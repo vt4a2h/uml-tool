@@ -1,0 +1,4 @@
+*.user
+*.user*
+build*
+*.zip
