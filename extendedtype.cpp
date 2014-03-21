@@ -1,8 +1,19 @@
 #include "extendedtype.h"
+#include "scope.h"
+#include "type.h"
 
 namespace entity {
 
     ExtendedType::ExtendedType()
+        : ExtendedType(nullptr, nullptr)
+    {
+    }
+
+    ExtendedType::ExtendedType(Scope *scope, Type *type)
+        : m_ConstStatus(false)
+        , m_Scope(scope)
+        , m_Type(type)
+        , m_Alias("")
     {
     }
 
@@ -51,14 +62,35 @@ namespace entity {
         m_ConstStatus = status;
     }
 
-    int ExtendedType::typeId() const
+    Scope *ExtendedType::scope() const
     {
-        return m_TypeId;
+        return m_Scope;
+    }
+    
+    void ExtendedType::setScope(Scope *scope)
+    {
+        m_Scope = scope;
     }
 
-    void ExtendedType::setTypeId(int typeId)
+    Type *ExtendedType::type() const
     {
-        m_TypeId = typeId;
+        return m_Type;
     }
 
+    void ExtendedType::setType(Type *type)
+    {
+        m_Type = type;
+    }
+
+    QString ExtendedType::alias() const
+    {
+        return m_Alias;
+    }
+
+    void ExtendedType::setAlias(const QString &alias)
+    {
+        m_Alias = alias;
+    }
+
+    
 } // namespace entity

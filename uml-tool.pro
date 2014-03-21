@@ -4,8 +4,16 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     scope.cpp \
-    extendedtype.cpp
+    extendedtype.cpp \
+    type.cpp \
+    enum.cpp \
+    union.cpp \
+    class.cpp
 
 HEADERS += \
     scope.h \
-    extendedtype.h
+    extendedtype.h \
+    type.h \
+    enum.h \
+    union.h \
+    class.h

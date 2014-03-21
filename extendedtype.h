@@ -6,6 +6,9 @@
 
 namespace entity {
 
+    class Scope;
+    class Type;
+
     class ExtendedType
     {
     public:
@@ -13,6 +16,7 @@ namespace entity {
         using PlList = QList<Pl>;
 
         ExtendedType();
+        ExtendedType(Scope *scope, Type *type);
 
         bool isLink() const;
         void addPointerStatus(bool pointerToConst = false);
@@ -27,12 +31,20 @@ namespace entity {
         bool isConst() const;
         void setConstStatus(bool status);
 
-        int typeId() const;
-        void setTypeId(int typeId);
+        Scope *scope() const;
+        void setScope(Scope *scope);
+
+        Type *type() const;
+        void setType(Type *type);
+
+        QString alias() const;
+        void setAlias(const QString &alias);
 
     protected:
         bool    m_ConstStatus;
-        int     m_TypeId;
+        Scope  *m_Scope;
+        Type   *m_Type;
+        QString m_Alias;
         PlList  m_Pl;
     };
 
