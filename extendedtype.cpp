@@ -51,16 +51,6 @@ namespace entity {
         m_ConstStatus = status;
     }
 
-    QString ExtendedType::alias() const
-    {
-        return m_Alias;
-    }
-
-    void ExtendedType::setAlias(const QString &name)
-    {
-        m_Alias = name;
-    }
-
     int ExtendedType::typeId() const
     {
         return m_TypeId;

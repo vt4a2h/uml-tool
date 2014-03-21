@@ -9,6 +9,9 @@ namespace entity {
     class ExtendedType
     {
     public:
+        using Pl     = std::pair<QString, bool>;
+        using PlList = QList<Pl>;
+
         ExtendedType();
 
         bool isLink() const;
@@ -24,19 +27,12 @@ namespace entity {
         bool isConst() const;
         void setConstStatus(bool status);
 
-        QString alias() const;
-        void setAlias(const QString &alias);
-
         int typeId() const;
         void setTypeId(int typeId);
 
     protected:
-        using Pl     = std::pair<QString, bool>;
-        using PlList = QList<Pl>;
-
         bool    m_ConstStatus;
         int     m_TypeId;
-        QString m_Alias;
         PlList  m_Pl;
     };
 
