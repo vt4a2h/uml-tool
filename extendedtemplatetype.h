@@ -11,6 +11,7 @@ namespace entity {
         ExtendedTemplateType(Scope *scope, Type *type);
 
         ExtendedType *getTemplateParameter(const QString &typeAliasOrName) const;
+        ExtendedTypes parameters() const;
         void addTemplateParameter(ExtendedType *parameter);
         bool contains(ExtendedType *type) const;
         bool contains(const QString &typeAliasOrName) const;

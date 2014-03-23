@@ -33,6 +33,11 @@ namespace entity {
         return result;
     }
 
+    ExtendedType::ExtendedTypes ExtendedTemplateType::parameters() const
+    {
+        return m_TemplateParameters;
+    }
+
     void ExtendedTemplateType::addTemplateParameter(ExtendedType *parameter)
     {
         m_TemplateParameters.append(parameter);
