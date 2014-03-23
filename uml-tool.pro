@@ -8,7 +8,8 @@ SOURCES += \
     type.cpp \
     enum.cpp \
     union.cpp \
-    class.cpp
+    class.cpp \
+    extendedtemplatetype.cpp
 
 HEADERS += \
     scope.h \
@@ -16,4 +17,5 @@ HEADERS += \
     type.h \
     enum.h \
     union.h \
-    class.h
+    class.h \
+    extendedtemplatetype.h
