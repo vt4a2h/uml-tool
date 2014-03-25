@@ -1,6 +1,7 @@
 #pragma once
 
 #include "type.h"
+#include "types.h"
 
 namespace entity {
 
@@ -15,11 +16,13 @@ namespace entity {
 
         SharedField getField(const QString &name);
         SharedField addField(const QString &name, ExtendedType *type);
-        void deleteField(const QString &name);
+        void removeField(const QString &name);
         bool containsField(const QString &name);
 
+        FieldsList fields() const;
+
     private:
-        Type::Fields m_Fields;
+        Fields m_Fields;
     };
 
 } // namespace entity

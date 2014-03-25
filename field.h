@@ -5,12 +5,11 @@
 namespace entity {
 
     class ExtendedType;
+    enum Section : int;
 
     class Field
     {
     public:
-        enum Section {Public, Private, Protected};
-
         Field();
         Field(const QString &name, ExtendedType *type);
 

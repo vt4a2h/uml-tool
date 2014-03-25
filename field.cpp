@@ -1,5 +1,6 @@
 #include "field.h"
 #include "extendedtype.h"
+#include "enums.h"
 
 namespace entity {
 
@@ -35,12 +36,12 @@ namespace entity {
         m_Name = name;
     }
 
-    Field::Section Field::section() const
+    Section Field::section() const
     {
         return m_Section;
     }
 
-    void Field::setSection(Field::Section section)
+    void Field::setSection(Section section)
     {
         m_Section = section;
     }

@@ -4,12 +4,18 @@
 
 namespace entity {
 
+    enum Kind : int;
+
     class Class : public Type
     {
     public:
-        enum Kind {ClassType, StructType};
-
         Class();
+
+        Kind kind() const;
+        void setKind(Kind kind);
+
+    private:
+        Kind m_Kind;
     };
 
 } // namespace entity

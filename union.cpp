@@ -14,7 +14,7 @@ namespace entity {
     {
     }
 
-    Type::SharedField Union::getField(const QString &name)
+    SharedField Union::getField(const QString &name)
     {
         SharedField result = nullptr;
 
@@ -24,12 +24,12 @@ namespace entity {
         return result;
     }
 
-    Type::SharedField Union::addField(const QString &name, ExtendedType *type)
+    SharedField Union::addField(const QString &name, ExtendedType *type)
     {
         return *m_Fields.insert(name, std::make_shared<Field>(name, type));
     }
 
-    void Union::deleteField(const QString &name)
+    void Union::removeField(const QString &name)
     {
         m_Fields.remove(name);
     }
@@ -37,6 +37,11 @@ namespace entity {
     bool Union::containsField(const QString &name)
     {
         return m_Fields.contains(name);
+    }
+
+    FieldsList Union::fields() const
+    {
+        return m_Fields.values();
     }
 
 } // namespace entity
