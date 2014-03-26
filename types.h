@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QHash>
+#include <QMultiHash>
 #include <memory>
 
 namespace entity {
@@ -11,7 +12,7 @@ namespace entity {
 
     class ClassMethod;
     using SharedMethod = std::shared_ptr<ClassMethod>;
-    using Methods      = QHash<QString, SharedMethod>;
+    using Methods      = QMultiHash<QString, SharedMethod>;
     using MethodsList  = QList<SharedMethod>;
 
     class Class;
@@ -20,6 +21,7 @@ namespace entity {
     using ClassesList = QList<SharedClass>;
 
     enum Section : int;
-    using ClassParent  = std::pair<SharedClass, Section>;
-    using ClassParents = QList<ClassParent>;
+    using Parent      = std::pair<SharedClass, Section>;
+    using Parents     = QMultiHash<QString, Parent>;
+    using ParentsList = QList<Parent>;
 }

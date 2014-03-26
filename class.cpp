@@ -19,40 +19,64 @@ namespace entity {
     {
     }
 
-    ClassParent Class::addParent(SharedClass cl, Section section)
+    Parent Class::addParent(SharedClass cl, Section section)
     {
-        return *m_Parents.insert(m_Parents.end(), std::make_pair(cl, section));
+        return *m_Parents.insertMulti(cl->name(), std::make_pair(cl, section));
     }
 
-    ClassParent Class::getParent(const QString &name, Scope *scope)
+    ParentsList Class::getParents(const QString &name)
     {
-        ClassParent result(nullptr, Public);
-
-        auto it = std::find_if(m_Parents.begin(), m_Parents.end(),
-                               [&](const ClassParent &p) {return p.first->name() == name && (scope ? p.first->scope() == scope : true);});
-        if (it != m_Parents.end()) result = *it;
-
-        return result;
+        return m_Parents.values(name);
     }
 
-    bool Class::containsParent(const QString &name, Scope *scope)
+    bool Class::containsParent(const QString &name)
     {
-        return getParent(name, scope).first != nullptr;
+        return m_Parents.contains(name);
     }
 
-    void Class::removeParent(const ClassParent &parent)
+    void Class::removeParents(const QString &name)
     {
-        if (parent.first) m_Parents.removeOne(parent);
+        m_Parents.remove(name);
     }
 
-    void Class::removeParent(const QString &name, Scope *scope)
+    void Class::removeParent(const Parent &parent)
     {
-        removeParent(getParent(name, scope));
+        m_Parents.remove(parent.first->name(), parent);
     }
 
-    ClassParents Class::parents() const
+    ParentsList Class::parents() const
     {
-        return m_Parents;
+        return m_Parents.values();
+    }
+
+    SharedMethod Class::addMethod(const QString &name)
+    {
+        return *m_Methods.insertMulti(name, std::make_shared<ClassMethod>(name));
+    }
+
+    MethodsList Class::getMethod(const QString &name)
+    {
+        return m_Methods.values(name);
+    }
+
+    bool Class::containsMethod(const QString &name)
+    {
+        return m_Methods.contains(name);
+    }
+
+    void Class::removeMethods(const QString &name)
+    {
+        m_Methods.remove(name);
+    }
+
+    void Class::removeMethod(SharedMethod method)
+    {
+        m_Methods.remove(method->name(), method);
+    }
+
+    MethodsList Class::methods() const
+    {
+        return m_Methods.values();
     }
 
     Kind Class::kind() const
