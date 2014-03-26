@@ -12,7 +12,7 @@ namespace entity {
 
     ClassMethod::ClassMethod(const QString &name)
         : m_Name(name)
-        , m_Kind(Public)
+        , m_Section(Public)
         , m_Identificator(None)
         , m_ConstStatus(false)
         , m_ReturnType(nullptr)
@@ -29,14 +29,14 @@ namespace entity {
         m_Name = name;
     }
 
-    Section ClassMethod::kind() const
+    Section ClassMethod::section() const
     {
-        return m_Kind;
+        return m_Section;
     }
 
-    void ClassMethod::setKind(Section &kind)
+    void ClassMethod::setSection(Section &section)
     {
-        m_Kind = kind;
+        m_Section = section;
     }
 
     ExtendedType *ClassMethod::returnType() const

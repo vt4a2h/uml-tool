@@ -7,7 +7,7 @@ namespace entity {
 
     class ExtendedType;
     class Field;
-    enum Section : int;
+    enum Section       : int;
     enum Identificator : int;
 
     class ClassMethod
@@ -19,8 +19,8 @@ namespace entity {
         QString name() const;
         void setName(const QString &name);
 
-        Section kind() const;
-        void setKind(Section &kind);
+        Section section() const;
+        void setSection(Section &section);
 
         ExtendedType *returnType() const;
         void setReturnType(ExtendedType *returnType);
@@ -40,7 +40,7 @@ namespace entity {
 
     private:
         QString m_Name;
-        Section m_Kind;
+        Section m_Section;
         Identificator m_Identificator;
         bool          m_ConstStatus;
         ExtendedType *m_ReturnType;
