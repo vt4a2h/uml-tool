@@ -2,7 +2,7 @@
 
 #include "type.h"
 #include <utility>
-#include <QList>
+#include <QHash>
 
 namespace entity {
 
@@ -10,7 +10,8 @@ namespace entity {
     {
     public:
         using Variable  = std::pair<QString, unsigned int>;
-        using Variables = QList<Variable>;
+        using Variables = QHash<QString, Variable>;
+        using VariablesList = QList<Variable>;
 
         Enum();
         Enum(const QString &name, Scope *scope);
@@ -21,10 +22,11 @@ namespace entity {
         bool isStrong() const;
         void setStrongStatus(bool status);
 
-        bool addVariable(const Variable &variable);
+        Variable &addVariable(const QString &name);
+        Variable getVariable(const QString &name) const;
         void removeVariable(const QString &name);
         bool containsVariable(const QString &name);
-        Variables variables() const;
+        VariablesList variables() const;
 
     private:
         Type *m_EnumType;

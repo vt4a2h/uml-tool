@@ -5,6 +5,7 @@
 
 namespace entity {
 
+    class ExtendedType;
     enum Kind    : int;
     enum Section : int;
 
@@ -28,6 +29,12 @@ namespace entity {
         void removeMethod(SharedMethod method);
         MethodsList methods() const;
 
+        SharedField addField(const QString &name, ExtendedType *type);
+        SharedField getField(const QString &name);
+        bool containsField(const QString &name);
+        void removeField(const QString &name);
+        FieldsList fields() const;
+
         Kind kind() const;
         void setKind(Kind kind);
 
@@ -40,6 +47,7 @@ namespace entity {
 
         Parents m_Parents;
         Methods m_Methods;
+        Fields  m_Fields;
     };
 
 } // namespace entity

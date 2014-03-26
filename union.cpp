@@ -16,12 +16,7 @@ namespace entity {
 
     SharedField Union::getField(const QString &name)
     {
-        SharedField result = nullptr;
-
-        auto it = m_Fields.find(name);
-        if (it != m_Fields.end()) result =  *it;
-
-        return result;
+        return m_Fields.value(name);
     }
 
     SharedField Union::addField(const QString &name, ExtendedType *type)

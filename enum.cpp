@@ -1,5 +1,6 @@
 #include "enum.h"
 #include <algorithm>
+#include <utility>
 
 namespace entity {
 
@@ -35,34 +36,29 @@ namespace entity {
         m_StrongStatus = status;
     }
 
-    bool Enum::addVariable(const Enum::Variable &variable)
+    Enum::Variable &Enum::addVariable(const QString &name)
     {
-        bool operationStatus(false);
+        return *m_Variables.insert(name, std::make_pair(name, m_Variables.size()));
+    }
 
-        if (!containsVariable(variable.first)) {
-            m_Variables.append(variable);
-            operationStatus = true;
-        }
-
-        return operationStatus;
+    Enum::Variable Enum::getVariable(const QString &name) const
+    {
+        return m_Variables.value(name);
     }
 
     void Enum::removeVariable(const QString &name)
     {
-        std::remove_if(m_Variables.begin(), m_Variables.end(),
-                       [&](const Variable &v){ return v.first == name; });
+        m_Variables.remove(name);
     }
 
     bool Enum::containsVariable(const QString &name)
     {
-        return std::find_if(m_Variables.begin(), m_Variables.end(),
-                            [&](const Variable &v){ return v.first == name; }) != m_Variables.end();
+        return m_Variables.contains(name);
     }
 
-    Enum::Variables Enum::variables() const
+    Enum::VariablesList Enum::variables() const
     {
-        return m_Variables;
+        return m_Variables.values();
     }
-
 
 } // namespace entity

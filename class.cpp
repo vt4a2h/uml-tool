@@ -3,6 +3,7 @@
 #include "field.h"
 #include "classmethod.h"
 #include "enums.h"
+#include "extendedtype.h"
 
 #include <utility>
 #include <algorithm>
@@ -77,6 +78,31 @@ namespace entity {
     MethodsList Class::methods() const
     {
         return m_Methods.values();
+    }
+
+    SharedField Class::addField(const QString &name, ExtendedType *type)
+    {
+        return *m_Fields.insert(name, std::make_shared<Field>(name, type));
+    }
+
+    SharedField Class::getField(const QString &name)
+    {
+        return m_Fields.value(name);
+    }
+
+    bool Class::containsField(const QString &name)
+    {
+        return m_Fields.contains(name);
+    }
+
+    void Class::removeField(const QString &name)
+    {
+        m_Fields.remove(name);
+    }
+
+    FieldsList Class::fields() const
+    {
+        return m_Fields.values();
     }
 
     Kind Class::kind() const
