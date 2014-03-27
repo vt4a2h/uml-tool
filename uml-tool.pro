@@ -11,7 +11,9 @@ SOURCES += \
     class.cpp \
     field.cpp \
     classmethod.cpp \
-    template.cpp
+    template.cpp \
+    templateclass.cpp \
+    templateclassmethod.cpp
 
 HEADERS += \
     scope.h \
@@ -24,4 +26,6 @@ HEADERS += \
     classmethod.h \
     enums.h \
     types.h \
-    template.h
+    template.h \
+    templateclass.h \
+    templateclassmethod.h
