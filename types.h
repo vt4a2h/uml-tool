@@ -24,4 +24,9 @@ namespace entity {
     using Parent      = std::pair<SharedClass, Section>;
     using Parents     = QMultiHash<QString, Parent>;
     using ParentsList = QList<Parent>;
+
+    class ExtendedType;
+    using TemplateParameter      = std::pair<QString, ExtendedType*>;
+    using TemplateParameters     = QHash<QString, TemplateParameter>;
+    using TemplateParametersList = QList<TemplateParameter>;
 }

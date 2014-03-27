@@ -9,9 +9,9 @@ SOURCES += \
     enum.cpp \
     union.cpp \
     class.cpp \
-    extendedtemplatetype.cpp \
     field.cpp \
-    classmethod.cpp
+    classmethod.cpp \
+    template.cpp
 
 HEADERS += \
     scope.h \
@@ -20,8 +20,8 @@ HEADERS += \
     enum.h \
     union.h \
     class.h \
-    extendedtemplatetype.h \
     field.h \
     classmethod.h \
     enums.h \
-    types.h
+    types.h \
+    template.h

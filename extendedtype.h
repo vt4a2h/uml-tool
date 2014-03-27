@@ -14,7 +14,6 @@ namespace entity {
     public:
         using Pl     = std::pair<QString, bool>;
         using PlList = QList<Pl>;
-        using ExtendedTypes = QList<ExtendedType*>;
 
         ExtendedType();
         ExtendedType(Scope *scope, Type *type);
