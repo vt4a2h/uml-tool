@@ -44,6 +44,10 @@ namespace entity {
     using TemplateParameter      = std::pair<QString, ExtendedType*>;
     using TemplateParameters     = QHash<QString, TemplateParameter>;
     using TemplateParametersList = QList<TemplateParameter>;
+    using SharedExtendedType     = std::shared_ptr<ExtendedType>;
+    using ExtendedTypes          = QHash<QString, SharedExtendedType>;
+    using ExtendedTypesList      = QList<SharedExtendedType>;
+    using ExtendedTypesRawList   = QList<ExtendedType*>;
 
     class Scope;
     using SharedScope = std::shared_ptr<Scope>;

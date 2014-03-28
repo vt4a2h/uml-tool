@@ -9,12 +9,17 @@ namespace entity {
     {
     }
 
-    ExtendedType::ExtendedType(Scope *scope, Type *type)
+    ExtendedType::ExtendedType(Scope *scope, Type *type, const QString &alias)
         : m_ConstStatus(false)
         , m_Scope(scope)
         , m_Type(type)
-        , m_Alias("")
+        , m_Alias(alias)
     {
+    }
+
+    ExtendedType::~ExtendedType()
+    {
+
     }
 
     bool ExtendedType::isLink() const
@@ -90,6 +95,26 @@ namespace entity {
     void ExtendedType::setAlias(const QString &alias)
     {
         m_Alias = alias;
+    }
+
+    void ExtendedType::addTemplateParameter(ExtendedType *t)
+    {
+        m_TemplateParameters << t;
+    }
+
+    bool ExtendedType::containsTemplateParameter(ExtendedType *t) const
+    {
+        return m_TemplateParameters.contains(t);
+    }
+
+    void ExtendedType::removeTemplateParameters(ExtendedType *t)
+    {
+        m_TemplateParameters.removeAll(t);
+    }
+
+    ExtendedTypesRawList ExtendedType::templateParameters() const
+    {
+        return m_TemplateParameters;
     }
 
     

@@ -24,12 +24,19 @@ namespace entity {
         void removeType(const QString &name);
         TypesList types() const;
 
+        SharedExtendedType getExtendedType(const QString &alias, SharedType type) const;
+        SharedExtendedType addExtendedType(const QString &alias, SharedType type);
+        bool containsExtendedType(const QString &alias, SharedType type) const;
+        void removeExtendedType(const QString &alias, SharedType type);
+        ExtendedTypesList extendedTypes() const;
+
     private:
         void swap(Scope &other);
 
         QString m_Name;
         Scope  *m_ParentScope;
         Types m_Types;
+        ExtendedTypes m_ExtendedType;
     };
 
 } // namespace entity

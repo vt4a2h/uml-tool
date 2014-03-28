@@ -4,6 +4,8 @@
 #include <QString>
 #include <QList>
 
+#include "types.h"
+
 namespace entity {
 
     class Scope;
@@ -16,7 +18,8 @@ namespace entity {
         using PlList = QList<Pl>;
 
         ExtendedType();
-        ExtendedType(Scope *scope, Type *type);
+        ExtendedType(Scope *scope, Type *type, const QString &alias = "");
+        ~ExtendedType();
 
         bool isLink() const;
         void addPointerStatus(bool pointerToConst = false);
@@ -40,12 +43,18 @@ namespace entity {
         QString alias() const;
         void setAlias(const QString &alias);
 
+        void addTemplateParameter(ExtendedType *t);
+        bool containsTemplateParameter(ExtendedType *t) const;
+        void removeTemplateParameters(ExtendedType *t);
+        ExtendedTypesRawList templateParameters() const;
+
     protected:
         bool    m_ConstStatus;
         Scope  *m_Scope;
         Type   *m_Type;
         QString m_Alias;
         PlList  m_Pl;
+        ExtendedTypesRawList m_TemplateParameters;
     };
 
 } // namespace entity

@@ -5,6 +5,7 @@
 #include "union.h"
 #include "enum.h"
 #include "enums.h"
+#include "extendedtype.h"
 #include <utility>
 
 namespace entity {
@@ -69,6 +70,33 @@ namespace entity {
     TypesList Scope::types() const
     {
         return m_Types.values();
+    }
+
+    SharedExtendedType Scope::getExtendedType(const QString &alias, SharedType type) const
+    {
+        QString key(QString("%1-%2").arg(alias, type->name()));
+        return (m_ExtendedType.contains(key) ? m_ExtendedType[key] : nullptr);
+    }
+
+    SharedExtendedType Scope::addExtendedType(const QString &alias, SharedType type)
+    {
+        return *m_ExtendedType.insert(QString("%1-%2").arg(alias, type->name()),
+                                      std::make_shared<ExtendedType>(this, type.get(), alias));
+    }
+
+    bool Scope::containsExtendedType(const QString &alias, SharedType type) const
+    {
+        return m_ExtendedType.contains(QString("%1-%2").arg(alias, type->name()));
+    }
+
+    void Scope::removeExtendedType(const QString &alias, SharedType type)
+    {
+        m_ExtendedType.remove(QString("%1-%2").arg(alias, type->name()));
+    }
+
+    ExtendedTypesList Scope::extendedTypes() const
+    {
+        return m_ExtendedType.values();
     }
 
 } // namespace entity
