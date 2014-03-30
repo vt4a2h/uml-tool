@@ -42,10 +42,14 @@ namespace entity {
         void removeChildScope(const QString &name);
         ScopesList scopes() const;
 
+        QString id() const;
+        void setId(const QString &id);
+
     private:
         void swap(Scope &other);
 
         QString m_Name;
+        QString m_Id;
         Scope  *m_ParentScope;
         Scopes m_Scopes;
         Types  m_Types;

@@ -1,5 +1,6 @@
 #include "type.h"
 #include "scope.h"
+#include "helpfunctions.h"
 
 namespace entity {
 
@@ -10,6 +11,7 @@ namespace entity {
 
     Type::Type(const QString &name, Scope *scope)
         : m_Name(name)
+        , m_Id(utility::genId())
         , m_Scope(scope)
     {
     }
@@ -34,5 +36,14 @@ namespace entity {
         m_Scope = scope;
     }
 
-
+    QString Type::id() const
+    {
+        return m_Id;
+    }
+    
+    void Type::setId(const QString &id)
+    {
+        m_Id = id;
+    }   
+    
 } // namespace entity

@@ -13,6 +13,7 @@ namespace entity {
         : m_Type(type)
         , m_Section(Public)
         , m_Name(name)
+        , m_Prefix("m_")
     {
     }
 
@@ -46,4 +47,15 @@ namespace entity {
         m_Section = section;
     }
 
+    QString Field::prefix() const
+    {
+        return m_Prefix;
+    }
+    
+    void Field::setPrefix(const QString &prefix)
+    {
+        m_Prefix = prefix;
+    }
+    
+    
 } // namespace entity

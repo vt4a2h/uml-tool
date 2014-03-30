@@ -1,6 +1,7 @@
 #include "extendedtype.h"
 #include "scope.h"
 #include "type.h"
+#include "helpfunctions.h"
 
 namespace entity {
 
@@ -14,12 +15,12 @@ namespace entity {
         , m_Scope(scope)
         , m_Type(type)
         , m_Alias(alias)
+        , m_Id(utility::genId())
     {
     }
 
     ExtendedType::~ExtendedType()
     {
-
     }
 
     bool ExtendedType::isLink() const
@@ -117,5 +118,14 @@ namespace entity {
         return m_TemplateParameters;
     }
 
+    QString ExtendedType::id() const
+    {
+        return m_Id;
+    }
+    
+    void ExtendedType::setId(const QString &id)
+    {
+        m_Id = id;
+    }
     
 } // namespace entity

@@ -6,12 +6,14 @@
 #include "enum.h"
 #include "enums.h"
 #include "extendedtype.h"
+#include "helpfunctions.h"
 #include <utility>
 
 namespace entity {
 
     Scope::Scope(const QString &scopeName, Scope *parent)
         : m_Name(scopeName)
+        , m_Id(utility::genId())
         , m_ParentScope(parent)
     {
     }
@@ -191,4 +193,15 @@ namespace entity {
         return m_Scopes.values();
     }
 
+    QString Scope::id() const
+    {
+        return m_Id;
+    }
+    
+    void Scope::setId(const QString &id)
+    {
+        m_Id = id;
+    }
+    
+    
 } // namespace entity

@@ -48,11 +48,15 @@ namespace entity {
         void removeTemplateParameters(ExtendedType *t);
         ExtendedTypesRawList templateParameters() const;
 
+        QString id() const;
+        void setId(const QString &id);
+
     protected:
         bool    m_ConstStatus;
         Scope  *m_Scope;
         Type   *m_Type;
         QString m_Alias;
+        QString m_Id;
         PlList  m_Pl;
         ExtendedTypesRawList m_TemplateParameters;
     };

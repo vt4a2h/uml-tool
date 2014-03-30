@@ -22,10 +22,14 @@ namespace entity {
         Section section() const;
         void setSection(Section section);
 
+        QString prefix() const;
+        void setPrefix(const QString &prefix);
+
     private:
         ExtendedType *m_Type;
         Section       m_Section;
         QString       m_Name;
+        QString       m_Prefix;
     };
 
 } // namespace entity

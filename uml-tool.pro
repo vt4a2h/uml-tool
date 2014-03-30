@@ -13,7 +13,8 @@ SOURCES += \
     classmethod.cpp \
     template.cpp \
     templateclass.cpp \
-    templateclassmethod.cpp
+    templateclassmethod.cpp \
+    helpfunctions.cpp
 
 HEADERS += \
     scope.h \
@@ -28,4 +29,5 @@ HEADERS += \
     types.h \
     template.h \
     templateclass.h \
-    templateclassmethod.h
+    templateclassmethod.h \
+    helpfunctions.h
