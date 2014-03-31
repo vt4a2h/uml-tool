@@ -7,8 +7,9 @@ namespace entity {
 
     class ExtendedType;
     class Field;
-    enum Section       : int;
-    enum Identificator : int;
+    enum Section          : int;
+    enum RhsIdentificator : int;
+    enum LhsIdentificator : int;
 
     class ClassMethod
     {
@@ -28,12 +29,19 @@ namespace entity {
         bool isConst() const;
         void setConstStatus(bool newStatus);
 
-        Identificator identificator() const;
-        void setIdentificator(const Identificator &identificator);
+        RhsIdentificator rhsIdentificator() const;
+        void setRhsIdentificator(RhsIdentificator identificator);
+
+        LhsIdentificatorsList lhsIdentificators() const;
+        void addLhsIdentificator(LhsIdentificator identificator);
+        bool containsLhsIdentficator(LhsIdentificator identificator) const;
+        bool hasLhsIdentificators() const;
+        void removeLhsIdentificator(LhsIdentificator identificator);
 
         SharedField getParameter(const QString &name);
         SharedField addParameter(const QString &name, ExtendedType *type);
         bool containsParameter(const QString &name);
+        bool hasParameters() const;
         void removeParameter(const QString &name);
 
         FieldsList parameters() const;
@@ -41,11 +49,13 @@ namespace entity {
     private:
         QString m_Name;
         Section m_Section;
-        Identificator m_Identificator;
         bool          m_ConstStatus;
         ExtendedType *m_ReturnType;
 
         Fields m_Parameters;
+
+        RhsIdentificator  m_RhsIdentificator;
+        LhsIdentificators m_LhsIdentificators;
     };
 
 } // namespace entity

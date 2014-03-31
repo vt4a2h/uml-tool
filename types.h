@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QHash>
+#include <QSet>
 #include <QMultiHash>
 #include <memory>
 
@@ -10,10 +11,18 @@ namespace entity {
     using Fields      = QHash<QString, SharedField>;
     using FieldsList  = QList<SharedField>;
 
+    enum FieldKeyword : int;
+    using FieldKeywords     = QSet<FieldKeyword>;
+    using FieldKeywordsList = QList<FieldKeyword>;
+
     class ClassMethod;
     using SharedMethod = std::shared_ptr<ClassMethod>;
     using Methods      = QMultiHash<QString, SharedMethod>;
     using MethodsList  = QList<SharedMethod>;
+
+    enum  LhsIdentificator : int;
+    using LhsIdentificators     = QSet<LhsIdentificator>;
+    using LhsIdentificatorsList = QList<LhsIdentificator>;
 
     class Type;
     using SharedType = std::shared_ptr<Type>;

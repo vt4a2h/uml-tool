@@ -56,6 +56,31 @@ namespace entity {
     {
         m_Prefix = prefix;
     }
+
+    FieldKeywordsList Field::keywords() const
+    {
+        return m_Keywords.values();
+    }
+
+    void Field::addKeyword(FieldKeyword keyword)
+    {
+        m_Keywords << keyword;
+    }
+
+    bool Field::containsKeyword(FieldKeyword keyword) const
+    {
+        return m_Keywords.contains(keyword);
+    }
+
+    bool Field::hasKeywords() const
+    {
+        return m_Keywords.isEmpty();
+    }
+
+    void Field::removeKeyword(FieldKeyword keyword)
+    {
+        m_Keywords.remove(keyword);
+    }
     
     
 } // namespace entity

@@ -13,9 +13,9 @@ namespace entity {
     ClassMethod::ClassMethod(const QString &name)
         : m_Name(name)
         , m_Section(Public)
-        , m_Identificator(None)
         , m_ConstStatus(false)
         , m_ReturnType(nullptr)
+        , m_RhsIdentificator(None)
     {
     }
 
@@ -59,14 +59,39 @@ namespace entity {
         m_ConstStatus = newStatus;
     }
 
-    Identificator ClassMethod::identificator() const
+    RhsIdentificator ClassMethod::rhsIdentificator() const
     {
-        return m_Identificator;
+        return m_RhsIdentificator;
     }
 
-    void ClassMethod::setIdentificator(const Identificator &identificator)
+    void ClassMethod::setRhsIdentificator(RhsIdentificator identificator)
     {
-        m_Identificator = identificator;
+        m_RhsIdentificator = identificator;
+    }
+
+    LhsIdentificatorsList ClassMethod::lhsIdentificators() const
+    {
+        return m_LhsIdentificators.values();
+    }
+
+    void ClassMethod::addLhsIdentificator(LhsIdentificator identificator)
+    {
+        m_LhsIdentificators << identificator;
+    }
+
+    bool ClassMethod::containsLhsIdentficator(LhsIdentificator identificator) const
+    {
+        return m_LhsIdentificators.contains(identificator);
+    }
+
+    bool ClassMethod::hasLhsIdentificators() const
+    {
+        return m_LhsIdentificators.empty();
+    }
+
+    void ClassMethod::removeLhsIdentificator(LhsIdentificator identificator)
+    {
+        m_LhsIdentificators.remove(identificator);
     }
 
     SharedField ClassMethod::getParameter(const QString &name)
@@ -87,6 +112,11 @@ namespace entity {
     bool ClassMethod::containsParameter(const QString &name)
     {
         return m_Parameters.contains(name);
+    }
+
+    bool ClassMethod::hasParameters() const
+    {
+        return m_Parameters.empty();
     }
 
     void ClassMethod::removeParameter(const QString &name)
