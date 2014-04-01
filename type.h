@@ -10,21 +10,21 @@ namespace entity {
     {
     public:
         Type();
-        Type(const QString &name, Scope *scope);
+        Type(const QString &name, const QString &scopeId);
 
         QString name() const;
         void setName(const QString &name);
 
-        Scope *scope() const;
-        void setScope(Scope *scope);
-
         QString id() const;
         void setId(const QString &id);
+
+        QString scopeId() const;
+        void setScopeId(const QString &scopeId);
 
     private:
         QString m_Name;
         QString m_Id;
-        Scope  *m_Scope;
+        QString m_ScopeId;
     };
 
 } // namespace entity

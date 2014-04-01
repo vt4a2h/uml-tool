@@ -1,30 +1,21 @@
 #include "field.h"
 #include "extendedtype.h"
 #include "enums.h"
+#include "constants.cpp"
 
 namespace entity {
 
     Field::Field()
-        : Field("noname", nullptr)
+        : Field(DEFAULT_NAME, STUB_ID)
     {
     }
 
-    Field::Field(const QString &name, ExtendedType *type)
-        : m_Type(type)
+    Field::Field(const QString &name, const QString &typeId)
+        : m_TypeId(typeId)
         , m_Section(Public)
         , m_Name(name)
         , m_Prefix("m_")
     {
-    }
-
-    ExtendedType *Field::type() const
-    {
-        return m_Type;
-    }
-
-    void Field::setType(ExtendedType *type)
-    {
-        m_Type = type;
     }
 
     QString Field::name() const
@@ -81,6 +72,15 @@ namespace entity {
     {
         m_Keywords.remove(keyword);
     }
-    
-    
+
+    QString Field::typeId() const
+    {
+        return m_TypeId;
+    }
+
+    void Field::setTypeId(const QString &typeId)
+    {
+        m_TypeId = typeId;
+    }
+
 } // namespace entity

@@ -1,18 +1,19 @@
 #include "type.h"
 #include "scope.h"
 #include "helpfunctions.h"
+#include "constants.cpp"
 
 namespace entity {
 
     Type::Type()
-        : Type("noname", nullptr)
+        : Type(DEFAULT_NAME, GLOBAL_SCOPE_ID)
     {
     }
 
-    Type::Type(const QString &name, Scope *scope)
+    Type::Type(const QString &name, const QString &scopeId)
         : m_Name(name)
         , m_Id(utility::genId())
-        , m_Scope(scope)
+        , m_ScopeId(scopeId)
     {
     }
 
@@ -26,16 +27,6 @@ namespace entity {
         m_Name = name;
     }
 
-    Scope *Type::scope() const
-    {
-        return m_Scope;
-    }
-
-    void Type::setScope(Scope *scope)
-    {
-        m_Scope = scope;
-    }
-
     QString Type::id() const
     {
         return m_Id;
@@ -44,6 +35,16 @@ namespace entity {
     void Type::setId(const QString &id)
     {
         m_Id = id;
-    }   
+    }
+
+    QString Type::scopeId() const
+    {
+        return m_ScopeId;
+    }
     
+    void Type::setScopeId(const QString &scopeId)
+    {
+        m_ScopeId = scopeId;
+    }
+        
 } // namespace entity

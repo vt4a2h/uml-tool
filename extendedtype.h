@@ -18,7 +18,7 @@ namespace entity {
         using PlList = QList<Pl>;
 
         ExtendedType();
-        ExtendedType(Scope *scope, Type *type, const QString &alias = "");
+        ExtendedType(const QString &scopeId, const QString &typeId, const QString &alias = "");
         ~ExtendedType();
 
         bool isLink() const;
@@ -34,30 +34,31 @@ namespace entity {
         bool isConst() const;
         void setConstStatus(bool status);
 
-        Scope *scope() const;
-        void setScope(Scope *scope);
-
-        Type *type() const;
-        void setType(Type *type);
-
         QString alias() const;
         void setAlias(const QString &alias);
 
-        void addTemplateParameter(ExtendedType *t);
-        bool containsTemplateParameter(ExtendedType *t) const;
-        void removeTemplateParameters(ExtendedType *t);
+        void addTemplateParameter(const QString &typeId);
+        bool containsTemplateParameter(const QString &typeId) const;
+        void removeTemplateParameters(const QString &typeId);
         ExtendedTypesRawList templateParameters() const;
 
         QString id() const;
         void setId(const QString &id);
 
+        QString scopeId() const;
+        void setScopeId(const QString &scopeId);
+
+        QString typeId() const;
+        void setTypeId(const QString &typeId);
+
     protected:
         bool    m_ConstStatus;
-        Scope  *m_Scope;
-        Type   *m_Type;
+        QString m_ScopeId;
+        QString m_TypeId;
         QString m_Alias;
         QString m_Id;
         PlList  m_Pl;
+
         ExtendedTypesRawList m_TemplateParameters;
     };
 

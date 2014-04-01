@@ -14,10 +14,7 @@ namespace entity {
         using VariablesList = QList<Variable>;
 
         Enum();
-        Enum(const QString &name, Scope *scope);
-
-        Type *enumType() const;
-        void setEnumType(Type *enumType);
+        Enum(const QString &name, const QString &scopeId);
 
         bool isStrong() const;
         void setStrongStatus(bool status);
@@ -28,8 +25,11 @@ namespace entity {
         bool containsVariable(const QString &name);
         VariablesList variables() const;
 
+        QString enumTypeId() const;
+        void setEnumTypeId(const QString &enumTypeId);
+
     private:
-        Type *m_EnumType;
+        QString m_EnumTypeId;
         bool m_StrongStatus;
         Variables m_Variables;
     };

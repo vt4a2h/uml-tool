@@ -1,9 +1,10 @@
 #include "templateclassmethod.h"
+#include "constants.cpp"
 
 namespace entity {
 
     TemplateClassMethod::TemplateClassMethod()
-        : TemplateClassMethod("noname")
+        : TemplateClassMethod(DEFAULT_NAME)
     {
     }
 

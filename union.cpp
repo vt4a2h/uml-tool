@@ -1,16 +1,17 @@
 #include "union.h"
 #include "field.h"
 #include "extendedtype.h"
+#include "constants.cpp"
 
 namespace entity {
 
     Union::Union()
-        : Union("noname", nullptr)
+        : Union(DEFAULT_NAME, GLOBAL_SCOPE_ID)
     {
     }
 
-    Union::Union(const QString &name, Scope *scope)
-        : Type(name, scope)
+    Union::Union(const QString &name, const QString &scopeId)
+        : Type(name, scopeId)
     {
     }
 
@@ -19,9 +20,9 @@ namespace entity {
         return m_Fields.value(name);
     }
 
-    SharedField Union::addField(const QString &name, ExtendedType *type)
+    SharedField Union::addField(const QString &name, const QString &typeId)
     {
-        return *m_Fields.insert(name, std::make_shared<Field>(name, type));
+        return *m_Fields.insert(name, std::make_shared<Field>(name, typeId));
     }
 
     void Union::removeField(const QString &name)

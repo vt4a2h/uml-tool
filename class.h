@@ -13,7 +13,7 @@ namespace entity {
     {
     public:
         Class();
-        Class(const QString &name, Scope *scope);
+        Class(const QString &name, const QString &scopeId);
 
         Parent addParent(SharedClass cl, Section section);
         ParentsList getParents(const QString &name);
@@ -29,7 +29,7 @@ namespace entity {
         void removeMethod(SharedMethod method);
         MethodsList methods() const;
 
-        SharedField addField(const QString &name, ExtendedType *type);
+        SharedField addField(const QString &name, const QString &typeId);
         SharedField getField(const QString &name);
         bool containsField(const QString &name);
         void removeField(const QString &name);

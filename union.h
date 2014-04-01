@@ -12,10 +12,10 @@ namespace entity {
     {
     public:
         Union();
-        Union(const QString &name, Scope *scope);
+        Union(const QString &name, const QString &scopeId);
 
         SharedField getField(const QString &name);
-        SharedField addField(const QString &name, ExtendedType *type);
+        SharedField addField(const QString &name, const QString &typeId);
         void removeField(const QString &name);
         bool containsField(const QString &name);
 

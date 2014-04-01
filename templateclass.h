@@ -9,7 +9,7 @@ namespace entity {
     {
     public:
         TemplateClass();
-        TemplateClass(const QString &name, Scope *scope);
+        TemplateClass(const QString &name, const QString &scopeId);
     };
 
 } // namespace entity

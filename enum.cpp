@@ -1,29 +1,20 @@
 #include "enum.h"
+#include "constants.cpp"
 #include <algorithm>
 #include <utility>
 
 namespace entity {
 
     Enum::Enum()
-        : Enum("noname", nullptr)
+        : Enum(DEFAULT_NAME, GLOBAL_SCOPE_ID)
     {
     }
 
-    Enum::Enum(const QString &name, Scope *scope)
-        : Type(name, scope)
-        , m_EnumType(nullptr)
+    Enum::Enum(const QString &name, const QString &scopeId)
+        : Type(name, scopeId)
+        , m_EnumTypeId(STUB_ID)
         , m_StrongStatus(false)
     {
-    }
-
-    Type *Enum::enumType() const
-    {
-        return m_EnumType;
-    }
-
-    void Enum::setEnumType(Type *enumType)
-    {
-        m_EnumType = enumType;
     }
 
     bool Enum::isStrong() const
@@ -60,5 +51,16 @@ namespace entity {
     {
         return m_Variables.values();
     }
+
+    QString Enum::enumTypeId() const
+    {
+        return m_EnumTypeId;
+    }
+
+    void Enum::setEnumTypeId(const QString &enumTypeId)
+    {
+        m_EnumTypeId = enumTypeId;
+    }
+
 
 } // namespace entity

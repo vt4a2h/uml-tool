@@ -4,6 +4,7 @@
 #include "classmethod.h"
 #include "enums.h"
 #include "extendedtype.h"
+#include "constants.cpp"
 
 #include <utility>
 #include <algorithm>
@@ -11,12 +12,12 @@
 namespace entity {
 
     Class::Class()
-        : Class("noname", nullptr)
+        : Class(DEFAULT_NAME, GLOBAL_SCOPE_ID)
     {
     }
 
-    Class::Class(const QString &name, Scope *scope)
-        : Type(name, scope)
+    Class::Class(const QString &name, const QString &scopeId)
+        : Type(name, scopeId)
     {
     }
 
@@ -80,9 +81,9 @@ namespace entity {
         return m_Methods.values();
     }
 
-    SharedField Class::addField(const QString &name, ExtendedType *type)
+    SharedField Class::addField(const QString &name, const QString &typeId)
     {
-        return *m_Fields.insert(name, std::make_shared<Field>(name, type));
+        return *m_Fields.insert(name, std::make_shared<Field>(name, typeId));
     }
 
     SharedField Class::getField(const QString &name)

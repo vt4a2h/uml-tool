@@ -10,13 +10,10 @@ namespace entity {
     class Scope
     {
     public:
-        Scope(const QString &scopeName = "", Scope *parent = nullptr);
+        Scope(const QString &scopeName = "", const QString &scopeId = "");
 
         QString name() const;
         void setName(const QString &name);
-
-        Scope *parentScope() const;
-        void setParentScope(Scope *parentScope);
 
         SharedType getType(const QString &name) const;
         SharedType takeType(const QString &name);
@@ -45,12 +42,15 @@ namespace entity {
         QString id() const;
         void setId(const QString &id);
 
+        QString parentScopeId() const;
+        void setParentScopeId(const QString &parentScopeId);
+
     private:
         void swap(Scope &other);
 
         QString m_Name;
         QString m_Id;
-        Scope  *m_ParentScope;
+        QString m_ParentScopeId;
         Scopes m_Scopes;
         Types  m_Types;
         ExtendedTypes m_ExtendedType;

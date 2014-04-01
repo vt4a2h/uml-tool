@@ -2,18 +2,19 @@
 #include "scope.h"
 #include "type.h"
 #include "helpfunctions.h"
+#include "constants.cpp"
 
 namespace entity {
 
     ExtendedType::ExtendedType()
-        : ExtendedType(nullptr, nullptr)
+        : ExtendedType(GLOBAL_SCOPE_ID, STUB_ID)
     {
     }
 
-    ExtendedType::ExtendedType(Scope *scope, Type *type, const QString &alias)
+    ExtendedType::ExtendedType(const QString &scopeId, const QString &typeId, const QString &alias)
         : m_ConstStatus(false)
-        , m_Scope(scope)
-        , m_Type(type)
+        , m_ScopeId(scopeId)
+        , m_TypeId(typeId)
         , m_Alias(alias)
         , m_Id(utility::genId())
     {
@@ -68,26 +69,6 @@ namespace entity {
         m_ConstStatus = status;
     }
 
-    Scope *ExtendedType::scope() const
-    {
-        return m_Scope;
-    }
-    
-    void ExtendedType::setScope(Scope *scope)
-    {
-        m_Scope = scope;
-    }
-
-    Type *ExtendedType::type() const
-    {
-        return m_Type;
-    }
-
-    void ExtendedType::setType(Type *type)
-    {
-        m_Type = type;
-    }
-
     QString ExtendedType::alias() const
     {
         return m_Alias;
@@ -98,19 +79,19 @@ namespace entity {
         m_Alias = alias;
     }
 
-    void ExtendedType::addTemplateParameter(ExtendedType *t)
+    void ExtendedType::addTemplateParameter(const QString &typeId)
     {
-        m_TemplateParameters << t;
+        m_TemplateParameters << typeId;
     }
 
-    bool ExtendedType::containsTemplateParameter(ExtendedType *t) const
+    bool ExtendedType::containsTemplateParameter(const QString &typeId) const
     {
-        return m_TemplateParameters.contains(t);
+        return m_TemplateParameters.contains(typeId);
     }
 
-    void ExtendedType::removeTemplateParameters(ExtendedType *t)
+    void ExtendedType::removeTemplateParameters(const QString &typeId)
     {
-        m_TemplateParameters.removeAll(t);
+        m_TemplateParameters.removeAll(typeId);
     }
 
     ExtendedTypesRawList ExtendedType::templateParameters() const
@@ -126,6 +107,26 @@ namespace entity {
     void ExtendedType::setId(const QString &id)
     {
         m_Id = id;
+    }
+
+    QString ExtendedType::scopeId() const
+    {
+        return m_ScopeId;
+    }
+
+    void ExtendedType::setScopeId(const QString &scopeId)
+    {
+        m_ScopeId = scopeId;
+    }
+
+    QString ExtendedType::typeId() const
+    {
+        return m_TypeId;
+    }
+
+    void ExtendedType::setTypeId(const QString &typeId)
+    {
+        m_TypeId = typeId;
     }
     
 } // namespace entity

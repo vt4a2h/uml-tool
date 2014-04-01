@@ -23,14 +23,14 @@ namespace entity {
         Section section() const;
         void setSection(Section &section);
 
-        ExtendedType *returnType() const;
-        void setReturnType(ExtendedType *returnType);
-
         bool isConst() const;
         void setConstStatus(bool newStatus);
 
         RhsIdentificator rhsIdentificator() const;
         void setRhsIdentificator(RhsIdentificator identificator);
+
+        QString returnTypeId() const;
+        void setReturnTypeId(const QString &returnTypeId);
 
         LhsIdentificatorsList lhsIdentificators() const;
         void addLhsIdentificator(LhsIdentificator identificator);
@@ -39,7 +39,7 @@ namespace entity {
         void removeLhsIdentificator(LhsIdentificator identificator);
 
         SharedField getParameter(const QString &name);
-        SharedField addParameter(const QString &name, ExtendedType *type);
+        SharedField addParameter(const QString &name, const QString &typeId);
         bool containsParameter(const QString &name);
         bool hasParameters() const;
         void removeParameter(const QString &name);
@@ -49,8 +49,8 @@ namespace entity {
     private:
         QString m_Name;
         Section m_Section;
-        bool          m_ConstStatus;
-        ExtendedType *m_ReturnType;
+        bool    m_ConstStatus;
+        QString m_ReturnTypeId;
 
         Fields m_Parameters;
 

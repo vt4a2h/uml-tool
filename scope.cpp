@@ -7,14 +7,15 @@
 #include "enums.h"
 #include "extendedtype.h"
 #include "helpfunctions.h"
+#include "constants.cpp"
 #include <utility>
 
 namespace entity {
 
-    Scope::Scope(const QString &scopeName, Scope *parent)
-        : m_Name(scopeName)
+    Scope::Scope(const QString &scopeName, const QString &scopeId)
+        : m_Name(!scopeName.isEmpty() ? scopeName : DEFAULT_NAME)
         , m_Id(utility::genId())
-        , m_ParentScope(parent)
+        , m_ParentScopeId(!scopeId.isEmpty() ? scopeId : GLOBAL_SCOPE_ID)
     {
     }
 
@@ -26,16 +27,6 @@ namespace entity {
     void Scope::setName(const QString &name)
     {
         m_Name = name;
-    }
-
-    Scope *Scope::parentScope() const
-    {
-        return m_ParentScope;
-    }
-
-    void Scope::setParentScope(Scope *parentScope)
-    {
-        m_ParentScope = parentScope;
     }
 
     SharedType Scope::getType(const QString &name) const
@@ -59,15 +50,15 @@ namespace entity {
     {
         switch (kindOfType) {
             case BasicType:
-                return *m_Types.insert(name, std::make_shared<Type>(name, this));
+                return *m_Types.insert(name, std::make_shared<Type>(name, m_Id));
             case UserClassType:
-                return *m_Types.insert(name, std::make_shared<Class>(name, this));
+                return *m_Types.insert(name, std::make_shared<Class>(name, m_Id));
             case TemplateClassType:
-                return *m_Types.insert(name, std::make_shared<TemplateClass>(name, this));
+                return *m_Types.insert(name, std::make_shared<TemplateClass>(name, m_Id));
             case UnionType:
-                return *m_Types.insert(name, std::make_shared<Union>(name, this));
+                return *m_Types.insert(name, std::make_shared<Union>(name, m_Id));
             case EnumType:
-                return *m_Types.insert(name, std::make_shared<Enum>(name, this));
+                return *m_Types.insert(name, std::make_shared<Enum>(name, m_Id));
         }
         return nullptr;
     }
@@ -76,7 +67,7 @@ namespace entity {
     {
         operationStatus = false;
         if (!m_Types.contains(type->name())) {
-            type->setScope(this);
+            type->setScopeId(m_Id);
             m_Types.insert(type->name(), type);
             operationStatus = true;
         }
@@ -118,14 +109,14 @@ namespace entity {
     SharedExtendedType Scope::addExtendedType(const QString &alias, SharedType type)
     {
         return *m_ExtendedType.insert(QString("%1-%2").arg(alias, type->name()),
-                                      std::make_shared<ExtendedType>(this, type.get(), alias));
+                                      std::make_shared<ExtendedType>(m_Id, type->id(), alias));
     }
 
     void Scope::addExtendedType(SharedExtendedType extendedType, bool &operationStatus)
     {
         operationStatus = false;
         if (!m_ExtendedType.contains(extendedType->alias())) {
-            extendedType->setScope(this);
+            extendedType->setScopeId(m_Id);
             m_ExtendedType.insert(extendedType->alias(), extendedType);
             operationStatus = true;
         }
@@ -165,14 +156,14 @@ namespace entity {
 
     SharedScope Scope::addChildScope(const QString &name)
     {
-        return *m_Scopes.insert(name, std::make_shared<Scope>(name, this));
+        return *m_Scopes.insert(name, std::make_shared<Scope>(name, m_Id));
     }
 
     void Scope::addChildScope(SharedScope scope, bool &operationStatus)
     {
         operationStatus = false;
         if (!m_Scopes.contains(scope->name())) {
-            scope->setParentScope(this);
+            scope->setParentScopeId(m_Id);
             m_Scopes.insert(scope->name(), scope);
             operationStatus = true;
         }
@@ -202,6 +193,17 @@ namespace entity {
     {
         m_Id = id;
     }
+
+    QString Scope::parentScopeId() const
+    {
+        return m_ParentScopeId;
+    }
+    
+    void Scope::setParentScopeId(const QString &parentScopeId)
+    {
+        m_ParentScopeId = parentScopeId;
+    }
+    
     
     
 } // namespace entity

@@ -13,10 +13,7 @@ namespace entity {
     {
     public:
         Field();
-        Field(const QString &name, ExtendedType *type);
-
-        ExtendedType *type() const;
-        void setType(ExtendedType *type);
+        Field(const QString &name, const QString &typeId);
 
         QString name() const;
         void setName(const QString &name);
@@ -33,11 +30,15 @@ namespace entity {
         bool hasKeywords() const;
         void removeKeyword(FieldKeyword keyword);
 
+        QString typeId() const;
+        void setTypeId(const QString &typeId);
+
     private:
-        ExtendedType *m_Type;
-        Section       m_Section;
-        QString       m_Name;
-        QString       m_Prefix;
+        QString m_TypeId;
+        Section m_Section;
+        QString m_Name;
+        QString m_Prefix;
+
         FieldKeywords m_Keywords;
     };
 

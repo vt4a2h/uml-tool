@@ -14,7 +14,8 @@ SOURCES += \
     template.cpp \
     templateclass.cpp \
     templateclassmethod.cpp \
-    helpfunctions.cpp
+    helpfunctions.cpp \
+    constants.cpp
 
 HEADERS += \
     scope.h \

@@ -1,14 +1,15 @@
 #include "templateclass.h"
+#include "constants.cpp"
 
 namespace entity {
 
     TemplateClass::TemplateClass()
-        : TemplateClass("noname", nullptr)
+        : TemplateClass(DEFAULT_NAME, GLOBAL_SCOPE_ID)
     {
     }
 
-    TemplateClass::TemplateClass(const QString &name, Scope *scope)
-        : Class (name, scope)
+    TemplateClass::TemplateClass(const QString &name, const QString &scopeId)
+        : Class (name, scopeId)
         , Template()
     {
     }

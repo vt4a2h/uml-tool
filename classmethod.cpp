@@ -2,11 +2,12 @@
 #include "extendedtype.h"
 #include "field.h"
 #include "enums.h"
+#include "constants.cpp"
 
 namespace entity {
 
     ClassMethod::ClassMethod()
-        : ClassMethod("noname")
+        : ClassMethod(DEFAULT_NAME)
     {
     }
 
@@ -14,7 +15,7 @@ namespace entity {
         : m_Name(name)
         , m_Section(Public)
         , m_ConstStatus(false)
-        , m_ReturnType(nullptr)
+        , m_ReturnTypeId(STUB_ID)
         , m_RhsIdentificator(None)
     {
     }
@@ -37,16 +38,6 @@ namespace entity {
     void ClassMethod::setSection(Section &section)
     {
         m_Section = section;
-    }
-
-    ExtendedType *ClassMethod::returnType() const
-    {
-        return m_ReturnType;
-    }
-
-    void ClassMethod::setReturnType(ExtendedType *returnType)
-    {
-        m_ReturnType = returnType;
     }
 
     bool ClassMethod::isConst() const
@@ -104,9 +95,9 @@ namespace entity {
         return result;
     }
 
-    SharedField ClassMethod::addParameter(const QString &name, ExtendedType *type)
+    SharedField ClassMethod::addParameter(const QString &name, const QString &typeId)
     {
-        return *m_Parameters.insert(name, std::make_shared<Field>(name, type));
+        return *m_Parameters.insert(name, std::make_shared<Field>(name, typeId));
     }
 
     bool ClassMethod::containsParameter(const QString &name)
@@ -129,4 +120,15 @@ namespace entity {
         return m_Parameters.values();
     }
 
+    QString ClassMethod::returnTypeId() const
+    {
+        return m_ReturnTypeId;
+    }
+    
+    void ClassMethod::setReturnTypeId(const QString &returnTypeId)
+    {
+        m_ReturnTypeId = returnTypeId;
+    }
+    
+    
 } // namespace entity
