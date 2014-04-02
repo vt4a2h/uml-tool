@@ -15,11 +15,11 @@ namespace entity {
         Class();
         Class(const QString &name, const QString &scopeId);
 
-        Parent addParent(SharedClass cl, Section section);
-        ParentsList getParents(const QString &name);
-        bool containsParent(const QString &name);
-        void removeParents(const QString &name);
-        void removeParent(const Parent &parent);
+        Parent addParent(const QString &typeId, Section section);
+        ParentsList getParents(const QString &typeId);
+        bool containsParent(const QString &typeId);
+        void removeParents(const QString &typeId);
+        void removeParent(const QString &typeId);
         ParentsList parents() const;
 
         SharedMethod addMethod(const QString &name);

@@ -21,29 +21,29 @@ namespace entity {
     {
     }
 
-    Parent Class::addParent(SharedClass cl, Section section)
+    Parent Class::addParent(const QString &typeId, Section section)
     {
-        return *m_Parents.insertMulti(cl->name(), std::make_pair(cl, section));
+        return *m_Parents.insert(typeId, std::make_pair(typeId, section));
     }
 
-    ParentsList Class::getParents(const QString &name)
+    ParentsList Class::getParents(const QString &typeId)
     {
-        return m_Parents.values(name);
+        return m_Parents.values(typeId);
     }
 
-    bool Class::containsParent(const QString &name)
+    bool Class::containsParent(const QString &typeId)
     {
-        return m_Parents.contains(name);
+        return m_Parents.contains(typeId);
     }
 
-    void Class::removeParents(const QString &name)
+    void Class::removeParents(const QString &typeId)
     {
-        m_Parents.remove(name);
+        m_Parents.remove(typeId);
     }
 
-    void Class::removeParent(const Parent &parent)
+    void Class::removeParent(const QString &typeId)
     {
-        m_Parents.remove(parent.first->name(), parent);
+        m_Parents.remove(typeId);
     }
 
     ParentsList Class::parents() const

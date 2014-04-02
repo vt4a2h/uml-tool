@@ -15,28 +15,25 @@ namespace entity {
         QString name() const;
         void setName(const QString &name);
 
-        SharedType getType(const QString &name) const;
-        SharedType takeType(const QString &name);
-        SharedType addType(const QString &name, UserType kindOfType);
-        void       addType(SharedType type, bool &operationStatus);
-        bool containsType(const QString &name) const;
-        void removeType(const QString &name);
+        SharedType getType(const QString &typeId) const;
+        SharedType takeType(const QString &typeId);
+        template <class T> std::shared_ptr<T> addType(const QString &name = "");
+        bool containsType(const QString &typeId) const;
+        void removeType(const QString &typeId);
         TypesList types() const;
 
-        SharedExtendedType getExtendedType(const QString &alias, SharedType type) const;
-        SharedExtendedType takeExtendedType(const QString &alias);
-        SharedExtendedType addExtendedType(const QString &alias, SharedType type);
-        void addExtendedType(SharedExtendedType extendedType, bool &operationStatus);
-        bool containsExtendedType(const QString &alias, SharedType type) const;
-        void removeExtendedType(const QString &alias, SharedType type);
+        SharedExtendedType getExtendedType(const QString &typeId) const;
+        SharedExtendedType takeExtendedType(const QString &typeId);
+        SharedExtendedType addExtendedType();
+        bool containsExtendedType(const QString &typeId) const;
+        void removeExtendedType(const QString &typeId);
         ExtendedTypesList extendedTypes() const;
 
-        SharedScope getChildScope(const QString &name);
-        SharedScope takeChildScope(const QString &name);
-        SharedScope addChildScope(const QString &name);
-        void        addChildScope(SharedScope scope, bool &operationStatus);
-        bool containsChildScope(const QString &name);
-        void removeChildScope(const QString &name);
+        SharedScope getChildScope(const QString &typeId);
+        SharedScope takeChildScope(const QString &typeId);
+        SharedScope addChildScope(const QString &typeId);
+        bool containsChildScope(const QString &typeId);
+        void removeChildScope(const QString &typeId);
         ScopesList scopes() const;
 
         QString id() const;
@@ -55,5 +52,13 @@ namespace entity {
         Types  m_Types;
         ExtendedTypes m_ExtendedType;
     };
+
+    template <class T>
+    std::shared_ptr<T> Scope::addType(const QString &name)
+    {
+        auto value = std::make_shared<T>(name, m_Id);
+        m_Types.insert(value->id(), value);
+        return value;
+    }
 
 } // namespace entity

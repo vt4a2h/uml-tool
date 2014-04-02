@@ -45,8 +45,8 @@ namespace entity {
     using EnumsList  = QList<SharedEnum>;
 
     enum Section : int;
-    using Parent      = std::pair<SharedClass, Section>;
-    using Parents     = QMultiHash<QString, Parent>;
+    using Parent      = std::pair<QString, Section>;
+    using Parents     = QHash<QString, Parent>; // id : {id, section}
     using ParentsList = QList<Parent>;
 
     class ExtendedType;

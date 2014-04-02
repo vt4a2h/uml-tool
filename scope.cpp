@@ -29,58 +29,31 @@ namespace entity {
         m_Name = name;
     }
 
-    SharedType Scope::getType(const QString &name) const
+    SharedType Scope::getType(const QString &typeId) const
     {
-        return (m_Types.contains(name) ? m_Types[name] : nullptr);
+        return (m_Types.contains(typeId) ? m_Types[typeId] : nullptr);
     }
 
-    SharedType Scope::takeType(const QString &name)
+    SharedType Scope::takeType(const QString &typeId)
     {
         SharedType result(nullptr);
 
-        if (m_Types.contains(name)) {
-            result = m_Types[name];
-            m_Types.remove(name);
+        if (m_Types.contains(typeId)) {
+            result = m_Types[typeId];
+            m_Types.remove(typeId);
         }
 
         return result;
     }
 
-    SharedType Scope::addType(const QString &name, UserType kindOfType)
+    bool Scope::containsType(const QString &typeId) const
     {
-        switch (kindOfType) {
-            case BasicType:
-                return *m_Types.insert(name, std::make_shared<Type>(name, m_Id));
-            case UserClassType:
-                return *m_Types.insert(name, std::make_shared<Class>(name, m_Id));
-            case TemplateClassType:
-                return *m_Types.insert(name, std::make_shared<TemplateClass>(name, m_Id));
-            case UnionType:
-                return *m_Types.insert(name, std::make_shared<Union>(name, m_Id));
-            case EnumType:
-                return *m_Types.insert(name, std::make_shared<Enum>(name, m_Id));
-        }
-        return nullptr;
+        return m_Types.contains(typeId);
     }
 
-    void Scope::addType(SharedType type, bool &operationStatus)
+    void Scope::removeType(const QString &typeId)
     {
-        operationStatus = false;
-        if (!m_Types.contains(type->name())) {
-            type->setScopeId(m_Id);
-            m_Types.insert(type->name(), type);
-            operationStatus = true;
-        }
-    }
-
-    bool Scope::containsType(const QString &name) const
-    {
-        return m_Types.contains(name);
-    }
-
-    void Scope::removeType(const QString &name)
-    {
-        m_Types.remove(name);
+        m_Types.remove(typeId);
     }
 
     TypesList Scope::types() const
@@ -88,48 +61,39 @@ namespace entity {
         return m_Types.values();
     }
 
-    SharedExtendedType Scope::getExtendedType(const QString &alias, SharedType type) const
+    SharedExtendedType Scope::getExtendedType(const QString &typeId) const
     {
-        QString key(QString("%1-%2").arg(alias, type->name()));
-        return (m_ExtendedType.contains(key) ? m_ExtendedType[key] : nullptr);
+        return (m_ExtendedType.contains(typeId) ? m_ExtendedType[typeId] : nullptr);
     }
 
-    SharedExtendedType Scope::takeExtendedType(const QString &alias)
+    SharedExtendedType Scope::takeExtendedType(const QString &typeId)
     {
         SharedExtendedType result(nullptr);
 
-        if (m_ExtendedType.contains(alias)) {
-            result = m_ExtendedType[alias];
-            m_ExtendedType.remove(alias);
+        if (m_ExtendedType.contains(typeId)) {
+            result = m_ExtendedType[typeId];
+            m_ExtendedType.remove(typeId);
         }
 
         return result;
     }
 
-    SharedExtendedType Scope::addExtendedType(const QString &alias, SharedType type)
+    SharedExtendedType Scope::addExtendedType()
     {
-        return *m_ExtendedType.insert(QString("%1-%2").arg(alias, type->name()),
-                                      std::make_shared<ExtendedType>(m_Id, type->id(), alias));
+        auto type = std::make_shared<ExtendedType>();
+        type->setScopeId(m_Id);
+
+        return *m_ExtendedType.insert(type->id(), type);
     }
 
-    void Scope::addExtendedType(SharedExtendedType extendedType, bool &operationStatus)
+    bool Scope::containsExtendedType(const QString &typeId) const
     {
-        operationStatus = false;
-        if (!m_ExtendedType.contains(extendedType->alias())) {
-            extendedType->setScopeId(m_Id);
-            m_ExtendedType.insert(extendedType->alias(), extendedType);
-            operationStatus = true;
-        }
+        return m_ExtendedType.contains(typeId);
     }
 
-    bool Scope::containsExtendedType(const QString &alias, SharedType type) const
+    void Scope::removeExtendedType(const QString &typeId)
     {
-        return m_ExtendedType.contains(QString("%1-%2").arg(alias, type->name()));
-    }
-
-    void Scope::removeExtendedType(const QString &alias, SharedType type)
-    {
-        m_ExtendedType.remove(QString("%1-%2").arg(alias, type->name()));
+        m_ExtendedType.remove(typeId);
     }
 
     ExtendedTypesList Scope::extendedTypes() const
@@ -137,46 +101,36 @@ namespace entity {
         return m_ExtendedType.values();
     }
 
-    SharedScope Scope::getChildScope(const QString &name)
+    SharedScope Scope::getChildScope(const QString &typeId)
     {
-        return (m_Scopes.contains(name) ? m_Scopes[name] : nullptr);
+        return (m_Scopes.contains(typeId) ? m_Scopes[typeId] : nullptr);
     }
 
-    SharedScope Scope::takeChildScope(const QString &name)
+    SharedScope Scope::takeChildScope(const QString &typeId)
     {
         SharedScope result(nullptr);
 
-        if (m_Scopes.contains(name)) {
-            result = m_Scopes[name];
-            m_Scopes.remove(name);
+        if (m_Scopes.contains(typeId)) {
+            result = m_Scopes[typeId];
+            m_Scopes.remove(typeId);
         }
 
         return result;
     }
 
-    SharedScope Scope::addChildScope(const QString &name)
+    SharedScope Scope::addChildScope(const QString &typeId)
     {
-        return *m_Scopes.insert(name, std::make_shared<Scope>(name, m_Id));
+        return *m_Scopes.insert(typeId, std::make_shared<Scope>(typeId, m_Id));
     }
 
-    void Scope::addChildScope(SharedScope scope, bool &operationStatus)
+    bool Scope::containsChildScope(const QString &typeId)
     {
-        operationStatus = false;
-        if (!m_Scopes.contains(scope->name())) {
-            scope->setParentScopeId(m_Id);
-            m_Scopes.insert(scope->name(), scope);
-            operationStatus = true;
-        }
+        return m_Scopes.contains(typeId);
     }
 
-    bool Scope::containsChildScope(const QString &name)
+    void Scope::removeChildScope(const QString &typeId)
     {
-        return m_Scopes.contains(name);
-    }
-
-    void Scope::removeChildScope(const QString &name)
-    {
-        m_Scopes.remove(name);
+        m_Scopes.remove(typeId);
     }
 
     ScopesList Scope::scopes() const
@@ -203,7 +157,5 @@ namespace entity {
     {
         m_ParentScopeId = parentScopeId;
     }
-    
-    
     
 } // namespace entity
