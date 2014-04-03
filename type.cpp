@@ -3,6 +3,8 @@
 #include "helpfunctions.h"
 #include "constants.cpp"
 
+#include <QJsonObject>
+
 namespace entity {
 
     Type::Type()
@@ -45,6 +47,24 @@ namespace entity {
     void Type::setScopeId(const QString &scopeId)
     {
         m_ScopeId = scopeId;
+    }
+
+    QJsonObject Type::toJson() const
+    {
+        QJsonObject result;
+
+        result.insert("Name", m_Name);
+        result.insert("Scope ID", m_ScopeId);
+        result.insert("ID", m_Id);
+
+        return result;
+    }
+
+    void Type::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        utility::checkAndSet(src, "Name", errorList, [&src, this](){ m_Name = src["Name"].toString(); });
+        utility::checkAndSet(src, "Scope ID", errorList, [&src, this](){ m_ScopeId = src["Scope ID"].toString(); });
+        utility::checkAndSet(src, "ID", errorList, [&src, this](){ m_Id = src["ID"].toString(); });
     }
         
 } // namespace entity

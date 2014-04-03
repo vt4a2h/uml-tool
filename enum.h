@@ -3,13 +3,14 @@
 #include "type.h"
 #include <utility>
 #include <QHash>
+#include <QStringList>
 
 namespace entity {
 
     class Enum : public Type
     {
     public:
-        using Variable  = std::pair<QString, unsigned int>;
+        using Variable  = std::pair<QString, int>;
         using Variables = QHash<QString, Variable>;
         using VariablesList = QList<Variable>;
 
@@ -27,6 +28,9 @@ namespace entity {
 
         QString enumTypeId() const;
         void setEnumTypeId(const QString &enumTypeId);
+
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
     private:
         QString m_EnumTypeId;

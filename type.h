@@ -2,6 +2,8 @@
 
 #include <QString>
 
+class QJsonObject;
+
 namespace entity {
 
     class Scope;
@@ -20,6 +22,9 @@ namespace entity {
 
         QString scopeId() const;
         void setScopeId(const QString &scopeId);
+
+        virtual QJsonObject toJson() const;
+        virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
     private:
         QString m_Name;
