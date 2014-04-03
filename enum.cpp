@@ -106,7 +106,7 @@ namespace entity {
                     m_Variables.insert(var.first, var);
                   }
             } else {
-                errorList << "Error: Varibles is not array";
+                errorList << "Error: \"Varibles\" is not array";
             }
         });
     }

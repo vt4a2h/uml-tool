@@ -19,6 +19,10 @@ namespace entity {
     {
     }
 
+    Type::~Type()
+    {
+    }
+
     QString Type::name() const
     {
         return m_Name;

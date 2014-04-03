@@ -21,6 +21,9 @@ namespace entity {
 
         FieldsList fields() const;
 
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
     private:
         Fields m_Fields;
     };

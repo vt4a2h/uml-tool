@@ -3,9 +3,11 @@
 #include <QString>
 #include "types.h"
 
+class QJsonObject;
+class QStringList;
+
 namespace entity {
 
-    class ExtendedType;
     enum Section : int;
     enum FieldKeyword : int;
 
@@ -32,6 +34,9 @@ namespace entity {
 
         QString typeId() const;
         void setTypeId(const QString &typeId);
+
+        QJsonObject toJson() const;
+        void fromJson(const QJsonObject &src, QStringList &errorList);
 
     private:
         QString m_TypeId;

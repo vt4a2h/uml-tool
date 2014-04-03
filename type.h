@@ -13,6 +13,7 @@ namespace entity {
     public:
         Type();
         Type(const QString &name, const QString &scopeId);
+        virtual ~Type();
 
         QString name() const;
         void setName(const QString &name);

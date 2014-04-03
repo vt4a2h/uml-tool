@@ -2,6 +2,11 @@
 #include "field.h"
 #include "extendedtype.h"
 #include "constants.cpp"
+#include "helpfunctions.h"
+
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QStringList>
 
 namespace entity {
 
@@ -38,6 +43,36 @@ namespace entity {
     FieldsList Union::fields() const
     {
         return m_Fields.values();
+    }
+
+    QJsonObject Union::toJson() const
+    {
+        QJsonObject result(Type::toJson());
+
+        QJsonArray fields;
+        for (auto key : m_Fields.keys()) fields.append(m_Fields[key]->toJson());
+        result.insert("Fields", fields);
+
+        return result;
+    }
+
+    void Union::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        Type::fromJson(src, errorList);
+
+        m_Fields.clear();
+        utility::checkAndSet(src, "Fields", errorList, [&src, &errorList, this](){
+            if (src["Fields"].isArray()) {
+                SharedField f;
+                for (auto value : src["Fields"].toArray()) {
+                    f = std::make_shared<Field>();
+                    f->fromJson(value.toObject(), errorList);
+                    m_Fields.insert(f->name(), f);
+                }
+            } else {
+                errorList << "Error: \"Fields\" is not array";
+            }
+        });
     }
 
 } // namespace entity
