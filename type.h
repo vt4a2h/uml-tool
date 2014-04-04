@@ -7,6 +7,7 @@ class QJsonObject;
 namespace entity {
 
     class Scope;
+    enum UserType : int;
 
     class Type
     {
@@ -24,8 +25,13 @@ namespace entity {
         QString scopeId() const;
         void setScopeId(const QString &scopeId);
 
+        UserType type() const;
+
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
+
+    protected:
+        UserType m_KindOfType;
 
     private:
         QString m_Name;

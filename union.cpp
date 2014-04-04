@@ -3,6 +3,7 @@
 #include "extendedtype.h"
 #include "constants.cpp"
 #include "helpfunctions.h"
+#include "enums.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -18,6 +19,7 @@ namespace entity {
     Union::Union(const QString &name, const QString &scopeId)
         : Type(name, scopeId)
     {
+        m_KindOfType = UnionType;
     }
 
     SharedField Union::getField(const QString &name)

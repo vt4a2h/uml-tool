@@ -1,6 +1,7 @@
 #include "type.h"
 #include "scope.h"
 #include "helpfunctions.h"
+#include "enums.h"
 #include "constants.cpp"
 
 #include <QJsonObject>
@@ -13,7 +14,8 @@ namespace entity {
     }
 
     Type::Type(const QString &name, const QString &scopeId)
-        : m_Name(name)
+        : m_KindOfType(BasicType)
+        , m_Name(name)
         , m_Id(utility::genId())
         , m_ScopeId(scopeId)
     {
@@ -53,6 +55,11 @@ namespace entity {
         m_ScopeId = scopeId;
     }
 
+    UserType Type::type() const
+    {
+        return m_KindOfType;
+    }
+
     QJsonObject Type::toJson() const
     {
         QJsonObject result;
@@ -60,6 +67,7 @@ namespace entity {
         result.insert("Name", m_Name);
         result.insert("Scope ID", m_ScopeId);
         result.insert("ID", m_Id);
+        result.insert("Kind of type", m_KindOfType);
 
         return result;
     }
@@ -69,6 +77,7 @@ namespace entity {
         utility::checkAndSet(src, "Name", errorList, [&src, this](){ m_Name = src["Name"].toString(); });
         utility::checkAndSet(src, "Scope ID", errorList, [&src, this](){ m_ScopeId = src["Scope ID"].toString(); });
         utility::checkAndSet(src, "ID", errorList, [&src, this](){ m_Id = src["ID"].toString(); });
+        utility::checkAndSet(src, "Kind of type", errorList, [&src, this](){ m_KindOfType = static_cast<UserType>(src["Kind of type"].toInt()); });
     }
         
 } // namespace entity

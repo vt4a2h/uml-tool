@@ -6,8 +6,6 @@
 
 namespace entity {
 
-    enum UserType : int;
-
     class Scope
     {
     public:

@@ -19,6 +19,7 @@ namespace entity {
     Class::Class(const QString &name, const QString &scopeId)
         : Type(name, scopeId)
     {
+        m_KindOfType = UserClassType;
     }
 
     Parent Class::addParent(const QString &typeId, Section section)

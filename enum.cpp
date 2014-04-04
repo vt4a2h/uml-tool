@@ -1,6 +1,7 @@
 #include "enum.h"
 #include "constants.cpp"
 #include "helpfunctions.h"
+#include "enums.h"
 
 #include <algorithm>
 #include <utility>
@@ -21,6 +22,7 @@ namespace entity {
         , m_EnumTypeId(STUB_ID)
         , m_StrongStatus(false)
     {
+        m_KindOfType = EnumType;
     }
 
     bool Enum::isStrong() const
