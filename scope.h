@@ -1,5 +1,6 @@
 #pragma once
 
+#include <type_traits>
 #include <QString>
 #include "types.h"
 
@@ -17,7 +18,7 @@ namespace entity {
 
         SharedType getType(const QString &typeId) const;
         SharedType takeType(const QString &typeId);
-        template <class T> std::shared_ptr<T> addType(const QString &name = "");
+        template <class T = Type> std::shared_ptr<T> addType(const QString &name = "");
         bool containsType(const QString &typeId) const;
         void removeType(const QString &typeId);
         TypesList types() const;
@@ -56,7 +57,8 @@ namespace entity {
     template <class T>
     std::shared_ptr<T> Scope::addType(const QString &name)
     {
-        auto value = std::make_shared<T>(name, m_Id);
+        typedef typename std::conditional<std::is_class<T>::value && std::is_base_of<Type, T>::value, T, Type>::type ResultType;
+        auto value = std::make_shared<ResultType>(name, m_Id);
         m_Types.insert(value->id(), value);
         return value;
     }
