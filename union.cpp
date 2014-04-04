@@ -52,7 +52,7 @@ namespace entity {
         QJsonObject result(Type::toJson());
 
         QJsonArray fields;
-        for (auto key : m_Fields.keys()) fields.append(m_Fields[key]->toJson());
+        for (auto value : m_Fields.values()) fields.append(value->toJson());
         result.insert("Fields", fields);
 
         return result;

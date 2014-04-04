@@ -4,10 +4,15 @@
 #include "classmethod.h"
 #include "enums.h"
 #include "extendedtype.h"
+#include "helpfunctions.h"
 #include "constants.cpp"
 
 #include <utility>
 #include <algorithm>
+
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QStringList>
 
 namespace entity {
 
@@ -35,11 +40,6 @@ namespace entity {
     bool Class::containsParent(const QString &typeId)
     {
         return m_Parents.contains(typeId);
-    }
-
-    void Class::removeParents(const QString &typeId)
-    {
-        m_Parents.remove(typeId);
     }
 
     void Class::removeParent(const QString &typeId)
@@ -127,5 +127,81 @@ namespace entity {
         m_FinalStatus = status;
     }
 
+    QJsonObject Class::toJson() const
+    {
+        QJsonObject result(Type::toJson());
+
+        result.insert("Kind", m_Kind);
+        result.insert("Final status", m_FinalStatus);
+
+        QJsonArray parents;
+        QJsonObject parent;
+        for (auto id : m_Parents.keys()) {
+            parent.insert("Id", m_Parents[id].first);
+            parent.insert("Section", m_Parents[id].second);
+            parents.append(parent);
+        }
+        result.insert("Parents", parents);
+
+        QJsonArray methods;
+        for (auto value : m_Methods.values()) methods.append(value->toJson());
+        result.insert("Methods", methods);
+
+        QJsonArray fields;
+        for (auto value : m_Fields.values()) fields.append(value->toJson());
+        result.insert("Fields", fields);
+
+        return result;
+    }
+
+    void Class::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        utility::checkAndSet(src, "Kind", errorList, [&src, this](){ m_Kind = static_cast<Kind>(src["Kind"].toInt()); });
+        utility::checkAndSet(src, "Final status", errorList, [&src, this](){ m_FinalStatus = src["Kind"].toBool(); });
+
+        m_Parents.clear();
+        utility::checkAndSet(src, "Parents", errorList, [&src, &errorList, this](){
+            Parent p;
+            QJsonObject o;
+            if (src["Parents"].isArray()) {
+                for (auto value : src["Parents"].toArray()) {
+                    o = value.toObject();
+                    utility::checkAndSet(o, "Id", errorList, [&o, &p, this](){ p.first = o["Id"].toString(); });
+                    utility::checkAndSet(o, "Section", errorList, [&o, &p, this](){ p.second = static_cast<Section>(o["Section"].toInt()); });
+                    m_Parents.insert(p.first, p);
+                }
+            } else {
+                errorList << "Error: \"Parents\" is not array";
+            }
+        });
+
+        m_Methods.clear();
+        utility::checkAndSet(src, "Methods", errorList, [&src, &errorList, this](){
+            if (src["Methods"].isArray()) {
+                SharedMethod method;
+                for (auto value : src["Methods"].toArray()) {
+                    method = std::make_shared<ClassMethod>();
+                    method->fromJson(value.toObject(), errorList);
+                    m_Methods.insertMulti(method->name(), method);
+                }
+            } else {
+                errorList << "Error: \"Methods\" is not array";
+            }
+        });
+
+        m_Fields.clear();
+        utility::checkAndSet(src, "Fields", errorList, [&src, &errorList, this](){
+            if (src["Fields"].isArray()) {
+                SharedField field;
+                for (auto value : src["Fields"].toArray()) {
+                    field = std::make_shared<Field>();
+                    field->fromJson(value.toObject(), errorList);
+                    m_Fields.insert(field->name(), field);
+                }
+            } else {
+                errorList << "Error: \"Fields\" is not array";
+            }
+        });
+    }
 
 } // namespace entity

@@ -18,7 +18,6 @@ namespace entity {
         Parent addParent(const QString &typeId, Section section);
         ParentsList getParents(const QString &typeId);
         bool containsParent(const QString &typeId);
-        void removeParents(const QString &typeId);
         void removeParent(const QString &typeId);
         ParentsList parents() const;
 
@@ -40,6 +39,9 @@ namespace entity {
 
         bool isFinal() const;
         void setFinalStatus(bool status);
+
+        QJsonObject toJson() const;
+        void fromJson(const QJsonObject &src, QStringList &errorList);
 
     private:
         Kind m_Kind;

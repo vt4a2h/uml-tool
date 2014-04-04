@@ -3,6 +3,8 @@
 #include <QString>
 #include "types.h"
 
+class QJsonObject;
+
 namespace entity {
 
     class ExtendedType;
@@ -45,6 +47,9 @@ namespace entity {
         void removeParameter(const QString &name);
 
         FieldsList parameters() const;
+
+        QJsonObject toJson() const;
+        void fromJson(const QJsonObject &src, QStringList &errorList);
 
     private:
         QString m_Name;
