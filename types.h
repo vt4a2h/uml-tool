@@ -51,7 +51,7 @@ namespace entity {
     using ParentsList = QList<Parent>;
 
     class ExtendedType;
-    using TemplateParameter      = std::pair<QString, QString>;
+    using TemplateParameter      = std::pair<QString, QString>; // (typename, default type id)
     using TemplateParameters     = QHash<QString, TemplateParameter>;
     using TemplateParametersList = QList<TemplateParameter>;
     using SharedExtendedType     = std::shared_ptr<ExtendedType>;

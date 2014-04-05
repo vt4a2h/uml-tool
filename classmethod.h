@@ -48,8 +48,8 @@ namespace entity {
 
         FieldsList parameters() const;
 
-        QJsonObject toJson() const;
-        void fromJson(const QJsonObject &src, QStringList &errorList);
+        virtual QJsonObject toJson() const;
+        virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
     private:
         QString m_Name;

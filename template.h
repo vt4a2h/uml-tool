@@ -14,6 +14,10 @@ namespace entity {
         void removeParameter(const QString &name);
         TemplateParametersList parameters() const;
 
+    protected:
+        QJsonArray templatePartToJson() const;
+        void templatePartFromJson(const QJsonArray &src, QStringList &errorList);
+
     private:
         TemplateParameters m_TemplateParameters;
     };

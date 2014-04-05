@@ -21,7 +21,7 @@ namespace entity {
         void removeParent(const QString &typeId);
         ParentsList parents() const;
 
-        SharedMethod addMethod(const QString &name);
+        SharedMethod addMethod(const QString &name); // FIXME: add choose type posibility
         MethodsList  getMethod(const QString &name);
         bool containsMethod(const QString &name);
         void removeMethods(const QString &name);
@@ -40,8 +40,8 @@ namespace entity {
         bool isFinal() const;
         void setFinalStatus(bool status);
 
-        QJsonObject toJson() const;
-        void fromJson(const QJsonObject &src, QStringList &errorList);
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
     private:
         Kind m_Kind;

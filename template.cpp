@@ -2,9 +2,14 @@
 #include "extendedtype.h"
 #include "type.h"
 #include "constants.cpp"
+#include "helpfunctions.h"
 
 #include <algorithm>
 #include <utility>
+
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QStringList>
 
 namespace entity {
 
@@ -32,6 +37,38 @@ namespace entity {
     TemplateParametersList Template::parameters() const
     {
         return m_TemplateParameters.values();
+    }
+
+    QJsonArray Template::templatePartToJson() const
+    {
+        QJsonArray result;
+
+        QJsonObject templateParameter;
+        for (auto value : m_TemplateParameters.values()) {
+            templateParameter.insert("Type name", value.first);
+            templateParameter.insert("Default type id", value.second);
+            result.append(templateParameter);
+        }
+
+        return result;
+    }
+
+    void Template::templatePartFromJson(const QJsonArray &src, QStringList &errorList)
+    {
+        m_TemplateParameters.clear();
+
+        TemplateParameter parameter;
+        QJsonObject obj;
+        for (auto value : src) {
+            obj = value.toObject();
+            utility::checkAndSet(obj, "Type name", errorList, [&obj, &parameter, this](){
+                parameter.first = obj["Type name"].toString();
+            });
+            utility::checkAndSet(obj, "Default type id", errorList, [&obj, &parameter, this](){
+                parameter.second = obj["Default type id"].toString();
+            });
+            m_TemplateParameters.insert(parameter.first, parameter);
+        }
     }
 
 } // namespace entity

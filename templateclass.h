@@ -10,6 +10,9 @@ namespace entity {
     public:
         TemplateClass();
         TemplateClass(const QString &name, const QString &scopeId);
+
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
     };
 
 } // namespace entity
