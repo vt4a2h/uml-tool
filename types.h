@@ -2,6 +2,7 @@
 
 #include <QHash>
 #include <QSet>
+#include <QStringList>
 #include <QMultiHash>
 #include <memory>
 
@@ -56,7 +57,7 @@ namespace entity {
     using SharedExtendedType     = std::shared_ptr<ExtendedType>;
     using ExtendedTypes          = QHash<QString, SharedExtendedType>;
     using ExtendedTypesList      = QList<SharedExtendedType>;
-    using ExtendedTypesRawList   = QList<QString>;
+    using ExtendedTypesIdList    = QStringList;
 
     class Scope;
     using SharedScope = std::shared_ptr<Scope>;

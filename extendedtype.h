@@ -6,6 +6,8 @@
 
 #include "types.h"
 
+class QJsonObject;
+
 namespace entity {
 
     class Scope;
@@ -14,7 +16,7 @@ namespace entity {
     class ExtendedType
     {
     public:
-        using Pl     = std::pair<QString, bool>;
+        using Pl     = std::pair<QString, bool>; // (pointer or link, const for pointer)
         using PlList = QList<Pl>;
 
         ExtendedType();
@@ -40,7 +42,7 @@ namespace entity {
         void addTemplateParameter(const QString &typeId);
         bool containsTemplateParameter(const QString &typeId) const;
         void removeTemplateParameters(const QString &typeId);
-        ExtendedTypesRawList templateParameters() const;
+        ExtendedTypesIdList templateParameters() const;
 
         QString id() const;
         void setId(const QString &id);
@@ -51,15 +53,18 @@ namespace entity {
         QString typeId() const;
         void setTypeId(const QString &typeId);
 
+        QJsonObject toJson() const;
+        void fromJson(const QJsonObject &src, QStringList &errorList);
+
     protected:
         bool    m_ConstStatus;
         QString m_ScopeId;
         QString m_TypeId;
         QString m_Alias;
         QString m_Id;
-        PlList  m_Pl;
+        PlList  m_PointersAndLinks;
 
-        ExtendedTypesRawList m_TemplateParameters;
+        ExtendedTypesIdList m_TemplateParameters;
     };
 
 } // namespace entity
