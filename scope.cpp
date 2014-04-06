@@ -8,7 +8,12 @@
 #include "extendedtype.h"
 #include "helpfunctions.h"
 #include "constants.cpp"
+
 #include <utility>
+
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QStringList>
 
 namespace entity {
 
@@ -63,16 +68,16 @@ namespace entity {
 
     SharedExtendedType Scope::getExtendedType(const QString &typeId) const
     {
-        return (m_ExtendedType.contains(typeId) ? m_ExtendedType[typeId] : nullptr);
+        return (m_ExtendedTypes.contains(typeId) ? m_ExtendedTypes[typeId] : nullptr);
     }
 
     SharedExtendedType Scope::takeExtendedType(const QString &typeId)
     {
         SharedExtendedType result(nullptr);
 
-        if (m_ExtendedType.contains(typeId)) {
-            result = m_ExtendedType[typeId];
-            m_ExtendedType.remove(typeId);
+        if (m_ExtendedTypes.contains(typeId)) {
+            result = m_ExtendedTypes[typeId];
+            m_ExtendedTypes.remove(typeId);
         }
 
         return result;
@@ -83,22 +88,22 @@ namespace entity {
         auto type = std::make_shared<ExtendedType>();
         type->setScopeId(m_Id);
 
-        return *m_ExtendedType.insert(type->id(), type);
+        return *m_ExtendedTypes.insert(type->id(), type);
     }
 
     bool Scope::containsExtendedType(const QString &typeId) const
     {
-        return m_ExtendedType.contains(typeId);
+        return m_ExtendedTypes.contains(typeId);
     }
 
     void Scope::removeExtendedType(const QString &typeId)
     {
-        m_ExtendedType.remove(typeId);
+        m_ExtendedTypes.remove(typeId);
     }
 
     ExtendedTypesList Scope::extendedTypes() const
     {
-        return m_ExtendedType.values();
+        return m_ExtendedTypes.values();
     }
 
     SharedScope Scope::getChildScope(const QString &typeId)
@@ -118,9 +123,11 @@ namespace entity {
         return result;
     }
 
-    SharedScope Scope::addChildScope(const QString &typeId)
+    SharedScope Scope::addChildScope(const QString &name)
     {
-        return *m_Scopes.insert(typeId, std::make_shared<Scope>(typeId, m_Id));
+        SharedScope scope = std::make_shared<Scope>(name, m_Id);
+        m_Scopes.insert(scope->id(), scope);
+        return scope;
     }
 
     bool Scope::containsChildScope(const QString &typeId)
@@ -156,6 +163,101 @@ namespace entity {
     void Scope::setParentScopeId(const QString &parentScopeId)
     {
         m_ParentScopeId = parentScopeId;
+    }
+
+    QJsonObject Scope::toJson() const
+    {
+        QJsonObject result;
+
+        result.insert("Name", m_Name);
+        result.insert("ID", m_Id);
+        result.insert("Parent ID", m_ParentScopeId);
+
+        QJsonArray scopes;
+        for (auto scope : m_Scopes.values()) scopes.append(scope->toJson());
+        result.insert("Scopes", scopes);
+
+        QJsonArray types;
+        for (auto type : m_Types.values()) types.append(type->toJson());
+        result.insert("Types", types);
+
+        QJsonArray extTypes;
+        for (auto extType : m_ExtendedTypes.values()) extTypes.append(extType->toJson());
+        result.insert("Extended types", extTypes);
+
+        return result;
+    }
+
+    void Scope::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        utility::checkAndSet(src, "Name", errorList, [&src, this](){ m_Name = src["Name"].toString(); });
+        utility::checkAndSet(src, "ID", errorList, [&src, this](){ m_Id = src["ID"].toString(); });
+        utility::checkAndSet(src, "Parent ID", errorList, [&src, this](){ m_ParentScopeId = src["Parent ID"].toString(); });
+
+        m_Scopes.clear();
+        utility::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
+            if (src["Scopes"].isArray()) {
+                SharedScope scope;
+                for (auto val : src["Scopes"].toArray()) {
+                    scope = std::make_shared<Scope>();
+                    scope->fromJson(val.toObject(), errorList);
+                    m_Scopes.insert(scope->id(), scope);
+                }
+            } else {
+                errorList << "Error: \"Scopes\" is not array";
+            }
+        });
+
+        m_Types.clear();
+        utility::checkAndSet(src, "Types", errorList, [&src, &errorList, this](){
+            if (src["Scopes"].isArray()) {
+                SharedType type;
+                QJsonObject obj;
+                for (auto val : src["Scopes"].toArray()) {
+                    obj = val.toObject();
+                    utility::checkAndSet(obj, "Kind of type", errorList,
+                                         [&obj, &type, &errorList, this](){
+                        type = makeType(static_cast<UserType>(obj["Kind of type"].toInt()));
+                        type->fromJson(obj, errorList);
+                        m_Types.insert(type->id(), type);
+                    });
+                }
+            } else {
+                errorList << "Error: \"Types\" is not array";
+            }
+        });
+
+        m_ExtendedTypes.clear();
+        utility::checkAndSet(src, "Extended types", errorList, [&src, &errorList, this](){
+            if (src["Extended types"].isArray()) {
+                SharedExtendedType type;
+                for (auto val : src["Extended types"].toArray()) {
+                    type = std::make_shared<ExtendedType>();
+                    type->fromJson(val.toObject(), errorList);
+                    m_ExtendedTypes.insert(type->id(), type);
+                }
+            } else {
+                errorList << "Error: \"Extended types\" is not array";
+            }
+        });
+    }
+
+    SharedType Scope::makeType(UserType type) const
+    {
+        switch (type) {
+            case BasicType:
+                return std::make_shared<Type>();
+            case UserClassType:
+                return std::make_shared<Class>();
+            case TemplateClassType:
+                return std::make_shared<TemplateClass>();
+            case UnionType:
+                return std::make_shared<Union>();
+            case EnumType:
+                return std::make_shared<Enum>();
+            default:
+                return std::make_shared<Type>();
+        }
     }
     
 } // namespace entity

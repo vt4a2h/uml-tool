@@ -6,6 +6,8 @@
 
 namespace entity {
 
+    enum UserType : int;
+
     class Scope
     {
     public:
@@ -30,7 +32,7 @@ namespace entity {
 
         SharedScope getChildScope(const QString &typeId);
         SharedScope takeChildScope(const QString &typeId);
-        SharedScope addChildScope(const QString &typeId);
+        SharedScope addChildScope(const QString &name = "");
         bool containsChildScope(const QString &typeId);
         void removeChildScope(const QString &typeId);
         ScopesList scopes() const;
@@ -41,15 +43,19 @@ namespace entity {
         QString parentScopeId() const;
         void setParentScopeId(const QString &parentScopeId);
 
+        QJsonObject toJson() const;
+        void fromJson(const QJsonObject &src, QStringList &errorList);
+
     private:
         void swap(Scope &other);
+        SharedType makeType(UserType type) const;
 
         QString m_Name;
         QString m_Id;
         QString m_ParentScopeId;
         Scopes m_Scopes;
         Types  m_Types;
-        ExtendedTypes m_ExtendedType;
+        ExtendedTypes m_ExtendedTypes;
     };
 
     template <class T>
