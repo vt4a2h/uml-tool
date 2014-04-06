@@ -21,7 +21,7 @@ namespace entity {
         void removeParent(const QString &typeId);
         ParentsList parents() const;
 
-        SharedMethod addMethod(const QString &name); // FIXME: add choose type posibility
+        template <class T = ClassMethod> std::shared_ptr<T> addMethod(const QString &name);
         MethodsList  getMethod(const QString &name);
         bool containsMethod(const QString &name);
         void removeMethods(const QString &name);
@@ -51,5 +51,15 @@ namespace entity {
         Methods m_Methods;
         Fields  m_Fields;
     };
+
+    template <class T>
+    std::shared_ptr<T> Class::addMethod(const QString &name)
+    {
+        typedef typename std::conditional<std::is_class<T>::value && std::is_base_of<ClassMethod, T>::value, T, ClassMethod>::type ResultType;
+        auto value = std::make_shared<ResultType>(name);
+        m_Methods.insertMulti(name, value);
+
+        return value;
+    }
 
 } // namespace entity

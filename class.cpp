@@ -52,11 +52,6 @@ namespace entity {
         return m_Parents.values();
     }
 
-    SharedMethod Class::addMethod(const QString &name)
-    {
-        return *m_Methods.insertMulti(name, std::make_shared<ClassMethod>(name));
-    }
-
     MethodsList Class::getMethod(const QString &name)
     {
         return m_Methods.values(name);
