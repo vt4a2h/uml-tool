@@ -8,3 +8,7 @@ namespace entity {
     enum LhsIdentificator : int {Explicit, Inline, MethodStatic, Virtual, Friend};
     enum FieldKeyword     : int {Volatile, Mutable, FieldStatic};
 }
+
+namespace relationship {
+    enum Multiplicity : int {NotSpecified, ZeroOrOne, One, ZeroOrInf, OneOrInf, Inf};
+}
