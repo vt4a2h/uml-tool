@@ -18,8 +18,12 @@ namespace relationship {
         Multiplicity multiplicity() const;
         void setMultiplicity(const Multiplicity &multiplicity);
 
+        QString description() const;
+        void setDescription(const QString &description);
+
     private:
         QString m_TypeId;
+        QString m_Description;
         Multiplicity m_Multiplicity;
     };
 

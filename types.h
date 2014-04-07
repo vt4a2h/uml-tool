@@ -64,3 +64,8 @@ namespace entity {
     using Scopes      = QHash<QString, SharedScope>;
     using ScopesList  = QList<SharedScope>;
 }
+
+namespace relationship {
+    class Node;
+    using SharedNode = std::shared_ptr<Node>;
+}

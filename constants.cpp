@@ -3,4 +3,5 @@ namespace {
     static constexpr char* STUB_ID = (char*)"_stub_type";
 
     static constexpr char* DEFAULT_NAME = (char*)"_noname";
+    static constexpr char* DEFAULT_DESCRIPTION = (char*)"_nothing";
 }

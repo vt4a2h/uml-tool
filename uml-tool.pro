@@ -16,7 +16,8 @@ SOURCES += \
     templateclassmethod.cpp \
     helpfunctions.cpp \
     constants.cpp \
-    node.cpp
+    node.cpp \
+    relation.cpp
 
 HEADERS += \
     scope.h \
@@ -33,4 +34,5 @@ HEADERS += \
     templateclass.h \
     templateclassmethod.h \
     helpfunctions.h \
-    node.h
+    node.h \
+    relation.h
