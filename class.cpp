@@ -23,6 +23,8 @@ namespace entity {
 
     Class::Class(const QString &name, const QString &scopeId)
         : Type(name, scopeId)
+        , m_Kind(ClassType)
+        , m_FinalStatus(false)
     {
         m_KindOfType = UserClassType;
     }
@@ -50,6 +52,11 @@ namespace entity {
     ParentsList Class::parents() const
     {
         return m_Parents.values();
+    }
+
+    void Class::addMethod(SharedMethod method)
+    {
+        m_Methods.insert(method->name(), method);
     }
 
     MethodsList Class::getMethod(const QString &name)

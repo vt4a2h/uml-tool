@@ -12,18 +12,25 @@ namespace relationship {
         Relation(const QString &tailTypeId, const QString &headTypeId);
         virtual ~Relation();
 
-        // TODO: add firs and second nodes maker
-
         QString description() const;
         void setDescription(const QString &description);
 
-        virtual make() = 0;
-        virtual clear() = 0;
+        virtual void make();
+        virtual void clear();
 
-    private:
+        // TODO: add method for get/set global database
+        // TODO: add method for get/set project database
+
+    protected:
         SharedNode m_TailNode;
         SharedNode m_HeadNode;
+
+        entity::SharedClass m_HeadClass;
+        entity::SharedClass m_TailClass;
+
         QString m_Description;
+
+        // TODO: add varibles for global and local db
     };
 
 } // namespace relationship

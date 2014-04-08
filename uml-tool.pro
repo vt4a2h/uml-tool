@@ -17,7 +17,9 @@ SOURCES += \
     helpfunctions.cpp \
     constants.cpp \
     node.cpp \
-    relation.cpp
+    relation.cpp \
+    generalization.cpp \
+    realization.cpp
 
 HEADERS += \
     scope.h \
@@ -35,4 +37,6 @@ HEADERS += \
     templateclassmethod.h \
     helpfunctions.h \
     node.h \
-    relation.h
+    relation.h \
+    generalization.h \
+    realization.h
