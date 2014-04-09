@@ -20,7 +20,7 @@ namespace entity {
         : m_Name(name)
         , m_Section(Public)
         , m_ConstStatus(false)
-        , m_ReturnTypeId(STUB_ID)
+        , m_ReturnTypeId(VOID_ID)
         , m_RhsIdentificator(None)
     {
     }

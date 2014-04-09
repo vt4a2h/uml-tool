@@ -20,7 +20,8 @@ SOURCES += \
     relation.cpp \
     generalization.cpp \
     realization.cpp \
-    dependency.cpp
+    dependency.cpp \
+    association.cpp
 
 HEADERS += \
     scope.h \
@@ -41,4 +42,5 @@ HEADERS += \
     relation.h \
     generalization.h \
     realization.h \
-    dependency.h
+    dependency.h \
+    association.h
