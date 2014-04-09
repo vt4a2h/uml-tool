@@ -11,4 +11,7 @@ namespace entity {
 
 namespace relationship {
     enum Multiplicity : int {NotSpecified, ZeroOrOne, One, ZeroOrInf, OneOrInf, Inf};
+    enum RelationType : int {SimpleRelation, AssociationRelation, DependencyRelation,
+                             GeneralizationRelation, RealizationRelation, CompositionRelation,
+                             AggregationRelation, MultiRelation};
 }

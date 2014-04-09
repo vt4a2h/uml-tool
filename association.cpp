@@ -17,6 +17,7 @@ namespace relationship {
         : Relation(tailTypeId, headTypeId)
         , m_GetSetTypeId(headTypeId)
     {
+        m_RelationType = AssociationRelation;
     }
 
     void Association::make()

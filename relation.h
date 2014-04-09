@@ -5,6 +5,8 @@
 
 namespace relationship {
 
+    enum RelationType : int;
+
     class Relation
     {
     public:
@@ -21,6 +23,9 @@ namespace relationship {
         // TODO: add method for get/set global database
         // TODO: add method for get/set project database
 
+        RelationType relationType() const;
+        void setRelationType(const RelationType &relationType);
+
     protected:
         SharedNode m_TailNode;
         SharedNode m_HeadNode;
@@ -29,6 +34,7 @@ namespace relationship {
         entity::SharedClass m_TailClass;
 
         QString m_Description;
+        RelationType m_RelationType;
 
         // TODO: add varibles for global and local db
     };

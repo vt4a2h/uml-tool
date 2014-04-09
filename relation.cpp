@@ -1,6 +1,7 @@
 #include "relation.h"
 #include "node.h"
 #include "class.h"
+#include "enums.h"
 #include "constants.cpp"
 
 namespace relationship {
@@ -15,6 +16,7 @@ namespace relationship {
         , m_HeadNode(std::make_shared<Node>(headTypeId))
         , m_HeadClass(std::make_shared<entity::Class>()) // NOTE: stub. load class from db
         , m_TailClass(std::make_shared<entity::Class>()) // NOTE: stub. load class from db
+        , m_RelationType(SimpleRelation)
     {
     }
 
@@ -39,5 +41,16 @@ namespace relationship {
     void Relation::clear()
     {
     }
+
+    RelationType Relation::relationType() const
+    {
+        return m_RelationType;
+    }
+
+    void Relation::setRelationType(const RelationType &relationType)
+    {
+        m_RelationType = relationType;
+    }
+
 
 } // namespace relationship

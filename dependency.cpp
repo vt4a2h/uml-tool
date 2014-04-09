@@ -1,6 +1,7 @@
 #include "dependency.h"
 #include "classmethod.h"
 #include "class.h"
+#include "enums.h"
 #include "constants.cpp"
 
 namespace relationship {
@@ -13,6 +14,7 @@ namespace relationship {
     Dependency::Dependency(const QString &tailTypeId, const QString &headTypeId)
         : Relation(tailTypeId, headTypeId)
     {
+        m_RelationType = DependencyRelation;
     }
 
     void Dependency::make()

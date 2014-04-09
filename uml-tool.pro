@@ -21,7 +21,8 @@ SOURCES += \
     generalization.cpp \
     realization.cpp \
     dependency.cpp \
-    association.cpp
+    association.cpp \
+    multiplyassociation.cpp
 
 HEADERS += \
     scope.h \
@@ -43,4 +44,5 @@ HEADERS += \
     generalization.h \
     realization.h \
     dependency.h \
-    association.h
+    association.h \
+    multiplyassociation.h

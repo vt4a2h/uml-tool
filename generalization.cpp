@@ -14,6 +14,7 @@ namespace relationship {
         :  Relation(tailTypeId, headTypeId)
         , m_Section(entity::Public)
     {
+        m_RelationType = GeneralizationRelation;
     }
 
     entity::Section Generalization::section() const

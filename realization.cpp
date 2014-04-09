@@ -14,6 +14,7 @@ namespace relationship {
     Realization::Realization(const QString &tailTypeId, const QString &headTypeId)
         : Generalization(tailTypeId, headTypeId)
     {
+        m_RelationType = RealizationRelation;
     }
 
     void Realization::addMethods(const entity::MethodsList &methods)
