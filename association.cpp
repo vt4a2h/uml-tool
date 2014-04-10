@@ -22,12 +22,14 @@ namespace relationship {
 
     void Association::make()
     {
+        makeField();
         makeGetter();
         makeSetter();
     }
 
     void Association::clear()
     {
+        removeField();
         removeGetter();
         removeSetter();
     }
@@ -59,6 +61,26 @@ namespace relationship {
     void Association::removeSetter()
     {
         m_TailClass->removeMethods(QString("src_%1").arg(m_HeadClass->name().toLower()));
+    }
+
+    QString Association::fieldtypeId() const
+    {
+        return m_FieldtypeId;
+    }
+
+    void Association::setFieldtypeId(const QString &fieldtypeId)
+    {
+        m_FieldtypeId = fieldtypeId;
+    }
+
+    void Association::makeField()
+    {
+        m_TailClass->addField(m_HeadClass->name(), m_FieldtypeId);
+    }
+
+    void Association::removeField()
+    {
+        m_TailClass->removeField("m_" + m_HeadClass->name());
     }
 
     QString Association::getGetSetTypeId() const

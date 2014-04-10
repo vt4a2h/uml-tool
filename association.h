@@ -16,13 +16,19 @@ namespace relationship {
         QString getGetSetTypeId() const;
         void setGetSetTypeId(const QString &getterReturnTypeId);
 
+        QString fieldtypeId() const;
+        void setFieldtypeId(const QString &fieldtypeId);
+
     protected:
+        virtual void makeField();
+        virtual void removeField();
         virtual void makeGetter();
         virtual void makeSetter();
         virtual void removeGetter();
         virtual void removeSetter();
 
         QString m_GetSetTypeId;
+        QString m_FieldtypeId;
     };
 
 } // namespace relationship
