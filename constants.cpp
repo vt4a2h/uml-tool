@@ -5,4 +5,8 @@ namespace {
 
     static constexpr char* DEFAULT_NAME = (char*)"_noname";
     static constexpr char* DEFAULT_DESCRIPTION = (char*)"_nothing";
+
+    static constexpr char* DEFAULT_DATABASE_NAME = (char*)"_database";
+    static constexpr char* DEFAULT_DATABASE_PATH = (char*)"";
+    static constexpr char* DEFAULT_DATABASE_EXTENSION = (char*)"qutdb";
 }
