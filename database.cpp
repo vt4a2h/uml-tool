@@ -52,9 +52,9 @@ namespace db {
             scope = std::make_shared<entity::Scope>(name, GLOBAL_SCOPE_ID);
             m_Scopes.insert(scope->id(), scope);
         } else {
-            auto searchResults = std::move(depthScopeFind(parentScopeId));
+            auto searchResults = std::move(makeDepthIdList(parentScopeId));
             if (!searchResults.isEmpty()) {
-                auto depthScope = depthGetScope(searchResults);
+                auto depthScope = getScopeWithDepthList(searchResults);
                 if (depthScope) scope = depthScope->addChildScope(name);
             }
         }
@@ -77,7 +77,12 @@ namespace db {
         return m_Scopes.values();
     }
 
-    QStringList Database::depthScopeFind(const QString &id) const
+    entity::SharedScope Database::depthScopeSearch(const QString &scopeId) const
+    {
+        return getScopeWithDepthList(makeDepthIdList(scopeId));
+    }
+
+    QStringList Database::makeDepthIdList(const QString &id) const
     {
         QStringList result;
 
@@ -93,7 +98,7 @@ namespace db {
         return result;
     }
 
-    entity::SharedScope Database::depthGetScope(const QStringList &ids) const
+    entity::SharedScope Database::getScopeWithDepthList(const QStringList &ids) const
     {
         entity::SharedScope result(nullptr);
         if (!ids.isEmpty() && containsScope(ids[0])) {

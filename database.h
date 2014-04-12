@@ -21,8 +21,7 @@ namespace db {
         void removeScope(const QString &id);
         entity::ScopesList scopes();
 
-        QStringList depthScopeFind(const QString &id) const;
-        entity::SharedScope depthGetScope(const QStringList &ids) const;
+        entity::SharedScope depthScopeSearch(const QString &scopeId) const;
 
         void load(QStringList &errorList);
         void clear();
@@ -32,6 +31,8 @@ namespace db {
         void fromJson(const QJsonObject &src, QStringList &errorList);
 
     private:
+        QStringList makeDepthIdList(const QString &id) const;
+        entity::SharedScope getScopeWithDepthList(const QStringList &ids) const;
         QString makeFullPath() const;
         void recursiveFind(entity::SharedScope scope, const QString &id, QStringList &ids) const;
 
