@@ -10,6 +10,12 @@ namespace db {
     public:
         ProjectDatabase(const QString &name = "", const QString &path = "");
 
+        relationship::SharedRelation getRelation(const QString &id) const;
+        void addRelation(relationship::SharedRelation relation);
+        bool containsRelation(const QString &id) const;
+        void removeRelation(const QString &id);
+        relationship::RelationsList relations() const;
+
         void clear() override;
 
         QJsonObject toJson() const override;
