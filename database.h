@@ -8,6 +8,7 @@ namespace db {
     {
     public:
         Database(const QString &name = "", const QString &path = "");
+        virtual ~Database();
 
         QString path() const;
         void setPath(const QString &path);
@@ -24,11 +25,11 @@ namespace db {
         entity::SharedScope depthScopeSearch(const QString &scopeId) const;
 
         void load(QStringList &errorList);
-        void clear();
         void save() const;
+        virtual void clear();
 
-        QJsonObject toJson() const;
-        void fromJson(const QJsonObject &src, QStringList &errorList);
+        virtual QJsonObject toJson() const;
+        virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
     private:
         QStringList makeDepthIdList(const QString &id) const;
