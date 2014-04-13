@@ -3,6 +3,8 @@
 #include "types.h"
 #include <QString>
 
+class QJsonObject;
+
 namespace relationship {
 
     enum RelationType : int;
@@ -26,6 +28,12 @@ namespace relationship {
         RelationType relationType() const;
         void setRelationType(const RelationType &relationType);
 
+        QString id() const;
+        void setId(const QString &id);
+
+        QJsonObject toJson() const;
+        void fromJson(const QJsonObject &src, QStringList &errorList);
+
     protected:
         SharedNode m_TailNode;
         SharedNode m_HeadNode;
@@ -33,6 +41,7 @@ namespace relationship {
         entity::SharedClass m_HeadClass;
         entity::SharedClass m_TailClass;
 
+        QString m_Id;
         QString m_Description;
         RelationType m_RelationType;
 

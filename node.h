@@ -2,6 +2,8 @@
 
 #include <QString>
 
+class QJsonObject;
+
 namespace relationship {
 
     enum Multiplicity : int;
@@ -20,6 +22,9 @@ namespace relationship {
 
         QString typeId() const;
         void setTypeId(const QString &typeId);
+
+        QJsonObject toJson() const;
+        void fromJson(const QJsonObject &src, QStringList &errorList);
 
     private:
         QString m_TypeId;
