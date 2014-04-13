@@ -23,7 +23,8 @@ SOURCES += \
     dependency.cpp \
     association.cpp \
     multiplyassociation.cpp \
-    database.cpp
+    database.cpp \
+    projectdatabase.cpp
 
 HEADERS += \
     scope.h \
@@ -47,4 +48,5 @@ HEADERS += \
     dependency.h \
     association.h \
     multiplyassociation.h \
-    database.h
+    database.h \
+    projectdatabase.h

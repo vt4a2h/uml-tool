@@ -19,6 +19,11 @@ namespace db {
     {
     }
 
+    Database::~Database()
+    {
+
+    }
+
     QString Database::path() const
     {
         return m_Path;
@@ -158,7 +163,7 @@ namespace db {
 
     void Database::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        m_Scopes.clear();
+        clear();
         utility::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
             if (src["Scopes"].isArray()) {
                 entity::SharedScope scope;
