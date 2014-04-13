@@ -158,8 +158,12 @@ namespace entity {
 
     void Class::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Kind", errorList, [&src, this](){ m_Kind = static_cast<Kind>(src["Kind"].toInt()); });
-        utility::checkAndSet(src, "Final status", errorList, [&src, this](){ m_FinalStatus = src["Kind"].toBool(); });
+        utility::checkAndSet(src, "Kind", errorList, [&src, this](){
+            m_Kind = static_cast<Kind>(src["Kind"].toInt());
+        });
+        utility::checkAndSet(src, "Final status", errorList, [&src, this](){
+            m_FinalStatus = src["Final status"].toBool();
+        });
 
         m_Parents.clear();
         utility::checkAndSet(src, "Parents", errorList, [&src, &errorList, this](){
@@ -168,8 +172,12 @@ namespace entity {
             if (src["Parents"].isArray()) {
                 for (auto value : src["Parents"].toArray()) {
                     o = value.toObject();
-                    utility::checkAndSet(o, "Id", errorList, [&o, &p, this](){ p.first = o["Id"].toString(); });
-                    utility::checkAndSet(o, "Section", errorList, [&o, &p, this](){ p.second = static_cast<Section>(o["Section"].toInt()); });
+                    utility::checkAndSet(o, "Id", errorList, [&o, &p, this](){
+                        p.first = o["Id"].toString();
+                    });
+                    utility::checkAndSet(o, "Section", errorList, [&o, &p, this](){
+                        p.second = static_cast<Section>(o["Section"].toInt());
+                    });
                     m_Parents.insert(p.first, p);
                 }
             } else {
