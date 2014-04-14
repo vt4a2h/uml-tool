@@ -9,7 +9,8 @@ namespace relationship {
     {
     public:
         Realization();
-        Realization(const QString &tailTypeId, const QString &headTypeId);
+        Realization(const QString &tailTypeId, const QString &headTypeId,
+                    const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
 
         void addMethods(const entity::MethodsList &methods);
         entity::MethodsList methods() const;

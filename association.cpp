@@ -9,12 +9,12 @@
 namespace relationship {
 
     Association::Association()
-        : Association(STUB_ID, STUB_ID)
+        : Association(STUB_ID, STUB_ID, nullptr, nullptr)
     {
     }
 
-    Association::Association(const QString &tailTypeId, const QString &headTypeId)
-        : Relation(tailTypeId, headTypeId)
+    Association::Association(const QString &tailTypeId, const QString &headTypeId, const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
+        : Relation(tailTypeId, headTypeId, globalDatabase, projectDatabase)
         , m_GetSetTypeId(headTypeId)
     {
         m_RelationType = AssociationRelation;

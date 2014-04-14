@@ -74,3 +74,8 @@ namespace relationship {
     using Relations = QHash<QString, SharedRelation>;
     using RelationsList = QList<SharedRelation>;
 }
+
+namespace db {
+    class Database;
+    using SharedDatabase = std::shared_ptr<Database>;
+}

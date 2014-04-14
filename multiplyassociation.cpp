@@ -8,12 +8,12 @@
 namespace relationship {
 
     MultiplyAssociation::MultiplyAssociation()
-        : MultiplyAssociation(STUB_ID, STUB_ID)
+        : MultiplyAssociation(STUB_ID, STUB_ID, nullptr, nullptr)
     {
     }
 
-    MultiplyAssociation::MultiplyAssociation(const QString &tailTypeId, const QString &headTypeId)
-        : Association(tailTypeId, headTypeId)
+    MultiplyAssociation::MultiplyAssociation(const QString &tailTypeId, const QString &headTypeId, const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
+        : Association(tailTypeId, headTypeId, globalDatabase, projectDatabase)
     {
         m_RelationType = MultiRelation;
     }
