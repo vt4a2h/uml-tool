@@ -17,7 +17,7 @@ namespace db {
         return (m_Relations.contains(id) ? m_Relations[id] : nullptr);
     }
 
-    void ProjectDatabase::addRelation(relationship::SharedRelation relation)
+    void ProjectDatabase::addRelation(const relationship::SharedRelation &relation)
     {
         m_Relations.insert(relation->id(), relation);
     }
