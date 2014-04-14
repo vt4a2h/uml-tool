@@ -74,7 +74,7 @@ namespace entity {
         m_Methods.remove(name);
     }
 
-    void Class::removeMethod(SharedMethod method)
+    void Class::removeMethod(const SharedMethod &method)
     {
         m_Methods.remove(method->name(), method);
     }
