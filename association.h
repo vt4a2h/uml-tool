@@ -8,7 +8,8 @@ namespace relationship {
     {
     public:
         Association();
-        Association(const QString &tailTypeId, const QString &headTypeId);
+        Association(const QString &tailTypeId, const QString &headTypeId,
+                    const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
 
         void make() override;
         void clear() override;

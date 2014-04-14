@@ -6,13 +6,13 @@
 namespace relationship {
 
     Generalization::Generalization()
-        : Generalization(STUB_ID, STUB_ID)
+        : Generalization(STUB_ID, STUB_ID, nullptr, nullptr)
     {
     }
 
-    Generalization::Generalization(const QString &tailTypeId, const QString &headTypeId)
-        :  Relation(tailTypeId, headTypeId)
-        , m_Section(entity::Public)
+    Generalization::Generalization(const QString &tailTypeId, const QString &headTypeId, const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
+        :  Relation(tailTypeId, headTypeId, globalDatabase, projectDatabase)
+        ,  m_Section(entity::Public)
     {
         m_RelationType = GeneralizationRelation;
     }

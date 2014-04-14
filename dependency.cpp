@@ -7,12 +7,12 @@
 namespace relationship {
 
     Dependency::Dependency()
-        : Dependency(STUB_ID, STUB_ID)
+        : Dependency(STUB_ID, STUB_ID, nullptr, nullptr)
     {
     }
 
-    Dependency::Dependency(const QString &tailTypeId, const QString &headTypeId)
-        : Relation(tailTypeId, headTypeId)
+    Dependency::Dependency(const QString &tailTypeId, const QString &headTypeId, const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
+        : Relation(tailTypeId, headTypeId, globalDatabase, projectDatabase)
     {
         m_RelationType = DependencyRelation;
     }

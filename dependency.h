@@ -8,7 +8,8 @@ namespace relationship {
     {
     public:
         Dependency();
-        Dependency(const QString &tailTypeId, const QString &headTypeId);
+        Dependency(const QString &tailTypeId, const QString &headTypeId,
+                   const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
 
         void make() override;
         void clear() override;

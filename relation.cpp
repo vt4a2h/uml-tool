@@ -3,6 +3,7 @@
 #include "class.h"
 #include "enums.h"
 #include "helpfunctions.h"
+#include "database.h"
 #include "constants.cpp"
 
 #include <QJsonObject>
@@ -10,17 +11,20 @@
 namespace relationship {
 
     Relation::Relation()
-        : Relation(STUB_ID, STUB_ID)
+        : Relation(STUB_ID, STUB_ID, nullptr, nullptr)
     {
     }
 
-    Relation::Relation(const QString &tailTypeId, const QString &headTypeId)
+    Relation::Relation(const QString &tailTypeId, const QString &headTypeId,
+                       const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
         : m_TailNode(std::make_shared<Node>(tailTypeId))
         , m_HeadNode(std::make_shared<Node>(headTypeId))
-        , m_HeadClass(std::make_shared<entity::Class>()) // NOTE: stub. load class from db
-        , m_TailClass(std::make_shared<entity::Class>()) // NOTE: stub. load class from db
+//        , m_HeadClass(std::make_shared<entity::Class>()) // NOTE: stub. load class from db
+//        , m_TailClass(std::make_shared<entity::Class>()) // NOTE: stub. load class from db
         , m_Id(utility::genId())
         , m_RelationType(SimpleRelation)
+        , m_GlobalDatabase(globalDatabase)
+        , m_ProjectDatabase(projectDatabase)
     {
     }
 
@@ -99,5 +103,27 @@ namespace relationship {
             // TODO: find tail class in db and add it
         });
     }
+
+    db::SharedDatabase Relation::globalDatabase() const
+    {
+        return m_GlobalDatabase;
+    }
+
+    void Relation::setGlobalDatabase(const db::SharedDatabase &globalDatabase)
+    {
+        m_GlobalDatabase = globalDatabase;
+    }
+
+    db::SharedDatabase Relation::projectDatabase() const
+    {
+        return m_ProjectDatabase;
+    }
+
+    void Relation::setProjectDatabase(const db::SharedDatabase &projectDatabase)
+    {
+        m_ProjectDatabase = projectDatabase;
+    }
+
+
 
 } // namespace relationship

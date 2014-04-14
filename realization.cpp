@@ -7,12 +7,12 @@
 namespace relationship {
 
     Realization::Realization()
-        : Realization(STUB_ID, STUB_ID)
+        : Realization(STUB_ID, STUB_ID, nullptr, nullptr)
     {
     }
 
-    Realization::Realization(const QString &tailTypeId, const QString &headTypeId)
-        : Generalization(tailTypeId, headTypeId)
+    Realization::Realization(const QString &tailTypeId, const QString &headTypeId, const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
+        : Generalization(tailTypeId, headTypeId, globalDatabase, projectDatabase)
     {
         m_RelationType = RealizationRelation;
     }
