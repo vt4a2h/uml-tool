@@ -11,7 +11,7 @@ namespace db {
         ProjectDatabase(const QString &name = "", const QString &path = "");
 
         relationship::SharedRelation getRelation(const QString &id) const;
-        void addRelation(relationship::SharedRelation relation);
+        void addRelation(const relationship::SharedRelation &relation);
         bool containsRelation(const QString &id) const;
         void removeRelation(const QString &id);
         relationship::RelationsList relations() const;
