@@ -26,7 +26,7 @@ namespace entity {
         MethodsList  getMethod(const QString &name);
         bool containsMethod(const QString &name);
         void removeMethods(const QString &name);
-        void removeMethod(SharedMethod method);
+        void removeMethod(const SharedMethod &method);
         MethodsList methods() const;
 
         SharedField addField(const QString &name, const QString &typeId);
