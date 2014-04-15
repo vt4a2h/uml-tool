@@ -87,6 +87,18 @@ namespace db {
         return getScopeWithDepthList(makeDepthIdList(scopeId));
     }
 
+    entity::SharedType Database::depthTypeSearch(const QString &typeId) const
+    {
+        entity::SharedType result(nullptr);
+
+        for (auto scope : m_Scopes.values()) {
+            getDepthType(scope, typeId, result);
+            if (result) break;
+        }
+
+        return result;
+    }
+
     QStringList Database::makeDepthIdList(const QString &id) const
     {
         QStringList result;
@@ -116,6 +128,20 @@ namespace db {
         }
 
         return result;
+    }
+
+    void Database::getDepthType(const entity::SharedScope &scope, const QString &id, entity::SharedType &result) const
+    {
+        if (scope->containsType(id)) {
+            result = scope->getType(id);
+            return;
+        } else if (scope->hasChildScopes()){
+            for (auto child_scope : scope->scopes()) {
+                if (result) break;
+                getDepthType(child_scope, id, result);
+            }
+        }
+
     }
 
     void Database::load(QStringList &errorList)
