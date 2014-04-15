@@ -26,6 +26,8 @@ namespace relationship {
         , m_GlobalDatabase(globalDatabase)
         , m_ProjectDatabase(projectDatabase)
     {
+        m_HeadClass = tryToFindType(headTypeId);
+        m_TailClass = tryToFindType(tailTypeId);
     }
 
     Relation::~Relation()
@@ -122,6 +124,12 @@ namespace relationship {
     void Relation::setProjectDatabase(const db::SharedDatabase &projectDatabase)
     {
         m_ProjectDatabase = projectDatabase;
+    }
+
+    entity::SharedType Relation::tryToFindType(const QString &typeId) const
+    {
+        entity::SharedType result = m_ProjectDatabase->depthTypeSearch(typeId);
+        return (result ? result : m_GlobalDatabase->depthTypeSearch(typeId));
     }
 
 

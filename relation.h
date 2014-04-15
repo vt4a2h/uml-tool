@@ -43,11 +43,14 @@ namespace relationship {
         void setProjectDatabase(const db::SharedDatabase &projectDatabase);
 
     protected:
+        entity::SharedType tryToFindType(const QString &typeId) const;
+
         SharedNode m_TailNode;
         SharedNode m_HeadNode;
 
-        entity::SharedClass m_HeadClass;
-        entity::SharedClass m_TailClass;
+        // FIXME: add casts to Class pointers in Association, Dependency, Realization etc.
+        entity::SharedType m_HeadClass;
+        entity::SharedType m_TailClass;
 
         QString m_Id;
         QString m_Description;
