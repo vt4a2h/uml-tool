@@ -34,6 +34,7 @@ namespace entity {
         SharedScope takeChildScope(const QString &typeId);
         SharedScope addChildScope(const QString &name = "");
         bool containsChildScope(const QString &typeId);
+        bool hasChildScopes() const;
         void removeChildScope(const QString &typeId);
         ScopesList scopes() const;
 

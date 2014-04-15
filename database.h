@@ -23,6 +23,7 @@ namespace db {
         entity::ScopesList scopes();
 
         entity::SharedScope depthScopeSearch(const QString &scopeId) const;
+        entity::SharedType  depthTypeSearch(const QString &typeId)   const;
 
         void load(QStringList &errorList);
         void save() const;
@@ -34,6 +35,7 @@ namespace db {
     private:
         QStringList makeDepthIdList(const QString &id) const;
         entity::SharedScope getScopeWithDepthList(const QStringList &ids) const;
+        void getDepthType(const entity::SharedScope &scope, const QString &id, entity::SharedType &result) const;
         QString makeFullPath() const;
         void recursiveFind(entity::SharedScope scope, const QString &id, QStringList &ids) const;
 
