@@ -43,10 +43,14 @@ namespace relationship {
         void setProjectDatabase(const db::SharedDatabase &projectDatabase);
 
     protected:
+        bool addHeadClass(const QString &id);
+        bool addTailClass(const QString &id);
+        entity::SharedType tryToFindType(const QString &typeId) const;
+
         SharedNode m_TailNode;
         SharedNode m_HeadNode;
 
-        entity::SharedClass m_HeadClass;
+        entity::SharedType m_HeadClass;
         entity::SharedClass m_TailClass;
 
         QString m_Id;

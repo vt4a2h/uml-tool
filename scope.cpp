@@ -135,6 +135,11 @@ namespace entity {
         return m_Scopes.contains(typeId);
     }
 
+    bool Scope::hasChildScopes() const
+    {
+        return !m_Scopes.isEmpty();
+    }
+
     void Scope::removeChildScope(const QString &typeId)
     {
         m_Scopes.remove(typeId);

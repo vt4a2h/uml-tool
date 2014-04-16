@@ -19,13 +19,13 @@ namespace relationship {
                        const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
         : m_TailNode(std::make_shared<Node>(tailTypeId))
         , m_HeadNode(std::make_shared<Node>(headTypeId))
-//        , m_HeadClass(std::make_shared<entity::Class>()) // NOTE: stub. load class from db
-//        , m_TailClass(std::make_shared<entity::Class>()) // NOTE: stub. load class from db
         , m_Id(utility::genId())
         , m_RelationType(SimpleRelation)
         , m_GlobalDatabase(globalDatabase)
         , m_ProjectDatabase(projectDatabase)
     {
+        Q_ASSERT(addHeadClass(headTypeId));
+        Q_ASSERT(addTailClass(tailTypeId));
     }
 
     Relation::~Relation()
@@ -96,11 +96,11 @@ namespace relationship {
         });
         utility::checkAndSet(src, "Head node", errorList, [&src, &errorList, this](){
             m_HeadNode->fromJson(src["Head node"].toObject(), errorList);
-            // TODO: find head class in db and add it
+            Q_ASSERT(addHeadClass(m_HeadNode->typeId()));
         });
         utility::checkAndSet(src, "Tail node", errorList, [&src, &errorList, this](){
             m_TailNode->fromJson(src["Tail node"].toObject(), errorList);
-            // TODO: find tail class in db and add it
+            Q_ASSERT(addTailClass(m_TailNode->typeId()));
         });
     }
 
@@ -122,6 +122,24 @@ namespace relationship {
     void Relation::setProjectDatabase(const db::SharedDatabase &projectDatabase)
     {
         m_ProjectDatabase = projectDatabase;
+    }
+
+    bool Relation::addHeadClass(const QString &id)
+    {
+        m_HeadClass = tryToFindType(id);
+        return m_HeadClass.operator bool();
+    }
+
+    bool Relation::addTailClass(const QString &id)
+    {
+        m_TailClass = std::dynamic_pointer_cast<entity::Class>(tryToFindType(id));
+        return m_TailClass.operator bool();
+    }
+
+    entity::SharedType Relation::tryToFindType(const QString &typeId) const
+    {
+        entity::SharedType result = m_ProjectDatabase->depthTypeSearch(typeId);
+        return (result ? result : m_GlobalDatabase->depthTypeSearch(typeId));
     }
 
 
