@@ -30,10 +30,12 @@ namespace relationship {
     void Realization::make()
     {
         entity::SharedMethod m;
+        entity::SharedClass head = std::dynamic_pointer_cast<entity::Class>(m_HeadClass);
+        Q_ASSERT(head);
         for (auto method : m_Methods) {
             m = std::make_shared<entity::ClassMethod>(*method.get());
             m->setRhsIdentificator(entity::PureVirtual);
-            m_HeadClass->addMethod(m);
+            head->addMethod(m);
 
             m = std::make_shared<entity::ClassMethod>(*method.get());
             m->setRhsIdentificator(entity::Override);
@@ -43,8 +45,10 @@ namespace relationship {
 
     void Realization::clear()
     {
+        entity::SharedClass head = std::dynamic_pointer_cast<entity::Class>(m_HeadClass);
+        Q_ASSERT(head);
         for (auto method : m_Methods) {
-            m_HeadClass->removeMethods(method->name());
+            head->removeMethods(method->name());
             m_TailClass->removeMethods(method->name());
         }
     }
