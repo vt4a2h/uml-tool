@@ -31,7 +31,7 @@ namespace relationship {
     {
         entity::SharedMethod m;
         entity::SharedClass head = std::dynamic_pointer_cast<entity::Class>(m_HeadClass);
-        Q_ASSERT(head);
+        Q_ASSERT_X(head, "Realization::make", "head class not found or not Class");
         for (auto method : m_Methods) {
             m = std::make_shared<entity::ClassMethod>(*method.get());
             m->setRhsIdentificator(entity::PureVirtual);
@@ -46,7 +46,7 @@ namespace relationship {
     void Realization::clear()
     {
         entity::SharedClass head = std::dynamic_pointer_cast<entity::Class>(m_HeadClass);
-        Q_ASSERT(head);
+        Q_ASSERT_X(head, "Realization::clear", "head class not found or not Class");
         for (auto method : m_Methods) {
             head->removeMethods(method->name());
             m_TailClass->removeMethods(method->name());

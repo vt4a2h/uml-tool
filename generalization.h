@@ -18,10 +18,10 @@ namespace relationship {
         entity::Section section() const;
         void setSection(const entity::Section &section);
 
-        void make() override;
         void clear() override;
 
     protected:
+        void make() override;
         entity::Section m_Section;
     };
 

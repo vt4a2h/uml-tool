@@ -9,4 +9,10 @@ namespace {
     static constexpr char* DEFAULT_DATABASE_NAME = (char*)"_database";
     static constexpr char* DEFAULT_DATABASE_PATH = (char*)"";
     static constexpr char* DEFAULT_DATABASE_EXTENSION = (char*)"qutdb";
+
+    static constexpr char* QTYPE_HASH_ID      = (char*)"_q_hash";
+    static constexpr char* QTYPE_MULTIHASH_ID = (char*)"_q_multihash";
+    static constexpr char* QTYPE_LIST_ID      = (char*)"_q_list";
+    static constexpr char* QTYPE_SET_ID       = (char*)"_q_set";
+    static constexpr char* QTYPE_MULTISET_ID  = (char*)"_q_multiset";
 }

@@ -61,8 +61,6 @@ namespace relationship {
         auto setter = m_TailClass->makeMethod(setterName);
         auto param = setter->addParameter(QString("src_%1").arg(m_HeadClass->name().toLower()), m_GetSetTypeId);
         param->setPrefix("");
-        // TODO: if (m_GetterReturnTypeId == head->id()... make and add new type to DB
-        // TODO: if (container type == hash then... add two parameters)
     }
 
     void MultiplyAssociation::makeField()
