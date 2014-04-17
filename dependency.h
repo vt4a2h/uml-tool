@@ -11,11 +11,13 @@ namespace relationship {
         Dependency(const QString &tailTypeId, const QString &headTypeId,
                    const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
 
-        void make() override;
         void clear() override;
 
         entity::SharedMethod method() const;
         void setMethod(const entity::SharedMethod &method);
+
+    protected:
+        void make() override;
 
     private:
         entity::SharedMethod m_Method;

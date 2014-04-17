@@ -24,8 +24,10 @@ namespace relationship {
         , m_GlobalDatabase(globalDatabase)
         , m_ProjectDatabase(projectDatabase)
     {
-        Q_ASSERT(addHeadClass(headTypeId));
-        Q_ASSERT(addTailClass(tailTypeId));
+        addHeadClass(headTypeId);
+        addTailClass(tailTypeId);
+        Q_ASSERT_X(m_GlobalDatabase, "Relation", "glodal database not valid");
+        Q_ASSERT_X(m_ProjectDatabase, "Relation", "project database not valid");
     }
 
     Relation::~Relation()
@@ -40,6 +42,13 @@ namespace relationship {
     void Relation::setDescription(const QString &description)
     {
         m_Description = description;
+    }
+
+    void Relation::makeRelation()
+    {
+        Q_ASSERT_X(m_HeadClass, "Relation::makeRelation", "head class not found");
+        Q_ASSERT_X(m_TailClass, "Relation::makeRelation", "tail class not found");
+        make();
     }
 
     void Relation::make()
@@ -96,11 +105,11 @@ namespace relationship {
         });
         utility::checkAndSet(src, "Head node", errorList, [&src, &errorList, this](){
             m_HeadNode->fromJson(src["Head node"].toObject(), errorList);
-            Q_ASSERT(addHeadClass(m_HeadNode->typeId()));
+            addHeadClass(m_HeadNode->typeId());
         });
         utility::checkAndSet(src, "Tail node", errorList, [&src, &errorList, this](){
             m_TailNode->fromJson(src["Tail node"].toObject(), errorList);
-            Q_ASSERT(addTailClass(m_TailNode->typeId()));
+            addTailClass(m_TailNode->typeId());
         });
     }
 
@@ -111,6 +120,9 @@ namespace relationship {
 
     void Relation::setGlobalDatabase(const db::SharedDatabase &globalDatabase)
     {
+        Q_ASSERT_X(globalDatabase,
+                   "Relation::setGlobalDatabase",
+                   "glodal database not valid");
         m_GlobalDatabase = globalDatabase;
     }
 
@@ -121,19 +133,30 @@ namespace relationship {
 
     void Relation::setProjectDatabase(const db::SharedDatabase &projectDatabase)
     {
+        Q_ASSERT_X(projectDatabase,
+                   "Relation::setProjectDatabase",
+                   "project database not valid");
         m_ProjectDatabase = projectDatabase;
     }
 
-    bool Relation::addHeadClass(const QString &id)
+    void Relation::addHeadClass(const QString &id)
     {
-        m_HeadClass = tryToFindType(id);
-        return m_HeadClass.operator bool();
+        auto tmpHead = tryToFindType(id);
+
+        Q_ASSERT_X(tmpHead, "Relation::addHeadClass", "head class not found");
+
+        m_HeadClass = tmpHead;
     }
 
-    bool Relation::addTailClass(const QString &id)
+    void Relation::addTailClass(const QString &id)
     {
-        m_TailClass = std::dynamic_pointer_cast<entity::Class>(tryToFindType(id));
-        return m_TailClass.operator bool();
+        auto tmpTailClass = std::dynamic_pointer_cast<entity::Class>(tryToFindType(id));
+
+        Q_ASSERT_X(tmpTailClass,
+                   "Relation::addTailClass",
+                   "tail class not found or not Class");
+
+        m_TailClass = tmpTailClass ;
     }
 
     entity::SharedType Relation::tryToFindType(const QString &typeId) const
@@ -141,7 +164,5 @@ namespace relationship {
         entity::SharedType result = m_ProjectDatabase->depthTypeSearch(typeId);
         return (result ? result : m_GlobalDatabase->depthTypeSearch(typeId));
     }
-
-
 
 } // namespace relationship

@@ -11,7 +11,6 @@ namespace relationship {
         MultiplyAssociation(const QString &tailTypeId, const QString &headTypeId,
                             const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
 
-        void make() override;
         void clear() override;
 
         QString containerTypeId() const;
@@ -21,6 +20,8 @@ namespace relationship {
         void setIndexTypeId(const QString &indexTypeId);
 
     protected:
+        void make() override;
+
         void makeGetter() override;
         void makeSetter() override;
         void makeField() override;

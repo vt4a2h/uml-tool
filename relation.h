@@ -24,7 +24,7 @@ namespace relationship {
         QString description() const;
         void setDescription(const QString &description);
 
-        virtual void make();
+        void makeRelation();
         virtual void clear();
 
         RelationType relationType() const;
@@ -43,8 +43,9 @@ namespace relationship {
         void setProjectDatabase(const db::SharedDatabase &projectDatabase);
 
     protected:
-        bool addHeadClass(const QString &id);
-        bool addTailClass(const QString &id);
+        virtual void make();
+        void addHeadClass(const QString &id);
+        void addTailClass(const QString &id);
         entity::SharedType tryToFindType(const QString &typeId) const;
 
         SharedNode m_TailNode;
