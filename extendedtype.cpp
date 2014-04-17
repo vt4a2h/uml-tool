@@ -11,16 +11,14 @@
 namespace entity {
 
     ExtendedType::ExtendedType()
-        : ExtendedType(GLOBAL_SCOPE_ID, STUB_ID)
+        : ExtendedType(GLOBAL_SCOPE_ID, STUB_ID, DEFAULT_NAME)
     {
     }
 
-    ExtendedType::ExtendedType(const QString &scopeId, const QString &typeId, const QString &alias)
-        : m_ConstStatus(false)
-        , m_ScopeId(scopeId)
+    ExtendedType::ExtendedType(const QString &scopeId, const QString &typeId, const QString &name)
+        : Type(name, scopeId)
+        , m_ConstStatus(false)
         , m_TypeId(typeId)
-        , m_Alias(alias)
-        , m_Id(utility::genId())
     {
     }
 
@@ -73,16 +71,6 @@ namespace entity {
         m_ConstStatus = status;
     }
 
-    QString ExtendedType::alias() const
-    {
-        return m_Alias;
-    }
-
-    void ExtendedType::setAlias(const QString &alias)
-    {
-        m_Alias = alias;
-    }
-
     void ExtendedType::addTemplateParameter(const QString &typeId)
     {
         m_TemplateParameters << typeId;
@@ -103,26 +91,6 @@ namespace entity {
         return m_TemplateParameters;
     }
 
-    QString ExtendedType::id() const
-    {
-        return m_Id;
-    }
-    
-    void ExtendedType::setId(const QString &id)
-    {
-        m_Id = id;
-    }
-
-    QString ExtendedType::scopeId() const
-    {
-        return m_ScopeId;
-    }
-
-    void ExtendedType::setScopeId(const QString &scopeId)
-    {
-        m_ScopeId = scopeId;
-    }
-
     QString ExtendedType::typeId() const
     {
         return m_TypeId;
@@ -135,13 +103,10 @@ namespace entity {
 
     QJsonObject ExtendedType::toJson() const
     {
-        QJsonObject result;
+        QJsonObject result(Type::toJson());
 
         result.insert("Const status", m_ConstStatus);
-        result.insert("Scope id", m_ScopeId);
         result.insert("Type id", m_TypeId);
-        result.insert("Alias", m_Alias);
-        result.insert("Id", m_Id);
 
         QJsonArray pointersAndLinks;
         QJsonObject obj;
@@ -161,11 +126,9 @@ namespace entity {
 
     void ExtendedType::fromJson(const QJsonObject &src, QStringList &errorList)
     {
+       Type::fromJson(src, errorList);
        utility::checkAndSet(src, "Const status", errorList, [&src, this](){ m_ConstStatus = src["Const status"].toBool(); });
-       utility::checkAndSet(src, "Scope id", errorList, [&src, this](){ m_ScopeId = src["Scope id"].toString(); });
        utility::checkAndSet(src, "Type id", errorList, [&src, this](){ m_TypeId = src["Type id"].toString(); });
-       utility::checkAndSet(src, "Alias", errorList, [&src, this](){ m_Alias = src["Alias"].toString(); });
-       utility::checkAndSet(src, "Id", errorList, [&src, this](){ m_Id = src["Id"].toString(); });
 
        m_PointersAndLinks.clear();
        utility::checkAndSet(src, "Pointers and links", errorList, [&src, &errorList, this](){

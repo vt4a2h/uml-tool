@@ -66,46 +66,6 @@ namespace entity {
         return m_Types.values();
     }
 
-    SharedExtendedType Scope::getExtendedType(const QString &typeId) const
-    {
-        return (m_ExtendedTypes.contains(typeId) ? m_ExtendedTypes[typeId] : nullptr);
-    }
-
-    SharedExtendedType Scope::takeExtendedType(const QString &typeId)
-    {
-        SharedExtendedType result(nullptr);
-
-        if (m_ExtendedTypes.contains(typeId)) {
-            result = m_ExtendedTypes[typeId];
-            m_ExtendedTypes.remove(typeId);
-        }
-
-        return result;
-    }
-
-    SharedExtendedType Scope::addExtendedType()
-    {
-        auto type = std::make_shared<ExtendedType>();
-        type->setScopeId(m_Id);
-
-        return *m_ExtendedTypes.insert(type->id(), type);
-    }
-
-    bool Scope::containsExtendedType(const QString &typeId) const
-    {
-        return m_ExtendedTypes.contains(typeId);
-    }
-
-    void Scope::removeExtendedType(const QString &typeId)
-    {
-        m_ExtendedTypes.remove(typeId);
-    }
-
-    ExtendedTypesList Scope::extendedTypes() const
-    {
-        return m_ExtendedTypes.values();
-    }
-
     SharedScope Scope::getChildScope(const QString &typeId)
     {
         return (m_Scopes.contains(typeId) ? m_Scopes[typeId] : nullptr);
@@ -186,10 +146,6 @@ namespace entity {
         for (auto type : m_Types.values()) types.append(type->toJson());
         result.insert("Types", types);
 
-        QJsonArray extTypes;
-        for (auto extType : m_ExtendedTypes.values()) extTypes.append(extType->toJson());
-        result.insert("Extended types", extTypes);
-
         return result;
     }
 
@@ -215,7 +171,7 @@ namespace entity {
 
         m_Types.clear();
         utility::checkAndSet(src, "Types", errorList, [&src, &errorList, this](){
-            if (src["Scopes"].isArray()) {
+            if (src["Types"].isArray()) {
                 SharedType type;
                 QJsonObject obj;
                 for (auto val : src["Scopes"].toArray()) {
@@ -229,20 +185,6 @@ namespace entity {
                 }
             } else {
                 errorList << "Error: \"Types\" is not array";
-            }
-        });
-
-        m_ExtendedTypes.clear();
-        utility::checkAndSet(src, "Extended types", errorList, [&src, &errorList, this](){
-            if (src["Extended types"].isArray()) {
-                SharedExtendedType type;
-                for (auto val : src["Extended types"].toArray()) {
-                    type = std::make_shared<ExtendedType>();
-                    type->fromJson(val.toObject(), errorList);
-                    m_ExtendedTypes.insert(type->id(), type);
-                }
-            } else {
-                errorList << "Error: \"Extended types\" is not array";
             }
         });
     }

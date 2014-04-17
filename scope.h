@@ -23,13 +23,6 @@ namespace entity {
         void removeType(const QString &typeId);
         TypesList types() const;
 
-        SharedExtendedType getExtendedType(const QString &typeId) const;
-        SharedExtendedType takeExtendedType(const QString &typeId);
-        SharedExtendedType addExtendedType();
-        bool containsExtendedType(const QString &typeId) const;
-        void removeExtendedType(const QString &typeId);
-        ExtendedTypesList extendedTypes() const;
-
         SharedScope getChildScope(const QString &typeId);
         SharedScope takeChildScope(const QString &typeId);
         SharedScope addChildScope(const QString &name = "");
@@ -56,7 +49,6 @@ namespace entity {
         QString m_ParentScopeId;
         Scopes m_Scopes;
         Types  m_Types;
-        ExtendedTypes m_ExtendedTypes;
     };
 
     template <class T>
