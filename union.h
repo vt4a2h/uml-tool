@@ -6,7 +6,6 @@
 namespace entity {
 
     class Field;
-    class ExtendedType;
 
     class Union : public Type
     {

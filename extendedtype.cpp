@@ -1,6 +1,4 @@
 #include "extendedtype.h"
-#include "scope.h"
-#include "type.h"
 #include "helpfunctions.h"
 #include "constants.cpp"
 
@@ -11,18 +9,14 @@
 namespace entity {
 
     ExtendedType::ExtendedType()
-        : ExtendedType(GLOBAL_SCOPE_ID, STUB_ID, DEFAULT_NAME)
+        : ExtendedType(DEFAULT_NAME, STUB_ID)
     {
     }
 
-    ExtendedType::ExtendedType(const QString &scopeId, const QString &typeId, const QString &name)
+    ExtendedType::ExtendedType(const QString &name, const QString &scopeId)
         : Type(name, scopeId)
         , m_ConstStatus(false)
-        , m_TypeId(typeId)
-    {
-    }
-
-    ExtendedType::~ExtendedType()
+        , m_TypeId(STUB_ID)
     {
     }
 

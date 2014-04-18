@@ -206,7 +206,11 @@ namespace db {
 
     QString Database::makeFullPath() const
     {
-        return QString("%1/%2.%3").arg(m_Path, m_Name.toLower(), DEFAULT_DATABASE_EXTENSION);
+        return QString("%1%2%3.%4")
+                .arg(m_Path,
+                     m_Path.isEmpty() ? "" : "/",
+                     m_Name.toLower(),
+                     DEFAULT_DATABASE_EXTENSION);
     }
 
     void Database::recursiveFind(entity::SharedScope scope, const QString &id, QStringList &ids) const

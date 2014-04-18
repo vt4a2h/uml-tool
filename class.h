@@ -5,7 +5,6 @@
 
 namespace entity {
 
-    class ExtendedType;
     enum Kind    : int;
     enum Section : int;
 

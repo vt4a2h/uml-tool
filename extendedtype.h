@@ -1,18 +1,12 @@
 #pragma once
 
-#include <utility>
+#include "type.h"
+#include "types.h"
+
 #include <QString>
 #include <QList>
 
-#include "types.h"
-#include "type.h"
-
-class QJsonObject;
-
 namespace entity {
-
-    class Scope;
-    class Type;
 
     class ExtendedType : public Type
     {
@@ -21,8 +15,7 @@ namespace entity {
         using PlList = QList<Pl>;
 
         ExtendedType();
-        ExtendedType(const QString &scopeId, const QString &typeId, const QString &name = "");
-        ~ExtendedType();
+        ExtendedType(const QString &name, const QString &scopeId);
 
         bool isLink() const;
         void addPointerStatus(bool pointerToConst = false);
