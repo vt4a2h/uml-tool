@@ -1,8 +1,14 @@
 #pragma once
 
+#include <QHash>
+#include <QString>
+
 #include <gtest/gtest.h>
+
 #include <type.h>
 #include <class.h>
+#include <enum.h>
+#include <union.h>
 #include <database.h>
 #include <scope.h>
 
@@ -12,12 +18,17 @@ protected:
     {
         _d = new db::Database();
 
-        sc1 = _d->addScope("sc1");
-        sc2 = sc1->addChildScope("sc2");
-        sc3 = sc2->addChildScope("sc3");
+        _scopes["sc1"] = _d->addScope("sc1");
+        _scopes["sc2"] = _scopes["sc1"]->addChildScope("sc2");
+        _scopes["sc3"] = _scopes["sc2"]->addChildScope("sc3");
 
-        sc4 = _d->addScope("sc4");
-        sc5 = sc4->addChildScope("sc5");
+        _scopes["sc4"] = _d->addScope("sc4");
+        _scopes["sc5"] = _scopes["sc4"]->addChildScope("sc5");
+
+        _types["Foo"] = _scopes["sc1"]->addType("Foo");
+        _types["Bar"] = _scopes["sc2"]->addType<entity::Class>("Bar");
+        _types["Baz"] = _scopes["sc3"]->addType<entity::Enum>("Baz");
+        _types["FooBar"] = _scopes["sc4"]->addType<entity::Union>("FooBar");
     }
 
     virtual void TearDown() override
@@ -26,9 +37,6 @@ protected:
     }
 
     db::Database *_d;
-    entity::SharedScope sc1;
-    entity::SharedScope sc2;
-    entity::SharedScope sc3;
-    entity::SharedScope sc4;
-    entity::SharedScope sc5;
+    QHash<QString, entity::SharedScope> _scopes;
+    QHash<QString, entity::SharedType> _types;
 };

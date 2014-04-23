@@ -2,9 +2,12 @@ TEMPLATE = app
 
 CONFIG += console
 CONFIG -= app_bundle
+CONFIG += qt
 CONFIG += c++11
 
 INCLUDEPATH += ../../
+
+HEADERS += ../../enums.h
 
 SOURCES += main.cpp \
            ../../type.cpp \
@@ -22,4 +25,6 @@ SOURCES += main.cpp \
 LIBS += -lgtest -lpthread
 
 HEADERS += \
-    TestDepthSearch.h
+    TestDepthSearch.h \
+    helpers.h \
+    TestTypeMaker.h
