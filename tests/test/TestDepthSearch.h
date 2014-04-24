@@ -12,7 +12,8 @@
 #include <database.h>
 #include <scope.h>
 
-class TestDepthSearch : public ::testing::Test {
+class TestDepthSearch : public ::testing::Test
+{
 protected:
     virtual void SetUp() override
     {

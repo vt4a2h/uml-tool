@@ -1,5 +1,6 @@
 #include "extendedtype.h"
 #include "helpfunctions.h"
+#include "enums.h"
 #include "constants.cpp"
 
 #include <QJsonObject>
@@ -18,6 +19,7 @@ namespace entity {
         , m_ConstStatus(false)
         , m_TypeId(STUB_ID)
     {
+        m_KindOfType = ExtendedTypeType;
     }
 
     bool ExtendedType::isLink() const

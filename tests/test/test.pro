@@ -7,7 +7,8 @@ CONFIG += c++11
 
 INCLUDEPATH += ../../
 
-HEADERS += ../../enums.h
+HEADERS += ../../enums.h \
+    TestRelationMaker.h
 
 SOURCES += main.cpp \
            ../../type.cpp \
@@ -17,9 +18,15 @@ SOURCES += main.cpp \
            ../../union.cpp \
            ../../classmethod.cpp \
            ../../templateclass.cpp \
+           ../../extendedtype.cpp\
            ../../template.cpp \
            ../../helpfunctions.cpp \
            ../../database.cpp \
+           ../../projectdatabase.cpp \
+           ../../relation.cpp \
+           ../../node.cpp \
+           ../../generalization.cpp \
+           ../../constants.cpp \
            ../../scope.cpp
 
 LIBS += -lgtest -lpthread

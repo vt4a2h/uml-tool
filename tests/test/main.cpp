@@ -5,9 +5,10 @@
 
 TEST_F(TestTypeMaker, MakesRightTypes)
 {
-    EXPECT_EQ(_types["Type"]->type(), entity::BasicType)
-            << "Type class object sholud have type_id entity::BasicType";
-    // TODO: add test for all kind of types
+    for (auto typeName : _typesNames)
+        EXPECT_EQ(_types[typeName]->type(),
+                  static_cast<entity::UserType>(_typesNames.indexOf(typeName))
+                  ) << typeName.toStdString() << " class object sholud has valid type id";
 }
 
 TEST_F(TestDepthSearch, ScopeSearchWorks)
