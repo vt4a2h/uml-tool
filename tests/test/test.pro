@@ -26,6 +26,7 @@ SOURCES += main.cpp \
            ../../relation.cpp \
            ../../node.cpp \
            ../../generalization.cpp \
+           ../../dependency.cpp \
            ../../constants.cpp \
            ../../scope.cpp
 

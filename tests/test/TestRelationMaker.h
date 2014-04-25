@@ -13,6 +13,7 @@
 
 #include <relation.h>
 #include <generalization.h>
+#include <dependency.h>
 
 #include <types.h>
 

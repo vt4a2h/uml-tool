@@ -6,10 +6,13 @@
 
 TEST_F(RelationMaker, Generalization)
 {
-    relationship::SharedRelation generalization =
-            std::make_shared<relationship::Generalization>(_firstClass->id(),
-                                                           _secondClass->id(),
-                                                           _globalDb, _projectDb);
+    auto generalization = std::make_shared<relationship::Generalization>(_firstClass->id(),
+                                                                         _secondClass->id(),
+                                                                         _globalDb,
+                                                                         _projectDb);
+
+    EXPECT_EQ(generalization->relationType(), relationship::GeneralizationRelation)
+            << "Generalization should have type relationship::GeneralizationRelation";
 
     generalization->makeRelation();
     EXPECT_TRUE(_firstClass->containsParent(_secondClass->id()))
@@ -20,6 +23,35 @@ TEST_F(RelationMaker, Generalization)
             << "relation should be removed";
 }
 
+TEST_F(RelationMaker, Dependency)
+{
+    auto ext = _globalScope->addType<entity::ExtendedType>("ConstLinkToSecondClass");
+    ext->setTypeId(_secondClass->id());
+    ext->addLinkStatus();
+    ext->setConstStatus(true);
+
+    auto depMethod = std::make_shared<entity::ClassMethod>("useSecond");
+    depMethod->setConstStatus(true);
+    depMethod->setReturnTypeId(VOID_ID);
+    depMethod->addParameter("second", ext->id());
+
+    auto dependency = std::make_shared<relationship::Dependency>(_firstClass->id(),
+                                                                 _secondClass->id(),
+                                                                 _globalDb,
+                                                                 _projectDb);
+    dependency->setMethod(depMethod);
+
+    EXPECT_EQ(dependency->relationType(), relationship::DependencyRelation)
+            << "Generalization should have type relationship::GeneralizationRelation";
+
+    dependency->makeRelation();
+    EXPECT_TRUE(_firstClass->containsMethod(depMethod->name()))
+            << "first class should have method with second class id in parameters list";
+
+    dependency->removeRelation();
+    EXPECT_FALSE(_firstClass->containsMethod(depMethod->name()))
+            << "relation should be removed";
+}
 
 TEST_F(TestTypeMaker, MakesRightTypes)
 {
