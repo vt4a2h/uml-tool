@@ -25,7 +25,7 @@ namespace relationship {
         void setDescription(const QString &description);
 
         void makeRelation();
-        virtual void clear();
+        void removeRelation();
 
         RelationType relationType() const;
         void setRelationType(const RelationType &relationType);
@@ -44,6 +44,7 @@ namespace relationship {
 
     protected:
         virtual void make();
+        virtual void clear();
         void addHeadClass(const QString &id);
         void addTailClass(const QString &id);
         entity::SharedType tryToFindType(const QString &typeId) const;

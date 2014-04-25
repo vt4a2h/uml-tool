@@ -27,18 +27,21 @@ protected:
         _projectDb = std::make_shared<db::ProjectDatabase>("Project");
 
         _globalScope = _globalDb->addScope(GLOBAL_SCOPE_ID, "");
-        _int    = _globalScope->addType("int");
-        _double = _globalScope->addType("double");
 
-        // TODO: cmpleted test
+        _firstProjectScope  = _projectDb->addScope("First scope");
+        _secondProjectScope = _projectDb->addScope("Second scope");
+
+        _firstClass  = _firstProjectScope->addType<entity::Class>("First");
+        _secondClass = _secondProjectScope->addType<entity::Class>("Second");
     }
 
     db::SharedDatabase _globalDb;
     db::SharedDatabase _projectDb;
 
     entity::SharedScope _globalScope;
-    entity::SharedType _int;
-    entity::SharedType _double;
 
-    entity::Scope _projectScope;
+    entity::SharedScope _firstProjectScope;
+    entity::SharedScope _secondProjectScope;
+    entity::SharedClass _firstClass;
+    entity::SharedClass _secondClass;
 };
