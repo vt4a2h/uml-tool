@@ -11,16 +11,15 @@ namespace relationship {
         Association(const QString &tailTypeId, const QString &headTypeId,
                     const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
 
-        void clear() override;
-
         QString getGetSetTypeId() const;
-        void setGetSetTypeId(const QString &getterReturnTypeId);
+        void setGetSetTypeId(const QString &getSetTypeId);
 
         QString fieldtypeId() const;
         void setFieldtypeId(const QString &fieldtypeId);
 
     protected:
         void make() override;
+        void clear() override;
 
         virtual void makeField();
         virtual void removeField();

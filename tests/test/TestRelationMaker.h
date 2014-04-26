@@ -14,6 +14,7 @@
 #include <relation.h>
 #include <generalization.h>
 #include <dependency.h>
+#include <association.h>
 
 #include <types.h>
 

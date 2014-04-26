@@ -4,6 +4,47 @@
 #include "TestTypeMaker.h"
 #include "TestRelationMaker.h"
 
+TEST_F(RelationMaker, Association)
+{
+    auto association = std::make_shared<relationship::Association>(_firstClass->id(),
+                                                                   _secondClass->id(),
+                                                                   _globalDb,
+                                                                   _projectDb);
+
+    EXPECT_EQ(association->relationType(), relationship::AssociationRelation)
+            << "Association should have type relationship::Association";
+
+    auto type = _firstProjectScope->addType<entity::ExtendedType>("PointerToFirstClass");
+    type->addPointerStatus();
+
+    association->setFieldtypeId(type->id());
+    association->setGetSetTypeId(type->id());
+
+    association->makeRelation();
+    EXPECT_TRUE(_firstClass->containsField(_secondClass->name()))
+            << "First class should contain second class type field";
+
+    auto methodsList = _firstClass->getMethod(_secondClass->name().toLower());
+
+    ASSERT_FALSE(methodsList.isEmpty()) << "First class should have a getter";
+    EXPECT_TRUE(methodsList.first()->isConst()) << "Getter shoudl be const";
+    EXPECT_EQ(type->id(), methodsList.first()->returnTypeId())
+            << "Getter should have valid return tyeid ";
+
+    methodsList = _firstClass->getMethod("set" + _secondClass->name());
+    ASSERT_FALSE(methodsList.isEmpty()) << "First class should have a setter";
+    auto parameters = methodsList.first()->parameters();
+    ASSERT_FALSE(parameters.isEmpty()) << "Setter should have parameter";
+    EXPECT_EQ(parameters.first()->name(), "src_" + _secondClass->name().toLower())
+            << "Setter parameter should have valid name";
+    EXPECT_EQ(parameters.first()->typeId(), type->id())
+            << "Parameter in setter should have a valid type";
+
+    association->removeRelation();
+    EXPECT_TRUE(_firstClass->methods().isEmpty() && _firstClass->fields().isEmpty())
+            << "Association should be removed";
+}
+
 TEST_F(RelationMaker, Generalization)
 {
     auto generalization = std::make_shared<relationship::Generalization>(_firstClass->id(),

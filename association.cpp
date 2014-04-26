@@ -36,7 +36,7 @@ namespace relationship {
 
     void Association::makeGetter()
     {
-        QString getterName(m_HeadClass->name().begin()->toLower());
+        QString getterName(m_HeadClass->name().toLower());
 
         auto getter = m_TailClass->makeMethod(getterName);
         getter->setReturnTypeId(m_GetSetTypeId);
@@ -54,12 +54,12 @@ namespace relationship {
 
     void Association::removeGetter()
     {
-        m_TailClass->removeMethods(m_HeadClass->name().begin()->toLower());
+        m_TailClass->removeMethods(m_HeadClass->name().toLower());
     }
 
     void Association::removeSetter()
     {
-        m_TailClass->removeMethods(QString("src_%1").arg(m_HeadClass->name().toLower()));
+        m_TailClass->removeMethods(QString("set%1").arg(m_HeadClass->name()));
     }
 
     QString Association::fieldtypeId() const
@@ -79,7 +79,7 @@ namespace relationship {
 
     void Association::removeField()
     {
-        m_TailClass->removeField("m_" + m_HeadClass->name());
+        m_TailClass->removeField(m_HeadClass->name());
     }
 
     QString Association::getGetSetTypeId() const
@@ -87,9 +87,9 @@ namespace relationship {
         return m_GetSetTypeId;
     }
 
-    void Association::setGetSetTypeId(const QString &getterReturnTypeId)
+    void Association::setGetSetTypeId(const QString &getSetTypeId)
     {
-        m_GetSetTypeId = getterReturnTypeId;
+        m_GetSetTypeId = getSetTypeId;
     }
 
 
