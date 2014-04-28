@@ -45,6 +45,7 @@ namespace relationship {
     protected:
         virtual void make();
         virtual void clear();
+        void checkClasses();
         void addHeadClass(const QString &id);
         void addTailClass(const QString &id);
         entity::SharedType tryToFindType(const QString &typeId) const;

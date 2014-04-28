@@ -46,15 +46,13 @@ namespace relationship {
 
     void Relation::makeRelation()
     {
-        Q_ASSERT_X(m_HeadClass, "Relation::makeRelation", "head class not found");
-        Q_ASSERT_X(m_TailClass, "Relation::makeRelation", "tail class not found");
+        checkClasses();
         make();
     }
 
     void Relation::removeRelation()
     {
-        Q_ASSERT_X(m_HeadClass, "Relation::makeRelation", "head class not found");
-        Q_ASSERT_X(m_TailClass, "Relation::makeRelation", "tail class not found");
+        checkClasses();
         clear();
     }
 
@@ -64,6 +62,12 @@ namespace relationship {
 
     void Relation::clear()
     {
+    }
+
+    void Relation::checkClasses()
+    {
+        Q_ASSERT_X(m_HeadClass, "Relation::makeRelation", "head class not found");
+        Q_ASSERT_X(m_TailClass, "Relation::makeRelation", "tail class not found");
     }
 
     RelationType Relation::relationType() const

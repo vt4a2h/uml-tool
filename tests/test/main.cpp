@@ -4,6 +4,81 @@
 #include "TestTypeMaker.h"
 #include "TestRelationMaker.h"
 
+TEST_F(RelationMaker, MultiplyAssociation)
+{
+    auto multAssociation =
+            std::make_shared<relationship::MultiplyAssociation>(_firstClass->id(),
+                                                                _secondClass->id(),
+                                                                _globalDb,
+                                                                _projectDb);
+
+    EXPECT_EQ(multAssociation->relationType(), relationship::MultiRelation)
+            << "MultiplyAssociation should have type relationship::MultiRelation";
+
+    auto valueType = _firstProjectScope->addType<entity::ExtendedType>("SharedSecond");
+    auto stdScope  = _globalScope->addChildScope("std");
+    auto sharedPtr = stdScope->addType("shared_ptr");
+    valueType->setTypeId(sharedPtr->id());
+    valueType->addTemplateParameter(_secondClass->id());
+
+    auto containerType = _globalScope->addType<entity::ExtendedType>("SecondClasses");
+    auto qhash = _globalScope->addType("QHash");
+    containerType->setTypeId(qhash->id());
+    auto stringClass = _globalScope->addType("QString");
+    containerType->addTemplateParameter(stringClass->id());
+    containerType->addTemplateParameter(valueType->id());
+
+    multAssociation->setFieldtypeId(valueType->id());
+    multAssociation->setGetSetTypeId(valueType->id());
+    multAssociation->setContainerTypeId(containerType->id());
+    multAssociation->setKeyTypeId(stringClass->id());
+
+    multAssociation->makeRelation();
+
+    EXPECT_TRUE(_firstClass->containsField(containerType->name()))
+            << "First class should contain container with second classes";
+
+    auto methods = _firstClass->methods();
+    ASSERT_FALSE(methods.isEmpty())
+            << "First class should have methods for work with container elemets";
+    EXPECT_EQ(methods.count(), 4)
+            << "First class should have 4 methods for work with container elemets";
+
+    auto methodsList = _firstClass->getMethod("get" + _secondClass->name());
+    ASSERT_FALSE(methodsList.isEmpty()) << "First class should have a getter";
+    EXPECT_TRUE(methodsList.first()->isConst()) << "Getter shoudl be const";
+    EXPECT_EQ(valueType->id(), methodsList.first()->returnTypeId())
+            << "Getter should have valid return tyeid ";
+    auto parameter = methodsList.first()->getParameter("key");
+    ASSERT_NE(parameter, nullptr) << "Getter should have parameter with name \"key\"";
+    EXPECT_EQ(parameter->typeId(), stringClass->id())
+            << "Parameter in getter should have a valid type";
+
+    methodsList = _firstClass->getMethod("add" + _secondClass->name());
+    ASSERT_FALSE(methodsList.isEmpty()) << "First class should have a setter";
+    parameter = methodsList.first()->getParameter("src_" + _secondClass->name().toLower());
+    ASSERT_NE(parameter, nullptr) << "Getter should have parameter with right name";
+    EXPECT_EQ(parameter->typeId(), valueType->id())
+            << "Parameter in setter should have a valid type";
+
+    methodsList = _firstClass->getMethod("remove" + _secondClass->name());
+    ASSERT_FALSE(methodsList.isEmpty()) << "First class should have a deleter";
+    parameter = methodsList.first()->getParameter("key");
+    ASSERT_NE(parameter, nullptr) << "Deleter should have parameter with right name";
+    EXPECT_EQ(parameter->typeId(), stringClass->id())
+            << "Parameter in deleter should have a valid type";
+
+    methodsList = _firstClass->getMethod(_secondClass->name().toLower() + "s");
+    ASSERT_FALSE(methodsList.isEmpty()) << "First class should have a group getter";
+    EXPECT_TRUE(methodsList.first()->isConst()) << "Group getter shoudl be const";
+    EXPECT_EQ(containerType->id(), methodsList.first()->returnTypeId())
+            << "Group getter should have valid return tyeid ";
+
+    multAssociation->removeRelation();
+    EXPECT_TRUE(_firstClass->methods().isEmpty() && _firstClass->fields().isEmpty())
+            << "MultiplyAssociation should be removed";
+}
+
 TEST_F(RelationMaker, Association)
 {
     auto association = std::make_shared<relationship::Association>(_firstClass->id(),
@@ -14,7 +89,8 @@ TEST_F(RelationMaker, Association)
     EXPECT_EQ(association->relationType(), relationship::AssociationRelation)
             << "Association should have type relationship::Association";
 
-    auto type = _firstProjectScope->addType<entity::ExtendedType>("PointerToFirstClass");
+    auto type = _firstProjectScope->addType<entity::ExtendedType>("PointerToSecondClass");
+    type->setTypeId(_secondClass->id());
     type->addPointerStatus();
 
     association->setFieldtypeId(type->id());

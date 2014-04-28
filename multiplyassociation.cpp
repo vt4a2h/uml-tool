@@ -1,4 +1,5 @@
 #include "multiplyassociation.h"
+#include "database.h"
 #include "enums.h"
 #include "class.h"
 #include "classmethod.h"
@@ -14,6 +15,7 @@ namespace relationship {
 
     MultiplyAssociation::MultiplyAssociation(const QString &tailTypeId, const QString &headTypeId, const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
         : Association(tailTypeId, headTypeId, globalDatabase, projectDatabase)
+        , m_ContainerClass(nullptr)
     {
         m_RelationType = MultiRelation;
     }
@@ -39,6 +41,12 @@ namespace relationship {
 
     void MultiplyAssociation::setContainerTypeId(const QString &containerTypeId)
     {
+        m_ContainerClass = m_GlobalDatabase->depthTypeSearch(containerTypeId);
+        if (!m_ContainerClass) m_ProjectDatabase->depthTypeSearch(containerTypeId);
+        Q_ASSERT_X(m_ContainerClass,
+                   "MultiplyAssociation::setContainerTypeId",
+                   "container class not found");
+
         m_ContainerTypeId = containerTypeId;
     }
 
@@ -50,7 +58,7 @@ namespace relationship {
         getter->setReturnTypeId(m_GetSetTypeId);
         getter->setConstStatus(true);
 
-        auto parameter = getter->addParameter("index", m_IndexTypeId);
+        auto parameter = getter->addParameter("key", m_KeyTypeId);
         parameter->setPrefix("");
     }
 
@@ -65,7 +73,10 @@ namespace relationship {
 
     void MultiplyAssociation::makeField()
     {
-       m_TailClass->addField(m_HeadClass->name(), containerTypeId());
+        Q_ASSERT_X(m_ContainerClass,
+                   "MultiplyAssociation::makeField",
+                   "container class not found");
+        m_TailClass->addField(m_ContainerClass->name(), containerTypeId());
     }
 
     void MultiplyAssociation::makeDeleter()
@@ -73,7 +84,7 @@ namespace relationship {
         QString deleterName(QString("remove%1").arg(m_HeadClass->name()));
 
         auto deleter = m_TailClass->makeMethod(deleterName);
-        auto parameter = deleter->addParameter("index", m_IndexTypeId);
+        auto parameter = deleter->addParameter("key", m_KeyTypeId);
         parameter->setPrefix("");
     }
 
@@ -98,7 +109,10 @@ namespace relationship {
 
     void MultiplyAssociation::removeField()
     {
-        m_TailClass->removeField("m_" + m_HeadClass->name());
+        Q_ASSERT_X(m_ContainerClass,
+                   "MultiplyAssociation::removeField",
+                   "container class not found");
+        m_TailClass->removeField(m_ContainerClass->name());
     }
 
     void MultiplyAssociation::removeDeleter()
@@ -111,14 +125,14 @@ namespace relationship {
         m_TailClass->removeMethods(QString("%1s").arg(m_HeadClass->name().toLower()));
     }
 
-    QString MultiplyAssociation::indexTypeId() const
+    QString MultiplyAssociation::keyTypeId() const
     {
-        return m_IndexTypeId;
+        return m_KeyTypeId;
     }
 
-    void MultiplyAssociation::setIndexTypeId(const QString &indexTypeId)
+    void MultiplyAssociation::setKeyTypeId(const QString &indexTypeId)
     {
-        m_IndexTypeId = indexTypeId;
+        m_KeyTypeId = indexTypeId;
     }
 
 } // namespace relationship

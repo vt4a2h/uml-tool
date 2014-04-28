@@ -15,6 +15,7 @@
 #include <generalization.h>
 #include <dependency.h>
 #include <association.h>
+#include <multiplyassociation.h>
 
 #include <types.h>
 

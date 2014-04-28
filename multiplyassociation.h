@@ -11,16 +11,15 @@ namespace relationship {
         MultiplyAssociation(const QString &tailTypeId, const QString &headTypeId,
                             const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
 
-        void clear() override;
-
         QString containerTypeId() const;
         void setContainerTypeId(const QString &containerTypeId);
 
-        QString indexTypeId() const;
-        void setIndexTypeId(const QString &indexTypeId);
+        QString keyTypeId() const;
+        void setKeyTypeId(const QString &keyTypeId);
 
     protected:
         void make() override;
+        void clear() override;
 
         void makeGetter() override;
         void makeSetter() override;
@@ -33,9 +32,9 @@ namespace relationship {
         void removeDeleter();
         void removeGroupGetter();
 
-
+        entity::SharedType m_ContainerClass;
         QString m_ContainerTypeId;
-        QString m_IndexTypeId;
+        QString m_KeyTypeId;
     };
 
 } // namespace relationship
