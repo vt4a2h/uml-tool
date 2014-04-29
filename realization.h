@@ -15,9 +15,8 @@ namespace relationship {
         void addMethods(const entity::MethodsList &methods);
         entity::MethodsList methods() const;
 
-        void clear() override;
-
     protected:
+        void clear() override;
         void make() override;
 
     private:

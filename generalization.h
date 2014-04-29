@@ -18,10 +18,13 @@ namespace relationship {
         entity::Section section() const;
         void setSection(const entity::Section &section);
 
-        void clear() override;
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
     protected:
+        void clear() override;
         void make() override;
+
         entity::Section m_Section;
     };
 

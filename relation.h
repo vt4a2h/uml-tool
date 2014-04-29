@@ -33,8 +33,8 @@ namespace relationship {
         QString id() const;
         void setId(const QString &id);
 
-        QJsonObject toJson() const;
-        void fromJson(const QJsonObject &src, QStringList &errorList);
+        virtual QJsonObject toJson() const;
+        virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
         db::SharedDatabase globalDatabase() const;
         void setGlobalDatabase(const db::SharedDatabase &globalDatabase);
