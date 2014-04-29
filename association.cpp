@@ -4,7 +4,10 @@
 #include "enums.h"
 #include "types.h"
 #include "field.h"
+#include "helpfunctions.h"
 #include "constants.cpp"
+
+#include <QJsonObject>
 
 namespace relationship {
 
@@ -64,17 +67,39 @@ namespace relationship {
 
     QString Association::fieldtypeId() const
     {
-        return m_FieldtypeId;
+        return m_FieldTypeId;
     }
 
     void Association::setFieldtypeId(const QString &fieldtypeId)
     {
-        m_FieldtypeId = fieldtypeId;
+        m_FieldTypeId = fieldtypeId;
+    }
+
+    QJsonObject Association::toJson() const
+    {
+        auto result = Relation::toJson();
+
+        result.insert("Get and set type ID", m_GetSetTypeId);
+        result.insert("Field type ID", m_FieldTypeId);
+
+        return result;
+    }
+
+    void Association::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        Relation::fromJson(src, errorList);
+
+        utility::checkAndSet(src, "Get and set type ID", errorList, [&src, this](){
+            m_GetSetTypeId = src["Get and set type ID"].toString();
+        });
+        utility::checkAndSet(src, "Field type ID", errorList, [&src, this](){
+            m_FieldTypeId = src["Field type ID"].toString();
+        });
     }
 
     void Association::makeField()
     {
-        m_TailClass->addField(m_HeadClass->name(), m_FieldtypeId);
+        m_TailClass->addField(m_HeadClass->name(), m_FieldTypeId);
     }
 
     void Association::removeField()

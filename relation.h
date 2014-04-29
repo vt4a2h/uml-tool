@@ -33,14 +33,14 @@ namespace relationship {
         QString id() const;
         void setId(const QString &id);
 
-        virtual QJsonObject toJson() const;
-        virtual void fromJson(const QJsonObject &src, QStringList &errorList);
-
         db::SharedDatabase globalDatabase() const;
         void setGlobalDatabase(const db::SharedDatabase &globalDatabase);
 
         db::SharedDatabase projectDatabase() const;
         void setProjectDatabase(const db::SharedDatabase &projectDatabase);
+
+        virtual QJsonObject toJson() const;
+        virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
     protected:
         virtual void make();

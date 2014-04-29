@@ -2,7 +2,10 @@
 #include "classmethod.h"
 #include "class.h"
 #include "enums.h"
+#include "helpfunctions.h"
 #include "constants.cpp"
+
+#include <QJsonObject>
 
 namespace relationship {
 
@@ -37,5 +40,24 @@ namespace relationship {
         m_Method = method;
     }
 
+    QJsonObject Dependency::toJson() const
+    {
+        auto result = Relation::toJson();
+
+        result.insert("Method", m_Method->toJson());
+
+        return result;
+    }
+
+    void Dependency::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        Relation::fromJson(src, errorList);
+
+        utility::checkAndSet(src, "Method", errorList, [this, &src, &errorList](){
+            // TODO: add type chooser
+            m_Method = std::make_shared<entity::ClassMethod>();
+            m_Method->fromJson(src["Method"].toObject(), errorList);
+        });
+    }
 
 } // namespace relationship

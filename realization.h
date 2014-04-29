@@ -15,6 +15,9 @@ namespace relationship {
         void addMethods(const entity::MethodsList &methods);
         entity::MethodsList methods() const;
 
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
     protected:
         void clear() override;
         void make() override;

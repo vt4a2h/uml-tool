@@ -1,5 +1,6 @@
 #include "templateclassmethod.h"
 #include "constants.cpp"
+#include "enums.h"
 #include "helpfunctions.h"
 
 #include <QJsonObject>
@@ -17,6 +18,7 @@ namespace entity {
         : ClassMethod(name)
         , Template()
     {
+        m_Type = TemplateMethod;
     }
 
     QJsonObject TemplateClassMethod::toJson() const

@@ -4,7 +4,10 @@
 #include "class.h"
 #include "classmethod.h"
 #include "field.h"
+#include "helpfunctions.h"
 #include "constants.cpp"
+
+#include <QJsonObject>
 
 namespace relationship {
 
@@ -133,6 +136,16 @@ namespace relationship {
     void MultiplyAssociation::setKeyTypeId(const QString &indexTypeId)
     {
         m_KeyTypeId = indexTypeId;
+    }
+
+    QJsonObject MultiplyAssociation::toJson() const
+    {
+        // TODO: make
+    }
+
+    void MultiplyAssociation::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        // TODO: make
     }
 
 } // namespace relationship

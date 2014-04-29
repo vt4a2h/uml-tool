@@ -17,6 +17,9 @@ namespace relationship {
         QString fieldtypeId() const;
         void setFieldtypeId(const QString &fieldtypeId);
 
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
     protected:
         void make() override;
         void clear() override;
@@ -29,7 +32,7 @@ namespace relationship {
         virtual void removeSetter();
 
         QString m_GetSetTypeId;
-        QString m_FieldtypeId;
+        QString m_FieldTypeId;
     };
 
 } // namespace relationship

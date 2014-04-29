@@ -3,6 +3,10 @@
 #include "class.h"
 #include "enums.h"
 #include "constants.cpp"
+#include "helpfunctions.h"
+
+#include <QJsonObject>
+#include <QJsonArray>
 
 namespace relationship {
 
@@ -25,6 +29,36 @@ namespace relationship {
     entity::MethodsList Realization::methods() const
     {
         return m_Methods;
+    }
+
+    QJsonObject Realization::toJson() const
+    {
+        auto result = Generalization::toJson();
+
+        QJsonArray methods;
+        for (auto method : m_Methods) methods.append(method->toJson());
+        result.insert("Methods", methods);
+
+        return result;
+    }
+
+    void Realization::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        Generalization::fromJson(src, errorList);
+
+        m_Methods.clear();
+        utility::checkAndSet(src, "Methods", errorList, [&src, &errorList, this](){
+            if (src["Methods"].isArray()) {
+                entity::SharedMethod method;
+                for (auto value : src["Methods"].toArray()) {
+                    method = std::make_shared<entity::ClassMethod>();
+                    method->fromJson(value.toObject(), errorList);
+                    m_Methods.append(method);
+                }
+            } else {
+                errorList << "Error: \"Methods\" is not array";
+            }
+        });
     }
 
     void Realization::make()

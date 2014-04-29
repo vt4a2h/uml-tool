@@ -62,6 +62,7 @@ namespace db {
             if (src["Relations"].isArray()) {
                 relationship::SharedRelation relation;
                 for (auto val : src["Relations"].toArray()) {
+                    // FIXME: add relation generator. generator should choose relation type based on id
                     relation = std::make_shared<relationship::Relation>();
                     relation->fromJson(val.toObject(), errorList);
                     m_Relations.insert(relation->id(), relation);

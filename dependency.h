@@ -11,12 +11,14 @@ namespace relationship {
         Dependency(const QString &tailTypeId, const QString &headTypeId,
                    const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
 
-        void clear() override;
-
         entity::SharedMethod method() const;
         void setMethod(const entity::SharedMethod &method);
 
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
     protected:
+        void clear() override;
         void make() override;
 
     private:

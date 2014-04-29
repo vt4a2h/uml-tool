@@ -8,6 +8,7 @@ namespace entity {
     enum RhsIdentificator : int {None, Override, Final, Delete, PureVirtual};
     enum LhsIdentificator : int {Explicit, Inline, MethodStatic, Virtual, Friend};
     enum FieldKeyword     : int {Volatile, Mutable, FieldStatic};
+    enum ClassMethodType  : int {SimpleMethod, TemplateMethod};
 }
 
 namespace relationship {

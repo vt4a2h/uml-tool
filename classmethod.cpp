@@ -19,6 +19,7 @@ namespace entity {
     ClassMethod::ClassMethod(const QString &name)
         : m_Name(name)
         , m_Section(Public)
+        , m_Type(SimpleMethod)
         , m_ConstStatus(false)
         , m_ReturnTypeId(VOID_ID)
         , m_RhsIdentificator(None)
@@ -131,6 +132,7 @@ namespace entity {
 
         result.insert("Name", m_Name);
         result.insert("Section", m_Section);
+        result.insert("Type", m_Type);
         result.insert("Const status", m_ConstStatus);
         result.insert("Return type id", m_ReturnTypeId);
         result.insert("Rhs identificator", m_RhsIdentificator);
@@ -150,6 +152,7 @@ namespace entity {
     {
         utility::checkAndSet(src, "Name", errorList, [&src, this](){ m_Name = src["Name"].toString(); });
         utility::checkAndSet(src, "Section", errorList, [&src, this](){ m_Section = static_cast<Section>(src["Section"].toInt()); });
+        utility::checkAndSet(src, "Type", errorList, [&src, this](){ m_Type = static_cast<ClassMethodType>(src["Type"].toInt()); });
         utility::checkAndSet(src, "Const status", errorList, [&src, this](){ m_ConstStatus = src["Const status"].toBool(); });
         utility::checkAndSet(src, "Return type id", errorList, [&src, this](){ m_ReturnTypeId = src["Return type id"].toString(); });
         utility::checkAndSet(src, "Rhs identificator", errorList, [&src, this](){ m_RhsIdentificator = static_cast<RhsIdentificator>(src["Rhs identificator"].toInt()); });
@@ -178,7 +181,17 @@ namespace entity {
             }
         });
     }
-
+    ClassMethodType ClassMethod::type() const
+    {
+        return m_Type;
+    }
+    
+    void ClassMethod::setType(const ClassMethodType &type)
+    {
+        m_Type = type;
+    }
+    
+    
     QString ClassMethod::returnTypeId() const
     {
         return m_ReturnTypeId;

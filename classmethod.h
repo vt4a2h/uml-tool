@@ -12,6 +12,7 @@ namespace entity {
     enum Section          : int;
     enum RhsIdentificator : int;
     enum LhsIdentificator : int;
+    enum ClassMethodType  : int;
 
     class ClassMethod
     {
@@ -50,6 +51,12 @@ namespace entity {
 
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
+
+        ClassMethodType type() const;
+        void setType(const ClassMethodType &type);
+
+   protected:
+        ClassMethodType m_Type;
 
     private:
         QString m_Name;

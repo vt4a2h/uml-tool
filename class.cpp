@@ -190,6 +190,7 @@ namespace entity {
             if (src["Methods"].isArray()) {
                 SharedMethod method;
                 for (auto value : src["Methods"].toArray()) {
+                    // FIXME: add type chooser
                     method = std::make_shared<ClassMethod>();
                     method->fromJson(value.toObject(), errorList);
                     m_Methods.insertMulti(method->name(), method);

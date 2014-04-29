@@ -17,6 +17,9 @@ namespace relationship {
         QString keyTypeId() const;
         void setKeyTypeId(const QString &keyTypeId);
 
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
     protected:
         void make() override;
         void clear() override;
