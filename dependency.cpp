@@ -54,9 +54,11 @@ namespace relationship {
         Relation::fromJson(src, errorList);
 
         utility::checkAndSet(src, "Method", errorList, [this, &src, &errorList](){
-            // TODO: add type chooser
-            m_Method = std::make_shared<entity::ClassMethod>();
-            m_Method->fromJson(src["Method"].toObject(), errorList);
+            QJsonObject obj = src["Method"].toObject();
+            utility::checkAndSet(obj, "Type", errorList, [this, &obj, &errorList]{
+                m_Method = utility::makeMethod(static_cast<entity::ClassMethodType>(obj["Type"].toInt()));
+                m_Method->fromJson(obj, errorList);
+            });
         });
     }
 

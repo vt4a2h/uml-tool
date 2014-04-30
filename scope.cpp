@@ -178,7 +178,7 @@ namespace entity {
                     obj = val.toObject();
                     utility::checkAndSet(obj, "Kind of type", errorList,
                                          [&obj, &type, &errorList, this](){
-                        type = makeType(static_cast<UserType>(obj["Kind of type"].toInt()));
+                        type = utility::makeType(static_cast<UserType>(obj["Kind of type"].toInt()));
                         type->fromJson(obj, errorList);
                         m_Types.insert(type->id(), type);
                     });
@@ -189,22 +189,4 @@ namespace entity {
         });
     }
 
-    SharedType Scope::makeType(UserType type) const
-    {
-        switch (type) {
-            case BasicType:
-                return std::make_shared<Type>();
-            case UserClassType:
-                return std::make_shared<Class>();
-            case TemplateClassType:
-                return std::make_shared<TemplateClass>();
-            case UnionType:
-                return std::make_shared<Union>();
-            case EnumType:
-                return std::make_shared<Enum>();
-            default:
-                return std::make_shared<Type>();
-        }
-    }
-    
 } // namespace entity

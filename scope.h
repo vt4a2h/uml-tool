@@ -42,7 +42,6 @@ namespace entity {
 
     private:
         void swap(Scope &other);
-        SharedType makeType(UserType type) const;
 
         QString m_Name;
         QString m_Id;

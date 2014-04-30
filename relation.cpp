@@ -122,6 +122,7 @@ namespace relationship {
             m_TailNode->fromJson(src["Tail node"].toObject(), errorList);
             addTailClass(m_TailNode->typeId());
         });
+        // TODO: set global database and project database
     }
 
     db::SharedDatabase Relation::globalDatabase() const

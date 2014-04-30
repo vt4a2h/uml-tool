@@ -140,7 +140,11 @@ namespace relationship {
 
     QJsonObject MultiplyAssociation::toJson() const
     {
+        QJsonObject result = Association::toJson();
+
         // TODO: make
+
+        return result;
     }
 
     void MultiplyAssociation::fromJson(const QJsonObject &src, QStringList &errorList)

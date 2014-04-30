@@ -189,11 +189,15 @@ namespace entity {
         utility::checkAndSet(src, "Methods", errorList, [&src, &errorList, this](){
             if (src["Methods"].isArray()) {
                 SharedMethod method;
+                QJsonObject obj;
                 for (auto value : src["Methods"].toArray()) {
-                    // FIXME: add type chooser
-                    method = std::make_shared<ClassMethod>();
-                    method->fromJson(value.toObject(), errorList);
-                    m_Methods.insertMulti(method->name(), method);
+                    obj = value.toObject();
+                    utility::checkAndSet(obj, "Type", errorList,
+                                         [&obj, &errorList, &method, this](){
+                        method = utility::makeMethod(static_cast<ClassMethodType>(obj["Type"].toInt()));
+                        method->fromJson(obj, errorList);
+                        m_Methods.insertMulti(method->name(), method);
+                    });
                 }
             } else {
                 errorList << "Error: \"Methods\" is not array";

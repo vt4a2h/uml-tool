@@ -61,11 +61,15 @@ namespace db {
         utility::checkAndSet(src, "Relations", errorList, [&src, &errorList, this](){
             if (src["Relations"].isArray()) {
                 relationship::SharedRelation relation;
+                QJsonObject obj;
                 for (auto val : src["Relations"].toArray()) {
-                    // FIXME: add relation generator. generator should choose relation type based on id
-                    relation = std::make_shared<relationship::Relation>();
-                    relation->fromJson(val.toObject(), errorList);
-                    m_Relations.insert(relation->id(), relation);
+                    obj = val.toObject();
+                    utility::checkAndSet(obj, "Type", errorList,
+                                         [&obj, &errorList, &relation, this](){
+                        relation = utility::makeRelation(static_cast<relationship::RelationType>(obj["Type"].toInt()));
+                        relation->fromJson(obj, errorList);
+                        m_Relations.insert(relation->id(), relation);
+                    });
                 }
             } else {
                 errorList << "Error: \"Relations\" is not array";

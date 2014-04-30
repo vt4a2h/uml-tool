@@ -17,9 +17,9 @@ namespace entity {
     }
 
     ClassMethod::ClassMethod(const QString &name)
-        : m_Name(name)
+        : m_Type(SimpleMethod)
+        , m_Name(name)
         , m_Section(Public)
-        , m_Type(SimpleMethod)
         , m_ConstStatus(false)
         , m_ReturnTypeId(VOID_ID)
         , m_RhsIdentificator(None)
