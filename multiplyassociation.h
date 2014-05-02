@@ -9,7 +9,7 @@ namespace relationship {
     public:
         MultiplyAssociation();
         MultiplyAssociation(const QString &tailTypeId, const QString &headTypeId,
-                            const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
+                            db::Database *globalDatabase, db::Database *projectDatabase);
 
         QString containerTypeId() const;
         void setContainerTypeId(const QString &containerTypeId);

@@ -56,6 +56,9 @@ namespace db {
 
     void ProjectDatabase::fromJson(const QJsonObject &src, QStringList &errorList)
     {
+        Q_ASSERT_X(m_GlobalDatabase,
+                   "ProjectDatabase::fromJson",
+                   "global database is not found");
         Database::fromJson(src, errorList);
 
         utility::checkAndSet(src, "Relations", errorList, [&src, &errorList, this](){
@@ -67,6 +70,8 @@ namespace db {
                     utility::checkAndSet(obj, "Type", errorList,
                                          [&obj, &errorList, &relation, this](){
                         relation = utility::makeRelation(static_cast<relationship::RelationType>(obj["Type"].toInt()));
+                        relation->setProjectDatabase(this);
+                        relation->setGlobalDatabase(m_GlobalDatabase.get());
                         relation->fromJson(obj, errorList);
                         m_Relations.insert(relation->id(), relation);
                     });
@@ -76,5 +81,19 @@ namespace db {
             }
         });
     }
+
+    db::SharedDatabase ProjectDatabase::globalDatabase() const
+    {
+        return m_GlobalDatabase;
+    }
+
+    void ProjectDatabase::setGlobalDatabase(const db::SharedDatabase &globalDatabase)
+    {
+        Q_ASSERT_X(m_GlobalDatabase,
+                   "ProjectDatabase::setGlobalDatabase",
+                   "global database is not found");
+        m_GlobalDatabase = globalDatabase;
+    }
+
 
 } // namespace db

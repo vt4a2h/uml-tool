@@ -9,7 +9,7 @@ namespace relationship {
     public:
         Dependency();
         Dependency(const QString &tailTypeId, const QString &headTypeId,
-                   const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
+                   db::Database *globalDatabase, db::Database *projectDatabase);
 
         entity::SharedMethod method() const;
         void setMethod(const entity::SharedMethod &method);
