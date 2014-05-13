@@ -28,7 +28,9 @@ SOURCES += main.cpp \
            ../../generalization.cpp \
            ../../dependency.cpp \
            ../../association.cpp \
+           ../../realization.cpp \
            ../../multiplyassociation.cpp \
+           ../../templateclassmethod.cpp \
            ../../constants.cpp \
            ../../scope.cpp
 
