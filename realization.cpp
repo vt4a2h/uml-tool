@@ -15,7 +15,7 @@ namespace relationship {
     {
     }
 
-    Realization::Realization(const QString &tailTypeId, const QString &headTypeId, const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
+    Realization::Realization(const QString &tailTypeId, const QString &headTypeId, db::Database *globalDatabase, db::Database *projectDatabase)
         : Generalization(tailTypeId, headTypeId, globalDatabase, projectDatabase)
     {
         m_RelationType = RealizationRelation;

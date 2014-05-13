@@ -14,7 +14,7 @@ namespace relationship {
     {
     }
 
-    Dependency::Dependency(const QString &tailTypeId, const QString &headTypeId, const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
+    Dependency::Dependency(const QString &tailTypeId, const QString &headTypeId, db::Database *globalDatabase, db::Database *projectDatabase)
         : Relation(tailTypeId, headTypeId, globalDatabase, projectDatabase)
     {
         m_RelationType = DependencyRelation;

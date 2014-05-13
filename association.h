@@ -9,7 +9,7 @@ namespace relationship {
     public:
         Association();
         Association(const QString &tailTypeId, const QString &headTypeId,
-                    const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
+                    db::Database *globalDatabase, db::Database *projectDatabase);
 
         QString getGetSetTypeId() const;
         void setGetSetTypeId(const QString &getSetTypeId);

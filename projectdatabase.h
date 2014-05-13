@@ -16,6 +16,9 @@ namespace db {
         void removeRelation(const QString &id);
         relationship::RelationsList relations() const;
 
+        db::SharedDatabase globalDatabase() const;
+        void setGlobalDatabase(const db::SharedDatabase &globalDatabase);
+
         void clear() override;
 
         QJsonObject toJson() const override;
@@ -23,6 +26,7 @@ namespace db {
 
     private:
         relationship::Relations m_Relations;
+        db::SharedDatabase m_GlobalDatabase;
     };
 
 } // namespace db

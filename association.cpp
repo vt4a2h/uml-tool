@@ -16,7 +16,7 @@ namespace relationship {
     {
     }
 
-    Association::Association(const QString &tailTypeId, const QString &headTypeId, const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
+    Association::Association(const QString &tailTypeId, const QString &headTypeId, db::Database *globalDatabase, db::Database *projectDatabase)
         : Relation(tailTypeId, headTypeId, globalDatabase, projectDatabase)
         , m_GetSetTypeId(headTypeId)
     {
