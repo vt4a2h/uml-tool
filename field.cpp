@@ -20,6 +20,7 @@ namespace entity {
         , m_Section(Public)
         , m_Name(name)
         , m_Prefix("m_")
+        , m_Suffix("")
     {
     }
 
@@ -119,6 +120,16 @@ namespace entity {
                 errorList << "Error: \"Keywords\" is not array";
             }
         });
+    }
+
+    QString Field::suffix() const
+    {
+        return m_Suffix;
+    }
+
+    void Field::setSuffix(const QString &suffix)
+    {
+        m_Suffix = suffix;
     }
 
 } // namespace entity

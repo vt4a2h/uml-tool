@@ -24,7 +24,8 @@ SOURCES += \
     association.cpp \
     multiplyassociation.cpp \
     database.cpp \
-    projectdatabase.cpp
+    projectdatabase.cpp \
+    projecttranslator.cpp
 
 HEADERS += \
     scope.h \
@@ -49,4 +50,5 @@ HEADERS += \
     association.h \
     multiplyassociation.h \
     database.h \
-    projectdatabase.h
+    projectdatabase.h \
+    projecttranslator.h

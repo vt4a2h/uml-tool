@@ -38,11 +38,15 @@ namespace entity {
         QJsonObject toJson() const;
         void fromJson(const QJsonObject &src, QStringList &errorList);
 
+        QString suffix() const;
+        void setSuffix(const QString &suffix);
+
     private:
         QString m_TypeId;
         Section m_Section;
         QString m_Name;
         QString m_Prefix;
+        QString m_Suffix;
 
         FieldKeywords m_Keywords;
     };
