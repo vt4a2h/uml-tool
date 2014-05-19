@@ -25,6 +25,15 @@ namespace entity {
         m_KindOfType = EnumType;
     }
 
+    bool Enum::isOrdered() const
+    {
+        QList<int> numbers;
+        numbers.reserve(m_Variables.size());
+
+        for (auto key : m_Variables.keys()) numbers << m_Variables[key].second;
+        return std::is_sorted(numbers.begin(), numbers.end());
+    }
+
     bool Enum::isStrong() const
     {
         return m_StrongStatus;

@@ -8,7 +8,8 @@ CONFIG += c++11
 INCLUDEPATH += ../../
 
 HEADERS += ../../enums.h \
-    TestRelationMaker.h
+    TestRelationMaker.h \
+    TestProjectTranslator.h
 
 SOURCES += main.cpp \
            ../../type.cpp \
@@ -31,6 +32,7 @@ SOURCES += main.cpp \
            ../../realization.cpp \
            ../../multiplyassociation.cpp \
            ../../templateclassmethod.cpp \
+           ../../projecttranslator.cpp \
            ../../constants.cpp \
            ../../scope.cpp
 

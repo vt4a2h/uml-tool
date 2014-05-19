@@ -17,6 +17,8 @@ namespace entity {
         Enum();
         Enum(const QString &name, const QString &scopeId);
 
+        bool isOrdered() const;
+
         bool isStrong() const;
         void setStrongStatus(bool status);
 
