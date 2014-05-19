@@ -19,6 +19,7 @@ namespace translator {
     private:
         void checkDb();
 
+
         db::SharedDatabase m_GlobalDatabase;
         db::SharedDatabase m_ProjectDatabase;
     };

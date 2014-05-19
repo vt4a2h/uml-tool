@@ -9,8 +9,8 @@ TEST_F(RelationMaker, MultiplyAssociation)
     auto multAssociation =
             std::make_shared<relationship::MultiplyAssociation>(_firstClass->id(),
                                                                 _secondClass->id(),
-                                                                _globalDb,
-                                                                _projectDb);
+                                                                _globalDb.get(),
+                                                                _projectDb.get());
 
     EXPECT_EQ(multAssociation->relationType(), relationship::MultiRelation)
             << "MultiplyAssociation should have type relationship::MultiRelation";
@@ -83,8 +83,8 @@ TEST_F(RelationMaker, Association)
 {
     auto association = std::make_shared<relationship::Association>(_firstClass->id(),
                                                                    _secondClass->id(),
-                                                                   _globalDb,
-                                                                   _projectDb);
+                                                                   _globalDb.get(),
+                                                                   _projectDb.get());
 
     EXPECT_EQ(association->relationType(), relationship::AssociationRelation)
             << "Association should have type relationship::Association";
@@ -125,8 +125,8 @@ TEST_F(RelationMaker, Generalization)
 {
     auto generalization = std::make_shared<relationship::Generalization>(_firstClass->id(),
                                                                          _secondClass->id(),
-                                                                         _globalDb,
-                                                                         _projectDb);
+                                                                         _globalDb.get(),
+                                                                         _projectDb.get());
 
     EXPECT_EQ(generalization->relationType(), relationship::GeneralizationRelation)
             << "Generalization should have type relationship::GeneralizationRelation";
@@ -154,8 +154,8 @@ TEST_F(RelationMaker, Dependency)
 
     auto dependency = std::make_shared<relationship::Dependency>(_firstClass->id(),
                                                                  _secondClass->id(),
-                                                                 _globalDb,
-                                                                 _projectDb);
+                                                                 _globalDb.get(),
+                                                                 _projectDb.get());
     dependency->setMethod(depMethod);
 
     EXPECT_EQ(dependency->relationType(), relationship::DependencyRelation)
