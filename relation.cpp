@@ -16,7 +16,7 @@ namespace relationship {
     }
 
     Relation::Relation(const QString &tailTypeId, const QString &headTypeId,
-                       const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
+                       db::Database *globalDatabase, db::Database *projectDatabase)
         : m_TailNode(std::make_shared<Node>(tailTypeId))
         , m_HeadNode(std::make_shared<Node>(headTypeId))
         , m_Id(utility::genId())
@@ -26,8 +26,6 @@ namespace relationship {
     {
         addHeadClass(headTypeId);
         addTailClass(tailTypeId);
-        Q_ASSERT_X(m_GlobalDatabase, "Relation", "glodal database not valid");
-        Q_ASSERT_X(m_ProjectDatabase, "Relation", "project database not valid");
     }
 
     Relation::~Relation()
@@ -46,13 +44,13 @@ namespace relationship {
 
     void Relation::makeRelation()
     {
-        checkClasses();
+        check();
         make();
     }
 
     void Relation::removeRelation()
     {
-        checkClasses();
+        check();
         clear();
     }
 
@@ -64,10 +62,12 @@ namespace relationship {
     {
     }
 
-    void Relation::checkClasses()
+    void Relation::check()
     {
-        Q_ASSERT_X(m_HeadClass, "Relation::makeRelation", "head class not found");
-        Q_ASSERT_X(m_TailClass, "Relation::makeRelation", "tail class not found");
+        Q_ASSERT_X(m_HeadClass, "Relation::check", "head class not found");
+        Q_ASSERT_X(m_TailClass, "Relation::check", "tail class not found");
+        Q_ASSERT_X(m_GlobalDatabase, "Relation::check", "glodal database not valid");
+        Q_ASSERT_X(m_ProjectDatabase, "Relation::check", "project database not valid");
     }
 
     RelationType Relation::relationType() const
@@ -122,15 +122,14 @@ namespace relationship {
             m_TailNode->fromJson(src["Tail node"].toObject(), errorList);
             addTailClass(m_TailNode->typeId());
         });
-        // TODO: set global database and project database
     }
 
-    db::SharedDatabase Relation::globalDatabase() const
+    db::Database *Relation::globalDatabase() const
     {
         return m_GlobalDatabase;
     }
 
-    void Relation::setGlobalDatabase(const db::SharedDatabase &globalDatabase)
+    void Relation::setGlobalDatabase(db::Database *globalDatabase)
     {
         Q_ASSERT_X(globalDatabase,
                    "Relation::setGlobalDatabase",
@@ -138,12 +137,12 @@ namespace relationship {
         m_GlobalDatabase = globalDatabase;
     }
 
-    db::SharedDatabase Relation::projectDatabase() const
+    db::Database *Relation::projectDatabase() const
     {
         return m_ProjectDatabase;
     }
 
-    void Relation::setProjectDatabase(const db::SharedDatabase &projectDatabase)
+    void Relation::setProjectDatabase(db::Database *projectDatabase)
     {
         Q_ASSERT_X(projectDatabase,
                    "Relation::setProjectDatabase",
@@ -155,7 +154,9 @@ namespace relationship {
     {
         auto tmpHead = tryToFindType(id);
 
-        Q_ASSERT_X(tmpHead, "Relation::addHeadClass", "head class not found");
+        Q_ASSERT_X(tmpHead,
+                   "Relation::addHeadClass",
+                   "head class not found");
 
         m_HeadClass = tmpHead;
     }

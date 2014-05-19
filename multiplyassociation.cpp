@@ -16,7 +16,7 @@ namespace relationship {
     {
     }
 
-    MultiplyAssociation::MultiplyAssociation(const QString &tailTypeId, const QString &headTypeId, const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase)
+    MultiplyAssociation::MultiplyAssociation(const QString &tailTypeId, const QString &headTypeId, db::Database *globalDatabase, db::Database *projectDatabase)
         : Association(tailTypeId, headTypeId, globalDatabase, projectDatabase)
         , m_ContainerClass(nullptr)
     {
@@ -142,14 +142,25 @@ namespace relationship {
     {
         QJsonObject result = Association::toJson();
 
-        // TODO: make
+        result.insert("Conatiner ID", m_ContainerTypeId);
+        result.insert("Key ID", m_KeyTypeId);
 
         return result;
     }
 
     void MultiplyAssociation::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        // TODO: make
+        utility::checkAndSet(src, "Conatiner ID", errorList, [&src, this](){
+            m_ContainerTypeId = src["Conatiner ID"].toString();
+            m_ContainerClass = tryToFindType(m_ContainerTypeId);
+            Q_ASSERT_X(m_ContainerClass,
+                       "MultiplyAssociation::fromJson",
+                       "container class is not found");
+        });
+
+        utility::checkAndSet(src, "Key ID", errorList, [&src, this](){
+            m_KeyTypeId = src["Key ID"].toString();
+        });
     }
 
 } // namespace relationship

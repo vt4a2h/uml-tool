@@ -18,7 +18,7 @@ namespace relationship {
     public:
         Relation();
         Relation(const QString &tailTypeId, const QString &headTypeId,
-                 const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
+                 db::Database *globalDatabase, db::Database *projectDatabase);
         virtual ~Relation();
 
         QString description() const;
@@ -33,11 +33,11 @@ namespace relationship {
         QString id() const;
         void setId(const QString &id);
 
-        db::SharedDatabase globalDatabase() const;
-        void setGlobalDatabase(const db::SharedDatabase &globalDatabase);
+        db::Database *globalDatabase() const;
+        void setGlobalDatabase(db::Database *globalDatabase);
 
-        db::SharedDatabase projectDatabase() const;
-        void setProjectDatabase(const db::SharedDatabase &projectDatabase);
+        db::Database *projectDatabase() const;
+        void setProjectDatabase(db::Database *projectDatabase);
 
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
@@ -45,7 +45,7 @@ namespace relationship {
     protected:
         virtual void make();
         virtual void clear();
-        void checkClasses();
+        void check();
         void addHeadClass(const QString &id);
         void addTailClass(const QString &id);
         entity::SharedType tryToFindType(const QString &typeId) const;
@@ -60,8 +60,8 @@ namespace relationship {
         QString m_Description;
         RelationType m_RelationType;
 
-        db::SharedDatabase m_GlobalDatabase;
-        db::SharedDatabase m_ProjectDatabase;
+        db::Database *m_GlobalDatabase;
+        db::Database *m_ProjectDatabase;
     };
 
 } // namespace relationship

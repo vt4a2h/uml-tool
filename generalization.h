@@ -13,7 +13,7 @@ namespace relationship {
     public:
         Generalization();
         Generalization(const QString &tailTypeId, const QString &headTypeId,
-                       const db::SharedDatabase &globalDatabase, const db::SharedDatabase &projectDatabase);
+                       db::Database *globalDatabase, db::Database *projectDatabase);
 
         entity::Section section() const;
         void setSection(const entity::Section &section);

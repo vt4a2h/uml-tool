@@ -20,6 +20,7 @@ namespace translator {
         void checkDb();
         QString generateCode(const entity::SharedEnum &type) const;
 
+
         db::SharedDatabase m_GlobalDatabase;
         db::SharedDatabase m_ProjectDatabase;
     };
