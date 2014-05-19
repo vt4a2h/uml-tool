@@ -25,7 +25,8 @@ SOURCES += \
     multiplyassociation.cpp \
     database.cpp \
     projectdatabase.cpp \
-    projecttranslator.cpp
+    projecttranslator.cpp \
+    templates.cpp
 
 HEADERS += \
     scope.h \

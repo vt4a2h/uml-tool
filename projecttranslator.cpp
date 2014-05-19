@@ -1,4 +1,5 @@
 #include "projecttranslator.h"
+#include "templates.cpp"
 
 namespace translator {
 
@@ -14,6 +15,7 @@ namespace translator {
         Q_ASSERT_X(m_GlobalDatabase, "ProjectTranslator", "global example database not found");
         Q_ASSERT_X(m_ProjectDatabase, "ProjectTranslator", "project database not found");
     }
+
 
     db::SharedDatabase ProjectTranslator::projectDatabase() const
     {
