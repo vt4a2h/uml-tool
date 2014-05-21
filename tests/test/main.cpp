@@ -7,6 +7,8 @@
 
 TEST_F(Translator, Enum)
 {
+    auto _fooEnum = _projectScope->addType<entity::Enum>("Foo");
+
     QString futureResult("enum Foo {};");
     QString code(_translator->generateCode(_fooEnum));
     ASSERT_EQ(futureResult, code);
@@ -30,6 +32,41 @@ TEST_F(Translator, Enum)
     futureResult = "enum class Foo : int {bar = 0, baz = 1};";
     code = _translator->generateCode(_fooEnum, true);
     ASSERT_EQ(futureResult, code);
+}
+
+TEST_F(Translator, ExtendedType)
+{
+    entity::SharedExtendedType type = _projectScope->addType<entity::ExtendedType>();
+    type->setTypeId(_int->id());
+
+    QString futureResult("int");
+    QString code(_translator->generateCode(type));
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "const int";
+    type->setConstStatus(true);
+    code = _translator->generateCode(type);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "const int &";
+    type->addLinkStatus();
+    code = _translator->generateCode(type);
+    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
+
+    futureResult = "const int &&";
+    type->addLinkStatus();
+    code = _translator->generateCode(type);
+    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
+
+    type->removeLinkStatus();
+    type->removeLinkStatus();
+
+    futureResult = "const int * const";
+    type->addPointerStatus(true);
+    code = _translator->generateCode(type);
+    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
+
+    // TODO: make tests for extended type with parameters (QHash, vector, set etc.)
 }
 
 TEST_F(RelationMaker, MultiplyAssociation)

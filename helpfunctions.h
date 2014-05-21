@@ -24,6 +24,10 @@ namespace relationship {
     enum RelationType : int;
 }
 
+namespace db {
+    class Database;
+}
+
 namespace utility {
     QString genId();
     void checkAndSet(const QJsonObject& object, const QString& key, QStringList& lst, std::function<void()> func);
@@ -31,5 +35,8 @@ namespace utility {
     std::shared_ptr<entity::Type> makeType(entity::UserType type);
     std::shared_ptr<relationship::Relation> makeRelation(relationship::RelationType relation);
     std::shared_ptr<entity::ClassMethod> makeMethod(entity::ClassMethodType methodType);
+    std::shared_ptr<entity::Type> findType(const std::shared_ptr<db::Database> &global,
+                                           const std::shared_ptr<db::Database> & project,
+                                           const QString &id);
 }
 

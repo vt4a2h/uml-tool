@@ -9,7 +9,10 @@ INCLUDEPATH += ../../
 
 HEADERS += ../../enums.h \
     TestRelationMaker.h \
-    TestProjectTranslator.h
+    TestProjectTranslator.h \
+    TestDepthSearch.h \
+    helpers.h \
+    TestTypeMaker.h
 
 SOURCES += main.cpp \
            ../../type.cpp \
@@ -37,8 +40,3 @@ SOURCES += main.cpp \
            ../../scope.cpp
 
 LIBS += -lgtest -lpthread
-
-HEADERS += \
-    TestDepthSearch.h \
-    helpers.h \
-    TestTypeMaker.h

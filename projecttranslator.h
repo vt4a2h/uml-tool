@@ -17,8 +17,11 @@ namespace translator {
         db::SharedDatabase projectDatabase() const;
         void setProjectDatabase(const db::SharedDatabase &projectDatabase);
 
+        QString generateCode(const entity::SharedType &type) const;
         QString generateCode(const entity::SharedEnum &type,
                              bool generateNumbers = false) const;
+        QString generateCode(const entity::SharedExtendedType &type,
+                             bool alias = false) const;
 
     private:
         void checkDb() const;

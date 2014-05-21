@@ -6,6 +6,7 @@
 #include <database.h>
 #include <scope.h>
 #include <enum.h>
+#include <extendedtype.h>
 #include <projecttranslator.h>
 #include <types.h>
 
@@ -23,7 +24,6 @@ protected:
         _projectScope = _projectDb->addScope("project_scope");
 
         _int = _globalScope->addType("int");
-        _fooEnum = _projectScope->addType<entity::Enum>("Foo");
     }
 
     db::SharedDatabase _globalDb;
@@ -34,6 +34,5 @@ protected:
     entity::SharedScope _globalScope;
     entity::SharedScope _projectScope;
 
-    entity::SharedEnum  _fooEnum;
-    entity::SharedType  _int;
+    entity::SharedType _int;
 };
