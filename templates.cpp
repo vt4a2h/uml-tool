@@ -2,6 +2,6 @@
 
 namespace {
 
-    const QString ENUM_TEMPLATE = "enum %class%%name%%type% { %values% };";
+    const QString ENUM_TEMPLATE = "enum %class%%name%%type% {%values%};";
 
 }

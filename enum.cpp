@@ -25,15 +25,6 @@ namespace entity {
         m_KindOfType = EnumType;
     }
 
-    bool Enum::isOrdered() const
-    {
-        QList<int> numbers;
-        numbers.reserve(m_Variables.size());
-
-        for (auto key : m_Variables.keys()) numbers << m_Variables[key].second;
-        return std::is_sorted(numbers.begin(), numbers.end());
-    }
-
     bool Enum::isStrong() const
     {
         return m_StrongStatus;
@@ -46,27 +37,34 @@ namespace entity {
 
     Enum::Variable &Enum::addVariable(const QString &name)
     {
-        return *m_Variables.insert(name, std::make_pair(name, m_Variables.size()));
+        m_Variables.append(std::make_pair(name, m_Variables.size()));
+        return m_Variables.last();
     }
 
     Enum::Variable Enum::getVariable(const QString &name) const
     {
-        return m_Variables.value(name);
+        auto it = std::find_if(m_Variables.cbegin(), m_Variables.cend(),
+                               [&name](const Variable &v){ return v.first == name; });
+        return (it != m_Variables.end() ? *it : std::make_pair(DEFAULT_NAME, -1));
     }
 
     void Enum::removeVariable(const QString &name)
     {
-        m_Variables.remove(name);
+        auto it = std::find_if(m_Variables.begin(), m_Variables.end(),
+                               [&name](Variable &v){ return v.first == name; });
+        if (it != m_Variables.end()) m_Variables.erase(it);
     }
 
     bool Enum::containsVariable(const QString &name)
     {
-        return m_Variables.contains(name);
+        return (std::find_if(m_Variables.begin(), m_Variables.end(),
+                            [&name](Variable &v){ return v.first == name; }) !=
+                m_Variables.end());
     }
 
     Enum::VariablesList Enum::variables() const
     {
-        return m_Variables.values();
+        return m_Variables;
     }
 
     QString Enum::enumTypeId() const
@@ -88,9 +86,9 @@ namespace entity {
 
         QJsonArray variables;
         QJsonObject variable;
-        for (auto name : m_Variables.keys()) {
-            variable.insert("Name", m_Variables[name].first);
-            variable.insert("Number", m_Variables[name].second);
+        for (auto v : m_Variables) {
+            variable.insert("Name", v.first);
+            variable.insert("Number", v.second);
             variables.append(variable);
         }
         result.insert("Variables", variables);
@@ -114,7 +112,7 @@ namespace entity {
                     obj = value.toObject();
                     utility::checkAndSet(obj, "Name",   errorList, [&obj, &var, this](){ var.first  = obj["Name"].toString(); });
                     utility::checkAndSet(obj, "Number", errorList, [&obj, &var, this](){ var.second = obj["Number"].toInt();  });
-                    m_Variables.insert(var.first, var);
+                    m_Variables.append(var);
                   }
             } else {
                 errorList << "Error: \"Varibles\" is not array";

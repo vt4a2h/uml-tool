@@ -7,6 +7,7 @@ namespace translator {
     class ProjectTranslator
     {
     public:
+        ProjectTranslator();
         ProjectTranslator(const db::SharedDatabase &globalDb,
                           const db::SharedDatabase &projectDb);
 
@@ -16,10 +17,11 @@ namespace translator {
         db::SharedDatabase projectDatabase() const;
         void setProjectDatabase(const db::SharedDatabase &projectDatabase);
 
-    private:
-        void checkDb();
-        QString generateCode(const entity::SharedEnum &type) const;
+        QString generateCode(const entity::SharedEnum &type,
+                             bool generateNumbers = false) const;
 
+    private:
+        void checkDb() const;
 
         db::SharedDatabase m_GlobalDatabase;
         db::SharedDatabase m_ProjectDatabase;

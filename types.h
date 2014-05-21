@@ -79,3 +79,8 @@ namespace db {
     class Database;
     using SharedDatabase = std::shared_ptr<Database>;
 }
+
+namespace translator {
+    class ProjectTranslator;
+    using SharedTranslator = std::shared_ptr<ProjectTranslator>;
+}

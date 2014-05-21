@@ -13,7 +13,7 @@
 #include <templateclass.h>
 #include <enums.h>
 
-class TestTypeMaker: public ::testing::Test
+class TypeMaker: public ::testing::Test
 {
 protected:
     virtual void SetUp() override

@@ -3,6 +3,34 @@
 #include "TestDepthSearch.h"
 #include "TestTypeMaker.h"
 #include "TestRelationMaker.h"
+#include "TestProjectTranslator.h"
+
+TEST_F(Translator, Enum)
+{
+    QString futureResult("enum Foo {};");
+    QString code(_translator->generateCode(_fooEnum));
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "enum class Foo {};";
+    _fooEnum->setStrongStatus(true);
+    code = _translator->generateCode(_fooEnum);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "enum class Foo : int {};";
+    _fooEnum->setEnumTypeId(_int->id());
+    code = _translator->generateCode(_fooEnum);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "enum class Foo : int {bar, baz};";
+    _fooEnum->addVariable("bar");
+    _fooEnum->addVariable("baz");
+    code = _translator->generateCode(_fooEnum);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "enum class Foo : int {bar = 0, baz = 1};";
+    code = _translator->generateCode(_fooEnum, true);
+    ASSERT_EQ(futureResult, code);
+}
 
 TEST_F(RelationMaker, MultiplyAssociation)
 {
@@ -170,7 +198,7 @@ TEST_F(RelationMaker, Dependency)
             << "relation should be removed";
 }
 
-TEST_F(TestTypeMaker, MakesRightTypes)
+TEST_F(TypeMaker, MakesRightTypes)
 {
     for (auto typeName : _typesNames)
         EXPECT_EQ(_types[typeName]->type(),
@@ -178,7 +206,7 @@ TEST_F(TestTypeMaker, MakesRightTypes)
                   ) << typeName.toStdString() << " class object sholud has valid type id";
 }
 
-TEST_F(TestDepthSearch, ScopeSearchWorks)
+TEST_F(DepthSearch, ScopeSearchWorks)
 {
     entity::SharedScope p(nullptr);
 
@@ -186,7 +214,7 @@ TEST_F(TestDepthSearch, ScopeSearchWorks)
     invalid_case(depthScopeSearch, "foobarid")
 }
 
-TEST_F(TestDepthSearch, TypeSearchWorks)
+TEST_F(DepthSearch, TypeSearchWorks)
 {
     entity::SharedType p(nullptr);
 
