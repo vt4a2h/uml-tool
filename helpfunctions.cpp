@@ -109,4 +109,19 @@ namespace utility {
         return scope;
     }
 
+    QString fieldKeywordToString(entity::FieldKeyword keyword)
+    {
+//        {Volatile, Mutable, FieldStatic};
+        switch (keyword) {
+        case entity::Volatile:
+            return "volatile";
+        case entity::Mutable:
+            return "mutable";
+        case entity::FieldStatic:
+            return "static";
+        default:
+            return "unknown";
+        }
+    }
+
 }

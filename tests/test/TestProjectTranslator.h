@@ -6,6 +6,7 @@
 #include <database.h>
 #include <scope.h>
 #include <enum.h>
+#include <enums.h>
 #include <extendedtype.h>
 #include <projecttranslator.h>
 #include <types.h>
@@ -21,7 +22,6 @@ protected:
         _translator = std::make_shared<translator::ProjectTranslator>(_globalDb, _projectDb);
 
         _globalScope  = _globalDb->addScope();
-//        _globalScope->setId("_global_scope");
         _projectScope = _projectDb->addScope("project_scope");
 
         _int = _globalScope->addType("int");

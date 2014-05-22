@@ -18,12 +18,14 @@ namespace entity {
         Field(const QString &name, const QString &typeId);
 
         QString name() const;
+        QString fullName() const;
         void setName(const QString &name);
 
         Section section() const;
         void setSection(Section section);
 
         QString prefix() const;
+        void removePrefix();
         void setPrefix(const QString &prefix);
 
         FieldKeywordsList keywords() const;
@@ -39,6 +41,7 @@ namespace entity {
         void fromJson(const QJsonObject &src, QStringList &errorList);
 
         QString suffix() const;
+        void removeSuffix();
         void setSuffix(const QString &suffix);
 
     private:

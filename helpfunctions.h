@@ -19,6 +19,8 @@ namespace entity {
     enum ClassMethodType : int;
 
     class Scope;
+
+    enum FieldKeyword : int;
 }
 
 namespace relationship {
@@ -31,17 +33,22 @@ namespace db {
 }
 
 namespace utility {
+
     QString genId();
     void checkAndSet(const QJsonObject& object, const QString& key, QStringList& lst, std::function<void()> func);
 
     std::shared_ptr<entity::Type> makeType(entity::UserType type);
     std::shared_ptr<relationship::Relation> makeRelation(relationship::RelationType relation);
     std::shared_ptr<entity::ClassMethod> makeMethod(entity::ClassMethodType methodType);
+
     std::shared_ptr<entity::Type> findType(const std::shared_ptr<db::Database> &global,
                                            const std::shared_ptr<db::Database> & project,
-                                           const QString &id);
+                                           const QString &id); // NOTE: refactore: it should return different type
     std::shared_ptr<entity::Scope> findScope(const std::shared_ptr<db::Database> &global,
                                              const std::shared_ptr<db::Database> & project,
                                              const QString &id);
+
+    QString fieldKeywordToString(entity::FieldKeyword keyword);
+
 }
 

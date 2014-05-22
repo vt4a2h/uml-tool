@@ -1,12 +1,14 @@
 #include "projecttranslator.h"
 #include "enum.h"
+#include "enums.h"
 #include "extendedtype.h"
 #include "database.h"
 #include "projectdatabase.h"
+#include "scope.h"
+#include "field.h"
+#include "helpfunctions.h"
 #include "templates.cpp"
 #include "constants.cpp"
-#include "helpfunctions.h"
-#include "scope.h"
 
 namespace translator {
 
@@ -95,6 +97,29 @@ namespace translator {
 
         if (alias && type->name() != DEFAULT_NAME)
             result.prepend(QString("using %1 = ").arg(type->name())).append(";");
+
+        return result;
+    }
+
+    QString ProjectTranslator::generateCode(const entity::SharedField &type) const
+    {
+        checkDb();
+        QString result(FIELD_TEMPLATE);
+
+        QStringList keywords;
+        if (!type->keywords().isEmpty())
+            for (auto &&keyword : type->keywords())
+                keywords << utility::fieldKeywordToString(keyword);
+        result.replace("%keywords%", keywords.isEmpty() ? "" : keywords.join(" ").append(" "));
+
+        auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, type->typeId());
+        entity::SharedExtendedType st = nullptr;
+        if (t->type() == entity::ExtendedTypeType)
+            st = std::dynamic_pointer_cast<entity::ExtendedType>(t);
+        result.replace("%type%", st ? generateCode(st).append(" ") :
+                                      t ? generateCode(t).append(" ") :
+                                          "");
+        result.replace("%name%", type->fullName());
 
         return result;
     }

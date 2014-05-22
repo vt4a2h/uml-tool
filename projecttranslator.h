@@ -22,6 +22,7 @@ namespace translator {
                              bool generateNumbers = false) const;
         QString generateCode(const entity::SharedExtendedType &type,
                              bool alias = false) const;
+        QString generateCode(const entity::SharedField &type) const;
 
     private:
         void checkDb() const;

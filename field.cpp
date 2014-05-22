@@ -29,6 +29,11 @@ namespace entity {
         return m_Name;
     }
 
+    QString Field::fullName() const
+    {
+        return QString("%1%2%3").arg(m_Prefix, m_Name, m_Suffix);
+    }
+
     void Field::setName(const QString &name)
     {
         m_Name = name;
@@ -47,6 +52,11 @@ namespace entity {
     QString Field::prefix() const
     {
         return m_Prefix;
+    }
+
+    void Field::removePrefix()
+    {
+        m_Prefix.clear();
     }
     
     void Field::setPrefix(const QString &prefix)
@@ -125,6 +135,11 @@ namespace entity {
     QString Field::suffix() const
     {
         return m_Suffix;
+    }
+
+    void Field::removeSuffix()
+    {
+        m_Suffix.clear();
     }
 
     void Field::setSuffix(const QString &suffix)
