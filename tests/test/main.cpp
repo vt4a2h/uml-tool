@@ -4,6 +4,7 @@
 #include "TestTypeMaker.h"
 #include "TestRelationMaker.h"
 #include "TestProjectTranslator.h"
+#include <helpfunctions.h>
 
 TEST_F(Translator, Enum)
 {
@@ -34,6 +35,19 @@ TEST_F(Translator, Enum)
     ASSERT_EQ(futureResult, code);
 }
 
+TEST_F(Translator, Type)
+{
+    QString futureResult("int");
+    QString code(_translator->generateCode(_int));
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "project_scope::foo_scope::Foo";
+    auto scopeFoo = _projectScope->addChildScope("foo_scope");
+    auto foo = scopeFoo->addType("Foo");
+    code = _translator->generateCode(foo);
+    ASSERT_EQ(futureResult, code);
+}
+
 TEST_F(Translator, ExtendedType)
 {
     entity::SharedExtendedType type = _projectScope->addType<entity::ExtendedType>();
@@ -51,12 +65,12 @@ TEST_F(Translator, ExtendedType)
     futureResult = "const int &";
     type->addLinkStatus();
     code = _translator->generateCode(type);
-    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
+    ASSERT_EQ(futureResult, code);
 
     futureResult = "const int &&";
     type->addLinkStatus();
     code = _translator->generateCode(type);
-    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
+    ASSERT_EQ(futureResult, code);
 
     type->removeLinkStatus();
     type->removeLinkStatus();
@@ -64,9 +78,33 @@ TEST_F(Translator, ExtendedType)
     futureResult = "const int * const";
     type->addPointerStatus(true);
     code = _translator->generateCode(type);
-    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
+    ASSERT_EQ(futureResult, code);
 
-    // TODO: make tests for extended type with parameters (QHash, vector, set etc.)
+    type->removePointerStatus();
+    type->setConstStatus(false);
+
+    futureResult = "vector<int>";
+    auto vector = _globalScope->addType("vector");
+    type->setTypeId(vector->id());
+    type->addTemplateParameter(_int->id());
+    code = _translator->generateCode(type);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "using Ints = vector<int>;";
+    type->setName("Ints");
+    code = _translator->generateCode(type, true);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "std::set<int>";
+    _projectScope->removeType(type->id());
+    type = _projectScope->addType<entity::ExtendedType>();
+    auto stdScope = _globalScope->addChildScope("std");
+    auto set = stdScope->addType("set");
+    type->setTypeId(set->id());
+    type->addTemplateParameter(_int->id());
+    code = _translator->generateCode(type); // FIXME: wrong code
+
+    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
 }
 
 TEST_F(RelationMaker, MultiplyAssociation)

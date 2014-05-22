@@ -21,6 +21,7 @@ protected:
         _translator = std::make_shared<translator::ProjectTranslator>(_globalDb, _projectDb);
 
         _globalScope  = _globalDb->addScope();
+        _globalScope->setId("_global_scope");
         _projectScope = _projectDb->addScope("project_scope");
 
         _int = _globalScope->addType("int");

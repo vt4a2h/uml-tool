@@ -17,6 +17,8 @@ namespace entity {
 
     class ClassMethod;
     enum ClassMethodType : int;
+
+    class Scope;
 }
 
 namespace relationship {
@@ -38,5 +40,8 @@ namespace utility {
     std::shared_ptr<entity::Type> findType(const std::shared_ptr<db::Database> &global,
                                            const std::shared_ptr<db::Database> & project,
                                            const QString &id);
+    std::shared_ptr<entity::Scope> findScope(const std::shared_ptr<db::Database> &global,
+                                             const std::shared_ptr<db::Database> & project,
+                                             const QString &id);
 }
 

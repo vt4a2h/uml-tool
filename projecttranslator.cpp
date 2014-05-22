@@ -6,6 +6,7 @@
 #include "templates.cpp"
 #include "constants.cpp"
 #include "helpfunctions.h"
+#include "scope.h"
 
 namespace translator {
 
@@ -62,7 +63,7 @@ namespace translator {
 
         if (type->typeId() != STUB_ID) {
             auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, type->typeId());
-            result.replace("%name%", t ? t->name() : "");
+            result.replace("%name%", t ? this->generateCode(t) : "");
         } else {
             result.remove("%name%");
         }
@@ -88,12 +89,12 @@ namespace translator {
             }
             params = names.join(", ");
             params.append(">");
-            params.prepend(" <");
+            params.prepend("<");
         }
         result.replace("%template_params%", params);
 
         if (alias && type->name() != DEFAULT_NAME)
-            result.prepend("using %1 = ").append(";").arg(type->name());
+            result.prepend(QString("using %1 = ").arg(type->name())).append(";");
 
         return result;
     }
@@ -110,6 +111,22 @@ namespace translator {
 
     QString ProjectTranslator::generateCode(const entity::SharedType &type) const
     {
+        QStringList scopesNames;
+        QString id = type->scopeId();
+        entity::SharedScope scope = utility::findScope(m_GlobalDatabase, m_ProjectDatabase,
+                                                       id);
+        while (id != GLOBAL_SCOPE_ID) {
+            if (!scope) break;
+            if (scope->name() != DEFAULT_NAME) scopesNames.prepend(scope->name());
+            id = scope->parentScopeId();
+            scope = utility::findScope(m_GlobalDatabase, m_ProjectDatabase, id);
+        }
+
+        if (!scopesNames.isEmpty()) {
+            scopesNames << type->name();
+            return scopesNames.join("::");
+        }
+
         return type->name();
     }
 
