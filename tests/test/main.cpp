@@ -6,35 +6,6 @@
 #include "TestProjectTranslator.h"
 #include <helpfunctions.h>
 
-TEST_F(Translator, Enum)
-{
-    auto _fooEnum = _projectScope->addType<entity::Enum>("Foo");
-
-    QString futureResult("enum Foo {};");
-    QString code(_translator->generateCode(_fooEnum));
-    ASSERT_EQ(futureResult, code);
-
-    futureResult = "enum class Foo {};";
-    _fooEnum->setStrongStatus(true);
-    code = _translator->generateCode(_fooEnum);
-    ASSERT_EQ(futureResult, code);
-
-    futureResult = "enum class Foo : int {};";
-    _fooEnum->setEnumTypeId(_int->id());
-    code = _translator->generateCode(_fooEnum);
-    ASSERT_EQ(futureResult, code);
-
-    futureResult = "enum class Foo : int {bar, baz};";
-    _fooEnum->addVariable("bar");
-    _fooEnum->addVariable("baz");
-    code = _translator->generateCode(_fooEnum);
-    ASSERT_EQ(futureResult, code);
-
-    futureResult = "enum class Foo : int {bar = 0, baz = 1};";
-    code = _translator->generateCode(_fooEnum, true);
-    ASSERT_EQ(futureResult, code);
-}
-
 TEST_F(Translator, Type)
 {
     QString futureResult("int");
@@ -102,9 +73,37 @@ TEST_F(Translator, ExtendedType)
     auto set = stdScope->addType("set");
     type->setTypeId(set->id());
     type->addTemplateParameter(_int->id());
-    code = _translator->generateCode(type); // FIXME: wrong code
-
+    code = _translator->generateCode(type);
     ASSERT_EQ(futureResult.toStdString(), code.toStdString());
+}
+
+TEST_F(Translator, Enum)
+{
+    auto _fooEnum = _projectScope->addType<entity::Enum>("Foo");
+
+    QString futureResult("enum Foo {};");
+    QString code(_translator->generateCode(_fooEnum));
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "enum class Foo {};";
+    _fooEnum->setStrongStatus(true);
+    code = _translator->generateCode(_fooEnum);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "enum class Foo : int {};";
+    _fooEnum->setEnumTypeId(_int->id());
+    code = _translator->generateCode(_fooEnum);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "enum class Foo : int {bar, baz};";
+    _fooEnum->addVariable("bar");
+    _fooEnum->addVariable("baz");
+    code = _translator->generateCode(_fooEnum);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "enum class Foo : int {bar = 0, baz = 1};";
+    code = _translator->generateCode(_fooEnum, true);
+    ASSERT_EQ(futureResult, code);
 }
 
 TEST_F(RelationMaker, MultiplyAssociation)
