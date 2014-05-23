@@ -6,6 +6,7 @@
 #include "projectdatabase.h"
 #include "scope.h"
 #include "field.h"
+#include "classmethod.h"
 #include "helpfunctions.h"
 #include "templates.cpp"
 #include "constants.cpp"
@@ -27,16 +28,17 @@ namespace translator {
         Q_ASSERT_X(m_ProjectDatabase, "ProjectTranslator", "project database not found");
     }
 
-    QString ProjectTranslator::generateCode(const entity::SharedEnum &type, bool generateNumbers) const
+    QString ProjectTranslator::generateCode(const entity::SharedEnum &_enum, bool generateNumbers) const
     {
+        if (!_enum) return "\ninvalid enum\n";
         checkDb();
         QString result(ENUM_TEMPLATE);
 
-        result.replace("%class%", type->isStrong() ? "class " : "");
-        result.replace("%name%",  type->name());
+        result.replace("%class%", _enum->isStrong() ? "class " : "");
+        result.replace("%name%",  _enum->name());
 
         QString typeName("");
-        QString typeId(type->enumTypeId());
+        QString typeId(_enum->enumTypeId());
         if (typeId != STUB_ID) {
             auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, typeId);
             if (t)  typeName.append(" : ").append(t->name());
@@ -45,10 +47,10 @@ namespace translator {
 
         QStringList values;
         if (generateNumbers) {
-            for (auto &&v : type->variables())
+            for (auto &&v : _enum->variables())
                 values << QString("%1 = %2").arg(v.first, QString::number(v.second));
         } else {
-            for (auto &&v : type->variables())
+            for (auto &&v : _enum->variables())
                 values << v.first;
         }
         result.replace("%values%", values.isEmpty() ? "" : values.join(", "));
@@ -56,23 +58,58 @@ namespace translator {
         return result;
     }
 
-    QString ProjectTranslator::generateCode(const entity::SharedExtendedType &type, bool alias) const
+    QString ProjectTranslator::generateCode(const entity::SharedMethod &method) const
     {
+        if (!method) return "\ninvalid method\n";
+        checkDb();
+        QString result(METHOD_TEMPLATE);
+//        %lhs_k%%r_type%%name%(%parameters%)%rhs_k%%const%
+        QString lhsIds("");
+        QStringList lhsIdsList;
+        for (auto &&lhsId : method->lhsIdentificators())
+            lhsIdsList << utility::methodLhsIdToString(lhsId);
+        if (!lhsIdsList.isEmpty()) lhsIds.append(lhsIdsList.join(" ")).append(" ");
+        result.replace("%lhs_k%", lhsIds);
+
+        result.replace("%r_type%", generateCode(utility::findType(m_GlobalDatabase,
+                                                                  m_ProjectDatabase,
+                                                                  method->returnTypeId()))
+                                   .append(" "));
+
+        result.replace("%name%", method->name().append(" "));
+
+        QString parameters("");
+        QStringList parametersList;
+        for (auto &&p : method->parameters()) parametersList << generateCode(p);
+        if (!parametersList.isEmpty()) parameters.append(parametersList.join(", "));
+
+        QString rhsId(utility::methodRhsIdToString(method->rhsIdentificator()));
+        if (method->rhsIdentificator() != entity::None) rhsId.prepend(" ");
+        result.replace("%rhs_k%", rhsId);
+
+        result.replace("%const%", method->isConst() ? " const" : "");
+
+        return result;
+    }
+
+    QString ProjectTranslator::generateCode(const entity::SharedExtendedType &extType, bool alias) const
+    {
+        if (!extType) return "\ninvalid extended type\n";
         checkDb();
         QString result(EXT_TYPE_TEMPLATE);
 
-        result.replace("%const%", type->isConst() ? "const " : "");
+        result.replace("%const%", extType->isConst() ? "const " : "");
 
-        if (type->typeId() != STUB_ID) {
-            auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, type->typeId());
+        if (extType->typeId() != STUB_ID) {
+            auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, extType->typeId());
             result.replace("%name%", t ? this->generateCode(t) : "");
         } else {
             result.remove("%name%");
         }
 
         QString pl("");
-        if (!type->pl().isEmpty()) {
-            for (auto &&c : type->pl()) {
+        if (!extType->pl().isEmpty()) {
+            for (auto &&c : extType->pl()) {
                 pl.append(c.first);
                 if (c.second) pl.append(" const ");
             }
@@ -82,10 +119,10 @@ namespace translator {
         result.replace("%pl%", pl);
 
         QString params("");
-        if (!type->templateParameters().isEmpty()) {
+        if (!extType->templateParameters().isEmpty()) {
             QStringList names;
             entity::SharedType t = nullptr;
-            for (auto &&id : type->templateParameters()) {
+            for (auto &&id : extType->templateParameters()) {
                 t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, id);
                 if (t) names << t->name();
             }
@@ -95,31 +132,32 @@ namespace translator {
         }
         result.replace("%template_params%", params);
 
-        if (alias && type->name() != DEFAULT_NAME)
-            result.prepend(QString("using %1 = ").arg(type->name())).append(";");
+        if (alias && extType->name() != DEFAULT_NAME)
+            result.prepend(QString("using %1 = ").arg(extType->name())).append(";");
 
         return result;
     }
 
-    QString ProjectTranslator::generateCode(const entity::SharedField &type) const
+    QString ProjectTranslator::generateCode(const entity::SharedField &field) const
     {
+        if (!field) return "\ninvalid field\n";
         checkDb();
         QString result(FIELD_TEMPLATE);
 
         QStringList keywords;
-        if (!type->keywords().isEmpty())
-            for (auto &&keyword : type->keywords())
+        if (!field->keywords().isEmpty())
+            for (auto &&keyword : field->keywords())
                 keywords << utility::fieldKeywordToString(keyword);
         result.replace("%keywords%", keywords.isEmpty() ? "" : keywords.join(" ").append(" "));
 
-        auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, type->typeId());
+        auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, field->typeId());
         entity::SharedExtendedType st = nullptr;
         if (t->type() == entity::ExtendedTypeType)
             st = std::dynamic_pointer_cast<entity::ExtendedType>(t);
         result.replace("%type%", st ? generateCode(st).append(" ") :
                                       t ? generateCode(t).append(" ") :
                                           "");
-        result.replace("%name%", type->fullName());
+        result.replace("%name%", field->fullName());
 
         return result;
     }

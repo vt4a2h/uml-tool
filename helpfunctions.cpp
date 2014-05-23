@@ -111,7 +111,6 @@ namespace utility {
 
     QString fieldKeywordToString(entity::FieldKeyword keyword)
     {
-//        {Volatile, Mutable, FieldStatic};
         switch (keyword) {
         case entity::Volatile:
             return "volatile";
@@ -119,6 +118,44 @@ namespace utility {
             return "mutable";
         case entity::FieldStatic:
             return "static";
+        default:
+            return "unknown";
+        }
+    }
+
+    QString methodLhsIdToString(entity::LhsIdentificator id)
+    {
+        switch (id) {
+        case entity::Explicit:
+            return "explicit";
+        case entity::Inline:
+            return "inline";
+        case entity::MethodStatic:
+            return "static";
+        case entity::Virtual:
+            return "virtual";
+        case entity::Friend:
+            return "friend";
+        default:
+            return "unknown";
+        }
+    }
+
+    QString methodRhsIdToString(entity::RhsIdentificator id)
+    {
+        switch (id) {
+        case entity::None:
+            return "";
+        case entity::Override:
+            return "override";
+        case entity::Final:
+            return "final";
+        case entity::Delete:
+            return "= delete";
+        case entity::Default:
+            return "= default";
+        case entity::PureVirtual:
+            return "= 0";
         default:
             return "unknown";
         }

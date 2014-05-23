@@ -21,6 +21,8 @@ namespace entity {
     class Scope;
 
     enum FieldKeyword : int;
+    enum LhsIdentificator : int;
+    enum RhsIdentificator : int;
 }
 
 namespace relationship {
@@ -49,6 +51,7 @@ namespace utility {
                                              const QString &id);
 
     QString fieldKeywordToString(entity::FieldKeyword keyword);
-
+    QString methodLhsIdToString(entity::LhsIdentificator id);
+    QString methodRhsIdToString(entity::RhsIdentificator id);
 }
 
