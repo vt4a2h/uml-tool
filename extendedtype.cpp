@@ -24,7 +24,7 @@ namespace entity {
 
     bool ExtendedType::isLink() const
     {
-        return m_PointersAndLinks.last().first == "&";
+        return !m_PointersAndLinks.isEmpty() && m_PointersAndLinks.last().first == "&";
     }
 
     void ExtendedType::addPointerStatus(bool pointerToConst)
@@ -39,7 +39,7 @@ namespace entity {
 
     bool ExtendedType::isPointer() const
     {
-        return m_PointersAndLinks.last().first == "*";
+        return !m_PointersAndLinks.isEmpty() && m_PointersAndLinks.last().first == "*";
     }
 
     void ExtendedType::addLinkStatus()

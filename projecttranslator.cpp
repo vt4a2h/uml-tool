@@ -28,6 +28,23 @@ namespace translator {
         Q_ASSERT_X(m_ProjectDatabase, "ProjectTranslator", "project database not found");
     }
 
+    QString ProjectTranslator::generateCodeForExtTypeOrType(const QString &id) const
+    {
+        checkDb();
+
+        auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, id);
+        if (!t) return "";
+
+        entity::SharedExtendedType st = nullptr;
+        if (t->type() == entity::ExtendedTypeType)
+            st = std::dynamic_pointer_cast<entity::ExtendedType>(t);
+
+        return (st ? generateCode(st)
+                     .append(st->isLink() || st->isPointer() ? "" : " ") :
+                        t ? generateCode(t).append(" ") :
+                            "");
+    }
+
     QString ProjectTranslator::generateCode(const entity::SharedEnum &_enum, bool generateNumbers) const
     {
         if (!_enum) return "\ninvalid enum\n";
@@ -63,7 +80,7 @@ namespace translator {
         if (!method) return "\ninvalid method\n";
         checkDb();
         QString result(METHOD_TEMPLATE);
-//        %lhs_k%%r_type%%name%(%parameters%)%rhs_k%%const%
+
         QString lhsIds("");
         QStringList lhsIdsList;
         for (auto &&lhsId : method->lhsIdentificators())
@@ -71,17 +88,19 @@ namespace translator {
         if (!lhsIdsList.isEmpty()) lhsIds.append(lhsIdsList.join(" ")).append(" ");
         result.replace("%lhs_k%", lhsIds);
 
-        result.replace("%r_type%", generateCode(utility::findType(m_GlobalDatabase,
-                                                                  m_ProjectDatabase,
-                                                                  method->returnTypeId()))
-                                   .append(" "));
+        result.replace("%r_type%", generateCodeForExtTypeOrType(method->returnTypeId()));
 
-        result.replace("%name%", method->name().append(" "));
+        result.replace("%name%", method->name());
 
         QString parameters("");
         QStringList parametersList;
-        for (auto &&p : method->parameters()) parametersList << generateCode(p);
+        for (auto &&p : method->parameters()) {
+            p->removePrefix();
+            p->removeSuffix();
+            parametersList << generateCode(p);
+        }
         if (!parametersList.isEmpty()) parameters.append(parametersList.join(", "));
+        result.replace("%parameters%", parameters);
 
         QString rhsId(utility::methodRhsIdToString(method->rhsIdentificator()));
         if (method->rhsIdentificator() != entity::None) rhsId.prepend(" ");
@@ -150,13 +169,7 @@ namespace translator {
                 keywords << utility::fieldKeywordToString(keyword);
         result.replace("%keywords%", keywords.isEmpty() ? "" : keywords.join(" ").append(" "));
 
-        auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, field->typeId());
-        entity::SharedExtendedType st = nullptr;
-        if (t->type() == entity::ExtendedTypeType)
-            st = std::dynamic_pointer_cast<entity::ExtendedType>(t);
-        result.replace("%type%", st ? generateCode(st).append(" ") :
-                                      t ? generateCode(t).append(" ") :
-                                          "");
+        result.replace("%type%", generateCodeForExtTypeOrType(field->typeId()));
         result.replace("%name%", field->fullName());
 
         return result;

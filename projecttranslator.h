@@ -27,6 +27,7 @@ namespace translator {
 
     private:
         void checkDb() const;
+        QString generateCodeForExtTypeOrType(const QString &id) const;
 
         db::SharedDatabase m_GlobalDatabase;
         db::SharedDatabase m_ProjectDatabase;

@@ -19,7 +19,7 @@ namespace entity {
         : m_TypeId(typeId)
         , m_Section(Public)
         , m_Name(name)
-        , m_Prefix("m_")
+        , m_Prefix("")
         , m_Suffix("")
     {
     }

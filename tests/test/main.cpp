@@ -80,6 +80,7 @@ TEST_F(Translator, ExtendedType)
 TEST_F(Translator, Field)
 {
     auto field = std::make_shared<entity::Field>("Number", _int->id());
+    field->setPrefix("m_");
 
     QString futureResult("int m_Number");
     QString code(_translator->generateCode(field));
@@ -99,6 +100,71 @@ TEST_F(Translator, Field)
     type->setConstStatus(true);
     field->setTypeId(type->id());
     code = _translator->generateCode(field);
+    ASSERT_EQ(futureResult, code);
+}
+
+TEST_F(Translator, ClassMethod)
+{
+    auto method = std::make_shared<entity::ClassMethod>("calc");
+    method->setConstStatus(true);
+
+    QString futureResult("void calc() const");
+    auto voidType = _globalScope->addType("void");
+    method->setReturnTypeId(voidType->id());
+    QString code(_translator->generateCode(method));
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "double sum(double a, double b) const";
+    auto doubleType = _globalScope->addType("double");
+    method->setName("sum");
+    method->setReturnTypeId(doubleType->id());
+    method->addParameter("a", doubleType->id());
+    method->addParameter("b", doubleType->id());
+    code = _translator->generateCode(method);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "ps::Foo *getFoo(const QString &id) const";
+    auto ps = _projectDb->addScope("ps");
+
+    auto foo = ps->addType("Foo");
+    auto fooExt = ps->addType<entity::ExtendedType>();
+    fooExt->addPointerStatus();
+    fooExt->setTypeId(foo->id());
+
+    auto qstr = _globalScope->addType("QString");
+    auto qstrExt = _globalScope->addType<entity::ExtendedType>();
+    qstrExt->addLinkStatus();
+    qstrExt->setTypeId(qstr->id());
+    qstrExt->setConstStatus(true);
+
+    method->setName("getFoo");
+    method->setReturnTypeId(fooExt->id());
+    method->removeParameter("a");
+    method->removeParameter("b");
+    method->addParameter("id", qstrExt->id());
+
+    code = _translator->generateCode(method);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "explicit Foo(const QString &name)";
+    method = std::make_shared<entity::ClassMethod>("Foo");
+    method->addLhsIdentificator(entity::Explicit);
+    method->addParameter("name", qstrExt->id());
+    code = _translator->generateCode(method);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "virtual ps::Foo *make() = 0";
+    method = std::make_shared<entity::ClassMethod>("make");
+    method->setReturnTypeId(fooExt->id());
+    method->setRhsIdentificator(entity::PureVirtual);
+    method->addLhsIdentificator(entity::Virtual);
+    code = _translator->generateCode(method);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "ps::Foo *make() override";
+    method->removeLhsIdentificator(entity::Virtual);
+    method->setRhsIdentificator(entity::Override);
+    code = _translator->generateCode(method);
     ASSERT_EQ(futureResult, code);
 }
 
