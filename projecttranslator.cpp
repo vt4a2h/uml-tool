@@ -121,7 +121,11 @@ namespace translator {
         QStringList fields;
         for (auto &&field : _union->fields())
             fields << generateCode(field).prepend(INDENT);
-        result.replace("%variables%", fields.join(";\n"));
+
+        QString resultFields(fields.join(";\n"));
+        if (!resultFields.isEmpty()) resultFields.append(";\n").prepend("\n");
+
+        result.replace("%variables%", resultFields);
 
         return result;
     }

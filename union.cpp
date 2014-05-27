@@ -22,29 +22,38 @@ namespace entity {
         m_KindOfType = UnionType;
     }
 
-    SharedField Union::getField(const QString &name)
+    SharedField Union::getField(const QString &name) const
     {
-        return m_Fields.value(name);
+        auto it = std::find_if(m_Fields.begin(), m_Fields.end(),
+                               [&](const SharedField &f) {return f->name() == name;});
+
+        return (it != m_Fields.end() ? *it : nullptr);
     }
 
     SharedField Union::addField(const QString &name, const QString &typeId)
     {
-        return *m_Fields.insert(name, std::make_shared<Field>(name, typeId));
+        auto field = std::make_shared<Field>(name, typeId);
+
+        if (getField(name) != nullptr) removeField(name);
+        m_Fields.append(field);
+
+        return field;
     }
 
     void Union::removeField(const QString &name)
     {
-        m_Fields.remove(name);
+        auto field = getField(name);
+        if (field) m_Fields.removeAll(field);
     }
 
     bool Union::containsField(const QString &name)
     {
-        return m_Fields.contains(name);
+        return (getField(name) != nullptr);
     }
 
     FieldsList Union::fields() const
     {
-        return m_Fields.values();
+        return m_Fields;
     }
 
     QJsonObject Union::toJson() const
@@ -52,7 +61,7 @@ namespace entity {
         QJsonObject result(Type::toJson());
 
         QJsonArray fields;
-        for (auto value : m_Fields.values()) fields.append(value->toJson());
+        for (auto &&value : m_Fields) fields.append(value->toJson());
         result.insert("Fields", fields);
 
         return result;
@@ -66,10 +75,10 @@ namespace entity {
         utility::checkAndSet(src, "Fields", errorList, [&src, &errorList, this](){
             if (src["Fields"].isArray()) {
                 SharedField f;
-                for (auto value : src["Fields"].toArray()) {
+                for (auto &&value : src["Fields"].toArray()) {
                     f = std::make_shared<Field>();
                     f->fromJson(value.toObject(), errorList);
-                    m_Fields.insert(f->name(), f);
+                    m_Fields.append(f);
                 }
             } else {
                 errorList << "Error: \"Fields\" is not array";

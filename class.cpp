@@ -138,7 +138,7 @@ namespace entity {
 
         QJsonArray parents;
         QJsonObject parent;
-        for (auto id : m_Parents.keys()) {
+        for (auto &&id : m_Parents.keys()) {
             parent.insert("Id", m_Parents[id].first);
             parent.insert("Section", m_Parents[id].second);
             parents.append(parent);
@@ -146,11 +146,11 @@ namespace entity {
         result.insert("Parents", parents);
 
         QJsonArray methods;
-        for (auto value : m_Methods.values()) methods.append(value->toJson());
+        for (auto &&value : m_Methods.values()) methods.append(value->toJson());
         result.insert("Methods", methods);
 
         QJsonArray fields;
-        for (auto value : m_Fields.values()) fields.append(value->toJson());
+        for (auto &&value : m_Fields.values()) fields.append(value->toJson());
         result.insert("Fields", fields);
 
         return result;
@@ -170,7 +170,7 @@ namespace entity {
             Parent p;
             QJsonObject o;
             if (src["Parents"].isArray()) {
-                for (auto value : src["Parents"].toArray()) {
+                for (auto &&value : src["Parents"].toArray()) {
                     o = value.toObject();
                     utility::checkAndSet(o, "Id", errorList, [&o, &p, this](){
                         p.first = o["Id"].toString();
@@ -190,7 +190,7 @@ namespace entity {
             if (src["Methods"].isArray()) {
                 SharedMethod method;
                 QJsonObject obj;
-                for (auto value : src["Methods"].toArray()) {
+                for (auto &&value : src["Methods"].toArray()) {
                     obj = value.toObject();
                     utility::checkAndSet(obj, "Type", errorList,
                                          [&obj, &errorList, &method, this](){
@@ -208,7 +208,7 @@ namespace entity {
         utility::checkAndSet(src, "Fields", errorList, [&src, &errorList, this](){
             if (src["Fields"].isArray()) {
                 SharedField field;
-                for (auto value : src["Fields"].toArray()) {
+                for (auto &&value : src["Fields"].toArray()) {
                     field = std::make_shared<Field>();
                     field->fromJson(value.toObject(), errorList);
                     m_Fields.insert(field->name(), field);

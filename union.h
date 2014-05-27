@@ -13,7 +13,7 @@ namespace entity {
         Union();
         Union(const QString &name, const QString &scopeId);
 
-        SharedField getField(const QString &name);
+        SharedField getField(const QString &name) const;
         SharedField addField(const QString &name, const QString &typeId);
         void removeField(const QString &name);
         bool containsField(const QString &name);
@@ -24,7 +24,7 @@ namespace entity {
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
     private:
-        Fields m_Fields;
+        FieldsList m_Fields;
     };
 
 } // namespace entity

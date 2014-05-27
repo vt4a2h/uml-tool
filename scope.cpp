@@ -139,11 +139,11 @@ namespace entity {
         result.insert("Parent ID", m_ParentScopeId);
 
         QJsonArray scopes;
-        for (auto scope : m_Scopes.values()) scopes.append(scope->toJson());
+        for (auto &&scope : m_Scopes.values()) scopes.append(scope->toJson());
         result.insert("Scopes", scopes);
 
         QJsonArray types;
-        for (auto type : m_Types.values()) types.append(type->toJson());
+        for (auto &&type : m_Types.values()) types.append(type->toJson());
         result.insert("Types", types);
 
         return result;
@@ -159,7 +159,7 @@ namespace entity {
         utility::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
             if (src["Scopes"].isArray()) {
                 SharedScope scope;
-                for (auto val : src["Scopes"].toArray()) {
+                for (auto &&val : src["Scopes"].toArray()) {
                     scope = std::make_shared<Scope>();
                     scope->fromJson(val.toObject(), errorList);
                     m_Scopes.insert(scope->id(), scope);
@@ -174,7 +174,7 @@ namespace entity {
             if (src["Types"].isArray()) {
                 SharedType type;
                 QJsonObject obj;
-                for (auto val : src["Scopes"].toArray()) {
+                for (auto &&val : src["Scopes"].toArray()) {
                     obj = val.toObject();
                     utility::checkAndSet(obj, "Kind of type", errorList,
                                          [&obj, &type, &errorList, this](){

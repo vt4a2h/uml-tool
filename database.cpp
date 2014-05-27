@@ -179,7 +179,7 @@ namespace db {
     QJsonObject Database::toJson() const
     {
         QJsonArray scopes;
-        for (auto scope : m_Scopes.values()) scopes.append(scope->toJson());
+        for (auto &&scope : m_Scopes.values()) scopes.append(scope->toJson());
 
         QJsonObject result;
         result.insert("Scopes", scopes);
@@ -193,7 +193,7 @@ namespace db {
         utility::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
             if (src["Scopes"].isArray()) {
                 entity::SharedScope scope;
-                for (auto val : src["Scopes"].toArray()) {
+                for (auto &&val : src["Scopes"].toArray()) {
                     scope = std::make_shared<entity::Scope>();
                     scope->fromJson(val.toObject(), errorList);
                     m_Scopes.insert(scope->id(), scope);

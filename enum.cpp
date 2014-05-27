@@ -86,7 +86,7 @@ namespace entity {
 
         QJsonArray variables;
         QJsonObject variable;
-        for (auto v : m_Variables) {
+        for (auto &&v : m_Variables) {
             variable.insert("Name", v.first);
             variable.insert("Number", v.second);
             variables.append(variable);
@@ -108,7 +108,7 @@ namespace entity {
             if (src["Variables"].isArray()) {
                 QJsonObject obj;
                 Variable var;
-                for (auto value : src["Variables"].toArray()) {
+                for (auto &&value : src["Variables"].toArray()) {
                     obj = value.toObject();
                     utility::checkAndSet(obj, "Name",   errorList, [&obj, &var, this](){ var.first  = obj["Name"].toString(); });
                     utility::checkAndSet(obj, "Number", errorList, [&obj, &var, this](){ var.second = obj["Number"].toInt();  });

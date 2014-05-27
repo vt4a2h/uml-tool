@@ -44,7 +44,7 @@ namespace entity {
         QJsonArray result;
 
         QJsonObject templateParameter;
-        for (auto value : m_TemplateParameters.values()) {
+        for (auto &&value : m_TemplateParameters.values()) {
             templateParameter.insert("Type name", value.first);
             templateParameter.insert("Default type id", value.second);
             result.append(templateParameter);
@@ -59,7 +59,7 @@ namespace entity {
 
         TemplateParameter parameter;
         QJsonObject obj;
-        for (auto value : src) {
+        for (auto &&value : src) {
             obj = value.toObject();
             utility::checkAndSet(obj, "Type name", errorList, [&obj, &parameter, this](){
                 parameter.first = obj["Type name"].toString();

@@ -125,7 +125,7 @@ namespace entity {
         m_Keywords.clear();
         utility::checkAndSet(src, "Keywords", errorList, [&src, &errorList, this](){
             if (src["Keywords"].isArray()) {
-                for (auto value : src["Keywords"].toArray()) m_Keywords.insert(static_cast<FieldKeyword>(value.toInt()));
+                for (auto &&value : src["Keywords"].toArray()) m_Keywords.insert(static_cast<FieldKeyword>(value.toInt()));
             } else {
                 errorList << "Error: \"Keywords\" is not array";
             }

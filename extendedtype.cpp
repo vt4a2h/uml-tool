@@ -106,7 +106,7 @@ namespace entity {
 
         QJsonArray pointersAndLinks;
         QJsonObject obj;
-        for (auto p : m_PointersAndLinks) {
+        for (auto &&p : m_PointersAndLinks) {
             obj.insert("Pl", p.first);
             obj.insert("Const pl status", p.second);
             pointersAndLinks.append(obj);
@@ -114,7 +114,7 @@ namespace entity {
         result.insert("Pointers and links", pointersAndLinks);
 
         QJsonArray templateParameters;
-        for (auto parameterId : m_TemplateParameters) templateParameters.append(parameterId);
+        for (auto &&parameterId : m_TemplateParameters) templateParameters.append(parameterId);
         result.insert("Template parameters", templateParameters);
 
         return result;
@@ -131,7 +131,7 @@ namespace entity {
            if (src["Pointers and links"].isArray()) {
                Pl pl;
                QJsonObject obj;
-               for (auto value : src["Pointers and links"].toArray()) {
+               for (auto &&value : src["Pointers and links"].toArray()) {
                     obj = value.toObject();
                     utility::checkAndSet(obj, "Pl", errorList, [&obj, &pl](){ pl.first = obj["Pl"].toString(); });
                     utility::checkAndSet(obj, "Const pl status", errorList, [&obj, &pl](){ pl.second = obj["Const pl status"].toBool(); });
@@ -145,7 +145,7 @@ namespace entity {
        m_TemplateParameters.clear();
        utility::checkAndSet(src, "Template parameters", errorList, [&src, &errorList, this](){
            if (src["Template parameters"].isArray()) {
-               for (auto value : src["Template parameters"].toArray()) m_TemplateParameters << value.toString();
+               for (auto &&value : src["Template parameters"].toArray()) m_TemplateParameters << value.toString();
            } else {
                errorList << "Error: \"Template parameters\" is not array";
            }

@@ -48,7 +48,7 @@ namespace db {
         QJsonObject result(Database::toJson());
 
         QJsonArray relations;
-        for (auto val : m_Relations.values()) relations.append(val->toJson());
+        for (auto &&val : m_Relations.values()) relations.append(val->toJson());
         result.insert("Relations", relations);
 
         return result;
@@ -65,7 +65,7 @@ namespace db {
             if (src["Relations"].isArray()) {
                 relationship::SharedRelation relation;
                 QJsonObject obj;
-                for (auto val : src["Relations"].toArray()) {
+                for (auto &&val : src["Relations"].toArray()) {
                     obj = val.toObject();
                     utility::checkAndSet(obj, "Type", errorList,
                                          [&obj, &errorList, &relation, this](){

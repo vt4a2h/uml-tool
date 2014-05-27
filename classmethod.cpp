@@ -138,11 +138,11 @@ namespace entity {
         result.insert("Rhs identificator", m_RhsIdentificator);
 
         QJsonArray parameters;
-        for (auto value : m_Parameters.values()) parameters.append(value->toJson());
+        for (auto &&value : m_Parameters.values()) parameters.append(value->toJson());
         result.insert("Parameters", parameters);
 
         QJsonArray lhsIdentificators;
-        for (auto id : m_LhsIdentificators) lhsIdentificators.append(id);
+        for (auto &&id : m_LhsIdentificators) lhsIdentificators.append(id);
         result.insert("Lhs identificators", lhsIdentificators);
 
         return result;
@@ -161,7 +161,7 @@ namespace entity {
         utility::checkAndSet(src, "Parameters", errorList, [&src, &errorList, this](){
             if (src["Parameters"].isArray()) {
                 SharedField parameter;
-                for (auto value : src["Parameters"].toArray()) {
+                for (auto &&value : src["Parameters"].toArray()) {
                     parameter = std::make_shared<Field>();
                     parameter->fromJson(value.toObject(), errorList);
                     m_Parameters.insert(parameter->name(), parameter);
@@ -174,7 +174,7 @@ namespace entity {
         m_LhsIdentificators.clear();
         utility::checkAndSet(src, "Lhs identificators", errorList, [&src, &errorList, this](){
             if (src["Lhs identificators"].isArray()) {
-                for (auto value : src["Lhs identificators"].toArray())
+                for (auto &&value : src["Lhs identificators"].toArray())
                     m_LhsIdentificators.insert(static_cast<LhsIdentificator>(value.toInt()));
             } else {
                 errorList << "Error: \"Lhs identificators\" is not array";

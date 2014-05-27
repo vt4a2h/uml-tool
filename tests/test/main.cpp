@@ -197,6 +197,22 @@ TEST_F(Translator, Enum)
     ASSERT_EQ(futureResult, code);
 }
 
+TEST_F(Translator, Union)
+{
+    auto fooUnion = _projectScope->addType<entity::Union>("Foo");
+
+    QString futureResult("union Foo {};");
+    QString code(_translator->generateCode(fooUnion));
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "union Foo {\n    double a;\n    int b;\n};";
+    auto typeDouble = _globalScope->addType("double");
+    fooUnion->addField("a", typeDouble->id());
+    fooUnion->addField("b", _int->id());
+    code = _translator->generateCode(fooUnion);
+    ASSERT_EQ(futureResult, code);
+}
+
 TEST_F(RelationMaker, MultiplyAssociation)
 {
     auto multAssociation =
