@@ -7,6 +7,7 @@
 #include "scope.h"
 #include "field.h"
 #include "classmethod.h"
+#include "union.h"
 #include "helpfunctions.h"
 #include "templates.cpp"
 #include "constants.cpp"
@@ -107,6 +108,20 @@ namespace translator {
         result.replace("%rhs_k%", rhsId);
 
         result.replace("%const%", method->isConst() ? " const" : "");
+
+        return result;
+    }
+
+    QString ProjectTranslator::generateCode(const entity::SharedUnion &_union) const
+    {
+        QString result(UNION_TEMPLATE);
+
+        result.replace("%name%", _union->name());
+
+        QStringList fields;
+        for (auto &&field : _union->fields())
+            fields << generateCode(field).prepend(INDENT);
+        result.replace("%variables%", fields.join(";\n"));
 
         return result;
     }

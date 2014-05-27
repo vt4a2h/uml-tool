@@ -24,6 +24,7 @@ namespace translator {
         QString generateCode(const entity::SharedEnum &_enum,
                              bool generateNumbers = false) const;
         QString generateCode(const entity::SharedMethod &method) const;
+        QString generateCode(const entity::SharedUnion &_union) const;
 
     private:
         void checkDb() const;
