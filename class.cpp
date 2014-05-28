@@ -84,6 +84,30 @@ namespace entity {
         return m_Methods.values();
     }
 
+    bool Class::containsMethods(Section section) const
+    {
+        bool result(false);
+
+        for (auto &&method : m_Methods.values()) {
+            if (method->section() == section) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    MethodsList Class::methods(Section section) const
+    {
+        MethodsList result;
+
+        for (auto &&method : m_Methods.values())
+            if (method->section() == section) result << method;
+
+        return result;
+    }
+
     SharedField Class::addField(const QString &name, const QString &typeId)
     {
         return *m_Fields.insert(name, std::make_shared<Field>(name, typeId));
@@ -107,6 +131,30 @@ namespace entity {
     FieldsList Class::fields() const
     {
         return m_Fields.values();
+    }
+
+    bool Class::containsFields(Section section) const
+    {
+        bool result(false);
+
+        for (auto &&field : m_Fields.values()) {
+            if (field->section() == section) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    FieldsList Class::fields(Section section) const
+    {
+        FieldsList result;
+
+        for (auto &&field : m_Fields.values())
+            if (field->section() == section) result << field;
+
+        return result;
     }
 
     Kind Class::kind() const

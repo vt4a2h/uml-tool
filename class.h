@@ -28,11 +28,17 @@ namespace entity {
         void removeMethod(const SharedMethod &method);
         MethodsList methods() const;
 
+        bool containsMethods(Section section) const;
+        MethodsList methods(Section section) const;
+
         SharedField addField(const QString &name, const QString &typeId);
         SharedField getField(const QString &name);
         bool containsField(const QString &name);
         void removeField(const QString &name);
         FieldsList fields() const;
+
+        bool containsFields(Section section) const;
+        FieldsList fields(Section section) const;
 
         Kind kind() const;
         void setKind(Kind kind);

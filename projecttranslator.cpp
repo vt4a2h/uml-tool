@@ -114,6 +114,8 @@ namespace translator {
 
     QString ProjectTranslator::generateCode(const entity::SharedUnion &_union) const
     {
+        if (!_union) return "\ninvalid union\n";
+        checkDb();
         QString result(UNION_TEMPLATE);
 
         result.replace("%name%", _union->name());
@@ -126,6 +128,15 @@ namespace translator {
         if (!resultFields.isEmpty()) resultFields.append(";\n").prepend("\n");
 
         result.replace("%variables%", resultFields);
+
+        return result;
+    }
+
+    QString ProjectTranslator::generateCode(const entity::SharedClass &_class) const
+    {
+        if (!_class) return "\ninvalid class\n";
+        checkDb();
+        QString result(CLASS_TEMPLATE);
 
         return result;
     }

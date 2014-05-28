@@ -25,6 +25,7 @@ namespace translator {
                              bool generateNumbers = false) const;
         QString generateCode(const entity::SharedMethod &method) const;
         QString generateCode(const entity::SharedUnion &_union) const;
+        QString generateCode(const entity::SharedClass &_class) const;
 
     private:
         void checkDb() const;
