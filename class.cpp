@@ -49,6 +49,11 @@ namespace entity {
         m_Parents.remove(typeId);
     }
 
+    bool Class::hasParents() const
+    {
+        return !m_Parents.isEmpty();
+    }
+
     ParentsList Class::parents() const
     {
         return m_Parents.values();

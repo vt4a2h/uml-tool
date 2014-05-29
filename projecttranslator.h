@@ -30,6 +30,8 @@ namespace translator {
     private:
         void checkDb() const;
         QString generateCodeForExtTypeOrType(const QString &id) const;
+        void generateClassSection(const entity::SharedClass &_class,
+                                  entity::Section section, QString &out) const;
 
         db::SharedDatabase m_GlobalDatabase;
         db::SharedDatabase m_ProjectDatabase;

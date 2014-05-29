@@ -18,6 +18,7 @@ namespace entity {
         ParentsList getParents(const QString &typeId);
         bool containsParent(const QString &typeId);
         void removeParent(const QString &typeId);
+        bool hasParents() const;
         ParentsList parents() const;
 
         template <class T = ClassMethod> std::shared_ptr<T> makeMethod(const QString &name);

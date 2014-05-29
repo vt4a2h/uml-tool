@@ -161,4 +161,18 @@ namespace utility {
         return type;
     }
 
+    QString sectionToString(entity::Section section)
+    {
+        switch (section) {
+        case entity::Public:
+            return "public";
+        case entity::Protected:
+            return "protected";
+        case entity::Private:
+            return "private";
+        default:
+            return "unknown";
+        }
+    }
+
 }

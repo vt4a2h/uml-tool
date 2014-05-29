@@ -23,6 +23,7 @@ namespace entity {
     enum FieldKeyword : int;
     enum LhsIdentificator : int;
     enum RhsIdentificator : int;
+    enum Section : int;
 }
 
 namespace relationship {
@@ -53,5 +54,6 @@ namespace utility {
     QString fieldKeywordToString(entity::FieldKeyword keyword);
     QString methodLhsIdToString(entity::LhsIdentificator id);
     QString methodRhsIdToString(entity::RhsIdentificator id);
+    QString sectionToString(entity::Section section);
 }
 

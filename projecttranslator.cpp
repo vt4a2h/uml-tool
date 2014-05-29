@@ -8,6 +8,7 @@
 #include "field.h"
 #include "classmethod.h"
 #include "union.h"
+#include "class.h"
 #include "helpfunctions.h"
 #include "templates.cpp"
 #include "constants.cpp"
@@ -44,6 +45,27 @@ namespace translator {
                      .append(st->isLink() || st->isPointer() ? "" : " ") :
                         t ? generateCode(t).append(" ") :
                             "");
+    }
+
+    void ProjectTranslator::generateClassSection(const entity::SharedClass &_class,
+                                                 entity::Section section, QString &out) const
+    {
+        if (!_class->containsMethods(section) || !_class->containsFields(section)) return;
+
+        out.append("\n")
+           .append(INDENT)
+           .append(utility::sectionToString(section))
+           .append(":\n");
+
+        QStringList methodsList;
+        for (auto &&method : _class->methods(section))
+            methodsList << generateCode(method).prepend(INDENT).prepend(INDENT);
+        out.append(methodsList.join(";\n")).append(";\n");
+
+        QStringList fieldsList;
+        for (auto &&field : _class->fields(section))
+            fieldsList << generateCode(field).prepend(INDENT).prepend(INDENT);
+        out.append("\n").append(fieldsList.join(";\n")).append(";\n");
     }
 
     QString ProjectTranslator::generateCode(const entity::SharedEnum &_enum, bool generateNumbers) const
@@ -137,6 +159,32 @@ namespace translator {
         if (!_class) return "\ninvalid class\n";
         checkDb();
         QString result(CLASS_TEMPLATE);
+
+        result.replace("%kind%", _class->kind() == entity::ClassType ? "class " : "struct ");
+
+        QString parents("");
+        if (_class->hasParents()) {
+            QStringList parentsList;
+            QString pString;
+            entity::SharedType t(nullptr);
+            for (auto &&p : _class->parents()) {
+                t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, p.first);
+                pString.append(utility::sectionToString(p.second))
+                       .append(" ")
+                       .append(t ? generateCode(t) : "unknown type");
+                parentsList << pString;
+                pString.clear();
+            }
+            parents.append(": ").append(parentsList.join(", ")).append(" ");
+        }
+        if (_class->kind() == entity::ClassType) parents.append("\n");
+        result.replace("%parents%", parents);
+
+        QString section("");
+        generateClassSection(_class, entity::Public, section);
+        generateClassSection(_class, entity::Protected, section);
+        generateClassSection(_class, entity::Private, section);
+        result.replace("%section%", section);
 
         return result;
     }
