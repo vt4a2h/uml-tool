@@ -3,10 +3,11 @@
 #include "TestDepthSearch.h"
 #include "TestTypeMaker.h"
 #include "TestRelationMaker.h"
-#include "TestProjectTranslator.h"
+#include "TestCodeGenerator.h"
 #include <helpfunctions.h>
+#include <templates.cpp>
 
-TEST_F(Translator, Type)
+TEST_F(CodeGenerator, Type)
 {
     QString futureResult("int");
     QString code(_translator->generateCode(_int));
@@ -19,7 +20,7 @@ TEST_F(Translator, Type)
     ASSERT_EQ(futureResult, code);
 }
 
-TEST_F(Translator, ExtendedType)
+TEST_F(CodeGenerator, ExtendedType)
 {
     entity::SharedExtendedType type = _projectScope->addType<entity::ExtendedType>();
     type->setTypeId(_int->id());
@@ -77,7 +78,7 @@ TEST_F(Translator, ExtendedType)
     ASSERT_EQ(futureResult, code);
 }
 
-TEST_F(Translator, Field)
+TEST_F(CodeGenerator, Field)
 {
     auto field = std::make_shared<entity::Field>("Number", _int->id());
     field->setPrefix("m_");
@@ -103,7 +104,7 @@ TEST_F(Translator, Field)
     ASSERT_EQ(futureResult, code);
 }
 
-TEST_F(Translator, ClassMethod)
+TEST_F(CodeGenerator, ClassMethod)
 {
     auto method = std::make_shared<entity::ClassMethod>("calc");
     method->setConstStatus(true);
@@ -168,7 +169,7 @@ TEST_F(Translator, ClassMethod)
     ASSERT_EQ(futureResult, code);
 }
 
-TEST_F(Translator, Enum)
+TEST_F(CodeGenerator, Enum)
 {
     auto fooEnum = _projectScope->addType<entity::Enum>("Foo");
 
@@ -197,7 +198,7 @@ TEST_F(Translator, Enum)
     ASSERT_EQ(futureResult, code);
 }
 
-TEST_F(Translator, Union)
+TEST_F(CodeGenerator, Union)
 {
     auto fooUnion = _projectScope->addType<entity::Union>("Foo");
 
@@ -210,6 +211,51 @@ TEST_F(Translator, Union)
     fooUnion->addField("a", typeDouble->id());
     fooUnion->addField("b", _int->id());
     code = _translator->generateCode(fooUnion);
+    ASSERT_EQ(futureResult, code);
+}
+
+#include <QDebug>
+TEST_F(CodeGenerator, Class)
+{
+    auto fooClass = _projectScope->addType<entity::Class>("Foo");
+
+    QString futureResult("class Foo {};");
+    QString code(_translator->generateCode(fooClass));
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "struct Foo {};";
+    fooClass->setKind(entity::StructType);
+    code = _translator->generateCode(fooClass);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "class Foo : public Bar {};";
+    fooClass->setKind(entity::ClassType);
+    auto barClass = _projectScope->addType<entity::Class>("Bar");
+    fooClass->addParent(barClass->id(), entity::Public);
+    code = _translator->generateCode(fooClass);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "class Foo : public Bar, protected Baz {};";
+    auto bazClass = _projectScope->addType<entity::Class>("Baz");
+    fooClass->addParent(bazClass->id(), entity::Protected);
+    code = _translator->generateCode(fooClass);
+    ASSERT_EQ(futureResult, code);
+
+    fooClass->removeParent(barClass->id());
+    fooClass->removeParent(bazClass->id());
+
+    futureResult = QString("class Foo \n{\n"
+                           "%1private:\n"
+                           "%1%1int a_;\n"
+                           "%1%1Baz b_;\n"
+                           "};").arg(INDENT);
+    auto aField = fooClass->addField("a", _int->id());
+    aField->setSection(entity::Private);
+    aField->setSuffix("_");
+    auto bField = fooClass->addField("b", bazClass->id());
+    bField->setSection(entity::Private);
+    bField->setSuffix("_");
+    code = _translator->generateCode(fooClass);
     ASSERT_EQ(futureResult, code);
 }
 

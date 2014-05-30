@@ -17,10 +17,10 @@ namespace translator {
         db::SharedDatabase projectDatabase() const;
         void setProjectDatabase(const db::SharedDatabase &projectDatabase);
 
-        QString generateCode(const entity::SharedType &type) const;
+        QString generateCode(const entity::SharedType &type, bool withNamespace = true) const;
         QString generateCode(const entity::SharedExtendedType &extType,
-                             bool alias = false) const;
-        QString generateCode(const entity::SharedField &field) const;
+                             bool alias = false, bool withNamespace = true) const;
+        QString generateCode(const entity::SharedField &field, bool withNamespace = true) const;
         QString generateCode(const entity::SharedEnum &_enum,
                              bool generateNumbers = false) const;
         QString generateCode(const entity::SharedMethod &method) const;
@@ -29,7 +29,7 @@ namespace translator {
 
     private:
         void checkDb() const;
-        QString generateCodeForExtTypeOrType(const QString &id) const;
+        QString generateCodeForExtTypeOrType(const QString &id, bool withNamespace = true) const;
         void generateClassSection(const entity::SharedClass &_class,
                                   entity::Section section, QString &out) const;
 

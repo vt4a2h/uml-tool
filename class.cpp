@@ -31,32 +31,45 @@ namespace entity {
 
     Parent Class::addParent(const QString &typeId, Section section)
     {
-        return *m_Parents.insert(typeId, std::make_pair(typeId, section));
+        auto parent = Parent(typeId, section);
+        if (containsParent(typeId)) removeParent(typeId);
+        m_Parents.append(parent);
+
+        return parent;
     }
 
     ParentsList Class::getParents(const QString &typeId)
     {
-        return m_Parents.values(typeId);
+        ParentsList result;
+
+        for (auto &&p : m_Parents)
+            if (p.first == typeId) result << p;
+
+        return result;
     }
 
     bool Class::containsParent(const QString &typeId)
     {
-        return m_Parents.contains(typeId);
+        auto it = std::find_if(m_Parents.begin(), m_Parents.end(),
+                               [&](const Parent &p) { return p.first == typeId; });
+        return (it != m_Parents.end());
     }
 
     void Class::removeParent(const QString &typeId)
     {
-        m_Parents.remove(typeId);
+        auto it = std::find_if(m_Parents.begin(), m_Parents.end(),
+                               [&](const Parent &p) { return p.first == typeId; });
+        if (it != m_Parents.end()) m_Parents.erase(it);
     }
 
-    bool Class::hasParents() const
+    bool Class::anyParents() const
     {
         return !m_Parents.isEmpty();
     }
 
     ParentsList Class::parents() const
     {
-        return m_Parents.values();
+        return m_Parents;
     }
 
     void Class::addMethod(SharedMethod method)
@@ -87,6 +100,11 @@ namespace entity {
     MethodsList Class::methods() const
     {
         return m_Methods.values();
+    }
+
+    bool Class::anyMethods() const
+    {
+        return !m_Methods.isEmpty();
     }
 
     bool Class::containsMethods(Section section) const
@@ -136,6 +154,11 @@ namespace entity {
     FieldsList Class::fields() const
     {
         return m_Fields.values();
+    }
+
+    bool Class::anyFields() const
+    {
+        return !m_Fields.empty();
     }
 
     bool Class::containsFields(Section section) const
@@ -191,9 +214,9 @@ namespace entity {
 
         QJsonArray parents;
         QJsonObject parent;
-        for (auto &&id : m_Parents.keys()) {
-            parent.insert("Id", m_Parents[id].first);
-            parent.insert("Section", m_Parents[id].second);
+        for (auto &&p: m_Parents) {
+            parent.insert("Id", p.first);
+            parent.insert("Section", p.second);
             parents.append(parent);
         }
         result.insert("Parents", parents);
@@ -231,7 +254,7 @@ namespace entity {
                     utility::checkAndSet(o, "Section", errorList, [&o, &p, this](){
                         p.second = static_cast<Section>(o["Section"].toInt());
                     });
-                    m_Parents.insert(p.first, p);
+                    m_Parents.append(p);
                 }
             } else {
                 errorList << "Error: \"Parents\" is not array";

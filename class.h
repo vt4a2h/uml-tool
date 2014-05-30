@@ -8,7 +8,7 @@ namespace entity {
     enum Kind    : int;
     enum Section : int;
 
-    class Class : public Type
+    class   Class : public Type
     {
     public:
         Class();
@@ -18,16 +18,17 @@ namespace entity {
         ParentsList getParents(const QString &typeId);
         bool containsParent(const QString &typeId);
         void removeParent(const QString &typeId);
-        bool hasParents() const;
+        bool anyParents() const;
         ParentsList parents() const;
 
         template <class T = ClassMethod> std::shared_ptr<T> makeMethod(const QString &name);
         void addMethod(SharedMethod method);
-        MethodsList  getMethod(const QString &name);
+        MethodsList getMethod(const QString &name);
         bool containsMethod(const QString &name);
         void removeMethods(const QString &name);
         void removeMethod(const SharedMethod &method);
         MethodsList methods() const;
+        bool anyMethods() const;
 
         bool containsMethods(Section section) const;
         MethodsList methods(Section section) const;
@@ -37,6 +38,7 @@ namespace entity {
         bool containsField(const QString &name);
         void removeField(const QString &name);
         FieldsList fields() const;
+        bool anyFields() const;
 
         bool containsFields(Section section) const;
         FieldsList fields(Section section) const;
@@ -54,7 +56,7 @@ namespace entity {
         Kind m_Kind;
         bool m_FinalStatus;
 
-        Parents m_Parents;
+        ParentsList m_Parents;
         Methods m_Methods;
         Fields  m_Fields;
     };

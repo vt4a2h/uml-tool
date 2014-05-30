@@ -30,7 +30,7 @@ namespace translator {
         Q_ASSERT_X(m_ProjectDatabase, "ProjectTranslator", "project database not found");
     }
 
-    QString ProjectTranslator::generateCodeForExtTypeOrType(const QString &id) const
+    QString ProjectTranslator::generateCodeForExtTypeOrType(const QString &id, bool withNamespace) const
     {
         checkDb();
 
@@ -41,16 +41,16 @@ namespace translator {
         if (t->type() == entity::ExtendedTypeType)
             st = std::dynamic_pointer_cast<entity::ExtendedType>(t);
 
-        return (st ? generateCode(st)
+        return (st ? generateCode(st, false, withNamespace)
                      .append(st->isLink() || st->isPointer() ? "" : " ") :
-                        t ? generateCode(t).append(" ") :
+                        t ? generateCode(t, withNamespace).append(" ") :
                             "");
     }
 
     void ProjectTranslator::generateClassSection(const entity::SharedClass &_class,
                                                  entity::Section section, QString &out) const
     {
-        if (!_class->containsMethods(section) || !_class->containsFields(section)) return;
+        if (!_class->containsMethods(section) && !_class->containsFields(section)) return;
 
         out.append("\n")
            .append(INDENT)
@@ -60,12 +60,18 @@ namespace translator {
         QStringList methodsList;
         for (auto &&method : _class->methods(section))
             methodsList << generateCode(method).prepend(INDENT).prepend(INDENT);
-        out.append(methodsList.join(";\n")).append(";\n");
+        out.append(methodsList.join(";\n"));
+        if (!methodsList.isEmpty()) out.append(";\n\n");
 
         QStringList fieldsList;
-        for (auto &&field : _class->fields(section))
-            fieldsList << generateCode(field).prepend(INDENT).prepend(INDENT);
-        out.append("\n").append(fieldsList.join(";\n")).append(";\n");
+        for (auto &&field : _class->fields(section)) {
+            auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, field->typeId());
+            if (!t) break;
+            fieldsList << generateCode(field, t->scopeId() == _class->scopeId() ? false : true)
+                          .prepend(INDENT).prepend(INDENT);
+        }
+        out.append(fieldsList.join(";\n"));
+        if (!fieldsList.isEmpty()) out.append(";\n");
     }
 
     QString ProjectTranslator::generateCode(const entity::SharedEnum &_enum, bool generateNumbers) const
@@ -162,8 +168,10 @@ namespace translator {
 
         result.replace("%kind%", _class->kind() == entity::ClassType ? "class " : "struct ");
 
+        result.replace("%name%", _class->name().append(" "));
+
         QString parents("");
-        if (_class->hasParents()) {
+        if (_class->anyParents()) {
             QStringList parentsList;
             QString pString;
             entity::SharedType t(nullptr);
@@ -171,13 +179,14 @@ namespace translator {
                 t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, p.first);
                 pString.append(utility::sectionToString(p.second))
                        .append(" ")
-                       .append(t ? generateCode(t) : "unknown type");
+                       .append(t ? generateCode(t, t->scopeId() == _class->scopeId() ? false : true) : "unknown type");
                 parentsList << pString;
                 pString.clear();
             }
             parents.append(": ").append(parentsList.join(", ")).append(" ");
         }
-        if (_class->kind() == entity::ClassType) parents.append("\n");
+        if (_class->kind() == entity::ClassType &&
+           (_class->anyFields() || _class->anyMethods())) parents.append("\n");
         result.replace("%parents%", parents);
 
         QString section("");
@@ -189,7 +198,8 @@ namespace translator {
         return result;
     }
 
-    QString ProjectTranslator::generateCode(const entity::SharedExtendedType &extType, bool alias) const
+    QString ProjectTranslator::generateCode(const entity::SharedExtendedType &extType,
+                                            bool alias, bool withNamespace) const
     {
         if (!extType) return "\ninvalid extended type\n";
         checkDb();
@@ -199,7 +209,7 @@ namespace translator {
 
         if (extType->typeId() != STUB_ID) {
             auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, extType->typeId());
-            result.replace("%name%", t ? this->generateCode(t) : "");
+            result.replace("%name%", t ? this->generateCode(t, withNamespace) : "");
         } else {
             result.remove("%name%");
         }
@@ -235,7 +245,7 @@ namespace translator {
         return result;
     }
 
-    QString ProjectTranslator::generateCode(const entity::SharedField &field) const
+    QString ProjectTranslator::generateCode(const entity::SharedField &field, bool withNamespace) const
     {
         if (!field) return "\ninvalid field\n";
         checkDb();
@@ -247,7 +257,7 @@ namespace translator {
                 keywords << utility::fieldKeywordToString(keyword);
         result.replace("%keywords%", keywords.isEmpty() ? "" : keywords.join(" ").append(" "));
 
-        result.replace("%type%", generateCodeForExtTypeOrType(field->typeId()));
+        result.replace("%type%", generateCodeForExtTypeOrType(field->typeId(), withNamespace));
         result.replace("%name%", field->fullName());
 
         return result;
@@ -263,7 +273,7 @@ namespace translator {
         m_ProjectDatabase = projectDatabase;
     }
 
-    QString ProjectTranslator::generateCode(const entity::SharedType &type) const
+    QString ProjectTranslator::generateCode(const entity::SharedType &type, bool withNamespace) const
     {
         QStringList scopesNames;
         QString id = type->scopeId();
@@ -276,7 +286,7 @@ namespace translator {
             scope = utility::findScope(m_GlobalDatabase, m_ProjectDatabase, id);
         }
 
-        if (!scopesNames.isEmpty()) {
+        if (!scopesNames.isEmpty() && withNamespace) {
             scopesNames << type->name();
             return scopesNames.join("::");
         }
