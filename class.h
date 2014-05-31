@@ -34,8 +34,8 @@ namespace entity {
         MethodsList methods(Section section) const;
 
         SharedField addField(const QString &name, const QString &typeId);
-        SharedField getField(const QString &name);
-        bool containsField(const QString &name);
+        SharedField getField(const QString &name) const;
+        bool containsField(const QString &name) const;
         void removeField(const QString &name);
         FieldsList fields() const;
         bool anyFields() const;
@@ -58,7 +58,7 @@ namespace entity {
 
         ParentsList m_Parents;
         Methods m_Methods;
-        Fields  m_Fields;
+        FieldsList  m_Fields;
     };
 
     template <class T>

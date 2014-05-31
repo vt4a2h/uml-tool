@@ -214,7 +214,6 @@ TEST_F(CodeGenerator, Union)
     ASSERT_EQ(futureResult, code);
 }
 
-#include <QDebug>
 TEST_F(CodeGenerator, Class)
 {
     auto fooClass = _projectScope->addType<entity::Class>("Foo");
@@ -257,6 +256,26 @@ TEST_F(CodeGenerator, Class)
     bField->setSuffix("_");
     code = _translator->generateCode(fooClass);
     ASSERT_EQ(futureResult, code);
+
+    fooClass->removeField("a");
+    fooClass->removeField("b");
+
+    futureResult = QString("class Foo \n{\n"
+                           "%1public:\n"
+                           "%1%1int a;\n\n"
+                           "%1protected:\n"
+                           "%1%1int b;\n\n"
+                           "%1private:\n"
+                           "%1%1int c;\n"
+                           "};").arg(INDENT);
+
+    aField = fooClass->addField("a", _int->id());
+    bField = fooClass->addField("b", _int->id());
+    bField->setSection(entity::Protected);
+    auto cField = fooClass->addField("c", _int->id());
+    cField->setSection(entity::Private);
+    code = _translator->generateCode(fooClass);
+    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
 }
 
 TEST_F(RelationMaker, MultiplyAssociation)

@@ -133,27 +133,34 @@ namespace entity {
 
     SharedField Class::addField(const QString &name, const QString &typeId)
     {
-        return *m_Fields.insert(name, std::make_shared<Field>(name, typeId));
+        auto field = std::make_shared<Field>(name, typeId);
+        if (containsField(name)) removeField(name);
+        m_Fields.append(field);
+
+        return field;
     }
 
-    SharedField Class::getField(const QString &name)
+    SharedField Class::getField(const QString &name) const
     {
-        return m_Fields.value(name);
+        auto it = std::find_if(m_Fields.begin(), m_Fields.end(),
+                               [&name](const SharedField &f){ return f->name() == name; });
+        return (it != m_Fields.end() ? *it : nullptr);
     }
 
-    bool Class::containsField(const QString &name)
+    bool Class::containsField(const QString &name) const
     {
-        return m_Fields.contains(name);
+        return getField(name).operator bool();
     }
 
     void Class::removeField(const QString &name)
     {
-        m_Fields.remove(name);
+        auto f = getField(name);
+        if (f) m_Fields.removeAt(m_Fields.indexOf(f));
     }
 
     FieldsList Class::fields() const
     {
-        return m_Fields.values();
+        return m_Fields;
     }
 
     bool Class::anyFields() const
@@ -165,7 +172,7 @@ namespace entity {
     {
         bool result(false);
 
-        for (auto &&field : m_Fields.values()) {
+        for (auto &&field : m_Fields) {
             if (field->section() == section) {
                 result = true;
                 break;
@@ -179,7 +186,7 @@ namespace entity {
     {
         FieldsList result;
 
-        for (auto &&field : m_Fields.values())
+        for (auto &&field : m_Fields)
             if (field->section() == section) result << field;
 
         return result;
@@ -226,7 +233,7 @@ namespace entity {
         result.insert("Methods", methods);
 
         QJsonArray fields;
-        for (auto &&value : m_Fields.values()) fields.append(value->toJson());
+        for (auto &&value : m_Fields) fields.append(value->toJson());
         result.insert("Fields", fields);
 
         return result;
@@ -287,7 +294,7 @@ namespace entity {
                 for (auto &&value : src["Fields"].toArray()) {
                     field = std::make_shared<Field>();
                     field->fromJson(value.toObject(), errorList);
-                    m_Fields.insert(field->name(), field);
+                    m_Fields << field;
                 }
             } else {
                 errorList << "Error: \"Fields\" is not array";
