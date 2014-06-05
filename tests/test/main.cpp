@@ -283,7 +283,7 @@ TEST_F(CodeGenerator, Class)
     futureResult = QString("class Foo \n{\n"
                            "%1public:\n"
                            "%1%1int c() const;\n"
-                           "%1%1void setC(const &int newC);\n\n"
+                           "%1%1void setC(const int &newC);\n\n"
                            "%1private:\n"
                            "%1%1int c;\n"
                            "};").arg(INDENT);
@@ -303,7 +303,7 @@ TEST_F(CodeGenerator, Class)
     cSetter->addParameter("newC", constLintToInt->id());
 
     code = _translator->generateCode(fooClass);
-    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
+    ASSERT_EQ(futureResult, code);
 }
 
 TEST_F(RelationMaker, MultiplyAssociation)

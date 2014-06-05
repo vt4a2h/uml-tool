@@ -94,7 +94,7 @@ namespace entity {
     void Class::removeMethods(const QString &name)
     {
         auto methods = getMethod(name);
-        for (auto &&m : methods) methods.removeOne(m);
+        for (auto &&m : methods) m_Methods.removeAll(m);
     }
 
     void Class::removeMethod(const SharedMethod &method)

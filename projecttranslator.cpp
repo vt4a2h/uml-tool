@@ -61,7 +61,7 @@ namespace translator {
         for (auto &&method : _class->methods(section))
             methodsList << generateCode(method).prepend(INDENT).prepend(INDENT);
         out.append(methodsList.join(";\n"));
-        if (!methodsList.isEmpty()) out.append(";\n\n");
+        if (!methodsList.isEmpty()) out.append(";\n");
 
         QStringList fieldsList;
         for (auto &&field : _class->fields(section)) {

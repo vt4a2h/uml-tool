@@ -93,22 +93,26 @@ namespace entity {
 
     SharedField ClassMethod::getParameter(const QString &name)
     {
-        SharedField result = nullptr;
+        auto it = std::find_if(m_Parameters.begin(), m_Parameters.end(),
+                               [&name](const SharedField &f){ return f->name() == name; });
 
-        auto it = m_Parameters.find(name);
-        if ( it != m_Parameters.end()) result = *it;
-
-        return result;
+        return (it != m_Parameters.end() ? *it : nullptr);
     }
 
     SharedField ClassMethod::addParameter(const QString &name, const QString &typeId)
     {
-        return *m_Parameters.insert(name, std::make_shared<Field>(name, typeId));
+        auto existField = getParameter(name);
+        if (existField.operator bool()) removeParameter(name);
+
+        auto f = std::make_shared<Field>(name, typeId);
+        m_Parameters << f;
+
+        return f;
     }
 
     bool ClassMethod::containsParameter(const QString &name)
     {
-        return m_Parameters.contains(name);
+        return getParameter(name).operator bool();
     }
 
     bool ClassMethod::hasParameters() const
@@ -118,12 +122,13 @@ namespace entity {
 
     void ClassMethod::removeParameter(const QString &name)
     {
-        m_Parameters.remove(name);
+        auto parameter = getParameter(name);
+        if (parameter.operator bool()) m_Parameters.removeOne(parameter);
     }
 
     FieldsList ClassMethod::parameters() const
     {
-        return m_Parameters.values();
+        return m_Parameters;
     }
 
     QJsonObject ClassMethod::toJson() const
@@ -138,7 +143,7 @@ namespace entity {
         result.insert("Rhs identificator", m_RhsIdentificator);
 
         QJsonArray parameters;
-        for (auto &&value : m_Parameters.values()) parameters.append(value->toJson());
+        for (auto &&value : m_Parameters) parameters.append(value->toJson());
         result.insert("Parameters", parameters);
 
         QJsonArray lhsIdentificators;
@@ -164,7 +169,7 @@ namespace entity {
                 for (auto &&value : src["Parameters"].toArray()) {
                     parameter = std::make_shared<Field>();
                     parameter->fromJson(value.toObject(), errorList);
-                    m_Parameters.insert(parameter->name(), parameter);
+                    m_Parameters << parameter;
                 }
             } else {
                 errorList << "Error: \"Parameters\" is not array";

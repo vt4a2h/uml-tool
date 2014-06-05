@@ -64,7 +64,7 @@ namespace entity {
         bool    m_ConstStatus;
         QString m_ReturnTypeId;
 
-        Fields m_Parameters;
+        FieldsList m_Parameters;
 
         RhsIdentificator  m_RhsIdentificator;
         LhsIdentificators m_LhsIdentificators;
