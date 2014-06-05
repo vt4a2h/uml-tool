@@ -24,7 +24,7 @@ namespace entity {
         void setName(const QString &name);
 
         Section section() const;
-        void setSection(Section &section);
+        void setSection(Section section);
 
         bool isConst() const;
         void setConstStatus(bool newStatus);

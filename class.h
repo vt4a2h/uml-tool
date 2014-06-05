@@ -57,7 +57,7 @@ namespace entity {
         bool m_FinalStatus;
 
         ParentsList m_Parents;
-        Methods m_Methods;
+        MethodsList m_Methods;
         FieldsList  m_Fields;
     };
 
@@ -66,7 +66,7 @@ namespace entity {
     {
         typedef typename std::conditional<std::is_class<T>::value && std::is_base_of<ClassMethod, T>::value, T, ClassMethod>::type ResultType;
         auto value = std::make_shared<ResultType>(name);
-        m_Methods.insertMulti(name, value);
+        m_Methods << value;
 
         return value;
     }

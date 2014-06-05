@@ -41,7 +41,7 @@ namespace entity {
         return m_Section;
     }
 
-    void ClassMethod::setSection(Section &section)
+    void ClassMethod::setSection(Section section)
     {
         m_Section = section;
     }

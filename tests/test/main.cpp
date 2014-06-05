@@ -268,12 +268,40 @@ TEST_F(CodeGenerator, Class)
                            "%1private:\n"
                            "%1%1int c;\n"
                            "};").arg(INDENT);
-
     aField = fooClass->addField("a", _int->id());
     bField = fooClass->addField("b", _int->id());
     bField->setSection(entity::Protected);
     auto cField = fooClass->addField("c", _int->id());
     cField->setSection(entity::Private);
+    code = _translator->generateCode(fooClass);
+    ASSERT_EQ(futureResult, code);
+
+    fooClass->removeField("a");
+    fooClass->removeField("b");
+
+
+    futureResult = QString("class Foo \n{\n"
+                           "%1public:\n"
+                           "%1%1int c() const;\n"
+                           "%1%1void setC(const &int newC);\n\n"
+                           "%1private:\n"
+                           "%1%1int c;\n"
+                           "};").arg(INDENT);
+    auto cGetter = fooClass->makeMethod("c");
+    cGetter->setConstStatus(true);
+    cGetter->setReturnTypeId(cField->typeId());
+    cGetter->setSection(entity::Public);
+
+    auto cSetter = fooClass->makeMethod("setC");
+    auto voidType = _globalScope->addType("void");
+    cSetter->setReturnTypeId(voidType->id());
+    cSetter->setSection(entity::Public);
+    auto constLintToInt = _projectScope->addType<entity::ExtendedType>();
+    constLintToInt->setTypeId(cField->typeId());
+    constLintToInt->setConstStatus(true);
+    constLintToInt->addLinkStatus();
+    cSetter->addParameter("newC", constLintToInt->id());
+
     code = _translator->generateCode(fooClass);
     ASSERT_EQ(futureResult.toStdString(), code.toStdString());
 }

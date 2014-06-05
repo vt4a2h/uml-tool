@@ -74,32 +74,37 @@ namespace entity {
 
     void Class::addMethod(SharedMethod method)
     {
-        m_Methods.insert(method->name(), method);
+        m_Methods << method;
     }
 
     MethodsList Class::getMethod(const QString &name)
     {
-        return m_Methods.values(name);
+        MethodsList result;
+        for (auto && m : m_Methods)
+            if (m->name() == name) result << m;
+
+        return result;
     }
 
     bool Class::containsMethod(const QString &name)
     {
-        return m_Methods.contains(name);
+        return !getMethod(name).isEmpty();
     }
 
     void Class::removeMethods(const QString &name)
     {
-        m_Methods.remove(name);
+        auto methods = getMethod(name);
+        for (auto &&m : methods) methods.removeOne(m);
     }
 
     void Class::removeMethod(const SharedMethod &method)
     {
-        m_Methods.remove(method->name(), method);
+        m_Methods.removeOne(method);
     }
 
     MethodsList Class::methods() const
     {
-        return m_Methods.values();
+        return m_Methods;
     }
 
     bool Class::anyMethods() const
@@ -111,7 +116,7 @@ namespace entity {
     {
         bool result(false);
 
-        for (auto &&method : m_Methods.values()) {
+        for (auto &&method : m_Methods) {
             if (method->section() == section) {
                 result = true;
                 break;
@@ -125,7 +130,7 @@ namespace entity {
     {
         MethodsList result;
 
-        for (auto &&method : m_Methods.values())
+        for (auto &&method : m_Methods)
             if (method->section() == section) result << method;
 
         return result;
@@ -229,7 +234,7 @@ namespace entity {
         result.insert("Parents", parents);
 
         QJsonArray methods;
-        for (auto &&value : m_Methods.values()) methods.append(value->toJson());
+        for (auto &&value : m_Methods) methods.append(value->toJson());
         result.insert("Methods", methods);
 
         QJsonArray fields;
@@ -279,7 +284,7 @@ namespace entity {
                                          [&obj, &errorList, &method, this](){
                         method = utility::makeMethod(static_cast<ClassMethodType>(obj["Type"].toInt()));
                         method->fromJson(obj, errorList);
-                        m_Methods.insertMulti(method->name(), method);
+                        m_Methods << method;
                     });
                 }
             } else {
