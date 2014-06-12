@@ -24,7 +24,7 @@ namespace entity {
     QJsonObject TemplateClass::toJson() const
     {
         QJsonObject result(Class::toJson());
-        result.insert("Template parameters", templatePartToJson());
+        result.insert("Template part", Template::templateToJson());
 
         return result;
     }
@@ -33,12 +33,8 @@ namespace entity {
     {
         Class::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Template parameters", errorList, [&src, &errorList, this](){
-            if (src["Template parameters"].isArray()) {
-                templatePartFromJson(src["Template parameters"].toArray(), errorList);
-            } else {
-                errorList << "Error: \"Template parameters\" is not array";
-            }
+        utility::checkAndSet(src, "Template part", errorList, [&src, &errorList, this](){
+            Template::templateLoadFromJson(src["Template part"].toObject(), errorList);
         });
     }
 
