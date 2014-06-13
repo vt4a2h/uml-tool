@@ -8,10 +8,10 @@ namespace entity {
     class Template
     {
     public:
-        TemplateParameter getTemplateParameter(const QString &name) const;
-        void addTemplateParameter(const QString &name, const QString &typeId = QString(""));
-        bool contains(const QString &name) const;
-        void removeParameter(const QString &name);
+        TemplateParameter getTemplateParameter(const QString &typeId) const;
+        void addTemplateParameter(const QString &typeId, const QString &defaultTypeId= QString(""));
+        bool contains(const QString &typeId) const;
+        bool removeParameter(const QString &typeId);
         TemplateParametersList parameters() const;
 
         db::SharedDatabase localDatabase() const;
@@ -21,7 +21,7 @@ namespace entity {
         void templateLoadFromJson(const QJsonObject &src, QStringList &errorList);
 
     private:
-        TemplateParameters m_TemplateParameters;
+        TemplateParametersList m_TemplateParameters;
         db::SharedDatabase m_LocalDatabase;
     };
 
