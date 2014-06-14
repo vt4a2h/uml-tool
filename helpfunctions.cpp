@@ -152,15 +152,6 @@ namespace utility {
         }
     }
 
-    std::shared_ptr<entity::Type> findType(const std::shared_ptr<db::Database> &global,
-                             const std::shared_ptr<db::Database> &project,
-                             const QString &id)
-    {
-        auto type = project->depthTypeSearch(id);
-        if (!type) type = global->depthTypeSearch(id);
-        return type;
-    }
-
     QString sectionToString(entity::Section section)
     {
         switch (section) {

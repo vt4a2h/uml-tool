@@ -34,7 +34,7 @@ namespace translator {
     {
         checkDb();
 
-        auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, id);
+        auto t = utility::findType(id, m_GlobalDatabase, m_ProjectDatabase);
         if (!t) return "";
 
         entity::SharedExtendedType st = nullptr;
@@ -65,7 +65,7 @@ namespace translator {
 
         QStringList fieldsList;
         for (auto &&field : _class->fields(section)) {
-            auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, field->typeId());
+            auto t = utility::findType(field->typeId(), m_GlobalDatabase, m_ProjectDatabase);
             if (!t) break;
             fieldsList << generateCode(field, t->scopeId() == _class->scopeId() ? false : true)
                           .prepend(INDENT).prepend(INDENT);
@@ -86,7 +86,7 @@ namespace translator {
         QString typeName("");
         QString typeId(_enum->enumTypeId());
         if (typeId != STUB_ID) {
-            auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, typeId);
+            auto t = utility::findType(typeId, m_GlobalDatabase, m_ProjectDatabase);
             if (t)  typeName.append(" : ").append(t->name());
         }
         result.replace("%type%", typeName);
@@ -176,7 +176,7 @@ namespace translator {
             QString pString;
             entity::SharedType t(nullptr);
             for (auto &&p : _class->parents()) {
-                t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, p.first);
+                t = utility::findType(p.first, m_GlobalDatabase, m_ProjectDatabase);
                 pString.append(utility::sectionToString(p.second))
                        .append(" ")
                        .append(t ? generateCode(t, t->scopeId() == _class->scopeId() ? false : true) : "unknown type");
@@ -208,7 +208,7 @@ namespace translator {
         result.replace("%const%", extType->isConst() ? "const " : "");
 
         if (extType->typeId() != STUB_ID) {
-            auto t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, extType->typeId());
+            auto t = utility::findType(extType->typeId(), m_GlobalDatabase, m_ProjectDatabase);
             result.replace("%name%", t ? this->generateCode(t, withNamespace) : "");
         } else {
             result.remove("%name%");
@@ -230,7 +230,7 @@ namespace translator {
             QStringList names;
             entity::SharedType t = nullptr;
             for (auto &&id : extType->templateParameters()) {
-                t = utility::findType(m_GlobalDatabase, m_ProjectDatabase, id);
+                t = utility::findType(id, m_GlobalDatabase, m_ProjectDatabase);
                 if (t) names << t->name();
             }
             params = names.join(", ");
