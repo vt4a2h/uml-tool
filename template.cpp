@@ -3,7 +3,6 @@
 #include "type.h"
 #include "constants.cpp"
 #include "helpfunctions.h"
-#include "database.h"
 
 #include <algorithm>
 #include <utility>
@@ -13,6 +12,12 @@
 #include <QStringList>
 
 namespace entity {
+
+    Template::Template()
+        : m_LocalDatabase(std::make_shared<db::Database>())
+    {
+        m_LocalDatabase->addScope(DEFAULT_NAME);
+    }
 
     TemplateParameter Template::getTemplateParameter(const QString &typeId) const
     {
@@ -42,6 +47,35 @@ namespace entity {
     TemplateParametersList Template::parameters() const
     {
         return m_TemplateParameters;
+    }
+
+    const db::SharedDatabase Template::database() const
+    {
+        return m_LocalDatabase;
+    }
+
+    SharedType Template::getLocaleType(const QString &typeId) const
+    {
+        auto scope = m_LocalDatabase->getScope("_global_scope");
+        return (scope ? scope->getType(typeId) : nullptr);
+    }
+
+    bool Template::containsLocaleType(const QString &typeId) const
+    {
+        auto scope = m_LocalDatabase->getScope("_global_scope");
+        return (scope ? scope->containsType(typeId) : false);
+    }
+
+    void Template::removeLocaleType(const QString &typeId)
+    {
+        auto scope = m_LocalDatabase->getScope("_global_scope");
+        if (scope) scope->removeType(typeId);
+    }
+
+    TypesList Template::localeTypes() const
+    {
+        auto scope = m_LocalDatabase->getScope("_global_scope");
+        return (scope ? scope->types() : TypesList());
     }
 
     QJsonObject Template::templateToJson() const
@@ -91,15 +125,5 @@ namespace entity {
             m_LocalDatabase->fromJson(src["Local database"].toObject(), errorList);
         });
     }
-
-    db::SharedDatabase Template::localDatabase() const
-    {
-        return m_LocalDatabase;
-    }
-    
-    void Template::setLocalDatabase(const db::SharedDatabase &localDatabase)
-    {
-        m_LocalDatabase = localDatabase;
-    }   
     
 } // namespace entity

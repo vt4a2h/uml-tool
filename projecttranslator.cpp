@@ -108,6 +108,7 @@ namespace translator {
     {
         if (!method) return "\ninvalid method\n";
         checkDb();
+
         QString result(METHOD_TEMPLATE);
 
         QString lhsIds("");

@@ -21,7 +21,6 @@ namespace db {
 
     Database::~Database()
     {
-
     }
 
     QString Database::path() const

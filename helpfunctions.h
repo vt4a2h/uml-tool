@@ -47,7 +47,7 @@ namespace utility {
     template <class D>
     std::shared_ptr<entity::Type> findType(const QString &id, const D &database)
     {
-        return database->depthTypeSearch(id);
+        return (database ? database->depthTypeSearch(id) : nullptr);
     }
 
     template <class D, class... Args>
