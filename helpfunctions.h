@@ -58,9 +58,19 @@ namespace utility {
         return result;
     }
 
-    std::shared_ptr<entity::Scope> findScope(const std::shared_ptr<db::Database> &global,
-                                             const std::shared_ptr<db::Database> & project,
-                                             const QString &id);
+    template <class D>
+    std::shared_ptr<entity::Scope> findScope(const QString &id, const D &database)
+    {
+        return (database ? database->depthScopeSearch(id) : nullptr);
+    }
+
+    template <class D, class... Args>
+    std::shared_ptr<entity::Scope> findScope(const QString &id, const D &database, const Args&... args)
+    {
+        auto result = findScope(id, database);
+        if (!result) return findScope(id, args...);
+        return result;
+    }
 
     QString fieldKeywordToString(entity::FieldKeyword keyword);
     QString methodLhsIdToString(entity::LhsIdentificator id);

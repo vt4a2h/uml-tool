@@ -16,7 +16,8 @@ namespace entity {
     Template::Template()
         : m_LocalDatabase(std::make_shared<db::Database>())
     {
-        m_LocalDatabase->addScope(DEFAULT_NAME);
+        auto localeScope = m_LocalDatabase->addScope(DEFAULT_NAME);
+        localeScope->setId(LOCALE_TEMPLATE_SCOPE_ID);
     }
 
     TemplateParameter Template::getTemplateParameter(const QString &typeId) const

@@ -30,20 +30,22 @@ namespace translator {
         Q_ASSERT_X(m_ProjectDatabase, "ProjectTranslator", "project database not found");
     }
 
-    QString ProjectTranslator::generateCodeForExtTypeOrType(const QString &id, bool withNamespace) const
+    QString ProjectTranslator::generateCodeForExtTypeOrType(const QString &id,
+                                                            bool withNamespace,
+                                                            const db::SharedDatabase &localeDatabase) const
     {
         checkDb();
 
-        auto t = utility::findType(id, m_GlobalDatabase, m_ProjectDatabase);
+        auto t = utility::findType(id, localeDatabase, m_ProjectDatabase, m_GlobalDatabase);
         if (!t) return "";
 
         entity::SharedExtendedType st = nullptr;
         if (t->type() == entity::ExtendedTypeType)
             st = std::dynamic_pointer_cast<entity::ExtendedType>(t);
 
-        return (st ? generateCode(st, false, withNamespace)
+        return (st ? generateCode(st, false, withNamespace, localeDatabase)
                      .append(st->isLink() || st->isPointer() ? "" : " ") :
-                        t ? generateCode(t, withNamespace).append(" ") :
+                        t ? generateCode(t, withNamespace, localeDatabase).append(" ") :
                             "");
     }
 
@@ -200,7 +202,7 @@ namespace translator {
     }
 
     QString ProjectTranslator::generateCode(const entity::SharedExtendedType &extType,
-                                            bool alias, bool withNamespace) const
+                                            bool alias, bool withNamespace, const db::SharedDatabase &localeDatabase) const
     {
         if (!extType) return "\ninvalid extended type\n";
         checkDb();
@@ -209,8 +211,9 @@ namespace translator {
         result.replace("%const%", extType->isConst() ? "const " : "");
 
         if (extType->typeId() != STUB_ID) {
-            auto t = utility::findType(extType->typeId(), m_GlobalDatabase, m_ProjectDatabase);
-            result.replace("%name%", t ? this->generateCode(t, withNamespace) : "");
+            auto t = utility::findType(extType->typeId(), localeDatabase, m_ProjectDatabase,
+                                       m_GlobalDatabase);
+            result.replace("%name%", t ? this->generateCode(t, withNamespace, localeDatabase) : "");
         } else {
             result.remove("%name%");
         }
@@ -231,7 +234,8 @@ namespace translator {
             QStringList names;
             entity::SharedType t = nullptr;
             for (auto &&id : extType->templateParameters()) {
-                t = utility::findType(id, m_GlobalDatabase, m_ProjectDatabase);
+                t = utility::findType(id, localeDatabase, m_ProjectDatabase,
+                                      m_GlobalDatabase);
                 if (t) names << t->name();
             }
             params = names.join(", ");
@@ -246,7 +250,8 @@ namespace translator {
         return result;
     }
 
-    QString ProjectTranslator::generateCode(const entity::SharedField &field, bool withNamespace) const
+    QString ProjectTranslator::generateCode(const entity::SharedField &field, bool withNamespace,
+                                            const db::SharedDatabase &localeDatabase) const
     {
         if (!field) return "\ninvalid field\n";
         checkDb();
@@ -258,7 +263,8 @@ namespace translator {
                 keywords << utility::fieldKeywordToString(keyword);
         result.replace("%keywords%", keywords.isEmpty() ? "" : keywords.join(" ").append(" "));
 
-        result.replace("%type%", generateCodeForExtTypeOrType(field->typeId(), withNamespace));
+        result.replace("%type%", generateCodeForExtTypeOrType(field->typeId(), withNamespace,
+                                                              localeDatabase));
         result.replace("%name%", field->fullName());
 
         return result;
@@ -274,17 +280,18 @@ namespace translator {
         m_ProjectDatabase = projectDatabase;
     }
 
-    QString ProjectTranslator::generateCode(const entity::SharedType &type, bool withNamespace) const
+    QString ProjectTranslator::generateCode(const entity::SharedType &type, bool withNamespace,
+                                            const db::SharedDatabase &localeDatabase) const
     {
         QStringList scopesNames;
         QString id = type->scopeId();
-        entity::SharedScope scope = utility::findScope(m_GlobalDatabase, m_ProjectDatabase,
-                                                       id);
-        while (id != GLOBAL_SCOPE_ID) {
+        entity::SharedScope scope = utility::findScope(id, localeDatabase, m_ProjectDatabase,
+                                                       m_GlobalDatabase);
+        while (id != GLOBAL_SCOPE_ID || id != LOCALE_TEMPLATE_SCOPE_ID) {
             if (!scope) break;
             if (scope->name() != DEFAULT_NAME) scopesNames.prepend(scope->name());
             id = scope->parentScopeId();
-            scope = utility::findScope(m_GlobalDatabase, m_ProjectDatabase, id);
+            scope = utility::findScope(id, localeDatabase, m_ProjectDatabase, m_GlobalDatabase);
         }
 
         if (!scopesNames.isEmpty() && withNamespace) {
