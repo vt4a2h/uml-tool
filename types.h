@@ -21,6 +21,9 @@ namespace entity {
     using Methods      = QMultiHash<QString, SharedMethod>;
     using MethodsList  = QList<SharedMethod>;
 
+    class TemplateClassMethod;
+    using SharedTemplateClassMethod = std::shared_ptr<TemplateClassMethod>;
+
     enum  LhsIdentificator : int;
     using LhsIdentificators     = QSet<LhsIdentificator>;
     using LhsIdentificatorsList = QList<LhsIdentificator>;

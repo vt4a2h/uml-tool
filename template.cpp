@@ -45,7 +45,7 @@ namespace entity {
         return m_TemplateParameters.removeOne(getTemplateParameter(typeId));
     }
 
-    TemplateParametersList Template::parameters() const
+    TemplateParametersList Template::templateParameters() const
     {
         return m_TemplateParameters;
     }

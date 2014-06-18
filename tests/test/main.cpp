@@ -169,6 +169,17 @@ TEST_F(CodeGenerator, ClassMethod)
     ASSERT_EQ(futureResult, code);
 }
 
+TEST_F(CodeGenerator, TemplateClassMethod)
+{
+    entity::SharedTemplateClassMethod method(std::make_shared<entity::TemplateClassMethod>("swap"));
+
+    QString futureResult("template <>\nswap()");
+    QString code(_translator->generateCode(method));
+    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
+
+    // TODO: add tests
+}
+
 TEST_F(CodeGenerator, Enum)
 {
     auto fooEnum = _projectScope->addType<entity::Enum>("Foo");

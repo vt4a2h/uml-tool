@@ -15,7 +15,7 @@ namespace entity {
         void addTemplateParameter(const QString &typeId, const QString &defaultTypeId= QString(""));
         bool contains(const QString &typeId) const;
         bool removeParameter(const QString &typeId);
-        TemplateParametersList parameters() const;
+        TemplateParametersList templateParameters() const;
 
         const db::SharedDatabase database() const;
         SharedType getLocaleType(const QString &typeId) const;

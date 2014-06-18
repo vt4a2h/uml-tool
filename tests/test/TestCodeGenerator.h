@@ -9,6 +9,7 @@
 #include <enums.h>
 #include <extendedtype.h>
 #include <projecttranslator.h>
+#include <templateclassmethod.h>
 #include <types.h>
 
 class CodeGenerator : public ::testing::Test

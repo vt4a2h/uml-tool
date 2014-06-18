@@ -10,6 +10,7 @@
 #include "union.h"
 #include "class.h"
 #include "helpfunctions.h"
+#include "templateclassmethod.h"
 #include "templates.cpp"
 #include "constants.cpp"
 
@@ -113,6 +114,20 @@ namespace translator {
 
         QString result(METHOD_TEMPLATE);
 
+        entity::SharedTemplateClassMethod m(nullptr);
+        if (method->type() == entity::TemplateMethod) {
+            m = std::dynamic_pointer_cast<entity::TemplateClassMethod>(method);
+
+            result.prepend(TEMPLATE_TEMPLATE + "\n");
+            QStringList parameters;
+            for (auto &&parameter : m->templateParameters()) {
+                parameters << generateCodeForExtTypeOrType(parameter.first, false, m->database());
+                if (!parameter.second.isEmpty())
+                    parameters.last().append(" = ").append(generateCodeForExtTypeOrType(parameter.second, true, m->database()));
+            }
+            result.replace("%parameters%", parameters.join(", "));
+        }
+
         QString lhsIds("");
         QStringList lhsIdsList;
         for (auto &&lhsId : method->lhsIdentificators())
@@ -120,7 +135,9 @@ namespace translator {
         if (!lhsIdsList.isEmpty()) lhsIds.append(lhsIdsList.join(" ")).append(" ");
         result.replace("%lhs_k%", lhsIds);
 
-        result.replace("%r_type%", generateCodeForExtTypeOrType(method->returnTypeId()));
+        result.replace("%r_type%", generateCodeForExtTypeOrType(method->returnTypeId(),
+                                                                true,
+                                                                m ? m->database() : nullptr));
 
         result.replace("%name%", method->name());
 
@@ -129,7 +146,7 @@ namespace translator {
         for (auto &&p : method->parameters()) {
             p->removePrefix();
             p->removeSuffix();
-            parametersList << generateCode(p);
+            parametersList << generateCode(p, true, m ? m->database() : nullptr);
         }
         if (!parametersList.isEmpty()) parameters.append(parametersList.join(", "));
         result.replace("%parameters%", parameters);

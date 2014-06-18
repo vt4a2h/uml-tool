@@ -26,7 +26,7 @@ namespace translator {
                              const db::SharedDatabase &localeDatabase = nullptr) const;
         QString generateCode(const entity::SharedEnum &_enum,
                              bool generateNumbers = false) const;
-        QString generateCode(const entity::SharedMethod &method) const; // TODO: add template case
+        QString generateCode(const entity::SharedMethod &method) const;
         QString generateCode(const entity::SharedUnion &_union) const;
         QString generateCode(const entity::SharedClass &_class) const; // TODO: add template case
 
