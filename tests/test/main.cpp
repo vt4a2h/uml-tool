@@ -175,9 +175,24 @@ TEST_F(CodeGenerator, TemplateClassMethod)
 
     QString futureResult("template <>\nswap()");
     QString code(_translator->generateCode(method));
-    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
+    ASSERT_EQ(futureResult, code);
 
-    // TODO: add tests
+    futureResult = "template <class T>\nswap()";
+    auto t = method->addLocaleType("T");
+    method->addTemplateParameter(t->id());
+    code = _translator->generateCode(method);
+    ASSERT_EQ(futureResult, code);
+
+    futureResult = "template <class T>\nswap(T *first, T *second)";
+    auto ptrT = method->addLocaleType<entity::ExtendedType>();
+    ptrT->setTypeId(t->id());
+    ptrT->addPointerStatus();
+    method->addParameter("first", ptrT->id());
+    method->addParameter("second", ptrT->id());
+    code = _translator->generateCode(method);
+    ASSERT_EQ(futureResult, code);
+
+    // TODO: add tests for case "T = int"
 }
 
 TEST_F(CodeGenerator, Enum)

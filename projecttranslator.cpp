@@ -36,7 +36,6 @@ namespace translator {
                                                             const db::SharedDatabase &localeDatabase) const
     {
         checkDb();
-
         auto t = utility::findType(id, localeDatabase, m_ProjectDatabase, m_GlobalDatabase);
         if (!t) return "";
 
@@ -121,11 +120,15 @@ namespace translator {
             result.prepend(TEMPLATE_TEMPLATE + "\n");
             QStringList parameters;
             for (auto &&parameter : m->templateParameters()) {
-                parameters << generateCodeForExtTypeOrType(parameter.first, false, m->database());
-                if (!parameter.second.isEmpty())
+                parameters << generateCodeForExtTypeOrType(parameter.first,
+                                                           false,
+                                                           m->database())
+                              .prepend("class ")
+                              .trimmed();
+                if (!parameter.second.isEmpty() && parameter.second != STUB_ID)
                     parameters.last().append(" = ").append(generateCodeForExtTypeOrType(parameter.second, true, m->database()));
             }
-            result.replace("%parameters%", parameters.join(", "));
+            result.replace("%template_parameters%", parameters.join(", "));
         }
 
         QString lhsIds("");

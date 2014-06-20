@@ -71,6 +71,11 @@ namespace db {
         return m_Scopes.contains(id);
     }
 
+    bool Database::anyScopes() const
+    {
+        return !m_Scopes.isEmpty();
+    }
+
     void Database::removeScope(const QString &id)
     {
         m_Scopes.remove(id);

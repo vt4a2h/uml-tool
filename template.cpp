@@ -16,8 +16,7 @@ namespace entity {
     Template::Template()
         : m_LocalDatabase(std::make_shared<db::Database>())
     {
-        auto localeScope = m_LocalDatabase->addScope(DEFAULT_NAME);
-        localeScope->setId(LOCALE_TEMPLATE_SCOPE_ID);
+        m_LocalDatabase->addScope();
     }
 
     TemplateParameter Template::getTemplateParameter(const QString &typeId) const
@@ -37,7 +36,7 @@ namespace entity {
 
     bool Template::contains(const QString &typeId) const
     {
-        return (getTemplateParameter(typeId).first != STUB_ID);
+        return getTemplateParameter(typeId).first != STUB_ID;
     }
 
     bool Template::removeParameter(const QString &typeId)
@@ -57,26 +56,26 @@ namespace entity {
 
     SharedType Template::getLocaleType(const QString &typeId) const
     {
-        auto scope = m_LocalDatabase->getScope("_global_scope");
-        return (scope ? scope->getType(typeId) : nullptr);
+        return m_LocalDatabase->anyScopes() ?
+                    m_LocalDatabase->scopes()[0]->getType(typeId) : nullptr;
     }
 
     bool Template::containsLocaleType(const QString &typeId) const
     {
-        auto scope = m_LocalDatabase->getScope("_global_scope");
-        return (scope ? scope->containsType(typeId) : false);
+        return m_LocalDatabase->anyScopes() ?
+                    m_LocalDatabase->scopes()[0]->containsType(typeId) : false;
     }
 
     void Template::removeLocaleType(const QString &typeId)
     {
-        auto scope = m_LocalDatabase->getScope("_global_scope");
-        if (scope) scope->removeType(typeId);
+        if (m_LocalDatabase->anyScopes())
+            m_LocalDatabase->scopes()[0]->removeType(typeId);
     }
 
     TypesList Template::localeTypes() const
     {
-        auto scope = m_LocalDatabase->getScope("_global_scope");
-        return (scope ? scope->types() : TypesList());
+        return m_LocalDatabase->anyScopes() ?
+                    m_LocalDatabase->scopes()[0]->types() : TypesList();
     }
 
     QJsonObject Template::templateToJson() const

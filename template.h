@@ -35,8 +35,8 @@ namespace entity {
     template <class T>
     std::shared_ptr<T> Template::addLocaleType(const QString &name)
     {
-        auto scope = m_LocalDatabase->getScope("_global_scope");
-        return (scope ? scope->addType<T>(name) : nullptr);
+        return m_LocalDatabase->anyScopes() ?
+                    m_LocalDatabase->scopes()[0]->addType<T>(name) : nullptr;
     }
 
 } // namespace entity

@@ -10,6 +10,6 @@ namespace {
     const QString METHOD_TEMPLATE = "%lhs_k%%r_type%%name%(%parameters%)%rhs_k%%const%";
     const QString UNION_TEMPLATE = "union %name% {%variables%};";
     const QString CLASS_TEMPLATE = "%kind%%name%%parents%{%section%};";
-    const QString TEMPLATE_TEMPLATE = "template <%parameters%>";
+    const QString TEMPLATE_TEMPLATE = "template <%template_parameters%>";
 
 }
