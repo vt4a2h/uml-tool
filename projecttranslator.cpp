@@ -125,8 +125,14 @@ namespace translator {
                                                            m->database())
                               .prepend("class ")
                               .trimmed();
-                if (!parameter.second.isEmpty() && parameter.second != STUB_ID)
-                    parameters.last().append(" = ").append(generateCodeForExtTypeOrType(parameter.second, true, m->database()));
+                if (!parameter.second.isEmpty() && parameter.second != STUB_ID) {
+                    parameters.last()
+                              .append(" = ")
+                              .append(generateCodeForExtTypeOrType(parameter.second,
+                                                                   true,
+                                                                   m->database()));
+                    parameters.last() = parameters.last().trimmed();
+                }
             }
             result.replace("%template_parameters%", parameters.join(", "));
         }

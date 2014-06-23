@@ -192,7 +192,29 @@ TEST_F(CodeGenerator, TemplateClassMethod)
     code = _translator->generateCode(method);
     ASSERT_EQ(futureResult, code);
 
-    // TODO: add tests for case "T = int"
+    futureResult = "template <class T = project_scope::Foo>\n"
+                   "std::shared_ptr<T> make(const QString &name)";
+    method = std::make_shared<entity::TemplateClassMethod>("make");
+    auto qstring = _globalScope->addType("QString");
+    auto constLinkToQstr = _globalScope->addType<entity::ExtendedType>();
+    constLinkToQstr->setTypeId(qstring->id());
+    constLinkToQstr->addLinkStatus();
+    constLinkToQstr->setConstStatus(true);
+    method->addParameter("name", constLinkToQstr->id());
+
+    auto foo = _projectScope->addType("Foo");
+    t = method->addLocaleType("T");
+    method->addTemplateParameter(t->id(), foo->id());
+
+    auto stdScope = _globalDb->addScope("std");
+    auto sharedPointer = stdScope->addType("shared_ptr");
+    auto sharedPointerToT = stdScope->addType<entity::ExtendedType>();
+    sharedPointerToT->setTypeId(sharedPointer->id());
+    sharedPointerToT->addTemplateParameter(t->id());
+    method->setReturnTypeId(sharedPointerToT->id());
+
+    code = _translator->generateCode(method);
+    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
 }
 
 TEST_F(CodeGenerator, Enum)
