@@ -38,6 +38,12 @@ namespace entity {
     using Classes     = QHash<QString, SharedClass>;
     using ClassesList = QList<SharedClass>;
 
+    class TemplateClass;
+    using SharedTemplateClass = std::shared_ptr<TemplateClass>;
+
+    class Template;
+    using SharedTemplate = std::shared_ptr<Template>;
+
     class Union;
     using SharedUnion = std::shared_ptr<Union>;
     using Unions      = QHash<QString, SharedUnion>;

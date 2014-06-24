@@ -18,24 +18,32 @@ namespace translator {
         void setProjectDatabase(const db::SharedDatabase &projectDatabase);
 
         QString generateCode(const entity::SharedType &type, bool withNamespace = true,
-                             const db::SharedDatabase &localeDatabase = nullptr) const;
+                             const db::SharedDatabase &localeDatabase = nullptr,
+                             const db::SharedDatabase &classDatabase = nullptr) const;
         QString generateCode(const entity::SharedExtendedType &extType,
-                             bool alias = false, bool withNamespace = true,
-                             const db::SharedDatabase &localeDatabase = nullptr) const;
+                             bool withNamespace = true,
+                             const db::SharedDatabase &localeDatabase = nullptr,
+                             const db::SharedDatabase &classDatabase = nullptr,
+                             bool alias = false) const;
         QString generateCode(const entity::SharedField &field, bool withNamespace = true,
-                             const db::SharedDatabase &localeDatabase = nullptr) const;
+                             const db::SharedDatabase &localeDatabase = nullptr,
+                             const db::SharedDatabase &classDatabase = nullptr) const;
         QString generateCode(const entity::SharedEnum &_enum,
                              bool generateNumbers = false) const;
-        QString generateCode(const entity::SharedMethod &method) const;
+        QString generateCode(const entity::SharedMethod &method,
+                             const db::SharedDatabase &localeDatabase = nullptr) const;
         QString generateCode(const entity::SharedUnion &_union) const;
-        QString generateCode(const entity::SharedClass &_class) const; // TODO: add template case
+        QString generateCode(const entity::SharedClass &_class) const;
 
     private:
         void checkDb() const;
         QString generateCodeForExtTypeOrType(const QString &id, bool withNamespace = true,
-                                             const db::SharedDatabase &localeDatabase = nullptr) const;
+                                             const db::SharedDatabase &localeDatabase = nullptr,
+                                             const db::SharedDatabase &classDatabase = nullptr) const;
         void generateClassSection(const entity::SharedClass &_class,
+                                  const db::SharedDatabase &localeDatabase,
                                   entity::Section section, QString &out) const;
+        void generateTemplatePart(QString &result, const entity::SharedTemplate &t) const;
 
         db::SharedDatabase m_GlobalDatabase;
         db::SharedDatabase m_ProjectDatabase;

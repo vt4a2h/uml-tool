@@ -64,7 +64,7 @@ TEST_F(CodeGenerator, ExtendedType)
 
     futureResult = "using Ints = vector<int>;";
     type->setName("Ints");
-    code = _translator->generateCode(type, true);
+    code = _translator->generateCode(type, true, nullptr, nullptr, true);
     ASSERT_EQ(futureResult, code);
 
     futureResult = "std::set<int>";
@@ -352,6 +352,11 @@ TEST_F(CodeGenerator, Class)
 
     code = _translator->generateCode(fooClass);
     ASSERT_EQ(futureResult, code);
+}
+
+TEST_F(CodeGenerator, TemplateClass)
+{
+    // TODO: add tests for templated class
 }
 
 TEST_F(RelationMaker, MultiplyAssociation)
