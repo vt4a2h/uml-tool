@@ -357,6 +357,28 @@ TEST_F(CodeGenerator, Class)
 TEST_F(CodeGenerator, TemplateClass)
 {
     // TODO: add tests for templated class
+    QString futureResult = QString("template <class T>\n"
+                                   "struct Node "
+                                   "{\n"
+                                   "%1T data_;\n"
+                                   "%1Node *next;\n"
+                                   "};").arg(INDENT);
+    auto nodeStruct = _projectScope->addType<entity::TemplateClass>("Node");
+    nodeStruct->setKind(entity::StructType);
+
+    auto tType = nodeStruct->addLocaleType("T");
+    nodeStruct->addTemplateParameter(tType->id());
+
+    auto dataField = nodeStruct->addField("data", tType->id());
+    dataField->setSuffix("_");
+
+    auto ptrNode = _projectScope->addType<entity::ExtendedType>();
+    ptrNode->setTypeId(nodeStruct->id());
+    ptrNode->addPointerStatus();
+    nodeStruct->addField("next", ptrNode->id());
+
+    QString code(_translator->generateCode(nodeStruct));
+    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
 }
 
 TEST_F(RelationMaker, MultiplyAssociation)

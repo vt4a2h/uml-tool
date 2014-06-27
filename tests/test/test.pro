@@ -5,6 +5,8 @@ CONFIG -= app_bundle
 CONFIG += qt
 CONFIG += c++11
 
+LIBS += -lgtest -lpthread
+
 INCLUDEPATH += ../../
 
 HEADERS += ../../enums.h \
@@ -39,5 +41,3 @@ SOURCES += main.cpp \
            ../../constants.cpp \
            ../../templates.cpp \
            ../../scope.cpp
-
-LIBS += -lgtest -lpthread

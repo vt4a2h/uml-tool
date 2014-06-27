@@ -17,7 +17,8 @@ namespace translator {
         db::SharedDatabase projectDatabase() const;
         void setProjectDatabase(const db::SharedDatabase &projectDatabase);
 
-        QString generateCode(const entity::SharedType &type, bool withNamespace = true,
+        QString generateCode(const entity::SharedType &type,
+                             bool withNamespace = true,
                              const db::SharedDatabase &localeDatabase = nullptr,
                              const db::SharedDatabase &classDatabase = nullptr) const;
         QString generateCode(const entity::SharedExtendedType &extType,
@@ -25,7 +26,8 @@ namespace translator {
                              const db::SharedDatabase &localeDatabase = nullptr,
                              const db::SharedDatabase &classDatabase = nullptr,
                              bool alias = false) const;
-        QString generateCode(const entity::SharedField &field, bool withNamespace = true,
+        QString generateCode(const entity::SharedField &field,
+                             bool withNamespace = true,
                              const db::SharedDatabase &localeDatabase = nullptr,
                              const db::SharedDatabase &classDatabase = nullptr) const;
         QString generateCode(const entity::SharedEnum &_enum,
@@ -34,6 +36,7 @@ namespace translator {
                              const db::SharedDatabase &localeDatabase = nullptr) const;
         QString generateCode(const entity::SharedUnion &_union) const;
         QString generateCode(const entity::SharedClass &_class) const;
+        QString generateCode(const entity::SharedTemplateClass &_class) const;
 
     private:
         void checkDb() const;
@@ -43,6 +46,11 @@ namespace translator {
         void generateClassSection(const entity::SharedClass &_class,
                                   const db::SharedDatabase &localeDatabase,
                                   entity::Section section, QString &out) const;
+        void generateFieldsAndMethods(const entity::SharedClass &_class,
+                                      const db::SharedDatabase &localeDatabase,
+                                      const QString &indent,
+                                      entity::Section section,
+                                      QString &out) const;
         void generateTemplatePart(QString &result, const entity::SharedTemplate &t) const;
 
         db::SharedDatabase m_GlobalDatabase;

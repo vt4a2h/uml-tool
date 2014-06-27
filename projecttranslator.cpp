@@ -56,14 +56,26 @@ namespace translator {
     {
         if (!_class->containsMethods(section) && !_class->containsFields(section)) return;
 
-        out.append("\n")
-           .append(INDENT)
-           .append(utility::sectionToString(section))
-           .append(":\n");
+        out.append("\n");
+        if (_class->kind() == entity::ClassType ||
+            (_class->kind() != entity::StructType && section != entity::Public)) {
+            out.append(INDENT)
+               .append(utility::sectionToString(section))
+               .append(":\n");
+            generateFieldsAndMethods(_class, localeDatabase, DOUBLE_INDENT, section, out);
+        } else {
+            generateFieldsAndMethods(_class, localeDatabase, INDENT, section, out);
+        }
+    }
 
+    void ProjectTranslator::generateFieldsAndMethods(const entity::SharedClass &_class,
+                                                     const db::SharedDatabase &localeDatabase,
+                                                     const QString &indent, entity::Section section,
+                                                     QString &out) const
+    {
         QStringList methodsList;
         for (auto &&method : _class->methods(section))
-            methodsList << generateCode(method, localeDatabase).prepend(INDENT).prepend(INDENT);
+            methodsList << generateCode(method, localeDatabase).prepend(indent);
         out.append(methodsList.join(";\n"));
         if (!methodsList.isEmpty()) out.append(";\n");
 
@@ -73,7 +85,7 @@ namespace translator {
             if (!t) break;
             fieldsList << generateCode(field, t->scopeId() == _class->scopeId() ? false : true,
                                        localeDatabase)
-                          .prepend(INDENT).prepend(INDENT);
+                          .prepend(indent);
         }
         out.append(fieldsList.join(";\n"));
         if (!fieldsList.isEmpty()) out.append(";\n");
@@ -252,6 +264,11 @@ namespace translator {
         result.replace("%section%", section);
 
         return result;
+    }
+
+    QString ProjectTranslator::generateCode(const entity::SharedTemplateClass &_class) const
+    {
+        return generateCode(std::dynamic_pointer_cast<entity::Class>(_class));
     }
 
     QString ProjectTranslator::generateCode(const entity::SharedExtendedType &extType,
