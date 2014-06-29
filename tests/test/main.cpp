@@ -356,7 +356,6 @@ TEST_F(CodeGenerator, Class)
 
 TEST_F(CodeGenerator, TemplateClass)
 {
-    // TODO: add tests for templated class
     QString futureResult = QString("template <class T>\n"
                                    "struct Node "
                                    "{\n"

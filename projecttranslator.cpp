@@ -118,6 +118,24 @@ namespace translator {
         result.replace("%template_parameters%", parameters.join(", "));
     }
 
+    bool ProjectTranslator::toHeader(const entity::SharedMethod &m,
+                                     const db::SharedDatabase &classDatabase) const
+    {
+        if (m->type() == entity::TemplateMethod) return true;
+        if (!classDatabase) return false;
+
+        entity::FieldsList fields(m->parameters());
+        auto it = std::find_if(fields.begin(), fields.end(),
+                               [&](const entity::SharedField &f) {
+            return classDatabase->depthTypeSearch(f->typeId()) != nullptr;
+        });
+
+        if (it != fields.end() ||
+            classDatabase->depthTypeSearch(m->returnTypeId()) != nullptr) return true;
+
+        return false;
+    }
+
     QString ProjectTranslator::generateCode(const entity::SharedEnum &_enum, bool generateNumbers) const
     {
         if (!_enum) return "\ninvalid enum\n";
@@ -272,6 +290,33 @@ namespace translator {
     QString ProjectTranslator::generateCode(const entity::SharedTemplateClass &_class) const
     {
         return generateCode(std::dynamic_pointer_cast<entity::Class>(_class));
+    }
+
+    Code ProjectTranslator::generateClassMethodsImpl(const entity::SharedClass &_class) const
+    {
+        if (!_class) return Code("\ninvalid class\n", "\ninvalid class\n");
+        checkDb();
+
+        QStringList methodsCpp;
+        QStringList methodsH;
+        QString method;
+        entity::SharedTemplateClass tc(std::dynamic_pointer_cast<entity::TemplateClass>(_class));
+        for (auto &&m : _class->methods()) {
+            method = generateCode(m);
+            method.replace(m->name(),
+                           m->name().prepend(_class->name().append("::")));
+            method.append("\n{\n}").prepend("\n");
+
+            (toHeader(m, tc ? tc->database() : nullptr) ? methodsH : methodsCpp) << method;
+            method.clear();
+        }
+
+        return Code(methodsH.join("\n"), methodsCpp.join("\n"));
+    }
+
+    Code ProjectTranslator::generateClassMethodsImpl(const entity::SharedTemplateClass &_class) const
+    {
+        return generateClassMethodsImpl(std::static_pointer_cast<entity::Class>(_class));
     }
 
     QString ProjectTranslator::generateCode(const entity::SharedExtendedType &extType,

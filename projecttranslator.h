@@ -4,6 +4,14 @@
 
 namespace translator {
 
+    struct Code {
+        Code(const QString &h, const QString &cpp)
+            : toHeader(h), toSource(cpp) {}
+
+        QString toHeader;
+        QString toSource;
+    };
+
     class ProjectTranslator
     {
     public:
@@ -38,6 +46,9 @@ namespace translator {
         QString generateCode(const entity::SharedClass &_class) const;
         QString generateCode(const entity::SharedTemplateClass &_class) const;
 
+        Code generateClassMethodsImpl(const entity::SharedClass &_class) const;
+        Code generateClassMethodsImpl(const entity::SharedTemplateClass &_class) const;
+
     private:
         void checkDb() const;
         QString generateCodeForExtTypeOrType(const QString &id, bool withNamespace = true,
@@ -52,6 +63,8 @@ namespace translator {
                                       entity::Section section,
                                       QString &out) const;
         void generateTemplatePart(QString &result, const entity::SharedTemplate &t) const;
+        bool toHeader(const entity::SharedMethod &m,
+                      const db::SharedDatabase &classDatabase = nullptr) const;
 
         db::SharedDatabase m_GlobalDatabase;
         db::SharedDatabase m_ProjectDatabase;
