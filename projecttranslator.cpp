@@ -81,13 +81,16 @@ namespace translator {
 
         QStringList fieldsList;
         for (auto &&field : _class->fields(section)) {
-            auto t = utility::findType(field->typeId(), localeDatabase, m_GlobalDatabase, m_ProjectDatabase);
+            auto t = utility::findType(field->typeId(), localeDatabase,
+                                       m_GlobalDatabase, m_ProjectDatabase);
             if (!t) break;
-            fieldsList << generateCode(field, t->scopeId() == _class->scopeId() ? false : true,
+            fieldsList << generateCode(field,
+                                       t->scopeId() == _class->scopeId() ? false : true,
                                        localeDatabase)
                           .prepend(indent);
         }
         out.append(fieldsList.join(";\n"));
+
         if (!fieldsList.isEmpty()) out.append(";\n");
     }
 
