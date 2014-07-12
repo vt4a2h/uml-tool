@@ -305,7 +305,7 @@ namespace translator {
             method = generateCode(m);
             method.replace(m->name(),
                            m->name().prepend(_class->name().append("::")));
-            method.append("\n{\n}").prepend("\n");
+            method.append("\n{\n}").append("\n");
 
             (toHeader(m, tc ? tc->database() : nullptr) ? methodsH : methodsCpp) << method;
             method.clear();

@@ -377,7 +377,37 @@ TEST_F(CodeGenerator, TemplateClass)
     nodeStruct->addField("next", ptrNode->id());
 
     QString code(_translator->generateCode(nodeStruct));
-    ASSERT_EQ(futureResult.toStdString(), code.toStdString());
+    ASSERT_EQ(futureResult, code);
+}
+
+TEST_F(CodeGenerator, ClassImplementation)
+{
+    QString futureResult("int Foo::getC() const\n"
+                         "{\n"
+                         "}\n");
+
+    entity::SharedClass classFoo(_projectScope->addType<entity::Class>("Foo"));
+    entity::SharedMethod getterForC(classFoo->makeMethod("getC"));
+    getterForC->setConstStatus(true);
+    getterForC->setReturnTypeId(_int->id());
+
+    translator::Code code(_translator->generateClassMethodsImpl(classFoo));
+    ASSERT_EQ(futureResult, code.toSource);
+
+    futureResult = "int Foo::getC() const\n"
+                   "{\n"
+                   "}\n"
+                   "\n"
+                   "void Foo::setC(int c)\n"
+                   "{\n"
+                   "}\n";
+    entity::SharedMethod setterForC(classFoo->makeMethod("setC"));
+    entity::SharedType voidType(_globalScope->addType("void"));
+    setterForC->setReturnTypeId(voidType->id());
+    setterForC->addParameter("c", _int->id());
+
+    code = _translator->generateClassMethodsImpl(classFoo);
+    ASSERT_EQ(futureResult.toStdString(), code.toSource.toStdString());
 }
 
 TEST_F(RelationMaker, MultiplyAssociation)
