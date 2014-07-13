@@ -392,6 +392,7 @@ TEST_F(CodeGenerator, ClassImplementation)
     getterForC->setReturnTypeId(_int->id());
 
     translator::Code code(_translator->generateClassMethodsImpl(classFoo));
+    ASSERT_TRUE(code.toHeader.isEmpty()) << "Header should be empty!";
     ASSERT_EQ(futureResult, code.toSource);
 
     futureResult = "int Foo::getC() const\n"
@@ -407,7 +408,8 @@ TEST_F(CodeGenerator, ClassImplementation)
     setterForC->addParameter("c", _int->id());
 
     code = _translator->generateClassMethodsImpl(classFoo);
-    ASSERT_EQ(futureResult.toStdString(), code.toSource.toStdString());
+    ASSERT_TRUE(code.toHeader.isEmpty()) << "Header should be empty!";
+    ASSERT_EQ(futureResult, code.toSource);
 }
 
 TEST_F(RelationMaker, MultiplyAssociation)
