@@ -410,7 +410,10 @@ TEST_F(CodeGenerator, ClassImplementation)
     code = _translator->generateClassMethodsImpl(classFoo);
     ASSERT_TRUE(code.toHeader.isEmpty()) << "Header should be empty!";
     ASSERT_EQ(futureResult, code.toSource);
+    // TODO: test with template functions
 }
+
+// TODO: add tests for templates
 
 TEST_F(RelationMaker, MultiplyAssociation)
 {

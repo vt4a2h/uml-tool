@@ -303,8 +303,7 @@ namespace translator {
         entity::SharedTemplateClass tc(std::dynamic_pointer_cast<entity::TemplateClass>(_class));
         for (auto &&m : _class->methods()) {
             method = generateCode(m);
-            method.replace(m->name(),
-                           m->name().prepend(_class->name().append("::")));
+            method.replace(m->name(), m->name().prepend(_class->name().append("::")));
             method.append("\n{\n}").append("\n");
 
             (toHeader(m, tc ? tc->database() : nullptr) ? methodsH : methodsCpp) << method;
