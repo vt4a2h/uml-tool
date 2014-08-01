@@ -410,7 +410,25 @@ TEST_F(CodeGenerator, ClassImplementation)
     code = _translator->generateClassMethodsImpl(classFoo);
     ASSERT_TRUE(code.toHeader.isEmpty()) << "Header should be empty!";
     ASSERT_EQ(futureResult, code.toSource);
-    // TODO: test with template functions
+
+    QString futureResultH("template <class T>\n"
+                          "void Foo::swap(T &src)\n"
+                          "{\n"
+                          "}\n");
+    entity::SharedTemplateClassMethod swapMethod(classFoo->makeMethod<entity::TemplateClassMethod>("swap"));
+    swapMethod->setReturnTypeId(voidType->id());
+    entity::SharedType typeT(swapMethod->addLocaleType("T"));
+    swapMethod->addTemplateParameter(typeT->id());
+    entity::SharedExtendedType typeTLink(swapMethod->addLocaleType<entity::ExtendedType>());
+    typeTLink->setTypeId(typeT->id());
+    typeTLink->addLinkStatus();
+    swapMethod->addParameter("src", typeTLink->id());
+
+    code = _translator->generateClassMethodsImpl(classFoo);
+    ASSERT_FALSE(code.toHeader.isEmpty()) << "Header should be generated!";
+    ASSERT_FALSE(code.toSource.isEmpty()) << "Source file should be generated!";
+    ASSERT_EQ(futureResultH, code.toHeader);
+    ASSERT_EQ(futureResult, code.toSource);
 }
 
 // TODO: add tests for templates
