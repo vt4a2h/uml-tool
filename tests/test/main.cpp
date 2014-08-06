@@ -432,6 +432,30 @@ TEST_F(CodeGenerator, ClassImplementation)
 }
 
 // TODO: add tests for templates
+TEST_F(CodeGenerator, TemplateClassImplementation)
+{
+    QString futureResult("template<class Value, class Deleter>\n"
+                         "void ScopedPointer<Value, Deleter>::reset(Value *other)\n"
+                         "{\n"
+                         "}\n");
+
+    entity::SharedType voidType(_globalScope->addType("void"));
+
+    entity::SharedScope _std(_globalDb->addScope("std"));
+    entity::SharedType dd(_std->addType("default_delete"));
+    entity::SharedExtendedType defaultDelete(_std->addType<entity::ExtendedType>());
+    // NOTE: check generated
+    // NOTE: implement copyFrom, swap and clone methods
+    defaultDelete->setTypeId(dd->id());
+
+    entity::SharedTemplateClass scopedPointer(_projectScope->addType<entity::TemplateClass>("ScopedPointer"));
+    entity::SharedType value(scopedPointer->addLocaleType("Value"));
+    entity::SharedType deleter(scopedPointer->addLocaleType("Deleter"));
+    scopedPointer->addTemplateParameter(value->id());
+    scopedPointer->addTemplateParameter(deleter->id(), defaultDelete->id());
+    entity::SharedMethod resetMethod(scopedPointer->makeMethod("reset"));
+    resetMethod->setReturnTypeId(voidType->id());
+}
 
 TEST_F(RelationMaker, MultiplyAssociation)
 {
