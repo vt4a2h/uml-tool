@@ -431,7 +431,6 @@ TEST_F(CodeGenerator, ClassImplementation)
     ASSERT_EQ(futureResult, code.toSource);
 }
 
-// TODO: add tests for templates
 TEST_F(CodeGenerator, TemplateClassImplementation)
 {
     QString futureResult("template<class Value, class Deleter>\n"
@@ -443,18 +442,20 @@ TEST_F(CodeGenerator, TemplateClassImplementation)
 
     entity::SharedScope _std(_globalDb->addScope("std"));
     entity::SharedType dd(_std->addType("default_delete"));
-    entity::SharedExtendedType defaultDelete(_std->addType<entity::ExtendedType>());
-    // NOTE: check generated
     // NOTE: implement copyFrom, swap and clone methods
-    defaultDelete->setTypeId(dd->id());
 
     entity::SharedTemplateClass scopedPointer(_projectScope->addType<entity::TemplateClass>("ScopedPointer"));
     entity::SharedType value(scopedPointer->addLocaleType("Value"));
     entity::SharedType deleter(scopedPointer->addLocaleType("Deleter"));
+    entity::SharedExtendedType defaultDelete(scopedPointer->addLocaleType<entity::ExtendedType>());
+    defaultDelete->setTypeId(dd->id());
+    defaultDelete->addTemplateParameter(value->id());
     scopedPointer->addTemplateParameter(value->id());
     scopedPointer->addTemplateParameter(deleter->id(), defaultDelete->id());
+
     entity::SharedMethod resetMethod(scopedPointer->makeMethod("reset"));
     resetMethod->setReturnTypeId(voidType->id());
+    // TODO: add tests for templates
 }
 
 TEST_F(RelationMaker, MultiplyAssociation)
