@@ -433,7 +433,7 @@ TEST_F(CodeGenerator, ClassImplementation)
 
 TEST_F(CodeGenerator, TemplateClassImplementation)
 {
-    QString futureResult("template<class Value, class Deleter>\n"
+    QString futureResult("template <class Value, class Deleter>\n"
                          "void ScopedPointer<Value, Deleter>::reset(Value *other)\n"
                          "{\n"
                          "}\n");
@@ -455,6 +455,14 @@ TEST_F(CodeGenerator, TemplateClassImplementation)
 
     entity::SharedMethod resetMethod(scopedPointer->makeMethod("reset"));
     resetMethod->setReturnTypeId(voidType->id());
+    entity::SharedExtendedType valuePtr(scopedPointer->addLocaleType<entity::ExtendedType>());
+    valuePtr->setTypeId(value->id());
+    valuePtr->addPointerStatus();
+    resetMethod->addParameter("other", valuePtr->id());
+
+    translator::Code code(_translator->generateClassMethodsImpl(scopedPointer));
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
+
     // TODO: add tests for templates
 }
 

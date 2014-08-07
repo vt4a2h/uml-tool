@@ -94,7 +94,7 @@ namespace translator {
         if (!fieldsList.isEmpty()) out.append(";\n");
     }
 
-    void ProjectTranslator::generateTemplatePart(QString &result, const entity::SharedTemplate &t) const
+    void ProjectTranslator::generateTemplatePart(QString &result, const entity::SharedTemplate &t, bool withDefaultTypes) const
     {
         if (!t) return;
 
@@ -106,7 +106,7 @@ namespace translator {
                                                        t->database())
                           .prepend("class ")
                           .trimmed();
-            if (!parameter.second.isEmpty() && parameter.second != STUB_ID) {
+            if (!parameter.second.isEmpty() && parameter.second != STUB_ID && withDefaultTypes) {
                 parameters.last()
                           .append(" = ")
                           .append(generateCodeForExtTypeOrType(parameter.second,
@@ -292,7 +292,8 @@ namespace translator {
         return generateCode(std::dynamic_pointer_cast<entity::Class>(_class));
     }
 
-    Code ProjectTranslator::generateClassMethodsImpl(const entity::SharedClass &_class) const
+    Code ProjectTranslator::generateClassMethodsImpl(const entity::SharedClass &_class,
+                                                     const db::SharedDatabase &localeDatabase) const
     {
         if (!_class) return Code("\ninvalid class\n", "\ninvalid class\n");
         checkDb();
@@ -302,7 +303,8 @@ namespace translator {
         QString method;
         entity::SharedTemplateClass tc(std::dynamic_pointer_cast<entity::TemplateClass>(_class));
         for (auto &&m : _class->methods()) {
-            method = generateCode(m);
+            method = generateCode(m, localeDatabase);
+            if (tc) method.prepend(TEMPLATE);
             method.replace(m->name(), m->name().prepend(_class->name().append("::")));
             method.append("\n{\n}").append("\n");
 
@@ -315,7 +317,21 @@ namespace translator {
 
     Code ProjectTranslator::generateClassMethodsImpl(const entity::SharedTemplateClass &_class) const
     {
-        return generateClassMethodsImpl(std::static_pointer_cast<entity::Class>(_class));
+        if (!_class) return Code("\ninvalid template class\n", "\ninvalid template class\n");
+        checkDb();
+
+        QString templatePart;
+        generateTemplatePart(templatePart,
+                             std::dynamic_pointer_cast<entity::Template>(_class),
+                             false);
+        QString methodTemplatePart(templatePart);
+        methodTemplatePart.remove("template ").remove("class ").remove("\n");
+
+        Code result(generateClassMethodsImpl(std::dynamic_pointer_cast<entity::Class>(_class), _class->database()));
+        result.toHeader.replace(TEMPLATE, templatePart);
+        result.toHeader.replace(_class->name(), _class->name().append(methodTemplatePart));
+
+        return result;
     }
 
     QString ProjectTranslator::generateCode(const entity::SharedExtendedType &extType,

@@ -5,8 +5,11 @@
 namespace translator {
 
     struct Code {
+       Code() : Code("", "" ) {}
         Code(const QString &h, const QString &cpp)
             : toHeader(h), toSource(cpp) {}
+        Code(const Code &src)
+            : Code(src.toHeader, src.toSource) {}
 
         QString toHeader;
         QString toSource;
@@ -46,7 +49,8 @@ namespace translator {
         QString generateCode(const entity::SharedClass &_class) const;
         QString generateCode(const entity::SharedTemplateClass &_class) const;
 
-        Code generateClassMethodsImpl(const entity::SharedClass &_class) const;
+        Code generateClassMethodsImpl(const entity::SharedClass &_class,
+                                      const db::SharedDatabase &localeDatabase = nullptr) const;
         Code generateClassMethodsImpl(const entity::SharedTemplateClass &_class) const;
 
     private:
@@ -62,7 +66,7 @@ namespace translator {
                                       const QString &indent,
                                       entity::Section section,
                                       QString &out) const;
-        void generateTemplatePart(QString &result, const entity::SharedTemplate &t) const;
+        void generateTemplatePart(QString &result, const entity::SharedTemplate &t, bool withDefaultTypes = true) const;
         bool toHeader(const entity::SharedMethod &m,
                       const db::SharedDatabase &classDatabase = nullptr) const;
 

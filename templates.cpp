@@ -12,5 +12,5 @@ namespace {
     const QString UNION_TEMPLATE("union %name% {%variables%};");
     const QString CLASS_TEMPLATE("%kind%%name%%parents%{%section%};");
     const QString TEMPLATE_TEMPLATE("template <%template_parameters%>");
-
+    const QString TEMPLATE("%template%");
 }
