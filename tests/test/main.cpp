@@ -442,7 +442,6 @@ TEST_F(CodeGenerator, TemplateClassImplementation)
 
     entity::SharedScope _std(_globalDb->addScope("std"));
     entity::SharedType dd(_std->addType("default_delete"));
-    // NOTE: implement copyFrom, swap and clone methods
 
     entity::SharedTemplateClass scopedPointer(_projectScope->addType<entity::TemplateClass>("ScopedPointer"));
     entity::SharedType value(scopedPointer->addLocaleType("Value"));
@@ -461,7 +460,7 @@ TEST_F(CodeGenerator, TemplateClassImplementation)
     resetMethod->addParameter("other", valuePtr->id());
 
     translator::Code code(_translator->generateClassMethodsImpl(scopedPointer));
-    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
+    ASSERT_EQ(futureResult, code.toHeader);
 
     // TODO: add tests for templates
 }

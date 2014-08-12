@@ -13,6 +13,19 @@ namespace entity {
     {
     }
 
+    Type::Type(Type &&src)
+    {
+       moveFrom(src);
+    }
+
+    Type::Type(const Type &src)
+       : m_KindOfType(src.m_KindOfType)
+       , m_Name(src.m_Name)
+       , m_Id(src.m_Id)
+       , m_ScopeId(src.m_ScopeId)
+    {
+    }
+
     Type::Type(const QString &name, const QString &scopeId)
         : m_KindOfType(BasicType)
         , m_Name(name)
@@ -23,6 +36,21 @@ namespace entity {
 
     Type::~Type()
     {
+    }
+
+    Type &Type::operator =(Type &&rhs)
+    {
+       if (&rhs != this)
+          moveFrom(rhs);
+
+       return *this;
+    }
+
+    Type &Type::operator =(Type rhs)
+    {
+        moveFrom(rhs);
+
+        return *this;
     }
 
     QString Type::name() const
@@ -39,7 +67,7 @@ namespace entity {
     {
         return m_Id;
     }
-    
+
     void Type::setId(const QString &id)
     {
         m_Id = id;
@@ -49,7 +77,7 @@ namespace entity {
     {
         return m_ScopeId;
     }
-    
+
     void Type::setScopeId(const QString &scopeId)
     {
         m_ScopeId = scopeId;
@@ -74,10 +102,26 @@ namespace entity {
 
     void Type::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Name", errorList, [&src, this](){ m_Name = src["Name"].toString(); });
-        utility::checkAndSet(src, "Scope ID", errorList, [&src, this](){ m_ScopeId = src["Scope ID"].toString(); });
-        utility::checkAndSet(src, "ID", errorList, [&src, this](){ m_Id = src["ID"].toString(); });
-        utility::checkAndSet(src, "Kind of type", errorList, [&src, this](){ m_KindOfType = static_cast<UserType>(src["Kind of type"].toInt()); });
+        utility::checkAndSet(src, "Name", errorList, [&src, this](){
+            m_Name = src["Name"].toString();
+        });
+        utility::checkAndSet(src, "Scope ID", errorList, [&src, this](){
+            m_ScopeId = src["Scope ID"].toString();
+        });
+        utility::checkAndSet(src, "ID", errorList, [&src, this](){
+            m_Id = src["ID"].toString();
+        });
+        utility::checkAndSet(src, "Kind of type", errorList, [&src, this](){
+            m_KindOfType = static_cast<UserType>(src["Kind of type"].toInt());
+        });
     }
-        
+
+    void Type::moveFrom(Type &src)
+    {
+        m_KindOfType = std::move(src.m_KindOfType); // not necessary
+        m_Name       = std::move(src.m_Name);
+        m_Id         = std::move(src.m_Id);
+        m_ScopeId    = std::move(src.m_ScopeId);
+    }
+
 } // namespace entity

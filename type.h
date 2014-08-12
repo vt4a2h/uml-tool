@@ -4,6 +4,12 @@
 
 class QJsonObject;
 
+namespace std
+{
+    template <class T>
+    class shared_ptr;
+}
+
 namespace entity {
 
     class Scope;
@@ -13,8 +19,13 @@ namespace entity {
     {
     public:
         Type();
+        Type(Type &&src);
+        Type(const Type &src);
         Type(const QString &name, const QString &scopeId);
         virtual ~Type();
+
+        Type &operator =(Type &&rhs);
+        Type &operator =(Type rhs);
 
         QString name() const;
         void setName(const QString &name);
@@ -31,6 +42,8 @@ namespace entity {
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
     protected:
+        virtual void moveFrom(Type &src);
+
         UserType m_KindOfType;
 
     private:
