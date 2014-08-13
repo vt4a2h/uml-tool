@@ -4,12 +4,6 @@
 
 class QJsonObject;
 
-namespace std
-{
-    template <class T>
-    class shared_ptr;
-}
-
 namespace entity {
 
     class Scope;

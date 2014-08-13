@@ -19,6 +19,7 @@ namespace entity {
         SharedType getType(const QString &typeId) const;
         SharedType takeType(const QString &typeId);
         template <class T = Type> std::shared_ptr<T> addType(const QString &name = "");
+        // TODO: add addType(T) for cloned types.
         bool containsType(const QString &typeId) const;
         void removeType(const QString &typeId);
         TypesList types() const;
