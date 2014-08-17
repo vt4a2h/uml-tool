@@ -17,37 +17,12 @@ namespace entity {
     {
     }
 
-    Enum::Enum(Enum &&src)
-    {
-       moveFrom(src);
-    }
-
-    Enum::Enum(const Enum &src)
-        : Type(src)
-        , m_EnumTypeId(src.m_EnumTypeId)
-        , m_StrongStatus(src.m_StrongStatus)
-        , m_Variables(src.m_Variables)
-    {
-    }
-
     Enum::Enum(const QString &name, const QString &scopeId)
         : Type(name, scopeId)
         , m_EnumTypeId(STUB_ID)
         , m_StrongStatus(false)
     {
        m_KindOfType = EnumType;
-    }
-
-    Enum &Enum::operator =(Enum &&rhs)
-    {
-       moveFrom(rhs);
-       return *this;
-    }
-
-    Enum &Enum::operator =(Enum rhs)
-    {
-       moveFrom(rhs);
-       return *this;
     }
 
     bool Enum::isStrong() const
@@ -145,13 +120,9 @@ namespace entity {
         });
     }
 
-    void Enum::moveFrom(Enum &src)
+    Enum *Enum::clone() const
     {
-        Type::moveFrom(src);
-
-        m_EnumTypeId = std::move(src.m_EnumTypeId);
-        m_StrongStatus = std::move(src.m_StrongStatus);
-        m_Variables = std::move(src.m_Variables);
+        return new Enum(*this);
     }
 
 } // namespace entity

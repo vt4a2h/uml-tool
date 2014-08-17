@@ -16,10 +16,36 @@ namespace entity {
     {
     }
 
+    Union::Union(const Union &src)
+       : Type(src)
+    {
+        copy(src);
+    }
+
+    Union::Union(Union &&src)
+    {
+        moveFrom(src);
+    }
+
     Union::Union(const QString &name, const QString &scopeId)
         : Type(name, scopeId)
     {
         m_KindOfType = UnionType;
+    }
+
+    Union &Union::operator=(Union rhs)
+    {
+        moveFrom(rhs);
+
+        return *this;
+    }
+
+    Union &Union::operator=(Union &&rhs)
+    {
+        if (this != &rhs)
+            moveFrom(rhs);
+
+        return *this;
     }
 
     SharedField Union::getField(const QString &name) const
@@ -84,6 +110,29 @@ namespace entity {
                 errorList << "Error: \"Fields\" is not array";
             }
         });
+    }
+
+    Union *Union::clone() const
+    {
+        return new Union(*this);
+    }
+
+    void Union::moveFrom(Union &src)
+    {
+        Type::moveFrom(src);
+
+        m_Fields = std::move(src.m_Fields);
+    }
+
+    void Union::copy(const Union &src)
+    {
+        FieldsList tmp;
+        tmp.reserve(src.m_Fields.size());
+
+        for (auto &&field : src.m_Fields)
+            tmp.append(SharedField(field->clone()));
+
+        m_Fields = std::move(tmp);
     }
 
 } // namespace entity

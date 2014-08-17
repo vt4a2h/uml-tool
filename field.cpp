@@ -144,7 +144,12 @@ namespace entity {
 
     void Field::setSuffix(const QString &suffix)
     {
-        m_Suffix = suffix;
+       m_Suffix = suffix;
+    }
+
+    Field *Field::clone() const
+    {
+        return new Field(*this);
     }
 
 } // namespace entity

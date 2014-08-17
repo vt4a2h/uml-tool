@@ -44,6 +44,8 @@ namespace entity {
         void removeSuffix();
         void setSuffix(const QString &suffix);
 
+        virtual Field *clone() const;
+
     private:
         QString m_TypeId;
         Section m_Section;

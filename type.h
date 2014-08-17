@@ -9,6 +9,7 @@ namespace entity {
     class Scope;
     enum UserType : int;
 
+    // we need to implement all copy and move methods, because class has a virtual dtor
     class Type
     {
     public:
@@ -18,8 +19,8 @@ namespace entity {
         Type(const QString &name, const QString &scopeId);
         virtual ~Type();
 
-        Type &operator =(Type &&rhs);
         Type &operator =(Type rhs);
+        Type &operator =(Type &&rhs);
 
         QString name() const;
         void setName(const QString &name);
@@ -34,6 +35,8 @@ namespace entity {
 
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
+
+        virtual Type *clone() const;
 
     protected:
         virtual void moveFrom(Type &src);

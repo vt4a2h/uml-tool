@@ -15,12 +15,7 @@ namespace entity {
         using VariablesList = QList<Variable>;
 
         Enum();
-        Enum(Enum &&src);
-        Enum(const Enum &src);
         Enum(const QString &name, const QString &scopeId);
-
-        Enum &operator =(Enum &&rhs);
-        Enum &operator =(Enum rhs);
 
         bool isStrong() const;
         void setStrongStatus(bool status);
@@ -37,9 +32,9 @@ namespace entity {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
-    private:
-        void moveFrom(Enum &src);
+        Enum *clone() const;
 
+    private:
         QString m_EnumTypeId;
         bool m_StrongStatus;
         VariablesList m_Variables;

@@ -40,7 +40,7 @@ namespace entity {
 
     Type &Type::operator =(Type &&rhs)
     {
-       if (&rhs != this)
+       if (this != &rhs)
           moveFrom(rhs);
 
        return *this;
@@ -114,6 +114,11 @@ namespace entity {
         utility::checkAndSet(src, "Kind of type", errorList, [&src, this](){
             m_KindOfType = static_cast<UserType>(src["Kind of type"].toInt());
         });
+    }
+
+    Type *Type::clone() const
+    {
+        return new Type(*this);
     }
 
     void Type::moveFrom(Type &src)
