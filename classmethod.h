@@ -18,7 +18,12 @@ namespace entity {
     {
     public:
         ClassMethod();
+        ClassMethod(ClassMethod &&src);
+        ClassMethod(const ClassMethod &src);
         ClassMethod(const QString & name);
+
+        ClassMethod &operator =(ClassMethod &&rhs);
+        ClassMethod &operator =(ClassMethod rhs);
 
         QString name() const;
         void setName(const QString &name);
@@ -56,6 +61,9 @@ namespace entity {
         void setType(const ClassMethodType &type);
 
    protected:
+        virtual void moveFrom(ClassMethod &src);
+        virtual void copyFrom(const ClassMethod &src);
+
         ClassMethodType m_Type;
 
     private:

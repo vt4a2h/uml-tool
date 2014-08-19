@@ -16,6 +16,16 @@ namespace entity {
     {
     }
 
+    ClassMethod::ClassMethod(ClassMethod &&src)
+    {
+        moveFrom(src);
+    }
+
+    ClassMethod::ClassMethod(const ClassMethod &src)
+    {
+        copyFrom(src);
+    }
+
     ClassMethod::ClassMethod(const QString &name)
         : m_Type(SimpleMethod)
         , m_Name(name)
@@ -24,6 +34,21 @@ namespace entity {
         , m_ReturnTypeId(VOID_ID)
         , m_RhsIdentificator(None)
     {
+    }
+
+    ClassMethod &ClassMethod::operator =(ClassMethod &&rhs)
+    {
+        if (this != &rhs)
+            moveFrom(rhs);
+
+        return *this;
+    }
+
+    ClassMethod &ClassMethod::operator =(ClassMethod rhs)
+    {
+        moveFrom(rhs);
+
+        return *this;
     }
 
     QString ClassMethod::name() const
@@ -190,22 +215,51 @@ namespace entity {
     {
         return m_Type;
     }
-    
+
     void ClassMethod::setType(const ClassMethodType &type)
     {
         m_Type = type;
     }
-    
-    
+
+    void ClassMethod::moveFrom(ClassMethod &src)
+    {
+        m_Type = std::move(src.m_Type);
+
+        m_Name = std::move(src.m_Name);
+        m_Section = std::move(src.m_Section);
+        m_ConstStatus = std::move(src.m_ConstStatus);
+        m_ReturnTypeId = std::move(src.m_ReturnTypeId);
+
+        m_Parameters = std::move(src.m_Parameters);
+
+        m_RhsIdentificator  = std::move(src.m_RhsIdentificator );
+        m_LhsIdentificators = std::move(src.m_LhsIdentificators);
+    }
+
+    void ClassMethod::copyFrom(const ClassMethod &src)
+    {
+        m_Type = src.m_Type;
+
+        m_Name = src.m_Name;
+        m_Section = src.m_Section;
+        m_ConstStatus = src.m_ConstStatus;
+        m_ReturnTypeId = src.m_ReturnTypeId;
+
+        utility::deepCopySharedPointerList(src.m_Parameters, m_Parameters);
+
+        m_RhsIdentificator  = src.m_RhsIdentificator;
+        m_LhsIdentificators = src.m_LhsIdentificators;
+    }
+
     QString ClassMethod::returnTypeId() const
     {
         return m_ReturnTypeId;
     }
-    
+
     void ClassMethod::setReturnTypeId(const QString &returnTypeId)
     {
         m_ReturnTypeId = returnTypeId;
     }
-    
-    
+
+
 } // namespace entity

@@ -17,7 +17,7 @@ namespace entity {
     }
 
     Union::Union(const Union &src)
-       : Type(src)
+        : Type(src)
     {
         copyFrom(src);
     }
@@ -120,7 +120,6 @@ namespace entity {
     void Union::moveFrom(Union &src)
     {
         Type::moveFrom(src);
-
         m_Fields = std::move(src.m_Fields);
     }
 

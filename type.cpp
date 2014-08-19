@@ -19,11 +19,8 @@ namespace entity {
     }
 
     Type::Type(const Type &src)
-       : m_KindOfType(src.m_KindOfType)
-       , m_Name(src.m_Name)
-       , m_Id(src.m_Id)
-       , m_ScopeId(src.m_ScopeId)
     {
+        copyFrom(src);
     }
 
     Type::Type(const QString &name, const QString &scopeId)
@@ -127,6 +124,14 @@ namespace entity {
         m_Name       = std::move(src.m_Name);
         m_Id         = std::move(src.m_Id);
         m_ScopeId    = std::move(src.m_ScopeId);
+    }
+
+    void Type::copyFrom(const Type &src)
+    {
+        m_KindOfType = src.m_KindOfType;
+        m_Name = src.m_Name;
+        m_Id = src.m_Id;
+        m_ScopeId = src.m_ScopeId;
     }
 
 } // namespace entity

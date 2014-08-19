@@ -120,9 +120,4 @@ namespace entity {
         });
     }
 
-    Enum *Enum::clone() const
-    {
-        return new Enum(*this);
-    }
-
 } // namespace entity

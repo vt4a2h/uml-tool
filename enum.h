@@ -32,8 +32,6 @@ namespace entity {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
-        Enum *clone() const;
-
     private:
         QString m_EnumTypeId;
         bool m_StrongStatus;

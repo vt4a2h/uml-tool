@@ -40,6 +40,7 @@ namespace entity {
 
     protected:
         virtual void moveFrom(Type &src);
+        virtual void copyFrom(const Type &src);
 
         UserType m_KindOfType;
 
