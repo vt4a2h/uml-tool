@@ -72,6 +72,19 @@ namespace utility {
         return result;
     }
 
+    template <class List>
+    void deepCopySharedPointerList(const List &src, List &dst)
+    {
+        List tmpList;
+        tmpList.reserve(src.size());
+
+        typedef typename List::value_type::element_type ValueType;
+        for (auto &&value : src)
+            tmpList.append(std::make_shared<ValueType>(*value));
+
+        dst = std::move(tmpList);
+    }
+
     QString fieldKeywordToString(entity::FieldKeyword keyword);
     QString methodLhsIdToString(entity::LhsIdentificator id);
     QString methodRhsIdToString(entity::RhsIdentificator id);

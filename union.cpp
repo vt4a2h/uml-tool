@@ -19,7 +19,7 @@ namespace entity {
     Union::Union(const Union &src)
        : Type(src)
     {
-        copy(src);
+        copyFrom(src);
     }
 
     Union::Union(Union &&src)
@@ -124,15 +124,9 @@ namespace entity {
         m_Fields = std::move(src.m_Fields);
     }
 
-    void Union::copy(const Union &src)
+    void Union::copyFrom(const Union &src)
     {
-        FieldsList tmp;
-        tmp.reserve(src.m_Fields.size());
-
-        for (auto &&field : src.m_Fields)
-            tmp.append(SharedField(field->clone()));
-
-        m_Fields = std::move(tmp);
+        utility::deepCopySharedPointerList(src.m_Fields, m_Fields);
     }
 
 } // namespace entity

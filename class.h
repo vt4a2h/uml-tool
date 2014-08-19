@@ -12,7 +12,12 @@ namespace entity {
     {
     public:
         Class();
+        Class(Class &&src);
+        Class(const Class &src);
         Class(const QString &name, const QString &scopeId);
+
+        Class &operator =(Class &&rhs);
+        Class &operator =(Class rhs);
 
         Parent addParent(const QString &typeId, Section section);
         ParentsList getParents(const QString &typeId);
@@ -51,6 +56,10 @@ namespace entity {
 
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
+    protected:
+        void moveFrom(Class &src);
+        void copyFrom(const Class &src);
 
     private:
         Kind m_Kind;

@@ -32,7 +32,7 @@ namespace entity {
 
     private:
         void moveFrom(Union &src);
-        void copy(const Union &src);
+        void copyFrom(const Union &src);
 
         FieldsList m_Fields;
     };

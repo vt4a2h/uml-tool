@@ -21,12 +21,38 @@ namespace entity {
     {
     }
 
+    Class::Class(Class &&src)
+    {
+        moveFrom(src);
+    }
+
+    Class::Class(const Class &src)
+        : Type(src)
+    {
+        copyFrom(src);
+    }
+
     Class::Class(const QString &name, const QString &scopeId)
         : Type(name, scopeId)
         , m_Kind(ClassType)
         , m_FinalStatus(false)
     {
         m_KindOfType = UserClassType;
+    }
+
+    Class &Class::operator =(Class &&rhs)
+    {
+        if (this != &rhs)
+            moveFrom(rhs);
+
+        return *this;
+    }
+
+    Class &Class::operator =(Class rhs)
+    {
+        moveFrom(rhs);
+
+        return *this;
     }
 
     Parent Class::addParent(const QString &typeId, Section section)
@@ -305,6 +331,28 @@ namespace entity {
                 errorList << "Error: \"Fields\" is not array";
             }
         });
+    }
+
+    void Class::moveFrom(Class &src)
+    {
+        Type::moveFrom(src);
+
+        m_Kind = std::move(src.m_Kind);
+        m_FinalStatus = std::move(src.m_FinalStatus);
+
+        m_Parents = std::move(src.m_Parents);
+        m_Methods = std::move(src.m_Methods);
+        m_Fields  = std::move(src.m_Fields );
+    }
+
+    void Class::copyFrom(const Class &src)
+    {
+        m_Kind = src.m_Kind;
+        m_FinalStatus = src.m_FinalStatus;
+        m_Parents = src.m_Parents;
+
+        utility::deepCopySharedPointerList(src.m_Methods, m_Methods);
+        utility::deepCopySharedPointerList(src.m_Fields,  m_Fields );
     }
 
 } // namespace entity
