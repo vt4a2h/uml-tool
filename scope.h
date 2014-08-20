@@ -11,7 +11,12 @@ namespace entity {
     class Scope
     {
     public:
+        Scope(Scope &&src);
+        Scope(const Scope &src);
         Scope(const QString &scopeName = "", const QString &scopeId = "");
+
+        Scope &operator =(Scope rhs);
+        Scope &operator =(Scope &&rhs);
 
         QString name() const;
         void setName(const QString &name);
@@ -19,7 +24,7 @@ namespace entity {
         SharedType getType(const QString &typeId) const;
         SharedType takeType(const QString &typeId);
         template <class T = Type> std::shared_ptr<T> addType(const QString &name = "");
-        // TODO: add addType(T) for cloned types.
+        void addClonedType(const SharedType &type);
         bool containsType(const QString &typeId) const;
         void removeType(const QString &typeId);
         TypesList types() const;
@@ -42,7 +47,8 @@ namespace entity {
         void fromJson(const QJsonObject &src, QStringList &errorList);
 
     private:
-        void swap(Scope &other);
+        void copyFrom(const Scope &src);
+        void moveFrom(Scope &src);
 
         QString m_Name;
         QString m_Id;

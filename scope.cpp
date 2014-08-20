@@ -17,11 +17,35 @@
 
 namespace entity {
 
+    Scope::Scope(Scope &&src)
+    {
+        moveFrom(src);
+    }
+
+    Scope::Scope(const Scope &src)
+    {
+        copyFrom(src);
+    }
+
     Scope::Scope(const QString &scopeName, const QString &scopeId)
         : m_Name(!scopeName.isEmpty() ? scopeName : DEFAULT_NAME)
         , m_Id(utility::genId())
         , m_ParentScopeId(!scopeId.isEmpty() ? scopeId : GLOBAL_SCOPE_ID)
     {
+    }
+
+    Scope &Scope::operator =(Scope rhs)
+    {
+        moveFrom(rhs);
+        return *this;
+    }
+
+    Scope &Scope::operator =(Scope &&rhs)
+    {
+        if (this != &rhs)
+            moveFrom(rhs);
+
+        return *this;
     }
 
     QString Scope::name() const
@@ -49,6 +73,14 @@ namespace entity {
         }
 
         return result;
+    }
+
+    void Scope::addClonedType(const SharedType &type)
+    {
+        SharedType newType(std::make_shared<Type>(*type));
+        newType->setScopeId(m_Id);
+        newType->setId(utility::genId());
+        m_Types.insert(newType->id(), newType);
     }
 
     bool Scope::containsType(const QString &typeId) const
@@ -114,7 +146,7 @@ namespace entity {
     {
         return m_Id;
     }
-    
+
     void Scope::setId(const QString &id)
     {
         m_Id = id;
@@ -124,7 +156,7 @@ namespace entity {
     {
         return m_ParentScopeId;
     }
-    
+
     void Scope::setParentScopeId(const QString &parentScopeId)
     {
         m_ParentScopeId = parentScopeId;
@@ -187,6 +219,26 @@ namespace entity {
                 errorList << "Error: \"Types\" is not array";
             }
         });
+    }
+
+    void Scope::copyFrom(const Scope &src)
+    {
+        m_Name = src.m_Name;
+        m_Id   = src.m_Id;
+        m_ParentScopeId = src.m_ParentScopeId;
+
+        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes);
+        utility::deepCopySharedPointerHash(src.m_Types,  m_Types );
+    }
+
+    void Scope::moveFrom(Scope &src)
+    {
+        m_Name = std::move(src.m_Name);
+        m_Id   = std::move(src.m_Id);
+        m_ParentScopeId = std::move(src.m_ParentScopeId);
+
+        m_Scopes = std::move(src.m_Scopes);
+        m_Types  = std::move(src.m_Types );
     }
 
 } // namespace entity

@@ -168,11 +168,13 @@ namespace entity {
         result.insert("Rhs identificator", m_RhsIdentificator);
 
         QJsonArray parameters;
-        for (auto &&value : m_Parameters) parameters.append(value->toJson());
+        for (auto &&value : m_Parameters)
+            parameters.append(value->toJson());
         result.insert("Parameters", parameters);
 
         QJsonArray lhsIdentificators;
-        for (auto &&id : m_LhsIdentificators) lhsIdentificators.append(id);
+        for (auto &&id : m_LhsIdentificators)
+            lhsIdentificators.append(id);
         result.insert("Lhs identificators", lhsIdentificators);
 
         return result;
@@ -180,12 +182,24 @@ namespace entity {
 
     void ClassMethod::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Name", errorList, [&src, this](){ m_Name = src["Name"].toString(); });
-        utility::checkAndSet(src, "Section", errorList, [&src, this](){ m_Section = static_cast<Section>(src["Section"].toInt()); });
-        utility::checkAndSet(src, "Type", errorList, [&src, this](){ m_Type = static_cast<ClassMethodType>(src["Type"].toInt()); });
-        utility::checkAndSet(src, "Const status", errorList, [&src, this](){ m_ConstStatus = src["Const status"].toBool(); });
-        utility::checkAndSet(src, "Return type id", errorList, [&src, this](){ m_ReturnTypeId = src["Return type id"].toString(); });
-        utility::checkAndSet(src, "Rhs identificator", errorList, [&src, this](){ m_RhsIdentificator = static_cast<RhsIdentificator>(src["Rhs identificator"].toInt()); });
+        utility::checkAndSet(src, "Name", errorList, [&src, this](){
+            m_Name = src["Name"].toString();
+        });
+        utility::checkAndSet(src, "Section", errorList, [&src, this](){
+            m_Section = static_cast<Section>(src["Section"].toInt());
+        });
+        utility::checkAndSet(src, "Type", errorList, [&src, this](){
+            m_Type = static_cast<ClassMethodType>(src["Type"].toInt());
+        });
+        utility::checkAndSet(src, "Const status", errorList, [&src, this](){
+            m_ConstStatus = src["Const status"].toBool();
+        });
+        utility::checkAndSet(src, "Return type id", errorList, [&src, this](){
+            m_ReturnTypeId = src["Return type id"].toString();
+        });
+        utility::checkAndSet(src, "Rhs identificator", errorList, [&src, this](){
+            m_RhsIdentificator = static_cast<RhsIdentificator>(src["Rhs identificator"].toInt());
+        });
 
         m_Parameters.clear();
         utility::checkAndSet(src, "Parameters", errorList, [&src, &errorList, this](){

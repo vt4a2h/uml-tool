@@ -82,7 +82,22 @@ namespace utility {
         for (auto &&value : src)
             tmpList.append(std::make_shared<ValueType>(*value));
 
+        dst.clear();
         dst = std::move(tmpList);
+    }
+
+    template <class Hash>
+    void deepCopySharedPointerHash(const Hash &src, Hash &dst)
+    {
+        Hash tmpHash;
+        tmpHash.reserve(src.size());
+
+        typedef typename Hash::mapped_type::element_type ValueType;
+        for (auto &&value : src.values())
+            tmpHash.insert(value->id(), std::make_shared<ValueType>(*value));
+
+        dst.clear();
+        dst = std::move(tmpHash);
     }
 
     QString fieldKeywordToString(entity::FieldKeyword keyword);
