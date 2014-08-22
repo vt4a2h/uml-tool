@@ -12,6 +12,16 @@
 
 namespace db {
 
+    Database::Database(Database &&src)
+    {
+        moveFrom(src);
+    }
+
+    Database::Database(const Database &src)
+    {
+        copyFrom(src);
+    }
+
     Database::Database(const QString &name, const QString &path)
         : m_Name(name.isEmpty() ? DEFAULT_DATABASE_NAME : name)
         , m_Path(path.isEmpty() ? DEFAULT_DATABASE_PATH : QDir::currentPath())
@@ -21,6 +31,20 @@ namespace db {
 
     Database::~Database()
     {
+    }
+
+    Database &Database::operator =(Database &&rhs)
+    {
+        if (this != &rhs)
+            moveFrom(rhs);
+
+        return *this;
+    }
+
+    Database &Database::operator =(Database rhs)
+    {
+        moveFrom(rhs);
+        return *this;
     }
 
     QString Database::path() const
@@ -206,6 +230,22 @@ namespace db {
                 errorList << "Error: \"Scopes\" is not array";
             }
         });
+    }
+
+    void Database::moveFrom(Database &src)
+    {
+        m_Name = std::move(src.m_Name);
+        m_Path = std::move(src.m_Path);
+
+        m_Scopes = std::move(src.m_Scopes);
+    }
+
+    void Database::copyFrom(const Database &src)
+    {
+        m_Name = src.m_Name;
+        m_Path = src.m_Path;
+
+        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes);
     }
 
     QString Database::makeFullPath() const

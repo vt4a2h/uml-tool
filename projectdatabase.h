@@ -8,7 +8,12 @@ namespace db {
     class ProjectDatabase : public Database
     {
     public:
+        ProjectDatabase(ProjectDatabase &&src);
+        ProjectDatabase(const ProjectDatabase &src);
         ProjectDatabase(const QString &name = "", const QString &path = "");
+
+        ProjectDatabase &operator =(ProjectDatabase &&rhs);
+        ProjectDatabase &operator =(ProjectDatabase rhs);
 
         relationship::SharedRelation getRelation(const QString &id) const;
         void addRelation(const relationship::SharedRelation &relation);
@@ -23,6 +28,10 @@ namespace db {
 
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
+    protected:
+        virtual void copyFrom(const ProjectDatabase &src);
+        virtual void moveFrom(ProjectDatabase &src);
 
     private:
         relationship::Relations m_Relations;

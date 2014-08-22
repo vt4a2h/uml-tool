@@ -7,9 +7,34 @@
 
 namespace db {
 
+    ProjectDatabase::ProjectDatabase(ProjectDatabase &&src)
+    {
+        moveFrom(src);
+    }
+
+    ProjectDatabase::ProjectDatabase(const ProjectDatabase &src)
+        : Database(src)
+    {
+        copyFrom(src);
+    }
+
     ProjectDatabase::ProjectDatabase(const QString &name, const QString &path)
         : Database(name, path)
     {
+    }
+
+    ProjectDatabase &ProjectDatabase::operator =(ProjectDatabase &&rhs)
+    {
+        if (this != &rhs)
+            moveFrom(rhs);
+
+        return *this;
+    }
+
+    ProjectDatabase &ProjectDatabase::operator =(ProjectDatabase rhs)
+    {
+        moveFrom(rhs);
+        return *this;
     }
 
     relationship::SharedRelation ProjectDatabase::getRelation(const QString &id) const
@@ -80,6 +105,19 @@ namespace db {
                 errorList << "Error: \"Relations\" is not array";
             }
         });
+    }
+
+    void ProjectDatabase::copyFrom(const ProjectDatabase &src)
+    {
+        m_GlobalDatabase = src.m_GlobalDatabase; // shallow copy. ok
+        utility::deepCopySharedPointerHash(src.m_Relations, m_Relations);
+    }
+
+    void ProjectDatabase::moveFrom(ProjectDatabase &src)
+    {
+        Database::moveFrom(src);
+        m_GlobalDatabase = std::move(src.m_GlobalDatabase);
+        m_Relations = src.m_Relations;
     }
 
     db::SharedDatabase ProjectDatabase::globalDatabase() const

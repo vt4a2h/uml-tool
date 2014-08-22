@@ -7,8 +7,13 @@ namespace db {
     class Database
     {
     public:
+        Database(Database &&src);
+        Database(const Database &src);
         Database(const QString &name = "", const QString &path = "");
         virtual ~Database();
+
+        Database &operator =(Database &&rhs);
+        Database &operator =(Database rhs);
 
         QString path() const;
         void setPath(const QString &path);
@@ -32,6 +37,10 @@ namespace db {
 
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
+
+    protected:
+        virtual void copyFrom(const Database &src);
+        virtual void moveFrom(Database &src);
 
     private:
         QStringList makeDepthIdList(const QString &id) const;
