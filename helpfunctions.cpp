@@ -36,6 +36,8 @@ namespace utility {
         object.contains(key) ? func() : lst.append(QObject::tr("Key \"%1\" not found!").arg(key));
     }
 
+    // TODO: improve it
+
     std::shared_ptr<entity::Type> makeType(entity::UserType type)
     {
         using namespace entity;
@@ -91,70 +93,43 @@ namespace utility {
         }
     }
 
+    namespace {
+        using namespace entity;
+
+        using KeywordsString = const std::map<FieldKeyword,     QString>;
+        using LhsIdString    = const std::map<LhsIdentificator, QString>;
+        using RhsIdString    = const std::map<RhsIdentificator, QString>;
+        using SectionString  = const std::map<Section,          QString>;
+
+        KeywordsString kKeywords { {Volatile, "volatile"}, {Mutable, "mutable"}, {FieldStatic, "static"} };
+
+        LhsIdString    kLhsId    { {Explicit, "explicit"}, {Inline, "inline"},   {MethodStatic, "static"},
+                                   {Virtual, "virtual"},   {Friend, "friend"} };
+
+        RhsIdString    kRhsId    { {None, ""}, {Override, "override"}, {Final, "final"}, {Delete, "= delete"},
+                                   {Default, "= default"}, {PureVirtual, "= 0"} };
+
+        SectionString  kSection  { {Public, "public"}, {Protected, "protected"}, {Private, "private"} };
+    }
+
     QString fieldKeywordToString(entity::FieldKeyword keyword)
     {
-        switch (keyword) {
-        case entity::Volatile:
-            return "volatile";
-        case entity::Mutable:
-            return "mutable";
-        case entity::FieldStatic:
-            return "static";
-        default:
-            return "unknown";
-        }
+        return mapSearchHelper(kKeywords, keyword, QString("unknown"));
     }
 
     QString methodLhsIdToString(entity::LhsIdentificator id)
     {
-        switch (id) {
-        case entity::Explicit:
-            return "explicit";
-        case entity::Inline:
-            return "inline";
-        case entity::MethodStatic:
-            return "static";
-        case entity::Virtual:
-            return "virtual";
-        case entity::Friend:
-            return "friend";
-        default:
-            return "unknown";
-        }
+        return mapSearchHelper(kLhsId, id, QString("unknown"));
     }
 
     QString methodRhsIdToString(entity::RhsIdentificator id)
     {
-        switch (id) {
-        case entity::None:
-            return "";
-        case entity::Override:
-            return "override";
-        case entity::Final:
-            return "final";
-        case entity::Delete:
-            return "= delete";
-        case entity::Default:
-            return "= default";
-        case entity::PureVirtual:
-            return "= 0";
-        default:
-            return "unknown";
-        }
+        return mapSearchHelper(kRhsId, id, QString("unknown"));
     }
 
     QString sectionToString(entity::Section section)
     {
-        switch (section) {
-        case entity::Public:
-            return "public";
-        case entity::Protected:
-            return "protected";
-        case entity::Private:
-            return "private";
-        default:
-            return "unknown";
-        }
+        return mapSearchHelper(kSection, section, QString("unknown"));
     }
 
 }

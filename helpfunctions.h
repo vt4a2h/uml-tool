@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <map>
 
 class QString;
 class QJsonObject;
@@ -98,6 +99,18 @@ namespace utility {
 
         dst.clear();
         dst = std::move(tmpHash);
+    }
+
+    template <class Key, class Value>
+    Value mapSearchHelper(const std::map<Key, Value> &map, Key key, Value defaultValue)
+    {
+        Value result = defaultValue;
+
+        auto it(map.find(key));
+        if (it != map.end())
+            result = it->second;
+
+        return result;
     }
 
     QString fieldKeywordToString(entity::FieldKeyword keyword);
