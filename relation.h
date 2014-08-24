@@ -17,9 +17,14 @@ namespace relationship {
     {
     public:
         Relation();
+        Relation(Relation &&src);
+        Relation(const Relation &src);
         Relation(const QString &tailTypeId, const QString &headTypeId,
                  db::Database *globalDatabase, db::Database *projectDatabase);
         virtual ~Relation();
+
+        Relation &operator =(Relation rhs);
+        Relation &operator =(Relation &&rhs);
 
         QString description() const;
         void setDescription(const QString &description);
@@ -45,6 +50,10 @@ namespace relationship {
     protected:
         virtual void make();
         virtual void clear();
+
+        virtual void moveFrom(Relation &src);
+        virtual void copyFrom(const Relation &src);
+
         void check();
         void addHeadClass(const QString &id);
         void addTailClass(const QString &id);

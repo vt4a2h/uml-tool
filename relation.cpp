@@ -15,6 +15,16 @@ namespace relationship {
     {
     }
 
+    Relation::Relation(Relation &&src)
+    {
+        moveFrom(src);
+    }
+
+    Relation::Relation(const Relation &src)
+    {
+        copyFrom(src);
+    }
+
     Relation::Relation(const QString &tailTypeId, const QString &headTypeId,
                        db::Database *globalDatabase, db::Database *projectDatabase)
         : m_TailNode(std::make_shared<Node>(tailTypeId))
@@ -30,6 +40,21 @@ namespace relationship {
 
     Relation::~Relation()
     {
+    }
+
+    Relation &Relation::operator =(Relation rhs)
+    {
+        moveFrom(rhs);
+
+        return *this;
+    }
+
+    Relation &Relation::operator =(Relation &&rhs)
+    {
+        if (this != &rhs)
+            moveFrom(rhs);
+
+        return *this;
     }
 
     QString Relation::description() const
@@ -60,6 +85,39 @@ namespace relationship {
 
     void Relation::clear()
     {
+    }
+
+    void Relation::moveFrom(Relation &src)
+    {
+        m_TailNode = std::move(src.m_TailNode);
+        m_HeadNode = std::move(src.m_HeadNode);
+
+        m_HeadClass = std::move(src.m_HeadClass);
+        m_TailClass = std::move(src.m_TailClass);
+
+        m_Id = std::move(src.m_Id);
+        m_Description = std::move(src.m_Description);
+        m_RelationType = std::move(src.m_RelationType);
+
+        m_GlobalDatabase = std::move(src.m_GlobalDatabase);
+        m_ProjectDatabase = std::move(src.m_ProjectDatabase);
+    }
+
+    void Relation::copyFrom(const Relation &src)
+    {
+        m_TailNode = std::make_shared<Node>(*src.m_TailNode);
+        m_HeadNode = std::make_shared<Node>(*src.m_HeadNode);
+
+        // shallow copy
+        m_HeadClass = src.m_HeadClass;
+        m_TailClass = src.m_TailClass;
+
+        m_Id = src.m_Id;
+        m_Description = src.m_Description;
+        m_RelationType = src.m_RelationType;
+
+        m_GlobalDatabase = src.m_GlobalDatabase;
+        m_ProjectDatabase = src.m_ProjectDatabase;
     }
 
     void Relation::check()

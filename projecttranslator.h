@@ -5,11 +5,15 @@
 namespace translator {
 
     struct Code {
-       Code() : Code("", "" ) {}
-        Code(const QString &h, const QString &cpp)
-            : toHeader(h), toSource(cpp) {}
-        Code(const Code &src)
-            : Code(src.toHeader, src.toSource) {}
+       Code() : Code("", "" )
+       {}
+       Code(const QString &h, const QString &cpp)
+           : toHeader(h)
+           , toSource(cpp)
+       {}
+       Code(const Code &src)
+           : Code(src.toHeader, src.toSource)
+       {}
 
         QString toHeader;
         QString toSource;
