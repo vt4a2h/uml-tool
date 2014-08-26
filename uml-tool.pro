@@ -26,7 +26,9 @@ SOURCES += \
     database.cpp \
     projectdatabase.cpp \
     projecttranslator.cpp \
-    templates.cpp
+    templates.cpp \
+    abstractprojectgenerator.cpp \
+    basiccppprojectgenerator.cpp
 
 HEADERS += \
     scope.h \
@@ -52,4 +54,6 @@ HEADERS += \
     multiplyassociation.h \
     database.h \
     projectdatabase.h \
-    projecttranslator.h
+    projecttranslator.h \
+    abstractprojectgenerator.h \
+    basiccppprojectgenerator.h
