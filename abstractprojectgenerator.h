@@ -26,13 +26,13 @@ namespace generator {
        QStringList errors() const;
        bool anyErrors() const;
 
-       virtual bool validate() const = 0;
+       virtual bool valid() const;
        virtual void generate() = 0;
 
     protected:
        translator::ProjectTranslator m_ProjectTranslator;
        QString m_OutputDirectory;
-       QStringList m_ErrorList;
+       mutable QStringList m_ErrorList;
     };
 
     Q_DECLARE_OPERATORS_FOR_FLAGS(AbstractProjectGenerator::GeneratorOptions)

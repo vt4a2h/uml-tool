@@ -28,7 +28,8 @@ SOURCES += \
     projecttranslator.cpp \
     templates.cpp \
     abstractprojectgenerator.cpp \
-    basiccppprojectgenerator.cpp
+    basiccppprojectgenerator.cpp \
+    virtualfile.cpp
 
 HEADERS += \
     scope.h \
@@ -56,4 +57,5 @@ HEADERS += \
     projectdatabase.h \
     projecttranslator.h \
     abstractprojectgenerator.h \
-    basiccppprojectgenerator.h
+    basiccppprojectgenerator.h \
+    virtualfile.h

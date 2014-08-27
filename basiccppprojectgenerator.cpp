@@ -6,13 +6,15 @@ namespace generator {
     {
     }
 
-    bool BasicCppProjectGenerator::validate() const
+    bool BasicCppProjectGenerator::valid() const
     {
-        return true; // NOTE: stub
+        return AbstractProjectGenerator::valid();
     }
 
     void BasicCppProjectGenerator::generate()
     {
+        if (!valid()) return;
+
         // NOTE: stub
     }
 

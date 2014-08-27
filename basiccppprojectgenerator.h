@@ -8,7 +8,7 @@ namespace generator {
     public:
         BasicCppProjectGenerator();
 
-        bool validate() const override;
+        bool valid() const override;
         void generate() override;
     };
 

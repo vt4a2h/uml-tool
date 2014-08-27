@@ -1,4 +1,5 @@
 #include "abstractprojectgenerator.h"
+#include <QFileInfo>
 
 namespace generator {
 
@@ -57,6 +58,21 @@ namespace generator {
     bool AbstractProjectGenerator::anyErrors() const
     {
         return !m_ErrorList.isEmpty();
+    }
+
+    bool AbstractProjectGenerator::valid() const
+    {
+        QFileInfo dir(m_OutputDirectory);
+
+        if (!dir.isDir()) {
+            m_ErrorList << QObject::tr("%1 is not a directory.").arg(m_OutputDirectory);
+            return false;
+        } else if (!dir.isWritable()) {
+            m_ErrorList << QObject::tr("%1 is not writable.").arg(m_OutputDirectory);
+            return false;
+        }
+
+        return true;
     }
 
 } // namespace generator

@@ -6,6 +6,9 @@
 #include <QMultiHash>
 #include <memory>
 
+using ErrorList = QStringList;
+using SharedErrorList = std::shared_ptr<ErrorList>;
+
 namespace entity {
     class Field;
     using SharedField = std::shared_ptr<Field>;
@@ -92,4 +95,8 @@ namespace db {
 namespace translator {
     class ProjectTranslator;
     using SharedTranslator = std::shared_ptr<ProjectTranslator>;
+}
+
+namespace generator {
+
 }
