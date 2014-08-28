@@ -98,5 +98,10 @@ namespace translator {
 }
 
 namespace generator {
+    class VirtualFile;
+    using SharedVirtualFile = std::shared_ptr<VirtualFile>;
+    using VirtualFiles      = QHash<QString, SharedVirtualFile>;
 
+    class VirtualDirectory;
+    using SharedVirtualDirectory = std::shared_ptr<VirtualDirectory>;
 }

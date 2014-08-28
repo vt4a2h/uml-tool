@@ -1,11 +1,12 @@
 #include "virtualfile.h"
 #include <QFileInfo>
+#include <QDir>
 #include <QTextStream>
 
 namespace generator {
 
     VirtualFile::VirtualFile()
-        : VirtualFile("")
+        : VirtualFile("stub path")
     {
     }
 
@@ -22,6 +23,7 @@ namespace generator {
     VirtualFile::VirtualFile(const QString &path)
         : m_FileInfo(path)
     {
+        toNativeSeparators();
     }
 
     VirtualFile::~VirtualFile()
@@ -51,6 +53,7 @@ namespace generator {
     void VirtualFile::setPath(const QString &path)
     {
         m_FileInfo = path;
+        toNativeSeparators();
     }
 
     QString VirtualFile::name() const
@@ -123,6 +126,12 @@ namespace generator {
         m_FileInfo  = std::move(src.m_FileInfo);
         m_Data      = std::move(src.m_Data);
         m_ErrorList = std::move(src.m_ErrorList);
+    }
+
+    void VirtualFile::toNativeSeparators()
+    {
+        if (!m_FileInfo.isNativePath())
+            m_FileInfo.setFile(QDir::toNativeSeparators(m_FileInfo.filePath()));
     }
 
 } // namespace generator

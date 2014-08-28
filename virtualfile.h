@@ -34,6 +34,7 @@ namespace generator {
     protected:
         virtual void copyFrom(const VirtualFile &src);
         virtual void moveFrom(VirtualFile &src);
+        void toNativeSeparators(); // just for better displaying
 
         QFileInfo m_FileInfo;
         QString   m_Data;
