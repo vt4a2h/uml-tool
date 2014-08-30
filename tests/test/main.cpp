@@ -4,6 +4,7 @@
 #include "TestTypeMaker.h"
 #include "TestRelationMaker.h"
 #include "TestCodeGenerator.h"
+#include "TestFileMaker.h"
 #include <helpfunctions.h>
 #include <templates.cpp>
 
@@ -653,6 +654,64 @@ TEST_F(DepthSearch, TypeSearchWorks)
 
     search_circle(_types, depthTypeSearch, type)
     invalid_case(depthTypeSearch, "foobarbaz")
+}
+
+TEST_F(FileMaker, MakeFileStructure)
+{
+    m_Directory.setPath(m_RootPath + m_Sep + "dir_name");
+    m_Directory.write();
+    QFileInfo info(m_Directory.path());
+
+    EXPECT_TRUE(m_Directory.errorList()->isEmpty())
+            << "Directory should be created without any errors";
+    EXPECT_TRUE(info.isDir())
+            << "VirtualDirectory::write should create directory.";
+    EXPECT_TRUE(info.isWritable())
+            << "Directory should be writable.";
+
+    generator::SharedVirtualDirectory dir1(m_Directory.addDirectory("dir1"));
+
+    EXPECT_TRUE(m_Directory.constainsDirectory("dir1"))
+            << "Directory should contains nested directory.";
+    EXPECT_FALSE(m_Directory.constainsDirectory("dir123"))
+            << "Directory should not contains wrong nested directory.";
+
+    m_Directory.write();
+    info = dir1->path();
+
+    EXPECT_TRUE(m_Directory.errorList()->isEmpty())
+            << "Nested directory should be created without any errors";
+    EXPECT_TRUE(info.isDir())
+            << "VirtualDirectory::write should create nested directory.";
+    EXPECT_TRUE(info.isWritable())
+            << "Nested directory should be writable.";
+
+    generator::SharedVirtualFile file1(m_Directory.addFile("foo.cpp"));
+
+    EXPECT_TRUE(m_Directory.constainsFile("foo.cpp"))
+            << "Directory should contains nested file.";
+    EXPECT_FALSE(m_Directory.constainsFile("dir1"))
+            << "Directory should not contains wrong nested file.";
+
+    QString fileData("int main()\n{\n}");
+    file1->setData(fileData);
+    m_Directory.write();
+    info = file1->path();
+
+    EXPECT_TRUE(m_Directory.errorList()->isEmpty())
+            << "File should be created without any errors";
+    EXPECT_TRUE(info.isFile())
+            << "VirtualFile::write should create a file.";
+    EXPECT_TRUE(info.isReadable())
+            << "File should be readable.";
+
+    QFile f(file1->path());
+    EXPECT_TRUE(f.open(QIODevice::ReadOnly | QIODevice::Text))
+            << "File should be openable";
+    QTextStream s(&f);
+    EXPECT_EQ(fileData, s.readAll())
+            << "File should contains right data";
+    f.close();
 }
 
 int main(int argc, char **argv)

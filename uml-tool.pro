@@ -30,7 +30,8 @@ SOURCES += \
     abstractprojectgenerator.cpp \
     basiccppprojectgenerator.cpp \
     virtualfile.cpp \
-    virtualdirectory.cpp
+    virtualdirectory.cpp \
+    virtualfilesystemabstractitem.cpp
 
 HEADERS += \
     scope.h \
@@ -60,4 +61,5 @@ HEADERS += \
     abstractprojectgenerator.h \
     basiccppprojectgenerator.h \
     virtualfile.h \
-    virtualdirectory.h
+    virtualdirectory.h \
+    virtualfilesystemabstractitem.h

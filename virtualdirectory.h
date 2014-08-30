@@ -1,26 +1,39 @@
 #pragma once
 
+#include "virtualfilesystemabstractitem.h"
 #include "virtualfile.h"
 
 #include <QDir>
 
 namespace generator {
 
-    class VirtualDirectory : public VirtualFile
+    class VirtualDirectory : public VirtualFileSystemAbstractItem
     {
     public:
-        // TODO: add move methods
         VirtualDirectory();
+        VirtualDirectory(const VirtualDirectory &src);
+        VirtualDirectory(VirtualDirectory &&src);
         VirtualDirectory(const QString &path);
+
+        VirtualDirectory &operator =(VirtualDirectory rhs);
+        VirtualDirectory &operator =(VirtualDirectory &&rhs);
 
         SharedVirtualFile addFile(const QString &fileName);
         SharedVirtualFile getFile(const QString &fileName);
+        bool constainsFile(const QString &name) const;
 
         SharedVirtualDirectory addDirectory(const QString &directoryName);
         SharedVirtualDirectory getDirectory(const QString &directoryName);
+        bool constainsDirectory(const QString &name) const;
 
-        bool remove(const QString &name);
-        bool constains(const QString &name) const;
+        bool removeNestedItem(const QString &name);
+
+        void write() const override;
+        bool remove() const override;
+
+    protected:
+        void moveFrom(VirtualDirectory &src);
+        void copyFrom(const VirtualDirectory &src);
 
     private:
         template<class Item>
@@ -29,7 +42,10 @@ namespace generator {
             QChar sep(QDir::separator());
             QString path(m_FileInfo.filePath().append(sep).append(name));
 
-            return std::static_pointer_cast<Item>(*m_Files.insert(name, std::make_shared<Item>(path)));
+            std::shared_ptr<Item> result(std::static_pointer_cast<Item>(*m_Files.insert(name, std::make_shared<Item>(path))));
+            result->setErrorList(m_ErrorList);
+
+            return result;
         }
 
         template<class Item>

@@ -14,7 +14,8 @@ HEADERS += ../../enums.h \
     TestDepthSearch.h \
     helpers.h \
     TestTypeMaker.h \
-    TestCodeGenerator.h
+    TestCodeGenerator.h \
+    TestFileMaker.h
 
 SOURCES += main.cpp \
            ../../type.cpp \
@@ -40,4 +41,7 @@ SOURCES += main.cpp \
            ../../projecttranslator.cpp \
            ../../constants.cpp \
            ../../templates.cpp \
-           ../../scope.cpp
+           ../../scope.cpp \
+           ../../virtualfile.cpp \
+           ../../virtualdirectory.cpp \
+           ../../virtualfilesystemabstractitem.cpp

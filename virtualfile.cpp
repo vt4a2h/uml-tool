@@ -6,64 +6,13 @@
 namespace generator {
 
     VirtualFile::VirtualFile()
-        : VirtualFile("stub path")
+        : VirtualFileSystemAbstractItem()
     {
-    }
-
-    VirtualFile::VirtualFile(VirtualFile &&src)
-    {
-        moveFrom(src);
-    }
-
-    VirtualFile::VirtualFile(const VirtualFile &src)
-    {
-        copyFrom(src);
     }
 
     VirtualFile::VirtualFile(const QString &path)
-        : m_FileInfo(path)
+        : VirtualFileSystemAbstractItem(path)
     {
-        toNativeSeparators();
-    }
-
-    VirtualFile::~VirtualFile()
-    {
-    }
-
-    VirtualFile &VirtualFile::operator =(VirtualFile &&rhs)
-    {
-        if (this != &rhs)
-            moveFrom(rhs);
-
-        return *this;
-    }
-
-    VirtualFile &VirtualFile::operator =(VirtualFile rhs)
-    {
-        moveFrom(rhs);
-
-        return *this;
-    }
-
-    QString VirtualFile::path() const
-    {
-        return m_FileInfo.filePath();
-    }
-
-    void VirtualFile::setPath(const QString &path)
-    {
-        m_FileInfo = path;
-        toNativeSeparators();
-    }
-
-    QString VirtualFile::name() const
-    {
-        return m_FileInfo.fileName();
-    }
-
-    QString VirtualFile::baseName() const
-    {
-        return m_FileInfo.baseName();
     }
 
     QString VirtualFile::data() const
@@ -91,47 +40,14 @@ namespace generator {
         }
     }
 
-    bool VirtualFile::valid() const
+    bool VirtualFile::remove() const
     {
-        QFileInfo path(m_FileInfo.path());
+        bool result(QFile::remove(m_FileInfo.filePath()));
 
-        if (!path.isWritable()) {
-            if (m_ErrorList)
-                *m_ErrorList << QObject::tr("%1 is not writable.").arg(path.filePath());
-            return false;
-        }
+        if (!result)
+            *m_ErrorList << QObject::tr("Cannot delete file %1.").arg(m_FileInfo.filePath());
 
-        return true;
-    }
-
-    SharedErrorList VirtualFile::errorList() const
-    {
-        return m_ErrorList;
-    }
-
-    void VirtualFile::setErrorList(const SharedErrorList &errorList)
-    {
-        m_ErrorList = errorList;
-    }
-
-    void VirtualFile::copyFrom(const VirtualFile &src)
-    {
-        m_FileInfo  = src.m_FileInfo;
-        m_Data      = src.m_Data;
-        m_ErrorList = src.m_ErrorList;
-    }
-
-    void VirtualFile::moveFrom(VirtualFile &src)
-    {
-        m_FileInfo  = std::move(src.m_FileInfo);
-        m_Data      = std::move(src.m_Data);
-        m_ErrorList = std::move(src.m_ErrorList);
-    }
-
-    void VirtualFile::toNativeSeparators()
-    {
-        if (!m_FileInfo.isNativePath())
-            m_FileInfo.setFile(QDir::toNativeSeparators(m_FileInfo.filePath()));
+        return result;
     }
 
 } // namespace generator

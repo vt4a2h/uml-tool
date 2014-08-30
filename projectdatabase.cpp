@@ -110,7 +110,7 @@ namespace db {
     void ProjectDatabase::copyFrom(const ProjectDatabase &src)
     {
         m_GlobalDatabase = src.m_GlobalDatabase; // shallow copy. ok
-        utility::deepCopySharedPointerHash(src.m_Relations, m_Relations);
+        utility::deepCopySharedPointerHash(src.m_Relations, m_Relations, &relationship::Relation::id);
     }
 
     void ProjectDatabase::moveFrom(ProjectDatabase &src)

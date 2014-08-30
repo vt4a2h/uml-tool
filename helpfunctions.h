@@ -87,15 +87,15 @@ namespace utility {
         dst = std::move(tmpList);
     }
 
-    template <class Hash>
-    void deepCopySharedPointerHash(const Hash &src, Hash &dst)
+    template <class Hash, class KeyGetter>
+    void deepCopySharedPointerHash(const Hash &src, Hash &dst, KeyGetter keyGetter)
     {
         Hash tmpHash;
         tmpHash.reserve(src.size());
 
         typedef typename Hash::mapped_type::element_type ValueType;
         for (auto &&value : src.values())
-            tmpHash.insert(value->id(), std::make_shared<ValueType>(*value));
+            tmpHash.insert(std::bind(keyGetter, value.get())(), std::make_shared<ValueType>(*value));
 
         dst.clear();
         dst = std::move(tmpHash);

@@ -227,8 +227,8 @@ namespace entity {
         m_Id   = src.m_Id;
         m_ParentScopeId = src.m_ParentScopeId;
 
-        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes);
-        utility::deepCopySharedPointerHash(src.m_Types,  m_Types );
+        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &Scope::id);
+        utility::deepCopySharedPointerHash(src.m_Types,  m_Types, &Type::id);
     }
 
     void Scope::moveFrom(Scope &src)

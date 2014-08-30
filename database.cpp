@@ -245,7 +245,7 @@ namespace db {
         m_Name = src.m_Name;
         m_Path = src.m_Path;
 
-        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes);
+        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &entity::Scope::id);
     }
 
     QString Database::makeFullPath() const
