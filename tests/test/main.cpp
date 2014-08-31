@@ -8,6 +8,8 @@
 #include <helpfunctions.h>
 #include <templates.cpp>
 
+// NOTE: !!!added test for json
+
 TEST_F(CodeGenerator, Type)
 {
     QString futureResult("int");
@@ -462,8 +464,6 @@ TEST_F(CodeGenerator, TemplateClassImplementation)
 
     translator::Code code(_translator->generateClassMethodsImpl(scopedPointer));
     ASSERT_EQ(futureResult, code.toHeader);
-
-    // TODO: add tests for templates
 }
 
 TEST_F(RelationMaker, MultiplyAssociation)

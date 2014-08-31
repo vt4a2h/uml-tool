@@ -5,6 +5,9 @@
 #include "constants.cpp"
 
 #include <QJsonObject>
+#include <QJsonDocument>
+#include <QFile>
+#include <QTextStream>
 
 namespace entity {
 
@@ -111,6 +114,35 @@ namespace entity {
         utility::checkAndSet(src, "Kind of type", errorList, [&src, this](){
             m_KindOfType = static_cast<UserType>(src["Kind of type"].toInt());
         });
+    }
+
+    void Type::writeToFile(const QString &fileName) const
+    {
+        QJsonDocument document(toJson());
+        QFile jsonFile(fileName);
+
+        if (jsonFile.open(QIODevice::WriteOnly))
+            jsonFile.write(document.toJson());
+    }
+
+    bool Type::readFromFile(const QString &fileName)
+    {
+        QFile jsonFile(fileName);
+        if (jsonFile.open(QIODevice::ReadOnly)) {
+            QJsonDocument document;
+            QJsonParseError errorMessage;
+            document.fromJson(jsonFile.readAll(), &errorMessage);
+
+            if (errorMessage.error == QJsonParseError::NoError) {
+                ErrorList errorList;
+                fromJson(document.object(), errorList);
+
+                if (errorList.isEmpty())
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     Type *Type::clone() const

@@ -36,6 +36,9 @@ namespace entity {
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
+
         virtual Type *clone() const;
 
     protected:
