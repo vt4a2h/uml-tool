@@ -15,4 +15,3 @@ for (auto key : table_name.keys()) {\
 #define invalid_case(method_name, invalid_id) \
 p = _d->method_name(invalid_id);\
 EXPECT_EQ(p, nullptr) << #method_name "() should return nullptr for invalid id";
-

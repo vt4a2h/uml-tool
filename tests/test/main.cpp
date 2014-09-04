@@ -5,10 +5,9 @@
 #include "TestRelationMaker.h"
 #include "TestCodeGenerator.h"
 #include "TestFileMaker.h"
+#include "TestJson.h"
 #include <helpfunctions.h>
 #include <templates.cpp>
-
-// NOTE: !!!added test for json
 
 TEST_F(CodeGenerator, Type)
 {
@@ -712,6 +711,18 @@ TEST_F(FileMaker, MakeFileStructure)
     EXPECT_EQ(fileData, s.readAll())
             << "File should contains right data";
     f.close();
+}
+
+TEST_F(FileJson, WorkWithJson)
+{
+    // TODO: check strange JSON
+    entity::SharedType type(std::make_shared<entity::Type>("stub_name", "stub_scope_id"));
+    type->writeToFile(m_JsonFileName);
+    entity::SharedType type_comp(std::make_shared<entity::Type>());
+    EXPECT_TRUE(type_comp->readFromFile(m_JsonFileName))
+            << "Data for type should be a correct";
+    EXPECT_EQ(*type, *type_comp)
+            << "Read/write for type should work correctly";
 }
 
 int main(int argc, char **argv)

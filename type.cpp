@@ -46,6 +46,14 @@ namespace entity {
        return *this;
     }
 
+    bool operator ==(const Type &lhs, const Type &rhs)
+    {
+        return lhs.m_KindOfType == rhs.m_KindOfType &&
+               lhs.m_Name       == rhs.m_Name       &&
+               lhs.m_Id         == rhs.m_Id         &&
+               lhs.m_ScopeId    == rhs.m_ScopeId;
+    }
+
     Type &Type::operator =(Type rhs)
     {
         moveFrom(rhs);
@@ -135,7 +143,12 @@ namespace entity {
 
             if (errorMessage.error == QJsonParseError::NoError) {
                 ErrorList errorList;
-                fromJson(document.object(), errorList);
+                QJsonObject object = document.object();
+
+                if (object.isEmpty())
+                        return false;
+
+                fromJson(object, errorList);
 
                 if (errorList.isEmpty())
                     return true;

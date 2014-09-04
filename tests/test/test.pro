@@ -15,7 +15,8 @@ HEADERS += ../../enums.h \
     helpers.h \
     TestTypeMaker.h \
     TestCodeGenerator.h \
-    TestFileMaker.h
+    TestFileMaker.h \
+    TestJson.h
 
 SOURCES += main.cpp \
            ../../type.cpp \

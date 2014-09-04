@@ -21,6 +21,7 @@ namespace entity {
 
         Type &operator =(Type rhs);
         Type &operator =(Type &&rhs);
+        friend bool operator ==(const Type &lhs, const Type &rhs);
 
         QString name() const;
         void setName(const QString &name);
