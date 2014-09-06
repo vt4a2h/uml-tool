@@ -36,6 +36,10 @@ namespace entity {
     {
     }
 
+    ClassMethod::~ClassMethod()
+    {
+    }
+
     ClassMethod &ClassMethod::operator =(ClassMethod &&rhs)
     {
         if (this != &rhs)
@@ -49,6 +53,18 @@ namespace entity {
         moveFrom(rhs);
 
         return *this;
+    }
+
+    bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs)
+    {
+        return lhs.m_Name              == rhs.m_Name              &&
+               lhs.m_Section           == rhs.m_Section           &&
+               lhs.m_ConstStatus       == rhs.m_ConstStatus       &&
+               lhs.m_ReturnTypeId      == rhs.m_ReturnTypeId      &&
+               lhs.m_RhsIdentificator  == rhs.m_RhsIdentificator  &&
+               lhs.m_LhsIdentificators == rhs.m_LhsIdentificators &&
+               utility::listSharedPointerEq(lhs.m_Parameters, rhs.m_Parameters);
+
     }
 
     QString ClassMethod::name() const
@@ -233,6 +249,11 @@ namespace entity {
     void ClassMethod::setType(const ClassMethodType &type)
     {
         m_Type = type;
+    }
+
+    bool ClassMethod::isEqual(const ClassMethod &rhs) const
+    {
+        return *this == rhs;
     }
 
     void ClassMethod::moveFrom(ClassMethod &src)

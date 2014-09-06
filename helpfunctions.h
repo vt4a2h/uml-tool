@@ -79,12 +79,23 @@ namespace utility {
         List tmpList;
         tmpList.reserve(src.size());
 
-        typedef typename List::value_type::element_type ValueType;
+        using ValueType = typename List::value_type::element_type;
         for (auto &&value : src)
             tmpList.append(std::make_shared<ValueType>(*value));
 
         dst.clear();
         dst = std::move(tmpList);
+    }
+
+    template <class List>
+    bool listSharedPointerEq(const List &lhs, const List &rhs)
+    {
+        if (lhs.size() != rhs.size())
+            return false;
+
+        using ValueType = typename List::value_type;
+        return std::equal(lhs.begin(), lhs.end(), rhs.begin(),
+                          [](const ValueType &r, const ValueType &l){ return r == l || *r == *l; });
     }
 
     template <class Hash, class KeyGetter>
@@ -93,11 +104,10 @@ namespace utility {
         Hash tmpHash;
         tmpHash.reserve(src.size());
 
-        typedef typename Hash::mapped_type::element_type ValueType;
+        using ValueType = typename Hash::mapped_type::element_type;
         for (auto &&value : src.values())
             tmpHash.insert(std::bind(keyGetter, value.get())(), std::make_shared<ValueType>(*value));
 
-        dst.clear();
         dst = std::move(tmpHash);
     }
 

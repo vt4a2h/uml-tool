@@ -24,6 +24,16 @@ namespace entity {
     {
     }
 
+    bool operator==(const Field &lhs, const Field &rhs)
+    {
+        return lhs.m_TypeId   == rhs.m_TypeId   &&
+               lhs.m_Section  == rhs.m_Section  &&
+               lhs.m_Name     == rhs.m_Name     &&
+               lhs.m_Prefix   == rhs.m_Prefix   &&
+               lhs.m_Suffix   == rhs.m_Suffix   &&
+               lhs.m_Keywords == rhs.m_Keywords;
+    }
+
     QString Field::name() const
     {
         return m_Name;

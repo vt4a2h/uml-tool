@@ -126,32 +126,33 @@ namespace entity {
 
     void Type::writeToFile(const QString &fileName) const
     {
-        QJsonDocument document(toJson());
         QFile jsonFile(fileName);
 
-        if (jsonFile.open(QIODevice::WriteOnly))
-            jsonFile.write(document.toJson());
+        if (jsonFile.open(QIODevice::WriteOnly)) {
+            QJsonDocument jdoc(toJson());
+            QTextStream st(&jsonFile);
+            st << jdoc.toJson();
+        }
     }
 
     bool Type::readFromFile(const QString &fileName)
     {
         QFile jsonFile(fileName);
         if (jsonFile.open(QIODevice::ReadOnly)) {
-            QJsonDocument document;
             QJsonParseError errorMessage;
-            document.fromJson(jsonFile.readAll(), &errorMessage);
+            auto jdoc = QJsonDocument::fromJson(jsonFile.readAll(), &errorMessage);
 
             if (errorMessage.error == QJsonParseError::NoError) {
                 ErrorList errorList;
-                QJsonObject object = document.object();
 
-                if (object.isEmpty())
-                        return false;
+                if (jdoc.isObject()) {
+                    QJsonObject object = jdoc.object();
 
-                fromJson(object, errorList);
+                    fromJson(object, errorList);
 
-                if (errorList.isEmpty())
-                    return true;
+                    if (errorList.isEmpty())
+                        return true;
+                }
             }
         }
 
@@ -161,6 +162,11 @@ namespace entity {
     Type *Type::clone() const
     {
         return new Type(*this);
+    }
+
+    bool Type::isEqual(const Type &rhs) const
+    {
+        return *this == rhs;
     }
 
     void Type::moveFrom(Type &src)

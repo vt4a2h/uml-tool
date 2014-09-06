@@ -21,9 +21,12 @@ namespace entity {
         ClassMethod(ClassMethod &&src);
         ClassMethod(const ClassMethod &src);
         ClassMethod(const QString & name);
+        virtual ~ClassMethod();
 
         ClassMethod &operator =(ClassMethod &&rhs);
         ClassMethod &operator =(ClassMethod rhs);
+
+        friend bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs);
 
         QString name() const;
         void setName(const QString &name);
@@ -59,6 +62,8 @@ namespace entity {
 
         ClassMethodType type() const;
         void setType(const ClassMethodType &type);
+
+        virtual bool isEqual(const ClassMethod &rhs) const;
 
    protected:
         virtual void moveFrom(ClassMethod &src);

@@ -42,6 +42,8 @@ namespace entity {
 
         virtual Type *clone() const;
 
+        virtual bool isEqual(const Type &rhs) const;
+
     protected:
         virtual void moveFrom(Type &src);
         virtual void copyFrom(const Type &src);

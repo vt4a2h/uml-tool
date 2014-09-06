@@ -713,16 +713,43 @@ TEST_F(FileMaker, MakeFileStructure)
     f.close();
 }
 
-TEST_F(FileJson, WorkWithJson)
+TEST_F(FileJson, TypeJson)
 {
-    // TODO: check strange JSON
     entity::SharedType type(std::make_shared<entity::Type>("stub_name", "stub_scope_id"));
     type->writeToFile(m_JsonFileName);
     entity::SharedType type_comp(std::make_shared<entity::Type>());
-    EXPECT_TRUE(type_comp->readFromFile(m_JsonFileName))
-            << "Data for type should be a correct";
+    ASSERT_TRUE(type_comp->readFromFile(m_JsonFileName))
+            << "Data for Type should be a correct";
     EXPECT_EQ(*type, *type_comp)
-            << "Read/write for type should work correctly";
+            << "Read/write for Type should work correctly";
+}
+
+TEST_F(FileJson, UnionJson)
+{
+    entity::SharedUnion union_(std::make_shared<entity::Union>("stub_name", "stub_scope_id"));
+    union_->addField("stub_name", "stub_id");
+    union_->writeToFile(m_JsonFileName);
+
+    entity::SharedUnion union_comp(std::make_shared<entity::Union>());
+    ASSERT_TRUE(union_comp->readFromFile(m_JsonFileName))
+            << "Data for Union should be a correct";
+    EXPECT_EQ(*union_, *union_comp)
+            << "Read/write for Union should work correctly";
+}
+
+TEST_F(FileJson, EnumJson)
+{
+    entity::SharedEnum enum_(std::make_shared<entity::Enum>("stub_name", "stub_scope_id"));
+    enum_->setStrongStatus(true);
+    enum_->addVariable("a");
+    enum_->addVariable("b");
+    enum_->writeToFile(m_JsonFileName);
+
+    entity::SharedEnum enum_comp(std::make_shared<entity::Enum>());
+    ASSERT_TRUE(enum_comp->readFromFile(m_JsonFileName))
+            << "Data for Enum should be a correct";
+    EXPECT_EQ(*enum_, *enum_comp)
+            << "Read/write for Enum should work correctly";
 }
 
 int main(int argc, char **argv)

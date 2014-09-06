@@ -17,6 +17,7 @@ namespace entity {
 
         Union &operator= (Union rhs);
         Union &operator= (Union &&rhs);
+        friend bool operator ==(const Union &lhs, const Union &rhs);
 
         SharedField getField(const QString &name) const;
         SharedField addField(const QString &name, const QString &typeId);
@@ -29,6 +30,8 @@ namespace entity {
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
         Union *clone() const;
+
+        bool isEqual(const Union &rhs) const;
 
     private:
         void moveFrom(Union &src);

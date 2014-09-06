@@ -17,6 +17,8 @@ namespace entity {
         Field();
         Field(const QString &name, const QString &typeId);
 
+        friend bool operator== (const Field &lhs, const Field &rhs);
+
         QString name() const;
         QString fullName() const;
         void setName(const QString &name);

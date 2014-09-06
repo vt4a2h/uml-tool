@@ -17,6 +17,8 @@ namespace entity {
         Enum();
         Enum(const QString &name, const QString &scopeId);
 
+        friend bool operator== (const Enum &lhs, const Enum &rhs);
+
         bool isStrong() const;
         void setStrongStatus(bool status);
 
@@ -31,6 +33,8 @@ namespace entity {
 
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
+        bool isEqual(const Enum &rhs) const;
 
     private:
         QString m_EnumTypeId;
