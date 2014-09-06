@@ -246,14 +246,19 @@ namespace entity {
         return m_Type;
     }
 
-    void ClassMethod::setType(const ClassMethodType &type)
-    {
-        m_Type = type;
-    }
-
     bool ClassMethod::isEqual(const ClassMethod &rhs) const
     {
         return *this == rhs;
+    }
+
+    void ClassMethod::writeToFile(const QString &fileName) const
+    {
+        utility::writeToFile(*this, fileName);
+    }
+
+    bool ClassMethod::readFromFile(const QString &fileName)
+    {
+        return utility::readFromFile(*this, fileName);
     }
 
     void ClassMethod::moveFrom(ClassMethod &src)

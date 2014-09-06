@@ -117,6 +117,7 @@ namespace entity {
         result.insert("Section", m_Section);
         result.insert("Name", m_Name);
         result.insert("Prefix", m_Prefix);
+        result.insert("Suffix", m_Suffix);
 
         QJsonArray keywords;
         for (auto keyword : m_Keywords) keywords.append(keyword);
@@ -129,8 +130,9 @@ namespace entity {
     {
         utility::checkAndSet(src, "Type ID", errorList, [&src, this](){ m_TypeId = src["Type ID"].toString(); });
         utility::checkAndSet(src, "Section", errorList, [&src, this](){ m_Section = static_cast<Section>(src["Section"].toInt()); });
-        utility::checkAndSet(src, "Name", errorList, [&src, this](){ m_Name = src["Name"].toString(); });
-        utility::checkAndSet(src, "Prefix", errorList, [&src, this](){ m_Prefix = src["Prefix"].toString(); });
+        utility::checkAndSet(src, "Name",    errorList, [&src, this](){ m_Name = src["Name"].toString(); });
+        utility::checkAndSet(src, "Prefix",  errorList, [&src, this](){ m_Prefix = src["Prefix"].toString(); });
+        utility::checkAndSet(src, "Suffix",  errorList, [&src, this](){ m_Suffix = src["Suffix"].toString(); });
 
         m_Keywords.clear();
         utility::checkAndSet(src, "Keywords", errorList, [&src, &errorList, this](){
@@ -160,6 +162,16 @@ namespace entity {
     Field *Field::clone() const
     {
         return new Field(*this);
+    }
+
+    void Field::writeToFile(const QString &fileName) const
+    {
+        utility::writeToFile(*this, fileName);
+    }
+
+    bool Field::readFromFile(const QString &fileName)
+    {
+        return utility::readFromFile(*this, fileName);
     }
 
 } // namespace entity

@@ -17,6 +17,8 @@ namespace entity {
         ExtendedType();
         ExtendedType(const QString &name, const QString &scopeId);
 
+        friend bool operator ==(const ExtendedType &lhs, const ExtendedType &rhs);
+
         bool isLink() const;
         void addPointerStatus(bool pointerToConst = false);
         void removePointerStatus();
@@ -40,6 +42,8 @@ namespace entity {
 
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
+        bool isEqual(const ExtendedType &rhs) const;
 
     protected:
         bool    m_ConstStatus;

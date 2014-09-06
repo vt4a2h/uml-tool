@@ -48,6 +48,9 @@ namespace entity {
 
         virtual Field *clone() const;
 
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
+
     private:
         QString m_TypeId;
         Section m_Section;

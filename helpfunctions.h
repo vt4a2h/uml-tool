@@ -1,7 +1,13 @@
 #pragma once
 
+#include <QFile>
+#include <QTextStream>
+#include <QJsonDocument>
+
 #include <memory>
 #include <map>
+
+#include "types.h"
 
 class QString;
 class QJsonObject;
@@ -121,6 +127,43 @@ namespace utility {
             result = it->second;
 
         return result;
+    }
+
+    template <class Element>
+    void writeToFile(const Element &elem, const QString &fileName)
+    {
+        QFile jsonFile(fileName);
+
+        if (jsonFile.open(QIODevice::WriteOnly)) {
+            QJsonDocument jdoc(elem.toJson());
+            QTextStream st(&jsonFile);
+            st << jdoc.toJson();
+        }
+    }
+
+    template <class Element>
+    bool readFromFile(Element &elem, const QString &fileName)
+    {
+        QFile jsonFile(fileName);
+        if (jsonFile.open(QIODevice::ReadOnly)) {
+            QJsonParseError errorMessage;
+            auto jdoc = QJsonDocument::fromJson(jsonFile.readAll(), &errorMessage);
+
+            if (errorMessage.error == QJsonParseError::NoError) {
+                ErrorList errorList;
+
+                if (jdoc.isObject()) {
+                    QJsonObject object = jdoc.object();
+
+                    elem.fromJson(object, errorList);
+
+                    if (errorList.isEmpty())
+                        return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     QString fieldKeywordToString(entity::FieldKeyword keyword);

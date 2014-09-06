@@ -15,3 +15,9 @@ for (auto key : table_name.keys()) {\
 #define invalid_case(method_name, invalid_id) \
 p = _d->method_name(invalid_id);\
 EXPECT_EQ(p, nullptr) << #method_name "() should return nullptr for invalid id";
+
+#define json_eq(basic_obj, comp_obj, name)\
+    ASSERT_TRUE(comp_obj->readFromFile(m_JsonFileName))\
+            << "Data for " #name " should be a correct";\
+    EXPECT_EQ(*basic_obj, *comp_obj)\
+            << "Read/write for " #name " should work correctly";

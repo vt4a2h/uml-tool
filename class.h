@@ -19,6 +19,8 @@ namespace entity {
         Class &operator =(Class &&rhs);
         Class &operator =(Class rhs);
 
+        friend bool operator ==(const Class &lhs, const Class &rhs);
+
         Parent addParent(const QString &typeId, Section section);
         ParentsList getParents(const QString &typeId);
         bool containsParent(const QString &typeId);
@@ -56,6 +58,8 @@ namespace entity {
 
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
+        bool isEqual(const Class &rhs) const;
 
     protected:
         void moveFrom(Class &src);

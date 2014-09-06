@@ -126,37 +126,12 @@ namespace entity {
 
     void Type::writeToFile(const QString &fileName) const
     {
-        QFile jsonFile(fileName);
-
-        if (jsonFile.open(QIODevice::WriteOnly)) {
-            QJsonDocument jdoc(toJson());
-            QTextStream st(&jsonFile);
-            st << jdoc.toJson();
-        }
+        utility::writeToFile(*this, fileName);
     }
 
     bool Type::readFromFile(const QString &fileName)
     {
-        QFile jsonFile(fileName);
-        if (jsonFile.open(QIODevice::ReadOnly)) {
-            QJsonParseError errorMessage;
-            auto jdoc = QJsonDocument::fromJson(jsonFile.readAll(), &errorMessage);
-
-            if (errorMessage.error == QJsonParseError::NoError) {
-                ErrorList errorList;
-
-                if (jdoc.isObject()) {
-                    QJsonObject object = jdoc.object();
-
-                    fromJson(object, errorList);
-
-                    if (errorList.isEmpty())
-                        return true;
-                }
-            }
-        }
-
-        return false;
+        return utility::readFromFile(*this, fileName);
     }
 
     Type *Type::clone() const

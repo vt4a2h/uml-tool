@@ -717,11 +717,24 @@ TEST_F(FileJson, TypeJson)
 {
     entity::SharedType type(std::make_shared<entity::Type>("stub_name", "stub_scope_id"));
     type->writeToFile(m_JsonFileName);
-    entity::SharedType type_comp(std::make_shared<entity::Type>());
-    ASSERT_TRUE(type_comp->readFromFile(m_JsonFileName))
-            << "Data for Type should be a correct";
-    EXPECT_EQ(*type, *type_comp)
-            << "Read/write for Type should work correctly";
+
+    auto type_comp(std::make_shared<entity::Type>());
+    json_eq(type, type_comp, "Type")
+}
+
+TEST_F(FileJson, ExtendedTypeJson)
+{
+    entity::SharedExtendedType type(std::make_shared<entity::ExtendedType>("stub_name", "stub_scope_id"));
+    type->addLinkStatus();
+    type->addPointerStatus(true);
+    type->addTemplateParameter("id1");
+    type->addTemplateParameter("id2");
+    type->setConstStatus(true);
+    type->setId("id3");
+    type->writeToFile(m_JsonFileName);
+
+    auto type_comp(std::make_shared<entity::ExtendedType>());
+    json_eq(type, type_comp, "ExtendedType")
 }
 
 TEST_F(FileJson, UnionJson)
@@ -730,11 +743,8 @@ TEST_F(FileJson, UnionJson)
     union_->addField("stub_name", "stub_id");
     union_->writeToFile(m_JsonFileName);
 
-    entity::SharedUnion union_comp(std::make_shared<entity::Union>());
-    ASSERT_TRUE(union_comp->readFromFile(m_JsonFileName))
-            << "Data for Union should be a correct";
-    EXPECT_EQ(*union_, *union_comp)
-            << "Read/write for Union should work correctly";
+    auto union_comp(std::make_shared<entity::Union>());
+    json_eq(union_, union_comp, "Union")
 }
 
 TEST_F(FileJson, EnumJson)
@@ -745,11 +755,51 @@ TEST_F(FileJson, EnumJson)
     enum_->addVariable("b");
     enum_->writeToFile(m_JsonFileName);
 
-    entity::SharedEnum enum_comp(std::make_shared<entity::Enum>());
-    ASSERT_TRUE(enum_comp->readFromFile(m_JsonFileName))
-            << "Data for Enum should be a correct";
-    EXPECT_EQ(*enum_, *enum_comp)
-            << "Read/write for Enum should work correctly";
+    auto enum_comp(std::make_shared<entity::Enum>());
+    json_eq(enum_, enum_comp, "Enum")
+}
+
+TEST_F(FileJson, ClassJson)
+{
+    entity::SharedClass class_(std::make_shared<entity::Class>("stub_name", "stub_scope_id"));
+    class_->addParent("stub_parent_id", entity::Protected);
+    class_->addField("stub_field_name", "stub_type_id");
+    class_->addField("stub_field_name_1", "stub_type_id_1");
+    class_->makeMethod("stub_method_name");
+    class_->makeMethod("stub_method_name_1");
+    class_->writeToFile(m_JsonFileName);
+
+    auto class_comp(std::make_shared<entity::Class>());
+    json_eq(class_, class_comp, "Class");
+}
+
+TEST_F(FileJson, FieldJson)
+{
+    entity::SharedField field(std::make_shared<entity::Field>("stub_name", "stub_id"));
+    field->addKeyword(entity::Mutable);
+    field->setPrefix("m_");
+    field->setSection(entity::Private);
+    field->setSuffix("foo");
+    field->writeToFile(m_JsonFileName);
+
+    auto field_comp(std::make_shared<entity::Field>());
+    json_eq(field, field_comp, "Field");
+}
+
+TEST_F(FileJson, ClassMethodJson)
+{
+    entity::SharedMethod method(std::make_shared<entity::ClassMethod>("stub_name"));
+    method->setConstStatus(true);
+    method->setReturnTypeId("stub_return_type_id");
+    method->setRhsIdentificator(entity::Final);
+    method->setSection(entity::Private);
+    method->addLhsIdentificator(entity::Inline);
+    method->addParameter("stub_parameter", "stub_id");
+    method->addParameter("stub_parameter_1", "stub_id_1");
+    method->writeToFile(m_JsonFileName);
+
+    auto method_comp(std::make_shared<entity::ClassMethod>());
+    json_eq(method, method_comp, "ClassMethod")
 }
 
 int main(int argc, char **argv)

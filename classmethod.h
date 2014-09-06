@@ -20,7 +20,7 @@ namespace entity {
         ClassMethod();
         ClassMethod(ClassMethod &&src);
         ClassMethod(const ClassMethod &src);
-        ClassMethod(const QString & name);
+        ClassMethod(const QString &name);
         virtual ~ClassMethod();
 
         ClassMethod &operator =(ClassMethod &&rhs);
@@ -54,16 +54,17 @@ namespace entity {
         bool containsParameter(const QString &name);
         bool hasParameters() const;
         void removeParameter(const QString &name);
-
         FieldsList parameters() const;
 
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
         ClassMethodType type() const;
-        void setType(const ClassMethodType &type);
 
         virtual bool isEqual(const ClassMethod &rhs) const;
+
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
 
    protected:
         virtual void moveFrom(ClassMethod &src);
