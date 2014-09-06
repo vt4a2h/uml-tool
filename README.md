@@ -1,1 +1,2 @@
-UML tool for Qt.
+UML tool for Qt.<br>
+License LGPL v3.
