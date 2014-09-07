@@ -47,6 +47,13 @@ namespace db {
         return *this;
     }
 
+    bool operator ==(const Database &lhs, const Database &rhs)
+    {
+        return lhs.m_Name == rhs.m_Name &&
+               lhs.m_Path == rhs.m_Path &&
+               utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes);
+    }
+
     QString Database::path() const
     {
         return m_Path;
@@ -230,6 +237,11 @@ namespace db {
                 errorList << "Error: \"Scopes\" is not array";
             }
         });
+    }
+
+    bool Database::isEqual(const Database &rhs) const
+    {
+        return *this == rhs;
     }
 
     void Database::moveFrom(Database &src)

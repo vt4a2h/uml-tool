@@ -21,6 +21,12 @@ namespace relationship {
         m_RelationType = RealizationRelation;
     }
 
+    bool operator ==(const Realization &lhs, const Realization &rhs)
+    {
+        return static_cast<const Generalization&>(lhs).isEqual(rhs) &&
+               utility::seqSharedPointerEq(lhs.m_Methods, rhs.m_Methods);
+    }
+
     void Realization::addMethods(const entity::MethodsList &methods)
     {
         m_Methods = methods;
@@ -36,7 +42,8 @@ namespace relationship {
         auto result = Generalization::toJson();
 
         QJsonArray methods;
-        for (auto method : m_Methods) methods.append(method->toJson());
+        for (auto &&method : m_Methods)
+            methods.append(method->toJson());
         result.insert("Methods", methods);
 
         return result;
@@ -50,7 +57,7 @@ namespace relationship {
         utility::checkAndSet(src, "Methods", errorList, [&src, &errorList, this](){
             if (src["Methods"].isArray()) {
                 entity::SharedMethod method;
-                for (auto value : src["Methods"].toArray()) {
+                for (auto &&value : src["Methods"].toArray()) {
                     method = std::make_shared<entity::ClassMethod>();
                     method->fromJson(value.toObject(), errorList);
                     m_Methods.append(method);
@@ -61,12 +68,17 @@ namespace relationship {
         });
     }
 
+    bool Realization::isEqual(const Realization &rhs) const
+    {
+        return *this == rhs;
+    }
+
     void Realization::make()
     {
         entity::SharedMethod m;
         entity::SharedClass head = std::dynamic_pointer_cast<entity::Class>(m_HeadClass);
         Q_ASSERT_X(head, "Realization::make", "head class not found or not Class");
-        for (auto method : m_Methods) {
+        for (auto &&method : m_Methods) {
             m = std::make_shared<entity::ClassMethod>(*method.get());
             m->setRhsIdentificator(entity::PureVirtual);
             head->addMethod(m);

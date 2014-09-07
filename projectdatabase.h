@@ -12,6 +12,8 @@ namespace db {
         ProjectDatabase(const ProjectDatabase &src);
         ProjectDatabase(const QString &name = "", const QString &path = "");
 
+        friend bool operator ==(const ProjectDatabase &lhs, const ProjectDatabase &rhs);
+
         ProjectDatabase &operator =(ProjectDatabase &&rhs);
         ProjectDatabase &operator =(ProjectDatabase rhs);
 
@@ -28,6 +30,8 @@ namespace db {
 
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
+        bool isEqual(const ProjectDatabase &rhs) const;
 
     protected:
         virtual void copyFrom(const ProjectDatabase &src);

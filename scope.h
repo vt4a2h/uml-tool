@@ -18,6 +18,8 @@ namespace entity {
         Scope &operator =(Scope rhs);
         Scope &operator =(Scope &&rhs);
 
+        friend bool operator ==(const Scope &lhs, const Scope &rhs);
+
         QString name() const;
         void setName(const QString &name);
 

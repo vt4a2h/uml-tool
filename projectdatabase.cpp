@@ -23,6 +23,13 @@ namespace db {
     {
     }
 
+    bool operator ==(const ProjectDatabase &lhs, const ProjectDatabase &rhs)
+    {
+        return static_cast<const Database &>(lhs).isEqual(rhs)               &&
+               utility::seqSharedPointerEq(lhs.m_Relations, rhs.m_Relations) &&
+               (lhs.m_GlobalDatabase == rhs.m_GlobalDatabase || *lhs.m_GlobalDatabase == *rhs.m_GlobalDatabase);
+    }
+
     ProjectDatabase &ProjectDatabase::operator =(ProjectDatabase &&rhs)
     {
         if (this != &rhs)
@@ -105,6 +112,11 @@ namespace db {
                 errorList << "Error: \"Relations\" is not array";
             }
         });
+    }
+
+    bool ProjectDatabase::isEqual(const ProjectDatabase &rhs) const
+    {
+        return *this == rhs;
     }
 
     void ProjectDatabase::copyFrom(const ProjectDatabase &src)

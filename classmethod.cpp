@@ -63,7 +63,7 @@ namespace entity {
                lhs.m_ReturnTypeId      == rhs.m_ReturnTypeId      &&
                lhs.m_RhsIdentificator  == rhs.m_RhsIdentificator  &&
                lhs.m_LhsIdentificators == rhs.m_LhsIdentificators &&
-               utility::listSharedPointerEq(lhs.m_Parameters, rhs.m_Parameters);
+               utility::seqSharedPointerEq(lhs.m_Parameters, rhs.m_Parameters);
 
     }
 

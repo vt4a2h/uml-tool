@@ -15,6 +15,8 @@ namespace db {
         Database &operator =(Database &&rhs);
         Database &operator =(Database rhs);
 
+        friend bool operator ==(const Database &lhs, const Database &rhs);
+
         QString path() const;
         void setPath(const QString &path);
 
@@ -37,6 +39,8 @@ namespace db {
 
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
+
+        virtual bool isEqual(const Database &rhs) const;
 
     protected:
         virtual void copyFrom(const Database &src);

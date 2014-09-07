@@ -51,7 +51,7 @@ namespace entity {
     bool operator ==(const Union &lhs, const Union &rhs)
     {
         return static_cast<const Type&>(lhs).isEqual(rhs) &&
-               utility::listSharedPointerEq(lhs.m_Fields, rhs.m_Fields);
+               utility::seqSharedPointerEq(lhs.m_Fields, rhs.m_Fields);
     }
 
     SharedField Union::getField(const QString &name) const

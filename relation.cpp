@@ -57,6 +57,18 @@ namespace relationship {
         return *this;
     }
 
+    bool operator ==(const Relation &lhs, const Relation &rhs)
+    {
+        return lhs.m_Description     == rhs.m_Description     &&
+               lhs.m_GlobalDatabase  == rhs.m_GlobalDatabase  &&
+               lhs.m_Id              == rhs.m_Id              &&
+               lhs.m_ProjectDatabase == rhs.m_ProjectDatabase &&
+               (lhs.m_HeadClass == rhs.m_HeadClass || *lhs.m_HeadClass == *rhs.m_HeadClass) &&
+               (lhs.m_HeadNode  == rhs.m_HeadNode  || *lhs.m_HeadNode  == *rhs.m_HeadNode ) &&
+               (lhs.m_TailClass == rhs.m_TailClass || *lhs.m_TailClass == *rhs.m_TailClass) &&
+               (lhs.m_TailNode  == rhs.m_TailNode  || *lhs.m_TailNode  == *rhs.m_TailNode );
+    }
+
     QString Relation::description() const
     {
         return m_Description;
@@ -180,6 +192,11 @@ namespace relationship {
             m_TailNode->fromJson(src["Tail node"].toObject(), errorList);
             addTailClass(m_TailNode->typeId());
         });
+    }
+
+    bool Relation::isEqual(const Relation &rhs) const
+    {
+        return *this == rhs;
     }
 
     db::Database *Relation::globalDatabase() const

@@ -23,6 +23,14 @@ namespace relationship {
         m_RelationType = MultiRelation;
     }
 
+    bool operator ==(const MultiplyAssociation &lhs, const MultiplyAssociation &rhs)
+    {
+        return static_cast<const Association&>(lhs).isEqual(rhs) &&
+               lhs.m_ContainerTypeId == rhs.m_ContainerTypeId    &&
+               lhs.m_KeyTypeId       == rhs.m_KeyTypeId          &&
+               (lhs.m_ContainerClass == rhs.m_ContainerClass || *lhs.m_ContainerClass == *rhs.m_ContainerClass);
+    }
+
     void MultiplyAssociation::make()
     {
         Association::make();
@@ -161,6 +169,11 @@ namespace relationship {
         utility::checkAndSet(src, "Key ID", errorList, [&src, this](){
             m_KeyTypeId = src["Key ID"].toString();
         });
+    }
+
+    bool MultiplyAssociation::isEqual(const MultiplyAssociation &rhs) const
+    {
+        return *this == rhs;
     }
 
 } // namespace relationship

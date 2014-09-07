@@ -48,6 +48,15 @@ namespace entity {
         return *this;
     }
 
+    bool operator ==(const Scope &lhs, const Scope &rhs)
+    {
+        return lhs.m_Name          == rhs.m_Name                       &&
+               lhs.m_Id            == rhs.m_Id                         &&
+               lhs.m_ParentScopeId == rhs.m_ParentScopeId              &&
+               utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes) &&
+               utility::seqSharedPointerEq(lhs.m_Types, rhs.m_Types);
+    }
+
     QString Scope::name() const
     {
         return m_Name;

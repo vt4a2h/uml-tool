@@ -20,6 +20,12 @@ namespace relationship {
         m_RelationType = GeneralizationRelation;
     }
 
+    bool operator ==(const Generalization &lhs, const Generalization &rhs)
+    {
+        return static_cast<const Relation&>(lhs).isEqual(rhs) &&
+               lhs.m_Section == rhs.m_Section;
+    }
+
     entity::Section Generalization::section() const
     {
         return m_Section;
@@ -46,6 +52,11 @@ namespace relationship {
         utility::checkAndSet(src, "Section", errorList, [this, &src](){
             m_Section = static_cast<entity::Section>(src["Section"].toInt());
         });
+    }
+
+    bool Generalization::isEqual(const Generalization &rhs) const
+    {
+        return *this == rhs;
     }
 
     void Generalization::make()

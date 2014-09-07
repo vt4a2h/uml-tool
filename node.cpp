@@ -19,6 +19,13 @@ namespace relationship {
     {
     }
 
+    bool operator ==(const Node &lhs, const Node &rhs)
+    {
+        return lhs.m_TypeId       == rhs.m_TypeId      &&
+               lhs.m_Description  == rhs.m_Description &&
+               lhs.m_Multiplicity == rhs.m_Multiplicity;
+    }
+
     QString Node::typeId() const
     {
         return m_TypeId;

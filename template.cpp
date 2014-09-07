@@ -119,7 +119,10 @@ namespace entity {
             }
         });
 
-        m_LocalDatabase->clear();
+        if (!m_LocalDatabase)
+            m_LocalDatabase = std::make_shared<db::Database>();
+        else
+            m_LocalDatabase->clear();
 
         utility::checkAndSet(src, "Local database", errorList, [&src, &errorList, this](){
             m_LocalDatabase->fromJson(src["Local database"].toObject(), errorList);

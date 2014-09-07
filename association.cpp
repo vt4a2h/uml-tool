@@ -23,6 +23,13 @@ namespace relationship {
         m_RelationType = AssociationRelation;
     }
 
+    bool operator ==(const Association &lhs, const Association &rhs)
+    {
+        return static_cast<const Relation&>(lhs).isEqual(rhs) &&
+               lhs.m_GetSetTypeId == rhs.m_GetSetTypeId &&
+               lhs.m_FieldTypeId  == rhs.m_FieldTypeId;
+    }
+
     void Association::make()
     {
         makeField();
@@ -95,6 +102,11 @@ namespace relationship {
         utility::checkAndSet(src, "Field type ID", errorList, [&src, this](){
             m_FieldTypeId = src["Field type ID"].toString();
         });
+    }
+
+    bool Association::isEqual(const Association &rhs) const
+    {
+        return *this == rhs;
     }
 
     void Association::makeField()

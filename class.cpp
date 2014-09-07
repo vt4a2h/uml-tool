@@ -61,8 +61,8 @@ namespace entity {
                 lhs.m_Kind        == rhs.m_Kind           &&
                 lhs.m_FinalStatus == rhs.m_FinalStatus    &&
                 lhs.m_Parents     == rhs.m_Parents        &&
-                utility::listSharedPointerEq(lhs.m_Methods, rhs.m_Methods) &&
-                utility::listSharedPointerEq(lhs.m_Fields,  rhs.m_Fields);
+                utility::seqSharedPointerEq(lhs.m_Methods, rhs.m_Methods) &&
+                utility::seqSharedPointerEq(lhs.m_Fields,  rhs.m_Fields);
     }
 
     Parent Class::addParent(const QString &typeId, Section section)

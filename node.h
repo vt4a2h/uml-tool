@@ -14,6 +14,8 @@ namespace relationship {
         Node();
         Node(const QString &typeId, Multiplicity multiplicity = static_cast<Multiplicity>(0));
 
+        friend bool operator ==(const Node &lhs, const Node &rhs);
+
         Multiplicity multiplicity() const;
         void setMultiplicity(const Multiplicity &multiplicity);
 
