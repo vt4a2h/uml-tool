@@ -802,6 +802,47 @@ TEST_F(FileJson, ClassMethodJson)
     json_eq(method, method_comp, "ClassMethod")
 }
 
+TEST_F(FileJson, TemplateClassJson)
+{
+    entity::SharedTemplateClass class_(std::make_shared<entity::TemplateClass>("stub_name", "stub_scope_id"));
+    class_->addTemplateParameter("stub_type_id", "stub_default_id");
+    class_->addTemplateParameter("stub_type_id_1", "stub_default_id_1");
+    EXPECT_TRUE(class_->addLocaleType("type").operator bool())
+            << "Locale type must be added.";
+    EXPECT_TRUE(class_->addLocaleType("type_1").operator bool())
+            << "Locale type must be added.";
+    class_->writeToFile(m_JsonFileName);
+
+    auto class_comp(std::make_shared<entity::TemplateClass>());
+    json_eq(class_, class_comp, "TemplateClass")
+}
+
+TEST_F(FileJson, TemplateClassMethodJson)
+{
+    entity::SharedTemplateClassMethod method(std::make_shared<entity::TemplateClassMethod>("stub name"));
+    EXPECT_TRUE(method->addLocaleType("type").operator bool())
+            << "Locale type must be added.";
+    EXPECT_TRUE(method->addLocaleType("type_1").operator bool())
+            << "Locale type must be added.";
+    method->writeToFile(m_JsonFileName);
+
+    auto method_comp(std::make_shared<entity::TemplateClassMethod>());
+    json_eq(method, method_comp, "TemplateClassMethod");
+}
+
+TEST_F(FileJson, ScopeJson)
+{
+    entity::SharedScope scope(std::make_shared<entity::Scope>("stub_scope_name", "stub_scope_id"));
+    scope->addType("type");
+    scope->addType("type_1");
+    scope->addChildScope("scope");
+    scope->addChildScope("scope_1");
+    scope->writeToFile(m_JsonFileName);
+
+    auto scope_comp(std::make_shared<entity::Scope>());
+    json_eq(scope, scope_comp, "Scope");
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

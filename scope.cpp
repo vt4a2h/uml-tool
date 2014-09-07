@@ -215,7 +215,7 @@ namespace entity {
             if (src["Types"].isArray()) {
                 SharedType type;
                 QJsonObject obj;
-                for (auto &&val : src["Scopes"].toArray()) {
+                for (auto &&val : src["Types"].toArray()) {
                     obj = val.toObject();
                     utility::checkAndSet(obj, "Kind of type", errorList,
                                          [&obj, &type, &errorList, this](){
@@ -228,6 +228,16 @@ namespace entity {
                 errorList << "Error: \"Types\" is not array";
             }
         });
+    }
+
+    void Scope::writeToFile(const QString &fileName) const
+    {
+         utility::writeToFile(*this, fileName);
+    }
+
+    bool Scope::readFromFile(const QString &fileName)
+    {
+        return utility::readFromFile(*this, fileName);
     }
 
     void Scope::copyFrom(const Scope &src)

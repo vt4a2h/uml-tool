@@ -48,6 +48,9 @@ namespace entity {
         QJsonObject toJson() const;
         void fromJson(const QJsonObject &src, QStringList &errorList);
 
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
+
     private:
         void copyFrom(const Scope &src);
         void moveFrom(Scope &src);
