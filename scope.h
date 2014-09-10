@@ -65,7 +65,7 @@ namespace entity {
     template <class T>
     std::shared_ptr<T> Scope::addType(const QString &name)
     {
-        typedef typename std::conditional<std::is_class<T>::value && std::is_base_of<Type, T>::value, T, Type>::type ResultType;
+        using ResultType = typename std::conditional<std::is_class<T>::value && std::is_base_of<Type, T>::value, T, Type>::type;
         auto value = std::make_shared<ResultType>(name, m_Id);
         m_Types.insert(value->id(), value);
         return value;
