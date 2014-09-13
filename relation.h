@@ -51,6 +51,9 @@ namespace relationship {
 
         virtual bool isEqual(const Relation &rhs) const;
 
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
+
     protected:
         virtual void make();
         virtual void clear();

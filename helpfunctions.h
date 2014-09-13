@@ -96,7 +96,7 @@ namespace utility {
     bool seqSharedPointerEq(const Container &lhs, const Container &rhs)
     {
         if (lhs.size()  != rhs.size() ||
-            typeid(lhs) != typeid(lhs) )
+            typeid(lhs) != typeid(lhs))
             return false;
 
         using ValueType = decltype(*lhs.begin());

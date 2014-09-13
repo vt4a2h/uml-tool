@@ -98,7 +98,7 @@ namespace utility {
         MakerR defaultMaker([](){ return std::make_shared<relationship::Relation>(); });
 
         return mapSearchHelper(kRelation, relation, defaultMaker)();
-    }
+    }  
 
     std::shared_ptr<entity::ClassMethod> makeMethod(entity::ClassMethodType methodType)
     {

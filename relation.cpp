@@ -7,6 +7,7 @@
 #include "constants.cpp"
 
 #include <QJsonObject>
+#include <QDebug>
 
 namespace relationship {
 
@@ -34,8 +35,10 @@ namespace relationship {
         , m_GlobalDatabase(globalDatabase)
         , m_ProjectDatabase(projectDatabase)
     {
-        addHeadClass(headTypeId);
-        addTailClass(tailTypeId);
+        if (headTypeId != STUB_ID)
+            addHeadClass(headTypeId);
+        if (tailTypeId != STUB_ID)
+            addTailClass(tailTypeId);
     }
 
     Relation::~Relation()
@@ -197,6 +200,16 @@ namespace relationship {
     bool Relation::isEqual(const Relation &rhs) const
     {
         return *this == rhs;
+    }
+
+    void Relation::writeToFile(const QString &fileName) const
+    {
+        utility::writeToFile(*this, fileName);
+    }
+
+    bool Relation::readFromFile(const QString &fileName)
+    {
+        return utility::readFromFile(*this, fileName);
     }
 
     db::Database *Relation::globalDatabase() const

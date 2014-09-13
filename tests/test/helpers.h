@@ -21,3 +21,14 @@ EXPECT_EQ(p, nullptr) << #method_name "() should return nullptr for invalid id";
             << "Data for " #name " should be a correct";\
     EXPECT_EQ(*basic_obj, *comp_obj)\
             << "Read/write for " #name " should work correctly";
+
+#define test_relation(type, actions)\
+    auto relation(makeRelation<relationship::type>(m_Parameters));\
+    \
+    actions();\
+    \
+    relation->writeToFile(m_JsonFileName);\
+    \
+    auto relation_comp(std::make_shared<relationship::Relation>());\
+    setDb(relation_comp, m_Parameters);\
+    json_eq(relation, relation_comp, #type);

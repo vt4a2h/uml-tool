@@ -60,6 +60,16 @@ namespace relationship {
         });
     }
 
+    void Node::writeToFile(const QString &fileName) const
+    {
+        utility::writeToFile(*this, fileName);
+    }
+
+    bool Node::readFromFile(const QString &fileName)
+    {
+       return utility::readFromFile(*this, fileName);
+    }
+
     Multiplicity Node::multiplicity() const
     {
         return m_Multiplicity;

@@ -28,6 +28,9 @@ namespace relationship {
         QJsonObject toJson() const;
         void fromJson(const QJsonObject &src, QStringList &errorList);
 
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
+
     private:
         QString m_TypeId;
         QString m_Description;

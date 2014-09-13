@@ -843,6 +843,43 @@ TEST_F(FileJson, ScopeJson)
     json_eq(scope, scope_comp, "Scope");
 }
 
+TEST_F(FileJson, NodeJson)
+{
+    relationship::SharedNode node(std::make_shared<relationship::Node>("stub_id", relationship::ZeroOrInf));
+    node->setDescription("stub_description");
+    node->writeToFile(m_JsonFileName);
+
+    auto node_comp(std::make_shared<relationship::Node>());
+    json_eq(node, node_comp, "Node");
+}
+
+TEST_F(FileJson, BasicRelationJson)
+{
+    test_relation(Relation, [&](){ relation->setDescription("description"); })
+}
+
+TEST_F(FileJson, AssociationRelationJson)
+{
+    test_relation(Association, [&](){
+        relation->setGetSetTypeId("get_set_type_id");
+        relation->setFieldtypeId("field_type_id");
+    })
+}
+
+TEST_F(FileJson, DependencyRelation)
+{
+    test_relation(Dependency, [&](){
+        relation->setMethod(std::make_shared<entity::ClassMethod>("stub_name"));
+    })
+}
+
+TEST_F(FileJson, GeneralizationRelation)
+{
+    test_relation(Generalization, [&](){
+        relation->setSection(entity::Private);
+    })
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
