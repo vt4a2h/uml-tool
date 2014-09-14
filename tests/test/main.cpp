@@ -506,32 +506,41 @@ TEST_F(RelationMaker, MultiplyAssociation)
             << "First class should have 4 methods for work with container elemets";
 
     auto methodsList = _firstClass->getMethod("get" + _secondClass->name());
-    ASSERT_FALSE(methodsList.isEmpty()) << "First class should have a getter";
-    EXPECT_TRUE(methodsList.first()->isConst()) << "Getter shoudl be const";
+    ASSERT_FALSE(methodsList.isEmpty())
+            << "First class should have a getter";
+    EXPECT_TRUE(methodsList.first()->isConst())
+            << "Getter shoudl be const";
     EXPECT_EQ(valueType->id(), methodsList.first()->returnTypeId())
             << "Getter should have valid return tyeid ";
     auto parameter = methodsList.first()->getParameter("key");
-    ASSERT_NE(parameter, nullptr) << "Getter should have parameter with name \"key\"";
+    ASSERT_NE(parameter, nullptr)
+            << "Getter should have parameter with name \"key\"";
     EXPECT_EQ(parameter->typeId(), stringClass->id())
             << "Parameter in getter should have a valid type";
 
     methodsList = _firstClass->getMethod("add" + _secondClass->name());
-    ASSERT_FALSE(methodsList.isEmpty()) << "First class should have a setter";
+    ASSERT_FALSE(methodsList.isEmpty())
+            << "First class should have a setter";
     parameter = methodsList.first()->getParameter("src_" + _secondClass->name().toLower());
-    ASSERT_NE(parameter, nullptr) << "Getter should have parameter with right name";
+    ASSERT_NE(parameter, nullptr)
+            << "Getter should have parameter with right name";
     EXPECT_EQ(parameter->typeId(), valueType->id())
             << "Parameter in setter should have a valid type";
 
     methodsList = _firstClass->getMethod("remove" + _secondClass->name());
-    ASSERT_FALSE(methodsList.isEmpty()) << "First class should have a deleter";
+    ASSERT_FALSE(methodsList.isEmpty())
+            << "First class should have a deleter";
     parameter = methodsList.first()->getParameter("key");
-    ASSERT_NE(parameter, nullptr) << "Deleter should have parameter with right name";
+    ASSERT_NE(parameter, nullptr)
+            << "Deleter should have parameter with right name";
     EXPECT_EQ(parameter->typeId(), stringClass->id())
             << "Parameter in deleter should have a valid type";
 
     methodsList = _firstClass->getMethod(_secondClass->name().toLower() + "s");
-    ASSERT_FALSE(methodsList.isEmpty()) << "First class should have a group getter";
-    EXPECT_TRUE(methodsList.first()->isConst()) << "Group getter shoudl be const";
+    ASSERT_FALSE(methodsList.isEmpty())
+            << "First class should have a group getter";
+    EXPECT_TRUE(methodsList.first()->isConst())
+            << "Group getter shoudl be const";
     EXPECT_EQ(containerType->id(), methodsList.first()->returnTypeId())
             << "Group getter should have valid return tyeid ";
 
@@ -630,6 +639,8 @@ TEST_F(RelationMaker, Dependency)
     EXPECT_FALSE(_firstClass->containsMethod(depMethod->name()))
             << "relation should be removed";
 }
+
+// TODO: add tests for realization
 
 TEST_F(TypeMaker, MakesRightTypes)
 {
@@ -877,6 +888,28 @@ TEST_F(FileJson, GeneralizationRelation)
 {
     test_relation(Generalization, [&](){
         relation->setSection(entity::Private);
+    })
+}
+
+TEST_F(FileJson, MultiplyAssociationRelation)
+{
+    test_relation(MultiplyAssociation, [&](){
+        auto key(m_Parameters.globalScope_->addType("key_stub"));
+        auto container(m_Parameters.projectScope_->addType("container_stub"));
+
+        relation->setContainerTypeId(container->id());
+        relation->setKeyTypeId(key->id());
+    })
+}
+
+TEST_F(FileJson, RealizationRelation)
+{
+    test_relation(Realization, [&](){
+        entity::MethodsList methods;
+        methods << m_Parameters.firstClass_->makeMethod("first_method")
+                << m_Parameters.firstClass_->makeMethod("second_method");
+
+        relation->addMethods(methods);
     })
 }
 

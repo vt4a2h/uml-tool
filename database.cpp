@@ -128,7 +128,8 @@ namespace db {
 
         for (auto scope : m_Scopes.values()) {
             getDepthType(scope, typeId, result);
-            if (result) break;
+            if (result)
+                break;
         }
 
         return result;

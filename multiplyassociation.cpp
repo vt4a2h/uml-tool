@@ -52,8 +52,7 @@ namespace relationship {
 
     void MultiplyAssociation::setContainerTypeId(const QString &containerTypeId)
     {
-        m_ContainerClass = m_GlobalDatabase->depthTypeSearch(containerTypeId);
-        if (!m_ContainerClass) m_ProjectDatabase->depthTypeSearch(containerTypeId);
+        m_ContainerClass = tryToFindType(containerTypeId);
         Q_ASSERT_X(m_ContainerClass,
                    "MultiplyAssociation::setContainerTypeId",
                    "container class not found");
