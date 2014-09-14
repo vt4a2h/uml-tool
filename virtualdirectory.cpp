@@ -80,7 +80,7 @@ namespace generator {
         if (m_FileInfo.isWritable())
             for (auto &&file : m_Files.values())
                 file->write();
-        else
+        else if (m_ErrorList)
             *m_ErrorList << QObject::tr("%1 is not writable.").arg(m_FileInfo.filePath());
     }
 
@@ -88,7 +88,7 @@ namespace generator {
     {
         bool result(QDir(m_FileInfo.filePath()).removeRecursively());
 
-        if (!result)
+        if (!result && m_ErrorList)
             *m_ErrorList << QObject::tr("Cannot delete %1.").arg(m_FileInfo.filePath());
 
         return result;

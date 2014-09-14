@@ -1,21 +1,24 @@
 #include "basiccppprojectgenerator.h"
+#include "virtualdirectory.h"
 
 namespace generator {
 
     BasicCppProjectGenerator::BasicCppProjectGenerator()
+        : AbstractProjectGenerator()
     {
     }
 
-    bool BasicCppProjectGenerator::valid() const
+    BasicCppProjectGenerator::BasicCppProjectGenerator(const db::SharedDatabase &globalDb,
+                                                       const db::SharedDatabase &projectDb,
+                                                       const QString &outputDirectory)
+        : AbstractProjectGenerator(globalDb, projectDb, outputDirectory)
+        , m_RootOutputDirectory(std::make_shared<VirtualDirectory>(outputDirectory))
     {
-        return AbstractProjectGenerator::valid();
+        m_RootOutputDirectory->setErrorList(m_ErrorList);
     }
 
     void BasicCppProjectGenerator::generate()
     {
-        if (!valid()) return;
-
-        // NOTE: stub
     }
 
 } // namespace generator

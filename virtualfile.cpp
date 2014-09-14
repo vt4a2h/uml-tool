@@ -34,17 +34,15 @@ namespace generator {
         if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
             QTextStream out(&file);
             out << m_Data;
-        } else {
-            if (m_ErrorList)
+        } else if (m_ErrorList)
                 *m_ErrorList << QObject::tr("Cannot create file %1.").arg(m_FileInfo.filePath());
-        }
     }
 
     bool VirtualFile::remove() const
     {
         bool result(QFile::remove(m_FileInfo.filePath()));
 
-        if (!result)
+        if (!result && m_ErrorList)
             *m_ErrorList << QObject::tr("Cannot delete file %1.").arg(m_FileInfo.filePath());
 
         return result;

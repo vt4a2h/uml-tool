@@ -50,29 +50,25 @@ namespace generator {
         m_OutputDirectory = outputDirectory;
     }
 
-    QStringList AbstractProjectGenerator::errors() const
+    SharedErrorList AbstractProjectGenerator::errors() const
     {
         return m_ErrorList;
     }
 
     bool AbstractProjectGenerator::anyErrors() const
     {
-        return !m_ErrorList.isEmpty();
+        return !m_ErrorList->isEmpty();
     }
 
-    bool AbstractProjectGenerator::valid() const
+    AbstractProjectGenerator::GeneratorOptions AbstractProjectGenerator::options() const
     {
-        QFileInfo dir(m_OutputDirectory);
-
-        if (!dir.isDir()) {
-            m_ErrorList << QObject::tr("%1 is not a directory.").arg(m_OutputDirectory);
-            return false;
-        } else if (!dir.isWritable()) {
-            m_ErrorList << QObject::tr("%1 is not writable.").arg(m_OutputDirectory);
-            return false;
-        }
-
-        return true;
+        return m_Options;
     }
+
+    void AbstractProjectGenerator::setOptions(const GeneratorOptions &options)
+    {
+        m_Options = options;
+    }
+
 
 } // namespace generator
