@@ -28,6 +28,8 @@ namespace generator {
 
         bool removeNestedItem(const QString &name);
 
+        void clearVirtualStructure();
+
         void write() const override;
         bool remove() const override;
 

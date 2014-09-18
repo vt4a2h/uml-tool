@@ -25,6 +25,18 @@ namespace generator {
         m_Data = data;
     }
 
+    VirtualFile &VirtualFile::appendData(const QString &data, const QString &sep)
+    {
+        m_Data.append(sep).append(data);
+        return *this;
+    }
+
+    VirtualFile &VirtualFile::prependData(const QString &data, const QString &sep)
+    {
+        m_Data.prepend(sep).prepend(data);
+        return *this;
+    }
+
     void VirtualFile::write() const
     {
         if (!valid())

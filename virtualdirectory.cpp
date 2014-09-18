@@ -73,6 +73,11 @@ namespace generator {
         return m_Files.remove(name);
     }
 
+    void VirtualDirectory::clearVirtualStructure()
+    {
+        m_Files.clear();
+    }
+
     void VirtualDirectory::write() const
     {
         QDir().mkpath(m_FileInfo.filePath());

@@ -32,12 +32,18 @@ namespace generator {
        GeneratorOptions options() const;
        void setOptions(const GeneratorOptions &options);
 
-       virtual void generate() = 0;
+       QString projectName() const;
+       void setProjectName(const QString &projectName);
+
+       void generate();
 
     protected:
+       virtual void doGenerate() = 0;
+
        translator::ProjectTranslator m_ProjectTranslator;
        GeneratorOptions m_Options;
        QString m_OutputDirectory;
+       QString m_ProjectName;
        mutable SharedErrorList m_ErrorList;
     };
 

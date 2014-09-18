@@ -4,6 +4,12 @@
 
 namespace generator {
 
+    struct Profile
+    {
+        QStringList headers;
+        QStringList sources;
+    };
+
     class BasicCppProjectGenerator final : public AbstractProjectGenerator
     {
     public:
@@ -12,10 +18,15 @@ namespace generator {
                                   const db::SharedDatabase &projectDb,
                                   const QString &outputDirectory = "");
 
-        void generate() override;
+        void writeToDisk() const;
 
     private:
+        virtual void doGenerate() override;
+        void generateFiles(const entity::SharedScope &scope, const SharedVirtualDirectory &directory);
+        void addProfile();
+
         SharedVirtualDirectory m_RootOutputDirectory;
+        Profile m_ProfileData;
     };
 
 } // namespace generator
