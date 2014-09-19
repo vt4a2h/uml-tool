@@ -38,6 +38,7 @@ protected:
 
     entity::SharedType int_    = globalScope_->addType("int");
     entity::SharedType double_ = globalScope_->addType("double");
+    entity::SharedType void_   = globalScope_->addType("void");
 
     generator::SharedGenerator generator_;
 
