@@ -6,6 +6,7 @@
 #include "TestCodeGenerator.h"
 #include "TestFileMaker.h"
 #include "TestJson.h"
+#include "ProjectMaker.h"
 #include <helpfunctions.h>
 #include <templates.cpp>
 
@@ -912,6 +913,12 @@ TEST_F(FileJson, RealizationRelation)
 
         relation->addMethods(methods);
     })
+}
+
+TEST_F(ProjectMaker, MakeProject)
+{
+    generator_->generate();
+    generator_->writeToDisk();
 }
 
 int main(int argc, char **argv)

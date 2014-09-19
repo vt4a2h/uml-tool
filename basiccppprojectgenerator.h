@@ -18,10 +18,9 @@ namespace generator {
                                   const db::SharedDatabase &projectDb,
                                   const QString &outputDirectory = "");
 
-        void writeToDisk() const;
-
     private:
-        virtual void doGenerate() override;
+        void doWrite() const override;
+        void doGenerate() override;
         void generateFiles(const entity::SharedScope &scope, const SharedVirtualDirectory &directory);
         void addProfile();
 

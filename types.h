@@ -107,4 +107,7 @@ namespace generator {
 
     class VirtualDirectory;
     using SharedVirtualDirectory = std::shared_ptr<VirtualDirectory>;
+
+    class AbstractProjectGenerator;
+    using SharedGenerator = std::shared_ptr<AbstractProjectGenerator>;
 }

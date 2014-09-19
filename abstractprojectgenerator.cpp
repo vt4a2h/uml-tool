@@ -1,10 +1,13 @@
 #include "abstractprojectgenerator.h"
 #include <QFileInfo>
+#include <QDebug>
 
 namespace generator {
 
     AbstractProjectGenerator::AbstractProjectGenerator()
+        : AbstractProjectGenerator(nullptr, nullptr, "")
     {
+        qWarning() << "Project generator created with empty databases and (or) with empty output path";
     }
 
     AbstractProjectGenerator::AbstractProjectGenerator(const db::SharedDatabase &globalDb,
@@ -12,6 +15,7 @@ namespace generator {
                                                        const QString &outputDirectory)
         : m_ProjectTranslator(globalDb, projectDb)
         , m_OutputDirectory(outputDirectory)
+        , m_ErrorList(std::make_shared<ErrorList>())
     {
 
     }
@@ -83,6 +87,11 @@ namespace generator {
     void AbstractProjectGenerator::generate()
     {
         doGenerate();
+    }
+
+    void AbstractProjectGenerator::writeToDisk() const
+    {
+        doWrite();
     }
 
 } // namespace generator

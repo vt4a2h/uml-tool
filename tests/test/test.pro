@@ -14,7 +14,8 @@ HEADERS += ../../enums.h \
     TestTypeMaker.h \
     TestCodeGenerator.h \
     TestFileMaker.h \
-    TestJson.h
+    TestJson.h \
+    ProjectMaker.h
 
 SOURCES += main.cpp \
            ../../type.cpp \
@@ -43,4 +44,6 @@ SOURCES += main.cpp \
            ../../scope.cpp \
            ../../virtualfile.cpp \
            ../../virtualdirectory.cpp \
-           ../../virtualfilesystemabstractitem.cpp
+           ../../virtualfilesystemabstractitem.cpp \
+           ../../abstractprojectgenerator.cpp \
+           ../../basiccppprojectgenerator.cpp

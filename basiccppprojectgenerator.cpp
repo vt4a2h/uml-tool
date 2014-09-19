@@ -19,13 +19,14 @@ namespace generator {
         , m_RootOutputDirectory(std::make_shared<VirtualDirectory>(outputDirectory))
     {
         m_RootOutputDirectory->setErrorList(m_ErrorList);
+        m_RootOutputDirectory->setPath(m_OutputDirectory);
     }
 
-    void BasicCppProjectGenerator::writeToDisk() const
+    void BasicCppProjectGenerator::doWrite() const
     {
         m_RootOutputDirectory->write();
 
-        if (!m_ErrorList->isEmpty()) {
+        if (m_ErrorList && !m_ErrorList->isEmpty()) {
             m_RootOutputDirectory->clearVirtualStructure();
             m_RootOutputDirectory->addFile("errors.log")->setData(m_ErrorList->join("\n"));
         }
@@ -51,8 +52,8 @@ namespace generator {
                 code.join(m_ProjectTranslator.generateClassMethodsImpl(classPtr));
 
             QString name(t->name().toLower());
-            if (!code.isEmpty())
-                code.toSource.prepend("\n").prepend(QString("#include \"%1\".h").arg(name));
+            if (!code.toSource.isEmpty())
+                code.toSource.prepend("\n").prepend(QString("#include \"%1.h\"").arg(name));
 
             auto addFile = [&](const QString &data, const QString &ext, QStringList &section) {
                 QString fname(name + ext);
@@ -61,9 +62,9 @@ namespace generator {
             };
 
             if (!code.toHeader.isEmpty())
-                addFile(code.toHeader, "h", m_ProfileData.headers);
+                addFile(code.toHeader, ".h", m_ProfileData.headers);
             if (!code.toSource.isEmpty())
-                addFile(code.toSource, "cpp", m_ProfileData.sources);
+                addFile(code.toSource, ".cpp", m_ProfileData.sources);
         }
 
         for (auto &&s : scope->scopes())

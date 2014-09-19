@@ -17,8 +17,10 @@ namespace translator {
 
        void join(const Code &code, const QString &sep = "\n")
        {
-           toHeader.append(sep).append(code.toHeader);
-           toSource.append(sep).append(code.toSource);
+           if (!code.toHeader.isEmpty())
+               toHeader.append(sep).append(code.toHeader);
+           if (!code.toSource.isEmpty())
+               toSource.append(sep).append(code.toSource);
        }
 
        bool isEmpty() const { return toHeader.isEmpty() && toSource.isEmpty(); }

@@ -36,9 +36,11 @@ namespace generator {
        void setProjectName(const QString &projectName);
 
        void generate();
+       void writeToDisk() const;
 
     protected:
        virtual void doGenerate() = 0;
+       virtual void doWrite() const = 0;
 
        translator::ProjectTranslator m_ProjectTranslator;
        GeneratorOptions m_Options;
