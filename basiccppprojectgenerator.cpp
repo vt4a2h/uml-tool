@@ -1,9 +1,14 @@
 #include "basiccppprojectgenerator.h"
 #include "virtualdirectory.h"
 #include "database.h"
+#include "enums.h"
 #include "scope.h"
 #include "type.h"
 #include "class.h"
+#include "enum.h"
+#include "union.h"
+#include "templateclass.h"
+#include "extendedtype.h"
 
 namespace generator {
 
@@ -47,7 +52,32 @@ namespace generator {
                                        directory->addDirectory(scope->name().toLower()) : directory);
 
         for (auto &&t : scope->types()) {
-            auto code(m_ProjectTranslator.generateCode(t));
+            // temporary solution
+            translator::Code code;
+            switch (t->type()) {
+            case entity::BasicType:
+                code = m_ProjectTranslator.generateCode(t);
+                break;
+            case entity::EnumType:
+                code = m_ProjectTranslator.generateCode(std::static_pointer_cast<entity::Enum>(t));
+                break;
+            case entity::ExtendedTypeType:
+                code = m_ProjectTranslator.generateCode(std::static_pointer_cast<entity::ExtendedType>(t));
+                break;
+            case entity::TemplateClassType:
+                code = m_ProjectTranslator.generateCode(std::static_pointer_cast<entity::TemplateClass>(t));
+                break;
+            case entity::UnionType:
+                code = m_ProjectTranslator.generateCode(std::static_pointer_cast<entity::Union>(t));
+                break;
+            case entity::UserClassType:
+                code = m_ProjectTranslator.generateCode(std::static_pointer_cast<entity::Class>(t));
+                break;
+            default:
+                code = m_ProjectTranslator.generateCode(t);
+                break;
+            }
+            // end of temporary solution
             if (auto classPtr = std::dynamic_pointer_cast<entity::Class>(t))
                 code.join(m_ProjectTranslator.generateClassMethodsImpl(classPtr));
 

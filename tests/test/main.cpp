@@ -917,7 +917,9 @@ TEST_F(FileJson, RealizationRelation)
 
 TEST_F(ProjectMaker, MakeProject)
 {
-    firstClass_->addField("a", int_->id())->setPrefix("m");
+    auto fieldA = firstClass_->addField("a", int_->id());
+    fieldA->setPrefix("m_");
+    fieldA->setSection(entity::Private);
 
     entity::SharedMethod getterA = firstClass_->makeMethod("getA");
     getterA->setReturnTypeId(int_->id());
