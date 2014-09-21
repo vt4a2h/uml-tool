@@ -11,8 +11,9 @@
 #include <projecttranslator.h>
 #include <templateclassmethod.h>
 #include <types.h>
+#include <code.h>
 
-class CodeGenerator : public ::testing::Test
+class ProjectTranslatorTest : public ::testing::Test
 {
 protected:
     virtual void SetUp() override

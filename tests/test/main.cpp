@@ -3,48 +3,48 @@
 #include "TestDepthSearch.h"
 #include "TestTypeMaker.h"
 #include "TestRelationMaker.h"
-#include "TestCodeGenerator.h"
+#include "TestProjectTranslator.h"
 #include "TestFileMaker.h"
 #include "TestJson.h"
-#include "ProjectMaker.h"
+#include "TestProjectMaker.h"
 #include <helpfunctions.h>
 #include <templates.cpp>
 
-TEST_F(CodeGenerator, Type)
+TEST_F(ProjectTranslatorTest, Type)
 {
     QString futureResult("int");
-    auto code(_translator->generateCode(_int));
+    auto code(_translator->translate(_int));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "project_scope::foo_scope::Foo";
     auto scopeFoo = _projectScope->addChildScope("foo_scope");
     auto foo = scopeFoo->addType("Foo");
-    code = _translator->generateCode(foo);
+    code = _translator->translate(foo);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
-TEST_F(CodeGenerator, ExtendedType)
+TEST_F(ProjectTranslatorTest, ExtendedType)
 {
     entity::SharedExtendedType type = _projectScope->addType<entity::ExtendedType>();
     type->setTypeId(_int->id());
 
     QString futureResult("int");
-    auto code(_translator->generateCode(type));
+    auto code(_translator->translate(type));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "const int";
     type->setConstStatus(true);
-    code = _translator->generateCode(type);
+    code = _translator->translate(type);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "const int &";
     type->addLinkStatus();
-    code = _translator->generateCode(type);
+    code = _translator->translate(type);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "const int &&";
     type->addLinkStatus();
-    code = _translator->generateCode(type);
+    code = _translator->translate(type);
     ASSERT_EQ(futureResult, code.toHeader);
 
     type->removeLinkStatus();
@@ -52,7 +52,7 @@ TEST_F(CodeGenerator, ExtendedType)
 
     futureResult = "const int * const";
     type->addPointerStatus(true);
-    code = _translator->generateCode(type);
+    code = _translator->translate(type);
     ASSERT_EQ(futureResult, code.toHeader);
 
     type->removePointerStatus();
@@ -62,12 +62,13 @@ TEST_F(CodeGenerator, ExtendedType)
     auto vector = _globalScope->addType("vector");
     type->setTypeId(vector->id());
     type->addTemplateParameter(_int->id());
-    code = _translator->generateCode(type);
+    code = _translator->translate(type);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "using Ints = vector<int>;";
     type->setName("Ints");
-    code = _translator->generateCode(type, true, nullptr, nullptr, true);
+    code = _translator->translate(type, translator::ProjectTranslator::WithAlias |
+                                        translator::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "std::set<int>";
@@ -77,17 +78,17 @@ TEST_F(CodeGenerator, ExtendedType)
     auto set = stdScope->addType("set");
     type->setTypeId(set->id());
     type->addTemplateParameter(_int->id());
-    code = _translator->generateCode(type);
+    code = _translator->translate(type);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
-TEST_F(CodeGenerator, Field)
+TEST_F(ProjectTranslatorTest, Field)
 {
     auto field = std::make_shared<entity::Field>("Number", _int->id());
     field->setPrefix("m_");
 
     QString futureResult("int m_Number");
-    auto code(_translator->generateCode(field));
+    auto code(_translator->translate(field));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "static int number_";
@@ -95,7 +96,7 @@ TEST_F(CodeGenerator, Field)
     field->removePrefix();
     field->setSuffix("_");
     field->addKeyword(entity::FieldStatic);
-    code = _translator->generateCode(field);
+    code = _translator->translate(field);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "static const int number_";
@@ -103,11 +104,11 @@ TEST_F(CodeGenerator, Field)
     type->setTypeId(_int->id());
     type->setConstStatus(true);
     field->setTypeId(type->id());
-    code = _translator->generateCode(field);
+    code = _translator->translate(field);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
-TEST_F(CodeGenerator, ClassMethod)
+TEST_F(ProjectTranslatorTest, ClassMethod)
 {
     auto method = std::make_shared<entity::ClassMethod>("calc");
     method->setConstStatus(true);
@@ -115,7 +116,7 @@ TEST_F(CodeGenerator, ClassMethod)
     QString futureResult("void calc() const");
     auto voidType = _globalScope->addType("void");
     method->setReturnTypeId(voidType->id());
-    auto code(_translator->generateCode(method));
+    auto code(_translator->translate(method));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "double sum(double a, double b) const";
@@ -124,7 +125,7 @@ TEST_F(CodeGenerator, ClassMethod)
     method->setReturnTypeId(doubleType->id());
     method->addParameter("a", doubleType->id());
     method->addParameter("b", doubleType->id());
-    code = _translator->generateCode(method);
+    code = _translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "ps::Foo *getFoo(const QString &id) const";
@@ -147,14 +148,14 @@ TEST_F(CodeGenerator, ClassMethod)
     method->removeParameter("b");
     method->addParameter("id", qstrExt->id());
 
-    code = _translator->generateCode(method);
+    code = _translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "explicit Foo(const QString &name)";
     method = std::make_shared<entity::ClassMethod>("Foo");
     method->addLhsIdentificator(entity::Explicit);
     method->addParameter("name", qstrExt->id());
-    code = _translator->generateCode(method);
+    code = _translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "virtual ps::Foo *make() = 0";
@@ -162,28 +163,28 @@ TEST_F(CodeGenerator, ClassMethod)
     method->setReturnTypeId(fooExt->id());
     method->setRhsIdentificator(entity::PureVirtual);
     method->addLhsIdentificator(entity::Virtual);
-    code = _translator->generateCode(method);
+    code = _translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "ps::Foo *make() override";
     method->removeLhsIdentificator(entity::Virtual);
     method->setRhsIdentificator(entity::Override);
-    code = _translator->generateCode(method);
+    code = _translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
-TEST_F(CodeGenerator, TemplateClassMethod)
+TEST_F(ProjectTranslatorTest, TemplateClassMethod)
 {
     entity::SharedTemplateClassMethod method(std::make_shared<entity::TemplateClassMethod>("swap"));
 
     QString futureResult("template <>\nswap()");
-    auto code(_translator->generateCode(method));
+    auto code(_translator->translate(method));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "template <class T>\nswap()";
     auto t = method->addLocaleType("T");
     method->addTemplateParameter(t->id());
-    code = _translator->generateCode(method);
+    code = _translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "template <class T>\nswap(T *first, T *second)";
@@ -192,7 +193,7 @@ TEST_F(CodeGenerator, TemplateClassMethod)
     ptrT->addPointerStatus();
     method->addParameter("first", ptrT->id());
     method->addParameter("second", ptrT->id());
-    code = _translator->generateCode(method);
+    code = _translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "template <class T = project_scope::Foo>\n"
@@ -216,79 +217,79 @@ TEST_F(CodeGenerator, TemplateClassMethod)
     sharedPointerToT->addTemplateParameter(t->id());
     method->setReturnTypeId(sharedPointerToT->id());
 
-    code = _translator->generateCode(method);
+    code = _translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
-TEST_F(CodeGenerator, Enum)
+TEST_F(ProjectTranslatorTest, Enum)
 {
     auto fooEnum = _projectScope->addType<entity::Enum>("Foo");
 
     QString futureResult("enum Foo {};");
-    auto code(_translator->generateCode(fooEnum));
+    auto code(_translator->translate(fooEnum));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "enum class Foo {};";
     fooEnum->setStrongStatus(true);
-    code = _translator->generateCode(fooEnum);
+    code = _translator->translate(fooEnum);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "enum class Foo : int {};";
     fooEnum->setEnumTypeId(_int->id());
-    code = _translator->generateCode(fooEnum);
+    code = _translator->translate(fooEnum);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "enum class Foo : int {bar, baz};";
     fooEnum->addVariable("bar");
     fooEnum->addVariable("baz");
-    code = _translator->generateCode(fooEnum);
+    code = _translator->translate(fooEnum);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "enum class Foo : int {bar = 0, baz = 1};";
-    code = _translator->generateCode(fooEnum, true);
+    code = _translator->translate(fooEnum, translator::ProjectTranslator::GenerateNumbers);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
-TEST_F(CodeGenerator, Union)
+TEST_F(ProjectTranslatorTest, Union)
 {
     auto fooUnion = _projectScope->addType<entity::Union>("Foo");
 
     QString futureResult("union Foo {};");
-    auto code(_translator->generateCode(fooUnion));
+    auto code(_translator->translate(fooUnion));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "union Foo {\n    double a;\n    int b;\n};";
     auto typeDouble = _globalScope->addType("double");
     fooUnion->addField("a", typeDouble->id());
     fooUnion->addField("b", _int->id());
-    code = _translator->generateCode(fooUnion);
+    code = _translator->translate(fooUnion);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
-TEST_F(CodeGenerator, Class)
+TEST_F(ProjectTranslatorTest, Class)
 {
     auto fooClass = _projectScope->addType<entity::Class>("Foo");
 
     QString futureResult("class Foo {};");
-    auto code(_translator->generateCode(fooClass));
+    auto code(_translator->translate(fooClass));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "struct Foo {};";
     fooClass->setKind(entity::StructType);
-    code = _translator->generateCode(fooClass);
+    code = _translator->translate(fooClass);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "class Foo : public Bar {};";
     fooClass->setKind(entity::ClassType);
     auto barClass = _projectScope->addType<entity::Class>("Bar");
     fooClass->addParent(barClass->id(), entity::Public);
-    code = _translator->generateCode(fooClass);
+    code = _translator->translate(fooClass);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "class Foo : public Bar, protected Baz {};";
     auto bazClass = _projectScope->addType<entity::Class>("Baz");
     fooClass->addParent(bazClass->id(), entity::Protected);
-    code = _translator->generateCode(fooClass);
+    code = _translator->translate(fooClass);
     ASSERT_EQ(futureResult, code.toHeader);
 
     fooClass->removeParent(barClass->id());
@@ -305,7 +306,7 @@ TEST_F(CodeGenerator, Class)
     auto bField = fooClass->addField("b", bazClass->id());
     bField->setSection(entity::Private);
     bField->setSuffix("_");
-    code = _translator->generateCode(fooClass);
+    code = _translator->translate(fooClass);
     ASSERT_EQ(futureResult, code.toHeader);
 
     fooClass->removeField("a");
@@ -324,7 +325,7 @@ TEST_F(CodeGenerator, Class)
     bField->setSection(entity::Protected);
     auto cField = fooClass->addField("c", _int->id());
     cField->setSection(entity::Private);
-    code = _translator->generateCode(fooClass);
+    code = _translator->translate(fooClass);
     ASSERT_EQ(futureResult, code.toHeader);
 
     fooClass->removeField("a");
@@ -353,11 +354,11 @@ TEST_F(CodeGenerator, Class)
     constLintToInt->addLinkStatus();
     cSetter->addParameter("newC", constLintToInt->id());
 
-    code = _translator->generateCode(fooClass);
+    code = _translator->translate(fooClass);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
-TEST_F(CodeGenerator, TemplateClass)
+TEST_F(ProjectTranslatorTest, TemplateClass)
 {
     QString futureResult = QString("template <class T>\n"
                                    "struct Node "
@@ -379,11 +380,11 @@ TEST_F(CodeGenerator, TemplateClass)
     ptrNode->addPointerStatus();
     nodeStruct->addField("next", ptrNode->id());
 
-    auto code(_translator->generateCode(nodeStruct));
+    auto code(_translator->translate(nodeStruct));
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
-TEST_F(CodeGenerator, ClassImplementation)
+TEST_F(ProjectTranslatorTest, ClassImplementation)
 {
     QString futureResult("int Foo::getC() const\n"
                          "{\n"
@@ -435,7 +436,7 @@ TEST_F(CodeGenerator, ClassImplementation)
     ASSERT_EQ(futureResult, code.toSource);
 }
 
-TEST_F(CodeGenerator, TemplateClassImplementation)
+TEST_F(ProjectTranslatorTest, TemplateClassImplementation)
 {
     QString futureResult("template <class Value, class Deleter>\n"
                          "void ScopedPointer<Value, Deleter>::reset(Value *other)\n"

@@ -9,6 +9,7 @@
 #include "union.h"
 #include "templateclass.h"
 #include "extendedtype.h"
+#include "code.h"
 
 namespace generator {
 
@@ -56,28 +57,30 @@ namespace generator {
             translator::Code code;
             switch (t->type()) {
             case entity::BasicType:
-                code = m_ProjectTranslator.generateCode(t);
+                code = m_ProjectTranslator.translate(t);
                 break;
             case entity::EnumType:
-                code = m_ProjectTranslator.generateCode(std::static_pointer_cast<entity::Enum>(t));
+                code = m_ProjectTranslator.translate(std::static_pointer_cast<entity::Enum>(t));
                 break;
             case entity::ExtendedTypeType:
-                code = m_ProjectTranslator.generateCode(std::static_pointer_cast<entity::ExtendedType>(t));
+                code = m_ProjectTranslator.translate(std::static_pointer_cast<entity::ExtendedType>(t));
                 break;
             case entity::TemplateClassType:
-                code = m_ProjectTranslator.generateCode(std::static_pointer_cast<entity::TemplateClass>(t));
+                code = m_ProjectTranslator.translate(std::static_pointer_cast<entity::TemplateClass>(t));
                 break;
             case entity::UnionType:
-                code = m_ProjectTranslator.generateCode(std::static_pointer_cast<entity::Union>(t));
+                code = m_ProjectTranslator.translate(std::static_pointer_cast<entity::Union>(t));
                 break;
             case entity::UserClassType:
-                code = m_ProjectTranslator.generateCode(std::static_pointer_cast<entity::Class>(t));
+                code = m_ProjectTranslator.translate(std::static_pointer_cast<entity::Class>(t));
                 break;
             default:
-                code = m_ProjectTranslator.generateCode(t);
+                code = m_ProjectTranslator.translate(t);
                 break;
             }
             // end of temporary solution
+
+            // TODO: delete after refactoring
             if (auto classPtr = std::dynamic_pointer_cast<entity::Class>(t))
                 code.join(m_ProjectTranslator.generateClassMethodsImpl(classPtr));
 

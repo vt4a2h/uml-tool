@@ -14,6 +14,7 @@
 #include "templateclass.h"
 #include "templates.cpp"
 #include "constants.cpp"
+#include "code.h"
 
 namespace translator {
 
@@ -24,7 +25,8 @@ namespace translator {
     ProjectTranslator::ProjectTranslator(const db::SharedDatabase &globalDb, const db::SharedDatabase &projectDb)
         : m_GlobalDatabase(globalDb)
         , m_ProjectDatabase(projectDb)
-    {}
+    {
+    }
 
     void ProjectTranslator::checkDb() const
     {
@@ -33,21 +35,23 @@ namespace translator {
     }
 
     QString ProjectTranslator::generateCodeForExtTypeOrType(const QString &id,
-                                                            bool withNamespace,
+                                                            const TranslatorOptions &options,
                                                             const db::SharedDatabase &localeDatabase,
                                                             const db::SharedDatabase &classDatabase) const
     {
         checkDb();
         auto t = utility::findType(id, localeDatabase, classDatabase, m_ProjectDatabase, m_GlobalDatabase);
-        if (!t) return "";
+        if (!t)
+            return "";
 
+        // TODO: remove after refactoring
         entity::SharedExtendedType st = nullptr;
         if (t->type() == entity::ExtendedTypeType)
             st = std::dynamic_pointer_cast<entity::ExtendedType>(t);
 
-        return (st ? generateCode(st, withNamespace, localeDatabase, classDatabase)
+        return (st ? translate(st, options, localeDatabase, classDatabase)
                      .toHeader.append(st->isLink() || st->isPointer() ? "" : " ") :
-                        t ? generateCode(t, withNamespace, localeDatabase, classDatabase).toHeader.append(" ") :
+                        t ? translate(t, options, localeDatabase, classDatabase).toHeader.append(" ") :
                             "");
     }
 
@@ -75,7 +79,7 @@ namespace translator {
     {
         QStringList methodsList;
         for (auto &&method : _class->methods(section))
-            methodsList << generateCode(method, localeDatabase).toHeader.prepend(indent);
+            methodsList << translate(method, NoOptions, localeDatabase).toHeader.prepend(indent);
         out.append(methodsList.join(";\n"));
         if (!methodsList.isEmpty()) out.append(";\n");
 
@@ -84,9 +88,9 @@ namespace translator {
             auto t = utility::findType(field->typeId(), localeDatabase,
                                        m_GlobalDatabase, m_ProjectDatabase);
             if (!t) break;
-            fieldsList << generateCode(field,
-                                       t->scopeId() == _class->scopeId() ? false : true,
-                                       localeDatabase)
+            fieldsList << translate(field,
+                                    t->scopeId() == _class->scopeId() ? NoOptions : WithNamespace,
+                                    localeDatabase)
                           .toHeader.prepend(indent);
         }
         out.append(fieldsList.join(";\n"));
@@ -110,7 +114,7 @@ namespace translator {
                 parameters.last()
                           .append(" = ")
                           .append(generateCodeForExtTypeOrType(parameter.second,
-                                                               true,
+                                                               WithNamespace,
                                                                t->database()));
                 parameters.last() = parameters.last().trimmed();
             }
@@ -136,11 +140,19 @@ namespace translator {
         return false;
     }
 
-    Code ProjectTranslator::generateCode(const entity::SharedEnum &_enum, bool generateNumbers) const
+    Code ProjectTranslator::translate(const entity::SharedEnum &_enum,
+                                      const TranslatorOptions  &options,
+                                      const db::SharedDatabase &localeDatabase,
+                                      const db::SharedDatabase &classDatabase) const
     {
+        // compatibility with API
+        Q_UNUSED(localeDatabase)
+        Q_UNUSED(classDatabase)
+
         if (!_enum)
             return Code("\ninvalid enum\n", "");
         checkDb();
+
         QString result(ENUM_TEMPLATE);
 
         result.replace("%class%", _enum->isStrong() ? "class " : "");
@@ -155,7 +167,7 @@ namespace translator {
         result.replace("%type%", typeName);
 
         QStringList values;
-        if (generateNumbers) {
+        if (options & GenerateNumbers) {
             for (auto &&v : _enum->variables())
                 values << QString("%1 = %2").arg(v.first, QString::number(v.second));
         } else {
@@ -167,9 +179,15 @@ namespace translator {
         return Code(result, "");
     }
 
-    Code ProjectTranslator::generateCode(const entity::SharedMethod &method,
-                                         const db::SharedDatabase &localeDatabase) const
+    Code ProjectTranslator::translate(const entity::SharedMethod &method,
+                                      const TranslatorOptions  &options,
+                                      const db::SharedDatabase &localeDatabase,
+                                      const db::SharedDatabase &classDatabase) const
     {
+        // compatibility with API
+        Q_UNUSED(options)
+        Q_UNUSED(classDatabase)
+
         if (!method)
             return Code("\ninvalid method\n", "");
         checkDb();
@@ -191,7 +209,7 @@ namespace translator {
         result.replace("%lhs_k%", lhsIds);
 
         result.replace("%r_type%", generateCodeForExtTypeOrType(method->returnTypeId(),
-                                                                true,
+                                                                WithNamespace,
                                                                 m ? m->database() : nullptr,
                                                                 localeDatabase));
 
@@ -202,15 +220,17 @@ namespace translator {
         for (auto &&p : method->parameters()) {
             p->removePrefix();
             p->removeSuffix();
-            parametersList << generateCode(p, true,
-                                           m ? m->database() : nullptr,
-                                           localeDatabase).toHeader;
+            parametersList << translate(p, WithNamespace,
+                                        m ? m->database() : nullptr,
+                                        localeDatabase).toHeader;
         }
-        if (!parametersList.isEmpty()) parameters.append(parametersList.join(", "));
+        if (!parametersList.isEmpty())
+            parameters.append(parametersList.join(", "));
         result.replace("%parameters%", parameters);
 
         QString rhsId(utility::methodRhsIdToString(method->rhsIdentificator()));
-        if (method->rhsIdentificator() != entity::None) rhsId.prepend(" ");
+        if (method->rhsIdentificator() != entity::None)
+            rhsId.prepend(" ");
         result.replace("%rhs_k%", rhsId);
 
         result.replace("%const%", method->isConst() ? " const" : "");
@@ -218,32 +238,48 @@ namespace translator {
         return Code(result, "");
     }
 
-    Code ProjectTranslator::generateCode(const entity::SharedUnion &_union) const
+    Code ProjectTranslator::translate(const entity::SharedUnion &_union,
+                                      const TranslatorOptions &options,
+                                      const db::SharedDatabase &localeDatabase,
+                                      const db::SharedDatabase &classDatabase) const
     {
+        // compatibility with API
+        Q_UNUSED(options)
+        Q_UNUSED(localeDatabase)
+        Q_UNUSED(classDatabase)
+
         if (!_union)
             return Code("\ninvalid union\n", "");
         checkDb();
+
         QString result(UNION_TEMPLATE);
 
         result.replace("%name%", _union->name());
 
         QStringList fields;
         for (auto &&field : _union->fields())
-            fields << generateCode(field).toHeader.prepend(INDENT);
+            fields << translate(field).toHeader.prepend(INDENT);
 
         QString resultFields(fields.join(";\n"));
-        if (!resultFields.isEmpty()) resultFields.append(";\n").prepend("\n");
+        if (!resultFields.isEmpty())
+            resultFields.append(";\n").prepend("\n");
 
         result.replace("%variables%", resultFields);
 
         return Code(result, "");
     }
 
-    Code ProjectTranslator::generateCode(const entity::SharedClass &_class) const
+    Code ProjectTranslator::translate(const entity::SharedClass &_class, const TranslatorOptions &options, const db::SharedDatabase &localeDatabase, const db::SharedDatabase &classDatabase) const
     {
+        // compatibility with API
+        Q_UNUSED(options)
+        Q_UNUSED(localeDatabase)
+        Q_UNUSED(classDatabase)
+
         if (!_class)
             return Code("\ninvalid class\n", "");
         checkDb();
+
         QString result(CLASS_TEMPLATE);
 
         entity::SharedTemplateClass tc(nullptr);
@@ -269,9 +305,9 @@ namespace translator {
                 pString.append(utility::sectionToString(p.second))
                        .append(" ")
                        .append(t ?
-                                   generateCode(t,
-                                                t->scopeId() == _class->scopeId() ? false : true,
-                                                tc ? tc->database() : nullptr).toHeader :
+                                   translate(t,
+                                             t->scopeId() == _class->scopeId() ? NoOptions : WithNamespace,
+                                             tc ? tc->database() : nullptr).toHeader :
                                    "unknown type");
                 parentsList << pString;
                 pString.clear();
@@ -291,9 +327,13 @@ namespace translator {
         return Code(result, "");
     }
 
-    Code ProjectTranslator::generateCode(const entity::SharedTemplateClass &_class) const
+    Code ProjectTranslator::translate(const entity::SharedTemplateClass &_class,
+                                      const TranslatorOptions &options,
+                                      const db::SharedDatabase &localeDatabase,
+                                      const db::SharedDatabase &classDatabase) const
     {
-        return generateCode(std::dynamic_pointer_cast<entity::Class>(_class));
+        // TODO: remove this method
+        return translate(std::dynamic_pointer_cast<entity::Class>(_class), options, localeDatabase, classDatabase);
     }
 
     Code ProjectTranslator::generateClassMethodsImpl(const entity::SharedClass &_class,
@@ -308,8 +348,9 @@ namespace translator {
         QString method;
         entity::SharedTemplateClass tc(std::dynamic_pointer_cast<entity::TemplateClass>(_class));
         for (auto &&m : _class->methods()) {
-            method = generateCode(m, localeDatabase).toHeader;
-            if (tc) method.prepend(TEMPLATE);
+            method = translate(m, NoOptions, localeDatabase).toHeader;
+            if (tc)
+                method.prepend(TEMPLATE);
             method.replace(m->name(), m->name().prepend(_class->name().append("::")));
             method.append("\n{\n}").append("\n");
 
@@ -339,11 +380,10 @@ namespace translator {
         return result;
     }
 
-    Code ProjectTranslator::generateCode(const entity::SharedExtendedType &extType,
-                                         bool withNamespace,
-                                         const db::SharedDatabase &localeDatabase,
-                                         const db::SharedDatabase &classDatabase,
-                                         bool alias) const
+    Code ProjectTranslator::translate(const entity::SharedExtendedType &extType,
+                                      const TranslatorOptions &options,
+                                      const db::SharedDatabase &localeDatabase,
+                                      const db::SharedDatabase &classDatabase) const
     {
         if (!extType)
             return Code("\ninvalid extended type\n", "");
@@ -356,10 +396,10 @@ namespace translator {
             auto t = utility::findType(extType->typeId(), localeDatabase, classDatabase,
                                        m_ProjectDatabase,
                                        m_GlobalDatabase);
-            result.replace("%name%", t ? this->generateCode(t, withNamespace, localeDatabase, classDatabase).toHeader : "");
-        } else {
+            result.replace("%name%", t ?
+                               this->translate(t, options, localeDatabase, classDatabase).toHeader : "");
+        } else
             result.remove("%name%");
-        }
 
         QString pl("");
         if (!extType->pl().isEmpty()) {
@@ -387,15 +427,16 @@ namespace translator {
         }
         result.replace("%template_params%", params);
 
-        if (alias && extType->name() != DEFAULT_NAME)
+        if ((options & WithAlias) && extType->name() != DEFAULT_NAME)
             result.prepend(QString("using %1 = ").arg(extType->name())).append(";");
 
         return Code(result, "");
     }
 
-    Code ProjectTranslator::generateCode(const entity::SharedField &field, bool withNamespace,
-                                         const db::SharedDatabase &localeDatabase,
-                                         const db::SharedDatabase &classDatabase) const
+    Code ProjectTranslator::translate(const entity::SharedField &field,
+                                      const TranslatorOptions  &options,
+                                      const db::SharedDatabase &localeDatabase,
+                                      const db::SharedDatabase &classDatabase) const
     {
         if (!field)
             return Code("\ninvalid field\n", "");
@@ -409,7 +450,7 @@ namespace translator {
         result.replace("%keywords%", keywords.isEmpty() ? "" : keywords.join(" ").append(" "));
 
         result.replace("%type%", generateCodeForExtTypeOrType(field->typeId(),
-                                                              withNamespace,
+                                                              options,
                                                               localeDatabase,
                                                               classDatabase));
         result.replace("%name%", field->fullName());
@@ -427,21 +468,23 @@ namespace translator {
         m_ProjectDatabase = projectDatabase;
     }
 
-    Code ProjectTranslator::generateCode(const entity::SharedType &type, bool withNamespace,
-                                         const db::SharedDatabase &localeDatabase, const db::SharedDatabase &classDatabase) const
+    Code ProjectTranslator::translate(const entity::SharedType &type, const TranslatorOptions &options,
+                                      const db::SharedDatabase &localeDatabase, const db::SharedDatabase &classDatabase) const
     {
         QStringList scopesNames;
         QString id = type->scopeId();
         entity::SharedScope scope = utility::findScope(id, localeDatabase, classDatabase, m_ProjectDatabase,
                                                        m_GlobalDatabase);
         while (id != GLOBAL_SCOPE_ID || id != LOCALE_TEMPLATE_SCOPE_ID) {
-            if (!scope) break;
-            if (scope->name() != DEFAULT_NAME) scopesNames.prepend(scope->name());
+            if (!scope)
+                break;
+            if (scope->name() != DEFAULT_NAME)
+                scopesNames.prepend(scope->name());
             id = scope->parentScopeId();
             scope = utility::findScope(id, localeDatabase, classDatabase, m_ProjectDatabase, m_GlobalDatabase);
         }
 
-        if (!scopesNames.isEmpty() && withNamespace) {
+        if (!scopesNames.isEmpty() && (options & WithNamespace)) {
             scopesNames << type->name();
             return Code(scopesNames.join("::"), "");
         }
