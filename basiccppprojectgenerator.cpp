@@ -1,3 +1,5 @@
+#include <QMap>
+
 #include "basiccppprojectgenerator.h"
 #include "virtualdirectory.h"
 #include "database.h"
@@ -22,35 +24,28 @@ namespace {
         return code;
     }
 
-    translator::Code generateCode(const entity::SharedType &type, const translator::ProjectTranslator &translator)
+    using CodeMap = QMap<entity::UserType,
+                         std::function<translator::Code(const entity::SharedType &, const translator::ProjectTranslator &)>>;
+
+    const CodeMap codeMap
+        {{entity::BasicType, [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+                return translator.translate(type); }
+         }, {entity::EnumType, [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+                return translator.translate(std::static_pointer_cast<entity::Enum>(type)); }
+         }, {entity::ExtendedTypeType, [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+                return translator.translate(std::static_pointer_cast<entity::ExtendedType>(type)); }
+         }, {entity::UnionType, [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+                return translator.translate(std::static_pointer_cast<entity::Union>(type)); }
+         }, {entity::TemplateClassType, [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+                return generateHelper<entity::TemplateClass>(type, translator); }
+         }, {entity::UserClassType, [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+                return generateHelper<entity::Class>(type, translator); }
+         }};
+
+    translator::Code gen(const entity::SharedType &type, const translator::ProjectTranslator &translator)
     {
-        translator::Code code;
-        switch (type->type()) {
-            case entity::BasicType:
-                code = translator.translate(type);
-                break;
-            case entity::EnumType:
-                code =  translator.translate(std::static_pointer_cast<entity::Enum>(type));
-                break;
-            case entity::ExtendedTypeType:
-                code =  translator.translate(std::static_pointer_cast<entity::ExtendedType>(type));
-                break;
-            case entity::UnionType:
-                code =  translator.translate(std::static_pointer_cast<entity::Union>(type));
-                break;
-            case entity::TemplateClassType:
-                code = generateHelper<entity::TemplateClass>(type, translator);
-                break;
-            case entity::UserClassType:
-                code = generateHelper<entity::Class>(type, translator);
-                break;
-            default:
-                break;
-        }
-
-        return code;
+        return codeMap[type->type()](type, translator);
     }
-
 }
 
 namespace generator {
@@ -95,7 +90,7 @@ namespace generator {
                                        directory->addDirectory(scope->name().toLower()) : directory);
 
         for (auto &&t : scope->types()) {
-            translator::Code code(generateCode(t, m_ProjectTranslator));
+            translator::Code code(gen(t, m_ProjectTranslator));
 
             QString name(t->name().toLower());
             if (!code.toSource.isEmpty())
