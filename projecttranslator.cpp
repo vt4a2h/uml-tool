@@ -332,8 +332,7 @@ namespace translator {
                                       const db::SharedDatabase &localeDatabase,
                                       const db::SharedDatabase &classDatabase) const
     {
-        // TODO: remove this method
-        return translate(std::dynamic_pointer_cast<entity::Class>(_class), options, localeDatabase, classDatabase);
+        return translate(std::static_pointer_cast<entity::Class>(_class), options, localeDatabase, classDatabase);
     }
 
     Code ProjectTranslator::generateClassMethodsImpl(const entity::SharedClass &_class,

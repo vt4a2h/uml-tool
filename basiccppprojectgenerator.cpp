@@ -11,6 +11,48 @@
 #include "extendedtype.h"
 #include "code.h"
 
+namespace {
+
+    template <class T>
+    translator::Code generateHelper(const entity::SharedType &type, const translator::ProjectTranslator &translator)
+    {
+        std::shared_ptr<T> t(std::static_pointer_cast<T>(type));
+        translator::Code code(translator.translate(t));
+        code.join(translator.generateClassMethodsImpl(t));
+        return code;
+    }
+
+    translator::Code generateCode(const entity::SharedType &type, const translator::ProjectTranslator &translator)
+    {
+        translator::Code code;
+        switch (type->type()) {
+            case entity::BasicType:
+                code = translator.translate(type);
+                break;
+            case entity::EnumType:
+                code =  translator.translate(std::static_pointer_cast<entity::Enum>(type));
+                break;
+            case entity::ExtendedTypeType:
+                code =  translator.translate(std::static_pointer_cast<entity::ExtendedType>(type));
+                break;
+            case entity::UnionType:
+                code =  translator.translate(std::static_pointer_cast<entity::Union>(type));
+                break;
+            case entity::TemplateClassType:
+                code = generateHelper<entity::TemplateClass>(type, translator);
+                break;
+            case entity::UserClassType:
+                code = generateHelper<entity::Class>(type, translator);
+                break;
+            default:
+                break;
+        }
+
+        return code;
+    }
+
+}
+
 namespace generator {
 
     BasicCppProjectGenerator::BasicCppProjectGenerator()
@@ -53,36 +95,7 @@ namespace generator {
                                        directory->addDirectory(scope->name().toLower()) : directory);
 
         for (auto &&t : scope->types()) {
-            // temporary solution
-            translator::Code code;
-            switch (t->type()) {
-            case entity::BasicType:
-                code = m_ProjectTranslator.translate(t);
-                break;
-            case entity::EnumType:
-                code = m_ProjectTranslator.translate(std::static_pointer_cast<entity::Enum>(t));
-                break;
-            case entity::ExtendedTypeType:
-                code = m_ProjectTranslator.translate(std::static_pointer_cast<entity::ExtendedType>(t));
-                break;
-            case entity::TemplateClassType:
-                code = m_ProjectTranslator.translate(std::static_pointer_cast<entity::TemplateClass>(t));
-                break;
-            case entity::UnionType:
-                code = m_ProjectTranslator.translate(std::static_pointer_cast<entity::Union>(t));
-                break;
-            case entity::UserClassType:
-                code = m_ProjectTranslator.translate(std::static_pointer_cast<entity::Class>(t));
-                break;
-            default:
-                code = m_ProjectTranslator.translate(t);
-                break;
-            }
-            // end of temporary solution
-
-            // TODO: delete after refactoring
-            if (auto classPtr = std::dynamic_pointer_cast<entity::Class>(t))
-                code.join(m_ProjectTranslator.generateClassMethodsImpl(classPtr));
+            translator::Code code(generateCode(t, m_ProjectTranslator));
 
             QString name(t->name().toLower());
             if (!code.toSource.isEmpty())
