@@ -51,32 +51,32 @@ namespace utility {
     std::shared_ptr<relationship::Relation> makeRelation(relationship::RelationType relation);
     std::shared_ptr<entity::ClassMethod> makeMethod(entity::ClassMethodType methodType);
 
+    QStringList scopesNamesList(const entity::SharedType &type, const db::SharedDatabase &db);
+
     template <class D>
     std::shared_ptr<entity::Type> findType(const QString &id, const D &database)
     {
-        return (database ? database->depthTypeSearch(id) : nullptr);
+        return database ? database->depthTypeSearch(id) : nullptr;
     }
 
     template <class D, class... Args>
     std::shared_ptr<entity::Type> findType(const QString &id, const D &database, const Args&... args)
     {
         auto result = findType(id, database);
-        if (!result) return findType(id, args...);
-        return result;
+        return result ? result : findType(id, args...);
     }
 
     template <class D>
     std::shared_ptr<entity::Scope> findScope(const QString &id, const D &database)
     {
-        return (database ? database->depthScopeSearch(id) : nullptr);
+        return database ? database->depthScopeSearch(id) : nullptr;
     }
 
     template <class D, class... Args>
     std::shared_ptr<entity::Scope> findScope(const QString &id, const D &database, const Args&... args)
     {
         auto result = findScope(id, database);
-        if (!result) return findScope(id, args...);
-        return result;
+        return result ? result : findScope(id, args...);
     }
 
     template <class List>

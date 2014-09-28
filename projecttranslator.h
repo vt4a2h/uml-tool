@@ -65,6 +65,8 @@ namespace translator {
                                       const db::SharedDatabase &localeDatabase = nullptr) const;
         Code generateClassMethodsImpl(const entity::SharedTemplateClass &_class) const;
 
+        void addNamespace(const entity::SharedType &type, Code &code);
+
     private:
         void checkDb() const;
         void makeCallbacks();

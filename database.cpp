@@ -76,7 +76,7 @@ namespace db {
 
     entity::SharedScope Database::getScope(const QString &id) const
     {
-        return (m_Scopes.contains(id) ? m_Scopes[id] : nullptr);
+        return m_Scopes.contains(id) ? m_Scopes[id] : nullptr;
     }
 
     entity::SharedScope Database::addScope(const QString &name, const QString &parentScopeId)

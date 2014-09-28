@@ -91,6 +91,7 @@ namespace generator {
 
         for (auto &&t : scope->types()) {
             translator::Code code(gen(t, m_ProjectTranslator));
+            m_ProjectTranslator.addNamespace(t, code);
 
             QString name(t->name().toLower());
             if (!code.toSource.isEmpty())

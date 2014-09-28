@@ -16,6 +16,7 @@
 #include "enum.h"
 #include "database.h"
 #include "scope.h"
+#include "constants.cpp"
 
 #include <functional>
 
@@ -125,6 +126,21 @@ namespace utility {
     QString sectionToString(entity::Section section)
     {
         return mapSearchHelper(kSection, section, QString("unknown"));
+    }
+
+    QStringList scopesNamesList(const entity::SharedType &type, const db::SharedDatabase &db)
+    {
+        QStringList result;
+        entity::SharedScope scope(db->depthScopeSearch(type->scopeId()));
+        QString id(scope ? scope->id() : GLOBAL_SCOPE_ID);
+
+        while (scope && id != GLOBAL_SCOPE_ID) {
+            result << scope->name();
+            id = scope->parentScopeId();
+            scope = db->depthScopeSearch(id);
+        }
+
+        return result;
     }
 
 }

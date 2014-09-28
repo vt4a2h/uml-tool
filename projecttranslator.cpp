@@ -379,6 +379,25 @@ namespace translator {
         return result;
     }
 
+    void ProjectTranslator::addNamespace(const entity::SharedType &type, Code &code)
+    {
+        if (!type || !m_ProjectDatabase)
+            return;
+
+        // TODO: add right indent
+        QStringList scopesNames(utility::scopesNamesList(type,m_ProjectDatabase));
+        QString scopeTemplate(SCOPE_TEMPLATE);
+        while (!scopesNames.isEmpty()) {
+            if (!code.toHeader.isEmpty())
+                code.toHeader = scopeTemplate.replace("%name%", scopesNames.front())
+                                             .replace("%code%", code.toHeader);
+            if (!code.toSource.isEmpty())
+                code.toSource = scopeTemplate.replace("%name%", scopesNames.front())
+                                             .replace("%code%", code.toSource);
+            scopesNames.pop_front();
+        }
+    }
+
     Code ProjectTranslator::translate(const entity::SharedExtendedType &extType,
                                       const TranslatorOptions &options,
                                       const db::SharedDatabase &localeDatabase,
