@@ -16,6 +16,25 @@
 #include "constants.cpp"
 #include "code.h"
 
+namespace {
+
+    void addNamesapceHelper(QString &code, const QStringList &scopesNames, const QString &indent)
+    {
+        QString scopeTemplate(SCOPE_TEMPLATE);
+
+        if (!code.isEmpty()) {
+            if (!indent.isEmpty()) {
+                code.prepend(indent);
+                code.replace("\n", "\n" + indent);
+            }
+
+            code = scopeTemplate.replace("%name%", scopesNames.front())
+                                .replace("%code%", code);
+        }
+    }
+
+}
+
 namespace translator {
 
     ProjectTranslator::ProjectTranslator()
@@ -379,21 +398,21 @@ namespace translator {
         return result;
     }
 
-    void ProjectTranslator::addNamespace(const entity::SharedType &type, Code &code)
+    void ProjectTranslator::addNamespace(const entity::SharedType &type, Code &code, uint indentCount)
     {
         if (!type || !m_ProjectDatabase)
             return;
 
-        // TODO: add right indent
+        QString newIndent;
+        while (indentCount != 0) {
+            newIndent.append(INDENT);
+            --indentCount;
+        }
+
         QStringList scopesNames(utility::scopesNamesList(type,m_ProjectDatabase));
-        QString scopeTemplate(SCOPE_TEMPLATE);
         while (!scopesNames.isEmpty()) {
-            if (!code.toHeader.isEmpty())
-                code.toHeader = scopeTemplate.replace("%name%", scopesNames.front())
-                                             .replace("%code%", code.toHeader);
-            if (!code.toSource.isEmpty())
-                code.toSource = scopeTemplate.replace("%name%", scopesNames.front())
-                                             .replace("%code%", code.toSource);
+            addNamesapceHelper(code.toHeader, scopesNames, newIndent);
+            addNamesapceHelper(code.toSource, scopesNames, newIndent);
             scopesNames.pop_front();
         }
     }

@@ -95,7 +95,7 @@ namespace generator {
 
             QString name(t->name().toLower());
             if (!code.toSource.isEmpty())
-                code.toSource.prepend("\n").prepend(QString("#include \"%1.h\"").arg(name));
+                code.toSource.prepend(QString("#include \"%1.h\"\n\n").arg(name));
 
             auto addFile = [&](const QString &data, const QString &ext, QStringList &section) {
                 QString fname(name + ext);
