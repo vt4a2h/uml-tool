@@ -74,6 +74,11 @@ namespace generator {
         m_Options = options;
     }
 
+    void AbstractProjectGenerator::addOption(AbstractProjectGenerator::GeneratorOption option)
+    {
+        m_Options |= option;
+    }
+
     QString AbstractProjectGenerator::projectName() const
     {
         return m_ProjectName;

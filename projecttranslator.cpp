@@ -28,6 +28,7 @@ namespace {
 
             code = scopeTemplate.replace("%name%", scopesNames.front())
                                 .replace("%code%", code);
+            code.append(" // namespace " + scopesNames.front());
         }
     }
 

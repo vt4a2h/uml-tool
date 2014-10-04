@@ -30,19 +30,18 @@ protected:
     db::SharedDatabase projectDb_ = std::make_shared<db::ProjectDatabase>("Project");
 
     entity::SharedScope globalScope_        = globalDb_->addScope();
-    entity::SharedScope firstProjectScope_  = projectDb_->addScope("first_scope");
-    entity::SharedScope secondProjectScope_ = projectDb_->addScope("second_scope");
-
-    entity::SharedClass firstClass_  = firstProjectScope_->addType<entity::Class>("FirstClass");
-    entity::SharedClass secondClass_ = secondProjectScope_->addType<entity::Class>("SecondClass");
+    entity::SharedScope standartScope_      = globalDb_->addScope("std");
 
     entity::SharedType int_    = globalScope_->addType("int");
+    entity::SharedType bool_   = globalScope_->addType("bool");
     entity::SharedType double_ = globalScope_->addType("double");
     entity::SharedType void_   = globalScope_->addType("void");
+    entity::SharedType string_ = standartScope_->addType("string");
 
     generator::SharedGenerator generator_;
 
     // file section
-    QString rootPath_ = QDir::current().path();
-    QChar   sep_      = QDir(rootPath_).separator();
+    QString rootPath_     = QDir::current().path();
+    QChar   sep_          = QDir(rootPath_).separator();
+    QString testDataPath_ = "../test_data/";
 };

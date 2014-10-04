@@ -16,12 +16,17 @@ namespace entity {
     }
 
     Field::Field(const QString &name, const QString &typeId)
-        : m_TypeId(typeId)
-        , m_Section(Public)
-        , m_Name(name)
-        , m_Prefix("")
-        , m_Suffix("")
+        : Field(name, typeId, "", Public)
     {
+    }
+
+    Field::Field(const QString &name, const QString &typeId, const QString &prefix, Section section)
+        : m_TypeId(typeId)
+        , m_Section(section)
+        , m_Name(name)
+        , m_Prefix(prefix)
+    {
+
     }
 
     bool operator==(const Field &lhs, const Field &rhs)

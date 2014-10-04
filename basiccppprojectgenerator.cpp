@@ -13,8 +13,6 @@
 #include "extendedtype.h"
 #include "code.h"
 
-#include <QDebug>
-
 namespace {
 
     template <class T>
@@ -96,8 +94,20 @@ namespace generator {
             m_ProjectTranslator.addNamespace(t, code);
 
             QString name(t->name().toLower());
-            if (!code.toSource.isEmpty())
-                code.toSource.prepend(QString("#include \"%1.h\"\n\n").arg(name));
+            if (!code.toSource.isEmpty()) {
+                  code.toSource.prepend(QString("#include \"%1.h\"\n\n").arg(name));
+            }
+
+            if (!code.toHeader.isEmpty()) {
+                if (m_Options & DefineIcludeGuard) {
+                    QString guardName = scope->name().toUpper() + "_" + t->name().toUpper() + "_H";
+                    code.toHeader.prepend("#define "  + guardName + "\n\n");
+                    code.toHeader.prepend("#ifndef "  + guardName + "\n");
+                    code.toHeader.append("\n\n#endif // " + guardName);
+                } else {
+                    code.toHeader.prepend("#pragma once\n\n");
+                }
+            }
 
             auto addFile = [&](const QString &data, const QString &ext, QStringList &section) {
                 QString fname(name + ext);
@@ -109,6 +119,7 @@ namespace generator {
                 addFile(code.toHeader, ".h", m_ProfileData.headers);
             if (!code.toSource.isEmpty())
                 addFile(code.toSource, ".cpp", m_ProfileData.sources);
+
         }
 
         for (auto &&s : scope->scopes())

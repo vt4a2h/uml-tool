@@ -2,11 +2,9 @@
 
 #include "type.h"
 #include "types.h"
+#include "enums.h"
 
 namespace entity {
-
-    enum Kind    : int;
-    enum Section : int;
 
     class   Class : public Type
     {
@@ -40,7 +38,8 @@ namespace entity {
         bool containsMethods(Section section) const;
         MethodsList methods(Section section) const;
 
-        SharedField addField(const QString &name, const QString &typeId);
+        SharedField addField(const QString &name, const QString &typeId,
+                             const QString prefix = "", Section section = Public);
         SharedField getField(const QString &name) const;
         bool containsField(const QString &name) const;
         void removeField(const QString &name);

@@ -16,6 +16,7 @@ namespace entity {
     public:
         Field();
         Field(const QString &name, const QString &typeId);
+        Field(const QString &name, const QString &typeId, const QString &prefix, Section section);
 
         friend bool operator== (const Field &lhs, const Field &rhs);
 

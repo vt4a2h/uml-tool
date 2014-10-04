@@ -8,7 +8,8 @@ namespace generator {
     public:
         enum GeneratorOption {
             NoOptions = 0x0,
-            NamespacesInSubfolders = 0x1
+            NamespacesInSubfolders = 0x1,
+            DefineIcludeGuard = 0x2, // pragma by default
         };
         Q_DECLARE_FLAGS(GeneratorOptions, GeneratorOption)
 
@@ -31,6 +32,7 @@ namespace generator {
 
        GeneratorOptions options() const;
        void setOptions(const GeneratorOptions &options);
+       void addOption(GeneratorOption option);
 
        QString projectName() const;
        void setProjectName(const QString &projectName);

@@ -916,22 +916,15 @@ TEST_F(FileJson, RealizationRelation)
     })
 }
 
-TEST_F(ProjectMaker, MakeProject)
+TEST_F(ProjectMaker, MakeClass)
 {
-    auto fieldA = firstClass_->addField("a", int_->id());
-    fieldA->setPrefix("m_");
-    fieldA->setSection(entity::Private);
+    auto scopeWork = projectDb_->addScope("work");
+    auto empClass  = scopeWork->addType<entity::Class>("Employee");
 
-    entity::SharedMethod getterA = firstClass_->makeMethod("getA");
-    getterA->setReturnTypeId(int_->id());
-    getterA->setConstStatus(true);
-    entity::SharedMethod setterA = firstClass_->makeMethod("setA");
-    entity::SharedExtendedType constLinkToInt(globalScope_->addType<entity::ExtendedType>());
-    constLinkToInt->setTypeId(int_->id());
-    constLinkToInt->setConstStatus(true);
-    constLinkToInt->addLinkStatus();
-    setterA->addParameter("a", constLinkToInt->id());
-    setterA->setReturnTypeId(void_->id());
+    empClass->addField("firstName", string_->id(), "m_", entity::Private);
+    empClass->addField("lastName",  string_->id(), "m_", entity::Private);
+    empClass->addField("status",    bool_->id(),   "m_", entity::Private);
+    empClass->addField("salary",    double_->id(), "m_", entity::Private);
 
     generator_->generate();
     generator_->writeToDisk();
