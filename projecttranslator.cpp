@@ -18,10 +18,8 @@
 
 namespace {
 
-    void addNamesapceHelper(QString &code, const QStringList &scopesNames, const QString &indent)
+    void addNamesapceHelper(QString &code, const QStringList &scopesNames, const QString &indent, QString scopeTemplate)
     {
-        QString scopeTemplate(SCOPE_TEMPLATE);
-
         if (!code.isEmpty()) {
             if (!indent.isEmpty()) {
                 code.prepend(indent);
@@ -411,8 +409,8 @@ namespace translator {
 
         QStringList scopesNames(utility::scopesNamesList(type,m_ProjectDatabase));
         while (!scopesNames.isEmpty()) {
-            addNamesapceHelper(code.toHeader, scopesNames, newIndent);
-            addNamesapceHelper(code.toSource, scopesNames, newIndent);
+            addNamesapceHelper(code.toHeader, scopesNames, newIndent, SCOPE_TEMPLATE_HEADER);
+            addNamesapceHelper(code.toSource, scopesNames, newIndent, SCOPE_TEMPLATE_SOURCE);
             scopesNames.pop_front();
         }
     }
@@ -434,7 +432,7 @@ namespace translator {
                                        m_ProjectDatabase,
                                        m_GlobalDatabase);
             result.replace("%name%", t ?
-                               this->translate(t, options, localeDatabase, classDatabase).toHeader : "");
+                this->translate(t, options, localeDatabase, classDatabase).toHeader : "");
         } else
             result.remove("%name%");
 

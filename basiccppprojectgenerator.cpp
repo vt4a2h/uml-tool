@@ -13,6 +13,8 @@
 #include "extendedtype.h"
 #include "code.h"
 
+#include <QDebug>
+
 namespace {
 
     template <class T>

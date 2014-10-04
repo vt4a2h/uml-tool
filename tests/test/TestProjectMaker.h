@@ -23,7 +23,7 @@ protected:
 
     virtual void TearDown() override
     {
-        EXPECT_TRUE(QDir(rootPath_).removeRecursively());
+//        EXPECT_TRUE(QDir(rootPath_).removeRecursively());
     }
 
     db::SharedDatabase globalDb_  = std::make_shared<db::Database>("Global");
