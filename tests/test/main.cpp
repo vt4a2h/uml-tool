@@ -926,6 +926,36 @@ TEST_F(ProjectMaker, MakeClass)
     empClass->addField("status",    bool_->id(),   "m_", entity::Private);
     empClass->addField("salary",    double_->id(), "m_", entity::Private);
 
+    auto constLinkToString = globalScope_->addType<entity::ExtendedType>();
+    constLinkToString->setTypeId(string_->id());
+    constLinkToString->addLinkStatus();
+
+    empClass->makeMethod("Employee");
+
+    auto parCtor = empClass->makeMethod("Employee");
+    parCtor->addParameter("firstName", constLinkToString->id());
+    parCtor->addParameter("lastName", constLinkToString->id());
+
+    auto firstNameGetter = empClass->makeMethod("firstName");
+    firstNameGetter->setReturnTypeId(string_->id());
+    firstNameGetter->setConstStatus(true);
+    empClass->makeMethod("setFirstName")->addParameter("firstName", constLinkToString->id());
+
+    auto lastNameGetter = empClass->makeMethod("lastName");
+    lastNameGetter->setReturnTypeId(string_->id());
+    lastNameGetter->setConstStatus(true);
+    empClass->makeMethod("setLastName")->addParameter("lastName", constLinkToString->id());
+
+    auto isHired = empClass->makeMethod("isHired");
+    isHired->setConstStatus(true);
+    empClass->makeMethod("hire");
+    empClass->makeMethod("fire");
+
+    auto salaryGetter = empClass->makeMethod("salary");
+    salaryGetter->setReturnTypeId(double_->id());
+    salaryGetter->setConstStatus(true);
+    empClass->makeMethod("setSalary")->addParameter("salary", double_->id());
+
     generator_->generate();
     generator_->writeToDisk();
 }

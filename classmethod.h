@@ -14,6 +14,7 @@ namespace entity {
     enum LhsIdentificator : int;
     enum ClassMethodType  : int;
 
+    // TODO: add QString m_Body, for generate body if it's possible
     class ClassMethod
     {
     public:

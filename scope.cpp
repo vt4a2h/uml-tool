@@ -92,6 +92,12 @@ namespace entity {
         m_Types.insert(newType->id(), newType);
     }
 
+    SharedType Scope::addExistsType(const SharedType &type)
+    {
+        type->setScopeId(m_Id);
+        m_Types.insert(type->id(), type);
+    }
+
     bool Scope::containsType(const QString &typeId) const
     {
         return m_Types.contains(typeId);

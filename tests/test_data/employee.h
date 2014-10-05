@@ -9,8 +9,8 @@ namespace work {
         Employee(const std::string &firstName, const std::string &lastName);
         std::string firstName() const;
         void setFirstName(const std::string &firstName);
-        std::string secondName() const;
-        void setSecondName(const std::string &secondName);
+        std::string lastName() const;
+        void setLastName(const std::string &lastName);
         bool isHired() const;
         bool fire();
         bool hire();
@@ -19,7 +19,7 @@ namespace work {
 
     private:
         std::string m_firstName;
-        std::string m_secondName;
+        std::string m_lastName;
         bool m_status;
         double m_salary;
     };
