@@ -74,10 +74,11 @@ namespace entity {
         return value;
     }
 
-    template <class T = SharedType>
+    template <class T>
     T Scope::addExistsType(const T &type)
     {
-        type->setScopeId(m_Id)
+        type->setScopeId(m_Id);
+        return *m_Types.insert(type->id(), type);
     }
 
 } // namespace entity

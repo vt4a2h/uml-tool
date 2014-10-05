@@ -16,7 +16,7 @@ namespace entity {
         Type();
         Type(Type &&src);
         Type(const Type &src);
-        Type(const QString &name, const QString &scopeId);
+        Type(const QString &name, const QString &scopeId, const QString &typeId = "");
         virtual ~Type();
 
         Type &operator =(Type rhs);

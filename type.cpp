@@ -26,10 +26,10 @@ namespace entity {
         copyFrom(src);
     }
 
-    Type::Type(const QString &name, const QString &scopeId)
+    Type::Type(const QString &name, const QString &scopeId, const QString &typeId)
         : m_KindOfType(BasicType)
         , m_Name(name)
-        , m_Id(utility::genId())
+        , m_Id(typeId.isEmpty() ? utility::genId() : typeId)
         , m_ScopeId(scopeId)
     {
     }

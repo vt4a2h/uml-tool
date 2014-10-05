@@ -947,9 +947,10 @@ TEST_F(ProjectMaker, MakeClass)
     empClass->makeMethod("setLastName")->addParameter("lastName", constLinkToString->id());
 
     auto isHired = empClass->makeMethod("isHired");
+    isHired->setReturnTypeId(bool_->id());
     isHired->setConstStatus(true);
-    empClass->makeMethod("hire");
-    empClass->makeMethod("fire");
+    empClass->makeMethod("fire")->setReturnTypeId(bool_->id());
+    empClass->makeMethod("hire")->setReturnTypeId(bool_->id());
 
     auto salaryGetter = empClass->makeMethod("salary");
     salaryGetter->setReturnTypeId(double_->id());
@@ -958,6 +959,16 @@ TEST_F(ProjectMaker, MakeClass)
 
     generator_->generate();
     generator_->writeToDisk();
+
+    read_from(tstHeader, fTstHeader, testDataPath_ + "employee.h")
+    read_from(genHeader, fGenHeader, rootPath_ + sep_ + "employee.h")
+    EXPECT_EQ(tstHeader, genHeader)
+            << "Generated data for header must be the same with test data";
+
+    read_from(tstSource, fTstSource, testDataPath_ + "employee.cpp")
+    read_from(genSource, fGenSource, rootPath_ +  sep_ + "employee.cpp")
+    EXPECT_EQ(tstSource, genSource)
+            << "Generated data for source must be the same with test data";
 }
 
 int main(int argc, char **argv)

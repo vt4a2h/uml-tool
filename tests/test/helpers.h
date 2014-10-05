@@ -32,3 +32,14 @@ EXPECT_EQ(p, nullptr) << #method_name "() should return nullptr for invalid id";
     auto relation_comp(std::make_shared<relationship::Relation>());\
     setDb(relation_comp, m_Parameters);\
     json_eq(relation, relation_comp, #type);
+
+#define read_from(var_name, file_name, file_path)\
+    QString var_name;\
+    QFile file_name(file_path);\
+    if (file_name.open(QIODevice::ReadOnly | QIODevice::Text)) {\
+        QTextStream s(&file_name);\
+        var_name = s.readAll();\
+    }\
+    file_name.close();\
+    EXPECT_FALSE(var_name.isEmpty())\
+            << "Test data for " #file_path " shouldn't be empty";
