@@ -272,30 +272,30 @@ TEST_F(ProjectTranslatorTest, Class)
 
     QString futureResult("class Foo {};");
     auto code(_translator->translate(fooClass));
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "struct Foo {};";
     fooClass->setKind(entity::StructType);
     code = _translator->translate(fooClass);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "class Foo : public Bar {};";
     fooClass->setKind(entity::ClassType);
     auto barClass = _projectScope->addType<entity::Class>("Bar");
     fooClass->addParent(barClass->id(), entity::Public);
     code = _translator->translate(fooClass);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "class Foo : public Bar, protected Baz {};";
     auto bazClass = _projectScope->addType<entity::Class>("Baz");
     fooClass->addParent(bazClass->id(), entity::Protected);
     code = _translator->translate(fooClass);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     fooClass->removeParent(barClass->id());
     fooClass->removeParent(bazClass->id());
 
-    futureResult = QString("class Foo \n{\n"
+    futureResult = QString("class Foo\n{\n"
                            "%1private:\n"
                            "%1%1int a_;\n"
                            "%1%1Baz b_;\n"
@@ -312,7 +312,7 @@ TEST_F(ProjectTranslatorTest, Class)
     fooClass->removeField("a");
     fooClass->removeField("b");
 
-    futureResult = QString("class Foo \n{\n"
+    futureResult = QString("class Foo\n{\n"
                            "%1public:\n"
                            "%1%1int a;\n\n"
                            "%1protected:\n"
@@ -332,7 +332,7 @@ TEST_F(ProjectTranslatorTest, Class)
     fooClass->removeField("b");
 
 
-    futureResult = QString("class Foo \n{\n"
+    futureResult = QString("class Foo\n{\n"
                            "%1public:\n"
                            "%1%1int c() const;\n"
                            "%1%1void setC(const int &newC);\n\n"
@@ -361,7 +361,7 @@ TEST_F(ProjectTranslatorTest, Class)
 TEST_F(ProjectTranslatorTest, TemplateClass)
 {
     QString futureResult = QString("template <class T>\n"
-                                   "struct Node "
+                                   "struct Node"
                                    "{\n"
                                    "%1T data_;\n"
                                    "%1Node *next;\n"
@@ -928,11 +928,13 @@ TEST_F(ProjectMaker, MakeClass)
 
     auto constLinkToString = globalScope_->addType<entity::ExtendedType>();
     constLinkToString->setTypeId(string_->id());
+    constLinkToString->setConstStatus(true);
     constLinkToString->addLinkStatus();
 
-    empClass->makeMethod("Employee");
+    empClass->makeMethod("Employee")->setReturnTypeId(STUB_ID);
 
     auto parCtor = empClass->makeMethod("Employee");
+    parCtor->setReturnTypeId(STUB_ID);
     parCtor->addParameter("firstName", constLinkToString->id());
     parCtor->addParameter("lastName", constLinkToString->id());
 

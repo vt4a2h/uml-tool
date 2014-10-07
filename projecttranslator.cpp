@@ -23,7 +23,7 @@ namespace {
         if (!code.isEmpty()) {
             if (!indent.isEmpty()) {
                 code.prepend(indent);
-                code.replace("\n", "\n" + indent);
+                code.replace("\n", "\n" + indent); // TODO: add regex
             }
 
             code = scopeTemplate.replace("%name%", scopesNames.front())
@@ -309,7 +309,7 @@ namespace translator {
 
         result.replace("%kind%", _class->kind() == entity::ClassType ? "class " : "struct ");
 
-        result.replace("%name%", _class->name().append(" "));
+        result.replace("%name%", _class->name()/*.append(" ")*/);
 
         QString parents("");
         if (_class->anyParents()) {
@@ -330,7 +330,9 @@ namespace translator {
                 parentsList << pString;
                 pString.clear();
             }
-            parents.append(": ").append(parentsList.join(", ")).append(" ");
+            parents.append(" : ")
+                   .append(parentsList.join(", "))
+                   .append(!parentsList.isEmpty() ? " " : "");
         }
         if (_class->kind() == entity::ClassType &&
            (_class->anyFields() || _class->anyMethods())) parents.append("\n");
@@ -341,6 +343,9 @@ namespace translator {
         generateClassSection(_class, tc ? tc->database() : nullptr, entity::Protected, section);
         generateClassSection(_class, tc ? tc->database() : nullptr, entity::Private, section);
         result.replace("%section%", section);
+
+        if (section.isEmpty() && parents.isEmpty())
+           result.replace(_class->name(), _class->name() + " ");
 
         return Code(result, "");
     }
