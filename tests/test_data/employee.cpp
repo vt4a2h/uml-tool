@@ -1,7 +1,8 @@
 #include "employee.h"
 
-namespace work {
-
+namespace work
+{
+    
     Employee::Employee()
     {
     }
@@ -23,6 +24,18 @@ namespace work {
     }
 
     void Employee::setLastName(const std::string &lastName)
+    {
+    }
+
+    bool Employee::isHired() const
+    {
+    }
+
+    bool Employee::fire()
+    {
+    }
+
+    bool Employee::hire()
     {
     }
 

@@ -16,6 +16,8 @@
 #include "constants.cpp"
 #include "code.h"
 
+#include <QRegularExpression>
+
 namespace {
 
     void addNamesapceHelper(QString &code, const QStringList &scopesNames, const QString &indent, QString scopeTemplate)
@@ -23,7 +25,7 @@ namespace {
         if (!code.isEmpty()) {
             if (!indent.isEmpty()) {
                 code.prepend(indent);
-                code.replace("\n", "\n" + indent); // TODO: add regex
+                code.replace(QRegularExpression("(\n)(.)"), "\\1" + indent + "\\2");
             }
 
             code = scopeTemplate.replace("%name%", scopesNames.front())
