@@ -12,6 +12,7 @@
 #include "templateclass.h"
 #include "extendedtype.h"
 #include "code.h"
+#include "templates.cpp"
 
 namespace {
 
@@ -128,13 +129,21 @@ namespace generator {
 
     void BasicCppProjectGenerator::addProfile()
     {
+        // TODO: add different strateges for different project types
         QString name(m_ProjectName.remove(" ").toLower());
         name.append(".pro");
 
         auto file = m_RootOutputDirectory->addFile(name);
-        // NOTE: tmp output
-        file->appendData(m_ProfileData.headers.join(", "), "")
-             .appendData(m_ProfileData.sources.join(", "));
+
+        // TODO: add more variables
+        m_ProfileData.variables["HEADERS"] = m_ProfileData.headers.join(" \\\n" + INDENT).append("\n");
+        m_ProfileData.variables["SOURCES"] = m_ProfileData.sources.join(" \\\n" + INDENT);
+
+        for (auto &&key : m_ProfileData.variables.keys())
+           file->appendData(QString("%1 %2 \\\n%3%4").arg(key,
+                                                          "=",
+                                                          INDENT,
+                                                          m_ProfileData.variables[key]));
     }
 
 } // namespace generator

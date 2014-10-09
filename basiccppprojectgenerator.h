@@ -8,6 +8,8 @@ namespace generator {
     {
         QStringList headers;
         QStringList sources;
+
+        ProfileVariables variables;
     };
 
     class BasicCppProjectGenerator final : public AbstractProjectGenerator

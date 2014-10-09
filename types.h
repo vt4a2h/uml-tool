@@ -110,4 +110,7 @@ namespace generator {
 
     class AbstractProjectGenerator;
     using SharedGenerator = std::shared_ptr<AbstractProjectGenerator>;
+
+    using ProfileVariables = QMap<QString,   // name
+                                  QString>; // value
 }
