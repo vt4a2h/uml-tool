@@ -64,7 +64,6 @@ namespace translator {
         if (!t)
             return "";
 
-        // TODO: remove after refactoring
         entity::SharedExtendedType st = nullptr;
         if (t->type() == entity::ExtendedTypeType)
             st = std::dynamic_pointer_cast<entity::ExtendedType>(t);

@@ -9,6 +9,9 @@ namespace entity {
     // TODO: add methods for generate dtor, ctor, getter and setter
     // TODO: add includes to header and to source
     // TODO: add forward declaration possibilities
+
+    // TODO: add empty string between methods and fields
+    // TODO: add insert comment posibility
     class   Class : public Type
     {
     public:

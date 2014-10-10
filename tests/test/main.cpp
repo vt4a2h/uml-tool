@@ -973,6 +973,14 @@ TEST_F(ProjectMaker, MakeClass)
             << "Generated data for source must be the same with test data";
 }
 
+TEST_F(ProjectMaker, MakeTemplateClass)
+{
+    auto memoryScope = projectDb_->addScope("memory");
+    auto empClass    = scopeWork->addType<entity::Class>("shared_pointer");
+
+    // TODO: finish
+}
+
 int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

@@ -15,6 +15,7 @@ namespace entity {
     enum ClassMethodType  : int;
 
     // TODO: add QString m_Body, for generate body if it's possible
+    // TODO: add dtor and ctor types
     class ClassMethod
     {
     public:
