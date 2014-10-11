@@ -47,6 +47,9 @@ namespace entity {
         void removeSuffix();
         void setSuffix(const QString &suffix);
 
+        QString defaultValue() const;
+        void setDefaultValue(const QString &defaultValue);
+
         virtual Field *clone() const;
 
         void writeToFile(const QString &fileName) const;
@@ -58,6 +61,7 @@ namespace entity {
         QString m_Name;
         QString m_Prefix;
         QString m_Suffix;
+        QString m_DefaultValue;
 
         FieldKeywords m_Keywords;
     };

@@ -32,11 +32,12 @@ protected:
     entity::SharedScope globalScope_        = globalDb_->addScope();
     entity::SharedScope standartScope_      = globalDb_->addScope("std");
 
-    entity::SharedType int_    = globalScope_->addType("int");
-    entity::SharedType bool_   = globalScope_->addType("bool");
-    entity::SharedType double_ = globalScope_->addType("double");
-    entity::SharedType void_   = globalScope_->addExistsType(std::make_shared<entity::Type>("void", "", VOID_ID));
-    entity::SharedType string_ = standartScope_->addType("string");
+    entity::SharedType int_     = globalScope_->addType("int");
+    entity::SharedType bool_    = globalScope_->addType("bool");
+    entity::SharedType double_  = globalScope_->addType("double");
+    entity::SharedType void_    = globalScope_->addExistsType(std::make_shared<entity::Type>("void", "", VOID_ID));
+    entity::SharedType nullptr_ = globalScope_->addType("nullptr");
+    entity::SharedType string_  = standartScope_->addType("string");
 
     generator::SharedGenerator generator_;
 

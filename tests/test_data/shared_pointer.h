@@ -1,6 +1,6 @@
 namespace memory
 {
-    template<class Value>
+    template <class Value>
     class shared_pointer
     {
     public:

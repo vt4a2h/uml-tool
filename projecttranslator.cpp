@@ -497,6 +497,9 @@ namespace translator {
                                                               classDatabase));
         result.replace("%name%", field->fullName());
 
+        if (!field->defaultValue().isEmpty())
+            result.append( " = " + field->defaultValue() );
+
         return Code(result, "");
     }
 

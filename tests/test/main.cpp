@@ -975,10 +975,33 @@ TEST_F(ProjectMaker, MakeClass)
 
 TEST_F(ProjectMaker, MakeTemplateClass)
 {
-    auto memoryScope = projectDb_->addScope("memory");
-    auto empClass    = scopeWork->addType<entity::Class>("shared_pointer");
+    auto scopeMemory = projectDb_->addScope("memory");
+    auto ptrClass    = scopeMemory->addType<entity::TemplateClass>("shared_pointer");
+    auto linkToPtr   = globalScope_->addType<entity::ExtendedType>();
+    linkToPtr->setTypeId(ptrClass->id());
+    linkToPtr->addLinkStatus();
 
-    // TODO: finish
+    auto typeT       = ptrClass->addLocaleType("Value");
+    ptrClass->addTemplateParameter(typeT->id());
+
+    auto pointerToT = ptrClass->addLocaleType<entity::ExtendedType>();
+    pointerToT->setTypeId(typeT->id());
+    pointerToT->addPointerStatus();
+
+    auto cPointerToT = ptrClass->addLocaleType<entity::ExtendedType>();
+    cPointerToT->setTypeId(typeT->id());
+    cPointerToT->addPointerStatus();
+    cPointerToT->setConstStatus(true);
+
+    auto ctor = ptrClass->makeMethod("shared_pointer");
+    ctor->setReturnTypeId(STUB_ID);
+    ctor->addLhsIdentificator(entity::Explicit);
+    ctor->addParameter("value", pointerToT->id())->setDefaultValue("nullptr");
+
+    // TODO: fix test
+
+    generator_->generate();
+    generator_->writeToDisk();
 }
 
 int main(int argc, char **argv)

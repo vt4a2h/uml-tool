@@ -26,7 +26,6 @@ namespace entity {
         , m_Name(name)
         , m_Prefix(prefix)
     {
-
     }
 
     bool operator==(const Field &lhs, const Field &rhs)
@@ -36,7 +35,8 @@ namespace entity {
                lhs.m_Name     == rhs.m_Name     &&
                lhs.m_Prefix   == rhs.m_Prefix   &&
                lhs.m_Suffix   == rhs.m_Suffix   &&
-               lhs.m_Keywords == rhs.m_Keywords;
+               lhs.m_Keywords == rhs.m_Keywords &&
+               lhs.m_DefaultValue == rhs.m_DefaultValue;
     }
 
     QString Field::name() const
@@ -73,7 +73,7 @@ namespace entity {
     {
         m_Prefix.clear();
     }
-    
+
     void Field::setPrefix(const QString &prefix)
     {
         m_Prefix = prefix;
@@ -123,6 +123,7 @@ namespace entity {
         result.insert("Name", m_Name);
         result.insert("Prefix", m_Prefix);
         result.insert("Suffix", m_Suffix);
+        result.insert("DefaultValue", m_DefaultValue);
 
         QJsonArray keywords;
         for (auto keyword : m_Keywords) keywords.append(keyword);
@@ -133,16 +134,30 @@ namespace entity {
 
     void Field::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Type ID", errorList, [&src, this](){ m_TypeId = src["Type ID"].toString(); });
-        utility::checkAndSet(src, "Section", errorList, [&src, this](){ m_Section = static_cast<Section>(src["Section"].toInt()); });
-        utility::checkAndSet(src, "Name",    errorList, [&src, this](){ m_Name = src["Name"].toString(); });
-        utility::checkAndSet(src, "Prefix",  errorList, [&src, this](){ m_Prefix = src["Prefix"].toString(); });
-        utility::checkAndSet(src, "Suffix",  errorList, [&src, this](){ m_Suffix = src["Suffix"].toString(); });
+        utility::checkAndSet(src, "Type ID", errorList, [&src, this](){
+            m_TypeId = src["Type ID"].toString();
+        });
+        utility::checkAndSet(src, "Section", errorList, [&src, this](){
+            m_Section = static_cast<Section>(src["Section"].toInt());
+        });
+        utility::checkAndSet(src, "Name",    errorList, [&src, this](){
+            m_Name = src["Name"].toString();
+        });
+        utility::checkAndSet(src, "Prefix",  errorList, [&src, this](){
+            m_Prefix = src["Prefix"].toString();
+        });
+        utility::checkAndSet(src, "Suffix",  errorList, [&src, this](){
+            m_Suffix = src["Suffix"].toString();
+        });
+        utility::checkAndSet(src, "DefaultValue",  errorList, [&src, this](){
+            m_DefaultValue = src["DefaultValue"].toString();
+        });
 
         m_Keywords.clear();
         utility::checkAndSet(src, "Keywords", errorList, [&src, &errorList, this](){
             if (src["Keywords"].isArray()) {
-                for (auto &&value : src["Keywords"].toArray()) m_Keywords.insert(static_cast<FieldKeyword>(value.toInt()));
+                for (auto &&value : src["Keywords"].toArray())
+                    m_Keywords.insert(static_cast<FieldKeyword>(value.toInt()));
             } else {
                 errorList << "Error: \"Keywords\" is not array";
             }
@@ -162,6 +177,16 @@ namespace entity {
     void Field::setSuffix(const QString &suffix)
     {
        m_Suffix = suffix;
+    }
+
+    QString Field::defaultValue() const
+    {
+        return m_DefaultValue;
+    }
+
+    void Field::setDefaultValue(const QString &defaultValue)
+    {
+        m_DefaultValue = defaultValue;
     }
 
     Field *Field::clone() const
