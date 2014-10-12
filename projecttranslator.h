@@ -14,6 +14,7 @@ namespace translator {
             WithNamespace   = 0x1,
             WithAlias       = 0x2,
             GenerateNumbers = 0x4,
+            NoLhs           = 0x8,
         };
         Q_DECLARE_FLAGS(TranslatorOptions, TranslatorOption)
 

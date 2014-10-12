@@ -221,10 +221,12 @@ namespace translator {
         }
 
         QString lhsIds("");
-        QStringList lhsIdsList;
-        for (auto &&lhsId : method->lhsIdentificators())
-            lhsIdsList << utility::methodLhsIdToString(lhsId);
-        if (!lhsIdsList.isEmpty()) lhsIds.append(lhsIdsList.join(" ")).append(" ");
+        if (!(options & NoLhs)) {
+            QStringList lhsIdsList;
+            for (auto &&lhsId : method->lhsIdentificators())
+                lhsIdsList << utility::methodLhsIdToString(lhsId);
+            if (!lhsIdsList.isEmpty()) lhsIds.append(lhsIdsList.join(" ")).append(" ");
+        }
         result.replace("%lhs_k%", lhsIds);
 
         result.replace("%r_type%", generateCodeForExtTypeOrType(method->returnTypeId(),
@@ -371,7 +373,7 @@ namespace translator {
         QString method;
         entity::SharedTemplateClass tc(std::dynamic_pointer_cast<entity::TemplateClass>(_class));
         for (auto &&m : _class->methods()) {
-            method = translate(m, NoOptions, localeDatabase).toHeader;
+            method = translate(m, NoLhs, localeDatabase).toHeader;
             if (tc)
                 method.prepend(TEMPLATE);
             method.replace(m->name(), m->name().prepend(_class->name().append("::")));
