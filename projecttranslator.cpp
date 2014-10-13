@@ -119,7 +119,8 @@ namespace translator {
 
     void ProjectTranslator::generateTemplatePart(QString &result, const entity::SharedTemplate &t, bool withDefaultTypes) const
     {
-        if (!t) return;
+        if (!t)
+           return;
 
         result.prepend(TEMPLATE_TEMPLATE + "\n");
         QStringList parameters;
@@ -290,7 +291,10 @@ namespace translator {
         return Code(result, "");
     }
 
-    Code ProjectTranslator::translate(const entity::SharedClass &_class, const TranslatorOptions &options, const db::SharedDatabase &localeDatabase, const db::SharedDatabase &classDatabase) const
+    Code ProjectTranslator::translate(const entity::SharedClass &_class,
+                                      const TranslatorOptions &options,
+                                      const db::SharedDatabase &localeDatabase,
+                                      const db::SharedDatabase &classDatabase) const
     {
         // compatibility with API
         Q_UNUSED(options)
@@ -376,8 +380,12 @@ namespace translator {
             method = translate(m, NoLhs, localeDatabase).toHeader;
             if (tc)
                 method.prepend(TEMPLATE);
+
             method.replace(m->name(), m->name().prepend(_class->name().append("::")));
-            method.append("\n{\n}").append("\n");
+            method.append("\n{\n}");
+
+            if (!tc)
+                method.append("\n");
 
             (toHeader(m, tc ? tc->database() : nullptr) ? methodsH : methodsCpp) << method;
             method.clear();
@@ -388,7 +396,8 @@ namespace translator {
 
     Code ProjectTranslator::generateClassMethodsImpl(const entity::SharedTemplateClass &_class) const
     {
-        if (!_class) return Code("\ninvalid template class\n", "\ninvalid template class\n");
+        if (!_class)
+           return Code("\ninvalid template class\n", "\ninvalid template class\n");
         checkDb();
 
         QString templatePart;
@@ -398,9 +407,13 @@ namespace translator {
         QString methodTemplatePart(templatePart);
         methodTemplatePart.remove("template ").remove("class ").remove("\n");
 
-        Code result(generateClassMethodsImpl(std::dynamic_pointer_cast<entity::Class>(_class), _class->database()));
+        Code result(generateClassMethodsImpl(std::dynamic_pointer_cast<entity::Class>(_class),
+                                             _class->database()));
         result.toHeader.replace(TEMPLATE, templatePart);
-        result.toHeader.replace(_class->name(), _class->name().append(methodTemplatePart));
+        QString newName(_class->name().append(methodTemplatePart));
+        result.toHeader.replace(result.toHeader.indexOf(_class->name()), _class->name().size(),
+                                newName);
+        result.toHeader.prepend("\n");
 
         return result;
     }

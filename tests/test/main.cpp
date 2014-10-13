@@ -438,10 +438,10 @@ TEST_F(ProjectTranslatorTest, ClassImplementation)
 
 TEST_F(ProjectTranslatorTest, TemplateClassImplementation)
 {
-    QString futureResult("template <class Value, class Deleter>\n"
+    QString futureResult("\ntemplate <class Value, class Deleter>\n"
                          "void ScopedPointer<Value, Deleter>::reset(Value *other)\n"
                          "{\n"
-                         "}\n");
+                         "}");
 
     entity::SharedType voidType(_globalScope->addType("void"));
 
