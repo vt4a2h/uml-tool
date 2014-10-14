@@ -7,6 +7,7 @@
 
 namespace entity {
 
+    // TODO: add existing type posibilities
     class Template
     {
     public:

@@ -998,7 +998,26 @@ TEST_F(ProjectMaker, MakeTemplateClass)
     ctor->addLhsIdentificator(entity::Explicit);
     ctor->addParameter("value", pointerToT->id())->setDefaultValue("nullptr");
 
-    // TODO: fix test
+    ptrClass->makeMethod("~shared_pointer")->setReturnTypeId(STUB_ID);
+
+    auto resetMethod = ptrClass->makeMethod("reset");
+    resetMethod->addParameter("other", pointerToT->id())->setDefaultValue("nullptr");
+
+    auto useCountMethod = ptrClass->makeMethod("use_count");
+    useCountMethod->setReturnTypeId(uint_->id());
+    useCountMethod->setConstStatus(true);
+
+    auto getter = ptrClass->makeMethod("get");
+    getter->setReturnTypeId(cPointerToT->id());
+    getter->setConstStatus(true);
+
+    ptrClass->makeMethod("get")->setReturnTypeId(pointerToT->id());
+
+    auto swapMethod = ptrClass->makeMethod("swap");
+    swapMethod->addParameter("src", linkToPtr->id());
+    swapMethod->setSection(entity::Private);
+
+    // TODO: fix template part generation
 
     generator_->generate();
     generator_->writeToDisk();

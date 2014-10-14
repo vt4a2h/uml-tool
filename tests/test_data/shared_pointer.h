@@ -7,7 +7,7 @@ namespace memory
         explicit shared_pointer(Value *value = nullptr);
         ~shared_pointer();
         void reset(Value *other = nullptr);
-        size_t use_count() const;
+        uint use_count() const;
         const Value *get() const;
         Value *get();
 
@@ -31,7 +31,7 @@ namespace memory
     }
 
     template<class Value>
-    size_t shared_pointer<Value>::use_count() const
+    uint shared_pointer<Value>::use_count() const
     {
     }
 

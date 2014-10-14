@@ -145,17 +145,18 @@ namespace translator {
     bool ProjectTranslator::toHeader(const entity::SharedMethod &m,
                                      const db::SharedDatabase &classDatabase) const
     {
-        if (m->type() == entity::TemplateMethod) return true;
-        if (!classDatabase) return false;
+        if (m->type() == entity::TemplateMethod)
+           return true;
+        if (!classDatabase)
+           return false;
 
         entity::FieldsList fields(m->parameters());
-        auto it = std::find_if(fields.begin(), fields.end(),
-                               [&](const entity::SharedField &f) {
-            return classDatabase->depthTypeSearch(f->typeId()) != nullptr;
+        auto it = std::find_if(fields.begin(), fields.end(), [&](const entity::SharedField &f) {
+            return classDatabase->depthTypeSearch(f->typeId()) /*!= nullptr*/;
         });
 
-        if (it != fields.end() ||
-            classDatabase->depthTypeSearch(m->returnTypeId()) != nullptr) return true;
+        if (it != fields.end() || classDatabase->depthTypeSearch(m->returnTypeId()) /*!= nullptr*/)
+           return true;
 
         return false;
     }
@@ -362,7 +363,8 @@ namespace translator {
                                       const db::SharedDatabase &localeDatabase,
                                       const db::SharedDatabase &classDatabase) const
     {
-        return translate(std::static_pointer_cast<entity::Class>(_class), options, localeDatabase, classDatabase);
+        return translate(std::static_pointer_cast<entity::Class>(_class), options, localeDatabase,
+                         classDatabase);
     }
 
     Code ProjectTranslator::generateClassMethodsImpl(const entity::SharedClass &_class,
@@ -382,14 +384,14 @@ namespace translator {
                 method.prepend(TEMPLATE);
 
             method.replace(m->name(), m->name().prepend(_class->name().append("::")));
-            method.append("\n{\n}");
+            method.append("\n{\n}\n");
 
-            if (!tc)
-                method.append("\n");
-
-            (toHeader(m, tc ? tc->database() : nullptr) ? methodsH : methodsCpp) << method;
+            (toHeader(m, tc ? tc->database() : nullptr) || tc ? methodsH : methodsCpp) << method;
             method.clear();
         }
+
+        if (tc && !methodsH.isEmpty())
+           methodsH.last().remove(methodsH.last().size() - 1, 1);
 
         return Code(methodsH.join("\n"), methodsCpp.join("\n"));
     }
