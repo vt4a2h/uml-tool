@@ -232,7 +232,7 @@ namespace translator {
         result.replace("%lhs_k%", lhsIds);
 
         result.replace("%r_type%", generateCodeForExtTypeOrType(method->returnTypeId(),
-                                                                WithNamespace,
+                                                                options,
                                                                 m ? m->database() : nullptr,
                                                                 localeDatabase));
 
@@ -377,21 +377,40 @@ namespace translator {
         QStringList methodsCpp;
         QStringList methodsH;
         QString method;
+
         entity::SharedTemplateClass tc(std::dynamic_pointer_cast<entity::TemplateClass>(_class));
+        QString templatePart;
+        QString methodTemplatePart;
+        QString newName;
+
+        if (tc) {
+           generateTemplatePart(templatePart, tc, false);
+
+           methodTemplatePart = templatePart;
+           methodTemplatePart.remove("template ").remove("class ").remove("\n");
+
+           newName = _class->name().append(methodTemplatePart);
+        }
+
         for (auto &&m : _class->methods()) {
-            method = translate(m, NoLhs, localeDatabase).toHeader;
+            method = translate(m, NoLhs | WithNamespace, localeDatabase).toHeader;
             if (tc)
-                method.prepend(TEMPLATE);
+                method.prepend(templatePart);
 
             method.replace(m->name(), m->name().prepend(_class->name().append("::")));
             method.append("\n{\n}\n");
+
+            if (tc)
+                method.replace(method.indexOf(_class->name()), _class->name().size(), newName);
 
             (toHeader(m, tc ? tc->database() : nullptr) || tc ? methodsH : methodsCpp) << method;
             method.clear();
         }
 
-        if (tc && !methodsH.isEmpty())
+        if (tc && !methodsH.isEmpty()) {
            methodsH.last().remove(methodsH.last().size() - 1, 1);
+           methodsH.first().prepend("\n");
+        }
 
         return Code(methodsH.join("\n"), methodsCpp.join("\n"));
     }
@@ -402,22 +421,8 @@ namespace translator {
            return Code("\ninvalid template class\n", "\ninvalid template class\n");
         checkDb();
 
-        QString templatePart;
-        generateTemplatePart(templatePart,
-                             std::dynamic_pointer_cast<entity::Template>(_class),
-                             false);
-        QString methodTemplatePart(templatePart);
-        methodTemplatePart.remove("template ").remove("class ").remove("\n");
-
-        Code result(generateClassMethodsImpl(std::dynamic_pointer_cast<entity::Class>(_class),
-                                             _class->database()));
-        result.toHeader.replace(TEMPLATE, templatePart);
-        QString newName(_class->name().append(methodTemplatePart));
-        result.toHeader.replace(result.toHeader.indexOf(_class->name()), _class->name().size(),
-                                newName);
-        result.toHeader.prepend("\n");
-
-        return result;
+        return generateClassMethodsImpl(std::dynamic_pointer_cast<entity::Class>(_class),
+                                        _class->database());
     }
 
     void ProjectTranslator::addNamespace(const entity::SharedType &type, Code &code, uint indentCount)

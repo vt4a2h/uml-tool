@@ -148,7 +148,7 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     method->removeParameter("b");
     method->addParameter("id", qstrExt->id());
 
-    code = _translator->translate(method);
+    code = _translator->translate(method, translator::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "explicit Foo(const QString &name)";
@@ -163,13 +163,13 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     method->setReturnTypeId(fooExt->id());
     method->setRhsIdentificator(entity::PureVirtual);
     method->addLhsIdentificator(entity::Virtual);
-    code = _translator->translate(method);
+    code = _translator->translate(method, translator::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "ps::Foo *make() override";
     method->removeLhsIdentificator(entity::Virtual);
     method->setRhsIdentificator(entity::Override);
-    code = _translator->translate(method);
+    code = _translator->translate(method, translator::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
@@ -217,7 +217,7 @@ TEST_F(ProjectTranslatorTest, TemplateClassMethod)
     sharedPointerToT->addTemplateParameter(t->id());
     method->setReturnTypeId(sharedPointerToT->id());
 
-    code = _translator->translate(method);
+    code = _translator->translate(method, translator::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
@@ -962,13 +962,13 @@ TEST_F(ProjectMaker, MakeClass)
     generator_->generate();
     generator_->writeToDisk();
 
-    read_from(tstHeader, fTstHeader, testDataPath_ + "employee.h")
-    read_from(genHeader, fGenHeader, rootPath_ + sep_ + "employee.h")
+    read_from(tstHeader, fTstHeader, testDataPath_ + empClass->name().toLower() + ".h")
+    read_from(genHeader, fGenHeader, rootPath_ + sep_ + empClass->name().toLower() + ".h")
     EXPECT_EQ(tstHeader, genHeader)
             << "Generated data for header must be the same with test data";
 
-    read_from(tstSource, fTstSource, testDataPath_ + "employee.cpp")
-    read_from(genSource, fGenSource, rootPath_ +  sep_ + "employee.cpp")
+    read_from(tstSource, fTstSource, testDataPath_ + empClass->name().toLower() + ".cpp")
+    read_from(genSource, fGenSource, rootPath_ +  sep_ + empClass->name().toLower() + ".cpp")
     EXPECT_EQ(tstSource, genSource)
             << "Generated data for source must be the same with test data";
 }
@@ -1017,10 +1017,13 @@ TEST_F(ProjectMaker, MakeTemplateClass)
     swapMethod->addParameter("src", linkToPtr->id());
     swapMethod->setSection(entity::Private);
 
-    // TODO: fix template part generation
-
     generator_->generate();
     generator_->writeToDisk();
+
+    read_from(tstHeader, fTstHeader, testDataPath_ + ptrClass->name().toLower() + ".h")
+    read_from(genHeader, fGenHeader, rootPath_ + sep_ + ptrClass->name().toLower() + ".h")
+    EXPECT_EQ(tstHeader, genHeader)
+            << "Generated data for header must be the same with test data";
 }
 
 int main(int argc, char **argv)
