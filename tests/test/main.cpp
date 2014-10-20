@@ -977,7 +977,7 @@ TEST_F(ProjectMaker, MakeTemplateClass)
 {
     auto scopeMemory = projectDb_->addScope("memory");
     auto ptrClass    = scopeMemory->addType<entity::TemplateClass>("shared_pointer");
-    auto linkToPtr   = globalScope_->addType<entity::ExtendedType>();
+    auto linkToPtr   = scopeMemory->addType<entity::ExtendedType>();
     linkToPtr->setTypeId(ptrClass->id());
     linkToPtr->addLinkStatus();
 

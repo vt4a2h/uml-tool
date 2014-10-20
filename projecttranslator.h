@@ -10,11 +10,12 @@ namespace translator {
     {
     public:
         enum TranslatorOption {
-            NoOptions       = 0x0,
-            WithNamespace   = 0x1,
-            WithAlias       = 0x2,
-            GenerateNumbers = 0x4,
-            NoLhs           = 0x8,
+            NoOptions       = 0x00,
+            WithNamespace   = 0x01,
+            WithAlias       = 0x02,
+            GenerateNumbers = 0x04,
+            NoLhs           = 0x08,
+            NoDefaultName   = 0x10,
         };
         Q_DECLARE_FLAGS(TranslatorOptions, TranslatorOption)
 

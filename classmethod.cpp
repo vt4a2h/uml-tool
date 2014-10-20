@@ -29,6 +29,7 @@ namespace entity {
     ClassMethod::ClassMethod(const QString &name)
         : m_Type(SimpleMethod)
         , m_Name(name)
+        , m_ScopeId(STUB_ID)
         , m_Section(Public)
         , m_ConstStatus(false)
         , m_ReturnTypeId(VOID_ID)
@@ -58,6 +59,7 @@ namespace entity {
     bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs)
     {
         return lhs.m_Name              == rhs.m_Name              &&
+               lhs.m_ScopeId           == rhs.m_ScopeId           &&
                lhs.m_Section           == rhs.m_Section           &&
                lhs.m_ConstStatus       == rhs.m_ConstStatus       &&
                lhs.m_ReturnTypeId      == rhs.m_ReturnTypeId      &&
@@ -177,6 +179,7 @@ namespace entity {
         QJsonObject result;
 
         result.insert("Name", m_Name);
+        result.insert("ScopeID", m_ScopeId);
         result.insert("Section", m_Section);
         result.insert("Type", m_Type);
         result.insert("Const status", m_ConstStatus);
@@ -200,6 +203,9 @@ namespace entity {
     {
         utility::checkAndSet(src, "Name", errorList, [&src, this](){
             m_Name = src["Name"].toString();
+        });
+        utility::checkAndSet(src, "ScopeID", errorList, [&src, this](){
+           m_ScopeId = src["ScopeID"].toString();
         });
         utility::checkAndSet(src, "Section", errorList, [&src, this](){
             m_Section = static_cast<Section>(src["Section"].toInt());
@@ -266,6 +272,7 @@ namespace entity {
         m_Type = std::move(src.m_Type);
 
         m_Name = std::move(src.m_Name);
+        m_ScopeId = std::move(src.m_ScopeId);
         m_Section = std::move(src.m_Section);
         m_ConstStatus = std::move(src.m_ConstStatus);
         m_ReturnTypeId = std::move(src.m_ReturnTypeId);
@@ -281,6 +288,7 @@ namespace entity {
         m_Type = src.m_Type;
 
         m_Name = src.m_Name;
+        m_ScopeId = src.m_ScopeId;
         m_Section = src.m_Section;
         m_ConstStatus = src.m_ConstStatus;
         m_ReturnTypeId = src.m_ReturnTypeId;
@@ -291,9 +299,20 @@ namespace entity {
         m_LhsIdentificators = src.m_LhsIdentificators;
     }
 
+    QString ClassMethod::scopeId() const
+    {
+       return m_ScopeId;
+    }
+
+    void ClassMethod::setScopeId(const QString &scopeId)
+    {
+       m_ScopeId = scopeId;
+    }
+
+
     QString ClassMethod::returnTypeId() const
     {
-        return m_ReturnTypeId;
+       return m_ReturnTypeId;
     }
 
     void ClassMethod::setReturnTypeId(const QString &returnTypeId)

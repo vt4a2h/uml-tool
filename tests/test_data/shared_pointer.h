@@ -49,7 +49,7 @@ namespace memory
     }
 
     template <class Value>
-    void shared_pointer<Value>::swap(memory::shared_pointer &src)
+    void shared_pointer<Value>::swap(shared_pointer &src)
     {
     }
 

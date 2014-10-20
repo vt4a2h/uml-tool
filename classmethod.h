@@ -58,6 +58,9 @@ namespace entity {
         void removeParameter(const QString &name);
         FieldsList parameters() const;
 
+        QString scopeId() const;
+        void setScopeId(const QString &scopeId);
+
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
@@ -68,7 +71,7 @@ namespace entity {
         void writeToFile(const QString &fileName) const;
         bool readFromFile(const QString &fileName);
 
-   protected:
+    protected:
         virtual void moveFrom(ClassMethod &src);
         virtual void copyFrom(const ClassMethod &src);
 
@@ -76,6 +79,7 @@ namespace entity {
 
     private:
         QString m_Name;
+        QString m_ScopeId;
         Section m_Section;
         bool    m_ConstStatus;
         QString m_ReturnTypeId;

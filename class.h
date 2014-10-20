@@ -84,6 +84,7 @@ namespace entity {
     {
         typedef typename std::conditional<std::is_class<T>::value && std::is_base_of<ClassMethod, T>::value, T, ClassMethod>::type ResultType;
         auto value = std::make_shared<ResultType>(name);
+        value->setScopeId(scopeId());
         m_Methods << value;
 
         return value;

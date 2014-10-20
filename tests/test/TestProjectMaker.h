@@ -23,14 +23,14 @@ protected:
 
     virtual void TearDown() override
     {
-//        EXPECT_TRUE(QDir(rootPath_).removeRecursively());
+        EXPECT_TRUE(QDir(rootPath_).removeRecursively());
     }
 
     db::SharedDatabase globalDb_  = std::make_shared<db::Database>("Global");
     db::SharedDatabase projectDb_ = std::make_shared<db::ProjectDatabase>("Project");
 
-    entity::SharedScope globalScope_        = globalDb_->addScope();
-    entity::SharedScope standartScope_      = globalDb_->addScope("std");
+    entity::SharedScope globalScope_   = globalDb_->addScope();
+    entity::SharedScope standartScope_ = globalDb_->addScope("std");
 
     entity::SharedType int_     = globalScope_->addType("int");
     entity::SharedType bool_    = globalScope_->addType("bool");

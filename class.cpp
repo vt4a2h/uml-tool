@@ -110,14 +110,16 @@ namespace entity {
 
     void Class::addMethod(SharedMethod method)
     {
+        method->setScopeId(scopeId());
         m_Methods << method;
     }
 
     MethodsList Class::getMethod(const QString &name)
     {
         MethodsList result;
-        for (auto && m : m_Methods)
-            if (m->name() == name) result << m;
+        for (auto &&m : m_Methods)
+            if (m->name() == name)
+                result << m;
 
         return result;
     }

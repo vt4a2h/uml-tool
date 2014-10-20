@@ -98,15 +98,18 @@ namespace translator {
     {
         QStringList methodsList;
         for (auto &&method : _class->methods(section))
-            methodsList << translate(method, NoOptions, localeDatabase).toHeader.prepend(indent);
+            methodsList << translate(method, WithNamespace, localeDatabase).toHeader.prepend(indent);
         out.append(methodsList.join(";\n"));
-        if (!methodsList.isEmpty()) out.append(";\n");
+        if (!methodsList.isEmpty())
+           out.append(";\n");
 
         QStringList fieldsList;
         for (auto &&field : _class->fields(section)) {
             auto t = utility::findType(field->typeId(), localeDatabase,
                                        m_GlobalDatabase, m_ProjectDatabase);
-            if (!t) break;
+            if (!t)
+               break;
+
             fieldsList << translate(field,
                                     t->scopeId() == _class->scopeId() ? NoOptions : WithNamespace,
                                     localeDatabase)
@@ -114,7 +117,8 @@ namespace translator {
         }
         out.append(fieldsList.join(";\n"));
 
-        if (!fieldsList.isEmpty()) out.append(";\n");
+        if (!fieldsList.isEmpty())
+           out.append(";\n");
     }
 
     void ProjectTranslator::generateTemplatePart(QString &result, const entity::SharedTemplate &t, bool withDefaultTypes) const
@@ -206,7 +210,6 @@ namespace translator {
                                       const db::SharedDatabase &classDatabase) const
     {
         // compatibility with API
-        Q_UNUSED(options)
         Q_UNUSED(classDatabase)
 
         if (!method)
@@ -227,7 +230,8 @@ namespace translator {
             QStringList lhsIdsList;
             for (auto &&lhsId : method->lhsIdentificators())
                 lhsIdsList << utility::methodLhsIdToString(lhsId);
-            if (!lhsIdsList.isEmpty()) lhsIds.append(lhsIdsList.join(" ")).append(" ");
+            if (!lhsIdsList.isEmpty())
+                lhsIds.append(lhsIdsList.join(" ")).append(" ");
         }
         result.replace("%lhs_k%", lhsIds);
 
@@ -243,7 +247,15 @@ namespace translator {
         for (auto &&p : method->parameters()) {
             p->removePrefix();
             p->removeSuffix();
-            parametersList << translate(p, WithNamespace,
+
+            TranslatorOptions newOptions(options & NoDefaultName ? NoDefaultName : NoOptions);
+            auto t = utility::findType(p->typeId(), localeDatabase,
+                                       m_GlobalDatabase, m_ProjectDatabase);
+            if (!t || method->scopeId() != t->scopeId() || method->scopeId() == STUB_ID)
+               newOptions |= WithNamespace;
+
+            parametersList << translate(p,
+                                        newOptions,
                                         m ? m->database() : nullptr,
                                         localeDatabase).toHeader;
         }
@@ -393,7 +405,7 @@ namespace translator {
         }
 
         for (auto &&m : _class->methods()) {
-            method = translate(m, NoLhs | WithNamespace, localeDatabase).toHeader;
+            method = translate(m, NoLhs | WithNamespace | NoDefaultName, localeDatabase).toHeader;
             if (tc)
                 method.prepend(templatePart);
 
@@ -519,7 +531,7 @@ namespace translator {
                                                               classDatabase));
         result.replace("%name%", field->fullName());
 
-        if (!field->defaultValue().isEmpty())
+        if (!field->defaultValue().isEmpty() && !(options & NoDefaultName))
             result.append( " = " + field->defaultValue() );
 
         return Code(result, "");
