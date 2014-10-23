@@ -14,16 +14,21 @@ namespace entity {
     enum LhsIdentificator : int;
     enum ClassMethodType  : int;
 
+    // TODO: add QString m_Body, for generate body if it's possible
+    // TODO: add dtor and ctor types
     class ClassMethod
     {
     public:
         ClassMethod();
         ClassMethod(ClassMethod &&src);
         ClassMethod(const ClassMethod &src);
-        ClassMethod(const QString & name);
+        ClassMethod(const QString &name);
+        virtual ~ClassMethod();
 
         ClassMethod &operator =(ClassMethod &&rhs);
         ClassMethod &operator =(ClassMethod rhs);
+
+        friend bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs);
 
         QString name() const;
         void setName(const QString &name);
@@ -51,16 +56,22 @@ namespace entity {
         bool containsParameter(const QString &name);
         bool hasParameters() const;
         void removeParameter(const QString &name);
-
         FieldsList parameters() const;
+
+        QString scopeId() const;
+        void setScopeId(const QString &scopeId);
 
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
         ClassMethodType type() const;
-        void setType(const ClassMethodType &type);
 
-   protected:
+        virtual bool isEqual(const ClassMethod &rhs) const;
+
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
+
+    protected:
         virtual void moveFrom(ClassMethod &src);
         virtual void copyFrom(const ClassMethod &src);
 
@@ -68,6 +79,7 @@ namespace entity {
 
     private:
         QString m_Name;
+        QString m_ScopeId;
         Section m_Section;
         bool    m_ConstStatus;
         QString m_ReturnTypeId;

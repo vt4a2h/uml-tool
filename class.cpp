@@ -55,6 +55,16 @@ namespace entity {
         return *this;
     }
 
+    bool operator ==(const Class &lhs, const Class &rhs)
+    {
+        return static_cast<const Type&>(lhs).isEqual(rhs) &&
+                lhs.m_Kind        == rhs.m_Kind           &&
+                lhs.m_FinalStatus == rhs.m_FinalStatus    &&
+                lhs.m_Parents     == rhs.m_Parents        &&
+                utility::seqSharedPointerEq(lhs.m_Methods, rhs.m_Methods) &&
+                utility::seqSharedPointerEq(lhs.m_Fields,  rhs.m_Fields);
+    }
+
     Parent Class::addParent(const QString &typeId, Section section)
     {
         auto parent = Parent(typeId, section);
@@ -100,14 +110,16 @@ namespace entity {
 
     void Class::addMethod(SharedMethod method)
     {
+        method->setScopeId(scopeId());
         m_Methods << method;
     }
 
     MethodsList Class::getMethod(const QString &name)
     {
         MethodsList result;
-        for (auto && m : m_Methods)
-            if (m->name() == name) result << m;
+        for (auto &&m : m_Methods)
+            if (m->name() == name)
+                result << m;
 
         return result;
     }
@@ -162,10 +174,11 @@ namespace entity {
         return result;
     }
 
-    SharedField Class::addField(const QString &name, const QString &typeId)
+    SharedField Class::addField(const QString &name, const QString &typeId, const QString prefix, Section section)
     {
-        auto field = std::make_shared<Field>(name, typeId);
-        if (containsField(name)) removeField(name);
+        auto field = std::make_shared<Field>(name, typeId, prefix, section);
+        if (containsField(name))
+            removeField(name);
         m_Fields.append(field);
 
         return field;
@@ -272,6 +285,8 @@ namespace entity {
 
     void Class::fromJson(const QJsonObject &src, QStringList &errorList)
     {
+        Type::fromJson(src, errorList);
+
         utility::checkAndSet(src, "Kind", errorList, [&src, this](){
             m_Kind = static_cast<Kind>(src["Kind"].toInt());
         });
@@ -331,6 +346,11 @@ namespace entity {
                 errorList << "Error: \"Fields\" is not array";
             }
         });
+    }
+
+    bool Class::isEqual(const Class &rhs) const
+    {
+        return *this == rhs;
     }
 
     void Class::moveFrom(Class &src)

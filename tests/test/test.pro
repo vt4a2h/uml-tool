@@ -1,9 +1,7 @@
 TEMPLATE = app
 
-CONFIG += console
+CONFIG += console qt c++11
 CONFIG -= app_bundle
-CONFIG += qt
-CONFIG += c++11
 
 LIBS += -lgtest -lpthread
 
@@ -14,7 +12,10 @@ HEADERS += ../../enums.h \
     TestDepthSearch.h \
     helpers.h \
     TestTypeMaker.h \
-    TestCodeGenerator.h
+    TestFileMaker.h \
+    TestJson.h \
+    TestProjectTranslator.h \
+    TestProjectMaker.h
 
 SOURCES += main.cpp \
            ../../type.cpp \
@@ -40,4 +41,10 @@ SOURCES += main.cpp \
            ../../projecttranslator.cpp \
            ../../constants.cpp \
            ../../templates.cpp \
-           ../../scope.cpp
+           ../../scope.cpp \
+           ../../virtualfile.cpp \
+           ../../virtualdirectory.cpp \
+           ../../virtualfilesystemabstractitem.cpp \
+           ../../abstractprojectgenerator.cpp \
+           ../../basiccppprojectgenerator.cpp \
+           ../../code.cpp \

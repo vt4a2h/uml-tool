@@ -2,12 +2,16 @@
 
 #include "type.h"
 #include "types.h"
+#include "enums.h"
 
 namespace entity {
 
-    enum Kind    : int;
-    enum Section : int;
+    // TODO: add methods for generate dtor, ctor, getter and setter
+    // TODO: add includes to header and to source
+    // TODO: add forward declaration possibilities
 
+    // TODO: add empty string between methods and fields
+    // TODO: add insert comment posibility
     class   Class : public Type
     {
     public:
@@ -18,6 +22,8 @@ namespace entity {
 
         Class &operator =(Class &&rhs);
         Class &operator =(Class rhs);
+
+        friend bool operator ==(const Class &lhs, const Class &rhs);
 
         Parent addParent(const QString &typeId, Section section);
         ParentsList getParents(const QString &typeId);
@@ -38,7 +44,8 @@ namespace entity {
         bool containsMethods(Section section) const;
         MethodsList methods(Section section) const;
 
-        SharedField addField(const QString &name, const QString &typeId);
+        SharedField addField(const QString &name, const QString &typeId,
+                             const QString prefix = "", Section section = Public);
         SharedField getField(const QString &name) const;
         bool containsField(const QString &name) const;
         void removeField(const QString &name);
@@ -56,6 +63,8 @@ namespace entity {
 
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
+        bool isEqual(const Class &rhs) const;
 
     protected:
         void moveFrom(Class &src);
@@ -75,6 +84,7 @@ namespace entity {
     {
         typedef typename std::conditional<std::is_class<T>::value && std::is_base_of<ClassMethod, T>::value, T, ClassMethod>::type ResultType;
         auto value = std::make_shared<ResultType>(name);
+        value->setScopeId(scopeId());
         m_Methods << value;
 
         return value;

@@ -47,6 +47,13 @@ namespace db {
         return *this;
     }
 
+    bool operator ==(const Database &lhs, const Database &rhs)
+    {
+        return lhs.m_Name == rhs.m_Name &&
+               lhs.m_Path == rhs.m_Path &&
+               utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes);
+    }
+
     QString Database::path() const
     {
         return m_Path;
@@ -69,7 +76,7 @@ namespace db {
 
     entity::SharedScope Database::getScope(const QString &id) const
     {
-        return (m_Scopes.contains(id) ? m_Scopes[id] : nullptr);
+        return m_Scopes.contains(id) ? m_Scopes[id] : nullptr;
     }
 
     entity::SharedScope Database::addScope(const QString &name, const QString &parentScopeId)
@@ -121,7 +128,8 @@ namespace db {
 
         for (auto scope : m_Scopes.values()) {
             getDepthType(scope, typeId, result);
-            if (result) break;
+            if (result)
+                break;
         }
 
         return result;
@@ -232,6 +240,11 @@ namespace db {
         });
     }
 
+    bool Database::isEqual(const Database &rhs) const
+    {
+        return *this == rhs;
+    }
+
     void Database::moveFrom(Database &src)
     {
         m_Name = std::move(src.m_Name);
@@ -245,7 +258,7 @@ namespace db {
         m_Name = src.m_Name;
         m_Path = src.m_Path;
 
-        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes);
+        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &entity::Scope::id);
     }
 
     QString Database::makeFullPath() const

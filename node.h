@@ -14,6 +14,8 @@ namespace relationship {
         Node();
         Node(const QString &typeId, Multiplicity multiplicity = static_cast<Multiplicity>(0));
 
+        friend bool operator ==(const Node &lhs, const Node &rhs);
+
         Multiplicity multiplicity() const;
         void setMultiplicity(const Multiplicity &multiplicity);
 
@@ -25,6 +27,9 @@ namespace relationship {
 
         QJsonObject toJson() const;
         void fromJson(const QJsonObject &src, QStringList &errorList);
+
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
 
     private:
         QString m_TypeId;

@@ -21,6 +21,12 @@ namespace entity {
         m_Type = TemplateMethod;
     }
 
+    bool operator ==(const TemplateClassMethod &lhs, const TemplateClassMethod &rhs)
+    {
+        return static_cast<const ClassMethod&>(lhs).isEqual(rhs) &&
+               static_cast<const Template&>(lhs).templatePartEq(rhs);
+    }
+
     QJsonObject TemplateClassMethod::toJson() const
     {
         QJsonObject result(ClassMethod::toJson());
@@ -36,6 +42,11 @@ namespace entity {
         utility::checkAndSet(src, "Template part", errorList, [&src, &errorList, this](){
             Template::templateLoadFromJson(src["Template part"].toObject(), errorList);
         });
+    }
+
+    bool TemplateClassMethod::isEqual(const TemplateClassMethod &rhs) const
+    {
+        return *this == rhs;
     }
 
 } // namespace entity

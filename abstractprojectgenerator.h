@@ -6,7 +6,11 @@ namespace generator {
     class AbstractProjectGenerator
     {
     public:
-        enum GeneratorOption {};
+        enum GeneratorOption {
+            NoOptions = 0x0,
+            NamespacesInSubfolders = 0x1,
+            DefineIcludeGuard = 0x2, // pragma by default
+        };
         Q_DECLARE_FLAGS(GeneratorOptions, GeneratorOption)
 
        AbstractProjectGenerator();
@@ -23,16 +27,28 @@ namespace generator {
        QString outputDirectory() const;
        void setOutputDirectory(const QString &outputDirectory);
 
-       QStringList errors() const;
+       SharedErrorList errors() const;
        bool anyErrors() const;
 
-       virtual bool validate() const = 0;
-       virtual void generate() = 0;
+       GeneratorOptions options() const;
+       void setOptions(const GeneratorOptions &options);
+       void addOption(GeneratorOption option);
+
+       QString projectName() const;
+       void setProjectName(const QString &projectName);
+
+       void generate();
+       void writeToDisk() const;
 
     protected:
+       virtual void doGenerate() = 0;
+       virtual void doWrite() const = 0;
+
        translator::ProjectTranslator m_ProjectTranslator;
+       GeneratorOptions m_Options;
        QString m_OutputDirectory;
-       QStringList m_ErrorList;
+       QString m_ProjectName;
+       mutable SharedErrorList m_ErrorList;
     };
 
     Q_DECLARE_OPERATORS_FOR_FLAGS(AbstractProjectGenerator::GeneratorOptions)

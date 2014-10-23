@@ -6,6 +6,9 @@
 #include <QMultiHash>
 #include <memory>
 
+using ErrorList = QStringList;
+using SharedErrorList = std::shared_ptr<ErrorList>;
+
 namespace entity {
     class Field;
     using SharedField = std::shared_ptr<Field>;
@@ -92,4 +95,22 @@ namespace db {
 namespace translator {
     class ProjectTranslator;
     using SharedTranslator = std::shared_ptr<ProjectTranslator>;
+}
+
+namespace generator {
+    class VirtualFileSystemAbstractItem;
+    using SharedVirtualSystemBasicItem = std::shared_ptr<VirtualFileSystemAbstractItem>;
+    using VirtualFiles      = QHash<QString, SharedVirtualSystemBasicItem>;
+
+    class VirtualFile;
+    using SharedVirtualFile = std::shared_ptr<VirtualFile>;
+
+    class VirtualDirectory;
+    using SharedVirtualDirectory = std::shared_ptr<VirtualDirectory>;
+
+    class AbstractProjectGenerator;
+    using SharedGenerator = std::shared_ptr<AbstractProjectGenerator>;
+
+    using ProfileVariables = QMap<QString,   // name
+                                  QString>; // value
 }

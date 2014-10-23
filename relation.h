@@ -26,6 +26,8 @@ namespace relationship {
         Relation &operator =(Relation rhs);
         Relation &operator =(Relation &&rhs);
 
+        friend bool operator ==(const Relation &lhs, const Relation &rhs);
+
         QString description() const;
         void setDescription(const QString &description);
 
@@ -46,6 +48,11 @@ namespace relationship {
 
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
+
+        virtual bool isEqual(const Relation &rhs) const;
+
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
 
     protected:
         virtual void make();

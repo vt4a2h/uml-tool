@@ -1,5 +1,4 @@
-CONFIG += qt
-CONFIG += c++11
+CONFIG += qt c++11
 
 SOURCES += \
     main.cpp \
@@ -28,7 +27,11 @@ SOURCES += \
     projecttranslator.cpp \
     templates.cpp \
     abstractprojectgenerator.cpp \
-    basiccppprojectgenerator.cpp
+    basiccppprojectgenerator.cpp \
+    virtualfile.cpp \
+    virtualdirectory.cpp \
+    virtualfilesystemabstractitem.cpp \
+    code.cpp
 
 HEADERS += \
     scope.h \
@@ -56,4 +59,8 @@ HEADERS += \
     projectdatabase.h \
     projecttranslator.h \
     abstractprojectgenerator.h \
-    basiccppprojectgenerator.h
+    basiccppprojectgenerator.h \
+    virtualfile.h \
+    virtualdirectory.h \
+    virtualfilesystemabstractitem.h \
+    code.h

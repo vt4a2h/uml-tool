@@ -48,6 +48,15 @@ namespace entity {
         return *this;
     }
 
+    bool operator ==(const Scope &lhs, const Scope &rhs)
+    {
+        return lhs.m_Name          == rhs.m_Name                       &&
+               lhs.m_Id            == rhs.m_Id                         &&
+               lhs.m_ParentScopeId == rhs.m_ParentScopeId              &&
+               utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes) &&
+               utility::seqSharedPointerEq(lhs.m_Types, rhs.m_Types);
+    }
+
     QString Scope::name() const
     {
         return m_Name;
@@ -206,7 +215,7 @@ namespace entity {
             if (src["Types"].isArray()) {
                 SharedType type;
                 QJsonObject obj;
-                for (auto &&val : src["Scopes"].toArray()) {
+                for (auto &&val : src["Types"].toArray()) {
                     obj = val.toObject();
                     utility::checkAndSet(obj, "Kind of type", errorList,
                                          [&obj, &type, &errorList, this](){
@@ -221,14 +230,24 @@ namespace entity {
         });
     }
 
+    void Scope::writeToFile(const QString &fileName) const
+    {
+         utility::writeToFile(*this, fileName);
+    }
+
+    bool Scope::readFromFile(const QString &fileName)
+    {
+        return utility::readFromFile(*this, fileName);
+    }
+
     void Scope::copyFrom(const Scope &src)
     {
         m_Name = src.m_Name;
         m_Id   = src.m_Id;
         m_ParentScopeId = src.m_ParentScopeId;
 
-        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes);
-        utility::deepCopySharedPointerHash(src.m_Types,  m_Types );
+        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &Scope::id);
+        utility::deepCopySharedPointerHash(src.m_Types,  m_Types, &Type::id);
     }
 
     void Scope::moveFrom(Scope &src)

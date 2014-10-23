@@ -13,4 +13,7 @@ namespace {
     const QString CLASS_TEMPLATE("%kind%%name%%parents%{%section%};");
     const QString TEMPLATE_TEMPLATE("template <%template_parameters%>");
     const QString TEMPLATE("%template%");
+    const QString SCOPE_TEMPLATE_HEADER("namespace %name%\n{\n\n%code%\n\n}");
+    const QString SCOPE_TEMPLATE_SOURCE("namespace %name%\n{\n%code%\n}");
+
 }

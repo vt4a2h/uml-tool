@@ -16,3 +16,30 @@ for (auto key : table_name.keys()) {\
 p = _d->method_name(invalid_id);\
 EXPECT_EQ(p, nullptr) << #method_name "() should return nullptr for invalid id";
 
+#define json_eq(basic_obj, comp_obj, name)\
+    ASSERT_TRUE(comp_obj->readFromFile(m_JsonFileName))\
+            << "Data for " #name " should be a correct";\
+    EXPECT_EQ(*basic_obj, *comp_obj)\
+            << "Read/write for " #name " should work correctly";
+
+#define test_relation(type, actions)\
+    auto relation(makeRelation<relationship::type>(m_Parameters));\
+    \
+    actions();\
+    \
+    relation->writeToFile(m_JsonFileName);\
+    \
+    auto relation_comp(std::make_shared<relationship::Relation>());\
+    setDb(relation_comp, m_Parameters);\
+    json_eq(relation, relation_comp, #type);
+
+#define read_from(var_name, file_name, file_path)\
+    QString var_name;\
+    QFile file_name(file_path);\
+    if (file_name.open(QIODevice::ReadOnly | QIODevice::Text)) {\
+        QTextStream s(&file_name);\
+        var_name = s.readAll();\
+    }\
+    file_name.close();\
+    EXPECT_FALSE(var_name.isEmpty())\
+            << "Test data for " #file_path " shouldn't be empty";

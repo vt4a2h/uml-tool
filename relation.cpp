@@ -7,6 +7,7 @@
 #include "constants.cpp"
 
 #include <QJsonObject>
+#include <QDebug>
 
 namespace relationship {
 
@@ -34,8 +35,10 @@ namespace relationship {
         , m_GlobalDatabase(globalDatabase)
         , m_ProjectDatabase(projectDatabase)
     {
-        addHeadClass(headTypeId);
-        addTailClass(tailTypeId);
+        if (headTypeId != STUB_ID)
+            addHeadClass(headTypeId);
+        if (tailTypeId != STUB_ID)
+            addTailClass(tailTypeId);
     }
 
     Relation::~Relation()
@@ -55,6 +58,18 @@ namespace relationship {
             moveFrom(rhs);
 
         return *this;
+    }
+
+    bool operator ==(const Relation &lhs, const Relation &rhs)
+    {
+        return lhs.m_Description     == rhs.m_Description     &&
+               lhs.m_GlobalDatabase  == rhs.m_GlobalDatabase  &&
+               lhs.m_Id              == rhs.m_Id              &&
+               lhs.m_ProjectDatabase == rhs.m_ProjectDatabase &&
+               (lhs.m_HeadClass == rhs.m_HeadClass || *lhs.m_HeadClass == *rhs.m_HeadClass) &&
+               (lhs.m_HeadNode  == rhs.m_HeadNode  || *lhs.m_HeadNode  == *rhs.m_HeadNode ) &&
+               (lhs.m_TailClass == rhs.m_TailClass || *lhs.m_TailClass == *rhs.m_TailClass) &&
+               (lhs.m_TailNode  == rhs.m_TailNode  || *lhs.m_TailNode  == *rhs.m_TailNode );
     }
 
     QString Relation::description() const
@@ -180,6 +195,21 @@ namespace relationship {
             m_TailNode->fromJson(src["Tail node"].toObject(), errorList);
             addTailClass(m_TailNode->typeId());
         });
+    }
+
+    bool Relation::isEqual(const Relation &rhs) const
+    {
+        return *this == rhs;
+    }
+
+    void Relation::writeToFile(const QString &fileName) const
+    {
+        utility::writeToFile(*this, fileName);
+    }
+
+    bool Relation::readFromFile(const QString &fileName)
+    {
+        return utility::readFromFile(*this, fileName);
     }
 
     db::Database *Relation::globalDatabase() const

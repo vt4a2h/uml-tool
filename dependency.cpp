@@ -20,6 +20,12 @@ namespace relationship {
         m_RelationType = DependencyRelation;
     }
 
+    bool operator ==(const Dependency &lhs, const Dependency &rhs)
+    {
+        return static_cast<const Relation&>(lhs).isEqual(rhs) &&
+               (lhs.m_Method == rhs.m_Method || *lhs.m_Method == *rhs.m_Method);
+    }
+
     void Dependency::make()
     {
         m_TailClass->addMethod(m_Method);
@@ -60,6 +66,11 @@ namespace relationship {
                 m_Method->fromJson(obj, errorList);
             });
         });
+    }
+
+    bool Dependency::isEqual(const Dependency &rhs) const
+    {
+        return *this == rhs;
     }
 
 } // namespace relationship

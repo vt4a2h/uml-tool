@@ -16,6 +16,7 @@
 #include <dependency.h>
 #include <association.h>
 #include <multiplyassociation.h>
+#include <realization.h>
 
 #include <types.h>
 

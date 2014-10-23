@@ -5,6 +5,9 @@
 #include "constants.cpp"
 
 #include <QJsonObject>
+#include <QJsonDocument>
+#include <QFile>
+#include <QTextStream>
 
 namespace entity {
 
@@ -23,10 +26,10 @@ namespace entity {
         copyFrom(src);
     }
 
-    Type::Type(const QString &name, const QString &scopeId)
+    Type::Type(const QString &name, const QString &scopeId, const QString &typeId)
         : m_KindOfType(BasicType)
         , m_Name(name)
-        , m_Id(utility::genId())
+        , m_Id(typeId.isEmpty() ? utility::genId() : typeId)
         , m_ScopeId(scopeId)
     {
     }
@@ -41,6 +44,14 @@ namespace entity {
           moveFrom(rhs);
 
        return *this;
+    }
+
+    bool operator ==(const Type &lhs, const Type &rhs)
+    {
+        return lhs.m_KindOfType == rhs.m_KindOfType &&
+               lhs.m_Name       == rhs.m_Name       &&
+               lhs.m_Id         == rhs.m_Id         &&
+               lhs.m_ScopeId    == rhs.m_ScopeId;
     }
 
     Type &Type::operator =(Type rhs)
@@ -113,9 +124,24 @@ namespace entity {
         });
     }
 
+    void Type::writeToFile(const QString &fileName) const
+    {
+        utility::writeToFile(*this, fileName);
+    }
+
+    bool Type::readFromFile(const QString &fileName)
+    {
+        return utility::readFromFile(*this, fileName);
+    }
+
     Type *Type::clone() const
     {
         return new Type(*this);
+    }
+
+    bool Type::isEqual(const Type &rhs) const
+    {
+        return *this == rhs;
     }
 
     void Type::moveFrom(Type &src)

@@ -7,10 +7,14 @@
 
 namespace entity {
 
+    // TODO: add existing type posibilities
     class Template
     {
     public:
         Template();
+
+        friend bool operator ==(const Template &lhs, const Template &rhs);
+
         TemplateParameter getTemplateParameter(const QString &typeId) const;
         void addTemplateParameter(const QString &typeId, const QString &defaultTypeId= QString(""));
         bool contains(const QString &typeId) const;
@@ -26,6 +30,8 @@ namespace entity {
 
         QJsonObject templateToJson() const;
         void templateLoadFromJson(const QJsonObject &src, QStringList &errorList);
+
+        bool templatePartEq(const Template &rhs) const;
 
     private:
         TemplateParametersList m_TemplateParameters;

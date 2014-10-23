@@ -16,6 +16,9 @@ namespace entity {
     public:
         Field();
         Field(const QString &name, const QString &typeId);
+        Field(const QString &name, const QString &typeId, const QString &prefix, Section section);
+
+        friend bool operator== (const Field &lhs, const Field &rhs);
 
         QString name() const;
         QString fullName() const;
@@ -44,7 +47,13 @@ namespace entity {
         void removeSuffix();
         void setSuffix(const QString &suffix);
 
+        QString defaultValue() const;
+        void setDefaultValue(const QString &defaultValue);
+
         virtual Field *clone() const;
+
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
 
     private:
         QString m_TypeId;
@@ -52,6 +61,7 @@ namespace entity {
         QString m_Name;
         QString m_Prefix;
         QString m_Suffix;
+        QString m_DefaultValue;
 
         FieldKeywords m_Keywords;
     };

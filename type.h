@@ -16,11 +16,12 @@ namespace entity {
         Type();
         Type(Type &&src);
         Type(const Type &src);
-        Type(const QString &name, const QString &scopeId);
+        Type(const QString &name, const QString &scopeId, const QString &typeId = "");
         virtual ~Type();
 
         Type &operator =(Type rhs);
         Type &operator =(Type &&rhs);
+        friend bool operator ==(const Type &lhs, const Type &rhs);
 
         QString name() const;
         void setName(const QString &name);
@@ -36,7 +37,12 @@ namespace entity {
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
+
         virtual Type *clone() const;
+
+        virtual bool isEqual(const Type &rhs) const;
 
     protected:
         virtual void moveFrom(Type &src);

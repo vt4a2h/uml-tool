@@ -19,6 +19,12 @@ namespace entity {
         m_LocalDatabase->addScope();
     }
 
+    bool operator ==(const Template &lhs, const Template &rhs)
+    {
+        return lhs.m_TemplateParameters == rhs.m_TemplateParameters &&
+               (lhs.m_LocalDatabase == rhs.m_LocalDatabase || *lhs.m_LocalDatabase == *rhs.m_LocalDatabase);
+    }
+
     TemplateParameter Template::getTemplateParameter(const QString &typeId) const
     {
         auto it = std::find_if(m_TemplateParameters.begin(), m_TemplateParameters.end(),
@@ -119,11 +125,19 @@ namespace entity {
             }
         });
 
-        m_LocalDatabase->clear();
+        if (!m_LocalDatabase)
+            m_LocalDatabase = std::make_shared<db::Database>();
+        else
+            m_LocalDatabase->clear();
 
         utility::checkAndSet(src, "Local database", errorList, [&src, &errorList, this](){
             m_LocalDatabase->fromJson(src["Local database"].toObject(), errorList);
         });
+    }
+
+    bool Template::templatePartEq(const Template &rhs) const
+    {
+        return *this == rhs;
     }
     
 } // namespace entity

@@ -19,6 +19,13 @@ namespace relationship {
     {
     }
 
+    bool operator ==(const Node &lhs, const Node &rhs)
+    {
+        return lhs.m_TypeId       == rhs.m_TypeId      &&
+               lhs.m_Description  == rhs.m_Description &&
+               lhs.m_Multiplicity == rhs.m_Multiplicity;
+    }
+
     QString Node::typeId() const
     {
         return m_TypeId;
@@ -51,6 +58,16 @@ namespace relationship {
         utility::checkAndSet(src, "Multiplicity", errorList, [&src, this](){
             m_Multiplicity = static_cast<Multiplicity>(src["Multiplicity"].toInt());
         });
+    }
+
+    void Node::writeToFile(const QString &fileName) const
+    {
+        utility::writeToFile(*this, fileName);
+    }
+
+    bool Node::readFromFile(const QString &fileName)
+    {
+       return utility::readFromFile(*this, fileName);
     }
 
     Multiplicity Node::multiplicity() const

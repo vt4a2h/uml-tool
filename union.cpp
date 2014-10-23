@@ -48,6 +48,12 @@ namespace entity {
         return *this;
     }
 
+    bool operator ==(const Union &lhs, const Union &rhs)
+    {
+        return static_cast<const Type&>(lhs).isEqual(rhs) &&
+               utility::seqSharedPointerEq(lhs.m_Fields, rhs.m_Fields);
+    }
+
     SharedField Union::getField(const QString &name) const
     {
         auto it = std::find_if(m_Fields.begin(), m_Fields.end(),
@@ -115,6 +121,11 @@ namespace entity {
     Union *Union::clone() const
     {
         return new Union(*this);
+    }
+
+    bool Union::isEqual(const Union &rhs) const
+    {
+        return *this == rhs;
     }
 
     void Union::moveFrom(Union &src)

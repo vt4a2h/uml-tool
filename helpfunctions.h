@@ -1,7 +1,13 @@
 #pragma once
 
+#include <QFile>
+#include <QTextStream>
+#include <QJsonDocument>
+
 #include <memory>
 #include <map>
+
+#include "types.h"
 
 class QString;
 class QJsonObject;
@@ -45,32 +51,32 @@ namespace utility {
     std::shared_ptr<relationship::Relation> makeRelation(relationship::RelationType relation);
     std::shared_ptr<entity::ClassMethod> makeMethod(entity::ClassMethodType methodType);
 
+    QStringList scopesNamesList(const entity::SharedType &type, const db::SharedDatabase &db);
+
     template <class D>
     std::shared_ptr<entity::Type> findType(const QString &id, const D &database)
     {
-        return (database ? database->depthTypeSearch(id) : nullptr);
+        return database ? database->depthTypeSearch(id) : nullptr;
     }
 
     template <class D, class... Args>
     std::shared_ptr<entity::Type> findType(const QString &id, const D &database, const Args&... args)
     {
         auto result = findType(id, database);
-        if (!result) return findType(id, args...);
-        return result;
+        return result ? result : findType(id, args...);
     }
 
     template <class D>
     std::shared_ptr<entity::Scope> findScope(const QString &id, const D &database)
     {
-        return (database ? database->depthScopeSearch(id) : nullptr);
+        return database ? database->depthScopeSearch(id) : nullptr;
     }
 
     template <class D, class... Args>
     std::shared_ptr<entity::Scope> findScope(const QString &id, const D &database, const Args&... args)
     {
         auto result = findScope(id, database);
-        if (!result) return findScope(id, args...);
-        return result;
+        return result ? result : findScope(id, args...);
     }
 
     template <class List>
@@ -79,25 +85,35 @@ namespace utility {
         List tmpList;
         tmpList.reserve(src.size());
 
-        typedef typename List::value_type::element_type ValueType;
+        using ValueType = typename List::value_type::element_type;
         for (auto &&value : src)
             tmpList.append(std::make_shared<ValueType>(*value));
 
-        dst.clear();
         dst = std::move(tmpList);
     }
 
-    template <class Hash>
-    void deepCopySharedPointerHash(const Hash &src, Hash &dst)
+    template <class Container>
+    bool seqSharedPointerEq(const Container &lhs, const Container &rhs)
+    {
+        if (lhs.size()  != rhs.size() ||
+            typeid(lhs) != typeid(lhs))
+            return false;
+
+        using ValueType = decltype(*lhs.begin());
+        return std::equal(lhs.begin(), lhs.end(), rhs.begin(),
+                          [](const ValueType &r, const ValueType &l){ return r == l || *r == *l; });
+    }
+
+    template <class Hash, class KeyGetter>
+    void deepCopySharedPointerHash(const Hash &src, Hash &dst, KeyGetter keyGetter)
     {
         Hash tmpHash;
         tmpHash.reserve(src.size());
 
-        typedef typename Hash::mapped_type::element_type ValueType;
-        for (auto &&value : src.values())
-            tmpHash.insert(value->id(), std::make_shared<ValueType>(*value));
+        using ValueType = typename Hash::mapped_type::element_type;
+        for (auto &&value : src)
+            tmpHash.insert(std::bind(keyGetter, value.get())(), std::make_shared<ValueType>(*value));
 
-        dst.clear();
         dst = std::move(tmpHash);
     }
 
@@ -111,6 +127,43 @@ namespace utility {
             result = it->second;
 
         return result;
+    }
+
+    template <class Element>
+    void writeToFile(const Element &elem, const QString &fileName)
+    {
+        QFile jsonFile(fileName);
+
+        if (jsonFile.open(QIODevice::WriteOnly)) {
+            QJsonDocument jdoc(elem.toJson());
+            QTextStream st(&jsonFile);
+            st << jdoc.toJson();
+        }
+    }
+
+    template <class Element>
+    bool readFromFile(Element &elem, const QString &fileName)
+    {
+        QFile jsonFile(fileName);
+        if (jsonFile.open(QIODevice::ReadOnly)) {
+            QJsonParseError errorMessage;
+            auto jdoc = QJsonDocument::fromJson(jsonFile.readAll(), &errorMessage);
+
+            if (errorMessage.error == QJsonParseError::NoError) {
+                ErrorList errorList;
+
+                if (jdoc.isObject()) {
+                    QJsonObject object = jdoc.object();
+
+                    elem.fromJson(object, errorList);
+
+                    if (errorList.isEmpty())
+                        return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     QString fieldKeywordToString(entity::FieldKeyword keyword);

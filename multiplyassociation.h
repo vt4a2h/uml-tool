@@ -11,6 +11,8 @@ namespace relationship {
         MultiplyAssociation(const QString &tailTypeId, const QString &headTypeId,
                             db::Database *globalDatabase, db::Database *projectDatabase);
 
+        friend bool operator ==(const MultiplyAssociation &lhs, const MultiplyAssociation &rhs);
+
         QString containerTypeId() const;
         void setContainerTypeId(const QString &containerTypeId);
 
@@ -19,6 +21,8 @@ namespace relationship {
 
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
+        bool isEqual(const MultiplyAssociation &rhs) const;
 
     protected:
         void make() override;

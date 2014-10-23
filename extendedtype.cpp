@@ -22,6 +22,15 @@ namespace entity {
         m_KindOfType = ExtendedTypeType;
     }
 
+    bool operator ==(const ExtendedType &lhs, const ExtendedType &rhs)
+    {
+        return static_cast<const Type&>(lhs).isEqual(rhs)         &&
+               lhs.m_ConstStatus        == rhs.m_ConstStatus      &&
+               lhs.m_TypeId             == rhs.m_TypeId           &&
+               lhs.m_PointersAndLinks   == rhs.m_PointersAndLinks &&
+               lhs.m_TemplateParameters == rhs.m_TemplateParameters;
+    }
+
     bool ExtendedType::isLink() const
     {
         return !m_PointersAndLinks.isEmpty() && m_PointersAndLinks.last().first == "&";
@@ -150,6 +159,11 @@ namespace entity {
                errorList << "Error: \"Template parameters\" is not array";
            }
        });
+    }
+
+    bool ExtendedType::isEqual(const ExtendedType &rhs) const
+    {
+        return *this == rhs;
     }
     
 } // namespace entity

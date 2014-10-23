@@ -18,6 +18,8 @@ namespace entity {
         Scope &operator =(Scope rhs);
         Scope &operator =(Scope &&rhs);
 
+        friend bool operator ==(const Scope &lhs, const Scope &rhs);
+
         QString name() const;
         void setName(const QString &name);
 
@@ -25,6 +27,7 @@ namespace entity {
         SharedType takeType(const QString &typeId);
         template <class T = Type> std::shared_ptr<T> addType(const QString &name = "");
         void addClonedType(const SharedType &type);
+        template <class T = SharedType> T addExistsType(const T &type);
         bool containsType(const QString &typeId) const;
         void removeType(const QString &typeId);
         TypesList types() const;
@@ -46,6 +49,9 @@ namespace entity {
         QJsonObject toJson() const;
         void fromJson(const QJsonObject &src, QStringList &errorList);
 
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
+
     private:
         void copyFrom(const Scope &src);
         void moveFrom(Scope &src);
@@ -60,10 +66,19 @@ namespace entity {
     template <class T>
     std::shared_ptr<T> Scope::addType(const QString &name)
     {
-        typedef typename std::conditional<std::is_class<T>::value && std::is_base_of<Type, T>::value, T, Type>::type ResultType;
+        using ResultType = typename std::conditional<std::is_class<T>::value &&
+                                                     std::is_base_of<Type, T>::value,
+                                                     T, Type>::type;
         auto value = std::make_shared<ResultType>(name, m_Id);
         m_Types.insert(value->id(), value);
         return value;
+    }
+
+    template <class T>
+    T Scope::addExistsType(const T &type)
+    {
+        type->setScopeId(m_Id);
+        return *m_Types.insert(type->id(), type);
     }
 
 } // namespace entity

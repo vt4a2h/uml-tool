@@ -22,7 +22,15 @@ namespace entity {
         , m_EnumTypeId(STUB_ID)
         , m_StrongStatus(false)
     {
-       m_KindOfType = EnumType;
+        m_KindOfType = EnumType;
+    }
+
+    bool operator==(const Enum &lhs, const Enum &rhs)
+    {
+        return static_cast<const Type&>(lhs).isEqual(rhs) &&
+               lhs.m_EnumTypeId   == rhs.m_EnumTypeId     &&
+               lhs.m_StrongStatus == rhs.m_StrongStatus   &&
+               lhs.m_Variables    == rhs.m_Variables;
     }
 
     bool Enum::isStrong() const
@@ -118,6 +126,11 @@ namespace entity {
                 errorList << "Error: \"Varibles\" is not array";
             }
         });
+    }
+
+    bool Enum::isEqual(const Enum &rhs) const
+    {
+        return *this == rhs;
     }
 
 } // namespace entity

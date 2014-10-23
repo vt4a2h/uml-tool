@@ -23,6 +23,13 @@ namespace db {
     {
     }
 
+    bool operator ==(const ProjectDatabase &lhs, const ProjectDatabase &rhs)
+    {
+        return static_cast<const Database &>(lhs).isEqual(rhs)               &&
+               utility::seqSharedPointerEq(lhs.m_Relations, rhs.m_Relations) &&
+               (lhs.m_GlobalDatabase == rhs.m_GlobalDatabase || *lhs.m_GlobalDatabase == *rhs.m_GlobalDatabase);
+    }
+
     ProjectDatabase &ProjectDatabase::operator =(ProjectDatabase &&rhs)
     {
         if (this != &rhs)
@@ -107,10 +114,15 @@ namespace db {
         });
     }
 
+    bool ProjectDatabase::isEqual(const ProjectDatabase &rhs) const
+    {
+        return *this == rhs;
+    }
+
     void ProjectDatabase::copyFrom(const ProjectDatabase &src)
     {
         m_GlobalDatabase = src.m_GlobalDatabase; // shallow copy. ok
-        utility::deepCopySharedPointerHash(src.m_Relations, m_Relations);
+        utility::deepCopySharedPointerHash(src.m_Relations, m_Relations, &relationship::Relation::id);
     }
 
     void ProjectDatabase::moveFrom(ProjectDatabase &src)
