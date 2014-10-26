@@ -18,33 +18,33 @@ HEADERS += ../../enums.h \
     TestProjectMaker.h
 
 SOURCES += main.cpp \
-           ../../type.cpp \
-           ../../class.cpp \
-           ../../enum.cpp \
-           ../../field.cpp \
-           ../../union.cpp \
-           ../../classmethod.cpp \
-           ../../templateclass.cpp \
-           ../../extendedtype.cpp\
-           ../../template.cpp \
-           ../../helpfunctions.cpp \
-           ../../database.cpp \
-           ../../projectdatabase.cpp \
-           ../../relation.cpp \
-           ../../node.cpp \
-           ../../generalization.cpp \
-           ../../dependency.cpp \
-           ../../association.cpp \
-           ../../realization.cpp \
-           ../../multiplyassociation.cpp \
-           ../../templateclassmethod.cpp \
-           ../../projecttranslator.cpp \
+           ../../entity/type.cpp \
+           ../../entity/class.cpp \
+           ../../entity/enum.cpp \
+           ../../entity/field.cpp \
+           ../../entity/union.cpp \
+           ../../entity/classmethod.cpp \
+           ../../entity/templateclass.cpp \
+           ../../entity/extendedtype.cpp\
+           ../../entity/template.cpp \
+           ../../utility/helpfunctions.cpp \
+           ../../db/database.cpp \
+           ../../db/projectdatabase.cpp \
+           ../../relationship/relation.cpp \
+           ../../relationship/node.cpp \
+           ../../relationship/generalization.cpp \
+           ../../relationship/dependency.cpp \
+           ../../relationship/association.cpp \
+           ../../relationship/realization.cpp \
+           ../../relationship/multiplyassociation.cpp \
+           ../../entity/templateclassmethod.cpp \
+           ../../translator/projecttranslator.cpp \
            ../../constants.cpp \
            ../../templates.cpp \
-           ../../scope.cpp \
-           ../../virtualfile.cpp \
-           ../../virtualdirectory.cpp \
-           ../../virtualfilesystemabstractitem.cpp \
-           ../../abstractprojectgenerator.cpp \
-           ../../basiccppprojectgenerator.cpp \
-           ../../code.cpp \
+           ../../entity/scope.cpp \
+           ../../generator/virtualfile.cpp \
+           ../../generator/virtualdirectory.cpp \
+           ../../generator/virtualfilesystemabstractitem.cpp \
+           ../../generator/abstractprojectgenerator.cpp \
+           ../../generator/basiccppprojectgenerator.cpp \
+           ../../translator/code.cpp \

@@ -2,65 +2,65 @@ CONFIG += qt c++11
 
 SOURCES += \
     main.cpp \
-    scope.cpp \
-    extendedtype.cpp \
-    type.cpp \
-    enum.cpp \
-    union.cpp \
-    class.cpp \
-    field.cpp \
-    classmethod.cpp \
-    template.cpp \
-    templateclass.cpp \
-    templateclassmethod.cpp \
-    helpfunctions.cpp \
     constants.cpp \
-    node.cpp \
-    relation.cpp \
-    generalization.cpp \
-    realization.cpp \
-    dependency.cpp \
-    association.cpp \
-    multiplyassociation.cpp \
-    database.cpp \
-    projectdatabase.cpp \
-    projecttranslator.cpp \
     templates.cpp \
-    abstractprojectgenerator.cpp \
-    basiccppprojectgenerator.cpp \
-    virtualfile.cpp \
-    virtualdirectory.cpp \
-    virtualfilesystemabstractitem.cpp \
-    code.cpp
+    db/database.cpp \
+    db/projectdatabase.cpp \
+    entity/class.cpp \
+    entity/classmethod.cpp \
+    entity/enum.cpp \
+    entity/extendedtype.cpp \
+    entity/field.cpp \
+    entity/scope.cpp \
+    entity/template.cpp \
+    entity/templateclass.cpp \
+    entity/templateclassmethod.cpp \
+    entity/type.cpp \
+    entity/union.cpp \
+    generator/abstractprojectgenerator.cpp \
+    generator/basiccppprojectgenerator.cpp \
+    generator/virtualdirectory.cpp \
+    generator/virtualfile.cpp \
+    generator/virtualfilesystemabstractitem.cpp \
+    relationship/association.cpp \
+    relationship/dependency.cpp \
+    relationship/generalization.cpp \
+    relationship/multiplyassociation.cpp \
+    relationship/node.cpp \
+    relationship/realization.cpp \
+    relationship/relation.cpp \
+    translator/code.cpp \
+    translator/projecttranslator.cpp \
+    utility/helpfunctions.cpp
 
 HEADERS += \
-    scope.h \
-    extendedtype.h \
-    type.h \
-    enum.h \
-    union.h \
-    class.h \
-    field.h \
-    classmethod.h \
     enums.h \
     types.h \
-    template.h \
-    templateclass.h \
-    templateclassmethod.h \
-    helpfunctions.h \
-    node.h \
-    relation.h \
-    generalization.h \
-    realization.h \
-    dependency.h \
-    association.h \
-    multiplyassociation.h \
-    database.h \
-    projectdatabase.h \
-    projecttranslator.h \
-    abstractprojectgenerator.h \
-    basiccppprojectgenerator.h \
-    virtualfile.h \
-    virtualdirectory.h \
-    virtualfilesystemabstractitem.h \
-    code.h
+    db/database.h \
+    db/projectdatabase.h \
+    entity/class.h \
+    entity/classmethod.h \
+    entity/enum.h \
+    entity/extendedtype.h \
+    entity/field.h \
+    entity/scope.h \
+    entity/template.h \
+    entity/templateclass.h \
+    entity/templateclassmethod.h \
+    entity/type.h \
+    entity/union.h \
+    generator/abstractprojectgenerator.h \
+    generator/basiccppprojectgenerator.h \
+    generator/virtualdirectory.h \
+    generator/virtualfile.h \
+    generator/virtualfilesystemabstractitem.h \
+    relationship/association.h \
+    relationship/dependency.h \
+    relationship/generalization.h \
+    relationship/multiplyassociation.h \
+    relationship/node.h \
+    relationship/realization.h \
+    relationship/relation.h \
+    translator/code.h \
+    translator/projecttranslator.h \
+    utility/helpfunctions.h

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QHash>
+#include <QMap>
 #include <QSet>
 #include <QStringList>
 #include <QMultiHash>

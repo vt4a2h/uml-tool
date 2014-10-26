@@ -4,13 +4,13 @@
 
 #include <gtest/gtest.h>
 
-#include <type.h>
-#include <class.h>
-#include <enum.h>
-#include <union.h>
-#include <scope.h>
-#include <extendedtype.h>
-#include <templateclass.h>
+#include <entity/type.h>
+#include <entity/class.h>
+#include <entity/enum.h>
+#include <entity/union.h>
+#include <entity/scope.h>
+#include <entity/extendedtype.h>
+#include <entity/templateclass.h>
 #include <enums.h>
 
 class TypeMaker: public ::testing::Test

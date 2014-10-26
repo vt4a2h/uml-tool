@@ -2,16 +2,16 @@
 
 #include <gtest/gtest.h>
 
-#include <projectdatabase.h>
-#include <database.h>
-#include <scope.h>
-#include <enum.h>
+#include <db/projectdatabase.h>
+#include <db/database.h>
+#include <entity/scope.h>
+#include <entity/enum.h>
 #include <enums.h>
-#include <extendedtype.h>
-#include <projecttranslator.h>
-#include <templateclassmethod.h>
+#include <entity/extendedtype.h>
+#include <translator/projecttranslator.h>
+#include <entity/templateclassmethod.h>
 #include <types.h>
-#include <code.h>
+#include <translator/code.h>
 
 class ProjectTranslatorTest : public ::testing::Test
 {

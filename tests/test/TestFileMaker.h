@@ -6,7 +6,7 @@
 #include <QDir>
 #include <QTextStream>
 
-#include "virtualdirectory.h"
+#include "generator/virtualdirectory.h"
 
 class FileMaker : public ::testing::Test
 {

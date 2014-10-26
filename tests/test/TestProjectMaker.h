@@ -1,11 +1,12 @@
 #pragma once
 
-#include <types.h>
-#include <database.h>
-#include <virtualdirectory.h>
-#include <basiccppprojectgenerator.h>
-
 #include <gtest/gtest.h>
+
+#include <types.h>
+
+#include <db/database.h>
+#include <generator/virtualdirectory.h>
+#include <generator/basiccppprojectgenerator.h>
 
 class ProjectMaker : public ::testing::Test
 {

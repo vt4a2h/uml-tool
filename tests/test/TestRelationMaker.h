@@ -2,21 +2,20 @@
 
 #include <gtest/gtest.h>
 
-#include <database.h>
-#include <projectdatabase.h>
-#include <scope.h>
-#include <type.h>
-#include <class.h>
-#include <classmethod.h>
-#include <field.h>
-#include <node.h>
-
-#include <relation.h>
-#include <generalization.h>
-#include <dependency.h>
-#include <association.h>
-#include <multiplyassociation.h>
-#include <realization.h>
+#include <db/database.h>
+#include <db/projectdatabase.h>
+#include <entity/scope.h>
+#include <entity/type.h>
+#include <entity/class.h>
+#include <entity/classmethod.h>
+#include <entity/field.h>
+#include <relationship/node.h>
+#include <relationship/relation.h>
+#include <relationship/generalization.h>
+#include <relationship/dependency.h>
+#include <relationship/association.h>
+#include <relationship/multiplyassociation.h>
+#include <relationship/realization.h>
 
 #include <types.h>
 

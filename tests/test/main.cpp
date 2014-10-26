@@ -7,8 +7,9 @@
 #include "TestFileMaker.h"
 #include "TestJson.h"
 #include "TestProjectMaker.h"
-#include <helpfunctions.h>
+
 #include <templates.cpp>
+#include <utility/helpfunctions.h>
 
 TEST_F(ProjectTranslatorTest, Type)
 {

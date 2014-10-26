@@ -5,12 +5,12 @@
 
 #include <gtest/gtest.h>
 
-#include <type.h>
-#include <class.h>
-#include <enum.h>
-#include <union.h>
-#include <database.h>
-#include <scope.h>
+#include <entity/type.h>
+#include <entity/class.h>
+#include <entity/enum.h>
+#include <entity/union.h>
+#include <db/database.h>
+#include <entity/scope.h>
 
 class DepthSearch : public ::testing::Test
 {
