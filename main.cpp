@@ -1,4 +1,17 @@
-int main()
+#include <QApplication>
+#include <QMessageBox>
+#include <application/application.h>
+
+int main(int argc, char *argv[])
 {
-    return 0;
+    QApplication a(argc, argv);
+
+    const application::Application & app = application::Application::instance();
+    app.init();
+
+    if (app.hasErrors())
+        QMessageBox::warning(nullptr, QObject::tr("Application loaded with some errors: "),
+                             app.errors()->join("\n"), QMessageBox::Ok);
+
+    return a.exec();
 }

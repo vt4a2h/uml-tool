@@ -1,4 +1,6 @@
-CONFIG += qt c++11
+CONFIG += core gui c++11
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 SOURCES += \
     main.cpp \
@@ -31,7 +33,8 @@ SOURCES += \
     relationship/relation.cpp \
     translator/code.cpp \
     translator/projecttranslator.cpp \
-    utility/helpfunctions.cpp
+    utility/helpfunctions.cpp \
+    application/application.cpp
 
 HEADERS += \
     enums.h \
@@ -63,4 +66,5 @@ HEADERS += \
     relationship/relation.h \
     translator/code.h \
     translator/projecttranslator.h \
-    utility/helpfunctions.h
+    utility/helpfunctions.h \
+    application/application.h
