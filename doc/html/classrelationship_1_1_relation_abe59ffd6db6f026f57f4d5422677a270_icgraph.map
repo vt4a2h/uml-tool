@@ -1,0 +1,8 @@
+<map id="relationship::Relation::addHeadClass" name="relationship::Relation::addHeadClass">
+<area shape="rect" id="node3" href="$classrelationship_1_1_relation.html#a1ffe5ee47ea62184469b5d73c38f44d0" title="Relation::Relation. " alt="" coords="200,5,347,46"/>
+<area shape="rect" id="node5" href="$classrelationship_1_1_relation.html#ad9ded41d8c3d38045ceffcc42c751d8b" title="Relation::fromJson. " alt="" coords="200,70,347,111"/>
+<area shape="rect" id="node7" href="$classrelationship_1_1_association.html#abc6538b5c5d75da39ba4be99d0c0d98c" title="Association::fromJson. " alt="" coords="404,5,572,46"/>
+<area shape="rect" id="node9" href="$classrelationship_1_1_dependency.html#a98db74731c2f1a56ff9c1a44a230f9e2" title="Dependency::fromJson. " alt="" coords="401,70,575,111"/>
+<area shape="rect" id="node11" href="$classrelationship_1_1_generalization.html#ab5d8528110f527027027265fedc0b694" title="Generalization::fromJson. " alt="" coords="395,135,581,177"/>
+<area shape="rect" id="node13" href="$classrelationship_1_1_realization.html#a059e1683eb3bd10a018e904318104223" title="Realization::fromJson. " alt="" coords="629,135,795,177"/>
+</map>

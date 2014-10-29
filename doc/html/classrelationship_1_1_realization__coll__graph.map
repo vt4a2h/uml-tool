@@ -1,0 +1,5 @@
+<map id="relationship::Realization" name="relationship::Realization">
+<area shape="rect" id="node2" href="$classrelationship_1_1_generalization.html" title="The Generalization class. " alt="" coords="5,187,192,213"/>
+<area shape="rect" id="node4" href="$classrelationship_1_1_relation.html" title="The Relation class. " alt="" coords="25,109,172,136"/>
+<area shape="rect" id="node6" href="$classdb_1_1_database.html" title="The Database class. " alt="" coords="47,5,151,32"/>
+</map>

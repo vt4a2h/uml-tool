@@ -1,0 +1,6 @@
+<map id="relationship::Relation::fromJson" name="relationship::Relation::fromJson">
+<area shape="rect" id="node3" href="$classrelationship_1_1_relation.html#abe59ffd6db6f026f57f4d5422677a270" title="Relation::addHeadClass. " alt="" coords="200,5,347,46"/>
+<area shape="rect" id="node9" href="$classrelationship_1_1_relation.html#a1e8be83f94dfb27c2803cfd96c7c693f" title="Relation::addTailClass. " alt="" coords="200,70,347,111"/>
+<area shape="rect" id="node5" href="$classrelationship_1_1_relation.html#a3dd36b75210c48eb5070d94fa7206b57" title="Relation::tryToFindType. " alt="" coords="395,38,541,79"/>
+<area shape="rect" id="node7" href="$classdb_1_1_database.html#a4215e61abcc36fe9b3695e992a10beb0" title="Database::depthTypeSearch. " alt="" coords="590,45,810,72"/>
+</map>

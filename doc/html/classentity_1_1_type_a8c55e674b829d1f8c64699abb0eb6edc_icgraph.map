@@ -1,0 +1,17 @@
+<map id="entity::Type::name" name="entity::Type::name">
+<area shape="rect" id="node3" href="$classentity_1_1_class.html#accb6750b5072745e2a522c97f653ab6f" title="Class::getMethod. " alt="" coords="207,56,375,83"/>
+<area shape="rect" id="node9" href="$classentity_1_1_class.html#aec20a95c169b9813c5ae458f4a637ae3" title="Class::addField. " alt="" coords="691,157,850,184"/>
+<area shape="rect" id="node11" href="$classentity_1_1_class.html#a6c95ad645fa6959c5250c0e798429c36" title="Class::getField. " alt="" coords="214,157,367,184"/>
+<area shape="rect" id="node19" href="$classentity_1_1_enum.html#a82137996bbd72b4bd46d1d138d1cfeee" title="Enum::getVariable. " alt="" coords="205,208,376,235"/>
+<area shape="rect" id="node21" href="$classentity_1_1_enum.html#aab3aea5a9805b86583316fa8771e2e83" title="Enum::removeVariable. " alt="" coords="191,259,390,285"/>
+<area shape="rect" id="node23" href="$classentity_1_1_enum.html#a397381c8152a3f3f6c9d0da756775bbf" title="Enum::containsVariable. " alt="" coords="189,309,392,336"/>
+<area shape="rect" id="node25" href="$classentity_1_1_type.html#a80a5cbb054a59e269732717525b6561f" title="Type::setName. " alt="" coords="213,360,368,387"/>
+<area shape="rect" id="node27" href="$classentity_1_1_union.html#af30d2ce53f78d5b8f7b7f654510c27a3" title="Union::getField. " alt="" coords="215,411,367,437"/>
+<area shape="rect" id="node29" href="$classentity_1_1_union.html#a8397b37ec5c13e0feac08b619aee8e0b" title="Union::addField. " alt="" coords="692,385,849,412"/>
+<area shape="rect" id="node5" href="$classentity_1_1_class.html#ae44381907eb439f1eb62fdcf1b8bcf22" title="Class::containsMethod. " alt="" coords="442,5,641,32"/>
+<area shape="rect" id="node7" href="$classentity_1_1_class.html#ad46059780cb45f82fd3ebbbb764d740e" title="Class::removeMethods. " alt="" coords="440,56,643,83"/>
+<area shape="rect" id="node13" href="$classentity_1_1_class.html#a44e3d1a9b21f55a45abcec2494ecf268" title="Class::containsField. " alt="" coords="449,157,633,184"/>
+<area shape="rect" id="node16" href="$classentity_1_1_class.html#a44f07a2fa6974752fbd6daaa4e467df0" title="Class::removeField. " alt="" coords="451,208,631,235"/>
+<area shape="rect" id="node31" href="$classentity_1_1_union.html#a618cdd39e7afce080f09a70bf555ff91" title="Union::removeField. " alt="" coords="452,385,631,412"/>
+<area shape="rect" id="node34" href="$classentity_1_1_union.html#ac2e1312066e050a7d704341ad9c27c08" title="Union::containsField. " alt="" coords="450,436,633,463"/>
+</map>
