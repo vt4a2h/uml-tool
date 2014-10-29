@@ -90,7 +90,9 @@ namespace relationship {
 
 namespace db {
     class Database;
+    class ProjectDatabase;
     using SharedDatabase = std::shared_ptr<Database>;
+    using SharedProjectDatabase = std::shared_ptr<ProjectDatabase>;
 }
 
 namespace translator {

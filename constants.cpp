@@ -18,4 +18,8 @@ namespace {
     static constexpr char* QTYPE_LIST_ID      = (char*)"_q_list";
     static constexpr char* QTYPE_SET_ID       = (char*)"_q_set";
     static constexpr char* QTYPE_MULTISET_ID  = (char*)"_q_multiset";
+
+    static constexpr char* CFG_FILE_NAME = (char*)"config.umtconfig";
+    static constexpr char* DEFAULT_PROJECT_NAME = (char*)"empty_project";
+    static constexpr char* DEFAULT_PROJECT_PATH = (char*)"empty_path";
 }

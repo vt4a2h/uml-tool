@@ -26,8 +26,9 @@ namespace application {
 
     private:
         Application();
+        void readConfig() const;
 
-        SharedErrorList m_ErrorList;
+        mutable SharedErrorList m_ErrorList;
     };
 
 } // namespace application

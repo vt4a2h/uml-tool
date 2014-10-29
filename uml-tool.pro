@@ -34,7 +34,8 @@ SOURCES += \
     translator/code.cpp \
     translator/projecttranslator.cpp \
     utility/helpfunctions.cpp \
-    application/application.cpp
+    application/application.cpp \
+    project/project.cpp
 
 HEADERS += \
     enums.h \
@@ -67,4 +68,5 @@ HEADERS += \
     translator/code.h \
     translator/projecttranslator.h \
     utility/helpfunctions.h \
-    application/application.h
+    application/application.h \
+    project/project.h
