@@ -2,8 +2,14 @@
 
 #include "types.h"
 
+/**
+ *  @brief namespace db
+ */
 namespace db {
 
+    /**
+     * @brief The Database class
+     */
     class Database
     {
     public:

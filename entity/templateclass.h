@@ -5,6 +5,9 @@
 
 namespace entity {
 
+    /**
+     * @brief The TemplateClass class
+     */
     class TemplateClass : public Class, public Template
     {
     public:

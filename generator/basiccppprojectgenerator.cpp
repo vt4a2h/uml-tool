@@ -53,11 +53,20 @@ namespace {
 
 namespace generator {
 
+    /**
+     * @brief BasicCppProjectGenerator::BasicCppProjectGenerator
+     */
     BasicCppProjectGenerator::BasicCppProjectGenerator()
         : AbstractProjectGenerator()
     {
     }
 
+    /**
+     * @brief BasicCppProjectGenerator::BasicCppProjectGenerator
+     * @param globalDb
+     * @param projectDb
+     * @param outputDirectory
+     */
     BasicCppProjectGenerator::BasicCppProjectGenerator(const db::SharedDatabase &globalDb,
                                                        const db::SharedDatabase &projectDb,
                                                        const QString &outputDirectory)
@@ -68,6 +77,9 @@ namespace generator {
         m_RootOutputDirectory->setPath(m_OutputDirectory);
     }
 
+    /**
+     * @brief BasicCppProjectGenerator::doWrite
+     */
     void BasicCppProjectGenerator::doWrite() const
     {
         m_RootOutputDirectory->write();
@@ -78,6 +90,9 @@ namespace generator {
         }
     }
 
+    /**
+     * @brief BasicCppProjectGenerator::doGenerate
+     */
     void BasicCppProjectGenerator::doGenerate()
     {
         for (auto &&scope : m_ProjectTranslator.projectDatabase()->scopes())
@@ -86,6 +101,11 @@ namespace generator {
         addProfile();
     }
 
+    /**
+     * @brief BasicCppProjectGenerator::generateFiles
+     * @param scope
+     * @param directory
+     */
     void BasicCppProjectGenerator::generateFiles(const entity::SharedScope &scope,
                                                  const SharedVirtualDirectory &directory)
     {
@@ -129,6 +149,9 @@ namespace generator {
             generateFiles(s, dir);
     }
 
+    /**
+     * @brief BasicCppProjectGenerator::addProfile
+     */
     void BasicCppProjectGenerator::addProfile()
     {
         // TODO: add different strateges for different project types

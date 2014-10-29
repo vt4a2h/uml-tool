@@ -12,21 +12,36 @@
 
 namespace entity {
 
+    /**
+     * @brief ClassMethod::ClassMethod
+     */
     ClassMethod::ClassMethod()
         : ClassMethod(DEFAULT_NAME)
     {
     }
 
+    /**
+     * @brief ClassMethod::ClassMethod
+     * @param src
+     */
     ClassMethod::ClassMethod(ClassMethod &&src)
     {
         moveFrom(src);
     }
 
+    /**
+     * @brief ClassMethod::ClassMethod
+     * @param src
+     */
     ClassMethod::ClassMethod(const ClassMethod &src)
     {
         copyFrom(src);
     }
 
+    /**
+     * @brief ClassMethod::ClassMethod
+     * @param name
+     */
     ClassMethod::ClassMethod(const QString &name)
         : m_Type(SimpleMethod)
         , m_Name(name)
@@ -38,10 +53,18 @@ namespace entity {
     {
     }
 
+    /**
+     * @brief ClassMethod::~ClassMethod
+     */
     ClassMethod::~ClassMethod()
     {
     }
 
+    /**
+     * @brief ClassMethod::operator =
+     * @param rhs
+     * @return
+     */
     ClassMethod &ClassMethod::operator =(ClassMethod &&rhs)
     {
         if (this != &rhs)
@@ -50,6 +73,11 @@ namespace entity {
         return *this;
     }
 
+    /**
+     * @brief ClassMethod::operator =
+     * @param rhs
+     * @return
+     */
     ClassMethod &ClassMethod::operator =(ClassMethod rhs)
     {
         moveFrom(rhs);
@@ -57,6 +85,12 @@ namespace entity {
         return *this;
     }
 
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
     bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs)
     {
         return lhs.m_Name              == rhs.m_Name              &&
@@ -70,71 +104,129 @@ namespace entity {
 
     }
 
+    /**
+     * @brief ClassMethod::name
+     * @return
+     */
     QString ClassMethod::name() const
     {
         return m_Name;
     }
 
+    /**
+     * @brief ClassMethod::setName
+     * @param name
+     */
     void ClassMethod::setName(const QString &name)
     {
         m_Name = name;
     }
 
+    /**
+     * @brief ClassMethod::section
+     * @return
+     */
     Section ClassMethod::section() const
     {
         return m_Section;
     }
 
+    /**
+     * @brief ClassMethod::setSection
+     * @param section
+     */
     void ClassMethod::setSection(Section section)
     {
         m_Section = section;
     }
 
+    /**
+     * @brief ClassMethod::isConst
+     * @return
+     */
     bool ClassMethod::isConst() const
     {
         return m_ConstStatus;
     }
 
+    /**
+     * @brief ClassMethod::setConstStatus
+     * @param newStatus
+     */
     void ClassMethod::setConstStatus(bool newStatus)
     {
         m_ConstStatus = newStatus;
     }
 
+    /**
+     * @brief ClassMethod::rhsIdentificator
+     * @return
+     */
     RhsIdentificator ClassMethod::rhsIdentificator() const
     {
         return m_RhsIdentificator;
     }
 
+    /**
+     * @brief ClassMethod::setRhsIdentificator
+     * @param identificator
+     */
     void ClassMethod::setRhsIdentificator(RhsIdentificator identificator)
     {
         m_RhsIdentificator = identificator;
     }
 
+    /**
+     * @brief ClassMethod::lhsIdentificators
+     * @return
+     */
     LhsIdentificatorsList ClassMethod::lhsIdentificators() const
     {
         return m_LhsIdentificators.values();
     }
 
+    /**
+     * @brief ClassMethod::addLhsIdentificator
+     * @param identificator
+     */
     void ClassMethod::addLhsIdentificator(LhsIdentificator identificator)
     {
         m_LhsIdentificators << identificator;
     }
 
+    /**
+     * @brief ClassMethod::containsLhsIdentficator
+     * @param identificator
+     * @return
+     */
     bool ClassMethod::containsLhsIdentficator(LhsIdentificator identificator) const
     {
         return m_LhsIdentificators.contains(identificator);
     }
 
+    /**
+     * @brief ClassMethod::hasLhsIdentificators
+     * @return
+     */
     bool ClassMethod::hasLhsIdentificators() const
     {
         return m_LhsIdentificators.empty();
     }
 
+    /**
+     * @brief ClassMethod::removeLhsIdentificator
+     * @param identificator
+     */
     void ClassMethod::removeLhsIdentificator(LhsIdentificator identificator)
     {
         m_LhsIdentificators.remove(identificator);
     }
 
+    /**
+     * @brief ClassMethod::getParameter
+     * @param name
+     * @return
+     */
     SharedField ClassMethod::getParameter(const QString &name)
     {
         auto it = std::find_if(m_Parameters.begin(), m_Parameters.end(),
@@ -143,6 +235,12 @@ namespace entity {
         return (it != m_Parameters.end() ? *it : nullptr);
     }
 
+    /**
+     * @brief ClassMethod::addParameter
+     * @param name
+     * @param typeId
+     * @return
+     */
     SharedField ClassMethod::addParameter(const QString &name, const QString &typeId)
     {
         auto existField = getParameter(name);
@@ -154,27 +252,48 @@ namespace entity {
         return f;
     }
 
+    /**
+     * @brief ClassMethod::containsParameter
+     * @param name
+     * @return
+     */
     bool ClassMethod::containsParameter(const QString &name)
     {
         return getParameter(name).operator bool();
     }
 
+    /**
+     * @brief ClassMethod::hasParameters
+     * @return
+     */
     bool ClassMethod::hasParameters() const
     {
         return m_Parameters.empty();
     }
 
+    /**
+     * @brief ClassMethod::removeParameter
+     * @param name
+     */
     void ClassMethod::removeParameter(const QString &name)
     {
         auto parameter = getParameter(name);
         if (parameter.operator bool()) m_Parameters.removeOne(parameter);
     }
 
+    /**
+     * @brief ClassMethod::parameters
+     * @return
+     */
     FieldsList ClassMethod::parameters() const
     {
         return m_Parameters;
     }
 
+    /**
+     * @brief ClassMethod::toJson
+     * @return
+     */
     QJsonObject ClassMethod::toJson() const
     {
         QJsonObject result;
@@ -200,6 +319,11 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief ClassMethod::fromJson
+     * @param src
+     * @param errorList
+     */
     void ClassMethod::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         utility::checkAndSet(src, "Name", errorList, [&src, this](){
@@ -248,26 +372,49 @@ namespace entity {
             }
         });
     }
+
+    /**
+     * @brief ClassMethod::type
+     * @return
+     */
     ClassMethodType ClassMethod::type() const
     {
         return m_Type;
     }
 
+    /**
+     * @brief ClassMethod::isEqual
+     * @param rhs
+     * @return
+     */
     bool ClassMethod::isEqual(const ClassMethod &rhs) const
     {
         return *this == rhs;
     }
 
+    /**
+     * @brief ClassMethod::writeToFile
+     * @param fileName
+     */
     void ClassMethod::writeToFile(const QString &fileName) const
     {
         utility::writeToFile(*this, fileName);
     }
 
+    /**
+     * @brief ClassMethod::readFromFile
+     * @param fileName
+     * @return
+     */
     bool ClassMethod::readFromFile(const QString &fileName)
     {
         return utility::readFromFile(*this, fileName);
     }
 
+    /**
+     * @brief ClassMethod::moveFrom
+     * @param src
+     */
     void ClassMethod::moveFrom(ClassMethod &src)
     {
         m_Type = std::move(src.m_Type);
@@ -284,6 +431,10 @@ namespace entity {
         m_LhsIdentificators = std::move(src.m_LhsIdentificators);
     }
 
+    /**
+     * @brief ClassMethod::copyFrom
+     * @param src
+     */
     void ClassMethod::copyFrom(const ClassMethod &src)
     {
         m_Type = src.m_Type;
@@ -300,22 +451,37 @@ namespace entity {
         m_LhsIdentificators = src.m_LhsIdentificators;
     }
 
+    /**
+     * @brief ClassMethod::scopeId
+     * @return
+     */
     QString ClassMethod::scopeId() const
     {
        return m_ScopeId;
     }
 
+    /**
+     * @brief ClassMethod::setScopeId
+     * @param scopeId
+     */
     void ClassMethod::setScopeId(const QString &scopeId)
     {
        m_ScopeId = scopeId;
     }
 
-
+    /**
+     * @brief ClassMethod::returnTypeId
+     * @return
+     */
     QString ClassMethod::returnTypeId() const
     {
        return m_ReturnTypeId;
     }
 
+    /**
+     * @brief ClassMethod::setReturnTypeId
+     * @param returnTypeId
+     */
     void ClassMethod::setReturnTypeId(const QString &returnTypeId)
     {
         m_ReturnTypeId = returnTypeId;

@@ -28,11 +28,22 @@
 
 namespace utility {
 
+    /**
+     * @brief genId
+     * @return
+     */
     QString genId()
     {
         return QUuid::createUuid().toString();
     }
 
+    /**
+     * @brief checkAndSet
+     * @param object
+     * @param key
+     * @param lst
+     * @param func
+     */
     void checkAndSet(const QJsonObject &object, const QString &key, QStringList &lst, std::function<void ()> func)
     {
         object.contains(key) ? func() : lst.append(QObject::tr("Key \"%1\" not found!").arg(key));
@@ -88,6 +99,11 @@ namespace utility {
                           };
     }
 
+    /**
+     * @brief makeType
+     * @param type
+     * @return
+     */
     std::shared_ptr<entity::Type> makeType(entity::UserType type)
     {
         MakerT defaultMaker([](){ return std::make_shared<entity::Type>(); });
@@ -95,6 +111,11 @@ namespace utility {
         return mapSearchHelper(kType, type, defaultMaker)();
     }
 
+    /**
+     * @brief makeRelation
+     * @param relation
+     * @return
+     */
     std::shared_ptr<relationship::Relation> makeRelation(relationship::RelationType relation)
     {
         MakerR defaultMaker([](){ return std::make_shared<relationship::Relation>(); });
@@ -102,6 +123,11 @@ namespace utility {
         return mapSearchHelper(kRelation, relation, defaultMaker)();
     }
 
+    /**
+     * @brief makeMethod
+     * @param methodType
+     * @return
+     */
     std::shared_ptr<entity::ClassMethod> makeMethod(entity::ClassMethodType methodType)
     {
         MakerM defaultMaker([](){ return std::make_shared<entity::ClassMethod>(); });
@@ -109,26 +135,52 @@ namespace utility {
         return mapSearchHelper(kMethod, methodType, defaultMaker)();
     }
 
+    /**
+     * @brief fieldKeywordToString
+     * @param keyword
+     * @return
+     */
     QString fieldKeywordToString(entity::FieldKeyword keyword)
     {
         return mapSearchHelper(kKeywords, keyword, QString("unknown"));
     }
 
+    /**
+     * @brief methodLhsIdToString
+     * @param id
+     * @return
+     */
     QString methodLhsIdToString(entity::LhsIdentificator id)
     {
         return mapSearchHelper(kLhsId, id, QString("unknown"));
     }
 
+    /**
+     * @brief methodRhsIdToString
+     * @param id
+     * @return
+     */
     QString methodRhsIdToString(entity::RhsIdentificator id)
     {
         return mapSearchHelper(kRhsId, id, QString("unknown"));
     }
 
+    /**
+     * @brief sectionToString
+     * @param section
+     * @return
+     */
     QString sectionToString(entity::Section section)
     {
         return mapSearchHelper(kSection, section, QString("unknown"));
     }
 
+    /**
+     * @brief scopesNamesList
+     * @param type
+     * @param db
+     * @return
+     */
     QStringList scopesNamesList(const entity::SharedType &type, const db::SharedDatabase &db)
     {
         QStringList result;

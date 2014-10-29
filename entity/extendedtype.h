@@ -8,6 +8,9 @@
 
 namespace entity {
 
+    /**
+     * @brief The ExtendedType class
+     */
     class ExtendedType : public Type
     {
     public:

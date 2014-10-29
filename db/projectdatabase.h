@@ -5,6 +5,9 @@
 
 namespace db {
 
+    /**
+     * @brief The ProjectDatabase class
+     */
     class ProjectDatabase : public Database
     {
     public:

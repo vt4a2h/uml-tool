@@ -13,16 +13,29 @@
 
 namespace db {
 
+    /**
+     * @brief Database::Database
+     * @param src
+     */
     Database::Database(Database &&src)
     {
         moveFrom(src);
     }
 
+    /**
+     * @brief Database::Database
+     * @param src
+     */
     Database::Database(const Database &src)
     {
         copyFrom(src);
     }
 
+    /**
+     * @brief Database::Database
+     * @param name
+     * @param path
+     */
     Database::Database(const QString &name, const QString &path)
         : m_Name(name.isEmpty() ? DEFAULT_DATABASE_NAME : name)
         , m_Path(path.isEmpty() ? DEFAULT_DATABASE_PATH : QDir::currentPath())
@@ -30,10 +43,18 @@ namespace db {
     {
     }
 
+    /**
+     * @brief Database::~Database
+     */
     Database::~Database()
     {
     }
 
+    /**
+     * @brief Database::operator =
+     * @param rhs
+     * @return
+     */
     Database &Database::operator =(Database &&rhs)
     {
         if (this != &rhs)
@@ -42,12 +63,23 @@ namespace db {
         return *this;
     }
 
+    /**
+     * @brief Database::operator =
+     * @param rhs
+     * @return
+     */
     Database &Database::operator =(Database rhs)
     {
         moveFrom(rhs);
         return *this;
     }
 
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
     bool operator ==(const Database &lhs, const Database &rhs)
     {
         return lhs.m_Name == rhs.m_Name &&
@@ -55,31 +87,58 @@ namespace db {
                utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes);
     }
 
+    /**
+     * @brief Database::path
+     * @return
+     */
     QString Database::path() const
     {
         return m_Path;
     }
 
+    /**
+     * @brief Database::setPath
+     * @param path
+     */
     void Database::setPath(const QString &path)
     {
         m_Path = path.simplified();
     }
 
+    /**
+     * @brief Database::name
+     * @return
+     */
     QString Database::name() const
     {
         return m_Name;
     }
 
+    /**
+     * @brief Database::setName
+     * @param name
+     */
     void Database::setName(const QString &name)
     {
         m_Name = name;
     }
 
+    /**
+     * @brief Database::getScope
+     * @param id
+     * @return
+     */
     entity::SharedScope Database::getScope(const QString &id) const
     {
         return m_Scopes.contains(id) ? m_Scopes[id] : nullptr;
     }
 
+    /**
+     * @brief Database::addScope
+     * @param name
+     * @param parentScopeId
+     * @return
+     */
     entity::SharedScope Database::addScope(const QString &name, const QString &parentScopeId)
     {
         entity::SharedScope scope(nullptr);
@@ -98,31 +157,58 @@ namespace db {
         return scope;
     }
 
+    /**
+     * @brief Database::containsScope
+     * @param id
+     * @return
+     */
     bool Database::containsScope(const QString &id) const
     {
         return m_Scopes.contains(id);
     }
 
+    /**
+     * @brief Database::anyScopes
+     * @return
+     */
     bool Database::anyScopes() const
     {
         return !m_Scopes.isEmpty();
     }
 
+    /**
+     * @brief Database::removeScope
+     * @param id
+     */
     void Database::removeScope(const QString &id)
     {
         m_Scopes.remove(id);
     }
 
+    /**
+     * @brief Database::scopes
+     * @return
+     */
     entity::ScopesList Database::scopes()
     {
         return m_Scopes.values();
     }
 
+    /**
+     * @brief Database::depthScopeSearch
+     * @param scopeId
+     * @return
+     */
     entity::SharedScope Database::depthScopeSearch(const QString &scopeId) const
     {
         return getScopeWithDepthList(makeDepthIdList(scopeId));
     }
 
+    /**
+     * @brief Database::depthTypeSearch
+     * @param typeId
+     * @return
+     */
     entity::SharedType Database::depthTypeSearch(const QString &typeId) const
     {
         entity::SharedType result(nullptr);
@@ -136,6 +222,11 @@ namespace db {
         return result;
     }
 
+    /**
+     * @brief Database::makeDepthIdList
+     * @param id
+     * @return
+     */
     QStringList Database::makeDepthIdList(const QString &id) const
     {
         QStringList result;
@@ -152,6 +243,11 @@ namespace db {
         return result;
     }
 
+    /**
+     * @brief Database::getScopeWithDepthList
+     * @param ids
+     * @return
+     */
     entity::SharedScope Database::getScopeWithDepthList(const QStringList &ids) const
     {
         entity::SharedScope result(nullptr);
@@ -167,6 +263,12 @@ namespace db {
         return result;
     }
 
+    /**
+     * @brief Database::getDepthType
+     * @param scope
+     * @param id
+     * @param result
+     */
     void Database::getDepthType(const entity::SharedScope &scope, const QString &id, entity::SharedType &result) const
     {
         if (scope->containsType(id)) {
@@ -181,6 +283,10 @@ namespace db {
 
     }
 
+    /**
+     * @brief Database::load
+     * @param errorList
+     */
     void Database::load(QStringList &errorList)
     {
         QFile f(makeFullPath());
@@ -198,11 +304,17 @@ namespace db {
         }
     }
 
+    /**
+     * @brief Database::clear
+     */
     void Database::clear()
     {
         m_Scopes.clear();
     }
 
+    /**
+     * @brief Database::save
+     */
     void Database::save() const
     {
         QFile f(makeFullPath());
@@ -213,6 +325,10 @@ namespace db {
         }
     }
 
+    /**
+     * @brief Database::toJson
+     * @return
+     */
     QJsonObject Database::toJson() const
     {
         QJsonArray scopes;
@@ -224,6 +340,11 @@ namespace db {
         return result;
     }
 
+    /**
+     * @brief Database::fromJson
+     * @param src
+     * @param errorList
+     */
     void Database::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         clear();
@@ -241,11 +362,20 @@ namespace db {
         });
     }
 
+    /**
+     * @brief Database::isEqual
+     * @param rhs
+     * @return
+     */
     bool Database::isEqual(const Database &rhs) const
     {
         return *this == rhs;
     }
 
+    /**
+     * @brief Database::moveFrom
+     * @param src
+     */
     void Database::moveFrom(Database &src)
     {
         m_Name = std::move(src.m_Name);
@@ -254,6 +384,10 @@ namespace db {
         m_Scopes = std::move(src.m_Scopes);
     }
 
+    /**
+     * @brief Database::copyFrom
+     * @param src
+     */
     void Database::copyFrom(const Database &src)
     {
         m_Name = src.m_Name;
@@ -262,6 +396,10 @@ namespace db {
         utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &entity::Scope::id);
     }
 
+    /**
+     * @brief Database::makeFullPath
+     * @return
+     */
     QString Database::makeFullPath() const
     {
         return QString("%1%2%3.%4")
@@ -271,6 +409,12 @@ namespace db {
                      DEFAULT_DATABASE_EXTENSION);
     }
 
+    /**
+     * @brief Database::recursiveFind
+     * @param scope
+     * @param id
+     * @param ids
+     */
     void Database::recursiveFind(entity::SharedScope scope, const QString &id, QStringList &ids) const
     {
         if (scope->scopes().isEmpty())  {

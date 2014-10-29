@@ -10,6 +10,9 @@ namespace entity {
 
     enum UserType : int;
 
+    /**
+     * @brief The Scope class
+     */
     class Scope
     {
     public:

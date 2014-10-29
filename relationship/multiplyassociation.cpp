@@ -12,11 +12,21 @@
 
 namespace relationship {
 
+    /**
+     * @brief MultiplyAssociation::MultiplyAssociation
+     */
     MultiplyAssociation::MultiplyAssociation()
         : MultiplyAssociation(STUB_ID, STUB_ID, nullptr, nullptr)
     {
     }
 
+    /**
+     * @brief MultiplyAssociation::MultiplyAssociation
+     * @param tailTypeId
+     * @param headTypeId
+     * @param globalDatabase
+     * @param projectDatabase
+     */
     MultiplyAssociation::MultiplyAssociation(const QString &tailTypeId, const QString &headTypeId, db::Database *globalDatabase, db::Database *projectDatabase)
         : Association(tailTypeId, headTypeId, globalDatabase, projectDatabase)
         , m_ContainerClass(nullptr)
@@ -24,6 +34,12 @@ namespace relationship {
         m_RelationType = MultiRelation;
     }
 
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
     bool operator ==(const MultiplyAssociation &lhs, const MultiplyAssociation &rhs)
     {
         return static_cast<const Association&>(lhs).isEqual(rhs) &&
@@ -32,6 +48,9 @@ namespace relationship {
                (lhs.m_ContainerClass == rhs.m_ContainerClass || *lhs.m_ContainerClass == *rhs.m_ContainerClass);
     }
 
+    /**
+     * @brief MultiplyAssociation::make
+     */
     void MultiplyAssociation::make()
     {
         Association::make();
@@ -39,6 +58,9 @@ namespace relationship {
         makeGroupGetter();
     }
 
+    /**
+     * @brief MultiplyAssociation::clear
+     */
     void MultiplyAssociation::clear()
     {
         Association::clear();
@@ -46,11 +68,19 @@ namespace relationship {
         removeGroupGetter();
     }
 
+    /**
+     * @brief MultiplyAssociation::containerTypeId
+     * @return
+     */
     QString MultiplyAssociation::containerTypeId() const
     {
         return m_ContainerTypeId;
     }
 
+    /**
+     * @brief MultiplyAssociation::setContainerTypeId
+     * @param containerTypeId
+     */
     void MultiplyAssociation::setContainerTypeId(const QString &containerTypeId)
     {
         m_ContainerClass = tryToFindType(containerTypeId);
@@ -61,6 +91,9 @@ namespace relationship {
         m_ContainerTypeId = containerTypeId;
     }
 
+    /**
+     * @brief MultiplyAssociation::makeGetter
+     */
     void MultiplyAssociation::makeGetter()
     {
         QString getterName(QString("get%1").arg(m_HeadClass->name()));
@@ -73,6 +106,9 @@ namespace relationship {
         parameter->setPrefix("");
     }
 
+    /**
+     * @brief MultiplyAssociation::makeSetter
+     */
     void MultiplyAssociation::makeSetter()
     {
         QString setterName(QString("add%1").arg(m_HeadClass->name()));
@@ -82,6 +118,9 @@ namespace relationship {
         param->setPrefix("");
     }
 
+    /**
+     * @brief MultiplyAssociation::makeField
+     */
     void MultiplyAssociation::makeField()
     {
         Q_ASSERT_X(m_ContainerClass,
@@ -90,6 +129,9 @@ namespace relationship {
         m_TailClass->addField(m_ContainerClass->name(), containerTypeId());
     }
 
+    /**
+     * @brief MultiplyAssociation::makeDeleter
+     */
     void MultiplyAssociation::makeDeleter()
     {
         QString deleterName(QString("remove%1").arg(m_HeadClass->name()));
@@ -99,6 +141,9 @@ namespace relationship {
         parameter->setPrefix("");
     }
 
+    /**
+     * @brief MultiplyAssociation::makeGroupGetter
+     */
     void MultiplyAssociation::makeGroupGetter()
     {
         QString groupGetterName(QString("%1s").arg(m_HeadClass->name().toLower()));
@@ -108,16 +153,25 @@ namespace relationship {
         groupGetter->setConstStatus(true);
     }
 
+    /**
+     * @brief MultiplyAssociation::removeGetter
+     */
     void MultiplyAssociation::removeGetter()
     {
         m_TailClass->removeMethods(QString("get%1").arg(m_HeadClass->name()));
     }
 
+    /**
+     * @brief MultiplyAssociation::removeSetter
+     */
     void MultiplyAssociation::removeSetter()
     {
         m_TailClass->removeMethods(QString("add%1").arg(m_HeadClass->name()));
     }
 
+    /**
+     * @brief MultiplyAssociation::removeField
+     */
     void MultiplyAssociation::removeField()
     {
         Q_ASSERT_X(m_ContainerClass,
@@ -126,26 +180,44 @@ namespace relationship {
         m_TailClass->removeField(m_ContainerClass->name());
     }
 
+    /**
+     * @brief MultiplyAssociation::removeDeleter
+     */
     void MultiplyAssociation::removeDeleter()
     {
         m_TailClass->removeMethods(QString("remove%1").arg(m_HeadClass->name()));
     }
 
+    /**
+     * @brief MultiplyAssociation::removeGroupGetter
+     */
     void MultiplyAssociation::removeGroupGetter()
     {
         m_TailClass->removeMethods(QString("%1s").arg(m_HeadClass->name().toLower()));
     }
 
+    /**
+     * @brief MultiplyAssociation::keyTypeId
+     * @return
+     */
     QString MultiplyAssociation::keyTypeId() const
     {
         return m_KeyTypeId;
     }
 
+    /**
+     * @brief MultiplyAssociation::setKeyTypeId
+     * @param indexTypeId
+     */
     void MultiplyAssociation::setKeyTypeId(const QString &indexTypeId)
     {
         m_KeyTypeId = indexTypeId;
     }
 
+    /**
+     * @brief MultiplyAssociation::toJson
+     * @return
+     */
     QJsonObject MultiplyAssociation::toJson() const
     {
         QJsonObject result = Association::toJson();
@@ -156,6 +228,11 @@ namespace relationship {
         return result;
     }
 
+    /**
+     * @brief MultiplyAssociation::fromJson
+     * @param src
+     * @param errorList
+     */
     void MultiplyAssociation::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         utility::checkAndSet(src, "Conatiner ID", errorList, [&src, this](){
@@ -171,6 +248,11 @@ namespace relationship {
         });
     }
 
+    /**
+     * @brief MultiplyAssociation::isEqual
+     * @param rhs
+     * @return
+     */
     bool MultiplyAssociation::isEqual(const MultiplyAssociation &rhs) const
     {
         return *this == rhs;

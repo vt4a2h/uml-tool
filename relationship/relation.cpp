@@ -12,21 +12,39 @@
 
 namespace relationship {
 
+    /**
+     * @brief Relation::Relation
+     */
     Relation::Relation()
         : Relation(STUB_ID, STUB_ID, nullptr, nullptr)
     {
     }
 
+    /**
+     * @brief Relation::Relation
+     * @param src
+     */
     Relation::Relation(Relation &&src)
     {
         moveFrom(src);
     }
 
+    /**
+     * @brief Relation::Relation
+     * @param src
+     */
     Relation::Relation(const Relation &src)
     {
         copyFrom(src);
     }
 
+    /**
+     * @brief Relation::Relation
+     * @param tailTypeId
+     * @param headTypeId
+     * @param globalDatabase
+     * @param projectDatabase
+     */
     Relation::Relation(const QString &tailTypeId, const QString &headTypeId,
                        db::Database *globalDatabase, db::Database *projectDatabase)
         : m_TailNode(std::make_shared<Node>(tailTypeId))
@@ -42,10 +60,18 @@ namespace relationship {
             addTailClass(tailTypeId);
     }
 
+    /**
+     * @brief Relation::~Relation
+     */
     Relation::~Relation()
     {
     }
 
+    /**
+     * @brief Relation::operator =
+     * @param rhs
+     * @return
+     */
     Relation &Relation::operator =(Relation rhs)
     {
         moveFrom(rhs);
@@ -53,6 +79,11 @@ namespace relationship {
         return *this;
     }
 
+    /**
+     * @brief Relation::operator =
+     * @param rhs
+     * @return
+     */
     Relation &Relation::operator =(Relation &&rhs)
     {
         if (this != &rhs)
@@ -61,6 +92,12 @@ namespace relationship {
         return *this;
     }
 
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
     bool operator ==(const Relation &lhs, const Relation &rhs)
     {
         return lhs.m_Description     == rhs.m_Description     &&
@@ -73,36 +110,60 @@ namespace relationship {
                (lhs.m_TailNode  == rhs.m_TailNode  || *lhs.m_TailNode  == *rhs.m_TailNode );
     }
 
+    /**
+     * @brief Relation::description
+     * @return
+     */
     QString Relation::description() const
     {
         return m_Description;
     }
 
+    /**
+     * @brief Relation::setDescription
+     * @param description
+     */
     void Relation::setDescription(const QString &description)
     {
         m_Description = description;
     }
 
+    /**
+     * @brief Relation::makeRelation
+     */
     void Relation::makeRelation()
     {
         check();
         make();
     }
 
+    /**
+     * @brief Relation::removeRelation
+     */
     void Relation::removeRelation()
     {
         check();
         clear();
     }
 
+    /**
+     * @brief Relation::make
+     */
     void Relation::make()
     {
     }
 
+    /**
+     * @brief Relation::clear
+     */
     void Relation::clear()
     {
     }
 
+    /**
+     * @brief Relation::moveFrom
+     * @param src
+     */
     void Relation::moveFrom(Relation &src)
     {
         m_TailNode = std::move(src.m_TailNode);
@@ -119,6 +180,10 @@ namespace relationship {
         m_ProjectDatabase = std::move(src.m_ProjectDatabase);
     }
 
+    /**
+     * @brief Relation::copyFrom
+     * @param src
+     */
     void Relation::copyFrom(const Relation &src)
     {
         m_TailNode = std::make_shared<Node>(*src.m_TailNode);
@@ -136,6 +201,9 @@ namespace relationship {
         m_ProjectDatabase = src.m_ProjectDatabase;
     }
 
+    /**
+     * @brief Relation::check
+     */
     void Relation::check()
     {
         Q_ASSERT_X(m_HeadClass, "Relation::check", "head class not found");
@@ -144,26 +212,46 @@ namespace relationship {
         Q_ASSERT_X(m_ProjectDatabase, "Relation::check", "project database not valid");
     }
 
+    /**
+     * @brief Relation::relationType
+     * @return
+     */
     RelationType Relation::relationType() const
     {
         return m_RelationType;
     }
 
+    /**
+     * @brief Relation::setRelationType
+     * @param relationType
+     */
     void Relation::setRelationType(const RelationType &relationType)
     {
         m_RelationType = relationType;
     }
 
+    /**
+     * @brief Relation::id
+     * @return
+     */
     QString Relation::id() const
     {
         return m_Id;
     }
 
+    /**
+     * @brief Relation::setId
+     * @param id
+     */
     void Relation::setId(const QString &id)
     {
         m_Id = id;
     }
 
+    /**
+     * @brief Relation::toJson
+     * @return
+     */
     QJsonObject Relation::toJson() const
     {
         QJsonObject result;
@@ -177,6 +265,11 @@ namespace relationship {
         return result;
     }
 
+    /**
+     * @brief Relation::fromJson
+     * @param src
+     * @param errorList
+     */
     void Relation::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         utility::checkAndSet(src, "ID", errorList, [&src, this](){
@@ -198,26 +291,48 @@ namespace relationship {
         });
     }
 
+    /**
+     * @brief Relation::isEqual
+     * @param rhs
+     * @return
+     */
     bool Relation::isEqual(const Relation &rhs) const
     {
         return *this == rhs;
     }
 
+    /**
+     * @brief Relation::writeToFile
+     * @param fileName
+     */
     void Relation::writeToFile(const QString &fileName) const
     {
         utility::writeToFile(*this, fileName);
     }
 
+    /**
+     * @brief Relation::readFromFile
+     * @param fileName
+     * @return
+     */
     bool Relation::readFromFile(const QString &fileName)
     {
         return utility::readFromFile(*this, fileName);
     }
 
+    /**
+     * @brief Relation::globalDatabase
+     * @return
+     */
     db::Database *Relation::globalDatabase() const
     {
         return m_GlobalDatabase;
     }
 
+    /**
+     * @brief Relation::setGlobalDatabase
+     * @param globalDatabase
+     */
     void Relation::setGlobalDatabase(db::Database *globalDatabase)
     {
         Q_ASSERT_X(globalDatabase,
@@ -226,11 +341,19 @@ namespace relationship {
         m_GlobalDatabase = globalDatabase;
     }
 
+    /**
+     * @brief Relation::projectDatabase
+     * @return
+     */
     db::Database *Relation::projectDatabase() const
     {
         return m_ProjectDatabase;
     }
 
+    /**
+     * @brief Relation::setProjectDatabase
+     * @param projectDatabase
+     */
     void Relation::setProjectDatabase(db::Database *projectDatabase)
     {
         Q_ASSERT_X(projectDatabase,
@@ -239,6 +362,10 @@ namespace relationship {
         m_ProjectDatabase = projectDatabase;
     }
 
+    /**
+     * @brief Relation::addHeadClass
+     * @param id
+     */
     void Relation::addHeadClass(const QString &id)
     {
         auto tmpHead = tryToFindType(id);
@@ -250,6 +377,10 @@ namespace relationship {
         m_HeadClass = tmpHead;
     }
 
+    /**
+     * @brief Relation::addTailClass
+     * @param id
+     */
     void Relation::addTailClass(const QString &id)
     {
         auto tmpTailClass = std::dynamic_pointer_cast<entity::Class>(tryToFindType(id));
@@ -261,6 +392,11 @@ namespace relationship {
         m_TailClass = tmpTailClass ;
     }
 
+    /**
+     * @brief Relation::tryToFindType
+     * @param typeId
+     * @return
+     */
     entity::SharedType Relation::tryToFindType(const QString &typeId) const
     {
         entity::SharedType result = m_ProjectDatabase->depthTypeSearch(typeId);

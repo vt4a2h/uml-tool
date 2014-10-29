@@ -6,6 +6,9 @@
 
 namespace generator {
 
+    /**
+     * @brief The VirtualFileSystemAbstractItem class
+     */
     class VirtualFileSystemAbstractItem
     {
     public:

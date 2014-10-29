@@ -8,6 +8,9 @@
 
 namespace entity {
 
+    /**
+     * @brief The Enum class
+     */
     class Enum : public Type
     {
     public:

@@ -4,6 +4,9 @@
 
 namespace relationship {
 
+    /**
+     * @brief The MultiplyAssociation class
+     */
     class MultiplyAssociation : public Association
     {
     public:

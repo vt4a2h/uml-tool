@@ -11,33 +11,61 @@
 
 namespace relationship {
 
+    /**
+     * @brief Realization::Realization
+     */
     Realization::Realization()
         : Realization(STUB_ID, STUB_ID, nullptr, nullptr)
     {
     }
 
+    /**
+     * @brief Realization::Realization
+     * @param tailTypeId
+     * @param headTypeId
+     * @param globalDatabase
+     * @param projectDatabase
+     */
     Realization::Realization(const QString &tailTypeId, const QString &headTypeId, db::Database *globalDatabase, db::Database *projectDatabase)
         : Generalization(tailTypeId, headTypeId, globalDatabase, projectDatabase)
     {
         m_RelationType = RealizationRelation;
     }
 
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
     bool operator ==(const Realization &lhs, const Realization &rhs)
     {
         return static_cast<const Generalization&>(lhs).isEqual(rhs) &&
                utility::seqSharedPointerEq(lhs.m_Methods, rhs.m_Methods);
     }
 
+    /**
+     * @brief Realization::addMethods
+     * @param methods
+     */
     void Realization::addMethods(const entity::MethodsList &methods)
     {
         m_Methods = methods;
     }
 
+    /**
+     * @brief Realization::methods
+     * @return
+     */
     entity::MethodsList Realization::methods() const
     {
         return m_Methods;
     }
 
+    /**
+     * @brief Realization::toJson
+     * @return
+     */
     QJsonObject Realization::toJson() const
     {
         auto result = Generalization::toJson();
@@ -50,6 +78,11 @@ namespace relationship {
         return result;
     }
 
+    /**
+     * @brief Realization::fromJson
+     * @param src
+     * @param errorList
+     */
     void Realization::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         Generalization::fromJson(src, errorList);
@@ -69,11 +102,19 @@ namespace relationship {
         });
     }
 
+    /**
+     * @brief Realization::isEqual
+     * @param rhs
+     * @return
+     */
     bool Realization::isEqual(const Realization &rhs) const
     {
         return *this == rhs;
     }
 
+    /**
+     * @brief Realization::make
+     */
     void Realization::make()
     {
         entity::SharedMethod m;
@@ -90,6 +131,9 @@ namespace relationship {
         }
     }
 
+    /**
+     * @brief Realization::clear
+     */
     void Realization::clear()
     {
         entity::SharedClass head = std::dynamic_pointer_cast<entity::Class>(m_HeadClass);

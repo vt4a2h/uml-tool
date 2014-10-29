@@ -7,6 +7,9 @@
 
 namespace generator {
 
+    /**
+     * @brief The VirtualDirectory class
+     */
     class VirtualDirectory : public VirtualFileSystemAbstractItem
     {
     public:

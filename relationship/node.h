@@ -8,6 +8,9 @@ namespace relationship {
 
     enum Multiplicity : int;
 
+    /**
+     * @brief The Node class
+     */
     class Node
     {
     public:

@@ -13,11 +13,19 @@
 
 namespace entity {
 
+    /**
+     * @brief Enum::Enum
+     */
     Enum::Enum()
         : Enum(DEFAULT_NAME, GLOBAL_SCOPE_ID)
     {
     }
 
+    /**
+     * @brief Enum::Enum
+     * @param name
+     * @param scopeId
+     */
     Enum::Enum(const QString &name, const QString &scopeId)
         : Type(name, scopeId)
         , m_EnumTypeId(STUB_ID)
@@ -26,6 +34,12 @@ namespace entity {
         m_KindOfType = EnumType;
     }
 
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
     bool operator==(const Enum &lhs, const Enum &rhs)
     {
         return static_cast<const Type&>(lhs).isEqual(rhs) &&
@@ -34,22 +48,40 @@ namespace entity {
                lhs.m_Variables    == rhs.m_Variables;
     }
 
+    /**
+     * @brief Enum::isStrong
+     * @return
+     */
     bool Enum::isStrong() const
     {
         return m_StrongStatus;
     }
 
+    /**
+     * @brief Enum::setStrongStatus
+     * @param status
+     */
     void Enum::setStrongStatus(bool status)
     {
         m_StrongStatus = status;
     }
 
+    /**
+     * @brief Enum::addVariable
+     * @param name
+     * @return
+     */
     Enum::Variable &Enum::addVariable(const QString &name)
     {
         m_Variables.append(std::make_pair(name, m_Variables.size()));
         return m_Variables.last();
     }
 
+    /**
+     * @brief Enum::getVariable
+     * @param name
+     * @return
+     */
     Enum::Variable Enum::getVariable(const QString &name) const
     {
         auto it = std::find_if(m_Variables.cbegin(), m_Variables.cend(),
@@ -57,6 +89,10 @@ namespace entity {
         return (it != m_Variables.end() ? *it : std::make_pair(DEFAULT_NAME, -1));
     }
 
+    /**
+     * @brief Enum::removeVariable
+     * @param name
+     */
     void Enum::removeVariable(const QString &name)
     {
         auto it = std::find_if(m_Variables.begin(), m_Variables.end(),
@@ -64,6 +100,11 @@ namespace entity {
         if (it != m_Variables.end()) m_Variables.erase(it);
     }
 
+    /**
+     * @brief Enum::containsVariable
+     * @param name
+     * @return
+     */
     bool Enum::containsVariable(const QString &name)
     {
         return (std::find_if(m_Variables.begin(), m_Variables.end(),
@@ -71,21 +112,37 @@ namespace entity {
                 m_Variables.end());
     }
 
+    /**
+     * @brief Enum::variables
+     * @return
+     */
     Enum::VariablesList Enum::variables() const
     {
         return m_Variables;
     }
 
+    /**
+     * @brief Enum::enumTypeId
+     * @return
+     */
     QString Enum::enumTypeId() const
     {
         return m_EnumTypeId;
     }
 
+    /**
+     * @brief Enum::setEnumTypeId
+     * @param enumTypeId
+     */
     void Enum::setEnumTypeId(const QString &enumTypeId)
     {
         m_EnumTypeId = enumTypeId;
     }
 
+    /**
+     * @brief Enum::toJson
+     * @return
+     */
     QJsonObject Enum::toJson() const
     {
         QJsonObject result(Type::toJson());
@@ -105,6 +162,11 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Enum::fromJson
+     * @param src
+     * @param errorList
+     */
     void Enum::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         Type::fromJson(src, errorList);
@@ -129,6 +191,11 @@ namespace entity {
         });
     }
 
+    /**
+     * @brief Enum::isEqual
+     * @param rhs
+     * @return
+     */
     bool Enum::isEqual(const Enum &rhs) const
     {
         return *this == rhs;

@@ -12,6 +12,9 @@ namespace entity {
     enum Section : int;
     enum FieldKeyword : int;
 
+    /**
+     * @brief The Field class
+     */
     class Field
     {
     public:

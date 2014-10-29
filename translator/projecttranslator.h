@@ -6,9 +6,15 @@ namespace translator {
 
     struct Code;
 
+    /**
+     * @brief The ProjectTranslator class
+     */
     class ProjectTranslator
     {
     public:
+        /**
+         * @brief The TranslatorOption enum
+         */
         enum TranslatorOption {
             NoOptions       = 0x00,
             WithNamespace   = 0x01,

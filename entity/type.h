@@ -9,7 +9,9 @@ namespace entity {
     class Scope;
     enum UserType : int;
 
-    // we need to implement all copy and move methods, because class has a virtual dtor
+    /**
+     * @brief The Type class
+     */
     class Type
     {
     public:

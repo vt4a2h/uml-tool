@@ -4,8 +4,14 @@
 
 #include "types.h"
 
+/**
+ * @brief project
+ */
 namespace project {
 
+    /**
+     * @brief The Project class
+     */
     class Project
     {
     public:

@@ -4,6 +4,9 @@
 
 namespace relationship {
 
+    /**
+     * @brief The Dependency class
+     */
     class Dependency : public Relation
     {
     public:

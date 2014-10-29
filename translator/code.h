@@ -2,8 +2,14 @@
 
 #include <QString>
 
+/**
+ * @brief translator
+ */
 namespace translator {
 
+    /**
+     * @brief The Code struct
+     */
     struct Code {
        Code();
        Code(const QString &h, const QString &cpp);

@@ -14,6 +14,9 @@ namespace relationship {
 
     enum RelationType : int;
 
+    /**
+     * @brief The Relation class
+     */
     class Relation
     {
     public:

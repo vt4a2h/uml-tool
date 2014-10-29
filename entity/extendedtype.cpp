@@ -10,11 +10,19 @@
 
 namespace entity {
 
+    /**
+     * @brief ExtendedType::ExtendedType
+     */
     ExtendedType::ExtendedType()
         : ExtendedType(DEFAULT_NAME, STUB_ID)
     {
     }
 
+    /**
+     * @brief ExtendedType::ExtendedType
+     * @param name
+     * @param scopeId
+     */
     ExtendedType::ExtendedType(const QString &name, const QString &scopeId)
         : Type(name, scopeId)
         , m_ConstStatus(false)
@@ -23,6 +31,12 @@ namespace entity {
         m_KindOfType = ExtendedTypeType;
     }
 
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
     bool operator ==(const ExtendedType &lhs, const ExtendedType &rhs)
     {
         return static_cast<const Type&>(lhs).isEqual(rhs)         &&
@@ -32,81 +46,143 @@ namespace entity {
                lhs.m_TemplateParameters == rhs.m_TemplateParameters;
     }
 
+    /**
+     * @brief ExtendedType::isLink
+     * @return
+     */
     bool ExtendedType::isLink() const
     {
         return !m_PointersAndLinks.isEmpty() && m_PointersAndLinks.last().first == "&";
     }
 
+    /**
+     * @brief ExtendedType::addPointerStatus
+     * @param pointerToConst
+     */
     void ExtendedType::addPointerStatus(bool pointerToConst)
     {
         m_PointersAndLinks.append(std::make_pair("*", pointerToConst));
     }
 
+    /**
+     * @brief ExtendedType::removePointerStatus
+     */
     void ExtendedType::removePointerStatus()
     {
         if (isPointer()) m_PointersAndLinks.removeLast();
     }
 
+    /**
+     * @brief ExtendedType::isPointer
+     * @return
+     */
     bool ExtendedType::isPointer() const
     {
         return !m_PointersAndLinks.isEmpty() && m_PointersAndLinks.last().first == "*";
     }
 
+    /**
+     * @brief ExtendedType::addLinkStatus
+     */
     void ExtendedType::addLinkStatus()
     {
         m_PointersAndLinks.append(std::make_pair("&", false));
     }
 
+    /**
+     * @brief ExtendedType::removeLinkStatus
+     */
     void ExtendedType::removeLinkStatus()
     {
         if (isLink()) m_PointersAndLinks.removeLast();
     }
 
+    /**
+     * @brief ExtendedType::pl
+     * @return
+     */
     ExtendedType::PlList ExtendedType::pl() const
     {
         return m_PointersAndLinks;
     }
 
+    /**
+     * @brief ExtendedType::isConst
+     * @return
+     */
     bool ExtendedType::isConst() const
     {
         return m_ConstStatus;
     }
 
+    /**
+     * @brief ExtendedType::setConstStatus
+     * @param status
+     */
     void ExtendedType::setConstStatus(bool status)
     {
         m_ConstStatus = status;
     }
 
+    /**
+     * @brief ExtendedType::addTemplateParameter
+     * @param typeId
+     */
     void ExtendedType::addTemplateParameter(const QString &typeId)
     {
         m_TemplateParameters << typeId;
     }
 
+    /**
+     * @brief ExtendedType::containsTemplateParameter
+     * @param typeId
+     * @return
+     */
     bool ExtendedType::containsTemplateParameter(const QString &typeId) const
     {
         return m_TemplateParameters.contains(typeId);
     }
 
+    /**
+     * @brief ExtendedType::removeTemplateParameters
+     * @param typeId
+     */
     void ExtendedType::removeTemplateParameters(const QString &typeId)
     {
         m_TemplateParameters.removeAll(typeId);
     }
 
+    /**
+     * @brief ExtendedType::templateParameters
+     * @return
+     */
     ExtendedTypesIdList ExtendedType::templateParameters() const
     {
         return m_TemplateParameters;
     }
 
+    /**
+     * @brief ExtendedType::typeId
+     * @return
+     */
     QString ExtendedType::typeId() const
     {
         return m_TypeId;
     }
 
+    /**
+     * @brief ExtendedType::setTypeId
+     * @param typeId
+     */
     void ExtendedType::setTypeId(const QString &typeId)
     {
         m_TypeId = typeId;
     }
 
+    /**
+     * @brief ExtendedType::toJson
+     * @return
+     */
     QJsonObject ExtendedType::toJson() const
     {
         QJsonObject result(Type::toJson());
@@ -130,6 +206,11 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief ExtendedType::fromJson
+     * @param src
+     * @param errorList
+     */
     void ExtendedType::fromJson(const QJsonObject &src, QStringList &errorList)
     {
        Type::fromJson(src, errorList);
@@ -162,6 +243,11 @@ namespace entity {
        });
     }
 
+    /**
+     * @brief ExtendedType::isEqual
+     * @param rhs
+     * @return
+     */
     bool ExtendedType::isEqual(const ExtendedType &rhs) const
     {
         return *this == rhs;

@@ -5,6 +5,9 @@
 
 namespace entity {
 
+    /**
+     * @brief The TemplateClassMethod class
+     */
     class TemplateClassMethod : public ClassMethod, public Template
     {
     public:

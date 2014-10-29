@@ -4,6 +4,9 @@
 #include "types.h"
 #include "enums.h"
 
+/**
+ * @brief entity
+ */
 namespace entity {
 
     // TODO: add methods for generate dtor, ctor, getter and setter
@@ -12,6 +15,10 @@ namespace entity {
 
     // TODO: add empty string between methods and fields
     // TODO: add insert comment posibility
+
+    /**
+     * @brief The Class class
+     */
     class   Class : public Type
     {
     public:

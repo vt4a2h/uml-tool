@@ -8,6 +8,9 @@ namespace entity {
 
 namespace relationship {
 
+    /**
+     * @brief The Generalization class
+     */
     class Generalization : public Relation
     {
     public:

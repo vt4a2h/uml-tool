@@ -17,22 +17,38 @@
 
 namespace entity {
 
+    /**
+     * @brief Class::Class
+     */
     Class::Class()
         : Class(DEFAULT_NAME, GLOBAL_SCOPE_ID)
     {
     }
 
+    /**
+     * @brief Class::Class
+     * @param src
+     */
     Class::Class(Class &&src)
     {
         moveFrom(src);
     }
 
+    /**
+     * @brief Class::Class
+     * @param src
+     */
     Class::Class(const Class &src)
         : Type(src)
     {
         copyFrom(src);
     }
 
+    /**
+     * @brief Class::Class
+     * @param name
+     * @param scopeId
+     */
     Class::Class(const QString &name, const QString &scopeId)
         : Type(name, scopeId)
         , m_Kind(ClassType)
@@ -41,6 +57,11 @@ namespace entity {
         m_KindOfType = UserClassType;
     }
 
+    /**
+     * @brief Class::operator =
+     * @param rhs
+     * @return
+     */
     Class &Class::operator =(Class &&rhs)
     {
         if (this != &rhs)
@@ -49,6 +70,11 @@ namespace entity {
         return *this;
     }
 
+    /**
+     * @brief Class::operator =
+     * @param rhs
+     * @return
+     */
     Class &Class::operator =(Class rhs)
     {
         moveFrom(rhs);
@@ -56,6 +82,12 @@ namespace entity {
         return *this;
     }
 
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
     bool operator ==(const Class &lhs, const Class &rhs)
     {
         return static_cast<const Type&>(lhs).isEqual(rhs) &&
@@ -66,6 +98,12 @@ namespace entity {
                 utility::seqSharedPointerEq(lhs.m_Fields,  rhs.m_Fields);
     }
 
+    /**
+     * @brief Class::addParent
+     * @param typeId
+     * @param section
+     * @return
+     */
     Parent Class::addParent(const QString &typeId, Section section)
     {
         auto parent = Parent(typeId, section);
@@ -75,6 +113,11 @@ namespace entity {
         return parent;
     }
 
+    /**
+     * @brief Class::getParents
+     * @param typeId
+     * @return
+     */
     ParentsList Class::getParents(const QString &typeId)
     {
         ParentsList result;
@@ -85,6 +128,11 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Class::containsParent
+     * @param typeId
+     * @return
+     */
     bool Class::containsParent(const QString &typeId)
     {
         auto it = std::find_if(m_Parents.begin(), m_Parents.end(),
@@ -92,6 +140,10 @@ namespace entity {
         return (it != m_Parents.end());
     }
 
+    /**
+     * @brief Class::removeParent
+     * @param typeId
+     */
     void Class::removeParent(const QString &typeId)
     {
         auto it = std::find_if(m_Parents.begin(), m_Parents.end(),
@@ -99,22 +151,39 @@ namespace entity {
         if (it != m_Parents.end()) m_Parents.erase(it);
     }
 
+    /**
+     * @brief Class::anyParents
+     * @return
+     */
     bool Class::anyParents() const
     {
         return !m_Parents.isEmpty();
     }
 
+    /**
+     * @brief Class::parents
+     * @return
+     */
     ParentsList Class::parents() const
     {
         return m_Parents;
     }
 
+    /**
+     * @brief Class::addMethod
+     * @param method
+     */
     void Class::addMethod(SharedMethod method)
     {
         method->setScopeId(scopeId());
         m_Methods << method;
     }
 
+    /**
+     * @brief Class::getMethod
+     * @param name
+     * @return
+     */
     MethodsList Class::getMethod(const QString &name)
     {
         MethodsList result;
@@ -125,32 +194,58 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Class::containsMethod
+     * @param name
+     * @return
+     */
     bool Class::containsMethod(const QString &name)
     {
         return !getMethod(name).isEmpty();
     }
 
+    /**
+     * @brief Class::removeMethods
+     * @param name
+     */
     void Class::removeMethods(const QString &name)
     {
         auto methods = getMethod(name);
         for (auto &&m : methods) m_Methods.removeAll(m);
     }
 
+    /**
+     * @brief Class::removeMethod
+     * @param method
+     */
     void Class::removeMethod(const SharedMethod &method)
     {
         m_Methods.removeOne(method);
     }
 
+    /**
+     * @brief Class::methods
+     * @return
+     */
     MethodsList Class::methods() const
     {
         return m_Methods;
     }
 
+    /**
+     * @brief Class::anyMethods
+     * @return
+     */
     bool Class::anyMethods() const
     {
         return !m_Methods.isEmpty();
     }
 
+    /**
+     * @brief Class::containsMethods
+     * @param section
+     * @return
+     */
     bool Class::containsMethods(Section section) const
     {
         bool result(false);
@@ -165,6 +260,11 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Class::methods
+     * @param section
+     * @return
+     */
     MethodsList Class::methods(Section section) const
     {
         MethodsList result;
@@ -175,6 +275,14 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Class::addField
+     * @param name
+     * @param typeId
+     * @param prefix
+     * @param section
+     * @return
+     */
     SharedField Class::addField(const QString &name, const QString &typeId, const QString prefix, Section section)
     {
         auto field = std::make_shared<Field>(name, typeId, prefix, section);
@@ -185,6 +293,11 @@ namespace entity {
         return field;
     }
 
+    /**
+     * @brief Class::getField
+     * @param name
+     * @return
+     */
     SharedField Class::getField(const QString &name) const
     {
         auto it = std::find_if(m_Fields.begin(), m_Fields.end(),
@@ -192,27 +305,49 @@ namespace entity {
         return (it != m_Fields.end() ? *it : nullptr);
     }
 
+    /**
+     * @brief Class::containsField
+     * @param name
+     * @return
+     */
     bool Class::containsField(const QString &name) const
     {
         return getField(name).operator bool();
     }
 
+    /**
+     * @brief Class::removeField
+     * @param name
+     */
     void Class::removeField(const QString &name)
     {
         auto f = getField(name);
         if (f) m_Fields.removeAt(m_Fields.indexOf(f));
     }
 
+    /**
+     * @brief Class::fields
+     * @return
+     */
     FieldsList Class::fields() const
     {
         return m_Fields;
     }
 
+    /**
+     * @brief Class::anyFields
+     * @return
+     */
     bool Class::anyFields() const
     {
         return !m_Fields.empty();
     }
 
+    /**
+     * @brief Class::containsFields
+     * @param section
+     * @return
+     */
     bool Class::containsFields(Section section) const
     {
         bool result(false);
@@ -227,6 +362,11 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Class::fields
+     * @param section
+     * @return
+     */
     FieldsList Class::fields(Section section) const
     {
         FieldsList result;
@@ -237,26 +377,46 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Class::kind
+     * @return
+     */
     Kind Class::kind() const
     {
         return m_Kind;
     }
 
+    /**
+     * @brief Class::setKind
+     * @param kind
+     */
     void Class::setKind(Kind kind)
     {
         m_Kind = kind;
     }
 
+    /**
+     * @brief Class::isFinal
+     * @return
+     */
     bool Class::isFinal() const
     {
         return m_FinalStatus;
     }
 
+    /**
+     * @brief Class::setFinalStatus
+     * @param status
+     */
     void Class::setFinalStatus(bool status)
     {
         m_FinalStatus = status;
     }
 
+    /**
+     * @brief Class::toJson
+     * @return
+     */
     QJsonObject Class::toJson() const
     {
         QJsonObject result(Type::toJson());
@@ -284,6 +444,11 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Class::fromJson
+     * @param src
+     * @param errorList
+     */
     void Class::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         Type::fromJson(src, errorList);
@@ -349,11 +514,20 @@ namespace entity {
         });
     }
 
+    /**
+     * @brief Class::isEqual
+     * @param rhs
+     * @return
+     */
     bool Class::isEqual(const Class &rhs) const
     {
         return *this == rhs;
     }
 
+    /**
+     * @brief Class::moveFrom
+     * @param src
+     */
     void Class::moveFrom(Class &src)
     {
         Type::moveFrom(src);
@@ -366,6 +540,10 @@ namespace entity {
         m_Fields  = std::move(src.m_Fields );
     }
 
+    /**
+     * @brief Class::copyFrom
+     * @param src
+     */
     void Class::copyFrom(const Class &src)
     {
         m_Kind = src.m_Kind;

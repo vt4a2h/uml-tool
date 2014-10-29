@@ -7,6 +7,9 @@ namespace entity {
 
     class Field;
 
+    /**
+     * @brief The Union class
+     */
     class Union : public Type
     {
     public:

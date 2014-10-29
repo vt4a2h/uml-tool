@@ -18,16 +18,29 @@
 
 namespace entity {
 
+    /**
+     * @brief Scope::Scope
+     * @param src
+     */
     Scope::Scope(Scope &&src)
     {
         moveFrom(src);
     }
 
+    /**
+     * @brief Scope::Scope
+     * @param src
+     */
     Scope::Scope(const Scope &src)
     {
         copyFrom(src);
     }
 
+    /**
+     * @brief Scope::Scope
+     * @param scopeName
+     * @param scopeId
+     */
     Scope::Scope(const QString &scopeName, const QString &scopeId)
         : m_Name(!scopeName.isEmpty() ? scopeName : DEFAULT_NAME)
         , m_Id(utility::genId())
@@ -35,12 +48,22 @@ namespace entity {
     {
     }
 
+    /**
+     * @brief Scope::operator =
+     * @param rhs
+     * @return
+     */
     Scope &Scope::operator =(Scope rhs)
     {
         moveFrom(rhs);
         return *this;
     }
 
+    /**
+     * @brief Scope::operator =
+     * @param rhs
+     * @return
+     */
     Scope &Scope::operator =(Scope &&rhs)
     {
         if (this != &rhs)
@@ -49,6 +72,12 @@ namespace entity {
         return *this;
     }
 
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
     bool operator ==(const Scope &lhs, const Scope &rhs)
     {
         return lhs.m_Name          == rhs.m_Name                       &&
@@ -58,21 +87,39 @@ namespace entity {
                utility::seqSharedPointerEq(lhs.m_Types, rhs.m_Types);
     }
 
+    /**
+     * @brief Scope::name
+     * @return
+     */
     QString Scope::name() const
     {
         return m_Name;
     }
 
+    /**
+     * @brief Scope::setName
+     * @param name
+     */
     void Scope::setName(const QString &name)
     {
         m_Name = name;
     }
 
+    /**
+     * @brief Scope::getType
+     * @param typeId
+     * @return
+     */
     SharedType Scope::getType(const QString &typeId) const
     {
         return (m_Types.contains(typeId) ? m_Types[typeId] : nullptr);
     }
 
+    /**
+     * @brief Scope::takeType
+     * @param typeId
+     * @return
+     */
     SharedType Scope::takeType(const QString &typeId)
     {
         SharedType result(nullptr);
@@ -85,6 +132,10 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Scope::addClonedType
+     * @param type
+     */
     void Scope::addClonedType(const SharedType &type)
     {
         SharedType newType(std::make_shared<Type>(*type));
@@ -93,26 +144,49 @@ namespace entity {
         m_Types.insert(newType->id(), newType);
     }
 
+    /**
+     * @brief Scope::containsType
+     * @param typeId
+     * @return
+     */
     bool Scope::containsType(const QString &typeId) const
     {
         return m_Types.contains(typeId);
     }
 
+    /**
+     * @brief Scope::removeType
+     * @param typeId
+     */
     void Scope::removeType(const QString &typeId)
     {
         m_Types.remove(typeId);
     }
 
+    /**
+     * @brief Scope::types
+     * @return
+     */
     TypesList Scope::types() const
     {
         return m_Types.values();
     }
 
+    /**
+     * @brief Scope::getChildScope
+     * @param typeId
+     * @return
+     */
     SharedScope Scope::getChildScope(const QString &typeId)
     {
         return (m_Scopes.contains(typeId) ? m_Scopes[typeId] : nullptr);
     }
 
+    /**
+     * @brief Scope::takeChildScope
+     * @param typeId
+     * @return
+     */
     SharedScope Scope::takeChildScope(const QString &typeId)
     {
         SharedScope result(nullptr);
@@ -125,6 +199,11 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Scope::addChildScope
+     * @param name
+     * @return
+     */
     SharedScope Scope::addChildScope(const QString &name)
     {
         SharedScope scope = std::make_shared<Scope>(name, m_Id);
@@ -132,46 +211,83 @@ namespace entity {
         return scope;
     }
 
+    /**
+     * @brief Scope::containsChildScope
+     * @param typeId
+     * @return
+     */
     bool Scope::containsChildScope(const QString &typeId)
     {
         return m_Scopes.contains(typeId);
     }
 
+    /**
+     * @brief Scope::hasChildScopes
+     * @return
+     */
     bool Scope::hasChildScopes() const
     {
         return !m_Scopes.isEmpty();
     }
 
+    /**
+     * @brief Scope::removeChildScope
+     * @param typeId
+     */
     void Scope::removeChildScope(const QString &typeId)
     {
         m_Scopes.remove(typeId);
     }
 
+    /**
+     * @brief Scope::scopes
+     * @return
+     */
     ScopesList Scope::scopes() const
     {
         return m_Scopes.values();
     }
 
+    /**
+     * @brief Scope::id
+     * @return
+     */
     QString Scope::id() const
     {
         return m_Id;
     }
 
+    /**
+     * @brief Scope::setId
+     * @param id
+     */
     void Scope::setId(const QString &id)
     {
         m_Id = id;
     }
 
+    /**
+     * @brief Scope::parentScopeId
+     * @return
+     */
     QString Scope::parentScopeId() const
     {
         return m_ParentScopeId;
     }
 
+    /**
+     * @brief Scope::setParentScopeId
+     * @param parentScopeId
+     */
     void Scope::setParentScopeId(const QString &parentScopeId)
     {
         m_ParentScopeId = parentScopeId;
     }
 
+    /**
+     * @brief Scope::toJson
+     * @return
+     */
     QJsonObject Scope::toJson() const
     {
         QJsonObject result;
@@ -191,6 +307,11 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Scope::fromJson
+     * @param src
+     * @param errorList
+     */
     void Scope::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         utility::checkAndSet(src, "Name", errorList, [&src, this](){ m_Name = src["Name"].toString(); });
@@ -231,16 +352,29 @@ namespace entity {
         });
     }
 
+    /**
+     * @brief Scope::writeToFile
+     * @param fileName
+     */
     void Scope::writeToFile(const QString &fileName) const
     {
          utility::writeToFile(*this, fileName);
     }
 
+    /**
+     * @brief Scope::readFromFile
+     * @param fileName
+     * @return
+     */
     bool Scope::readFromFile(const QString &fileName)
     {
         return utility::readFromFile(*this, fileName);
     }
 
+    /**
+     * @brief Scope::copyFrom
+     * @param src
+     */
     void Scope::copyFrom(const Scope &src)
     {
         m_Name = src.m_Name;
@@ -251,6 +385,10 @@ namespace entity {
         utility::deepCopySharedPointerHash(src.m_Types,  m_Types, &Type::id);
     }
 
+    /**
+     * @brief Scope::moveFrom
+     * @param src
+     */
     void Scope::moveFrom(Scope &src)
     {
         m_Name = std::move(src.m_Name);

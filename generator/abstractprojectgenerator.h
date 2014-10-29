@@ -2,11 +2,20 @@
 
 #include <translator/projecttranslator.h>
 
+/**
+ * @brief  generator
+ */
 namespace generator {
 
+    /**
+     * @brief The AbstractProjectGenerator class
+     */
     class AbstractProjectGenerator
     {
     public:
+        /**
+         * @brief The GeneratorOption enum
+         */
         enum GeneratorOption {
             NoOptions = 0x0,
             NamespacesInSubfolders = 0x1,

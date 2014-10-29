@@ -5,6 +5,9 @@
 
 namespace relationship {
 
+    /**
+     * @brief The Realization class
+     */
     class Realization : public Generalization
     {
     public:

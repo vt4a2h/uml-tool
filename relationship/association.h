@@ -2,8 +2,14 @@
 
 #include "relation.h"
 
+/**
+ * @brief relationship
+ */
 namespace relationship {
 
+    /**
+     * @brief The Association class
+     */
     class Association : public Relation
     {
     public:

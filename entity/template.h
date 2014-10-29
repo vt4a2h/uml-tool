@@ -9,6 +9,10 @@
 namespace entity {
 
     // TODO: add existing type posibilities
+
+    /**
+     * @brief The Template class
+     */
     class Template
     {
     public:

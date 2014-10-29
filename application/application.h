@@ -2,8 +2,14 @@
 
 #include "types.h"
 
+/**
+ * @brief namespace application
+ */
 namespace application {
 
+    /**
+     * @brief The Application class
+     */
     class Application
     {
     public:

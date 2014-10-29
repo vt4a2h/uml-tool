@@ -12,21 +12,38 @@
 
 namespace entity {
 
+    /**
+     * @brief Type::Type
+     */
     Type::Type()
         : Type(DEFAULT_NAME, GLOBAL_SCOPE_ID)
     {
     }
 
+    /**
+     * @brief Type::Type
+     * @param src
+     */
     Type::Type(Type &&src)
     {
        moveFrom(src);
     }
 
+    /**
+     * @brief Type::Type
+     * @param src
+     */
     Type::Type(const Type &src)
     {
         copyFrom(src);
     }
 
+    /**
+     * @brief Type::Type
+     * @param name
+     * @param scopeId
+     * @param typeId
+     */
     Type::Type(const QString &name, const QString &scopeId, const QString &typeId)
         : m_KindOfType(BasicType)
         , m_Name(name)
@@ -35,10 +52,18 @@ namespace entity {
     {
     }
 
+    /**
+     * @brief Type::~Type
+     */
     Type::~Type()
     {
     }
 
+    /**
+     * @brief Type::operator =
+     * @param rhs
+     * @return
+     */
     Type &Type::operator =(Type &&rhs)
     {
        if (this != &rhs)
@@ -47,6 +72,12 @@ namespace entity {
        return *this;
     }
 
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
     bool operator ==(const Type &lhs, const Type &rhs)
     {
         return lhs.m_KindOfType == rhs.m_KindOfType &&
@@ -55,6 +86,11 @@ namespace entity {
                lhs.m_ScopeId    == rhs.m_ScopeId;
     }
 
+    /**
+     * @brief Type::operator =
+     * @param rhs
+     * @return
+     */
     Type &Type::operator =(Type rhs)
     {
         moveFrom(rhs);
@@ -62,41 +98,73 @@ namespace entity {
         return *this;
     }
 
+    /**
+     * @brief Type::name
+     * @return
+     */
     QString Type::name() const
     {
         return m_Name;
     }
 
+    /**
+     * @brief Type::setName
+     * @param name
+     */
     void Type::setName(const QString &name)
     {
         m_Name = name;
     }
 
+    /**
+     * @brief Type::id
+     * @return
+     */
     QString Type::id() const
     {
         return m_Id;
     }
 
+    /**
+     * @brief Type::setId
+     * @param id
+     */
     void Type::setId(const QString &id)
     {
         m_Id = id;
     }
 
+    /**
+     * @brief Type::scopeId
+     * @return
+     */
     QString Type::scopeId() const
     {
         return m_ScopeId;
     }
 
+    /**
+     * @brief Type::setScopeId
+     * @param scopeId
+     */
     void Type::setScopeId(const QString &scopeId)
     {
         m_ScopeId = scopeId;
     }
 
+    /**
+     * @brief Type::type
+     * @return
+     */
     UserType Type::type() const
     {
         return m_KindOfType;
     }
 
+    /**
+     * @brief Type::toJson
+     * @return
+     */
     QJsonObject Type::toJson() const
     {
         QJsonObject result;
@@ -109,6 +177,11 @@ namespace entity {
         return result;
     }
 
+    /**
+     * @brief Type::fromJson
+     * @param src
+     * @param errorList
+     */
     void Type::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         utility::checkAndSet(src, "Name", errorList, [&src, this](){
@@ -125,26 +198,48 @@ namespace entity {
         });
     }
 
+    /**
+     * @brief Type::writeToFile
+     * @param fileName
+     */
     void Type::writeToFile(const QString &fileName) const
     {
         utility::writeToFile(*this, fileName);
     }
 
+    /**
+     * @brief Type::readFromFile
+     * @param fileName
+     * @return
+     */
     bool Type::readFromFile(const QString &fileName)
     {
         return utility::readFromFile(*this, fileName);
     }
 
+    /**
+     * @brief Type::clone
+     * @return
+     */
     Type *Type::clone() const
     {
         return new Type(*this);
     }
 
+    /**
+     * @brief Type::isEqual
+     * @param rhs
+     * @return
+     */
     bool Type::isEqual(const Type &rhs) const
     {
         return *this == rhs;
     }
 
+    /**
+     * @brief Type::moveFrom
+     * @param src
+     */
     void Type::moveFrom(Type &src)
     {
         m_KindOfType = std::move(src.m_KindOfType); // not necessary
@@ -153,6 +248,10 @@ namespace entity {
         m_ScopeId    = std::move(src.m_ScopeId);
     }
 
+    /**
+     * @brief Type::copyFrom
+     * @param src
+     */
     void Type::copyFrom(const Type &src)
     {
         m_KindOfType = src.m_KindOfType;

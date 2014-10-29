@@ -5,6 +5,9 @@
 
 namespace generator {
 
+    /**
+     * @brief The Profile struct
+     */
     struct Profile
     {
         QStringList headers;
@@ -13,6 +16,9 @@ namespace generator {
         ProfileVariables variables;
     };
 
+    /**
+     * @brief The BasicCppProjectGenerator class
+     */
     class BasicCppProjectGenerator final : public AbstractProjectGenerator
     {
     public:

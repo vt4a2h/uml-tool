@@ -39,22 +39,41 @@ namespace {
 
 namespace translator {
 
+    /**
+     * @brief ProjectTranslator::ProjectTranslator
+     */
     ProjectTranslator::ProjectTranslator()
         : ProjectTranslator(nullptr, nullptr)
     {}
 
+    /**
+     * @brief ProjectTranslator::ProjectTranslator
+     * @param globalDb
+     * @param projectDb
+     */
     ProjectTranslator::ProjectTranslator(const db::SharedDatabase &globalDb, const db::SharedDatabase &projectDb)
         : m_GlobalDatabase(globalDb)
         , m_ProjectDatabase(projectDb)
     {
     }
 
+    /**
+     * @brief ProjectTranslator::checkDb
+     */
     void ProjectTranslator::checkDb() const
     {
         Q_ASSERT_X(m_GlobalDatabase, "ProjectTranslator", "global database not found");
         Q_ASSERT_X(m_ProjectDatabase, "ProjectTranslator", "project database not found");
     }
 
+    /**
+     * @brief ProjectTranslator::generateCodeForExtTypeOrType
+     * @param id
+     * @param options
+     * @param localeDatabase
+     * @param classDatabase
+     * @return
+     */
     QString ProjectTranslator::generateCodeForExtTypeOrType(const QString &id,
                                                             const TranslatorOptions &options,
                                                             const db::SharedDatabase &localeDatabase,
@@ -75,6 +94,13 @@ namespace translator {
                             "");
     }
 
+    /**
+     * @brief ProjectTranslator::generateClassSection
+     * @param _class
+     * @param localeDatabase
+     * @param section
+     * @param out
+     */
     void ProjectTranslator::generateClassSection(const entity::SharedClass &_class, const db::SharedDatabase &localeDatabase,
                                                  entity::Section section, QString &out) const
     {
@@ -92,6 +118,14 @@ namespace translator {
         }
     }
 
+    /**
+     * @brief ProjectTranslator::generateFieldsAndMethods
+     * @param _class
+     * @param localeDatabase
+     * @param indent
+     * @param section
+     * @param out
+     */
     void ProjectTranslator::generateFieldsAndMethods(const entity::SharedClass &_class,
                                                      const db::SharedDatabase &localeDatabase,
                                                      const QString &indent, entity::Section section,
@@ -122,6 +156,12 @@ namespace translator {
            out.append(";\n");
     }
 
+    /**
+     * @brief ProjectTranslator::generateTemplatePart
+     * @param result
+     * @param t
+     * @param withDefaultTypes
+     */
     void ProjectTranslator::generateTemplatePart(QString &result, const entity::SharedTemplate &t, bool withDefaultTypes) const
     {
         if (!t)
@@ -147,6 +187,12 @@ namespace translator {
         result.replace("%template_parameters%", parameters.join(", "));
     }
 
+    /**
+     * @brief ProjectTranslator::toHeader
+     * @param m
+     * @param classDatabase
+     * @return
+     */
     bool ProjectTranslator::toHeader(const entity::SharedMethod &m,
                                      const db::SharedDatabase &classDatabase) const
     {
@@ -166,6 +212,14 @@ namespace translator {
         return false;
     }
 
+    /**
+     * @brief ProjectTranslator::translate
+     * @param _enum
+     * @param options
+     * @param localeDatabase
+     * @param classDatabase
+     * @return
+     */
     Code ProjectTranslator::translate(const entity::SharedEnum &_enum,
                                       const TranslatorOptions  &options,
                                       const db::SharedDatabase &localeDatabase,
@@ -205,6 +259,14 @@ namespace translator {
         return Code(result, "");
     }
 
+    /**
+     * @brief ProjectTranslator::translate
+     * @param method
+     * @param options
+     * @param localeDatabase
+     * @param classDatabase
+     * @return
+     */
     Code ProjectTranslator::translate(const entity::SharedMethod &method,
                                       const TranslatorOptions  &options,
                                       const db::SharedDatabase &localeDatabase,
@@ -274,6 +336,14 @@ namespace translator {
         return Code(result, "");
     }
 
+    /**
+     * @brief ProjectTranslator::translate
+     * @param _union
+     * @param options
+     * @param localeDatabase
+     * @param classDatabase
+     * @return
+     */
     Code ProjectTranslator::translate(const entity::SharedUnion &_union,
                                       const TranslatorOptions &options,
                                       const db::SharedDatabase &localeDatabase,
@@ -305,6 +375,14 @@ namespace translator {
         return Code(result, "");
     }
 
+    /**
+     * @brief ProjectTranslator::translate
+     * @param _class
+     * @param options
+     * @param localeDatabase
+     * @param classDatabase
+     * @return
+     */
     Code ProjectTranslator::translate(const entity::SharedClass &_class,
                                       const TranslatorOptions &options,
                                       const db::SharedDatabase &localeDatabase,
@@ -371,6 +449,14 @@ namespace translator {
         return Code(result, "");
     }
 
+    /**
+     * @brief ProjectTranslator::translate
+     * @param _class
+     * @param options
+     * @param localeDatabase
+     * @param classDatabase
+     * @return
+     */
     Code ProjectTranslator::translate(const entity::SharedTemplateClass &_class,
                                       const TranslatorOptions &options,
                                       const db::SharedDatabase &localeDatabase,
@@ -380,6 +466,12 @@ namespace translator {
                          classDatabase);
     }
 
+    /**
+     * @brief ProjectTranslator::generateClassMethodsImpl
+     * @param _class
+     * @param localeDatabase
+     * @return
+     */
     Code ProjectTranslator::generateClassMethodsImpl(const entity::SharedClass &_class,
                                                      const db::SharedDatabase &localeDatabase) const
     {
@@ -428,6 +520,11 @@ namespace translator {
         return Code(methodsH.join("\n"), methodsCpp.join("\n"));
     }
 
+    /**
+     * @brief ProjectTranslator::generateClassMethodsImpl
+     * @param _class
+     * @return
+     */
     Code ProjectTranslator::generateClassMethodsImpl(const entity::SharedTemplateClass &_class) const
     {
         if (!_class)
@@ -438,6 +535,12 @@ namespace translator {
                                         _class->database());
     }
 
+    /**
+     * @brief ProjectTranslator::addNamespace
+     * @param type
+     * @param code
+     * @param indentCount
+     */
     void ProjectTranslator::addNamespace(const entity::SharedType &type, Code &code, uint indentCount)
     {
         if (!type || !m_ProjectDatabase)
@@ -457,6 +560,14 @@ namespace translator {
         }
     }
 
+    /**
+     * @brief ProjectTranslator::translate
+     * @param extType
+     * @param options
+     * @param localeDatabase
+     * @param classDatabase
+     * @return
+     */
     Code ProjectTranslator::translate(const entity::SharedExtendedType &extType,
                                       const TranslatorOptions &options,
                                       const db::SharedDatabase &localeDatabase,
@@ -510,6 +621,14 @@ namespace translator {
         return Code(result, "");
     }
 
+    /**
+     * @brief ProjectTranslator::translate
+     * @param field
+     * @param options
+     * @param localeDatabase
+     * @param classDatabase
+     * @return
+     */
     Code ProjectTranslator::translate(const entity::SharedField &field,
                                       const TranslatorOptions  &options,
                                       const db::SharedDatabase &localeDatabase,
@@ -538,16 +657,32 @@ namespace translator {
         return Code(result, "");
     }
 
+    /**
+     * @brief ProjectTranslator::projectDatabase
+     * @return
+     */
     db::SharedDatabase ProjectTranslator::projectDatabase() const
     {
         return m_ProjectDatabase;
     }
 
+    /**
+     * @brief ProjectTranslator::setProjectDatabase
+     * @param projectDatabase
+     */
     void ProjectTranslator::setProjectDatabase(const db::SharedDatabase &projectDatabase)
     {
         m_ProjectDatabase = projectDatabase;
     }
 
+    /**
+     * @brief ProjectTranslator::translate
+     * @param type
+     * @param options
+     * @param localeDatabase
+     * @param classDatabase
+     * @return
+     */
     Code ProjectTranslator::translate(const entity::SharedType &type, const TranslatorOptions &options,
                                       const db::SharedDatabase &localeDatabase, const db::SharedDatabase &classDatabase) const
     {
@@ -572,11 +707,19 @@ namespace translator {
         return Code(type->name(), "");
     }
 
+    /**
+     * @brief ProjectTranslator::globalDatabase
+     * @return
+     */
     db::SharedDatabase ProjectTranslator::globalDatabase() const
     {
         return m_GlobalDatabase;
     }
 
+    /**
+     * @brief ProjectTranslator::setGlobalDatabase
+     * @param globalDatabase
+     */
     void ProjectTranslator::setGlobalDatabase(const db::SharedDatabase &globalDatabase)
     {
         m_GlobalDatabase = globalDatabase;
