@@ -1,7 +1,0 @@
-<map id="relationship::Relation" name="relationship::Relation">
-<area shape="rect" id="node3" href="$classrelationship_1_1_association.html" title="The Association class. " alt="" coords="27,80,195,107"/>
-<area shape="rect" id="node7" href="$classrelationship_1_1_dependency.html" title="The Dependency class. " alt="" coords="219,80,393,107"/>
-<area shape="rect" id="node9" href="$classrelationship_1_1_generalization.html" title="The Generalization class. " alt="" coords="419,80,605,107"/>
-<area shape="rect" id="node5" href="$classrelationship_1_1_multiply_association.html" title="The MultiplyAssociation class. " alt="" coords="5,155,216,181"/>
-<area shape="rect" id="node11" href="$classrelationship_1_1_realization.html" title="The Realization class. " alt="" coords="429,155,593,181"/>
-</map>

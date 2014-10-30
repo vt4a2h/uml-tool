@@ -1,5 +1,0 @@
-<map id="relationship::Realization::toJson" name="relationship::Realization::toJson">
-<area shape="rect" id="node3" href="$classrelationship_1_1_generalization.html#a293ef0660c5856132a32a06e361c2a19" title="Generalization::toJson. " alt="" coords="219,5,405,46"/>
-<area shape="rect" id="node7" href="$classrelationship_1_1_realization.html#a2f2600c136fd2b55116d552d5aee3dd6" title="Realization::methods. " alt="" coords="229,70,395,111"/>
-<area shape="rect" id="node5" href="$classrelationship_1_1_relation.html#a20646ed9a984d83ef95fc6f4040093e3" title="Relation::toJson. " alt="" coords="453,5,600,46"/>
-</map>

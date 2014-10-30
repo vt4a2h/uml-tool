@@ -1,5 +1,0 @@
-<map id="relationship::Relation::id" name="relationship::Relation::id">
-<area shape="rect" id="node3" href="$classdb_1_1_project_database.html#a3238c64651f772dcff721a4ec97eae9e" title="ProjectDatabase::copyFrom. " alt="" coords="221,5,368,46"/>
-<area shape="rect" id="node7" href="$classrelationship_1_1_relation.html#ae96f294466d1d0be4c3b197bc8fb8d0c" title="Relation::setId. " alt="" coords="221,70,368,111"/>
-<area shape="rect" id="node5" href="$classdb_1_1_project_database.html#a00a6e0caf1015e24eafb6da5b72e4edb" title="ProjectDatabase::ProjectDatabase. " alt="" coords="416,5,563,46"/>
-</map>

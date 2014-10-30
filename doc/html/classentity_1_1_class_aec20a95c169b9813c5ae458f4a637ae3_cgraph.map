@@ -1,6 +1,0 @@
-<map id="entity::Class::addField" name="entity::Class::addField">
-<area shape="rect" id="node3" href="$classentity_1_1_type.html#a8c55e674b829d1f8c64699abb0eb6edc" title="Type::name. " alt="" coords="649,5,783,32"/>
-<area shape="rect" id="node5" href="$classentity_1_1_class.html#a44e3d1a9b21f55a45abcec2494ecf268" title="Class::containsField. " alt="" coords="213,31,397,57"/>
-<area shape="rect" id="node10" href="$classentity_1_1_class.html#a44f07a2fa6974752fbd6daaa4e467df0" title="Class::removeField. " alt="" coords="215,81,395,108"/>
-<area shape="rect" id="node7" href="$classentity_1_1_class.html#a6c95ad645fa6959c5250c0e798429c36" title="Class::getField. " alt="" coords="446,31,599,57"/>
-</map>

@@ -1,8 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classrelationship_1_1_relation.html" title="The Relation class. " alt="" coords="5,56,152,83"/>
-<area shape="rect" id="node3" href="$classrelationship_1_1_association.html" title="The Association class. " alt="" coords="209,5,377,32"/>
-<area shape="rect" id="node7" href="$classrelationship_1_1_dependency.html" title="The Dependency class. " alt="" coords="206,56,381,83"/>
-<area shape="rect" id="node9" href="$classrelationship_1_1_generalization.html" title="The Generalization class. " alt="" coords="200,107,387,133"/>
-<area shape="rect" id="node5" href="$classrelationship_1_1_multiply_association.html" title="The MultiplyAssociation class. " alt="" coords="435,5,647,32"/>
-<area shape="rect" id="node11" href="$classrelationship_1_1_realization.html" title="The Realization class. " alt="" coords="459,107,624,133"/>
-</map>

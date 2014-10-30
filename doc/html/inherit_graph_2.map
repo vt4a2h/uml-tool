@@ -1,9 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node3" href="$class_depth_search.html" title="DepthSearch" alt="" coords="131,5,231,32"/>
-<area shape="rect" id="node5" href="$class_file_json.html" title="FileJson" alt="" coords="145,56,218,83"/>
-<area shape="rect" id="node7" href="$class_file_maker.html" title="FileMaker" alt="" coords="140,107,223,133"/>
-<area shape="rect" id="node9" href="$class_project_maker.html" title="ProjectMaker" alt="" coords="130,157,233,184"/>
-<area shape="rect" id="node11" href="$class_project_translator_test.html" title="ProjectTranslatorTest" alt="" coords="104,208,259,235"/>
-<area shape="rect" id="node13" href="$class_relation_maker.html" title="RelationMaker" alt="" coords="127,259,236,285"/>
-<area shape="rect" id="node15" href="$class_type_maker.html" title="TypeMaker" alt="" coords="135,309,227,336"/>
-</map>
