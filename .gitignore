@@ -2,3 +2,5 @@
 *.user*
 build*
 *.zip
+html
+Doxyfile*
