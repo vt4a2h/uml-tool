@@ -6,12 +6,13 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    const application::Application & app = application::Application::instance();
+    application::Application & app = application::Application::instance();
     app.init();
 
+    QMessageBox errorBox(QMessageBox::Warning, "Loading problems",
+                         app.errors()->join("\n"), QMessageBox::Ok);
     if (app.hasErrors())
-        QMessageBox::warning(nullptr, QObject::tr("Application loaded with some errors: "),
-                             app.errors()->join("\n"), QMessageBox::Ok);
+        errorBox.show();
 
     return a.exec();
 }

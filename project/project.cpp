@@ -11,7 +11,7 @@ namespace project {
      * @brief Project::Project
      */
     Project::Project()
-        : Project( DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH )
+        : Project( DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, nullptr )
     {
     }
 
@@ -20,11 +20,12 @@ namespace project {
      * @param name
      * @param path
      */
-    Project::Project(const QString &name, const QString &path)
+    Project::Project(const QString &name, const QString &path, const SharedErrorList &errors)
         : m_Name(name)
         , m_Path(path)
         , m_ID(utility::genId())
         , m_Database(std::make_shared<db::ProjectDatabase>())
+        , m_Errors(errors)
     {
     }
 
@@ -88,5 +89,75 @@ namespace project {
     {
 
     }
+
+    /**
+     * @brief Project::db
+     * @return
+     */
+    db::SharedProjectDatabase Project::database() const
+    {
+        return m_Database;
+    }
+
+    /**
+     * @brief Project::setDatabase
+     * @param db
+     */
+    void Project::setDatabase(const db::SharedProjectDatabase &database)
+    {
+        m_Database = database;
+    }
+
+    /**
+     * @brief Project::globalDatabase
+     * @return
+     */
+    db::SharedDatabase Project::globalDatabase() const
+    {
+        return m_Database ? m_Database->globalDatabase() : nullptr;
+    }
+
+    /**
+     * @brief Project::setGloablDatabase
+     * @param database
+     * @return
+     */
+    bool Project::setGloablDatabase(const db::SharedDatabase &database)
+    {
+        bool result(false);
+
+        if (m_Database)
+            m_Database->setGlobalDatabase(database);
+
+        return result;
+    }
+
+    /**
+     * @brief Project::anyErrors
+     * @return
+     */
+    bool Project::anyErrors() const
+    {
+        return m_Errors ? !m_Errors->isEmpty() : false;
+    }
+
+    /**
+     * @brief Project::errors
+     * @return
+     */
+    SharedErrorList Project::errors() const
+    {
+        return m_Errors;
+    }
+
+    /**
+     * @brief Project::setErrorsList
+     * @param errors
+     */
+    void Project::setErrorsList(const SharedErrorList &errors)
+    {
+        m_Errors = errors;
+    }
+
 
 } // namespace project

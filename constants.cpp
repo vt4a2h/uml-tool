@@ -22,4 +22,6 @@ namespace {
     static constexpr char* CFG_FILE_NAME = (char*)"config.umtconfig";
     static constexpr char* DEFAULT_PROJECT_NAME = (char*)"empty_project";
     static constexpr char* DEFAULT_PROJECT_PATH = (char*)"empty_path";
+    static constexpr char* PROJECT_FILE_EXTENTION = (char*)"qut";
+    static constexpr char* DATABASE_FILE_EXTENTION = (char*)"qutdb";
 }

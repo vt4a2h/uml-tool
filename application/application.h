@@ -19,12 +19,20 @@ namespace application {
         Application& operator= (const Application &)  = delete;
         Application& operator= (Application &&)  = delete;
 
-        void init() const;
+        void init();
 
         bool hasErrors() const;
         SharedErrorList errors() const;
 
-        static const Application& instance()
+        project::SharedProject createProject(const QString &name, const QString &path);
+        project::SharedProject findProjectById(const QString &id) const;
+        project::SharedProject findProjectByName(const QString &name) const;
+        project::ProjectsList projects() const;
+        uint projectsCount() const;
+        void removeProjectById(const QString &id);
+        void removeProjectByName(const QString &name);
+
+        static Application& instance()
         {
             static Application singleInstance;
             return singleInstance;
@@ -32,9 +40,10 @@ namespace application {
 
     private:
         Application();
-        void readConfig() const;
+        void readConfig();
 
-        mutable SharedErrorList m_ErrorList;
+        project::Projects m_Projects;
+        SharedErrorList m_ErrorList;
     };
 
 } // namespace application

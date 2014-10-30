@@ -103,7 +103,7 @@ namespace translator {
 namespace generator {
     class VirtualFileSystemAbstractItem;
     using SharedVirtualSystemBasicItem = std::shared_ptr<VirtualFileSystemAbstractItem>;
-    using VirtualFiles      = QHash<QString, SharedVirtualSystemBasicItem>;
+    using VirtualFiles = QHash<QString, SharedVirtualSystemBasicItem>;
 
     class VirtualFile;
     using SharedVirtualFile = std::shared_ptr<VirtualFile>;
@@ -114,6 +114,13 @@ namespace generator {
     class AbstractProjectGenerator;
     using SharedGenerator = std::shared_ptr<AbstractProjectGenerator>;
 
-    using ProfileVariables = QMap<QString,   // name
+    using ProfileVariables = QMap<QString,  // name
                                   QString>; // value
+}
+
+namespace project {
+    class Project;
+    using SharedProject = std::shared_ptr<Project>;
+    using Projects = QHash<QString, SharedProject>;
+    using ProjectsList = QList<SharedProject>;
 }
