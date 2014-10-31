@@ -1,5 +1,9 @@
 #include "project.h"
 
+#include <QDir>
+#include <QFile>
+#include <QJsonObject>
+
 #include <db/projectdatabase.h>
 #include <utility/helpfunctions.h>
 
@@ -76,10 +80,19 @@ namespace project {
 
     /**
      * @brief Project::load
+     * @param path
      */
-    void Project::load()
+    void Project::load(const QString &path)
     {
+        Q_ASSERT(!!m_Errors);
+        Q_ASSERT(!!m_Database);
 
+        if (!utility::readFromFile(*this, projectPath(path)))
+            *m_Errors << "Cannot read project file.";
+
+        m_Database->setName(databaseFileName());
+        m_Database->setPath(databasePath(path));
+        m_Database->load(*m_Errors);
     }
 
     /**
@@ -87,7 +100,27 @@ namespace project {
      */
     void Project::save()
     {
+        Q_ASSERT(!!m_Errors);
+        Q_ASSERT(!!m_Database);
 
+        if (!m_Path.isEmpty()) {
+            QDir dir(m_Path);
+            if (!dir.exists())
+                if (!dir.mkpath(m_Path)) {
+                    *m_Errors << "Cannot create project directory.";
+                    return;
+                }
+
+            if (!utility::writeToFile(*this, projectPath(m_Path)))
+                *m_Errors << "Cannot save project to file.";
+
+            m_Database->setName(databaseFileName());
+            m_Database->setPath(databasePath(m_Path));
+            if (!m_Database->save())
+                *m_Errors << "Cannot save database to file.";
+        } else {
+            *m_Errors << "Project path is empty.";
+        }
     }
 
     /**
@@ -159,5 +192,77 @@ namespace project {
         m_Errors = errors;
     }
 
+    /**
+     * @brief Project::toJson
+     * @return
+     */
+    QJsonObject Project::toJson() const
+    {
+        QJsonObject result;
+
+        result.insert("Name", m_Name);
+        result.insert("Path", m_Path);
+        result.insert("ID", m_ID);
+
+        return result;
+    }
+
+    /**
+     * @brief Project::fromJson
+     * @param src
+     * @param errorList
+     */
+    void Project::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        utility::checkAndSet(src, "Name", errorList, [&src, this](){
+            m_Name = src["Name"].toString();
+        });
+        utility::checkAndSet(src, "Path", errorList, [&src, this](){
+            m_Path = src["Path"].toString();
+        });
+        utility::checkAndSet(src, "ID", errorList, [&src, this](){
+            m_ID = src["ID"].toString();
+        });
+    }
+
+    /**
+     * @brief Project::projectFileName
+     * @return
+     */
+    QString Project::projectFileName() const
+    {
+        return m_Name.toLower().replace(" ", "_");
+    }
+
+    /**
+     * @brief Project::databaseFileName
+     * @return
+     */
+    QString Project::databaseFileName() const
+    {
+        return m_Name.toLower().replace(" ", "_") + "_db";
+    }
+
+    /**
+     * @brief Project::makeProjectPath
+     * @param basePath
+     * @return
+     */
+    QString Project::projectPath(const QString &basePath) const
+    {
+        QChar sep = QDir(basePath).separator();
+        return basePath + sep + projectFileName() + "." + PROJECT_FILE_EXTENTION;
+    }
+
+    /**
+     * @brief Project::makeDatabasePath
+     * @param basePath
+     * @return
+     */
+    QString Project::databasePath(const QString &basePath) const
+    {
+        QChar sep = QDir(basePath).separator();
+        return basePath + sep + databaseFileName() + "." + DATABASE_FILE_EXTENTION;
+    }
 
 } // namespace project

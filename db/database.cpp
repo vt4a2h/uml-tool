@@ -314,15 +314,18 @@ namespace db {
 
     /**
      * @brief Database::save
+     * @return
      */
-    void Database::save() const
+    bool Database::save() const
     {
         QFile f(makeFullPath());
         if (f.open(QIODevice::WriteOnly)) {
             QJsonDocument jdoc(toJson());
             QTextStream stream(&f);
             stream << jdoc.toJson();
+            return true;
         }
+        return false;
     }
 
     /**

@@ -17,6 +17,7 @@ namespace project {
     public:
         Project();
         Project(const QString &name, const QString &path, const SharedErrorList &errors);
+        virtual ~Project() {}
 
         QString name() const;
         void setName(const QString &name);
@@ -26,7 +27,7 @@ namespace project {
 
         QString id() const;
 
-        void load();
+        void load(const QString &path);
         void save();
 
         db::SharedProjectDatabase database() const;
@@ -39,7 +40,15 @@ namespace project {
         SharedErrorList errors() const;
         void setErrorsList(const SharedErrorList &errors);
 
+        virtual QJsonObject toJson() const;
+        virtual void fromJson(const QJsonObject &src, QStringList &errorList);
+
     protected:
+        virtual QString projectFileName() const;
+        virtual QString databaseFileName() const;
+        virtual QString projectPath(const QString &basePath) const;
+        virtual QString databasePath(const QString &basePath) const;
+
         QString m_Name;
         QString m_Path;
         QString m_ID;

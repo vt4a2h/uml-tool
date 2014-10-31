@@ -130,7 +130,7 @@ namespace utility {
     }
 
     template <class Element>
-    void writeToFile(const Element &elem, const QString &fileName)
+    bool writeToFile(const Element &elem, const QString &fileName)
     {
         QFile jsonFile(fileName);
 
@@ -138,7 +138,10 @@ namespace utility {
             QJsonDocument jdoc(elem.toJson());
             QTextStream st(&jsonFile);
             st << jdoc.toJson();
+            return true;
         }
+
+        return false;
     }
 
     template <class Element>

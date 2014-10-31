@@ -40,7 +40,7 @@ namespace db {
         entity::SharedType  depthTypeSearch(const QString &typeId)   const;
 
         void load(QStringList &errorList);
-        void save() const;
+        bool save() const;
         virtual void clear();
 
         virtual QJsonObject toJson() const;
