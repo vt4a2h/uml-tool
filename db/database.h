@@ -61,6 +61,7 @@ namespace db {
 
         QString        m_Name;
         QString        m_Path;
+        QString        m_ID;
         entity::Scopes m_Scopes;
     };
 

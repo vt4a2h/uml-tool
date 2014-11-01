@@ -152,9 +152,6 @@ namespace db {
      */
     void ProjectDatabase::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        Q_ASSERT_X(m_GlobalDatabase,
-                   "ProjectDatabase::fromJson",
-                   "global database is not found");
         Database::fromJson(src, errorList);
 
         utility::checkAndSet(src, "Relations", errorList, [&src, &errorList, this](){
@@ -167,7 +164,7 @@ namespace db {
                                          [&obj, &errorList, &relation, this](){
                         relation = utility::makeRelation(static_cast<relationship::RelationType>(obj["Type"].toInt()));
                         relation->setProjectDatabase(this);
-                        relation->setGlobalDatabase(m_GlobalDatabase.get());
+                        relation->setGlobalDatabase(m_GlobalDatabase ? m_GlobalDatabase.get() : nullptr);
                         relation->fromJson(obj, errorList);
                         m_Relations.insert(relation->id(), relation);
                     });

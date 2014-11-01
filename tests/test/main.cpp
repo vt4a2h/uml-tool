@@ -7,6 +7,7 @@
 #include "TestFileMaker.h"
 #include "TestJson.h"
 #include "TestProjectMaker.h"
+#include "TestProject.h"
 
 #include <templates.cpp>
 #include <utility/helpfunctions.h>
@@ -1025,6 +1026,28 @@ TEST_F(ProjectMaker, MakeTemplateClass)
     read_from(genHeader, fGenHeader, rootPath_ + sep_ + ptrClass->name().toLower() + ".h")
     EXPECT_EQ(tstHeader, genHeader)
             << "Generated data for header must be the same with test data";
+}
+
+TEST_F(Project, LoadSaveProject)
+{
+    project_->database()->addScope("foo")->addType("bar");
+    project_->save();
+
+    EXPECT_FALSE(project_->anyErrors())
+            << "Project shouldn't have any errors";
+    EXPECT_TRUE(project_->errors()->isEmpty())
+            << "Some errors: " << project_->errors()->join("\n").toStdString();
+
+    project::SharedProject newProject(std::make_shared<project::Project>("no name here ", "no path here", errors));
+    newProject->load(rootPath_ + sep_ + project_->name().toLower().replace(" ", "_") + "." + PROJECT_FILE_EXTENTION);
+
+    EXPECT_FALSE(newProject->anyErrors())
+            << "Project shouldn't have any errors";
+    EXPECT_TRUE(newProject->errors()->isEmpty())
+            << "Some errors: " << project_->errors()->join("\n").toStdString();
+
+    EXPECT_EQ(*project_, *newProject)
+            << "Saved and loaded projects must be equal";
 }
 
 int main(int argc, char **argv)

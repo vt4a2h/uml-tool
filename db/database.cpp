@@ -39,6 +39,7 @@ namespace db {
     Database::Database(const QString &name, const QString &path)
         : m_Name(name.isEmpty() ? DEFAULT_DATABASE_NAME : name)
         , m_Path(path.isEmpty() ? DEFAULT_DATABASE_PATH : QDir::currentPath())
+        , m_ID(utility::genId())
 
     {
     }
@@ -84,6 +85,7 @@ namespace db {
     {
         return lhs.m_Name == rhs.m_Name &&
                lhs.m_Path == rhs.m_Path &&
+               lhs.m_ID   == rhs.m_ID   &&
                utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes);
     }
 
@@ -338,6 +340,9 @@ namespace db {
         for (auto &&scope : m_Scopes.values()) scopes.append(scope->toJson());
 
         QJsonObject result;
+        result.insert("Name", m_Name);
+        result.insert("Path", m_Path);
+        result.insert("ID",   m_ID);
         result.insert("Scopes", scopes);
 
         return result;
@@ -351,6 +356,17 @@ namespace db {
     void Database::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         clear();
+
+        utility::checkAndSet(src, "Name", errorList, [&src, this](){
+            m_Name = src["Name"].toString();
+        });
+        utility::checkAndSet(src, "Path", errorList, [&src, this](){
+            m_Path = src["Path"].toString();
+        });
+        utility::checkAndSet(src, "ID", errorList, [&src, this](){
+            m_ID = src["ID"].toString();
+        });
+
         utility::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
             if (src["Scopes"].isArray()) {
                 entity::SharedScope scope;
@@ -383,6 +399,7 @@ namespace db {
     {
         m_Name = std::move(src.m_Name);
         m_Path = std::move(src.m_Path);
+        m_ID   = std::move(src.m_ID);
 
         m_Scopes = std::move(src.m_Scopes);
     }
@@ -395,6 +412,7 @@ namespace db {
     {
         m_Name = src.m_Name;
         m_Path = src.m_Path;
+        m_ID   = src.m_ID;
 
         utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &entity::Scope::id);
     }

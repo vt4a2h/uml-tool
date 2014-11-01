@@ -19,6 +19,8 @@ namespace project {
         Project(const QString &name, const QString &path, const SharedErrorList &errors);
         virtual ~Project() {}
 
+        friend bool operator ==(const Project &lhs, const Project &rhs);
+
         QString name() const;
         void setName(const QString &name);
 
@@ -27,7 +29,7 @@ namespace project {
 
         QString id() const;
 
-        void load(const QString &path);
+        void load(const QString &path); // don't forget install global database after load
         void save();
 
         db::SharedProjectDatabase database() const;

@@ -34,6 +34,26 @@ namespace project {
     }
 
     /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator ==(const Project &lhs, const Project &rhs)
+    {
+        Q_ASSERT(!!lhs.m_Errors);
+        Q_ASSERT(!!lhs.m_Database);
+        Q_ASSERT(!!rhs.m_Errors);
+        Q_ASSERT(!!rhs.m_Database);
+
+        return lhs.m_Name == rhs.m_Name &&
+               lhs.m_Path == rhs.m_Path &&
+               lhs.m_ID   == rhs.m_ID   &&
+               *lhs.m_Database == *rhs.m_Database &&
+               *lhs.m_Errors   == *rhs.m_Errors;
+    }
+
+    /**
      * @brief Project::Name
      * @return
      */
@@ -87,12 +107,12 @@ namespace project {
         Q_ASSERT(!!m_Errors);
         Q_ASSERT(!!m_Database);
 
-        if (!utility::readFromFile(*this, projectPath(path)))
+        if (!utility::readFromFile(*this, path))
             *m_Errors << "Cannot read project file.";
 
-        m_Database->setName(databaseFileName());
-        m_Database->setPath(databasePath(path));
-        m_Database->load(*m_Errors);
+        m_Database->setPath(databasePath(m_Path));
+        if (!utility::readFromFile(*m_Database, m_Database->path()))
+            *m_Errors << "Cannot read database file.";
     }
 
     /**
@@ -116,7 +136,7 @@ namespace project {
 
             m_Database->setName(databaseFileName());
             m_Database->setPath(databasePath(m_Path));
-            if (!m_Database->save())
+            if (!utility::writeToFile(*m_Database, m_Database->path()))
                 *m_Errors << "Cannot save database to file.";
         } else {
             *m_Errors << "Project path is empty.";
