@@ -28,6 +28,7 @@ import QtQuick.Window 2.0
 ApplicationWindow {
     property var errorMessage: ErrorMessage {}
 
+    id: appWindows
     visible: true
     width: 1024
     height: 768
@@ -40,15 +41,7 @@ ApplicationWindow {
             title: qsTr("&File")
             MenuItem {
                 text: qsTr("Exit")
-                onTriggered: Qt.quit();
-            }
-            MenuItem {
-                text: qsTr("test")
-                onTriggered: {
-                    errorMessage.open()
-                    errorMessage.setX(x + width / 2 - errorMessage.width / 2 )
-                    errorMessage.setY(y + height / 2 - errorMessage.height / 2)
-                }
+                onTriggered: Qt.quit()
             }
         }
     }
@@ -56,5 +49,14 @@ ApplicationWindow {
     Text {
         text: qsTr("Work area")
         anchors.centerIn: parent
+    }
+
+    Component.onCompleted: {
+        if (application.anyErrors) {
+            errorMessage.open()
+            errorMessage.setText(application.errors.join("\n"))
+            errorMessage.setX(x + width / 2 - errorMessage.width / 2)
+            errorMessage.setY(y + height / 2 - errorMessage.height / 2)
+        }
     }
 }

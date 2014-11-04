@@ -34,6 +34,4 @@ MessageDialog {
     modality: Qt.ApplicationModal
 
     onAccepted: Qt.quit()
-
-    Component.onCompleted: visible.true
 }

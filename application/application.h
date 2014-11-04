@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <QObject>
 #include <QQmlApplicationEngine>
 
 #include "types.h"
@@ -35,20 +36,20 @@ namespace application {
     /**
      * @brief The Application class
      */
-    class Application
+    class Application : public QObject
     {
-    public:
-        Application();
-        Application(const Application &) = delete;
-        Application(Application &&) = delete;
+        Q_OBJECT
+        Q_PROPERTY(bool anyErrors READ hasErrors)
+        Q_PROPERTY(ErrorList errors READ getErrors)
 
-        Application& operator= (const Application &)  = delete;
-        Application& operator= (Application &&)  = delete;
+    public:
+        explicit Application(QObject *parent = nullptr);
+        ~Application();
 
         void run();
 
         bool hasErrors() const;
-        SharedErrorList errors() const;
+        ErrorList getErrors() const;
 
         project::SharedProject createProject(const QString &name, const QString &path);
         project::SharedProject findProjectById(const QString &id) const;
@@ -70,3 +71,5 @@ namespace application {
     };
 
 } // namespace application
+
+Q_DECLARE_METATYPE(ErrorList)

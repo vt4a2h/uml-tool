@@ -27,6 +27,7 @@
 
 #include <QFileInfo>
 #include <QDir>
+#include <QQmlContext>
 
 #include <project/project.h>
 
@@ -47,7 +48,9 @@ namespace application {
      */
     void Application::configuredGui()
     {
+        qRegisterMetaType<ErrorList>("ErrorList");
 
+        m_Engine.rootContext()->setContextProperty("application", this);
     }
 
     /**
@@ -73,9 +76,9 @@ namespace application {
      * @brief Application::errors
      * @return
      */
-    SharedErrorList Application::errors() const
+    ErrorList Application::getErrors() const
     {
-        return m_ErrorList;
+        return *m_ErrorList;
     }
 
     /**
@@ -154,8 +157,16 @@ namespace application {
     /**
      * @brief Application::Application
      */
-    Application::Application()
-        : m_ErrorList(std::make_shared<ErrorList>())
+    Application::Application(QObject *parent)
+        : QObject(parent)
+        , m_ErrorList(std::make_shared<ErrorList>())
+    {
+    }
+
+    /**
+     * @brief Application::~Application
+     */
+    Application::~Application()
     {
     }
 
