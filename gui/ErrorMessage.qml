@@ -21,15 +21,19 @@
 **
 *****************************************************************************/
 
-#include <QGuiApplication>
-#include <application/application.h>
+import QtQuick 2.3
+import QtQuick.Dialogs 1.2
 
-int main(int argc, char *argv[])
-{
-    QGuiApplication a(argc, argv);
+MessageDialog {
+    id: errorMessage
 
-    application::Application app;
-    app.run();
+    title: qsTr("Found some errors")
 
-    return a.exec();
+    icon: StandardIcon.Critical
+    standardButtons: StandardButton.Ok
+    modality: Qt.ApplicationModal
+
+    onAccepted: Qt.quit()
+
+    Component.onCompleted: visible.true
 }

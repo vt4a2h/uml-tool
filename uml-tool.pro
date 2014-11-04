@@ -1,6 +1,6 @@
 CONFIG += core gui c++11
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += qml quick widgets
 
 SOURCES += \
     main.cpp \
@@ -70,3 +70,6 @@ HEADERS += \
     utility/helpfunctions.h \
     application/application.h \
     project/project.h
+
+RESOURCES += \
+    gui/qml.qrc

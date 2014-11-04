@@ -21,15 +21,40 @@
 **
 *****************************************************************************/
 
-#include <QGuiApplication>
-#include <application/application.h>
+import QtQuick 2.3
+import QtQuick.Controls 1.2
+import QtQuick.Window 2.0
 
-int main(int argc, char *argv[])
-{
-    QGuiApplication a(argc, argv);
+ApplicationWindow {
+    property var errorMessage: ErrorMessage {}
 
-    application::Application app;
-    app.run();
+    visible: true
+    width: 1024
+    height: 768
+    x: Screen.width / 2 - width / 2
+    y: Screen.height / 2 - height / 2
+    title: qsTr("Hello World")
 
-    return a.exec();
+    menuBar: MenuBar {
+        Menu {
+            title: qsTr("&File")
+            MenuItem {
+                text: qsTr("Exit")
+                onTriggered: Qt.quit();
+            }
+            MenuItem {
+                text: qsTr("test")
+                onTriggered: {
+                    errorMessage.open()
+                    errorMessage.setX(x + width / 2 - errorMessage.width / 2 )
+                    errorMessage.setY(y + height / 2 - errorMessage.height / 2)
+                }
+            }
+        }
+    }
+
+    Text {
+        text: qsTr("Work area")
+        anchors.centerIn: parent
+    }
 }
