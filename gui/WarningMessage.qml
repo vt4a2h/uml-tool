@@ -25,13 +25,13 @@ import QtQuick 2.3
 import QtQuick.Dialogs 1.2
 
 MessageDialog {
-    id: errorMessage
+    id: warningMessage
 
-    title: qsTr("Found some errors")
+    title: qsTr("Found some problems")
 
-    icon: StandardIcon.Critical
+    icon: StandardIcon.Warning
     standardButtons: StandardButton.Ok
     modality: Qt.ApplicationModal
 
-    onAccepted: Qt.quit()
+    onAccepted: close()
 }

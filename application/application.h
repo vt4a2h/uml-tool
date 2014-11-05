@@ -51,13 +51,18 @@ namespace application {
         bool hasErrors() const;
         ErrorList getErrors() const;
 
-        project::SharedProject createProject(const QString &name, const QString &path);
         project::SharedProject findProjectById(const QString &id) const;
         project::SharedProject findProjectByName(const QString &name) const;
         project::ProjectsList projects() const;
         uint projectsCount() const;
         void removeProjectById(const QString &id);
         void removeProjectByName(const QString &name);
+
+    public slots:
+        project::SharedProject createProject(const QString &name, const QString &path);
+
+    signals:
+        void projectCreated(const project::SharedProject &);
 
     private:
         void init();

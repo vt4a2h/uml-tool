@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>ErrorMessage.qml</file>
+        <file>WarningMessage.qml</file>
+        <file>NewProjectDialog.qml</file>
     </qresource>
 </RCC>

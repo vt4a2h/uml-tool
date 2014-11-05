@@ -23,7 +23,7 @@
 
 #include "application.h"
 
-#include <functional>
+#include <iostream>
 
 #include <QFileInfo>
 #include <QDir>
@@ -90,7 +90,10 @@ namespace application {
     project::SharedProject Application::createProject(const QString &name, const QString &path)
     {
         auto newProject = std::make_shared<project::Project>(name, path, m_ErrorList);
-        return *m_Projects.insert(newProject->id(), newProject);
+        m_Projects.insert(newProject->id(), newProject);
+        emit projectCreated(newProject);
+
+        return newProject;
     }
 
     /**

@@ -26,7 +26,8 @@ import QtQuick.Controls 1.2
 import QtQuick.Window 2.0
 
 ApplicationWindow {
-    property var errorMessage: ErrorMessage {}
+    property var warningMessage: WarningMessage {}
+    property var newProjectDialog: NewProjectDialog {}
 
     id: appWindows
     visible: true
@@ -34,12 +35,20 @@ ApplicationWindow {
     height: 768
     x: Screen.width / 2 - width / 2
     y: Screen.height / 2 - height / 2
-    title: qsTr("Hello World")
+    title: qsTr("Q-UML")
 
     menuBar: MenuBar {
         Menu {
             title: qsTr("&File")
             MenuItem {
+                id: newProjectItem
+                text: qsTr("&New project")
+                shortcut: "Ctrl+N"
+                onTriggered:  newProjectDialog.show()
+            }
+            MenuSeparator {}
+            MenuItem {
+                id: exitItem
                 text: qsTr("Exit")
                 onTriggered: Qt.quit()
             }
@@ -53,10 +62,10 @@ ApplicationWindow {
 
     Component.onCompleted: {
         if (application.anyErrors) {
-            errorMessage.open()
-            errorMessage.setText(application.errors.join("\n"))
-            errorMessage.setX(x + width / 2 - errorMessage.width / 2)
-            errorMessage.setY(y + height / 2 - errorMessage.height / 2)
+            warningMessage.open()
+            warningMessage.setText(application.errors.join("\n"))
+            warningMessage.setX(x + width / 2 - warningMessage.width / 2)
+            warningMessage.setY(y + height / 2 - warningMessage.height / 2)
         }
     }
 }
