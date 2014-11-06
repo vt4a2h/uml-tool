@@ -30,9 +30,11 @@ Window {
     id: newProjectWindow
     title: "New project"
     width: 400
-    height: 100
+    height: 93
     minimumWidth: 300
-    minimumHeight: 100
+    minimumHeight: 93
+    flags: Qt.Dialog
+    modality: Qt.ApplicationModal
 
     Label {
         id: projectNameLabel
@@ -51,8 +53,17 @@ Window {
         anchors.leftMargin: 8
         anchors.verticalCenter: projectNameLabel.verticalCenter
         focus: true
+        placeholderText: qsTr("Enter project name...")
     }
 
+    FileDialog {
+        id: pathDialog
+        title: "Choose project path"
+        nameFilters: "Q-UML files(*.qut)"
+        onAccepted: {
+
+        }
+    }
     Label {
         id: projectPathLabel
         text: qsTr("Project path")
@@ -64,23 +75,33 @@ Window {
     TextField {
         id: projectPathEdit
         height: 20
-        anchors.right: parent.right
+        anchors.right: btnPathDialog.left
         anchors.rightMargin: 8
         anchors.left: projectPathLabel.right
         anchors.leftMargin: 14
         anchors.verticalCenter: projectPathLabel.verticalCenter
+        placeholderText: qsTr("Choose project path...")
+    }
+    Button {
+        id: btnPathDialog
+        text: qsTr("...")
+        height: 20
+        width: 20
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+        anchors.verticalCenter: projectPathEdit.verticalCenter
+        onClicked: pathDialog.open()
     }
 
     Button {
         id: acceptButton
-        width: 30
         height: 20
-        text: qsTr("Ok")
+        width: 100
+        text: qsTr("Create")
+        tooltip: qsTr("Press to create a new project")
+        anchors.top: projectPathEdit.bottom
+        anchors.topMargin: 8
         anchors.right: parent.right
         anchors.rightMargin: 8
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 10
-        anchors.top: projectPathEdit.bottom
-        anchors.topMargin: 10
     }
 }

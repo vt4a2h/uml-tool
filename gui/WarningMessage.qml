@@ -22,16 +22,47 @@
 *****************************************************************************/
 
 import QtQuick 2.3
-import QtQuick.Dialogs 1.2
+import QtQuick.Controls 1.2
+import QtQuick.Window 2.0
 
-MessageDialog {
+Window {
     id: warningMessage
+    minimumWidth: 300
+    minimumHeight: 100
+    flags: Qt.Dialog
+    modality: Qt.ApplicationModal
 
     title: qsTr("Found some problems")
 
-    icon: StandardIcon.Warning
-    standardButtons: StandardButton.Ok
-    modality: Qt.ApplicationModal
+    Button {
+        id: btnOk
+        height: 20
+        width: 100
+        text: qsTr("Ok")
+        anchors.horizontalCenterOffset: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 8
+        anchors.horizontalCenter: parent.horizontalCenter
+        onClicked: close()
+        focus: true
+    }
 
-    onAccepted: close()
+    Label {
+        id: lblMsg
+        verticalAlignment: "AlignVCenter"
+        horizontalAlignment: "AlignJustify"
+        wrapMode: Text.WordWrap
+        anchors.bottom: btnOk.top
+        anchors.bottomMargin: 8
+        anchors.top: parent.top
+        anchors.topMargin: 8
+        anchors.left: parent.left
+        anchors.leftMargin: 8
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+    }
+
+    function addErrors(errorList) {
+        lblMsg.text = errorList.join("\n")
+    }
 }

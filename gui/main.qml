@@ -26,10 +26,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Window 2.0
 
 ApplicationWindow {
-    property var warningMessage: WarningMessage {}
-    property var newProjectDialog: NewProjectDialog {}
-
-    id: appWindows
+    id: appWindow
     visible: true
     width: 1024
     height: 768
@@ -42,9 +39,7 @@ ApplicationWindow {
             title: qsTr("&File")
             MenuItem {
                 id: newProjectItem
-                text: qsTr("&New project")
-                shortcut: "Ctrl+N"
-                onTriggered:  newProjectDialog.show()
+                action: newProjectAction
             }
             MenuSeparator {}
             MenuItem {
@@ -60,12 +55,25 @@ ApplicationWindow {
         anchors.centerIn: parent
     }
 
+    WarningMessage {
+        id: warningMessage
+    }
+
+    NewProjectDialog {
+        id: newProjectDialog
+    }
+
+    Action {
+        id: newProjectAction
+        text: qsTr("Create &new project")
+        shortcut: "Ctrl+N"
+        onTriggered:  newProjectDialog.show()
+    }
+
     Component.onCompleted: {
         if (application.anyErrors) {
-            warningMessage.open()
-            warningMessage.setText(application.errors.join("\n"))
-            warningMessage.setX(x + width / 2 - warningMessage.width / 2)
-            warningMessage.setY(y + height / 2 - warningMessage.height / 2)
+            warningMessage.addErrors(application.errors)
+            warningMessage.show()
         }
     }
 }
