@@ -49,6 +49,7 @@ namespace application {
     void Application::configuredGui()
     {
         qRegisterMetaType<ErrorList>("ErrorList");
+        qRegisterMetaType<project::SharedProject>("project::SharedProject");
 
         m_Engine.rootContext()->setContextProperty("application", this);
     }
@@ -60,6 +61,9 @@ namespace application {
     {
         init();
         configuredGui();
+
+        // TODO: send errors in new list and clear current list
+
         m_Engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     }
 
@@ -90,8 +94,12 @@ namespace application {
     project::SharedProject Application::createProject(const QString &name, const QString &path)
     {
         auto newProject = std::make_shared<project::Project>(name, path, m_ErrorList);
-        m_Projects.insert(newProject->id(), newProject);
-        emit projectCreated(newProject);
+        newProject->save();
+
+        if (!newProject->hasErrors()) {
+            m_Projects.insert(newProject->id(), newProject);
+            emit projectCreated(newProject);
+        }
 
         return newProject;
     }

@@ -58,10 +58,12 @@ Window {
 
     FileDialog {
         id: pathDialog
-        title: "Choose project path"
-        nameFilters: "Q-UML files(*.qut)"
+        title: qsTr("Choose project folder")
+        selectMultiple: false
+        selectFolder: true
         onAccepted: {
-
+            if (Qt.resolvedUrl(fileUrl))
+                projectPathEdit.text = fileUrl.toString().replace("file://", "")
         }
     }
     Label {
@@ -103,5 +105,25 @@ Window {
         anchors.topMargin: 8
         anchors.right: parent.right
         anchors.rightMargin: 8
+        onClicked: {
+            if (createProject(projectNameEdit.text, projectPathEdit.text)) {
+                clear()
+                close()
+            }
+        }
+    }
+
+    function createProject(name, path) {
+        if (name && name.length !== 0 && path && path.lenght !== 0) {
+            application.createProject(name, path)
+            return true;
+        }
+
+        return false;
+    }
+
+    function clear() {
+        projectNameEdit.text = ""
+        projectPathEdit.text = ""
     }
 }

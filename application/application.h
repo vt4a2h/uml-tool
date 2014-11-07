@@ -78,3 +78,4 @@ namespace application {
 } // namespace application
 
 Q_DECLARE_METATYPE(ErrorList)
+Q_DECLARE_METATYPE(project::SharedProject)
