@@ -1,23 +1,23 @@
 /*****************************************************************************
-** 
+**
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
 ** Created 03/11/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
-** 
+**
 ** Q-UML is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** Q-UML is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU Lesser General Public License for more details.
 
 ** You should have received a copy of the GNU Lesser General Public License
-** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>. 
+** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
 
@@ -1056,7 +1056,7 @@ TEST_F(Project, LoadSaveProject)
     project_->database()->addScope("foo")->addType("bar");
     project_->save();
 
-    EXPECT_FALSE(project_->anyErrors())
+    EXPECT_FALSE(project_->hasErrors())
             << "Project shouldn't have any errors";
     EXPECT_TRUE(project_->errors()->isEmpty())
             << "Some errors: " << project_->errors()->join("\n").toStdString();
@@ -1064,7 +1064,7 @@ TEST_F(Project, LoadSaveProject)
     project::SharedProject newProject(std::make_shared<project::Project>("no name here ", "no path here", errors));
     newProject->load(rootPath_ + sep_ + project_->name().toLower().replace(" ", "_") + "." + PROJECT_FILE_EXTENTION);
 
-    EXPECT_FALSE(newProject->anyErrors())
+    EXPECT_FALSE(newProject->hasErrors())
             << "Project shouldn't have any errors";
     EXPECT_TRUE(newProject->errors()->isEmpty())
             << "Some errors: " << project_->errors()->join("\n").toStdString();

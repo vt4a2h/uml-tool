@@ -49,10 +49,8 @@ Window {
 
     Label {
         id: lblMsg
-        verticalAlignment: "AlignVCenter"
-        horizontalAlignment: "AlignJustify"
         wrapMode: Text.WordWrap
-        anchors.bottom: btnOk.top
+        anchors.bottom: lblErrors.top
         anchors.bottomMargin: 8
         anchors.top: parent.top
         anchors.topMargin: 8
@@ -62,7 +60,22 @@ Window {
         anchors.rightMargin: 8
     }
 
-    function addErrors(errorList) {
-        lblMsg.text = errorList.join("\n")
+    Label {
+        id: lblErrors
+        verticalAlignment: Text.AlignVCenter
+        wrapMode: Text.WordWrap
+        anchors.bottom: btnOk.top
+        anchors.bottomMargin: 8
+        anchors.top: lblMsg.bottom
+        anchors.topMargin: 8
+        anchors.left: parent.left
+        anchors.leftMargin: 8
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+    }
+
+    function addErrors(msg, errorList) {
+        lblMsg.text = msg
+        lblErrors.text = errorList.join("\n")
     }
 }

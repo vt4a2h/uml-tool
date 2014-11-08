@@ -51,6 +51,7 @@ ApplicationWindow {
     }
 
     Text {
+        id: stub
         text: qsTr("Work area")
         anchors.centerIn: parent
     }
@@ -70,10 +71,23 @@ ApplicationWindow {
         onTriggered:  newProjectDialog.show()
     }
 
-    Component.onCompleted: {
-        if (application.anyErrors) {
-            warningMessage.addErrors(application.errors)
-            warningMessage.show()
-        }
+    Connections {
+        target: application;
+        onErrors: handleErrors(message, errorlist)
+        onProjectCreated: handleNewProject(newProject)
+    }
+
+    function handleErrors(msg, errors) {
+        warningMessage.addErrors(msg, errors)
+        warningMessage.show()
+    }
+
+    function handleNewProject(project) {
+        stub.text = project.get().name()
+    }
+
+    function handleSuccess(msg, details) {
+        // TODO: add some
+        stub.text = msg + " " + details
     }
 }

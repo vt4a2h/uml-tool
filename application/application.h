@@ -62,7 +62,8 @@ namespace application {
         project::SharedProject createProject(const QString &name, const QString &path);
 
     signals:
-        void projectCreated(const project::SharedProject &);
+        void projectCreated(const project::SharedProject &newProject);
+        void errors(const QString &message, const ErrorList &errorlist);
 
     private:
         void init();

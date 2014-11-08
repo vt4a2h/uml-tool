@@ -62,9 +62,12 @@ namespace application {
         init();
         configuredGui();
 
-        // TODO: send errors in new list and clear current list
-
         m_Engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
+        if (hasErrors()) {
+            emit errors(tr("Application init errors"), *m_ErrorList);
+            m_ErrorList->clear();
+        }
     }
 
     /**
@@ -99,6 +102,9 @@ namespace application {
         if (!newProject->hasErrors()) {
             m_Projects.insert(newProject->id(), newProject);
             emit projectCreated(newProject);
+        } else {
+            emit errors(tr("Project creation errors"), *m_ErrorList);
+            newProject.reset();
         }
 
         return newProject;
