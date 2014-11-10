@@ -24,6 +24,7 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Window 2.0
+import QtQuick.Dialogs 1.2
 
 ApplicationWindow {
     id: appWindow
@@ -56,8 +57,17 @@ ApplicationWindow {
         anchors.centerIn: parent
     }
 
-    WarningMessage {
+    MessageDialog {
         id: warningMessage
+        modality: Qt.ApplicationModal
+        icon: StandardIcon.Warning
+        title: qsTr("Found some problems")
+        standardButtons: StandardButton.Ok
+
+        function addErrors(msg, errorList) {
+            text = msg
+            informativeText = errorList.join("\n")
+        }
     }
 
     NewProjectDialog {
@@ -79,11 +89,11 @@ ApplicationWindow {
 
     function handleErrors(msg, errors) {
         warningMessage.addErrors(msg, errors)
-        warningMessage.show()
+        warningMessage.open()
     }
 
     function handleNewProject(project) {
-        stub.text = project.get().name()
+        stub.text = project.name()
     }
 
     function handleSuccess(msg, details) {

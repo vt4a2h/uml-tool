@@ -21,12 +21,12 @@
 **
 *****************************************************************************/
 
-#include <QGuiApplication>
+#include <QApplication>
 #include <application/application.h>
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication a(argc, argv);
+    QApplication a(argc, argv);
 
     application::Application app;
     app.run();
