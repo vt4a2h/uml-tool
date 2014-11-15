@@ -59,10 +59,12 @@ namespace application {
         void removeProjectByName(const QString &name);
 
     public slots:
-        project::SharedProject createProject(const QString &name, const QString &path);
+        void createProject(const QString &name, const QString &path);
+        bool setActiveProject(const QString &id);
 
     signals:
-        void projectCreated(const project::SharedProject &newProject);
+        void projectCreated(const QJsonObject &project);
+        void activeProjectChange(const QJsonObject &project);
         void errors(const QString &message, const ErrorList &errorlist);
 
     private:
@@ -71,6 +73,7 @@ namespace application {
         void readConfig();
 
         project::Projects m_Projects;
+        project::SharedProject m_ActivProject;
         SharedErrorList m_ErrorList;
 
         QQmlApplicationEngine m_Engine;

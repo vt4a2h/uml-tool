@@ -28,6 +28,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QQmlContext>
+#include <QJsonObject>
 
 #include <project/project.h>
 
@@ -60,7 +61,6 @@ namespace application {
     void Application::run()
     {
         init();
-        configuredGui();
 
         m_Engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
@@ -94,20 +94,30 @@ namespace application {
      * @param path
      * @return
      */
-    project::SharedProject Application::createProject(const QString &name, const QString &path)
+    void Application::createProject(const QString &name, const QString &path)
     {
         auto newProject = std::make_shared<project::Project>(name, path, m_ErrorList);
         newProject->save();
 
         if (!newProject->hasErrors()) {
             m_Projects.insert(newProject->id(), newProject);
-            emit projectCreated(newProject);
+            emit projectCreated(newProject->toJson());
+            setActiveProject(newProject->id());
         } else {
             emit errors(tr("Project creation errors"), *m_ErrorList);
             newProject.reset();
         }
+    }
 
-        return newProject;
+    bool Application::setActiveProject(const QString &id)
+    {
+        if (m_Projects.contains(id)) {
+            m_ActivProject = m_Projects[id];
+            emit activeProjectChange(m_ActivProject->toJson());
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -178,6 +188,7 @@ namespace application {
         : QObject(parent)
         , m_ErrorList(std::make_shared<ErrorList>())
     {
+        configuredGui();
     }
 
     /**
