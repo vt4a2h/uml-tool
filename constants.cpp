@@ -34,7 +34,8 @@ namespace {
 
     static constexpr char* DEFAULT_DATABASE_NAME = (char*)"_database";
     static constexpr char* DEFAULT_DATABASE_PATH = (char*)"";
-    static constexpr char* APPLICATION_DATABASE_NAME = (char*)"qumldb.qutdb";
+    static constexpr char* APPLICATION_DATABASEL_NAME = (char*)"qumldb";
+    static constexpr char* APPLICATION_DATABASE_FULL_NAME = (char*)"qumldb.qutdb";
     static constexpr char* DEFAULT_DATABASE_EXTENSION = (char*)"qutdb";
 
     static constexpr char* QTYPE_HASH_ID      = (char*)"_q_hash";

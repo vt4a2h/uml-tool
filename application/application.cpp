@@ -62,11 +62,11 @@ namespace application {
      */
     void Application::readDatabase()
     {
-        QString filePath(QDir::toNativeSeparators(QDir::currentPath() + "/" + APPLICATION_DATABASE_NAME));
+        QString filePath(QDir::toNativeSeparators(QDir::currentPath() + "/" + APPLICATION_DATABASE_FULL_NAME));
 
         if (QFileInfo(filePath).exists()) {
-            m_GlobalDatabase->setName(APPLICATION_DATABASE_NAME);
-            m_GlobalDatabase->setPath(filePath);
+            m_GlobalDatabase->setName(APPLICATION_DATABASEL_NAME);
+            m_GlobalDatabase->setPath(QDir::currentPath());
             m_GlobalDatabase->load(*m_ErrorList);
         } else {
             *m_ErrorList << tr("Database file is not found.");
@@ -115,6 +115,7 @@ namespace application {
     void Application::createProject(const QString &name, const QString &path)
     {
         auto newProject = std::make_shared<project::Project>(name, path, m_ErrorList);
+        newProject->setGloablDatabase(m_GlobalDatabase);
         newProject->save();
 
         if (!newProject->hasErrors()) {
@@ -124,6 +125,7 @@ namespace application {
             setActiveProject(newProject->id());
         } else {
             emit errors(tr("Project creation errors"), *m_ErrorList);
+            m_ErrorList->clear();
             newProject.reset();
         }
     }
@@ -137,6 +139,9 @@ namespace application {
     {
         if (m_Projects.contains(id)) {
             m_ActivProject = m_Projects[id];
+            if (m_ActivProject->globalDatabase() != m_GlobalDatabase)
+                m_ActivProject->setGloablDatabase(m_GlobalDatabase);
+
             emit activeProjectChange(m_ActivProject->toJson());
             return true;
         }

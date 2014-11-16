@@ -58,7 +58,7 @@ Window {
 
     FileDialog {
         id: pathDialog
-        title: qsTr("Choose project folder")
+        title: qsTr("Choose project directory")
         selectMultiple: false
         selectFolder: true
         onAccepted: {
@@ -82,11 +82,12 @@ Window {
         anchors.left: projectPathLabel.right
         anchors.leftMargin: 14
         anchors.verticalCenter: projectPathLabel.verticalCenter
-        placeholderText: qsTr("Choose project path...")
+        placeholderText: qsTr("Enter project path...")
     }
     Button {
         id: btnPathDialog
         text: qsTr("...")
+        tooltip: qsTr("Press to choose directory")
         height: 20
         width: 20
         anchors.right: parent.right
@@ -106,10 +107,24 @@ Window {
         anchors.right: parent.right
         anchors.rightMargin: 8
         onClicked: {
-            if (createProject(projectNameEdit.text, projectPathEdit.text)) {
-                clear()
-                close()
-            }
+            createProject(projectNameEdit.text, projectPathEdit.text)
+            clear()
+            close()
+        }
+    }
+    Button {
+        id: closeButton
+        height: 20
+        width: 100
+        text: qsTr("Close dialog")
+        tooltip: qsTr("Press to close this dialog without create new project")
+        anchors.top: projectPathEdit.bottom
+        anchors.topMargin: 8
+        anchors.right: acceptButton.left
+        anchors.rightMargin: 8
+        onClicked: {
+            clear()
+            close()
         }
     }
 
