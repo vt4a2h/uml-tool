@@ -31,6 +31,7 @@
 #include <QJsonObject>
 
 #include <project/project.h>
+#include <db/database.h>
 
 #include "constants.cpp"
 
@@ -42,6 +43,7 @@ namespace application {
     void Application::init()
     {
         readConfig();
+        readDatabase();
     }
 
     /**
@@ -53,6 +55,22 @@ namespace application {
         qRegisterMetaType<project::SharedProject>("project::SharedProject");
 
         m_Engine.rootContext()->setContextProperty("application", this);
+    }
+
+    /**
+     * @brief Application::readDatabase
+     */
+    void Application::readDatabase()
+    {
+        QString filePath(QDir::toNativeSeparators(QDir::currentPath() + "/" + APPLICATION_DATABASE_NAME));
+
+        if (QFileInfo(filePath).exists()) {
+            m_GlobalDatabase->setName(APPLICATION_DATABASE_NAME);
+            m_GlobalDatabase->setPath(filePath);
+            m_GlobalDatabase->load(*m_ErrorList);
+        } else {
+            *m_ErrorList << tr("Database file is not found.");
+        }
     }
 
     /**
@@ -102,6 +120,7 @@ namespace application {
         if (!newProject->hasErrors()) {
             m_Projects.insert(newProject->id(), newProject);
             emit projectCreated(newProject->toJson());
+
             setActiveProject(newProject->id());
         } else {
             emit errors(tr("Project creation errors"), *m_ErrorList);
@@ -109,6 +128,11 @@ namespace application {
         }
     }
 
+    /**
+     * @brief Application::setActiveProject
+     * @param id
+     * @return
+     */
     bool Application::setActiveProject(const QString &id)
     {
         if (m_Projects.contains(id)) {
@@ -186,6 +210,7 @@ namespace application {
      */
     Application::Application(QObject *parent)
         : QObject(parent)
+        , m_GlobalDatabase(std::make_shared<db::Database>())
         , m_ErrorList(std::make_shared<ErrorList>())
     {
         configuredGui();
@@ -208,7 +233,7 @@ namespace application {
         if (QFileInfo(filePath).exists()) {
             // read config
         } else {
-            *m_ErrorList << "Configuration file is not found.";
+            *m_ErrorList << tr("Configuration file is not found.");
         }
     }
 

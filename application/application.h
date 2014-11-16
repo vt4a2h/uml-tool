@@ -70,7 +70,10 @@ namespace application {
     private:
         void init();
         void configuredGui();
+        void readDatabase();
         void readConfig();
+
+        db::SharedDatabase m_GlobalDatabase;
 
         project::Projects m_Projects;
         project::SharedProject m_ActivProject;

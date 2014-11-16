@@ -84,7 +84,7 @@ ApplicationWindow {
     Connections {
         target: application;
         onErrors: handleErrors(message, errorlist)
-        onProjectCreated: handleNewProject(newProject)
+        onProjectCreated: handleNewProject(project)
     }
 
     function handleErrors(msg, errors) {
@@ -93,7 +93,7 @@ ApplicationWindow {
     }
 
     function handleNewProject(project) {
-        stub.text = project.name()
+        stub.text = project.Name
     }
 
     function handleSuccess(msg, details) {
