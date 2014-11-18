@@ -60,6 +60,7 @@ namespace application {
 
     public slots:
         void createProject(const QString &name, const QString &path);
+        bool openProject(const QString &path);
         bool setActiveProject(const QString &id);
 
     signals:

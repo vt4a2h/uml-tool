@@ -131,6 +131,16 @@ namespace application {
     }
 
     /**
+     * @brief Application::openProject
+     * @param path
+     * @return
+     */
+    bool Application::openProject(const QString &path)
+    {
+        // TODO: complete
+    }
+
+    /**
      * @brief Application::setActiveProject
      * @param id
      * @return

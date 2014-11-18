@@ -44,7 +44,7 @@ Window {
         anchors.left: parent.left
         anchors.top: parent.top
     }
-    TextField{
+    TextField {
         id: projectNameEdit
         height: 20
         anchors.right: parent.right
@@ -96,7 +96,7 @@ Window {
         Action {
             id: chooseDirectoryAction
             text: qsTr("...")
-            tooltip: qsTr("Press to choose directory") + shortcutToString(shortcut)
+            tooltip: qsTr("Press to choose directory%1").arg(shortcutToString(shortcut))
             shortcut: "Ctrl+O"
             onTriggered: pathDialog.open()
         }
@@ -115,7 +115,7 @@ Window {
         Action {
             id: createAction
             text: qsTr("Cr&eate")
-            tooltip: qsTr("Press to create new project") + shortcutToString(shortcut)
+            tooltip: qsTr("Press to create new project%1").arg(shortcutToString(shortcut))
             shortcut: "Ctrl+G"
             onTriggered: {
                 createProject(projectNameEdit.text, projectPathEdit.text)
@@ -137,7 +137,7 @@ Window {
         Action {
             id: closeAction
             text: qsTr("&Close dialog")
-            tooltip: qsTr("Press to close this dialog without create new project") + shortcutToString(shortcut)
+            tooltip: qsTr("Press to close this dialog without create new project%1").arg(shortcutToString(shortcut))
             shortcut: "Ctrl+Q"
             onTriggered: {
                 clear()

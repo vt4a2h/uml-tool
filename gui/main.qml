@@ -42,11 +42,48 @@ ApplicationWindow {
                 id: newProjectItem
                 action: newProjectAction
             }
+            MenuItem {
+                id: openProjectItem
+                action: openProjectAction
+            }
             MenuSeparator {}
             MenuItem {
                 id: exitItem
-                text: qsTr("Exit")
+                action: exitAction
+            }
+
+            Action {
+                id: newProjectAction
+                text: qsTr("Create &new project")
+                tooltip: qsTr("Press to create new project")
+                shortcut: "Ctrl+N"
+                onTriggered:  newProjectDialog.show()
+            }
+            Action {
+                id: openProjectAction
+                text: qsTr("&Open project")
+                tooltip: qsTr("Press to open existing project")
+                shortcut: "Ctrl+O"
+                onTriggered: openNewProjectDialog.open()
+            }
+            Action {
+                id: exitAction
+                text: qsTr("&Exit")
+                tooltip: qsTr("Press to close application")
+                shortcut: "Ctrl+Q"
                 onTriggered: Qt.quit()
+            }
+
+            FileDialog {
+                id: openNewProjectDialog
+                title: qsTr("Open new project")
+                nameFilters: "Q-UML project files (*.qut)"
+                onAccepted: {
+                    if (Qt.resolvedUrl(fileUrl))
+                        application.openProject(fileUrl.toString().replace("file://", ""))
+                    else
+                      handleErrors(qsTr("Path: %1").arg(fileUrl), qsTr("is not resolved."))
+                }
             }
         }
     }
@@ -61,7 +98,7 @@ ApplicationWindow {
         id: warningMessage
         modality: Qt.ApplicationModal
         icon: StandardIcon.Warning
-        title: qsTr("Found some problems")
+        title: qsTr("Found a few problems")
         standardButtons: StandardButton.Ok
 
         function addErrors(msg, errorList) {
@@ -72,13 +109,6 @@ ApplicationWindow {
 
     NewProjectDialog {
         id: newProjectDialog
-    }
-
-    Action {
-        id: newProjectAction
-        text: qsTr("Create &new project")
-        shortcut: "Ctrl+N"
-        onTriggered:  newProjectDialog.show()
     }
 
     Connections {
