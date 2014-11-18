@@ -86,45 +86,63 @@ Window {
     }
     Button {
         id: btnPathDialog
-        text: qsTr("...")
-        tooltip: qsTr("Press to choose directory")
         height: 20
         width: 20
         anchors.right: parent.right
         anchors.rightMargin: 8
         anchors.verticalCenter: projectPathEdit.verticalCenter
-        onClicked: pathDialog.open()
+        action: chooseDirectoryAction
+
+        Action {
+            id: chooseDirectoryAction
+            text: qsTr("...")
+            tooltip: qsTr("Press to choose directory") + shortcutToString(shortcut)
+            shortcut: "Ctrl+O"
+            onTriggered: pathDialog.open()
+        }
     }
 
     Button {
         id: acceptButton
         height: 20
         width: 100
-        text: qsTr("Create")
-        tooltip: qsTr("Press to create a new project")
         anchors.top: projectPathEdit.bottom
         anchors.topMargin: 8
         anchors.right: parent.right
         anchors.rightMargin: 8
-        onClicked: {
-            createProject(projectNameEdit.text, projectPathEdit.text)
-            clear()
-            close()
+        action: createAction
+
+        Action {
+            id: createAction
+            text: qsTr("Cr&eate")
+            tooltip: qsTr("Press to create new project") + shortcutToString(shortcut)
+            shortcut: "Ctrl+G"
+            onTriggered: {
+                createProject(projectNameEdit.text, projectPathEdit.text)
+                clear()
+                close()
+            }
         }
     }
     Button {
         id: closeButton
         height: 20
         width: 100
-        text: qsTr("Close dialog")
-        tooltip: qsTr("Press to close this dialog without create new project")
         anchors.top: projectPathEdit.bottom
         anchors.topMargin: 8
         anchors.right: acceptButton.left
         anchors.rightMargin: 8
-        onClicked: {
-            clear()
-            close()
+        action: closeAction
+
+        Action {
+            id: closeAction
+            text: qsTr("&Close dialog")
+            tooltip: qsTr("Press to close this dialog without create new project") + shortcutToString(shortcut)
+            shortcut: "Ctrl+Q"
+            onTriggered: {
+                clear()
+                close()
+            }
         }
     }
 
@@ -140,5 +158,9 @@ Window {
     function clear() {
         projectNameEdit.text = ""
         projectPathEdit.text = ""
+    }
+
+    function shortcutToString(str) {
+        return " (" + str + ")"
     }
 }
