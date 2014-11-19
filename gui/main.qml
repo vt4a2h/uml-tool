@@ -114,7 +114,8 @@ ApplicationWindow {
     Connections {
         target: application;
         onErrors: handleErrors(message, errorlist)
-        onProjectCreated: handleNewProject(project)
+        onProjectCreated: handleOpenProject(project)
+        onProjectOpened: handleOpenProject(project)
     }
 
     function handleErrors(msg, errors) {
@@ -122,12 +123,17 @@ ApplicationWindow {
         warningMessage.open()
     }
 
-    function handleNewProject(project) {
-        stub.text = project.Name
+    function handleOpenProject(project) {
+        appWindow.title = makeTitle(project.Name)
+        stub.text = currentProject.name()
     }
 
     function handleSuccess(msg, details) {
         // TODO: add some
         stub.text = msg + " " + details
+    }
+
+    function makeTitle(projectName) {
+        return qsTr("%1 - Q-UML").arg(projectName)
     }
 }

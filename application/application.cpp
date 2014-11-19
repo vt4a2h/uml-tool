@@ -30,6 +30,7 @@
 #include <QQmlContext>
 #include <QJsonObject>
 
+#include <adaptors/projectadaptor.h>
 #include <project/project.h>
 #include <db/database.h>
 
@@ -53,6 +54,7 @@ namespace application {
     {
         qRegisterMetaType<ErrorList>("ErrorList");
         qRegisterMetaType<project::SharedProject>("project::SharedProject");
+        qRegisterMetaType<qml_adaptors::ProjectAdaptor>("qml_adaptors::ProjectAdaptor");
 
         m_Engine.rootContext()->setContextProperty("application", this);
     }
@@ -120,9 +122,8 @@ namespace application {
 
         if (!newProject->hasErrors()) {
             m_Projects.insert(newProject->id(), newProject);
-            emit projectCreated(newProject->toJson());
-
             setActiveProject(newProject->id());
+            emit projectCreated(newProject->toJson());
         } else {
             emit errors(tr("Project creation errors"), *m_ErrorList);
             m_ErrorList->clear();
@@ -137,7 +138,31 @@ namespace application {
      */
     bool Application::openProject(const QString &path)
     {
-        // TODO: complete
+        project::SharedProject pr(std::make_shared<project::Project>());
+        pr->setErrorsList(m_ErrorList);
+        pr->setGloablDatabase(m_GlobalDatabase);
+
+        m_ErrorList->clear();
+        pr->load(path);
+
+        if (!m_ErrorList->isEmpty()) {
+            emit errors(tr("Open project errors."), *m_ErrorList);
+            m_ErrorList->clear();
+            return false;
+        }
+
+        // now you can open only one project
+        // force save changes and close project, yet
+        if (m_ActivProject) {
+            m_ActivProject->save();
+            emit noActiveProject(); // handle no project case
+        }
+
+        // TODO: maybe handle case, when user reopenning current project
+        m_Projects.insert(pr->id(), pr);
+        setActiveProject(pr->id());
+        emit projectOpened(pr->toJson());
+        return true;
     }
 
     /**
@@ -151,6 +176,10 @@ namespace application {
             m_ActivProject = m_Projects[id];
             if (m_ActivProject->globalDatabase() != m_GlobalDatabase)
                 m_ActivProject->setGloablDatabase(m_GlobalDatabase);
+
+            m_Engine.rootContext()->setContextProperty(
+               "currentProject", new qml_adaptors::ProjectAdaptor(m_ActivProject) // leak, need shared pointer
+            );
 
             emit activeProjectChange(m_ActivProject->toJson());
             return true;

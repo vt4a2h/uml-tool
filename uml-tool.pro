@@ -35,7 +35,8 @@ SOURCES += \
     translator/projecttranslator.cpp \
     utility/helpfunctions.cpp \
     application/application.cpp \
-    project/project.cpp
+    project/project.cpp \
+    adaptors/projectadaptor.cpp
 
 HEADERS += \
     enums.h \
@@ -69,7 +70,8 @@ HEADERS += \
     translator/projecttranslator.h \
     utility/helpfunctions.h \
     application/application.h \
-    project/project.h
+    project/project.h \
+    adaptors/projectadaptor.h
 
 RESOURCES += \
     gui/qml.qrc

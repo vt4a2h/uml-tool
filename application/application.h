@@ -65,7 +65,9 @@ namespace application {
 
     signals:
         void projectCreated(const QJsonObject &project);
+        void projectOpened(const QJsonObject &project);
         void activeProjectChange(const QJsonObject &project);
+        void noActiveProject();
         void errors(const QString &message, const ErrorList &errorlist);
 
     private:
