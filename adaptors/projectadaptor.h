@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 03/11/2014.
+** Created 19/11/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
