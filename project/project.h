@@ -40,7 +40,7 @@ namespace project {
     public:
         Project();
         Project(const QString &name, const QString &path, const SharedErrorList &errors);
-        virtual ~Project() {}
+        virtual ~Project();
 
         friend bool operator ==(const Project &lhs, const Project &rhs);
 

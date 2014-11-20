@@ -57,7 +57,7 @@ ApplicationWindow {
                 text: qsTr("Create &new project")
                 tooltip: qsTr("Press to create new project")
                 shortcut: "Ctrl+N"
-                onTriggered:  newProjectDialog.show()
+                onTriggered: newProjectDialog.show()
             }
             Action {
                 id: openProjectAction
@@ -125,7 +125,7 @@ ApplicationWindow {
 
     function handleOpenProject(project) {
         appWindow.title = makeTitle(project.Name)
-        stub.text = currentProject.name()
+        stub.text = currentProject.name
     }
 
     function handleSuccess(msg, details) {

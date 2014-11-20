@@ -20,6 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+
 #include "projectadaptor.h"
 
 #include <QDebug>
@@ -63,7 +64,6 @@ namespace qml_adaptors {
      */
     ProjectAdaptor::~ProjectAdaptor()
     {
-        qDebug() << "project adaptor destoryed";
     }
 
     /**
@@ -91,6 +91,69 @@ namespace qml_adaptors {
     QString ProjectAdaptor::name() const
     {
         return m_Project->name();
+    }
+
+    /**
+     * @brief ProjectAdaptor::id
+     * @return
+     */
+    QString ProjectAdaptor::id() const
+    {
+        return m_Project->id();
+    }
+
+    /**
+     * @brief ProjectAdaptor::path
+     * @return
+     */
+    QString ProjectAdaptor::path() const
+    {
+        return m_Project->path();
+    }
+
+    /**
+     * @brief ProjectAdaptor::toJson
+     * @return
+     */
+    QJsonObject ProjectAdaptor::toJson() const
+    {
+        return m_Project->toJson();
+    }
+
+    /**
+     * @brief ProjectAdaptor::fromJson
+     * @param src
+     * @param errorList
+     */
+    void ProjectAdaptor::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        m_Project->fromJson(src, errorList);
+    }
+
+    /**
+     * @brief ProjectAdaptor::setName
+     * @param name
+     */
+    void ProjectAdaptor::setName(const QString &name)
+    {
+        if (m_Project->name() == name)
+            return;
+
+        m_Project->setName(name);
+        emit nameChanged(name);
+    }
+
+    /**
+     * @brief ProjectAdaptor::setPath
+     * @param path
+     */
+    void ProjectAdaptor::setPath(const QString &path)
+    {
+        if (m_Project->path() == path)
+            return;
+
+        m_Project->setPath(path);
+        emit pathChanged(path);
     }
 
 } // namespace qml_adaptors

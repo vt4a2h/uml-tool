@@ -36,7 +36,9 @@ SOURCES += \
     utility/helpfunctions.cpp \
     application/application.cpp \
     project/project.cpp \
-    adaptors/projectadaptor.cpp
+    adaptors/projectadaptor.cpp \
+    adaptors/databaseadaptor.cpp \
+    adaptors/projectdatabaseadaptor.cpp
 
 HEADERS += \
     enums.h \
@@ -71,7 +73,9 @@ HEADERS += \
     utility/helpfunctions.h \
     application/application.h \
     project/project.h \
-    adaptors/projectadaptor.h
+    adaptors/projectadaptor.h \
+    adaptors/databaseadaptor.h \
+    adaptors/projectdatabaseadaptor.h
 
 RESOURCES += \
     gui/qml.qrc

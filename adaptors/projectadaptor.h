@@ -20,17 +20,28 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+
 #pragma once
 
 #include <QObject>
+#include <QJsonObject>
 
 #include "types.h"
 
+/**
+ * @brief qml_adaptors
+ */
 namespace qml_adaptors {
 
+    /**
+     * @brief The ProjectAdaptor class
+     */
     class ProjectAdaptor : public QObject
     {
         Q_OBJECT
+        Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+        Q_PROPERTY(QString id   READ id   )
+        Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
 
     public:
         explicit ProjectAdaptor(QObject *parent = 0);
@@ -41,10 +52,20 @@ namespace qml_adaptors {
         project::SharedProject project() const;
         void setProject(const project::SharedProject &project);
 
+        QString name() const;
+        QString id()   const;
+        QString path() const;
+
+        Q_INVOKABLE QJsonObject toJson() const;
+        Q_INVOKABLE void fromJson(const QJsonObject &src, QStringList &errorList);
+
     signals:
+        void nameChanged(const QString& newName);
+        void pathChanged(const QString& newPath);
 
     public slots:
-        QString name() const; // just test
+        void setName(const QString &name);
+        void setPath(const QString &path);
 
     private:
         project::SharedProject m_Project;

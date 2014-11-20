@@ -66,8 +66,6 @@ namespace application {
     signals:
         void projectCreated(const QJsonObject &project);
         void projectOpened(const QJsonObject &project);
-        void activeProjectChange(const QJsonObject &project);
-        void noActiveProject();
         void errors(const QString &message, const ErrorList &errorlist);
 
     private:
@@ -79,8 +77,10 @@ namespace application {
         db::SharedDatabase m_GlobalDatabase;
 
         project::Projects m_Projects;
-        project::SharedProject m_ActivProject;
         SharedErrorList m_ErrorList;
+
+        project::SharedProject m_ActivProject;
+        qml_adaptors::SharingProjectAdaptor m_ProjectAdaptor;
 
         QQmlApplicationEngine m_Engine;
     };

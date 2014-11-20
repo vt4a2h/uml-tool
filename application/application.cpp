@@ -155,7 +155,6 @@ namespace application {
         // force save changes and close project, yet
         if (m_ActivProject) {
             m_ActivProject->save();
-            emit noActiveProject(); // handle no project case
         }
 
         // TODO: maybe handle case, when user reopenning current project
@@ -177,11 +176,9 @@ namespace application {
             if (m_ActivProject->globalDatabase() != m_GlobalDatabase)
                 m_ActivProject->setGloablDatabase(m_GlobalDatabase);
 
-            m_Engine.rootContext()->setContextProperty(
-               "currentProject", new qml_adaptors::ProjectAdaptor(m_ActivProject) // leak, need shared pointer
-            );
+            m_ProjectAdaptor = std::make_shared<qml_adaptors::ProjectAdaptor>(m_ActivProject);
+            m_Engine.rootContext()->setContextProperty("currentProject", m_ProjectAdaptor.get());
 
-            emit activeProjectChange(m_ActivProject->toJson());
             return true;
         }
 

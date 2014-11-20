@@ -57,6 +57,13 @@ namespace project {
     }
 
     /**
+     * @brief Project::~Project
+     */
+    Project::~Project()
+    {
+    }
+
+    /**
      * @brief operator ==
      * @param lhs
      * @param rhs
