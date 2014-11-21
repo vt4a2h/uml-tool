@@ -29,9 +29,38 @@ namespace qml_adaptors {
      * @brief ProjectDatabaseAdaptor::ProjectDatabaseAdaptor
      * @param parent
      */
-    ProjectDatabaseAdaptor::ProjectDatabaseAdaptor(QObject *parent) :
-        DatabaseAdaptor(parent)
+    ProjectDatabaseAdaptor::ProjectDatabaseAdaptor(QObject *parent)
+        : ProjectDatabaseAdaptor(nullptr, parent)
     {
+    }
+
+    /**
+     * @brief ProjectDatabaseAdaptor::ProjectDatabaseAdaptor
+     * @param db
+     * @param parent
+     */
+    ProjectDatabaseAdaptor::ProjectDatabaseAdaptor(const db::SharedProjectDatabase &db, QObject *parent)
+        : QObject(parent)
+        , m_db(db)
+    {
+    }
+
+    /**
+     * @brief ProjectDatabaseAdaptor::ProjectDatabaseAdaptor
+     * @param src
+     */
+    ProjectDatabaseAdaptor::ProjectDatabaseAdaptor(const ProjectDatabaseAdaptor &src)
+        : QObject(src.parent())
+        , m_db(src.m_db)
+    {
+    }
+
+    /**
+     * @brief ProjectDatabaseAdaptor::~ProjectDatabaseAdaptor
+     */
+    ProjectDatabaseAdaptor::~ProjectDatabaseAdaptor()
+    {
+
     }
 
 } // namespace qml_adaptors

@@ -23,23 +23,30 @@
 
 #pragma once
 
-#include "databaseadaptor.h"
+#include "types.h"
 
 namespace qml_adaptors {
 
     /**
      * @brief The ProjectDatabaseAdaptor class
      */
-    class ProjectDatabaseAdaptor : public DatabaseAdaptor
+    class ProjectDatabaseAdaptor : QObject
     {
         Q_OBJECT
     public:
         explicit ProjectDatabaseAdaptor(QObject *parent = 0);
+        ProjectDatabaseAdaptor(const db::SharedProjectDatabase &db, QObject *parent = 0);
+        ProjectDatabaseAdaptor(const ProjectDatabaseAdaptor &src);
+        ~ProjectDatabaseAdaptor();
 
     signals:
 
     public slots:
 
+    private:
+        db::SharedProjectDatabase m_db;
     };
 
 } // namespace qml_adaptors
+
+Q_DECLARE_METATYPE(qml_adaptors::ProjectDatabaseAdaptor)

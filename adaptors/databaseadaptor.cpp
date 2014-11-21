@@ -29,8 +29,36 @@ namespace qml_adaptors {
      * @brief DatabaseAdaptor::DatabaseAdaptor
      * @param parent
      */
-    DatabaseAdaptor::DatabaseAdaptor(QObject *parent) :
-        QObject(parent)
+    DatabaseAdaptor::DatabaseAdaptor(QObject *parent)
+        : DatabaseAdaptor(nullptr, parent)
+    {
+    }
+
+    /**
+     * @brief DatabaseAdaptor::DatabaseAdaptor
+     * @param db
+     * @param parent
+     */
+    DatabaseAdaptor::DatabaseAdaptor(const db::SharedDatabase &db, QObject *parent)
+        : QObject(parent)
+        , m_db(db)
+    {
+    }
+
+    /**
+     * @brief DatabaseAdaptor::DatabaseAdaptor
+     * @param src
+     */
+    DatabaseAdaptor::DatabaseAdaptor(const DatabaseAdaptor &src)
+        : QObject(src.parent())
+        , m_db(src.m_db)
+    {
+    }
+
+    /**
+     * @brief DatabaseAdaptor::~DatabaseAdaptor
+     */
+    DatabaseAdaptor::~DatabaseAdaptor()
     {
     }
 

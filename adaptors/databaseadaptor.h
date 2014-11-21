@@ -36,12 +36,21 @@ namespace qml_adaptors {
     {
         Q_OBJECT
     public:
+
         explicit DatabaseAdaptor(QObject *parent = 0);
+        DatabaseAdaptor(const db::SharedDatabase &db, QObject *parent = 0);
+        DatabaseAdaptor(const DatabaseAdaptor &src);
+
+        ~DatabaseAdaptor();
 
     signals:
 
     public slots:
 
+    private:
+        db::SharedDatabase m_db;
     };
 
 } // namespace qml_adaptors
+
+Q_DECLARE_METATYPE(qml_adaptors::DatabaseAdaptor)
