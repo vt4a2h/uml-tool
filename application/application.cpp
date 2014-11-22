@@ -31,6 +31,8 @@
 #include <QJsonObject>
 
 #include <adaptors/projectadaptor.h>
+#include <adaptors/databaseadaptor.h>
+#include <adaptors/projectdatabaseadaptor.h>
 #include <project/project.h>
 #include <db/database.h>
 
@@ -55,6 +57,8 @@ namespace application {
         qRegisterMetaType<ErrorList>("ErrorList");
         qRegisterMetaType<project::SharedProject>("project::SharedProject");
         qRegisterMetaType<qml_adaptors::ProjectAdaptor>("qml_adaptors::ProjectAdaptor");
+        qRegisterMetaType<qml_adaptors::DatabaseAdaptor>("qml_adaptors::DatabaseAdaptor");
+        qRegisterMetaType<qml_adaptors::ProjectDatabaseAdaptor>("qml_adaptors::ProjectDatabaseAdaptor");
 
         m_Engine.rootContext()->setContextProperty("application", this);
     }
@@ -70,6 +74,8 @@ namespace application {
             m_GlobalDatabase->setName(APPLICATION_DATABASEL_NAME);
             m_GlobalDatabase->setPath(QDir::currentPath());
             m_GlobalDatabase->load(*m_ErrorList);
+            m_Engine.rootContext()->setContextProperty("global_database",
+                                                       new qml_adaptors::DatabaseAdaptor(m_GlobalDatabase, this));
         } else {
             *m_ErrorList << tr("Database file is not found.");
         }

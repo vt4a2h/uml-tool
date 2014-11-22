@@ -47,6 +47,7 @@ Window {
     TextField {
         id: projectNameEdit
         height: 20
+        width: projectPathEdit.width + btnPathDialog.width + 8
         anchors.right: parent.right
         anchors.rightMargin: 8
         anchors.left: projectNameLabel.right
