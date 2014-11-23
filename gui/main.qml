@@ -29,8 +29,8 @@ import QtQuick.Dialogs 1.2
 ApplicationWindow {
     id: appWindow
     visible: true
-    width: 1024
-    height: 768
+    width: 800
+    height: 600
     x: Screen.width / 2 - width / 2
     y: Screen.height / 2 - height / 2
     title: qsTr("Q-UML")
@@ -88,10 +88,18 @@ ApplicationWindow {
         }
     }
 
-    Text {
-        id: stub
-        text: qsTr("Work area")
-        anchors.centerIn: parent
+    EntityList {
+        id: basicObjectsList
+    }
+
+    MainScene {
+        id: mainScene
+        anchors {
+            left: basicObjectsList.right
+            right: parent.right
+            top: parent.top
+            bottom: parent.bottom
+        }
     }
 
     MessageDialog {

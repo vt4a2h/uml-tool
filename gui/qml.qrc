@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>NewProjectDialog.qml</file>
+        <file>EntityList.qml</file>
+        <file>MainScene.qml</file>
     </qresource>
 </RCC>
