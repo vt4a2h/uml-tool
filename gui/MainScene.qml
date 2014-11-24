@@ -26,5 +26,5 @@ import QtQuick 2.0
 // scene stub
 Rectangle {
     anchors.margins: 8
-    color: "blue"
+    color: "white"
 }

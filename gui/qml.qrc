@@ -4,5 +4,6 @@
         <file>NewProjectDialog.qml</file>
         <file>EntityList.qml</file>
         <file>MainScene.qml</file>
+        <file>EntityItem.qml</file>
     </qresource>
 </RCC>

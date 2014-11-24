@@ -315,7 +315,7 @@ namespace db {
     void Database::load(QStringList &errorList)
     {
         QFile f(makeFullPath());
-        if (f.open(QIODevice::WriteOnly)) {
+        if (f.open(QIODevice::ReadOnly)) {
             QJsonParseError errorMessage;
             QJsonDocument jdoc(QJsonDocument::fromJson(f.readAll(), &errorMessage));
 

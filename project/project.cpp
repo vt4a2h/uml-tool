@@ -136,7 +136,6 @@ namespace project {
     {
         Q_ASSERT(!!m_Errors);
         Q_ASSERT(!!m_Database);
-        Q_ASSERT(!!m_Database->globalDatabase());
 
         if (!utility::readFromFile(*this, path))
             *m_Errors << "Cannot read project file.";
