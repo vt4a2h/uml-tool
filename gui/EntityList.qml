@@ -24,6 +24,7 @@
 import QtQuick 2.0
 
 Column {
+   id: itemsList
    spacing: 8
    anchors {
        margins: 8

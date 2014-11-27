@@ -25,6 +25,26 @@ import QtQuick 2.0
 
 // scene stub
 Rectangle {
+    id: mainScene
     anchors.margins: 8
     color: "white"
+
+    DropArea {
+            width: 200
+            height: 200
+            anchors.centerIn: parent
+
+            Rectangle {
+                anchors.fill: parent
+                color: parent.containsDrag ? "red" : "green"
+            }
+
+            onEntered: print("entered");
+            onExited: print("exited");
+            onDropped: print("dropped");
+    }
+
+    EntityItem {
+        id: stubItem
+    }
 }
