@@ -38,7 +38,29 @@ Column {
        height: 50
        width: 50
        color: "red"
+
+       property bool dragActive: dragArea.drag.active
+
+       Drag.dragType: Drag.Automatic
+
+       onDragActiveChanged: {
+           if (dragActive) {
+               print("drag started")
+               Drag.start();
+           } else {
+               print("drag finished")
+               Drag.drop();
+           }
+       }
+
+       MouseArea {
+           id: dragArea
+           anchors.fill: parent
+           drag.target: parent
+       }
+
    }
+
    Rectangle {
        height: 50
        width: 50

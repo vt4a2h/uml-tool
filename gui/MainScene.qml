@@ -24,27 +24,41 @@
 import QtQuick 2.0
 
 // scene stub
-Rectangle {
+
+Item {
     id: mainScene
     anchors.margins: 8
-    color: "white"
 
     DropArea {
-            width: 200
-            height: 200
-            anchors.centerIn: parent
+        id: dragTarget
+        anchors.fill: parent
+        anchors.centerIn: parent
 
-            Rectangle {
-                anchors.fill: parent
-                color: parent.containsDrag ? "red" : "green"
+        Rectangle {
+            id: dropScene
+            anchors.fill: parent
+            color: "white"
+            antialiasing: true
+            radius: 3
+            border {
+                width: 1
+                color: "black"
             }
 
-            onEntered: print("entered");
-            onExited: print("exited");
-            onDropped: print("dropped");
-    }
+            states: [
+                State {
+                    name: "DragEntered"
+                    when: dragTarget.containsDrag
+                    PropertyChanges {
+                        target: dropScene
+                        color: "#eaeaea"
+                    }
+                }
+            ]
+        }
 
-    EntityItem {
-        id: stubItem
+        onEntered: print("entered");
+        onExited: print("exited");
+        onDropped: print("dropped");
     }
 }

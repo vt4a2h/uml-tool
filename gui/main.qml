@@ -90,6 +90,7 @@ ApplicationWindow {
 
     EntityList {
         id: basicObjectsList
+        z: 1
     }
 
     MainScene {
