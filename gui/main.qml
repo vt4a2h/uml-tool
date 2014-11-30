@@ -149,7 +149,6 @@ ApplicationWindow {
 
     function handleOpenProject(project) {
         appWindow.title = makeTitle(project.Name)
-        stub.text = currentProject.name
     }
 
     function handleSuccess(msg, details) {
@@ -161,20 +160,21 @@ ApplicationWindow {
         return qsTr("%1 - Q-UML").arg(projectName)
     }
 
-    // TODO: add enumeration parameter
-    // TODO: add current scope ID parameter for insertation
     function createNewEntity() {
         var component = Qt.createComponent("EntityItem.qml")
         if (component.status === Component.Ready) {
             var entity = component.createObject(mainScene, {"x": 100, "y": 100})
             if (entity !== null) {
+                // TODO: add enumeration parameter for type
+                var jsObj = currentProjectDatabase.createEntity(application.currentScopeID);
+                // TODO: add function to object (fromJSON)
+                entity.name = jsObj.Name
                 print("Created.")
-                // TODO: call method of database for create object
             } else {
                 print("Creation error.")
             }
         } else if (component.status === Component.Error) {
-            // TODO: add messge which depends on entity type
+            // TODO: add message which depends on entity type
             handleErrors(qsTr("Component creation error"), qsTr("Creation QML component faild."))
         }
     }

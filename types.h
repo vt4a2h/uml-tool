@@ -150,5 +150,11 @@ namespace project {
 
 namespace qml_adaptors {
     class ProjectAdaptor;
-    using SharingProjectAdaptor = std::shared_ptr<ProjectAdaptor>;
+    using SharedProjectAdaptor = std::shared_ptr<ProjectAdaptor>;
+
+    class DatabaseAdaptor;
+    using SharedDatabaseAdaptor = std::shared_ptr<DatabaseAdaptor>;
+
+    class ProjectDatabaseAdaptor;
+    using SharedProjectDatabaseAdaptor = std::shared_ptr<ProjectDatabaseAdaptor>;
 }

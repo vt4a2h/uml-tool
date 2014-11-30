@@ -41,6 +41,7 @@ namespace application {
         Q_OBJECT
         Q_PROPERTY(bool anyErrors READ hasErrors)
         Q_PROPERTY(ErrorList errors READ getErrors)
+        Q_PROPERTY(QString currentScopeID READ currentScopeID WRITE setCurrentScopeID NOTIFY currentScopeIDChanged)
 
     public:
         explicit Application(QObject *parent = nullptr);
@@ -58,15 +59,21 @@ namespace application {
         void removeProjectById(const QString &id);
         void removeProjectByName(const QString &name);
 
+        QString currentScopeID() const;
+
     public slots:
         void createProject(const QString &name, const QString &path);
         bool openProject(const QString &path);
-        bool setActiveProject(const QString &id);
+        bool setCurrentProject(const QString &id);
+        bool setCurrentProjectDatabase();
+        void setCurrentScopeID(const QString &id);
 
     signals:
         void projectCreated(const QJsonObject &project);
         void projectOpened(const QJsonObject &project);
         void errors(const QString &message, const ErrorList &errorlist);
+
+        void currentScopeIDChanged(QString id);
 
     private:
         void init();
@@ -74,15 +81,20 @@ namespace application {
         void readDatabase();
         void readConfig();
 
-        db::SharedDatabase m_GlobalDatabase;
-
         project::Projects m_Projects;
         SharedErrorList m_ErrorList;
 
-        project::SharedProject m_ActivProject;
-        qml_adaptors::SharingProjectAdaptor m_ProjectAdaptor;
+        db::SharedDatabase m_GlobalDatabase;
+        qml_adaptors::SharedDatabaseAdaptor m_GlobalDatabaseAdaptor;
+
+        project::SharedProject m_CurrentProject;
+        qml_adaptors::SharedProjectAdaptor m_ProjectAdaptor;
+
+        db::SharedProjectDatabase m_CurrentProjectDatabase;
+        qml_adaptors::SharedProjectDatabaseAdaptor m_CurrentDatabaseAdaptor;
 
         QQmlApplicationEngine m_Engine;
+        QString m_currentScopeID;
     };
 
 } // namespace application

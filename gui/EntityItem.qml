@@ -35,6 +35,8 @@ Rectangle {
         color: "black"
     }
 
+    property alias name: entityName.text
+
     Text {
         id: entityName
         text: qsTr("Stub")

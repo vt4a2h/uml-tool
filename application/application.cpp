@@ -33,8 +33,10 @@
 #include <adaptors/projectadaptor.h>
 #include <adaptors/databaseadaptor.h>
 #include <adaptors/projectdatabaseadaptor.h>
-#include <project/project.h>
 #include <db/database.h>
+#include <db/projectdatabase.h>
+#include <entity/scope.h>
+#include <project/project.h>
 
 #include "constants.cpp"
 
@@ -74,8 +76,11 @@ namespace application {
             m_GlobalDatabase->setName(APPLICATION_DATABASEL_NAME);
             m_GlobalDatabase->setPath(QDir::currentPath());
             m_GlobalDatabase->load(*m_ErrorList);
-            m_Engine.rootContext()->setContextProperty("global_database",
-                                                       new qml_adaptors::DatabaseAdaptor(m_GlobalDatabase, this));
+
+            if (m_ErrorList->isEmpty()){
+                m_GlobalDatabaseAdaptor = std::make_shared<qml_adaptors::DatabaseAdaptor>(m_GlobalDatabase);
+                m_Engine.rootContext()->setContextProperty("global_database", m_GlobalDatabaseAdaptor.get());
+            }
         } else {
             *m_ErrorList << tr("Database file is not found.");
         }
@@ -128,8 +133,11 @@ namespace application {
 
         if (!newProject->hasErrors()) {
             m_Projects.insert(newProject->id(), newProject);
-            setActiveProject(newProject->id());
+            setCurrentProject(newProject->id());
             emit projectCreated(newProject->toJson());
+
+            auto basicScope = newProject->database()->addScope();
+            setCurrentScopeID(basicScope->id());
         } else {
             emit errors(tr("Project creation errors"), *m_ErrorList);
             m_ErrorList->clear();
@@ -159,13 +167,13 @@ namespace application {
 
         // now you can open only one project
         // force save changes and close project, yet
-        if (m_ActivProject) {
-            m_ActivProject->save();
+        if (m_CurrentProject) {
+            m_CurrentProject->save();
         }
 
         // TODO: maybe handle case, when user reopenning current project
         m_Projects.insert(pr->id(), pr);
-        setActiveProject(pr->id());
+        setCurrentProject(pr->id());
         emit projectOpened(pr->toJson());
         return true;
     }
@@ -175,20 +183,54 @@ namespace application {
      * @param id
      * @return
      */
-    bool Application::setActiveProject(const QString &id)
+    bool Application::setCurrentProject(const QString &id)
     {
         if (m_Projects.contains(id)) {
-            m_ActivProject = m_Projects[id];
-            if (m_ActivProject->globalDatabase() != m_GlobalDatabase)
-                m_ActivProject->setGloablDatabase(m_GlobalDatabase);
+            m_CurrentProject = m_Projects[id];
+            if (m_CurrentProject->globalDatabase() != m_GlobalDatabase)
+                m_CurrentProject->setGloablDatabase(m_GlobalDatabase);
 
-            m_ProjectAdaptor = std::make_shared<qml_adaptors::ProjectAdaptor>(m_ActivProject);
+            m_ProjectAdaptor = std::make_shared<qml_adaptors::ProjectAdaptor>(m_CurrentProject);
             m_Engine.rootContext()->setContextProperty("currentProject", m_ProjectAdaptor.get());
+
+            return setCurrentProjectDatabase();
+        }
+
+        return false;
+    }
+
+    /**
+     * @brief Application::setCurrentProjectDatabase
+     * @param id
+     * @return
+     */
+    bool Application::setCurrentProjectDatabase()
+    {
+        if (m_CurrentProject && m_CurrentProject->database()) {
+            m_CurrentProjectDatabase = m_CurrentProject->database();
+            m_CurrentDatabaseAdaptor =
+                std::make_shared<qml_adaptors::ProjectDatabaseAdaptor>(m_CurrentProjectDatabase);
+            m_Engine.rootContext()->setContextProperty(
+                "currentProjectDatabase", m_CurrentDatabaseAdaptor.get()
+            );
 
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @brief Application::setCurrentScopeID
+     * @param arg
+     */
+    void Application::setCurrentScopeID(const QString &id)
+    {
+        if (m_currentScopeID == id)
+            return;
+
+        m_currentScopeID = id;
+        emit currentScopeIDChanged(id);
     }
 
     /**
@@ -253,12 +295,21 @@ namespace application {
     }
 
     /**
+     * @brief Application::currentScopeID
+     * @return
+     */
+    QString Application::currentScopeID() const
+    {
+        return m_currentScopeID;
+    }
+
+    /**
      * @brief Application::Application
      */
     Application::Application(QObject *parent)
         : QObject(parent)
-        , m_GlobalDatabase(std::make_shared<db::Database>())
         , m_ErrorList(std::make_shared<ErrorList>())
+        , m_GlobalDatabase(std::make_shared<db::Database>())
     {
         configuredGui();
     }

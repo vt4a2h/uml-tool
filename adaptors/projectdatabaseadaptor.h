@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <QObject>
 #include <QJsonObject>
 
 #include "types.h"
@@ -33,7 +34,7 @@ namespace qml_adaptors {
     /**
      * @brief The ProjectDatabaseAdaptor class
      */
-    class ProjectDatabaseAdaptor : QObject
+    class ProjectDatabaseAdaptor : public QObject
     {
         Q_OBJECT
     public:
