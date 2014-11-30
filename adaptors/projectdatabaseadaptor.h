@@ -23,7 +23,10 @@
 
 #pragma once
 
+#include <QJsonObject>
+
 #include "types.h"
+#include "enums.h"
 
 namespace qml_adaptors {
 
@@ -40,8 +43,11 @@ namespace qml_adaptors {
         ~ProjectDatabaseAdaptor();
 
     signals:
+        void entityCreated(const QJsonObject &entity);
+        void creationErrors(const QStringList &errors);
 
     public slots:
+        QJsonObject createEntity(const QString &scopeID, entity::UserType type = entity::UserClassType);
 
     private:
         db::SharedProjectDatabase m_db;

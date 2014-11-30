@@ -1,23 +1,23 @@
 /*****************************************************************************
-** 
+**
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
 ** Created 29/10/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
-** 
+**
 ** Q-UML is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** Q-UML is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU Lesser General Public License for more details.
 
 ** You should have received a copy of the GNU Lesser General Public License
-** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>. 
+** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
 
@@ -77,20 +77,31 @@ namespace utility {
         using LhsIdString    = const std::map<entity::LhsIdentificator, QString>;
         using RhsIdString    = const std::map<entity::RhsIdentificator, QString>;
         using SectionString  = const std::map<entity::Section,          QString>;
+        using UserTypeString = const std::map<entity::UserType,         QString>;
 
         KeywordsString kKeywords { {entity::Volatile, "volatile"}, {entity::Mutable, "mutable"},
-                                   {entity::FieldStatic, "static"} };
+                                   {entity::FieldStatic, "static"}
+                                 };
 
         LhsIdString    kLhsId    { {entity::Explicit, "explicit"},   {entity::Inline, "inline"},
                                    {entity::MethodStatic, "static"}, {entity::Virtual, "virtual"},
-                                   {entity::Friend, "friend"} };
+                                   {entity::Friend, "friend"}
+                                 };
 
         RhsIdString    kRhsId    { {entity::None, ""}, {entity::Override, "override"}, {entity::Final, "final"},
                                    {entity::Delete, "= delete"}, {entity::Default, "= default"},
-                                   {entity::PureVirtual, "= 0"} };
+                                   {entity::PureVirtual, "= 0"}
+                                 };
 
         SectionString  kSection  { {entity::Public, "public"}, {entity::Protected, "protected"},
-                                   {entity::Private, "private"} };
+                                   {entity::Private, "private"}
+                                 };
+
+        UserTypeString kUserType { {entity::BasicType, "type"}, {entity::UserClassType, "class"},
+                                   {entity::TemplateClassType, "template"},
+                                   {entity::UnionType, "union"}, {entity::EnumType, "enum"},
+                                   {entity::ExtendedTypeType, "extended type"}
+                                 };
 
         using MakerT  = std::function<entity::SharedType()>;
         using MakersT = const std::map<entity::UserType, MakerT>;
@@ -99,11 +110,11 @@ namespace utility {
         using MakerR  = std::function<relationship::SharedRelation()>;
         using MakersR = const std::map<relationship::RelationType, MakerR>;
 
-        MakersT kType = { {entity::BasicType,        [](){ return std::make_shared<entity::Type>();          }},
-                         {entity::UserClassType,     [](){ return std::make_shared<entity::Class>();         }},
-                         {entity::TemplateClassType, [](){ return std::make_shared<entity::TemplateClass>(); }},
-                         {entity::UnionType,         [](){ return std::make_shared<entity::Union>();         }},
-                         {entity::EnumType,          [](){ return std::make_shared<entity::Enum>();          }}
+        MakersT kType = { {entity::BasicType,         [](){ return std::make_shared<entity::Type>();          }},
+                          {entity::UserClassType,     [](){ return std::make_shared<entity::Class>();         }},
+                          {entity::TemplateClassType, [](){ return std::make_shared<entity::TemplateClass>(); }},
+                          {entity::UnionType,         [](){ return std::make_shared<entity::Union>();         }},
+                          {entity::EnumType,          [](){ return std::make_shared<entity::Enum>();          }}
                         };
 
         MakersR kRelation = {
@@ -217,6 +228,16 @@ namespace utility {
         }
 
         return result;
+    }
+
+    /**
+     * @brief userTypeToString
+     * @param type
+     * @return
+     */
+    QString userTypeToString(entity::UserType type)
+    {
+        return mapSearchHelper(kUserType, type, QString("unknown"));
     }
 
 }

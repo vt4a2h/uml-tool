@@ -21,8 +21,9 @@
 **
 *****************************************************************************/
 
-import QtQuick 2.3
+import QtQuick 2.4
 import QtQuick.Controls 1.2
+import QtQuick.Layouts 1.1
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 
@@ -88,15 +89,29 @@ ApplicationWindow {
         }
     }
 
-    EntityList {
-        id: basicObjectsList
-        z: 1
+    // simple stub for test class creation mechanism
+    toolBar: ToolBar {
+        RowLayout {
+            anchors.fill: parent
+            ToolButton {
+                id: btnCreateClass
+                action: actionCreateClass
+            }
+            Action {
+               id: actionCreateClass
+               text: qsTr("Add class")
+               tooltip: qsTr("Press to add class")
+               shortcut: "Ctrl+Shift+C"
+//               checkable: true TODO should be checkable
+               onTriggered: createNewEntity()
+            }
+        }
     }
 
     MainScene {
         id: mainScene
         anchors {
-            left: basicObjectsList.right
+            left: parent.left
             right: parent.right
             top: parent.top
             bottom: parent.bottom
@@ -144,5 +159,23 @@ ApplicationWindow {
 
     function makeTitle(projectName) {
         return qsTr("%1 - Q-UML").arg(projectName)
+    }
+
+    // TODO: add enumeration parameter
+    // TODO: add current scope ID parameter for insertation
+    function createNewEntity() {
+        var component = Qt.createComponent("EntityItem.qml")
+        if (component.status === Component.Ready) {
+            var entity = component.createObject(mainScene, {"x": 100, "y": 100})
+            if (entity !== null) {
+                print("Created.")
+                // TODO: call method of database for create object
+            } else {
+                print("Creation error.")
+            }
+        } else if (component.status === Component.Error) {
+            // TODO: add messge which depends on entity type
+            handleErrors(qsTr("Component creation error"), qsTr("Creation QML component faild."))
+        }
     }
 }

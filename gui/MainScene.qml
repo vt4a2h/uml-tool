@@ -44,21 +44,6 @@ Item {
                 width: 1
                 color: "black"
             }
-
-            states: [
-                State {
-                    name: "DragEntered"
-                    when: dragTarget.containsDrag
-                    PropertyChanges {
-                        target: dropScene
-                        color: "#eaeaea"
-                    }
-                }
-            ]
         }
-
-        onEntered: print("entered");
-        onExited: print("exited");
-        onDropped: print("dropped");
     }
 }

@@ -21,7 +21,7 @@
 **
 *****************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.4
 
 Rectangle {
     id: parentID
@@ -34,8 +34,6 @@ Rectangle {
         width: 1
         color: "black"
     }
-
-    property bool dragActive: dragArea.drag.active
 
     Text {
         id: entityName
@@ -64,18 +62,6 @@ Rectangle {
 
         Text {
             text: "^"
-        }
-    }
-
-    Drag.dragType: Drag.Automatic
-
-    onDragActiveChanged: {
-        if (dragActive) {
-            print("drag started")
-            Drag.start();
-        } else {
-            print("drag finished")
-            Drag.drop();
         }
     }
 

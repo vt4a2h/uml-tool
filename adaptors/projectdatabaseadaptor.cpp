@@ -23,6 +23,10 @@
 
 #include "projectdatabaseadaptor.h"
 
+#include <entity/scope.h>
+#include <entity/class.h>
+#include <db/projectdatabase.h>
+
 namespace qml_adaptors {
 
     /**
@@ -61,6 +65,29 @@ namespace qml_adaptors {
     ProjectDatabaseAdaptor::~ProjectDatabaseAdaptor()
     {
 
+    }
+
+    /**
+     * @brief ProjectDatabaseAdaptor::createEntity
+     * @param scopeID
+     * @param type
+     * @return
+     */
+    QJsonObject ProjectDatabaseAdaptor::createEntity(const QString &scopeID, entity::UserType type)
+    {
+        QJsonObject result;
+
+        if (auto scope = m_db->getScope(scopeID)) {
+            Q_UNUSED(type) // TODO: make entity which based on this type
+
+            if (auto newType = scope->addType<entity::Class>()) {
+                result = newType->toJson();
+                emit entityCreated(result);
+            }
+        } else
+            emit creationErrors( QStringList() << tr("Cannot find scope.") );
+
+        return result;
     }
 
 } // namespace qml_adaptors
