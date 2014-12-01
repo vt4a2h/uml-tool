@@ -173,6 +173,16 @@ namespace application {
 
         // TODO: maybe handle case, when user reopenning current project
         m_Projects.insert(pr->id(), pr);
+
+        if (!pr->database()->anyScopes()) {
+            auto basicScope = pr->database()->addScope();
+            setCurrentScopeID(basicScope->id());
+        } else {
+            // TODO: preserve last scope and try to restore it
+            auto firstScope = pr->database()->scopes().first();
+            setCurrentScopeID(firstScope->id());
+        }
+
         setCurrentProject(pr->id());
         emit projectOpened(pr->toJson());
         return true;

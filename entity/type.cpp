@@ -285,9 +285,13 @@ namespace entity {
         m_ScopeId = src.m_ScopeId;
     }
 
+    /**
+     * @brief Type::generateUniqueName
+     */
     void Type::generateUniqueName()
     {
-        m_Name = utility::userTypeToString(m_KindOfType) + "_" + m_Id;
+        // TODO: investigate why always "type"
+        m_Name = utility::userTypeToString(m_KindOfType);
     }
 
 } // namespace entity
