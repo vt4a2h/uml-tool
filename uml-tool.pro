@@ -1,4 +1,4 @@
-CONFIG += core gui c++11
+CONFIG += core gui c++14
 
 QT += qml quick widgets
 

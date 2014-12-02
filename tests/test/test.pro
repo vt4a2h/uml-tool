@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-CONFIG += console qt c++11
+CONFIG += console qt c++14
 CONFIG -= app_bundle
 
 LIBS += -lgtest -lpthread
