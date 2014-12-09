@@ -29,6 +29,8 @@ Item {
     id: mainScene
     anchors.margins: 8
 
+    property list<EntityItem> entities
+
     DropArea {
         id: dragTarget
         anchors.fill: parent
@@ -45,5 +47,9 @@ Item {
                 color: "black"
             }
         }
+    }
+
+    function entityByID(entityID) {
+        return entities.find(function(elem, entityID){ return elem.entityID === entityID ? true : false });
     }
 }

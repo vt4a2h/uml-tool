@@ -24,7 +24,7 @@
 import QtQuick 2.4
 
 Rectangle {
-    id: parentID
+    id: parent
     radius: 10
     width: 100
     height: 50
@@ -35,11 +35,11 @@ Rectangle {
         color: "black"
     }
 
-    property alias name: entityName.text
+    property alias entityName: name.text
+    property string entityID
 
     Text {
-        id: entityName
-        text: qsTr("Stub")
+        id: name
         horizontalAlignment: Text.AlignHCenter
         anchors {
             left: parent.left
@@ -80,4 +80,32 @@ Rectangle {
         }
     }
 
+    Component.onCompleted: {
+        entityName = "New entity"
+        entityID = "stub_id"
+    }
+
+    function dataFromJson(obj) {
+        entityName = obj.Name
+        entityID = obj.ID
+    }
+
+    function visualStatesFromJson(obj) {
+        x = obj.X
+        y = obj.Y
+    }
+
+    function dataToJson() {
+        return {
+            "ID": entityID,
+            "Name": entityName
+        }
+    }
+
+    function visualStatesToJson() {
+        return {
+            "X": x,
+            "Y": y
+        }
+    }
 }

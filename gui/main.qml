@@ -47,6 +47,10 @@ ApplicationWindow {
                 id: openProjectItem
                 action: openProjectAction
             }
+            MenuItem {
+                id: saveProjectItem
+                action: saveProjectAction
+            }
             MenuSeparator {}
             MenuItem {
                 id: exitItem
@@ -64,8 +68,15 @@ ApplicationWindow {
                 id: openProjectAction
                 text: qsTr("&Open project")
                 tooltip: qsTr("Press to open existing project")
-                shortcut: "Ctrl+O"
+                shortcut: "Ctrl+S"
                 onTriggered: openNewProjectDialog.open()
+            }
+            Action {
+                id: saveProjectAction
+                text: qsTr("&Save project")
+                tooltip: qsTr("Press to save current project")
+                shortcut: "Ctrl+O"
+                onTriggered: saveProject()
             }
             Action {
                 id: exitAction
@@ -127,7 +138,7 @@ ApplicationWindow {
 
         function addErrors(msg, errorList) {
             text = msg
-            informativeText = errorList.join("\n")
+            informativeText = errorList
         }
     }
 
@@ -151,6 +162,9 @@ ApplicationWindow {
         appWindow.title = makeTitle(project.Name)
     }
 
+    function saveProject() {
+    }
+
     function handleSuccess(msg, details) {
         // TODO: add some
         stub.text = msg + " " + details
@@ -167,8 +181,8 @@ ApplicationWindow {
             if (entity !== null) {
                 // TODO: add enumeration parameter for type
                 var jsObj = currentProjectDatabase.createEntity(application.currentScopeID);
-                // TODO: add function to object (fromJSON)
-                entity.name = jsObj.Name
+                entity.dataFromJson(jsObj)
+                entity.visualStatesFromJson(jsObj)
                 print("Created.")
             } else {
                 print("Creation error.")
