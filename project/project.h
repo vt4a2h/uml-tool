@@ -68,6 +68,9 @@ namespace project {
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
+        bool isSaved() const;
+        void setSaveStatus(bool newStatus);
+
     protected:
         virtual QString projectFileName() const;
         virtual QString databaseFileName() const;
@@ -77,6 +80,8 @@ namespace project {
         QString m_Name;
         QString m_Path;
         QString m_ID;
+
+        bool m_SaveStatus;
 
         db::SharedProjectDatabase m_Database;
         SharedErrorList m_Errors;

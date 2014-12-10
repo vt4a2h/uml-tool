@@ -68,12 +68,22 @@ namespace application {
         bool setCurrentProjectDatabase();
         void setCurrentScopeID(const QString &id);
 
+        bool isCurrentProjectSaved() const;
+        void setProjectModified();
+        void saveCurrentProject();
+
+    private slots:
+        void connectEngine(QObject *object, const QUrl &url);
+
     signals:
         void projectCreated(const QJsonObject &project);
         void projectOpened(const QJsonObject &project);
         void errors(const QString &message, const ErrorList &errorlist);
 
         void currentScopeIDChanged(QString id);
+
+        void currentProjectSaved();
+        void currentProjectModified();
 
     private:
         void init();

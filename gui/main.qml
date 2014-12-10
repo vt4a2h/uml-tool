@@ -36,6 +36,8 @@ ApplicationWindow {
     y: Screen.height / 2 - height / 2
     title: qsTr("Q-UML")
 
+    signal projectModified
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("&File")
@@ -151,6 +153,8 @@ ApplicationWindow {
         onErrors: handleErrors(message, errorlist)
         onProjectCreated: handleOpenProject(project)
         onProjectOpened: handleOpenProject(project)
+        onCurrentProjectSaved: makeTitle(currentProject.name, false)
+        onCurrentProjectModified: makeTitle(currentProject.name, true)
     }
 
     function handleErrors(msg, errors) {
@@ -159,19 +163,19 @@ ApplicationWindow {
     }
 
     function handleOpenProject(project) {
-        appWindow.title = makeTitle(project.Name)
+        makeTitle(project.Name, false)
     }
 
     function saveProject() {
     }
 
     function handleSuccess(msg, details) {
-        // TODO: add some
         stub.text = msg + " " + details
     }
 
-    function makeTitle(projectName) {
-        return qsTr("%1 - Q-UML").arg(projectName)
+    function makeTitle(projectName, withAsterisks) {
+        var title = "%1%2 - Q-UML"
+        appWindow.title = title.arg(projectName).arg(withAsterisks ? " *" : "")
     }
 
     function createNewEntity() {

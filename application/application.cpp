@@ -29,6 +29,7 @@
 #include <QDir>
 #include <QQmlContext>
 #include <QJsonObject>
+#include <QDebug>
 
 #include <adaptors/projectadaptor.h>
 #include <adaptors/databaseadaptor.h>
@@ -63,6 +64,8 @@ namespace application {
         qRegisterMetaType<qml_adaptors::ProjectDatabaseAdaptor>("qml_adaptors::ProjectDatabaseAdaptor");
 
         m_Engine.rootContext()->setContextProperty("application", this);
+
+        connect(&m_Engine, &QQmlApplicationEngine::objectCreated, this, &Application::connectEngine);
     }
 
     /**
@@ -169,6 +172,7 @@ namespace application {
         // force save changes and close project, yet
         if (m_CurrentProject) {
             m_CurrentProject->save();
+            emit currentProjectSaved();
         }
 
         // TODO: maybe handle case, when user reopenning current project
@@ -241,6 +245,61 @@ namespace application {
 
         m_currentScopeID = id;
         emit currentScopeIDChanged(id);
+    }
+
+    /**
+     * @brief Application::isCurrentProjectSaved
+     * @return
+     */
+    bool Application::isCurrentProjectSaved() const
+    {
+        if (m_CurrentProject)
+            return m_CurrentProject->isSaved();
+
+        // If no project then not asterisk mark in window title
+        return true;
+    }
+
+    /**
+     * @brief Application::projectModified
+     * @return
+     */
+    void Application::setProjectModified()
+    {
+        if (m_CurrentProject && m_CurrentProject->isSaved()) {
+            m_CurrentProject->setSaveStatus(false);
+            emit currentProjectModified();
+        }
+    }
+
+    /**
+     * @brief Application::saveCurrentProject
+     */
+    void Application::saveCurrentProject()
+    {
+        if (m_CurrentProject && !m_CurrentProject->isSaved()) {
+            m_CurrentProject->save();
+
+            if (!m_CurrentProject->hasErrors())
+                emit currentProjectSaved();
+            else
+                emit errors(tr("Project saved errors"), *m_ErrorList);
+        }
+    }
+
+    /**
+     * @brief Application::connectEngine
+     * @param object
+     * @param url
+     */
+    void Application::connectEngine(QObject *object, const QUrl &url)
+    {
+        Q_UNUSED(url)
+
+        if (object) {
+            connect(object, SIGNAL(projectModified()), this, SLOT(setProjectModified()));
+        } else
+            qDebug() << "No engine";
     }
 
     /**

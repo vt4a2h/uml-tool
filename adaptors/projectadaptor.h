@@ -40,7 +40,7 @@ namespace qml_adaptors {
     {
         Q_OBJECT
         Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-        Q_PROPERTY(QString id   READ id   )
+        Q_PROPERTY(QString id   READ id)
         Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
 
     public:

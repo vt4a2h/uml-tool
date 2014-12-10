@@ -51,6 +51,7 @@ namespace project {
         : m_Name(name)
         , m_Path(path)
         , m_ID(utility::genId())
+        , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
         , m_Errors(errors)
     {
@@ -137,12 +138,16 @@ namespace project {
         Q_ASSERT(!!m_Errors);
         Q_ASSERT(!!m_Database);
 
+        m_Errors->clear();
+
         if (!utility::readFromFile(*this, path))
             *m_Errors << "Cannot read project file.";
 
         m_Database->setPath(databasePath(m_Path));
         if (!utility::readFromFile(*m_Database, m_Database->path()))
             *m_Errors << "Cannot read database file.";
+
+        m_SaveStatus = m_Errors->isEmpty();
     }
 
     /**
@@ -152,6 +157,8 @@ namespace project {
     {
         Q_ASSERT(!!m_Errors);
         Q_ASSERT(!!m_Database);
+
+        m_Errors->clear();
 
         if (!m_Path.isEmpty()) {
             QDir dir(m_Path);
@@ -171,6 +178,8 @@ namespace project {
         } else {
             *m_Errors << "Project path is empty.";
         }
+
+        m_SaveStatus = m_Errors->isEmpty();
     }
 
     /**
@@ -273,6 +282,24 @@ namespace project {
         utility::checkAndSet(src, "ID", errorList, [&src, this](){
             m_ID = src["ID"].toString();
         });
+    }
+
+    /**
+     * @brief Project::isSaved
+     * @return
+     */
+    bool Project::isSaved() const
+    {
+        return m_SaveStatus;
+    }
+
+    /**
+     * @brief Project::setSaveStatus
+     * @param newStatus
+     */
+    void Project::setSaveStatus(bool newStatus)
+    {
+        m_SaveStatus = newStatus;
     }
 
     /**
