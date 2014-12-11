@@ -64,7 +64,9 @@ namespace application {
         qRegisterMetaType<qml_adaptors::DatabaseAdaptor>("qml_adaptors::DatabaseAdaptor");
         qRegisterMetaType<qml_adaptors::ProjectDatabaseAdaptor>("qml_adaptors::ProjectDatabaseAdaptor");
 
-        qmlRegisterType<Application>("QUMLCore", 1, 0, "QUMLApplication");
+        qmlRegisterUncreatableType<Application>(
+            "QUMLCore", 1, 0, "QUMLApplication", "No create application from qml"
+         );
 
         m_Engine.rootContext()->setContextProperty("application", this);
 
