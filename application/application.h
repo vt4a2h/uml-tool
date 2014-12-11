@@ -43,6 +43,8 @@ namespace application {
         Q_PROPERTY(ErrorList errors READ getErrors)
         Q_PROPERTY(QString currentScopeID READ currentScopeID WRITE setCurrentScopeID NOTIFY currentScopeIDChanged)
 
+        Q_ENUMS(ProjectState)
+
     public:
         explicit Application(QObject *parent = nullptr);
         ~Application();
@@ -60,6 +62,8 @@ namespace application {
         void removeProjectByName(const QString &name);
 
         QString currentScopeID() const;
+
+        enum ProjectState { ProjectOpened, NoProject };
 
     public slots:
         void createProject(const QString &name, const QString &path);

@@ -26,6 +26,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
+import QUMLCore 1.0
 
 ApplicationWindow {
     id: appWindow
@@ -36,10 +37,13 @@ ApplicationWindow {
     y: Screen.height / 2 - height / 2
     title: qsTr("Q-UML")
 
+    property int projectStatus
+
     signal projectModified
 
     menuBar: MenuBar {
         Menu {
+            id: menuFile
             title: qsTr("&File")
             MenuItem {
                 id: newProjectItem
@@ -104,7 +108,9 @@ ApplicationWindow {
 
     // simple stub for test class creation mechanism
     toolBar: ToolBar {
+        id: tbEntityActions
         RowLayout {
+            id: rowLayout
             anchors.fill: parent
             ToolButton {
                 id: btnCreateClass
@@ -149,12 +155,43 @@ ApplicationWindow {
     }
 
     Connections {
-        target: application;
+        target: application
         onErrors: handleErrors(message, errorlist)
         onProjectCreated: handleOpenProject(project)
         onProjectOpened: handleOpenProject(project)
         onCurrentProjectSaved: makeTitle(currentProject.name, false)
         onCurrentProjectModified: makeTitle(currentProject.name, true)
+    }
+
+    Connections {
+        target: appWindow
+        onProjectStatusChanged: changeProjectStatus(projectStatus)
+    }
+
+    Component.onCompleted: {
+        projectStatus = QUMLApplication.NoProject
+    }
+
+    function changeProjectStatus(newStatus) {
+        // NOTE: add dictionary with callbacks for more statuses
+        switch (newStatus) {
+            case QUMLApplication.ProjectOpened:
+                setOpenProjectStatus();
+                break;
+            case QUMLApplication.NoProject:
+                setNoProjectStatus();
+                break;
+            default:
+                console.log("Strange project status: %1!".arg(newStatus))
+        }
+    }
+
+    function setOpenProjectStatus() {
+
+    }
+
+    function setNoProjectStatus() {
+
     }
 
     function handleErrors(msg, errors) {
@@ -192,7 +229,6 @@ ApplicationWindow {
                 print("Creation error.")
             }
         } else if (component.status === Component.Error) {
-            // TODO: add message which depends on entity type
             handleErrors(qsTr("Component creation error"), qsTr("Creation QML component faild."))
         }
     }

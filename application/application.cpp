@@ -28,6 +28,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QQmlContext>
+#include <QtQml>
 #include <QJsonObject>
 #include <QDebug>
 
@@ -62,6 +63,8 @@ namespace application {
         qRegisterMetaType<qml_adaptors::ProjectAdaptor>("qml_adaptors::ProjectAdaptor");
         qRegisterMetaType<qml_adaptors::DatabaseAdaptor>("qml_adaptors::DatabaseAdaptor");
         qRegisterMetaType<qml_adaptors::ProjectDatabaseAdaptor>("qml_adaptors::ProjectDatabaseAdaptor");
+
+        qmlRegisterType<Application>("QUMLCore", 1, 0, "QUMLApplication");
 
         m_Engine.rootContext()->setContextProperty("application", this);
 
