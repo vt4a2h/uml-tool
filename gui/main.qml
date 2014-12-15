@@ -116,6 +116,7 @@ ApplicationWindow {
                 id: btnCreateClass
                 action: actionCreateClass
             }
+
             Action {
                id: actionCreateClass
                text: qsTr("Add class")
@@ -187,11 +188,13 @@ ApplicationWindow {
     }
 
     function setOpenProjectStatus() {
-
+        mainScene.activeStatus = true
+        tbEntityActions.enabled = true
     }
 
     function setNoProjectStatus() {
-
+        mainScene.activeStatus = false
+        tbEntityActions.enabled = false
     }
 
     function handleErrors(msg, errors) {
@@ -201,6 +204,7 @@ ApplicationWindow {
 
     function handleOpenProject(project) {
         makeTitle(project.Name, false)
+        projectStatus = QUMLApplication.ProjectOpened
     }
 
     function saveProject() {

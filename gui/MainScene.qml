@@ -30,6 +30,7 @@ Item {
     anchors.margins: 8
 
     property list<EntityItem> entities
+    property var activeStatus
 
     DropArea {
         id: dragTarget
@@ -39,17 +40,29 @@ Item {
         Rectangle {
             id: dropScene
             anchors.fill: parent
-            color: "white"
             antialiasing: true
             radius: 3
-            border {
-                width: 1
-                color: "black"
-            }
+            border.width: 1
         }
     }
 
+    Connections {
+        target: mainScene
+        onActiveStatusChanged: setActiveStatus(activeStatus)
+    }
+
+    Component.onCompleted: {
+    }
+
+    function setActiveStatus(newActiveStatus) {
+        dropScene.enabled = newActiveStatus
+        dropScene.color = newActiveStatus ? "white" : "lightgray"
+        dropScene.border.color = newActiveStatus ? "black" : "gray"
+    }
+
     function entityByID(entityID) {
-        return entities.find(function(elem, entityID){ return elem.entityID === entityID ? true : false });
+        return entities.find(
+                   function(elem, entityID){ return elem.entityID === entityID ? true : false }
+               );
     }
 }
