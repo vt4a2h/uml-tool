@@ -32,6 +32,7 @@
  */
 namespace project {
 
+    // TODO: removes adaptor and inherits Project from qobject
     /**
      * @brief The Project class
      */

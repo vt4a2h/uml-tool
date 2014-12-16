@@ -208,6 +208,7 @@ ApplicationWindow {
     }
 
     function saveProject() {
+        application.saveCurrentProject();
     }
 
     function handleSuccess(msg, details) {

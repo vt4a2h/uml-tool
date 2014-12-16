@@ -80,6 +80,12 @@ Rectangle {
         }
     }
 
+    Connections {
+        target: parent
+        onXChanged: appWindow.projectModified()
+        onYChanged: appWindow.projectModified()
+    }
+
     Component.onCompleted: {
         entityName = "New entity"
         entityID = "stub_id"
@@ -91,8 +97,8 @@ Rectangle {
     }
 
     function visualStatesFromJson(obj) {
-        x = obj.X
-        y = obj.Y
+//        x = obj.X
+//        y = obj.Y
     }
 
     function dataToJson() {
