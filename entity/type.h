@@ -81,6 +81,10 @@ namespace entity {
         QString m_Name;
         QString m_Id;
         QString m_ScopeId;
+
+        // position
+        QString m_X;
+        QString m_Y;
     };
 
 } // namespace entity

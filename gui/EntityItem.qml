@@ -88,28 +88,20 @@ Rectangle {
 
     Component.onCompleted: {
         entityName = "New entity"
-        entityID = "stub_id"
+        entityID   = "stub_id"
     }
 
     function dataFromJson(obj) {
         entityName = obj.Name
         entityID = obj.ID
-    }
-
-    function visualStatesFromJson(obj) {
-//        x = obj.X
-//        y = obj.Y
+        //        x = obj.X
+        //        y = obj.Y
     }
 
     function dataToJson() {
         return {
             "ID": entityID,
-            "Name": entityName
-        }
-    }
-
-    function visualStatesToJson() {
-        return {
+            "Name": entityName,
             "X": x,
             "Y": y
         }

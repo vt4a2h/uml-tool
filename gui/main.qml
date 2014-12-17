@@ -28,6 +28,8 @@ import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.2
 import QUMLCore 1.0
 
+import "Helpers.js" as Helpers
+
 ApplicationWindow {
     id: appWindow
     visible: true
@@ -74,14 +76,14 @@ ApplicationWindow {
                 id: openProjectAction
                 text: qsTr("&Open project")
                 tooltip: qsTr("Press to open existing project")
-                shortcut: "Ctrl+S"
+                shortcut: "Ctrl+O"
                 onTriggered: openNewProjectDialog.open()
             }
             Action {
                 id: saveProjectAction
                 text: qsTr("&Save project")
                 tooltip: qsTr("Press to save current project")
-                shortcut: "Ctrl+O"
+                shortcut: "Ctrl+S"
                 onTriggered: saveProject()
             }
             Action {
@@ -122,8 +124,7 @@ ApplicationWindow {
                text: qsTr("Add class")
                tooltip: qsTr("Press to add class")
                shortcut: "Ctrl+Shift+C"
-//               checkable: true TODO should be checkable
-               onTriggered: createNewEntity()
+               checkable: true
             }
         }
     }
@@ -167,6 +168,11 @@ ApplicationWindow {
     Connections {
         target: appWindow
         onProjectStatusChanged: changeProjectStatus(projectStatus)
+    }
+
+    Connections {
+        target: mainScene
+        onClicked: createNewEntity(x, y)
     }
 
     Component.onCompleted: {
@@ -220,21 +226,24 @@ ApplicationWindow {
         appWindow.title = title.arg(projectName).arg(withAsterisks ? " *" : "")
     }
 
-    function createNewEntity() {
-        var component = Qt.createComponent("EntityItem.qml")
-        if (component.status === Component.Ready) {
-            var entity = component.createObject(mainScene, {"x": 100, "y": 100})
-            if (entity !== null) {
-                // TODO: add enumeration parameter for type
-                var jsObj = currentProjectDatabase.createEntity(application.currentScopeID);
-                entity.dataFromJson(jsObj)
-                entity.visualStatesFromJson(jsObj)
-                print("Created.")
-            } else {
-                print("Creation error.")
+    function createNewEntity(x, y) {
+        if (actionCreateClass.checked) {
+            var component = Qt.createComponent("EntityItem.qml")
+            if (component.status === Component.Ready) {
+                var entity = component.createObject(mainScene)
+                if (entity !== null) {
+                    entity.x = (x - entity.width / 2).clamp(0, mainScene.width - entity.width)
+                    entity.y = (y - entity.height / 2).clamp(0, mainScene.height - entity.height)
+
+                    // TODO: add enumeration parameter for type
+                    var jsObj = currentProjectDatabase.createEntity(application.currentScopeID);
+                    entity.dataFromJson(jsObj)
+                }
+            } else if (component.status === Component.Error) {
+                handleErrors(qsTr("Component creation error"), qsTr("Creation QML component faild."))
             }
-        } else if (component.status === Component.Error) {
-            handleErrors(qsTr("Component creation error"), qsTr("Creation QML component faild."))
+
+            actionCreateClass.checked = false
         }
     }
 }

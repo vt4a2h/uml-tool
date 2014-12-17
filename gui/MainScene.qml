@@ -29,8 +29,8 @@ Item {
     id: mainScene
     anchors.margins: 8
 
-    property list<EntityItem> entities
     property var activeStatus
+    signal clicked(int x, int y)
 
     DropArea {
         id: dragTarget
@@ -43,7 +43,14 @@ Item {
             antialiasing: true
             radius: 3
             border.width: 1
+
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+                onClicked: mainScene.clicked(mouseX, mouseY)
+            }
         }
+
     }
 
     Connections {
@@ -58,11 +65,5 @@ Item {
         dropScene.enabled = newActiveStatus
         dropScene.color = newActiveStatus ? "white" : "lightgray"
         dropScene.border.color = newActiveStatus ? "black" : "gray"
-    }
-
-    function entityByID(entityID) {
-        return entities.find(
-                   function(elem, entityID){ return elem.entityID === entityID ? true : false }
-               );
     }
 }
