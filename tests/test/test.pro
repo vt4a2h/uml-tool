@@ -8,6 +8,7 @@ LIBS += -lgtest -lpthread
 INCLUDEPATH += ../../
 
 HEADERS += ../../enums.h \
+    ../../project/project.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \

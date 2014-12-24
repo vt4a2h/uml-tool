@@ -148,7 +148,7 @@ ApplicationWindow {
 
         function addErrors(msg, errorList) {
             text = msg
-            informativeText = errorList
+            informativeText = errorList.join("\n")
         }
     }
 

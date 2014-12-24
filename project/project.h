@@ -20,10 +20,10 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
 
-#include <QString>
+#include <QObject>
+#include <QJsonObject>
 
 #include "types.h"
 
@@ -32,25 +32,26 @@
  */
 namespace project {
 
-    // TODO: removes adaptor and inherits Project from qobject
     /**
      * @brief The Project class
      */
-    class Project
+    class Project : public QObject
     {
+        Q_OBJECT
+        Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+        Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
+        Q_PROPERTY(QString id   READ id)
+
     public:
-        Project();
-        Project(const QString &name, const QString &path, const SharedErrorList &errors);
-        virtual ~Project();
+        explicit Project(QObject *parent = 0);
+        Project(const QString &name, const QString &path, const SharedErrorList &errors, QObject *parent = 0);
+        Project(const Project &src);
+        ~Project();
 
         friend bool operator ==(const Project &lhs, const Project &rhs);
 
         QString name() const;
-        void setName(const QString &name);
-
         QString path() const;
-        void setPath(const QString &path);
-
         QString id() const;
 
         void load(const QString &path); // don't forget install global database after load
@@ -66,17 +67,25 @@ namespace project {
         SharedErrorList errors() const;
         void setErrorsList(const SharedErrorList &errors);
 
-        virtual QJsonObject toJson() const;
-        virtual void fromJson(const QJsonObject &src, QStringList &errorList);
+        QJsonObject toJson() const;
+        void fromJson(const QJsonObject &src, QStringList &errorList);
 
         bool isSaved() const;
         void setSaveStatus(bool newStatus);
 
-    protected:
-        virtual QString projectFileName() const;
-        virtual QString databaseFileName() const;
-        virtual QString projectPath(const QString &basePath) const;
-        virtual QString databasePath(const QString &basePath) const;
+    public slots:
+        void setName(const QString &name);
+        void setPath(const QString &path);
+
+    signals:
+        void nameChanged(const QString &name);
+        void pathChanged(const QString &path);
+
+    private:
+        QString projectFileName() const;
+        QString databaseFileName() const;
+        QString projectPath(const QString &basePath) const;
+        QString databasePath(const QString &basePath) const;
 
         QString m_Name;
         QString m_Path;
@@ -89,3 +98,5 @@ namespace project {
     };
 
 } // namespace project
+
+Q_DECLARE_METATYPE(project::Project)

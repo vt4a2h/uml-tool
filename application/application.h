@@ -102,7 +102,6 @@ namespace application {
         qml_adaptors::SharedDatabaseAdaptor m_GlobalDatabaseAdaptor;
 
         project::SharedProject m_CurrentProject;
-        qml_adaptors::SharedProjectAdaptor m_ProjectAdaptor;
 
         db::SharedProjectDatabase m_CurrentProjectDatabase;
         qml_adaptors::SharedProjectDatabaseAdaptor m_CurrentDatabaseAdaptor;

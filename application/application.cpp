@@ -32,7 +32,6 @@
 #include <QJsonObject>
 #include <QDebug>
 
-#include <adaptors/projectadaptor.h>
 #include <adaptors/databaseadaptor.h>
 #include <adaptors/projectdatabaseadaptor.h>
 #include <db/database.h>
@@ -60,7 +59,7 @@ namespace application {
     {
         qRegisterMetaType<ErrorList>("ErrorList");
         qRegisterMetaType<project::SharedProject>("project::SharedProject");
-        qRegisterMetaType<qml_adaptors::ProjectAdaptor>("qml_adaptors::ProjectAdaptor");
+        qRegisterMetaType<project::Project>("project::Project");
         qRegisterMetaType<qml_adaptors::DatabaseAdaptor>("qml_adaptors::DatabaseAdaptor");
         qRegisterMetaType<qml_adaptors::ProjectDatabaseAdaptor>("qml_adaptors::ProjectDatabaseAdaptor");
 
@@ -209,8 +208,7 @@ namespace application {
             if (m_CurrentProject->globalDatabase() != m_GlobalDatabase)
                 m_CurrentProject->setGloablDatabase(m_GlobalDatabase);
 
-            m_ProjectAdaptor = std::make_shared<qml_adaptors::ProjectAdaptor>(m_CurrentProject);
-            m_Engine.rootContext()->setContextProperty("currentProject", m_ProjectAdaptor.get());
+            m_Engine.rootContext()->setContextProperty("currentProject", m_CurrentProject.get());
 
             return setCurrentProjectDatabase();
         }
@@ -256,6 +254,7 @@ namespace application {
      * @brief Application::isCurrentProjectSaved
      * @return
      */
+    // TODO: move to the Project! and all the same functionality.
     bool Application::isCurrentProjectSaved() const
     {
         if (m_CurrentProject)

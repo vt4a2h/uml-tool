@@ -37,32 +37,45 @@ namespace project {
     /**
      * @brief Project::Project
      */
-    Project::Project()
-        : Project( DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, nullptr )
-    {
-    }
+    Project::Project(QObject *parent)
+        : Project(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, nullptr, parent)
+    {}
 
     /**
      * @brief Project::Project
      * @param name
      * @param path
      */
-    Project::Project(const QString &name, const QString &path, const SharedErrorList &errors)
-        : m_Name(name)
+    Project::Project(const QString &name, const QString &path, const SharedErrorList &errors, QObject *parent)
+        : QObject(parent)
+        , m_Name(name)
         , m_Path(path)
         , m_ID(utility::genId())
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
         , m_Errors(errors)
-    {
-    }
+    {}
+
+    /**
+     * @brief Project::Project
+     * @param src
+     */
+    Project::Project(const Project &src)
+        : QObject(nullptr)
+        , m_Name(src.name())
+        , m_Path(src.path())
+        , m_ID(utility::genId()) // new UUID
+        , m_SaveStatus(false)    // not saved
+         // deep copy of project database and shallow copy of global database
+        , m_Database(std::make_shared<db::ProjectDatabase>(*src.m_Database))
+        , m_Errors(src.errors())
+    {}
 
     /**
      * @brief Project::~Project
      */
     Project::~Project()
-    {
-    }
+    {}
 
     /**
      * @brief operator ==
@@ -82,51 +95,6 @@ namespace project {
                lhs.m_ID   == rhs.m_ID   &&
                *lhs.m_Database == *rhs.m_Database &&
                *lhs.m_Errors   == *rhs.m_Errors;
-    }
-
-    /**
-     * @brief Project::Name
-     * @return
-     */
-    QString Project::name() const
-    {
-        return m_Name;
-    }
-
-    /**
-     * @brief Project::setName
-     * @param name
-     */
-    void Project::setName(const QString &name)
-    {
-        m_Name = name;
-    }
-
-    /**
-     * @brief Project::path
-     * @return
-     */
-    QString Project::path() const
-    {
-        return m_Path;
-    }
-
-    /**
-     * @brief Project::setPath
-     * @param path
-     */
-    void Project::setPath(const QString &path)
-    {
-        m_Path = path;
-    }
-
-    /**
-     * @brief Project::id
-     * @return
-     */
-    QString Project::id() const
-    {
-        return m_ID;
     }
 
     /**
@@ -261,7 +229,7 @@ namespace project {
 
         result.insert("Name", m_Name);
         result.insert("Path", m_Path);
-        result.insert("ID", m_ID);
+        result.insert("ID"  , m_ID  );
 
         return result;
     }
@@ -300,6 +268,59 @@ namespace project {
     void Project::setSaveStatus(bool newStatus)
     {
         m_SaveStatus = newStatus;
+    }
+
+    /**
+     * @brief Project::name
+     * @return
+     */
+    QString Project::name() const
+    {
+        return m_Name;
+    }
+
+    /**
+     * @brief Project::path
+     * @return
+     */
+    QString Project::path() const
+    {
+        return m_Path;
+    }
+
+    /**
+     * @brief Project::id
+     * @return
+     */
+    QString Project::id() const
+    {
+        return m_ID;
+    }
+
+    /**
+     * @brief Project::setName
+     * @param name
+     */
+    void Project::setName(const QString &name)
+    {
+        if (m_Name == name)
+            return;
+
+        m_Name = name;
+        emit nameChanged(name);
+    }
+
+    /**
+     * @brief Project::setPath
+     * @param path
+     */
+    void Project::setPath(const QString &path)
+    {
+        if (m_Path == path)
+            return;
+
+        m_Path = path;
+        emit pathChanged(path);
     }
 
     /**
