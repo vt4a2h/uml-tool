@@ -55,7 +55,6 @@ namespace project {
         QString id() const;
 
         void load(const QString &path); // don't forget install global database after load
-        void save();
 
         db::SharedProjectDatabase database() const;
         void setDatabase(const db::SharedProjectDatabase &database);
@@ -71,15 +70,21 @@ namespace project {
         void fromJson(const QJsonObject &src, QStringList &errorList);
 
         bool isSaved() const;
-        void setSaveStatus(bool newStatus);
 
     public slots:
+        void setSaveStatus(bool newStatus);
         void setName(const QString &name);
         void setPath(const QString &path);
+
+        void save();
+        void touch();
 
     signals:
         void nameChanged(const QString &name);
         void pathChanged(const QString &path);
+
+        void saved();
+        void modified();
 
     private:
         QString projectFileName() const;

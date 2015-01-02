@@ -26,6 +26,7 @@
 #include <QDir>
 #include <QFile>
 #include <QJsonObject>
+#include <QDebug>
 
 #include <db/projectdatabase.h>
 #include <utility/helpfunctions.h>
@@ -147,7 +148,7 @@ namespace project {
             *m_Errors << "Project path is empty.";
         }
 
-        m_SaveStatus = m_Errors->isEmpty();
+        setSaveStatus(m_Errors->isEmpty());
     }
 
     /**
@@ -267,7 +268,14 @@ namespace project {
      */
     void Project::setSaveStatus(bool newStatus)
     {
-        m_SaveStatus = newStatus;
+        if (newStatus != m_SaveStatus) {
+            m_SaveStatus = newStatus;
+
+            if (isSaved())
+                emit saved();
+            else
+                emit modified();
+        }
     }
 
     /**
@@ -321,6 +329,14 @@ namespace project {
 
         m_Path = path;
         emit pathChanged(path);
+    }
+
+    /**
+     * @brief Project::touch
+     */
+    void Project::touch()
+    {
+        setSaveStatus(false);
     }
 
     /**

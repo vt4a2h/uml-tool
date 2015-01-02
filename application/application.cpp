@@ -69,7 +69,7 @@ namespace application {
 
         m_Engine.rootContext()->setContextProperty("application", this);
 
-        connect(&m_Engine, &QQmlApplicationEngine::objectCreated, this, &Application::connectEngine);
+//        connect(&m_Engine, &QQmlApplicationEngine::objectCreated, this, &Application::connectEngine);
     }
 
     /**
@@ -136,12 +136,12 @@ namespace application {
     {
         auto newProject = std::make_shared<project::Project>(name, path, m_ErrorList);
         newProject->setGloablDatabase(m_GlobalDatabase);
-        newProject->save();
 
         if (!newProject->hasErrors()) {
             m_Projects.insert(newProject->id(), newProject);
             setCurrentProject(newProject->id());
             emit projectCreated(newProject->toJson());
+            newProject->save();
 
             auto basicScope = newProject->database()->addScope();
             setCurrentScopeID(basicScope->id());
@@ -174,10 +174,8 @@ namespace application {
 
         // now you can open only one project
         // force save changes and close project, yet
-        if (m_CurrentProject) {
+        if (m_CurrentProject)
             m_CurrentProject->save();
-            emit currentProjectSaved();
-        }
 
         // TODO: maybe handle case, when user reopenning current project
         m_Projects.insert(pr->id(), pr);
@@ -204,11 +202,17 @@ namespace application {
     bool Application::setCurrentProject(const QString &id)
     {
         if (m_Projects.contains(id)) {
+
+            auto oldProject = m_CurrentProject;
+
             m_CurrentProject = m_Projects[id];
             if (m_CurrentProject->globalDatabase() != m_GlobalDatabase)
                 m_CurrentProject->setGloablDatabase(m_GlobalDatabase);
 
             m_Engine.rootContext()->setContextProperty("currentProject", m_CurrentProject.get());
+            m_Engine.rootContext()->setContextProperty("oldProject", oldProject.get());
+
+            emit projectChanged();
 
             return setCurrentProjectDatabase();
         }
@@ -248,62 +252,6 @@ namespace application {
 
         m_currentScopeID = id;
         emit currentScopeIDChanged(id);
-    }
-
-    /**
-     * @brief Application::isCurrentProjectSaved
-     * @return
-     */
-    // TODO: move to the Project! and all the same functionality.
-    bool Application::isCurrentProjectSaved() const
-    {
-        if (m_CurrentProject)
-            return m_CurrentProject->isSaved();
-
-        // If no project then not asterisk mark in window title
-        return true;
-    }
-
-    /**
-     * @brief Application::projectModified
-     * @return
-     */
-    void Application::setProjectModified()
-    {
-        if (m_CurrentProject && m_CurrentProject->isSaved()) {
-            m_CurrentProject->setSaveStatus(false);
-            emit currentProjectModified();
-        }
-    }
-
-    /**
-     * @brief Application::saveCurrentProject
-     */
-    void Application::saveCurrentProject()
-    {
-        if (m_CurrentProject && !m_CurrentProject->isSaved()) {
-            m_CurrentProject->save();
-
-            if (!m_CurrentProject->hasErrors())
-                emit currentProjectSaved();
-            else
-                emit errors(tr("Project saved errors"), *m_ErrorList);
-        }
-    }
-
-    /**
-     * @brief Application::connectEngine
-     * @param object
-     * @param url
-     */
-    void Application::connectEngine(QObject *object, const QUrl &url)
-    {
-        Q_UNUSED(url)
-
-        if (object) {
-            connect(object, SIGNAL(projectModified()), this, SLOT(setProjectModified()));
-        } else
-            qDebug() << "No engine";
     }
 
     /**

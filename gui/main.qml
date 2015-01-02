@@ -161,8 +161,7 @@ ApplicationWindow {
         onErrors: handleErrors(message, errorlist)
         onProjectCreated: handleOpenProject(project)
         onProjectOpened: handleOpenProject(project)
-        onCurrentProjectSaved: makeTitle(currentProject.name, false)
-        onCurrentProjectModified: makeTitle(currentProject.name, true)
+        onProjectChanged: handleProjectChanged()
     }
 
     Connections {
@@ -177,6 +176,20 @@ ApplicationWindow {
 
     Component.onCompleted: {
         projectStatus = QUMLApplication.NoProject
+    }
+
+    function handleProjectChanged() {
+        if (oldProject !== null) {
+            oldProject.saved.disconnect(appWindow.makeTitle)
+            oldProject.modified.disconnect(appWindow.makeTitle)
+            appWindow.projectModified.disconnect(currentProject.touch)
+        }
+
+        if (currentProject !== null) {
+            currentProject.saved.connect(function() { appWindow.makeTitle(currentProject.name, false) })
+            currentProject.modified.connect(function() { appWindow.makeTitle(currentProject.name, true) })
+            appWindow.projectModified.connect(currentProject.touch)
+        }
     }
 
     function changeProjectStatus(newStatus) {
@@ -214,7 +227,9 @@ ApplicationWindow {
     }
 
     function saveProject() {
-        application.saveCurrentProject();
+        if (currentProject !== null)
+            currentProject.save()
+        // TODO: add error handling. project should emit signal
     }
 
     function handleSuccess(msg, details) {
