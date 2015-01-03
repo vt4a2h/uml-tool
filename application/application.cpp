@@ -39,6 +39,7 @@
 #include <entity/scope.h>
 #include <project/project.h>
 
+#include "enums.h"
 #include "constants.cpp"
 
 namespace application {
@@ -68,8 +69,6 @@ namespace application {
          );
 
         m_Engine.rootContext()->setContextProperty("application", this);
-
-//        connect(&m_Engine, &QQmlApplicationEngine::objectCreated, this, &Application::connectEngine);
     }
 
     /**

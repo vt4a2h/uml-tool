@@ -44,6 +44,7 @@ ApplicationWindow {
     signal projectModified
 
     menuBar: MenuBar {
+        id: menuBar
         Menu {
             id: menuFile
             title: qsTr("&File")
@@ -182,12 +183,21 @@ ApplicationWindow {
         if (oldProject !== null) {
             oldProject.saved.disconnect(appWindow.makeTitle)
             oldProject.modified.disconnect(appWindow.makeTitle)
-            appWindow.projectModified.disconnect(currentProject.touch)
+            oldProject.errors.disconnect(appWindow.handleErrors)
+            appWindow.projectModified.disconnect(oldProject.touch)
         }
 
         if (currentProject !== null) {
-            currentProject.saved.connect(function() { appWindow.makeTitle(currentProject.name, false) })
-            currentProject.modified.connect(function() { appWindow.makeTitle(currentProject.name, true) })
+            // TODO: check it maybe not disconnected!
+            currentProject.saved.connect(function() {
+                appWindow.makeTitle(currentProject.name, false)
+                saveProjectAction.enabled = false
+            })
+            currentProject.modified.connect(function() {
+                appWindow.makeTitle(currentProject.name, true)
+                saveProjectAction.enabled = true
+            })
+            currentProject.errors.connect(appWindow.handleErrors)
             appWindow.projectModified.connect(currentProject.touch)
         }
     }
@@ -229,7 +239,8 @@ ApplicationWindow {
     function saveProject() {
         if (currentProject !== null)
             currentProject.save()
-        // TODO: add error handling. project should emit signal
+        else
+            handleErrors(qsTr("Save error."), ["No current project."])
     }
 
     function handleSuccess(msg, details) {

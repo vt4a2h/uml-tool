@@ -23,5 +23,5 @@
 
 // (C) Daniel X Moore (http://strd6.com/2010/08/useful-javascript-game-extensions-clamp/)
 Number.prototype.clamp = function(min, max) {
-  return Math.min(Math.max(this, min), max);
-};
+  return Math.min(Math.max(this, min), max)
+}

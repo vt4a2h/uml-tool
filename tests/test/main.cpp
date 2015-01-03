@@ -1058,16 +1058,16 @@ TEST_F(Project, LoadSaveProject)
 
     EXPECT_FALSE(project_->hasErrors())
             << "Project shouldn't have any errors";
-    EXPECT_TRUE(project_->errors()->isEmpty())
-            << "Some errors: " << project_->errors()->join("\n").toStdString();
+    EXPECT_TRUE(project_->errorsList()->isEmpty())
+            << "Some errors: " << project_->errorsList()->join("\n").toStdString();
 
     project::SharedProject newProject(std::make_shared<project::Project>("no name here ", "no path here", errors));
     newProject->load(rootPath_ + sep_ + project_->name().toLower().replace(" ", "_") + "." + PROJECT_FILE_EXTENTION);
 
     EXPECT_FALSE(newProject->hasErrors())
             << "Project shouldn't have any errors";
-    EXPECT_TRUE(newProject->errors()->isEmpty())
-            << "Some errors: " << project_->errors()->join("\n").toStdString();
+    EXPECT_TRUE(newProject->errorsList()->isEmpty())
+            << "Some errors: " << project_->errorsList()->join("\n").toStdString();
 
     EXPECT_EQ(*project_, *newProject)
             << "Saved and loaded projects must be equal";

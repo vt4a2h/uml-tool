@@ -44,6 +44,7 @@ namespace application {
         Q_PROPERTY(QString currentScopeID READ currentScopeID WRITE setCurrentScopeID NOTIFY currentScopeIDChanged)
 
         Q_ENUMS(ProjectState)
+        Q_ENUMS(UserType)
 
     public:
         explicit Application(QObject *parent = nullptr);
@@ -64,6 +65,7 @@ namespace application {
         QString currentScopeID() const;
 
         enum ProjectState { ProjectOpened, NoProject };
+        enum UserType : int;
 
     public slots:
         void createProject(const QString &name, const QString &path);
