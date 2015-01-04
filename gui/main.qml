@@ -49,46 +49,46 @@ ApplicationWindow {
             id: menuFile
             title: qsTr("&File")
             MenuItem {
-                id: newProjectItem
-                action: newProjectAction
+                id: itemNewProject
+                action: actionNewProject
             }
             MenuItem {
-                id: openProjectItem
-                action: openProjectAction
+                id: itemOpenProject
+                action: actionOpenProject
             }
             MenuItem {
-                id: saveProjectItem
-                action: saveProjectAction
+                id: itemSaveProject
+                action: actionSaveProject
             }
             MenuSeparator {}
             MenuItem {
-                id: exitItem
-                action: exitAction
+                id: itemExit
+                action: actionExit
             }
 
             Action {
-                id: newProjectAction
+                id: actionNewProject
                 text: qsTr("Create &new project")
                 tooltip: qsTr("Press to create new project")
                 shortcut: "Ctrl+N"
                 onTriggered: newProjectDialog.show()
             }
             Action {
-                id: openProjectAction
+                id: actionOpenProject
                 text: qsTr("&Open project")
                 tooltip: qsTr("Press to open existing project")
                 shortcut: "Ctrl+O"
                 onTriggered: openNewProjectDialog.open()
             }
             Action {
-                id: saveProjectAction
+                id: actionSaveProject
                 text: qsTr("&Save project")
                 tooltip: qsTr("Press to save current project")
                 shortcut: "Ctrl+S"
                 onTriggered: saveProject()
             }
             Action {
-                id: exitAction
+                id: actionExit
                 text: qsTr("&Exit")
                 tooltip: qsTr("Press to close application")
                 shortcut: "Ctrl+Q"
@@ -177,6 +177,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         projectStatus = QUMLApplication.NoProject
+        actionSaveProject.enabled = false;
     }
 
     function handleProjectChanged() {
@@ -191,15 +192,19 @@ ApplicationWindow {
             // TODO: check it maybe not disconnected!
             currentProject.saved.connect(function() {
                 appWindow.makeTitle(currentProject.name, false)
-                saveProjectAction.enabled = false
+                actionSaveProject.enabled = false
             })
             currentProject.modified.connect(function() {
                 appWindow.makeTitle(currentProject.name, true)
-                saveProjectAction.enabled = true
+                actionSaveProject.enabled = true
             })
             currentProject.errors.connect(appWindow.handleErrors)
             appWindow.projectModified.connect(currentProject.touch)
         }
+
+        actionSaveProject.enabled = false
+        mainScene.clear()
+        // TODO: clear scene!
     }
 
     function changeProjectStatus(newStatus) {
@@ -260,6 +265,7 @@ ApplicationWindow {
                 if (entity !== null) {
                     entity.x = (x - entity.width / 2).clamp(0, mainScene.width - entity.width)
                     entity.y = (y - entity.height / 2).clamp(0, mainScene.height - entity.height)
+                    entity.objectName = "entity"
 
                     // TODO: add enumeration parameter for type
                     var jsObj = currentProjectDatabase.createEntity(application.currentScopeID);

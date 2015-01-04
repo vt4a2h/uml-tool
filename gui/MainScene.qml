@@ -66,4 +66,10 @@ Item {
         dropScene.color = newActiveStatus ? "white" : "lightgray"
         dropScene.border.color = newActiveStatus ? "black" : "gray"
     }
+
+    function clear() {
+        for (var index in children)
+            if (children[index].objectName === "entity")
+                children[index].destroy()
+    }
 }
