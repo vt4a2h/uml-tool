@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 17/12/2014.
+** Created 06/01/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,8 +20,29 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+#pragma once
 
-// (C) Daniel X Moore (http://strd6.com/2010/08/useful-javascript-game-extensions-clamp/)
-Number.prototype.clamp = function(min, max) {
-  return Math.min(Math.max(this, min), max)
-}
+#include <QMainWindow>
+
+namespace gui {
+
+    namespace Ui {
+        class MainWindow;
+    }
+
+    /**
+     * @brief The MainWindow class
+     */
+    class MainWindow : public QMainWindow
+    {
+        Q_OBJECT
+
+    public:
+        explicit MainWindow(QWidget *parent = 0);
+        ~MainWindow();
+
+    private:
+        Ui::MainWindow *ui;
+    };
+
+} // namespace gui

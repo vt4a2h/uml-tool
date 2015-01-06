@@ -1,6 +1,8 @@
 CONFIG += core gui c++14
 
-QT += qml quick widgets
+QT += widgets
+
+QMAKE_CXX = g++-5
 
 SOURCES += \
     main.cpp \
@@ -36,8 +38,7 @@ SOURCES += \
     utility/helpfunctions.cpp \
     application/application.cpp \
     project/project.cpp \
-    adaptors/databaseadaptor.cpp \
-    adaptors/projectdatabaseadaptor.cpp
+    gui/mainwindow.cpp
 
 HEADERS += \
     enums.h \
@@ -72,8 +73,7 @@ HEADERS += \
     utility/helpfunctions.h \
     application/application.h \
     project/project.h \
-    adaptors/databaseadaptor.h \
-    adaptors/projectdatabaseadaptor.h
+    gui/mainwindow.h
 
-RESOURCES += \
-    gui/qml.qrc
+FORMS += \
+    gui/mainwindow.ui

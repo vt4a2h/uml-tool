@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 20/11/2014.
+** Created 06/01/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,37 +20,28 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
 
-#pragma once
-
-#include <QObject>
-
-#include "types.h"
-
-namespace qml_adaptors {
+namespace gui {
 
     /**
-     * @brief The DatabaseAdaptor class
+     * @brief MainWindow::MainWindow
+     * @param parent
      */
-    class DatabaseAdaptor : public QObject
+    MainWindow::MainWindow(QWidget *parent) :
+        QMainWindow(parent),
+        ui(new Ui::MainWindow)
     {
-        Q_OBJECT
-    public:
+        ui->setupUi(this);
+    }
 
-        explicit DatabaseAdaptor(QObject *parent = 0);
-        DatabaseAdaptor(const db::SharedDatabase &db, QObject *parent = 0);
-        DatabaseAdaptor(const DatabaseAdaptor &src);
+    /**
+     * @brief MainWindow::~MainWindow
+     */
+    MainWindow::~MainWindow()
+    {
+        delete ui;
+    }
 
-        ~DatabaseAdaptor();
-
-    signals:
-
-    public slots:
-
-    private:
-        db::SharedDatabase m_db;
-    };
-
-} // namespace qml_adaptors
-
-Q_DECLARE_METATYPE(qml_adaptors::DatabaseAdaptor)
+} // namespace gui

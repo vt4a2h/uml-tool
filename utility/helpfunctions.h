@@ -29,6 +29,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QJsonDocument>
+#include <QJsonObject>
 
 #include "types.h"
 

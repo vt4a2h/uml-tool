@@ -148,13 +148,9 @@ namespace project {
     using ProjectsList = QList<SharedProject>;
 }
 
-namespace qml_adaptors {
-    class ProjectAdaptor;
-    using SharedProjectAdaptor = std::shared_ptr<ProjectAdaptor>;
-
-    class DatabaseAdaptor;
-    using SharedDatabaseAdaptor = std::shared_ptr<DatabaseAdaptor>;
-
-    class ProjectDatabaseAdaptor;
-    using SharedProjectDatabaseAdaptor = std::shared_ptr<ProjectDatabaseAdaptor>;
+namespace gui {
+    class MainWindow;
+    using UniqueMainWindow = std::unique_ptr<MainWindow>;
 }
+
+

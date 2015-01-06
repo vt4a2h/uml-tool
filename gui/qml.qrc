@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>main.qml</file>
-        <file>NewProjectDialog.qml</file>
-        <file>MainScene.qml</file>
-        <file>EntityItem.qml</file>
-        <file>Helpers.js</file>
-    </qresource>
-</RCC>

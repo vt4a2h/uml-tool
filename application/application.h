@@ -24,7 +24,6 @@
 #pragma once
 
 #include <QObject>
-#include <QQmlApplicationEngine>
 
 #include "types.h"
 
@@ -92,18 +91,14 @@ namespace application {
         SharedErrorList m_ErrorList;
 
         db::SharedDatabase m_GlobalDatabase;
-        qml_adaptors::SharedDatabaseAdaptor m_GlobalDatabaseAdaptor;
 
         project::SharedProject m_CurrentProject;
 
         db::SharedProjectDatabase m_CurrentProjectDatabase;
-        qml_adaptors::SharedProjectDatabaseAdaptor m_CurrentDatabaseAdaptor;
 
-        QQmlApplicationEngine m_Engine;
         QString m_currentScopeID;
+
+        gui::UniqueMainWindow m_MainWindow;
     };
 
 } // namespace application
-
-Q_DECLARE_METATYPE(ErrorList)
-Q_DECLARE_METATYPE(project::SharedProject)

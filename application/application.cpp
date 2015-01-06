@@ -23,21 +23,16 @@
 
 #include "application.h"
 
-#include <iostream>
-
 #include <QFileInfo>
 #include <QDir>
-#include <QQmlContext>
-#include <QtQml>
 #include <QJsonObject>
 #include <QDebug>
 
-#include <adaptors/databaseadaptor.h>
-#include <adaptors/projectdatabaseadaptor.h>
 #include <db/database.h>
 #include <db/projectdatabase.h>
 #include <entity/scope.h>
 #include <project/project.h>
+#include <gui/mainwindow.h>
 
 #include "enums.h"
 #include "constants.cpp"
@@ -58,17 +53,6 @@ namespace application {
      */
     void Application::configuredGui()
     {
-        qRegisterMetaType<ErrorList>("ErrorList");
-        qRegisterMetaType<project::SharedProject>("project::SharedProject");
-        qRegisterMetaType<project::Project>("project::Project");
-        qRegisterMetaType<qml_adaptors::DatabaseAdaptor>("qml_adaptors::DatabaseAdaptor");
-        qRegisterMetaType<qml_adaptors::ProjectDatabaseAdaptor>("qml_adaptors::ProjectDatabaseAdaptor");
-
-        qmlRegisterUncreatableType<Application>(
-            "QUMLCore", 1, 0, "QUMLApplication", "No create application from qml"
-         );
-
-        m_Engine.rootContext()->setContextProperty("application", this);
     }
 
     /**
@@ -84,8 +68,6 @@ namespace application {
             m_GlobalDatabase->load(*m_ErrorList);
 
             if (m_ErrorList->isEmpty()){
-                m_GlobalDatabaseAdaptor = std::make_shared<qml_adaptors::DatabaseAdaptor>(m_GlobalDatabase);
-                m_Engine.rootContext()->setContextProperty("global_database", m_GlobalDatabaseAdaptor.get());
             }
         } else {
             *m_ErrorList << tr("Database file is not found.");
@@ -99,7 +81,7 @@ namespace application {
     {
         init();
 
-        m_Engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+        m_MainWindow->show();
 
         if (hasErrors()) {
             emit errors(tr("Application init errors"), *m_ErrorList);
@@ -208,9 +190,6 @@ namespace application {
             if (m_CurrentProject->globalDatabase() != m_GlobalDatabase)
                 m_CurrentProject->setGloablDatabase(m_GlobalDatabase);
 
-            m_Engine.rootContext()->setContextProperty("currentProject", m_CurrentProject.get());
-            m_Engine.rootContext()->setContextProperty("oldProject", oldProject.get());
-
             emit projectChanged();
 
             return setCurrentProjectDatabase();
@@ -228,11 +207,6 @@ namespace application {
     {
         if (m_CurrentProject && m_CurrentProject->database()) {
             m_CurrentProjectDatabase = m_CurrentProject->database();
-            m_CurrentDatabaseAdaptor =
-                std::make_shared<qml_adaptors::ProjectDatabaseAdaptor>(m_CurrentProjectDatabase);
-            m_Engine.rootContext()->setContextProperty(
-                "currentProjectDatabase", m_CurrentDatabaseAdaptor.get()
-            );
 
             return true;
         }
@@ -330,6 +304,7 @@ namespace application {
         : QObject(parent)
         , m_ErrorList(std::make_shared<ErrorList>())
         , m_GlobalDatabase(std::make_shared<db::Database>())
+        , m_MainWindow(std::make_unique<gui::MainWindow>())
     {
         configuredGui();
     }
