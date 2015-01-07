@@ -29,7 +29,6 @@
 #include <QLineEdit>
 #include <QGraphicsView>
 #include <QTextEdit>
-#include <qdebug.h>
 
 namespace gui {
 
@@ -51,6 +50,14 @@ namespace gui {
     MainWindow::~MainWindow()
     {
         delete ui;
+    }
+
+    /**
+     * @brief MainWindow::onExit
+     */
+    void MainWindow::onExit()
+    {
+        this->close();
     }
 
     /**

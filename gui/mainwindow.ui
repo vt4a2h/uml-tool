@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>Q-UML</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="main.qrc">
+    <normaloff>:/img/pic/main.png</normaloff>:/img/pic/main.png</iconset>
+  </property>
   <property name="documentMode">
    <bool>false</bool>
   </property>
@@ -62,6 +66,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="main.qrc"/>
+ </resources>
  <connections/>
 </ui>

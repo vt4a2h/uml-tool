@@ -77,3 +77,6 @@ HEADERS += \
 
 FORMS += \
     gui/mainwindow.ui
+
+RESOURCES += \
+    gui/main.qrc

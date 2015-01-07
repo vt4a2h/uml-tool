@@ -49,6 +49,9 @@ namespace gui {
         explicit MainWindow(QWidget *parent = 0);
         ~MainWindow();
 
+    private slots:
+        void onExit();
+
     private:
         void makeElemnts();
 
