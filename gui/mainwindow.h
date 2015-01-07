@@ -23,6 +23,14 @@
 #pragma once
 
 #include <QMainWindow>
+#include <memory>
+
+class QSplitter;
+class QHBoxLayout;
+class QVBoxLayout;
+class QTreeView;
+class QGraphicsView;
+class QTextEdit;
 
 namespace gui {
 
@@ -42,7 +50,18 @@ namespace gui {
         ~MainWindow();
 
     private:
+        void makeElemnts();
+
         Ui::MainWindow *ui;
+
+        QSplitter *m_MainVerticalSplitter;
+        QSplitter *m_CanvasConsoleSplitter;
+
+        std::unique_ptr<QHBoxLayout> m_MainLayout;
+
+        QTreeView *m_ProjectTreeView;
+        QGraphicsView *m_MainView;
+        QTextEdit *m_ConsoleOutput;
     };
 
 } // namespace gui

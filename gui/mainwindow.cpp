@@ -23,6 +23,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QVBoxLayout>
+#include <QSplitter>
+#include <QTreeView>
+#include <QLineEdit>
+#include <QGraphicsView>
+#include <QTextEdit>
+#include <qdebug.h>
+
 namespace gui {
 
     /**
@@ -34,6 +42,7 @@ namespace gui {
         ui(new Ui::MainWindow)
     {
         ui->setupUi(this);
+        makeElemnts();
     }
 
     /**
@@ -42,6 +51,39 @@ namespace gui {
     MainWindow::~MainWindow()
     {
         delete ui;
+    }
+
+    /**
+     * @brief MainWindow::makeElemnts
+     */
+    void MainWindow::makeElemnts()
+    {
+        m_MainVerticalSplitter = new QSplitter(this);
+        m_ProjectTreeView = new QTreeView(this);
+        m_MainVerticalSplitter->addWidget(m_ProjectTreeView);
+
+        m_CanvasConsoleSplitter = new QSplitter(this);
+        m_CanvasConsoleSplitter->setOrientation(Qt::Vertical);
+        m_MainView = new QGraphicsView(this);
+        m_ConsoleOutput = new QTextEdit(this);
+        m_CanvasConsoleSplitter->addWidget(m_MainView);
+        m_CanvasConsoleSplitter->addWidget(m_ConsoleOutput);
+        m_CanvasConsoleSplitter->setStretchFactor(0, 9);
+        m_MainVerticalSplitter->addWidget(m_CanvasConsoleSplitter);
+
+        m_MainVerticalSplitter->setStretchFactor(1, 9);
+
+        m_MainLayout = std::make_unique<QHBoxLayout>();
+        m_MainLayout->addWidget(m_MainVerticalSplitter);
+        ui->centralwidget->setLayout(m_MainLayout.get());
+
+        int treeSize(std::round(this->width() * 0.3));
+        int canvasConsoleSize(std::round(this->width() * 0.7));
+        m_MainVerticalSplitter->setSizes({treeSize, canvasConsoleSize});
+
+        int canvasSize(std::round(this->height() * 0.7));
+        int consoleSize(std::round(this->height() * 0.3));
+        m_CanvasConsoleSplitter->setSizes({canvasSize, consoleSize});
     }
 
 } // namespace gui

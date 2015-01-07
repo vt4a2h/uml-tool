@@ -81,7 +81,7 @@ namespace application {
     {
         init();
 
-        m_MainWindow->show();
+        m_MainWindow->showMaximized();
 
         if (hasErrors()) {
             emit errors(tr("Application init errors"), *m_ErrorList);
