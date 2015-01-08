@@ -30,18 +30,23 @@
 #include <QGraphicsView>
 #include <QTextEdit>
 
+#include "about.h"
+#include "newproject.h"
+
 namespace gui {
 
     /**
      * @brief MainWindow::MainWindow
      * @param parent
      */
-    MainWindow::MainWindow(QWidget *parent) :
-        QMainWindow(parent),
-        ui(new Ui::MainWindow)
+    MainWindow::MainWindow(QWidget *parent)
+        : QMainWindow(parent)
+        , ui(new Ui::MainWindow)
     {
         ui->setupUi(this);
-        makeElemnts();
+
+        createMainWindowWidgets();
+        createAdditionalWidgets();
     }
 
     /**
@@ -61,9 +66,25 @@ namespace gui {
     }
 
     /**
+     * @brief MainWindow::onAbout
+     */
+    void MainWindow::onAbout()
+    {
+        m_AboutWidget->show();
+    }
+
+    /**
+     * @brief MainWindow::onNewProject
+     */
+    void MainWindow::onNewProject()
+    {
+        m_NewProject->show();
+    }
+
+    /**
      * @brief MainWindow::makeElemnts
      */
-    void MainWindow::makeElemnts()
+    void MainWindow::createMainWindowWidgets()
     {
         m_MainVerticalSplitter = new QSplitter(this);
         m_ProjectTreeView = new QTreeView(this);
@@ -91,6 +112,15 @@ namespace gui {
         int canvasSize(std::round(this->height() * 0.7));
         int consoleSize(std::round(this->height() * 0.3));
         m_CanvasConsoleSplitter->setSizes({canvasSize, consoleSize});
+    }
+
+    /**
+     * @brief MainWindow::createAdditionalWidgets
+     */
+    void MainWindow::createAdditionalWidgets()
+    {
+        m_AboutWidget = new About(this);
+        m_NewProject = new NewProject(this);
     }
 
 } // namespace gui

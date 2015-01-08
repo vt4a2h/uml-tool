@@ -38,7 +38,9 @@ SOURCES += \
     utility/helpfunctions.cpp \
     application/application.cpp \
     project/project.cpp \
-    gui/mainwindow.cpp
+    gui/mainwindow.cpp \
+    gui/about.cpp \
+    gui/newproject.cpp
 
 HEADERS += \
     enums.h \
@@ -73,10 +75,14 @@ HEADERS += \
     utility/helpfunctions.h \
     application/application.h \
     project/project.h \
-    gui/mainwindow.h
+    gui/mainwindow.h \
+    gui/about.h \
+    gui/newproject.h
 
 FORMS += \
-    gui/mainwindow.ui
+    gui/mainwindow.ui \
+    gui/about.ui \
+    gui/newproject.ui
 
 RESOURCES += \
     gui/main.qrc

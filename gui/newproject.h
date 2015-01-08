@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 06/01/2015.
+** Created 08/01/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,61 +22,27 @@
 *****************************************************************************/
 #pragma once
 
-#include <QMainWindow>
-#include <memory>
+#include <QDialog>
 
-class QSplitter;
-class QHBoxLayout;
-class QVBoxLayout;
-class QTreeView;
-class QGraphicsView;
-class QTextEdit;
-
-/**
- * @brief namespace gui
- */
 namespace gui {
 
-    class About;
-    class NewProject;
-
     namespace Ui {
-        class MainWindow;
+        class NewProject;
     }
 
     /**
-     * @brief The MainWindow class
+     * @brief The NewProject class
      */
-    class MainWindow : public QMainWindow
+    class NewProject : public QDialog
     {
         Q_OBJECT
 
     public:
-        explicit MainWindow(QWidget *parent = 0);
-        ~MainWindow();
-
-    private slots:
-        void onExit();
-        void onAbout();
-        void onNewProject();
+        explicit NewProject(QWidget *parent = 0);
+        ~NewProject();
 
     private:
-        void createMainWindowWidgets();
-        void createAdditionalWidgets();
-
-        Ui::MainWindow *ui;
-
-        QSplitter *m_MainVerticalSplitter;
-        QSplitter *m_CanvasConsoleSplitter;
-
-        std::unique_ptr<QHBoxLayout> m_MainLayout;
-
-        QTreeView *m_ProjectTreeView;
-        QGraphicsView *m_MainView;
-        QTextEdit *m_ConsoleOutput;
-
-        About *m_AboutWidget;
-        NewProject *m_NewProject;
+        Ui::NewProject *ui;
     };
 
 } // namespace gui
