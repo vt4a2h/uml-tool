@@ -59,6 +59,8 @@ namespace gui {
         void onExit();
         void onAbout();
         void onNewProject();
+        void onOpenProject();
+        void onSaveProject();
 
     private:
         void createMainWindowWidgets();

@@ -157,10 +157,44 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionOpenProject</sender>
+   <signal>triggered()</signal>
+   <receiver>gui::MainWindow</receiver>
+   <slot>onOpenProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSaveProject</sender>
+   <signal>triggered()</signal>
+   <receiver>gui::MainWindow</receiver>
+   <slot>onSaveProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onAbout()</slot>
   <slot>onExit()</slot>
   <slot>onNewProject()</slot>
+  <slot>onOpenProject()</slot>
+  <slot>onSaveProject()</slot>
  </slots>
 </ui>

@@ -29,9 +29,11 @@
 #include <QLineEdit>
 #include <QGraphicsView>
 #include <QTextEdit>
+#include <QFileDialog>
 
 #include "about.h"
 #include "newproject.h"
+#include "constants.cpp"
 
 namespace gui {
 
@@ -79,6 +81,27 @@ namespace gui {
     void MainWindow::onNewProject()
     {
         m_NewProject->show();
+    }
+
+    /**
+     * @brief MainWindow::onOpenProject
+     */
+    void MainWindow::onOpenProject()
+    {
+        QString caption(tr("Selet project file"));
+        QString dir(QApplication::applicationDirPath()); // temporary
+        QString filter(tr("Q-UML Project files (*.%1)").arg(PROJECT_FILE_EXTENTION));
+
+        QString file = QFileDialog::getOpenFileName(this,caption, dir, filter);
+        Q_UNUSED(file)
+    }
+
+    /**
+     * @brief MainWindow::onSaveProject
+     */
+    void MainWindow::onSaveProject()
+    {
+
     }
 
     /**
