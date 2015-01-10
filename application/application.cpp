@@ -144,7 +144,6 @@ namespace application {
         pr->setErrorsList(m_ErrorList);
         pr->setGloablDatabase(m_GlobalDatabase);
 
-        m_ErrorList->clear();
         pr->load(path);
 
         if (!m_ErrorList->isEmpty()) {
