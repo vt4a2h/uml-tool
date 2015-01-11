@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 01/10/2015.
+** Created 01/11/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,42 +22,34 @@
 *****************************************************************************/
 #pragma once
 
-#include <memory>
+#include <QAbstractItemModel>
 
-#include <QString>
-#include <QVector>
-#include <QVariant>
+#include "basictreeitem.h"
 
 namespace models {
 
-    class BasicTreeItem;
-
-    // TODO: just for tests now; move to types header
-    using ChildItems = QVector<BasicTreeItem*>;
-
-    class BasicTreeItem
+    class ProjectTreeModel : public QAbstractItemModel
     {
+        Q_OBJECT
+
     public:
-        BasicTreeItem(const QString &data, BasicTreeItem *parent = nullptr);
-        ~BasicTreeItem();
+        ProjectTreeModel(QObject * parent = nullptr);
+        ~ProjectTreeModel();
 
-        // TODO: stupid example! add normal method like emplace_back (kind of factory) with auto parent setup
-        void appendChild(BasicTreeItem *child);
-        BasicTreeItem *child(int row) const;
+        QVariant data(const QModelIndex &index, int role) const;
+        Qt::ItemFlags flags(const QModelIndex &index) const;
 
-        int childCount() const;
-        int columnCount() const;
+        QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+        QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 
-        QVariant data() const;
+        QModelIndex parent(const QModelIndex &child) const;
 
-        int row() const;
-
-        BasicTreeItem *parent() const;
+        int rowCount(const QModelIndex &parent = QModelIndex()) const;
+        int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
     private:
-        ChildItems m_Children;
-        const QString m_Data; // NOTE: just for test, will be more complicated
-        BasicTreeItem * m_Parent;
+        void fillData();
+        BasicTreeItem *m_Root;
     };
 
 } // namespace models

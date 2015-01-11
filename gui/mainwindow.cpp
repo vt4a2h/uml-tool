@@ -31,6 +31,8 @@
 #include <QTextEdit>
 #include <QFileDialog>
 
+#include <models/projecttreemodel.h>
+
 #include "about.h"
 #include "newproject.h"
 #include "constants.cpp"
@@ -41,9 +43,10 @@ namespace gui {
      * @brief MainWindow::MainWindow
      * @param parent
      */
-    MainWindow::MainWindow(QWidget *parent)
+    MainWindow::MainWindow(models::ProjectTreeModel *treeModel, QWidget *parent)
         : QMainWindow(parent)
         , ui(new Ui::MainWindow)
+        , m_ProjectTreeModel(treeModel)
     {
         ui->setupUi(this);
 
@@ -111,6 +114,7 @@ namespace gui {
     {
         m_MainVerticalSplitter = new QSplitter(this);
         m_ProjectTreeView = new QTreeView(this);
+        m_ProjectTreeView->setModel(m_ProjectTreeModel);
         m_MainVerticalSplitter->addWidget(m_ProjectTreeView);
 
         m_CanvasConsoleSplitter = new QSplitter(this);

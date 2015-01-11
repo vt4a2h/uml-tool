@@ -153,4 +153,9 @@ namespace gui {
     using UniqueMainWindow = std::unique_ptr<MainWindow>;
 }
 
+namespace models {
+    class ProjectTreeModel;
+    using UniqueTreeModel = std::unique_ptr<ProjectTreeModel>;
+}
+
 

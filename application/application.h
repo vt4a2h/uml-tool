@@ -25,6 +25,8 @@
 
 #include <QObject>
 
+#include <models/projecttreemodel.h>
+
 #include "types.h"
 
 /**
@@ -98,6 +100,7 @@ namespace application {
 
         QString m_currentScopeID;
 
+        models::UniqueTreeModel m_TestModel;
         gui::UniqueMainWindow m_MainWindow;
     };
 

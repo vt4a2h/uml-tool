@@ -303,7 +303,8 @@ namespace application {
         : QObject(parent)
         , m_ErrorList(std::make_shared<ErrorList>())
         , m_GlobalDatabase(std::make_shared<db::Database>())
-        , m_MainWindow(std::make_unique<gui::MainWindow>())
+        , m_TestModel(std::make_unique<models::ProjectTreeModel>())
+        , m_MainWindow(std::make_unique<gui::MainWindow>(m_TestModel.get()))
     {
         configuredGui();
     }

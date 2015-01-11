@@ -32,6 +32,10 @@ class QTreeView;
 class QGraphicsView;
 class QTextEdit;
 
+namespace models {
+    class ProjectTreeModel;
+}
+
 /**
  * @brief namespace gui
  */
@@ -52,7 +56,7 @@ namespace gui {
         Q_OBJECT
 
     public:
-        explicit MainWindow(QWidget *parent = 0);
+        explicit MainWindow(models::ProjectTreeModel *treeModel, QWidget *parent = 0);
         ~MainWindow();
 
     private slots:
@@ -79,6 +83,8 @@ namespace gui {
 
         About *m_AboutWidget;
         NewProject *m_NewProject;
+
+        models::ProjectTreeModel *m_ProjectTreeModel;
     };
 
 } // namespace gui
