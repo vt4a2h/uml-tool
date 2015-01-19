@@ -45,6 +45,17 @@ namespace models {
     }
 
     /**
+     * @brief BasicTreeItem::makeChild
+     */
+    BasicTreeItem *BasicTreeItem::makeChild(const QString &data)
+    {
+        BasicTreeItem *newChild = new BasicTreeItem(data, this);
+        m_Children.append(newChild);
+
+        return newChild;
+    }
+
+    /**
      * @brief BasicTreeItem::child
      * @param row
      * @return

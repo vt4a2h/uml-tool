@@ -41,8 +41,8 @@ namespace models {
         BasicTreeItem(const QString &data, BasicTreeItem *parent = nullptr);
         ~BasicTreeItem();
 
-        // TODO: stupid example! add normal method like emplace_back (kind of factory) with auto parent setup
         void appendChild(BasicTreeItem *child);
+        BasicTreeItem *makeChild(const QString & data = QString());
         BasicTreeItem *child(int row) const;
 
         int childCount() const;
