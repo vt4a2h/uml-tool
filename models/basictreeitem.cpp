@@ -67,9 +67,7 @@ namespace models {
 
     BasicTreeItem * BasicTreeItem::child(int row) const
     {
-        Q_ASSERT(row < m_Children.count());
-
-        return m_Children[row];
+        return m_Children.value(row);
     }
 
     /**
@@ -96,7 +94,7 @@ namespace models {
      */
     QVariant BasicTreeItem::data() const
     {
-        return QVariant::fromValue(m_Data);
+        return m_Data;
     }
 
     /**
@@ -105,12 +103,7 @@ namespace models {
      */
     int BasicTreeItem::row() const
     {
-        int index(0);
-
-        if (m_Parent)
-            index = m_Children.indexOf(const_cast<BasicTreeItem*>(this));
-
-        return index;
+        return m_Parent ? m_Parent->m_Children.indexOf(const_cast<BasicTreeItem*>(this)) : 0;
     }
 
     /**

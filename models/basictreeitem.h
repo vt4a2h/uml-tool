@@ -56,7 +56,7 @@ namespace models {
 
     private:
         ChildItems m_Children;
-        const QString m_Data; // NOTE: just for test, will be more complicated
+        QVariant m_Data; // NOTE: just for test, will be more complicated
         BasicTreeItem * m_Parent;
     };
 

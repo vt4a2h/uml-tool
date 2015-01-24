@@ -22,6 +22,8 @@
 *****************************************************************************/
 #include "projecttreemodel.h"
 
+#include <QDebug>
+
 namespace models {
 
     /**
@@ -69,10 +71,7 @@ namespace models {
      */
     Qt::ItemFlags ProjectTreeModel::flags(const QModelIndex &index) const
     {
-        if (!index.isValid())
-            return 0;
-
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+        return index.isValid() ? QAbstractItemModel::flags(index) : Qt::NoItemFlags;
     }
 
     /**
@@ -101,14 +100,9 @@ namespace models {
         if (!hasIndex(row, column, parent))
             return QModelIndex();
 
-        BasicTreeItem *parentItem;
+        BasicTreeItem *parentItem = !parent.isValid() ? m_Root : static_cast<BasicTreeItem*>(parent.internalPointer());
+        BasicTreeItem *childItem = parentItem->child(row);
 
-        if (!parent.isValid())
-            parentItem = m_Root;
-        else
-            parentItem = static_cast<BasicTreeItem*>(parent.internalPointer());
-
-        BasicTreeItem *childItem(parentItem->child(row));
         return childItem ? createIndex(row, column, childItem) : QModelIndex();
     }
 
@@ -123,12 +117,9 @@ namespace models {
             return QModelIndex();
 
         BasicTreeItem *childItem = static_cast<BasicTreeItem*>(child.internalPointer());
-        BasicTreeItem *parent = childItem->parent();
+        BasicTreeItem *parentItem = childItem->parent();
 
-        if (parent == m_Root)
-            return QModelIndex();
-
-        return createIndex(parent->row(), 0, parent);
+        return parentItem != m_Root ? createIndex(parentItem->row(), 0, parentItem) : QModelIndex();
     }
 
     /**
@@ -142,10 +133,7 @@ namespace models {
         if (parent.column() > 0)
             return 0;
 
-        if (!parent.isValid())
-            parentItem = m_Root;
-        else
-            parentItem = static_cast<BasicTreeItem*>(parent.internalPointer());
+        parentItem = !parent.isValid() ? m_Root : static_cast<BasicTreeItem*>(parent.internalPointer());
 
         return parentItem->childCount();
     }
@@ -157,10 +145,8 @@ namespace models {
      */
     int ProjectTreeModel::columnCount(const QModelIndex &parent) const
     {
-        if (parent.isValid())
-            return static_cast<BasicTreeItem*>(parent.internalPointer())->columnCount();
-        else
-            return m_Root->columnCount();
+        return parent.isValid() ? static_cast<BasicTreeItem*>(parent.internalPointer())->columnCount()
+                                : m_Root->columnCount();
     }
 
     /**
@@ -169,12 +155,13 @@ namespace models {
     void ProjectTreeModel::fillData()
     {
         for (int i = 0; i < 10; ++i) {
-            BasicTreeItem *item = new BasicTreeItem("item " + QString::number(i), m_Root);
-            m_Root->appendChild(item);
+            BasicTreeItem * item = m_Root->makeChild("item " + QString::number(i));
 
             for (int j = 0; j < 3; ++j) {
-                BasicTreeItem *innerItem = new BasicTreeItem("inner item " + QString::number(j), item);
-                item->appendChild(innerItem);
+                BasicTreeItem * secondItem = item->makeChild("few " + QString::number(j));
+
+                for (int k = 0; k < 25; ++k)
+                    secondItem->makeChild("ferr " + QString::number(k));
             }
         }
     }
