@@ -59,6 +59,8 @@ namespace models {
         if (role != Qt::DisplayRole)
             return QVariant();
 
+        // if (role == Qt::DecorationRole) {
+
         BasicTreeItem *item = static_cast<BasicTreeItem*>(index.internalPointer());
 
         return item->data();
@@ -84,6 +86,8 @@ namespace models {
     QVariant ProjectTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
     {
         Q_UNUSED(section);
+
+        // if (role == Qt::DecorationRole)
 
         return orientation == Qt::Horizontal && role == Qt::DisplayRole ? m_Root->data() : QVariant();
     }

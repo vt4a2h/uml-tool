@@ -26,23 +26,28 @@
 
 #include <QString>
 #include <QVector>
+#include <QMap>
 #include <QVariant>
 
+/// Namespace models
 namespace models {
+    /// The TreeItemType enum
+    enum class TreeItemType { ProjectItem, TypeItem };
 
     class BasicTreeItem;
 
     // TODO: just for tests now; move to types header
     using ChildItems = QVector<BasicTreeItem*>;
 
+    /// The BasicTreeItem class
     class BasicTreeItem
     {
     public:
-        BasicTreeItem(const QString &data, BasicTreeItem *parent = nullptr);
+        BasicTreeItem(const QVariant &data, BasicTreeItem *parent = nullptr); // TODO: add type here
         ~BasicTreeItem();
 
         void appendChild(BasicTreeItem *child);
-        BasicTreeItem *makeChild(const QString & data = QString());
+        BasicTreeItem *makeChild(const QVariant &data = QVariant());
         BasicTreeItem *child(int row) const;
 
         int childCount() const;
@@ -54,10 +59,18 @@ namespace models {
 
         BasicTreeItem *parent() const;
 
+        QString iconPath() const;
+
+        TreeItemType itemType() const;
+        void setItemType(const TreeItemType &itemType);
+
     private:
         ChildItems m_Children;
-        QVariant m_Data; // NOTE: just for test, will be more complicated
-        BasicTreeItem * m_Parent;
+
+        QVariant m_Data;
+        TreeItemType m_Type;
+
+        BasicTreeItem *m_Parent;
     };
 
 } // namespace models

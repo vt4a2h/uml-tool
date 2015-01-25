@@ -29,7 +29,7 @@ namespace models {
      * @param data
      * @param parent
      */
-    BasicTreeItem::BasicTreeItem(const QString &data, BasicTreeItem *parent)
+    BasicTreeItem::BasicTreeItem(const QVariant &data, BasicTreeItem *parent)
         : m_Data(data)
         , m_Parent(parent)
     {
@@ -47,7 +47,7 @@ namespace models {
     /**
      * @brief BasicTreeItem::makeChild
      */
-    BasicTreeItem *BasicTreeItem::makeChild(const QString &data)
+    BasicTreeItem *BasicTreeItem::makeChild(const QVariant &data)
     {
         BasicTreeItem *newChild = new BasicTreeItem(data, this);
         m_Children.append(newChild);
@@ -113,6 +113,42 @@ namespace models {
     BasicTreeItem *BasicTreeItem::parent() const
     {
         return m_Parent;
+    }
+
+    namespace {
+        using IconPathMap = QMap<TreeItemType, QString>;
+        const static IconPathMap icons = {
+            {TreeItemType::ProjectItem, "project icon path"},
+            {TreeItemType::TypeItem,    "type icon path"   }
+        };
+
+    }
+
+    /**
+     * @brief BasicTreeItem::iconPath
+     * @return
+     */
+    QString BasicTreeItem::iconPath() const
+    {
+        return icons[m_Type];
+    }
+
+    /**
+     * @brief BasicTreeItem::ItemType
+     * @return
+     */
+    TreeItemType BasicTreeItem::itemType() const
+    {
+        return m_Type;
+    }
+
+    /**
+     * @brief BasicTreeItem::setItemType
+     * @param itemType
+     */
+    void BasicTreeItem::setItemType(const TreeItemType &itemType)
+    {
+        m_Type = itemType;
     }
 
 } // namespace models

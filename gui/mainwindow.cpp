@@ -30,6 +30,7 @@
 #include <QGraphicsView>
 #include <QTextEdit>
 #include <QFileDialog>
+#include <QDebug>
 
 #include <models/projecttreemodel.h>
 
