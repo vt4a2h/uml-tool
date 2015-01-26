@@ -1056,18 +1056,14 @@ TEST_F(Project, LoadSaveProject)
     project_->database()->addScope("foo")->addType("bar");
     project_->save();
 
-    EXPECT_FALSE(project_->hasErrors())
-            << "Project shouldn't have any errors";
-    EXPECT_TRUE(project_->errorsList()->isEmpty())
-            << "Some errors: " << project_->errorsList()->join("\n").toStdString();
+    EXPECT_TRUE(project_->isSaved())
+            << "Project should be saved.";
 
-    project::SharedProject newProject(std::make_shared<project::Project>("no name here ", "no path here", errors));
+    project::SharedProject newProject(std::make_shared<project::Project>("no name here ", "no path here"));
     newProject->load(rootPath_ + sep_ + project_->name().toLower().replace(" ", "_") + "." + PROJECT_FILE_EXTENTION);
 
-    EXPECT_FALSE(newProject->hasErrors())
-            << "Project shouldn't have any errors";
-    EXPECT_TRUE(newProject->errorsList()->isEmpty())
-            << "Some errors: " << project_->errorsList()->join("\n").toStdString();
+    EXPECT_TRUE(newProject->isSaved())
+            << "Project should be saved.";
 
     EXPECT_EQ(*project_, *newProject)
             << "Saved and loaded projects must be equal";

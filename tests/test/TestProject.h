@@ -38,7 +38,7 @@ protected:
         rootPath_.append(sep_).append("tmp");
         QDir().mkpath(rootPath_);
 
-        project_ = std::make_shared<project::Project>("TstProject", rootPath_, errors);
+        project_ = std::make_shared<project::Project>("TstProject", rootPath_);
     }
 
     virtual void TearDown() override
@@ -48,6 +48,5 @@ protected:
 
     QString rootPath_ = QDir::current().path();
     QChar   sep_      = QDir(rootPath_).separator();
-    SharedErrorList errors = std::make_shared<QStringList>();
     project::SharedProject project_;
 };
