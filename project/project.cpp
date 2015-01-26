@@ -39,7 +39,7 @@ namespace project {
      * @brief Project::Project
      */
     Project::Project(QObject *parent)
-        : Project(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, nullptr, parent)
+        : Project(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, parent)
     {}
 
     /**
@@ -47,14 +47,13 @@ namespace project {
      * @param name
      * @param path
      */
-    Project::Project(const QString &name, const QString &path, const SharedErrorList &errors, QObject *parent)
+    Project::Project(const QString &name, const QString &path, QObject *parent)
         : QObject(parent)
         , m_Name(name)
         , m_Path(path)
         , m_ID(utility::genId())
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
-        , m_Errors(errors)
     {}
 
     /**
@@ -69,7 +68,6 @@ namespace project {
         , m_SaveStatus(false)    // not saved
          // deep copy of project database and shallow copy of global database
         , m_Database(std::make_shared<db::ProjectDatabase>(*src.m_Database))
-        , m_Errors(src.errorsList())
     {}
 
     /**
@@ -86,16 +84,13 @@ namespace project {
      */
     bool operator ==(const Project &lhs, const Project &rhs)
     {
-        Q_ASSERT(!!lhs.m_Errors);
         Q_ASSERT(!!lhs.m_Database);
-        Q_ASSERT(!!rhs.m_Errors);
         Q_ASSERT(!!rhs.m_Database);
 
         return lhs.m_Name == rhs.m_Name &&
                lhs.m_Path == rhs.m_Path &&
                lhs.m_ID   == rhs.m_ID   &&
-               *lhs.m_Database == *rhs.m_Database &&
-               *lhs.m_Errors   == *rhs.m_Errors;
+               *lhs.m_Database == *rhs.m_Database;
     }
 
     /**
@@ -104,21 +99,21 @@ namespace project {
      */
     void Project::load(const QString &path)
     {
-        Q_ASSERT(!!m_Errors);
         Q_ASSERT(!!m_Database);
 
-        m_Errors->clear();
+        ErrorList errorList;
 
         if (!utility::readFromFile(*this, path))
-            *m_Errors << "Cannot read project file.";
+            errorList << tr("Cannot read project file.");
 
         m_Database->setPath(databasePath(m_Path));
         if (!utility::readFromFile(*m_Database, m_Database->path()))
-            *m_Errors << "Cannot read database file.";
+            errorList << tr("Cannot read database file.");
 
-        setSaveStatus(m_Errors->isEmpty());
+        setSaveStatus(errorList.isEmpty());
 
-        sendErrors(tr("Project load error%1:").arg(m_Errors->count() <= 1 ? "" : "s"));
+        if (!errorList.isEmpty())
+            errors(tr("Project load error%1").arg(errorList.count() <= 1 ? "" : "s"), errorList);
     }
 
     /**
@@ -126,33 +121,34 @@ namespace project {
      */
     void Project::save()
     {
-        Q_ASSERT(!!m_Errors);
         Q_ASSERT(!!m_Database);
 
-        m_Errors->clear();
+        ErrorList errorList;
 
         if (!m_Path.isEmpty()) {
             QDir dir(m_Path);
             if (!dir.exists())
                 if (!dir.mkpath(m_Path)) {
-                    *m_Errors << "Cannot create project directory.";
+                    errorList << tr("Cannot create project directory.");
+                    emit errors(tr("Make path error%1").arg(errorList.count() <= 1 ? "" : "s"), errorList);
                     return;
                 }
 
             if (!utility::writeToFile(*this, projectPath(m_Path)))
-                *m_Errors << "Cannot save project to file.";
+                errorList << tr("Cannot save project to file.");
 
             m_Database->setName(databaseFileName());
             m_Database->setPath(databasePath(m_Path));
             if (!utility::writeToFile(*m_Database, m_Database->path()))
-                *m_Errors << "Cannot save database to file.";
+                errorList << tr("Cannot save database to file.");
         } else {
-            *m_Errors << "Project path is empty.";
+            errorList << "Project path is empty.";
         }
 
-        setSaveStatus(m_Errors->isEmpty());
+        setSaveStatus(errorList.isEmpty());
 
-        sendErrors(tr("Project save error%1:").arg(m_Errors->count() <= 1 ? "" : "s"));
+        if (!errorList.isEmpty())
+            emit errors(tr("Project save error%1").arg(errorList.count() <= 1 ? "" : "s"), errorList);
     }
 
     /**
@@ -195,33 +191,6 @@ namespace project {
             m_Database->setGlobalDatabase(database);
 
         return result;
-    }
-
-    /**
-     * @brief Project::hasErrors
-     * @return
-     */
-    bool Project::hasErrors() const
-    {
-        return m_Errors && !m_Errors->isEmpty();
-    }
-
-    /**
-     * @brief Project::errors
-     * @return
-     */
-    SharedErrorList Project::errorsList() const
-    {
-        return m_Errors;
-    }
-
-    /**
-     * @brief Project::setErrorsList
-     * @param errors
-     */
-    void Project::setErrorsList(const SharedErrorList &errors)
-    {
-        m_Errors = errors;
     }
 
     /**
@@ -381,18 +350,6 @@ namespace project {
     {
         QChar sep = QDir(basePath).separator();
         return basePath + sep + databaseFileName() + "." + DATABASE_FILE_EXTENTION;
-    }
-
-    /**
-     * @brief Project::sendErrors
-     * @param message
-     */
-    void Project::sendErrors(const QString &message)
-    {
-        if (!m_Errors->isEmpty()) {
-            emit errors(message, *m_Errors);
-            m_Errors->clear();
-        }
     }
 
 } // namespace project

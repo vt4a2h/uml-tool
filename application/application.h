@@ -25,8 +25,6 @@
 
 #include <QObject>
 
-#include <models/projecttreemodel.h>
-
 #include "types.h"
 
 /**
@@ -40,12 +38,12 @@ namespace application {
     class Application : public QObject
     {
         Q_OBJECT
-        Q_PROPERTY(bool anyErrors READ hasErrors)
-        Q_PROPERTY(ErrorList errors READ getErrors)
-        Q_PROPERTY(QString currentScopeID READ currentScopeID WRITE setCurrentScopeID NOTIFY currentScopeIDChanged)
+//        Q_PROPERTY(bool anyErrors READ hasErrors)
+//        Q_PROPERTY(ErrorList errors READ getErrors)
+//        Q_PROPERTY(QString currentScopeID READ currentScopeID WRITE setCurrentScopeID NOTIFY currentScopeIDChanged)
 
-        Q_ENUMS(ProjectState)
-        Q_ENUMS(UserType)
+//        Q_ENUMS(ProjectState)
+//        Q_ENUMS(UserType)
 
     public:
         explicit Application(QObject *parent = nullptr);
@@ -53,52 +51,52 @@ namespace application {
 
         void run();
 
-        bool hasErrors() const;
-        ErrorList getErrors() const;
+//        bool hasErrors() const;
+//        ErrorList getErrors() const;
 
-        project::SharedProject findProjectById(const QString &id) const;
-        project::SharedProject findProjectByName(const QString &name) const;
-        project::ProjectsList projects() const;
-        uint projectsCount() const;
-        void removeProjectById(const QString &id);
-        void removeProjectByName(const QString &name);
+//        project::SharedProject findProjectById(const QString &id) const;
+//        project::SharedProject findProjectByName(const QString &name) const;
+//        project::ProjectsList projects() const;
+//        uint projectsCount() const;
+//        void removeProjectById(const QString &id);
+//        void removeProjectByName(const QString &name);
 
-        QString currentScopeID() const;
+//        QString currentScopeID() const;
 
-        enum ProjectState { ProjectOpened, NoProject };
-        enum UserType : int;
+//        enum ProjectState { ProjectOpened, NoProject };
+//        enum UserType : int;
 
-    public slots:
-        void createProject(const QString &name, const QString &path);
-        bool openProject(const QString &path);
-        bool setCurrentProject(const QString &id);
-        bool setCurrentProjectDatabase();
-        void setCurrentScopeID(const QString &id);
+//    public slots:
+//        void createProject(const QString &name, const QString &path);
+//        bool openProject(const QString &path);
+//        bool setCurrentProject(const QString &id);
+//        bool setCurrentProjectDatabase();
+//        void setCurrentScopeID(const QString &id);
 
-    signals:
-        void projectCreated(const QJsonObject &project);
-        void projectOpened(const QJsonObject &project);
-        void errors(const QString &message, const ErrorList &errorlist);
+//    signals:
+//        void projectCreated(const QJsonObject &project);
+//        void projectOpened(const QJsonObject &project);
+//        void errors(const QString &message, const ErrorList &errorlist);
 
-        void currentScopeIDChanged(QString id);
-        void projectChanged();
+//        void currentScopeIDChanged(QString id);
+//        void projectChanged();
 
     private:
-        void init();
-        void configuredGui();
-        void readDatabase();
-        void readConfig();
+//        void init();
+//        void configuredGui();
+//        void readDatabase();
+//        void readConfig();
 
-        project::Projects m_Projects;
-        SharedErrorList m_ErrorList;
+//        project::Projects m_Projects;
+//        SharedErrorList m_ErrorList;
 
-        db::SharedDatabase m_GlobalDatabase;
+//        db::SharedDatabase m_GlobalDatabase;
 
-        project::SharedProject m_CurrentProject;
+//        project::SharedProject m_CurrentProject;
 
-        db::SharedProjectDatabase m_CurrentProjectDatabase;
+//        db::SharedProjectDatabase m_CurrentProjectDatabase;
 
-        QString m_currentScopeID;
+//        QString m_currentScopeID;
 
         models::UniqueTreeModel m_TestModel;
         gui::UniqueMainWindow m_MainWindow;

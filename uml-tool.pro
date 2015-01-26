@@ -42,7 +42,8 @@ SOURCES += \
     gui/about.cpp \
     gui/newproject.cpp \
     models/basictreeitem.cpp \
-    models/projecttreemodel.cpp
+    models/projecttreemodel.cpp \
+    models/applicationmodal.cpp
 
 HEADERS += \
     enums.h \
@@ -81,7 +82,8 @@ HEADERS += \
     gui/about.h \
     gui/newproject.h \
     models/basictreeitem.h \
-    models/projecttreemodel.h
+    models/projecttreemodel.h \
+    models/applicationmodal.h
 
 FORMS += \
     gui/mainwindow.ui \

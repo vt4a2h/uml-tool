@@ -44,7 +44,7 @@ namespace project {
 
     public:
         explicit Project(QObject *parent = 0);
-        Project(const QString &name, const QString &path, const SharedErrorList &errorsList, QObject *parent = 0);
+        Project(const QString &name, const QString &path, QObject *parent = 0);
         Project(const Project &src);
         ~Project();
 
@@ -61,10 +61,6 @@ namespace project {
 
         db::SharedDatabase globalDatabase() const;
         bool setGloablDatabase(const db::SharedDatabase &database);
-
-        bool hasErrors() const;
-        SharedErrorList errorsList() const;
-        void setErrorsList(const SharedErrorList &errors);
 
         QJsonObject toJson() const;
         void fromJson(const QJsonObject &src, QStringList &errorList);
@@ -93,7 +89,6 @@ namespace project {
         QString databaseFileName() const;
         QString projectPath(const QString &basePath) const;
         QString databasePath(const QString &basePath) const;
-        void sendErrors(const QString &message);
 
         QString m_Name;
         QString m_Path;
@@ -102,7 +97,6 @@ namespace project {
         bool m_SaveStatus;
 
         db::SharedProjectDatabase m_Database;
-        SharedErrorList m_Errors;
     };
 
 } // namespace project
