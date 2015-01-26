@@ -67,7 +67,7 @@ namespace models {
     private:
         ChildItems m_Children;
 
-        QVariant m_Data;
+        QVariant m_Entity;
         TreeItemType m_Type;
 
         BasicTreeItem *m_Parent;

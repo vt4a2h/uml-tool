@@ -30,7 +30,7 @@ namespace models {
      * @param parent
      */
     BasicTreeItem::BasicTreeItem(const QVariant &data, BasicTreeItem *parent)
-        : m_Data(data)
+        : m_Entity(data)
         , m_Parent(parent)
     {
     }
@@ -94,7 +94,7 @@ namespace models {
      */
     QVariant BasicTreeItem::data() const
     {
-        return m_Data;
+        return m_Entity;
     }
 
     /**
