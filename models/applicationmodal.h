@@ -37,9 +37,17 @@ namespace models {
         explicit ApplicationModal(QObject *parent = 0);
         ~ApplicationModal();
 
-    signals:
+        project::SharedProject makeProject(const QString &name, const QString &path);
+        project::ProjectsList projects() const;
+        bool removeProject(const QString &id);
+        bool containsProject(const QString &id);
 
-    public slots:
+        project::SharedProject currentProject() const;
+        bool setCurrentProject(const QString &id);
+
+    private:
+        project::Projects m_Projects;
+        project::SharedProject m_CurrentProject;
     };
 
 } // namespace models

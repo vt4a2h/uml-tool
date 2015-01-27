@@ -22,16 +22,86 @@
 *****************************************************************************/
 #include "applicationmodal.h"
 
+#include <project/project.h>
+
 namespace models {
 
+    /**
+     * @brief ApplicationModal::ApplicationModal
+     * @param parent
+     */
     ApplicationModal::ApplicationModal(QObject *parent) : QObject(parent)
     {
-
     }
 
+    /**
+     * @brief ApplicationModal::~ApplicationModal
+     */
     ApplicationModal::~ApplicationModal()
     {
+    }
 
+    /**
+     * @brief ApplicationModal::makeProject
+     * @param name
+     * @param path
+     * @return
+     */
+    project::SharedProject ApplicationModal::makeProject(const QString &name, const QString &path)
+    {
+        project::SharedProject newProject(std::make_shared<project::Project>(name, path));
+        return *m_Projects.insert(newProject->id(), newProject);
+    }
+
+    /**
+     * @brief ApplicationModal::projects
+     * @return
+     */
+    project::ProjectsList ApplicationModal::projects() const
+    {
+        return m_Projects.values();
+    }
+
+    /**
+     * @brief ApplicationModal::removeProject
+     * @param id
+     */
+    bool ApplicationModal::removeProject(const QString &id)
+    {
+        return !!m_Projects.remove(id);
+    }
+
+    /**
+     * @brief ApplicationModal::containsProject
+     * @param id
+     * @return
+     */
+    bool ApplicationModal::containsProject(const QString &id)
+    {
+        return m_Projects.contains(id);
+    }
+
+    /**
+     * @brief ApplicationModal::currentProject
+     * @return
+     */
+    project::SharedProject ApplicationModal::currentProject() const
+    {
+        return m_CurrentProject;
+    }
+
+    /**
+     * @brief ApplicationModal::setCurrentProject
+     * @param id
+     * @return
+     */
+    bool ApplicationModal::setCurrentProject(const QString &id)
+    {
+        if (!m_Projects.contains(id))
+            return false;
+
+        m_CurrentProject = m_Projects[id];
+        return true;
     }
 
 } // namespace models
