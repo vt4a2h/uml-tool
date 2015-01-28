@@ -156,6 +156,7 @@ namespace gui {
 namespace models {
     class ProjectTreeModel;
     using UniqueTreeModel = std::unique_ptr<ProjectTreeModel>;
+    using SharedTreeModel = std::shared_ptr<ProjectTreeModel>;
 }
 
 

@@ -24,13 +24,17 @@
 
 #include <project/project.h>
 
+#include "projecttreemodel.h"
+
 namespace models {
 
     /**
      * @brief ApplicationModal::ApplicationModal
      * @param parent
      */
-    ApplicationModal::ApplicationModal(QObject *parent) : QObject(parent)
+    ApplicationModal::ApplicationModal(QObject *parent)
+        : QObject(parent)
+        , m_TreeModel(std::make_shared<ProjectTreeModel>())
     {
     }
 
@@ -102,6 +106,15 @@ namespace models {
 
         m_CurrentProject = m_Projects[id];
         return true;
+    }
+
+    /**
+     * @brief ApplicationModal::treeModel
+     * @return
+     */
+    SharedTreeModel ApplicationModal::treeModel() const
+    {
+        return m_TreeModel;
     }
 
 } // namespace models

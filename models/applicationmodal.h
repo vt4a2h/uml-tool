@@ -45,9 +45,13 @@ namespace models {
         project::SharedProject currentProject() const;
         bool setCurrentProject(const QString &id);
 
+        SharedTreeModel treeModel() const;
+
     private:
         project::Projects m_Projects;
         project::SharedProject m_CurrentProject;
+
+        SharedTreeModel m_TreeModel;
     };
 
 } // namespace models
