@@ -50,7 +50,7 @@ namespace models {
      */
     BasicTreeItem *BasicTreeItem::makeChild(const QVariant &data)
     {
-        BasicTreeItem *newChild = new BasicTreeItem(data, this);
+        BasicTreeItem *newChild = new BasicTreeItem(data, models::TreeItemType::StubItem, this);
         m_Children.append(newChild);
 
         return newChild;

@@ -32,7 +32,7 @@ namespace models {
      */
     ProjectTreeModel::ProjectTreeModel(QObject *parent)
         : QAbstractItemModel(parent)
-        , m_Root(new BasicTreeItem(tr("Projects")))
+        , m_Root(new BasicTreeItem(tr("Projects"), models::TreeItemType::StubItem))
     {
        fillData();
     }

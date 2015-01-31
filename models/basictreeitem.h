@@ -36,6 +36,7 @@ namespace models {
 
     /// The TreeItemType enum
     enum class TreeItemType {
+        StubItem,    ///< StubItem
         ProjectItem, ///< ProjectItem
         ScopeItem,   ///< ScopeItem
         TypeItem,    ///< TypeItem
