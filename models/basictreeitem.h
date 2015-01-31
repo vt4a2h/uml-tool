@@ -29,21 +29,26 @@
 #include <QMap>
 #include <QVariant>
 
+#include "types.h"
+
 /// Namespace models
 namespace models {
+
     /// The TreeItemType enum
-    enum class TreeItemType { ProjectItem, TypeItem };
-
-    class BasicTreeItem;
-
-    // TODO: just for tests now; move to types header
-    using ChildItems = QVector<BasicTreeItem*>;
+    enum class TreeItemType {
+        ProjectItem, ///< ProjectItem
+        ScopeItem,   ///< ScopeItem
+        TypeItem,    ///< TypeItem
+        FieldItem,   ///< FieldItem
+        MethodItem,  ///< MethodItem
+        RelationItem ///< RelationItem
+    };
 
     /// The BasicTreeItem class
     class BasicTreeItem
     {
     public:
-        BasicTreeItem(const QVariant &data, BasicTreeItem *parent = nullptr); // TODO: add type here
+        BasicTreeItem(const QVariant &data, const TreeItemType &type, BasicTreeItem *parent = nullptr); // TODO: add type here
         ~BasicTreeItem();
 
         void appendChild(BasicTreeItem *child);

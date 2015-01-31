@@ -29,8 +29,9 @@ namespace models {
      * @param data
      * @param parent
      */
-    BasicTreeItem::BasicTreeItem(const QVariant &data, BasicTreeItem *parent)
+    BasicTreeItem::BasicTreeItem(const QVariant &data, const TreeItemType &type, BasicTreeItem *parent)
         : m_Entity(data)
+        , m_Type(type)
         , m_Parent(parent)
     {
     }

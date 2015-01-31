@@ -4,3 +4,4 @@ build*
 *.zip
 html
 Doxyfile*
+doc
