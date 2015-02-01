@@ -28,6 +28,7 @@
 #include <QVector>
 #include <QMap>
 #include <QVariant>
+#include <QCoreApplication>
 
 #include "types.h"
 
@@ -48,18 +49,20 @@ namespace models {
     /// The BasicTreeItem class
     class BasicTreeItem
     {
+        Q_DECLARE_TR_FUNCTIONS(BasicTreeItem)
     public:
-        BasicTreeItem(const QVariant &data, const TreeItemType &type, BasicTreeItem *parent = nullptr); // TODO: add type here
+        BasicTreeItem(const QVariant &name, const TreeItemType &type, BasicTreeItem *parent = nullptr); // TODO: add type here
         ~BasicTreeItem();
 
         void appendChild(BasicTreeItem *child);
-        BasicTreeItem *makeChild(const QVariant &data = QVariant());
+        BasicTreeItem *makeChild(const QVariant &name = QVariant());
         BasicTreeItem *child(int row) const;
 
         int childCount() const;
         int columnCount() const;
 
-        QVariant data() const;
+        QVariant name() const;
+        QVariant icon() const;
 
         int row() const;
 

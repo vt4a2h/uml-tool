@@ -1,6 +1,13 @@
 <RCC>
     <qresource prefix="/icons">
         <file>pic/main.ico</file>
+        <file>pic/icon_stub.png</file>
+        <file>pic/icon_scope.png</file>
+        <file>pic/icon_class.png</file>
+        <file>pic/icon_project.png</file>
+        <file>pic/icon_field.png</file>
+        <file>pic/icon_method.png</file>
+        <file>pic/icon_relation.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>pic/main.png</file>

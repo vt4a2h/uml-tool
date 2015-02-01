@@ -22,6 +22,18 @@
 *****************************************************************************/
 #include "basictreeitem.h"
 
+#include <functional>
+
+#include <QHash>
+#include <QIcon>
+
+#include <project/project.h>
+#include <entity/scope.h>
+#include <entity/type.h>
+#include <entity/field.h>
+#include <entity/classmethod.h>
+#include <relationship/relation.h>
+
 namespace models {
 
     /**
@@ -89,13 +101,52 @@ namespace models {
         return 1; // only on column need; is not depends on data
     }
 
+    namespace {
+        QMap<TreeItemType, std::function<QVariant(const QVariant&)>> nameGetters = {
+              {TreeItemType::ProjectItem,
+               [](const QVariant &item){ return item.value<project::SharedProject>()->name(); }},
+              {TreeItemType::ScopeItem,
+               [](const QVariant &item){ return item.value<entity::SharedScope>()->name(); }},
+              {TreeItemType::TypeItem,
+               [](const QVariant &item){ return item.value<entity::SharedType>()->name(); }},
+              {TreeItemType::FieldItem,
+               [](const QVariant &item){ return item.value<entity::SharedField>()->name(); }},
+              {TreeItemType::MethodItem,
+               [](const QVariant &item){ return item.value<entity::SharedMethod>()->name(); }},
+              {TreeItemType::RelationItem,
+               [](const QVariant &item){ return item.value<relationship::SharedRelation>()->description(); }}
+        };
+
+        QMap<TreeItemType, QIcon> icons = {
+            {TreeItemType::ProjectItem,  QIcon(":/icons/pic/icon_stub.png")},
+            {TreeItemType::ScopeItem,    QIcon(":/icons/pic/icon_scope.png")},
+            {TreeItemType::TypeItem,     QIcon(":/icons/pic/icon_class.png")},
+            {TreeItemType::FieldItem,    QIcon(":/icons/pic/icon_field.png")},
+            {TreeItemType::MethodItem,   QIcon(":/icons/pic/icon_method.png")},
+            {TreeItemType::RelationItem, QIcon(":/icons/pic/icon_relation.png")},
+            {TreeItemType::StubItem,     QIcon(":/icons/pic/icon_stub.png")}
+        };
+    }
+
     /**
      * @brief BasicTreeItem::data
      * @return
      */
-    QVariant BasicTreeItem::data() const
+    QVariant BasicTreeItem::name() const
     {
-        return m_Entity;
+        if (m_Type == TreeItemType::StubItem)
+            return tr("Stub item");
+
+        return nameGetters[m_Type](m_Entity);
+    }
+
+    /**
+     * @brief BasicTreeItem::icon
+     * @return
+     */
+    QVariant BasicTreeItem::icon() const
+    {
+        return icons[m_Type];
     }
 
     /**
@@ -114,24 +165,6 @@ namespace models {
     BasicTreeItem *BasicTreeItem::parent() const
     {
         return m_Parent;
-    }
-
-    namespace {
-        using IconPathMap = QMap<TreeItemType, QString>;
-        const static IconPathMap icons = {
-            {TreeItemType::ProjectItem, "project icon path"},
-            {TreeItemType::TypeItem,    "type icon path"   }
-        };
-
-    }
-
-    /**
-     * @brief BasicTreeItem::iconPath
-     * @return
-     */
-    QString BasicTreeItem::iconPath() const
-    {
-        return icons[m_Type];
     }
 
     /**

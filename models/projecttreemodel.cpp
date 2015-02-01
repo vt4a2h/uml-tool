@@ -63,7 +63,7 @@ namespace models {
 
         BasicTreeItem *item = static_cast<BasicTreeItem*>(index.internalPointer());
 
-        return item->data();
+        return item->name();
     }
 
     /**
@@ -89,7 +89,7 @@ namespace models {
 
         // if (role == Qt::DecorationRole)
 
-        return orientation == Qt::Horizontal && role == Qt::DisplayRole ? m_Root->data() : QVariant();
+        return orientation == Qt::Horizontal && role == Qt::DisplayRole ? m_Root->name() : QVariant();
     }
 
     /**
@@ -158,16 +158,7 @@ namespace models {
      */
     void ProjectTreeModel::fillData()
     {
-        for (int i = 0; i < 10; ++i) {
-            BasicTreeItem * item = m_Root->makeChild("item " + QString::number(i));
 
-            for (int j = 0; j < 3; ++j) {
-                BasicTreeItem * secondItem = item->makeChild("few " + QString::number(j));
-
-                for (int k = 0; k < 25; ++k)
-                    secondItem->makeChild("ferr " + QString::number(k));
-            }
-        }
     }
 
 } // namespace models
