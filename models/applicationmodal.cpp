@@ -34,8 +34,14 @@ namespace models {
      */
     ApplicationModal::ApplicationModal(QObject *parent)
         : QObject(parent)
-        , m_TreeModel(std::make_shared<ProjectTreeModel>())
+        , m_TreeModel(std::make_shared<ProjectTreeModel>(m_Projects))
     {
+        // make some test data
+        makeProject("Project1", "/path1");
+        makeProject("project2", "/path2");
+        makeProject("project3", "/path3");
+
+        m_TreeModel->fillData();
     }
 
     /**

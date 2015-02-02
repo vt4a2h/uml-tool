@@ -22,7 +22,12 @@
 *****************************************************************************/
 #include "projecttreemodel.h"
 
-#include <QDebug>
+#include <project/project.h>
+#include <entity/scope.h>
+#include <entity/class.h>
+#include <entity/classmethod.h>
+#include <entity/field.h>
+#include <db/projectdatabase.h>
 
 namespace models {
 
@@ -30,11 +35,11 @@ namespace models {
      * @brief ProjectTreeModel::ProjectTreeModel
      * @param parent
      */
-    ProjectTreeModel::ProjectTreeModel(QObject *parent)
+    ProjectTreeModel::ProjectTreeModel(project::Projects &projects, QObject *parent)
         : QAbstractItemModel(parent)
+        , m_Projects(projects)
         , m_Root(new BasicTreeItem(tr("Projects"), models::TreeItemType::StubItem))
     {
-       fillData();
     }
 
     /**
@@ -56,14 +61,22 @@ namespace models {
         if (!index.isValid())
             return QVariant();
 
-        if (role != Qt::DisplayRole)
-            return QVariant();
-
-        // if (role == Qt::DecorationRole) {
-
+        QVariant result;
         BasicTreeItem *item = static_cast<BasicTreeItem*>(index.internalPointer());
 
-        return item->name();
+        switch (role) {
+            case Qt::DisplayRole:
+                result = item->name();
+                break;
+
+            case Qt::DecorationRole:
+                result = item->icon();
+                break;
+
+            default: ;
+        }
+
+        return result;
     }
 
     /**
@@ -86,8 +99,6 @@ namespace models {
     QVariant ProjectTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
     {
         Q_UNUSED(section);
-
-        // if (role == Qt::DecorationRole)
 
         return orientation == Qt::Horizontal && role == Qt::DisplayRole ? m_Root->name() : QVariant();
     }
@@ -158,7 +169,8 @@ namespace models {
      */
     void ProjectTreeModel::fillData()
     {
-
+        for (auto &&pr : m_Projects)
+            m_Root->makeChild(QVariant::fromValue(pr), TreeItemType::TypeItem);
     }
 
 } // namespace models

@@ -30,6 +30,7 @@
 #include <project/project.h>
 #include <entity/scope.h>
 #include <entity/type.h>
+#include <entity/class.h>
 #include <entity/field.h>
 #include <entity/classmethod.h>
 #include <relationship/relation.h>
@@ -41,8 +42,8 @@ namespace models {
      * @param data
      * @param parent
      */
-    BasicTreeItem::BasicTreeItem(const QVariant &data, const TreeItemType &type, BasicTreeItem *parent)
-        : m_Entity(data)
+    BasicTreeItem::BasicTreeItem(const QVariant &entity, const TreeItemType &type, BasicTreeItem *parent)
+        : m_Entity(entity)
         , m_Type(type)
         , m_Parent(parent)
     {
@@ -60,9 +61,9 @@ namespace models {
     /**
      * @brief BasicTreeItem::makeChild
      */
-    BasicTreeItem *BasicTreeItem::makeChild(const QVariant &data)
+    BasicTreeItem *BasicTreeItem::makeChild(const QVariant &entity, const TreeItemType &type)
     {
-        BasicTreeItem *newChild = new BasicTreeItem(data, models::TreeItemType::StubItem, this);
+        BasicTreeItem *newChild = new BasicTreeItem(entity, type, this);
         m_Children.append(newChild);
 
         return newChild;
@@ -108,7 +109,10 @@ namespace models {
               {TreeItemType::ScopeItem,
                [](const QVariant &item){ return item.value<entity::SharedScope>()->name(); }},
               {TreeItemType::TypeItem,
-               [](const QVariant &item){ return item.value<entity::SharedType>()->name(); }},
+               [](const QVariant &item){
+            // TODO: check this case
+            entity::SharedClass t = item.value<entity::SharedClass>();
+            return t->name(); }},
               {TreeItemType::FieldItem,
                [](const QVariant &item){ return item.value<entity::SharedField>()->name(); }},
               {TreeItemType::MethodItem,

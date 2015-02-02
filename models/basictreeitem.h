@@ -50,12 +50,13 @@ namespace models {
     class BasicTreeItem
     {
         Q_DECLARE_TR_FUNCTIONS(BasicTreeItem)
+
     public:
-        BasicTreeItem(const QVariant &name, const TreeItemType &type, BasicTreeItem *parent = nullptr); // TODO: add type here
+        BasicTreeItem(const QVariant &entity, const TreeItemType &type, BasicTreeItem *parent = nullptr);
         ~BasicTreeItem();
 
         void appendChild(BasicTreeItem *child);
-        BasicTreeItem *makeChild(const QVariant &name = QVariant());
+        BasicTreeItem *makeChild(const QVariant &entity, const TreeItemType &type);
         BasicTreeItem *child(int row) const;
 
         int childCount() const;

@@ -26,6 +26,8 @@
 
 #include "basictreeitem.h"
 
+#include "types.h"
+
 namespace models {
 
     class ProjectTreeModel : public QAbstractItemModel
@@ -33,7 +35,7 @@ namespace models {
         Q_OBJECT
 
     public:
-        ProjectTreeModel(QObject * parent = nullptr);
+        ProjectTreeModel(project::Projects &projects, QObject * parent = nullptr);
         ~ProjectTreeModel();
 
         QVariant data(const QModelIndex &index, int role) const override;
@@ -47,8 +49,10 @@ namespace models {
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
+        void fillData(); // to test period
     private:
-        void fillData();
+
+        project::Projects &m_Projects;
         BasicTreeItem *m_Root;
     };
 
