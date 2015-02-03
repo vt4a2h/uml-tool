@@ -168,7 +168,6 @@ namespace models {
 Q_DECLARE_METATYPE(entity::SharedField)
 Q_DECLARE_METATYPE(entity::SharedMethod)
 Q_DECLARE_METATYPE(entity::SharedType)
-Q_DECLARE_METATYPE(entity::SharedClass)
 Q_DECLARE_METATYPE(entity::SharedScope)
 Q_DECLARE_METATYPE(relationship::SharedRelation)
 Q_DECLARE_METATYPE(project::SharedProject)

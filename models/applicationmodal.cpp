@@ -23,6 +23,9 @@
 #include "applicationmodal.h"
 
 #include <project/project.h>
+#include <db/projectdatabase.h>
+#include <entity/scope.h>
+#include <entity/type.h>
 
 #include "projecttreemodel.h"
 
@@ -38,8 +41,16 @@ namespace models {
     {
         // make some test data
         makeProject("Project1", "/path1");
-        makeProject("project2", "/path2");
-        makeProject("project3", "/path3");
+        makeProject("Project2", "/path2");
+
+        project::SharedProject pr3 = makeProject("Project3", "/path3");
+        db::SharedProjectDatabase db3 = pr3->database();
+        db3->addScope("foo_scope");
+        db3->addScope("bar_scope");
+        entity::SharedScope sc1 = db3->addScope("baz_scope");
+        sc1->addType("foo_type");
+        sc1->addType("bar_type");
+        sc1->addType("baz_type");
 
         m_TreeModel->fillData();
     }

@@ -99,7 +99,7 @@ namespace models {
      */
     int BasicTreeItem::columnCount() const
     {
-        return 1; // only on column need; is not depends on data
+        return maxColumnCount; // only on column need; is not depends on data
     }
 
     namespace {
@@ -109,10 +109,7 @@ namespace models {
               {TreeItemType::ScopeItem,
                [](const QVariant &item){ return item.value<entity::SharedScope>()->name(); }},
               {TreeItemType::TypeItem,
-               [](const QVariant &item){
-            // TODO: check this case
-            entity::SharedClass t = item.value<entity::SharedClass>();
-            return t->name(); }},
+               [](const QVariant &item){ return item.value<entity::SharedType>()->name(); }},
               {TreeItemType::FieldItem,
                [](const QVariant &item){ return item.value<entity::SharedField>()->name(); }},
               {TreeItemType::MethodItem,
@@ -121,14 +118,14 @@ namespace models {
                [](const QVariant &item){ return item.value<relationship::SharedRelation>()->description(); }}
         };
 
-        QMap<TreeItemType, QIcon> icons = {
-            {TreeItemType::ProjectItem,  QIcon(":/icons/pic/icon_stub.png")},
-            {TreeItemType::ScopeItem,    QIcon(":/icons/pic/icon_scope.png")},
-            {TreeItemType::TypeItem,     QIcon(":/icons/pic/icon_class.png")},
-            {TreeItemType::FieldItem,    QIcon(":/icons/pic/icon_field.png")},
-            {TreeItemType::MethodItem,   QIcon(":/icons/pic/icon_method.png")},
-            {TreeItemType::RelationItem, QIcon(":/icons/pic/icon_relation.png")},
-            {TreeItemType::StubItem,     QIcon(":/icons/pic/icon_stub.png")}
+        QMap<TreeItemType, QString> icons = {
+            {TreeItemType::ProjectItem,  ":/icons/pic/icon_project.png"},
+            {TreeItemType::ScopeItem,    ":/icons/pic/icon_scope.png"},
+            {TreeItemType::TypeItem,     ":/icons/pic/icon_class.png"},
+            {TreeItemType::FieldItem,    ":/icons/pic/icon_field.png"},
+            {TreeItemType::MethodItem,   ":/icons/pic/icon_method.png"},
+            {TreeItemType::RelationItem, ":/icons/pic/icon_relation.png"},
+            {TreeItemType::StubItem,     ":/icons/pic/icon_stub.png"} /*:/img/pic/main.png*/
         };
     }
 
@@ -148,7 +145,7 @@ namespace models {
      * @brief BasicTreeItem::icon
      * @return
      */
-    QVariant BasicTreeItem::icon() const
+    QString BasicTreeItem::iconPath() const
     {
         return icons[m_Type];
     }

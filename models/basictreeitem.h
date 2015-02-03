@@ -63,16 +63,16 @@ namespace models {
         int columnCount() const;
 
         QVariant name() const;
-        QVariant icon() const;
+        QString iconPath() const;
 
         int row() const;
 
         BasicTreeItem *parent() const;
 
-        QString iconPath() const;
-
         TreeItemType itemType() const;
         void setItemType(const TreeItemType &itemType);
+
+        const static int maxColumnCount = 1;
 
     private:
         ChildItems m_Children;

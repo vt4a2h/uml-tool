@@ -115,6 +115,7 @@ namespace gui {
     {
         m_MainVerticalSplitter = new QSplitter(this);
         m_ProjectTreeView = new QTreeView(this);
+        m_ProjectTreeView->setHeaderHidden(true);
         m_ProjectTreeView->setModel(m_ProjectTreeModel);
         m_MainVerticalSplitter->addWidget(m_ProjectTreeView);
 

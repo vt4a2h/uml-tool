@@ -36,7 +36,6 @@ namespace models {
 
     public:
         ProjectTreeModel(project::Projects &projects, QObject * parent = nullptr);
-        ~ProjectTreeModel();
 
         QVariant data(const QModelIndex &index, int role) const override;
         Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -53,7 +52,7 @@ namespace models {
     private:
 
         project::Projects &m_Projects;
-        BasicTreeItem *m_Root;
+        mutable QList<BasicTreeItem> m_Items;
     };
 
 } // namespace models

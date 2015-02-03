@@ -22,6 +22,8 @@
 *****************************************************************************/
 #include "projecttreemodel.h"
 
+#include <QPixmap>
+
 #include <project/project.h>
 #include <entity/scope.h>
 #include <entity/class.h>
@@ -38,16 +40,7 @@ namespace models {
     ProjectTreeModel::ProjectTreeModel(project::Projects &projects, QObject *parent)
         : QAbstractItemModel(parent)
         , m_Projects(projects)
-        , m_Root(new BasicTreeItem(tr("Projects"), models::TreeItemType::StubItem))
     {
-    }
-
-    /**
-     * @brief ProjectTreeModel::~ProjectTreeModel
-     */
-    ProjectTreeModel::~ProjectTreeModel()
-    {
-        delete m_Root;
     }
 
     /**
@@ -70,7 +63,7 @@ namespace models {
                 break;
 
             case Qt::DecorationRole:
-                result = item->icon();
+                result = QPixmap(item->iconPath());
                 break;
 
             default: ;
@@ -100,7 +93,7 @@ namespace models {
     {
         Q_UNUSED(section);
 
-        return orientation == Qt::Horizontal && role == Qt::DisplayRole ? m_Root->name() : QVariant();
+        return orientation == Qt::Horizontal && role == Qt::DisplayRole ? "stub" : QVariant();
     }
 
     /**
@@ -115,8 +108,10 @@ namespace models {
         if (!hasIndex(row, column, parent))
             return QModelIndex();
 
-        BasicTreeItem *parentItem = !parent.isValid() ? m_Root : static_cast<BasicTreeItem*>(parent.internalPointer());
-        BasicTreeItem *childItem = parentItem->child(row);
+        BasicTreeItem *parentItem =
+            parent.isValid() ? static_cast<BasicTreeItem*>(parent.internalPointer()) : nullptr;
+        BasicTreeItem *childItem  =
+            parentItem ? parentItem->child(row) : &m_Items[row];
 
         return childItem ? createIndex(row, column, childItem) : QModelIndex();
     }
@@ -134,7 +129,7 @@ namespace models {
         BasicTreeItem *childItem = static_cast<BasicTreeItem*>(child.internalPointer());
         BasicTreeItem *parentItem = childItem->parent();
 
-        return parentItem != m_Root ? createIndex(parentItem->row(), 0, parentItem) : QModelIndex();
+        return parentItem ? createIndex(parentItem->row(), 0, parentItem) : QModelIndex();
     }
 
     /**
@@ -144,13 +139,11 @@ namespace models {
      */
     int ProjectTreeModel::rowCount(const QModelIndex &parent) const
     {
-        BasicTreeItem *parentItem;
         if (parent.column() > 0)
             return 0;
 
-        parentItem = !parent.isValid() ? m_Root : static_cast<BasicTreeItem*>(parent.internalPointer());
-
-        return parentItem->childCount();
+        return !parent.isValid() ? m_Items.count()
+                                 : static_cast<BasicTreeItem*>(parent.internalPointer())->childCount();
     }
 
     /**
@@ -161,7 +154,7 @@ namespace models {
     int ProjectTreeModel::columnCount(const QModelIndex &parent) const
     {
         return parent.isValid() ? static_cast<BasicTreeItem*>(parent.internalPointer())->columnCount()
-                                : m_Root->columnCount();
+                                : BasicTreeItem::maxColumnCount;
     }
 
     /**
@@ -169,8 +162,19 @@ namespace models {
      */
     void ProjectTreeModel::fillData()
     {
-        for (auto &&pr : m_Projects)
-            m_Root->makeChild(QVariant::fromValue(pr), TreeItemType::TypeItem);
+        // NOTE: add sorting model after test period
+        for (auto &&pr : m_Projects) {
+            m_Items << BasicTreeItem(QVariant::fromValue(pr), TreeItemType::ProjectItem);
+
+            db::SharedProjectDatabase database = pr->database();
+            for (auto &&scope : database->scopes()) {
+                auto scopeItem = m_Items.last().makeChild(QVariant::fromValue(scope),
+                                                          TreeItemType::ScopeItem);
+                for (auto &&type : scope->types()) {
+                    scopeItem->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
+                }
+            }
+        }
     }
 
 } // namespace models
