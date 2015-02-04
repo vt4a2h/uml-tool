@@ -26,6 +26,7 @@
 #include <db/projectdatabase.h>
 #include <entity/scope.h>
 #include <entity/type.h>
+#include <entity/class.h>
 
 #include "projecttreemodel.h"
 
@@ -50,7 +51,7 @@ namespace models {
         entity::SharedScope sc1 = db3->addScope("baz_scope");
         sc1->addType("foo_type");
         sc1->addType("bar_type");
-        sc1->addType("baz_type");
+        entity::SharedClass cl1 = sc1->addType<entity::Class>("baz_type");
 
         m_TreeModel->fillData();
     }

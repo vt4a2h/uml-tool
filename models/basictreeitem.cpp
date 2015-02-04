@@ -110,6 +110,8 @@ namespace models {
                [](const QVariant &item){ return item.value<entity::SharedScope>()->name(); }},
               {TreeItemType::TypeItem,
                [](const QVariant &item){ return item.value<entity::SharedType>()->name(); }},
+              {TreeItemType::ClassItem,
+               [](const QVariant &item){ return item.value<entity::SharedClass>()->name(); }},
               {TreeItemType::FieldItem,
                [](const QVariant &item){ return item.value<entity::SharedField>()->name(); }},
               {TreeItemType::MethodItem,
@@ -119,13 +121,14 @@ namespace models {
         };
 
         QMap<TreeItemType, QString> icons = {
-            {TreeItemType::ProjectItem,  ":/icons/pic/icon_project.png"},
-            {TreeItemType::ScopeItem,    ":/icons/pic/icon_scope.png"},
-            {TreeItemType::TypeItem,     ":/icons/pic/icon_class.png"},
-            {TreeItemType::FieldItem,    ":/icons/pic/icon_field.png"},
-            {TreeItemType::MethodItem,   ":/icons/pic/icon_method.png"},
+            {TreeItemType::ProjectItem,  ":/icons/pic/icon_project.png" },
+            {TreeItemType::ScopeItem,    ":/icons/pic/icon_scope.png"   },
+            {TreeItemType::TypeItem,     ":/icons/pic/icon_class.png"   },
+            {TreeItemType::ClassItem,    ":/icons/pic/icon_class.png"   },
+            {TreeItemType::FieldItem,    ":/icons/pic/icon_field.png"   },
+            {TreeItemType::MethodItem,   ":/icons/pic/icon_method.png"  },
             {TreeItemType::RelationItem, ":/icons/pic/icon_relation.png"},
-            {TreeItemType::StubItem,     ":/icons/pic/icon_stub.png"} /*:/img/pic/main.png*/
+            {TreeItemType::StubItem,     ":/icons/pic/icon_stub.png"    }
         };
     }
 
