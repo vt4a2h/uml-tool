@@ -27,6 +27,7 @@
 #include <entity/scope.h>
 #include <entity/type.h>
 #include <entity/class.h>
+#include <entity/classmethod.h>
 
 #include "projecttreemodel.h"
 
@@ -52,6 +53,8 @@ namespace models {
         sc1->addType("foo_type");
         sc1->addType("bar_type");
         entity::SharedClass cl1 = sc1->addType<entity::Class>("baz_type");
+        cl1->addField("foo_field", cl1->id(), "m_");
+        cl1->makeMethod("bar_method");
 
         m_TreeModel->fillData();
     }

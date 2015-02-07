@@ -78,13 +78,6 @@ namespace entity {
     }
 
     /**
-     * @brief Type::~Type
-     */
-    Type::~Type()
-    {
-    }
-
-    /**
      * @brief Type::operator =
      * @param rhs
      * @return

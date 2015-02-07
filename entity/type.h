@@ -25,6 +25,8 @@
 
 #include <QString>
 
+#include "icomponents.h"
+
 class QJsonObject;
 
 namespace entity {
@@ -35,14 +37,13 @@ namespace entity {
     /**
      * @brief The Type class
      */
-    class Type
+    class Type : public IComponents
     {
     public:
         Type();
         Type(Type &&src);
         Type(const Type &src);
         Type(const QString &name, const QString &scopeId, const QString &typeId = "");
-        virtual ~Type();
 
         Type &operator =(Type rhs);
         Type &operator =(Type &&rhs);

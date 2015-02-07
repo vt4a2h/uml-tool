@@ -25,10 +25,12 @@
 #include <QPixmap>
 
 #include <project/project.h>
+
 #include <entity/scope.h>
 #include <entity/class.h>
 #include <entity/classmethod.h>
 #include <entity/field.h>
+
 #include <db/projectdatabase.h>
 
 namespace models {
@@ -171,7 +173,12 @@ namespace models {
                 auto scopeItem = m_Items.last().makeChild(QVariant::fromValue(scope),
                                                           TreeItemType::ScopeItem);
                 for (auto &&type : scope->types()) {
-                    scopeItem->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
+                    auto typeItem = scopeItem->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
+
+                    for (auto &&field : type->fields())
+                        typeItem->makeChild(QVariant::fromValue(field), TreeItemType::FieldItem);
+                    for (auto &&method : type->methods())
+                        typeItem->makeChild(QVariant::fromValue(method), TreeItemType::MethodItem);
                 }
             }
         }
