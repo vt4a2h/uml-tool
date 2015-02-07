@@ -34,7 +34,7 @@
 #include <project/project.h>
 #include <gui/mainwindow.h>
 #include <models/projecttreemodel.h>
-#include <models/applicationmodal.h>
+#include <models/applicationmodel.h>
 
 #include "enums.h"
 #include "constants.cpp"
@@ -305,7 +305,7 @@ namespace application {
         : QObject(parent)
 //        , m_ErrorList(std::make_shared<ErrorList>())
 //        , m_GlobalDatabase(std::make_shared<db::Database>())
-        , m_ApplicationModel(std::make_unique<models::ApplicationModal>())
+        , m_ApplicationModel(std::make_unique<models::ApplicationModel>())
         , m_MainWindow(std::make_unique<gui::MainWindow>(m_ApplicationModel->treeModel().get()))
     {
 //        configuredGui();

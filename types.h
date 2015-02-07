@@ -161,8 +161,8 @@ namespace models {
     class BasicTreeItem;
     using ChildItems = QVector<BasicTreeItem*>;
 
-    class ApplicationModal;
-    using UniqueApplicationModal = std::unique_ptr<ApplicationModal>;
+    class ApplicationModel;
+    using UniqueApplicationModal = std::unique_ptr<ApplicationModel>;
 }
 
 Q_DECLARE_METATYPE(entity::SharedField)

@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "applicationmodal.h"
+#include "applicationmodel.h"
 
 #include <project/project.h>
 #include <db/projectdatabase.h>
@@ -36,7 +36,7 @@ namespace models {
      * @brief ApplicationModal::ApplicationModal
      * @param parent
      */
-    ApplicationModal::ApplicationModal(QObject *parent)
+    ApplicationModel::ApplicationModel(QObject *parent)
         : QObject(parent)
         , m_TreeModel(std::make_shared<ProjectTreeModel>(m_Projects))
     {
@@ -59,7 +59,7 @@ namespace models {
     /**
      * @brief ApplicationModal::~ApplicationModal
      */
-    ApplicationModal::~ApplicationModal()
+    ApplicationModel::~ApplicationModel()
     {
     }
 
@@ -69,7 +69,7 @@ namespace models {
      * @param path
      * @return
      */
-    project::SharedProject ApplicationModal::makeProject(const QString &name, const QString &path)
+    project::SharedProject ApplicationModel::makeProject(const QString &name, const QString &path)
     {
         project::SharedProject newProject(std::make_shared<project::Project>(name, path));
         return *m_Projects.insert(newProject->id(), newProject);
@@ -79,7 +79,7 @@ namespace models {
      * @brief ApplicationModal::projects
      * @return
      */
-    project::ProjectsList ApplicationModal::projects() const
+    project::ProjectsList ApplicationModel::projects() const
     {
         return m_Projects.values();
     }
@@ -88,7 +88,7 @@ namespace models {
      * @brief ApplicationModal::removeProject
      * @param id
      */
-    bool ApplicationModal::removeProject(const QString &id)
+    bool ApplicationModel::removeProject(const QString &id)
     {
         return !!m_Projects.remove(id);
     }
@@ -98,7 +98,7 @@ namespace models {
      * @param id
      * @return
      */
-    bool ApplicationModal::containsProject(const QString &id)
+    bool ApplicationModel::containsProject(const QString &id)
     {
         return m_Projects.contains(id);
     }
@@ -107,7 +107,7 @@ namespace models {
      * @brief ApplicationModal::currentProject
      * @return
      */
-    project::SharedProject ApplicationModal::currentProject() const
+    project::SharedProject ApplicationModel::currentProject() const
     {
         return m_CurrentProject;
     }
@@ -117,7 +117,7 @@ namespace models {
      * @param id
      * @return
      */
-    bool ApplicationModal::setCurrentProject(const QString &id)
+    bool ApplicationModel::setCurrentProject(const QString &id)
     {
         if (!m_Projects.contains(id))
             return false;
@@ -130,7 +130,7 @@ namespace models {
      * @brief ApplicationModal::treeModel
      * @return
      */
-    SharedTreeModel ApplicationModal::treeModel() const
+    SharedTreeModel ApplicationModel::treeModel() const
     {
         return m_TreeModel;
     }

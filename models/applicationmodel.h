@@ -30,12 +30,12 @@
 namespace models {
 
     /// The ApplicationModal class
-    class ApplicationModal : public QObject
+    class ApplicationModel : public QObject
     {
         Q_OBJECT
     public:
-        explicit ApplicationModal(QObject *parent = 0);
-        ~ApplicationModal();
+        explicit ApplicationModel(QObject *parent = 0);
+        ~ApplicationModel();
 
         project::SharedProject makeProject(const QString &name, const QString &path);
         project::ProjectsList projects() const;
