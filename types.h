@@ -159,7 +159,7 @@ namespace models {
     using SharedTreeModel = std::shared_ptr<ProjectTreeModel>;
 
     class BasicTreeItem;
-    using ChildItems = QVector<BasicTreeItem*>;
+    using ChildItems = QList<BasicTreeItem*>;
 
     class ApplicationModel;
     using UniqueApplicationModal = std::unique_ptr<ApplicationModel>;

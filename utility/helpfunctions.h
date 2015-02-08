@@ -104,6 +104,19 @@ namespace utility {
     }
 
     template <class List>
+    void deepCopyPointerList(const List &src, List &dst)
+    {
+        List tmpList;
+        tmpList.reserve(src.size());
+
+        using ValueType = typename std::remove_pointer<typename List::value_type>::type;
+        for (auto &&value : src)
+            tmpList.append(new ValueType(*value));
+
+        dst = std::move(tmpList);
+    }
+
+    template <class List>
     void deepCopySharedPointerList(const List &src, List &dst)
     {
         List tmpList;

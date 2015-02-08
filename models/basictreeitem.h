@@ -47,13 +47,20 @@ namespace models {
     };
 
     /// The BasicTreeItem class
-    class BasicTreeItem
+    class BasicTreeItem : public QObject
     {
-        Q_DECLARE_TR_FUNCTIONS(BasicTreeItem)
+        Q_OBJECT
 
     public:
-        BasicTreeItem(const QVariant &entity, const TreeItemType &type, BasicTreeItem *parent = nullptr);
+        BasicTreeItem(const QVariant &entity, const TreeItemType &type,
+                      BasicTreeItem *parentNode = nullptr, QObject * parent = nullptr);
+        BasicTreeItem(const BasicTreeItem &src);
+        BasicTreeItem(BasicTreeItem &&src);
         ~BasicTreeItem();
+
+        BasicTreeItem &operator =(BasicTreeItem rhs);
+        BasicTreeItem &operator =(BasicTreeItem &&rhs);
+        friend bool operator ==(const BasicTreeItem &lhs, const BasicTreeItem &rhs);
 
         void appendChild(BasicTreeItem *child);
         BasicTreeItem *makeChild(const QVariant &entity, const TreeItemType &type);
@@ -65,9 +72,11 @@ namespace models {
         QVariant name() const;
         QString iconPath() const;
 
+        QString id() const;
+
         int row() const;
 
-        BasicTreeItem *parent() const;
+        BasicTreeItem *parentNode() const;
 
         TreeItemType itemType() const;
         void setItemType(const TreeItemType &itemType);
@@ -75,6 +84,9 @@ namespace models {
         const static int maxColumnCount = 1;
 
     private:
+        void moveFrom(BasicTreeItem &src);
+        void copyFrom(const BasicTreeItem &src);
+
         ChildItems m_Children;
 
         QVariant m_Entity;

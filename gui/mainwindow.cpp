@@ -38,6 +38,15 @@
 #include "newproject.h"
 #include "constants.cpp"
 
+namespace {
+    const int treeViewIndent = 20;
+    const QSize iconSize(20, 20);
+
+    const double treeSizeFactor = 0.3;
+    const double canvasSizeFactor = 0.7;
+    const double consoleSizeFactor = 0.3;
+}
+
 namespace gui {
 
     /**
@@ -116,8 +125,8 @@ namespace gui {
         m_MainVerticalSplitter = new QSplitter(this);
         m_ProjectTreeView = new QTreeView(this);
         m_ProjectTreeView->setHeaderHidden(true);
-        m_ProjectTreeView->setIndentation(20);
-        m_ProjectTreeView->setIconSize(QSize(20, 20));
+        m_ProjectTreeView->setIndentation(treeViewIndent);
+        m_ProjectTreeView->setIconSize(iconSize());
         m_ProjectTreeView->setModel(m_ProjectTreeModel);
         m_MainVerticalSplitter->addWidget(m_ProjectTreeView);
 
@@ -136,12 +145,12 @@ namespace gui {
         m_MainLayout->addWidget(m_MainVerticalSplitter);
         ui->centralwidget->setLayout(m_MainLayout.get());
 
-        int treeSize(std::round(this->width() * 0.3));
-        int canvasConsoleSize(std::round(this->width() * 0.7));
+        int treeSize(std::round(this->width() * treeSizeFactor));
+        int canvasConsoleSize(std::round(this->width() * canvasSizeFactor));
         m_MainVerticalSplitter->setSizes({treeSize, canvasConsoleSize});
 
-        int canvasSize(std::round(this->height() * 0.7));
-        int consoleSize(std::round(this->height() * 0.3));
+        int canvasSize(std::round(this->height() * canvasSizeFactor));
+        int consoleSize(std::round(this->height() * consoleSizeFactor));
         m_CanvasConsoleSplitter->setSizes({canvasSize, consoleSize});
     }
 

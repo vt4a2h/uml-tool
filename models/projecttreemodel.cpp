@@ -129,7 +129,7 @@ namespace models {
             return QModelIndex();
 
         BasicTreeItem *childItem = static_cast<BasicTreeItem*>(child.internalPointer());
-        BasicTreeItem *parentItem = childItem->parent();
+        BasicTreeItem *parentItem = childItem->parentNode();
 
         return parentItem ? createIndex(parentItem->row(), 0, parentItem) : QModelIndex();
     }

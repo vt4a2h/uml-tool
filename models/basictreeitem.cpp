@@ -35,6 +35,24 @@
 #include <entity/classmethod.h>
 #include <relationship/relation.h>
 
+#include <utility/helpfunctions.h>
+
+#define declare_methods_map(map_name, method_name)\
+    QMap<TreeItemType, std::function<QVariant(const QVariant&)>> map_name = {\
+          {TreeItemType::ProjectItem,\
+           [](const QVariant &item){ return item.value<project::SharedProject>()->method_name(); }},\
+          {TreeItemType::ScopeItem,\
+           [](const QVariant &item){ return item.value<entity::SharedScope>()->method_name(); }},\
+          {TreeItemType::TypeItem,\
+           [](const QVariant &item){ return item.value<entity::SharedType>()->method_name(); }},\
+          {TreeItemType::FieldItem,\
+           [](const QVariant &item){ return item.value<entity::SharedField>()->method_name(); }},\
+          {TreeItemType::MethodItem,\
+           [](const QVariant &item){ return item.value<entity::SharedMethod>()->method_name(); }},\
+          {TreeItemType::RelationItem,\
+           [](const QVariant &item){ return item.value<relationship::SharedRelation>()->method_name(); }}\
+    };
+
 namespace models {
 
     /**
@@ -42,11 +60,32 @@ namespace models {
      * @param data
      * @param parent
      */
-    BasicTreeItem::BasicTreeItem(const QVariant &entity, const TreeItemType &type, BasicTreeItem *parent)
-        : m_Entity(entity)
+    BasicTreeItem::BasicTreeItem(const QVariant &entity, const TreeItemType &type,
+                                 BasicTreeItem *parentNode, QObject *parent)
+        : QObject(parent)
+        , m_Entity(entity)
         , m_Type(type)
-        , m_Parent(parent)
+        , m_Parent(parentNode)
     {
+    }
+
+    /**
+     * @brief BasicTreeItem::BasicTreeItem
+     * @param src
+     */
+    BasicTreeItem::BasicTreeItem(const BasicTreeItem &src)
+        : QObject(nullptr)
+    {
+        copyFrom(src);
+    }
+
+    /**
+     * @brief BasicTreeItem::BasicTreeItem
+     * @param src
+     */
+    BasicTreeItem::BasicTreeItem(BasicTreeItem &&src)
+    {
+        moveFrom(src);
     }
 
     /**
@@ -79,6 +118,48 @@ namespace models {
         qDeleteAll(m_Children);
     }
 
+    /**
+     * @brief BasicTreeItem::operator =
+     * @param rhs
+     * @return
+     */
+    BasicTreeItem &BasicTreeItem::operator =(BasicTreeItem rhs)
+    {
+        moveFrom(rhs);
+
+        return *this;
+    }
+
+    /**
+     * @brief BasicTreeItem::operator =
+     * @param rhs
+     * @return
+     */
+    BasicTreeItem &BasicTreeItem::operator =(BasicTreeItem &&rhs)
+    {
+        if (this != &rhs)
+            moveFrom(rhs);
+
+        return *this;
+    }
+
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator ==(const BasicTreeItem &lhs, const BasicTreeItem &rhs)
+    {
+        return std::equal(lhs.m_Children.begin(), lhs.m_Children.end(), rhs.m_Children.begin(),
+                          [](BasicTreeItem const * l, BasicTreeItem const * r) {
+                             return l == r || *l == *r;
+                          }) &&
+                lhs.m_Entity == rhs.m_Entity &&
+                lhs.m_Type   == rhs.m_Type   &&
+                lhs.m_Parent == rhs.m_Parent;
+    }
+
     BasicTreeItem * BasicTreeItem::child(int row) const
     {
         return m_Children.value(row);
@@ -103,20 +184,8 @@ namespace models {
     }
 
     namespace {
-        QMap<TreeItemType, std::function<QVariant(const QVariant&)>> nameGetters = {
-              {TreeItemType::ProjectItem,
-               [](const QVariant &item){ return item.value<project::SharedProject>()->name(); }},
-              {TreeItemType::ScopeItem,
-               [](const QVariant &item){ return item.value<entity::SharedScope>()->name(); }},
-              {TreeItemType::TypeItem,
-               [](const QVariant &item){ return item.value<entity::SharedType>()->name(); }},
-              {TreeItemType::FieldItem,
-               [](const QVariant &item){ return item.value<entity::SharedField>()->name(); }},
-              {TreeItemType::MethodItem,
-               [](const QVariant &item){ return item.value<entity::SharedMethod>()->name(); }},
-              {TreeItemType::RelationItem,
-               [](const QVariant &item){ return item.value<relationship::SharedRelation>()->description(); }}
-        };
+        declare_methods_map(nameGetters, name)
+        declare_methods_map(idGetters, id)
 
         QMap<TreeItemType, QString> icons = {
             {TreeItemType::ProjectItem,  ":/icons/pic/icon_project.png" },
@@ -151,6 +220,18 @@ namespace models {
     }
 
     /**
+     * @brief BasicTreeItem::id
+     * @return
+     */
+    QString BasicTreeItem::id() const
+    {
+        if (m_Type == TreeItemType::StubItem)
+            return tr("No id");
+
+        return idGetters[m_Type](m_Entity).toString();
+    }
+
+    /**
      * @brief BasicTreeItem::row
      * @return
      */
@@ -163,7 +244,7 @@ namespace models {
      * @brief BasicTreeItem::parent
      * @return
      */
-    BasicTreeItem *BasicTreeItem::parent() const
+    BasicTreeItem *BasicTreeItem::parentNode() const
     {
         return m_Parent;
     }
@@ -184,6 +265,30 @@ namespace models {
     void BasicTreeItem::setItemType(const TreeItemType &itemType)
     {
         m_Type = itemType;
+    }
+
+    /**
+     * @brief BasicTreeItem::moveFrom
+     * @param src
+     */
+    void BasicTreeItem::moveFrom(BasicTreeItem &src)
+    {
+        m_Children = std::move(src.m_Children);
+        m_Entity   = std::move(src.m_Entity);
+        m_Type     = std::move(src.m_Type);
+        m_Parent   = std::move(src.m_Parent);
+    }
+
+    /**
+     * @brief BasicTreeItem::copyFrom
+     * @param src
+     */
+    void BasicTreeItem::copyFrom(const BasicTreeItem &src)
+    {
+        utility::deepCopyPointerList(src.m_Children, m_Children);
+        m_Entity = src.m_Entity;
+        m_Type   = src.m_Type;
+        m_Parent = src.m_Parent;
     }
 
 } // namespace models

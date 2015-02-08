@@ -1,23 +1,23 @@
 /*****************************************************************************
-** 
+**
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
 ** Created 29/10/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
-** 
+**
 ** Q-UML is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** Q-UML is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU Lesser General Public License for more details.
 
 ** You should have received a copy of the GNU Lesser General Public License
-** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>. 
+** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
 
@@ -123,7 +123,7 @@ namespace relationship {
      */
     bool operator ==(const Relation &lhs, const Relation &rhs)
     {
-        return lhs.m_Description     == rhs.m_Description     &&
+        return lhs.m_Name     == rhs.m_Name     &&
                lhs.m_GlobalDatabase  == rhs.m_GlobalDatabase  &&
                lhs.m_Id              == rhs.m_Id              &&
                lhs.m_ProjectDatabase == rhs.m_ProjectDatabase &&
@@ -137,18 +137,18 @@ namespace relationship {
      * @brief Relation::description
      * @return
      */
-    QString Relation::description() const
+    QString Relation::name() const
     {
-        return m_Description;
+        return m_Name;
     }
 
     /**
      * @brief Relation::setDescription
      * @param description
      */
-    void Relation::setDescription(const QString &description)
+    void Relation::setName(const QString &description)
     {
-        m_Description = description;
+        m_Name = description;
     }
 
     /**
@@ -196,7 +196,7 @@ namespace relationship {
         m_TailClass = std::move(src.m_TailClass);
 
         m_Id = std::move(src.m_Id);
-        m_Description = std::move(src.m_Description);
+        m_Name = std::move(src.m_Name);
         m_RelationType = std::move(src.m_RelationType);
 
         m_GlobalDatabase = std::move(src.m_GlobalDatabase);
@@ -217,7 +217,7 @@ namespace relationship {
         m_TailClass = src.m_TailClass;
 
         m_Id = src.m_Id;
-        m_Description = src.m_Description;
+        m_Name = src.m_Name;
         m_RelationType = src.m_RelationType;
 
         m_GlobalDatabase = src.m_GlobalDatabase;
@@ -281,7 +281,7 @@ namespace relationship {
 
         result.insert("ID", m_Id);
         result.insert("Type", m_RelationType);
-        result.insert("Description", m_Description);
+        result.insert("Description", m_Name);
         result.insert("Head node", m_HeadNode->toJson());
         result.insert("Tail node", m_TailNode->toJson());
 
@@ -299,7 +299,7 @@ namespace relationship {
             m_Id = src["ID"].toString();
         });
         utility::checkAndSet(src, "Description", errorList, [&src, this](){
-            m_Description = src["Description"].toString();
+            m_Name = src["Description"].toString();
         });
         utility::checkAndSet(src, "Type", errorList, [&src, this](){
             m_RelationType = static_cast<RelationType>(src["Type"].toInt());

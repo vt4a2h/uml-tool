@@ -21,6 +21,7 @@ HEADERS += ../../enums.h \
 
 SOURCES += main.cpp \
            ../../entity/type.cpp \
+           ../../entity/icomponents.cpp \
            ../../entity/class.cpp \
            ../../entity/enum.cpp \
            ../../entity/field.cpp \

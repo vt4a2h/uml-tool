@@ -894,7 +894,7 @@ TEST_F(FileJson, NodeJson)
 
 TEST_F(FileJson, BasicRelationJson)
 {
-    test_relation(Relation, [&](){ relation->setDescription("description"); })
+    test_relation(Relation, [&](){ relation->setName("description"); })
 }
 
 TEST_F(FileJson, AssociationRelationJson)

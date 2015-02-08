@@ -85,7 +85,7 @@ namespace entity {
     Type &Type::operator =(Type &&rhs)
     {
        if (this != &rhs)
-          moveFrom(rhs);
+           moveFrom(rhs);
 
        return *this;
     }
