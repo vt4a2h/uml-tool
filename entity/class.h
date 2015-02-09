@@ -68,7 +68,6 @@ namespace entity {
         bool containsMethod(const QString &name);
         void removeMethods(const QString &name);
         void removeMethod(const SharedMethod &method);
-        MethodsList methods() const override;
         bool anyMethods() const;
 
         bool containsMethods(Section section) const;
@@ -79,7 +78,6 @@ namespace entity {
         SharedField getField(const QString &name) const;
         bool containsField(const QString &name) const;
         void removeField(const QString &name);
-        FieldsList fields() const override;
         bool anyFields() const;
 
         bool containsFields(Section section) const;
@@ -91,10 +89,15 @@ namespace entity {
         bool isFinal() const;
         void setFinalStatus(bool status);
 
+        bool isEqual(const Class &rhs) const;
+
+    public: // IComponent omplementation
+        MethodsList methods() const override;
+        FieldsList fields() const override;
+
+    public: // BasicEntity implementation
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
-
-        bool isEqual(const Class &rhs) const;
 
     protected:
         void moveFrom(Class &src);

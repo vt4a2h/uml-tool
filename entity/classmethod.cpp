@@ -416,35 +416,6 @@ namespace entity {
     }
 
     /**
-     * @brief ClassMethod::writeToFile
-     * @param fileName
-     */
-    void ClassMethod::writeToFile(const QString &fileName) const
-    {
-        utility::writeToFile(*this, fileName);
-    }
-
-    /**
-     * @brief ClassMethod::readFromFile
-     * @param fileName
-     * @return
-     */
-    bool ClassMethod::readFromFile(const QString &fileName)
-    {
-        return utility::readFromFile(*this, fileName);
-    }
-
-    /**
-     * @brief ClassMethod::id
-     * @return
-     */
-    QString ClassMethod::id() const
-    {
-        // TODO: stub method. Remove it in future and implement interface.
-        return "nil";
-    }
-
-    /**
      * @brief ClassMethod::moveFrom
      * @param src
      */

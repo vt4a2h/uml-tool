@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 07/02/2015.
+** Created 09/02/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,18 +22,24 @@
 *****************************************************************************/
 #pragma once
 
-#include "types.h"
+#include <QObject>
 
 namespace entity {
 
-    /// The IComponents class
-    class IComponents
+    /// The BasicEntity class
+    class BasicEntity : public QObject
     {
-    public:
-        virtual ~IComponents();
+        Q_OBJECT
 
-        virtual MethodsList methods() const;
-        virtual FieldsList fields() const;
+    public:
+        virtual QString id() const;
+        virtual void setId(const QString &id);
+
+        void writeToFile(const QString &fileName) const;
+        bool readFromFile(const QString &fileName);
+
+        virtual QJsonObject toJson() const = 0;
+        virtual void fromJson(const QJsonObject &src, QStringList &errorList) = 0;
     };
 
-} // end of namespace entity
+} // namespace entity

@@ -50,14 +50,16 @@ namespace entity {
         void removeField(const QString &name);
         bool containsField(const QString &name);
 
-        FieldsList fields() const override;
-
-        QJsonObject toJson() const override;
-        void fromJson(const QJsonObject &src, QStringList &errorList) override;
-
         Union *clone() const;
 
         bool isEqual(const Union &rhs) const;
+
+    public: // IComponent omplementation
+        FieldsList fields() const override;
+
+    public: // BasicEntity implementation
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
     private:
         void moveFrom(Union &src);

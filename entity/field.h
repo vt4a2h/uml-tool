@@ -23,9 +23,11 @@
 
 #pragma once
 
-#include "types.h"
-
 #include <QString>
+
+#include "basicentity.h"
+
+#include "types.h"
 
 class QJsonObject;
 class QStringList;
@@ -38,13 +40,17 @@ namespace entity {
     /**
      * @brief The Field class
      */
-    class Field
+    class Field : public BasicEntity
     {
     public:
         Field();
+        Field(const Field &src);
+        Field(Field &&src);
         Field(const QString &name, const QString &typeId);
         Field(const QString &name, const QString &typeId, const QString &prefix, Section section);
 
+        Field &operator =(Field &&rhs);
+        Field &operator =(Field rhs);
         friend bool operator== (const Field &lhs, const Field &rhs);
 
         QString name() const;
@@ -67,9 +73,6 @@ namespace entity {
         QString typeId() const;
         void setTypeId(const QString &typeId);
 
-        QJsonObject toJson() const;
-        void fromJson(const QJsonObject &src, QStringList &errorList);
-
         QString suffix() const;
         void removeSuffix();
         void setSuffix(const QString &suffix);
@@ -77,14 +80,14 @@ namespace entity {
         QString defaultValue() const;
         void setDefaultValue(const QString &defaultValue);
 
-        virtual Field *clone() const;
-
-        void writeToFile(const QString &fileName) const;
-        bool readFromFile(const QString &fileName);
-
-        QString id() const;
+    public: // BasicEntity implementation
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
     private:
+        void copyFrom(const Field &src);
+        void moveFrom(Field &src);
+
         QString m_TypeId;
         Section m_Section;
         QString m_Name;

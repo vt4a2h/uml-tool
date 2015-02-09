@@ -217,25 +217,6 @@ namespace entity {
     }
 
     /**
-     * @brief Type::writeToFile
-     * @param fileName
-     */
-    void Type::writeToFile(const QString &fileName) const
-    {
-        utility::writeToFile(*this, fileName);
-    }
-
-    /**
-     * @brief Type::readFromFile
-     * @param fileName
-     * @return
-     */
-    bool Type::readFromFile(const QString &fileName)
-    {
-        return utility::readFromFile(*this, fileName);
-    }
-
-    /**
      * @brief Type::clone
      * @return
      */

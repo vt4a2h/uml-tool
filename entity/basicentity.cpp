@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 07/02/2015.
+** Created 09/02/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,20 +20,51 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#pragma once
+#include "basicentity.h"
 
-#include "types.h"
+#include <utility/helpfunctions.h>
 
 namespace entity {
 
-    /// The IComponents class
-    class IComponents
+    namespace {
+        const QString stubID = "no_id_for_this_elemnt";
+    }
+
+    /**
+     * @brief BasicEntity::id
+     * @return
+     */
+    QString BasicEntity::id() const
     {
-    public:
-        virtual ~IComponents();
+        return stubID;
+    }
 
-        virtual MethodsList methods() const;
-        virtual FieldsList fields() const;
-    };
+    /**
+     * @brief BasicEntity::setId
+     * @param id
+     */
+    void BasicEntity::setId(const QString &id)
+    {
+        Q_UNUSED(id);
+    }
 
-} // end of namespace entity
+    /**
+     * @brief BasicEntity::writeToFile
+     * @param fileName
+     */
+    void BasicEntity::writeToFile(const QString &fileName) const
+    {
+        utility::writeToFile(*this, fileName);
+    }
+
+    /**
+     * @brief BasicEntity::readFromFile
+     * @param fileName
+     * @return
+     */
+    bool BasicEntity::readFromFile(const QString &fileName)
+    {
+        return utility::readFromFile(*this, fileName);
+    }
+
+}

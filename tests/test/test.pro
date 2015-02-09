@@ -9,6 +9,7 @@ INCLUDEPATH += ../../
 
 HEADERS += ../../enums.h \
     ../../project/project.h \
+    ../../entity/basicentity.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -22,6 +23,7 @@ HEADERS += ../../enums.h \
 SOURCES += main.cpp \
            ../../entity/type.cpp \
            ../../entity/icomponents.cpp \
+           ../../entity/basicentity.cpp \
            ../../entity/class.cpp \
            ../../entity/enum.cpp \
            ../../entity/field.cpp \

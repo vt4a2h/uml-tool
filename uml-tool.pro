@@ -44,7 +44,8 @@ SOURCES += \
     models/basictreeitem.cpp \
     models/projecttreemodel.cpp \
     models/applicationmodel.cpp \
-    entity/icomponents.cpp
+    entity/icomponents.cpp \
+    entity/basicentity.cpp
 
 HEADERS += \
     enums.h \
@@ -85,7 +86,8 @@ HEADERS += \
     models/basictreeitem.h \
     models/projecttreemodel.h \
     models/applicationmodel.h \
-    entity/icomponents.h
+    entity/icomponents.h \
+    entity/basicentity.h
 
 FORMS += \
     gui/mainwindow.ui \

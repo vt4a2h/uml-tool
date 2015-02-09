@@ -44,6 +44,24 @@ namespace entity {
 
     /**
      * @brief Field::Field
+     * @param src
+     */
+    Field::Field(const Field &src)
+    {
+        copyFrom(src);
+    }
+
+    /**
+     * @brief Field::Field
+     * @param src
+     */
+    Field::Field(Field &&src)
+    {
+        moveFrom(src);
+    }
+
+    /**
+     * @brief Field::Field
      * @param name
      * @param typeId
      */
@@ -65,6 +83,31 @@ namespace entity {
         , m_Name(name)
         , m_Prefix(prefix)
     {
+    }
+
+    /**
+     * @brief Field::operator =
+     * @param rhs
+     * @return
+     */
+    Field &Field::operator =(Field &&rhs)
+    {
+        if (this != &rhs)
+            moveFrom(rhs);
+
+        return *this;
+    }
+
+    /**
+     * @brief Field::operator =
+     * @param rhs
+     * @return
+     */
+    Field &Field::operator =(Field rhs)
+    {
+        moveFrom(rhs);
+
+        return *this;
     }
 
     /**
@@ -279,6 +322,38 @@ namespace entity {
     }
 
     /**
+     * @brief Field::copyFrom
+     * @param src
+     */
+    void Field::copyFrom(const Field &src)
+    {
+        m_TypeId = src.m_TypeId;
+        m_Section = src.m_Section;
+        m_Name = src.m_Name;
+        m_Prefix = src.m_Prefix;
+        m_Suffix = src.m_Suffix;
+        m_DefaultValue = src.m_DefaultValue;
+
+        m_Keywords = src.m_Keywords;
+    }
+
+    /**
+     * @brief Field::moveFrom
+     * @param src
+     */
+    void Field::moveFrom(Field &src)
+    {
+        m_TypeId = std::move(src.m_TypeId);
+        m_Section = std::move(src.m_Section);
+        m_Name = std::move(src.m_Name);
+        m_Prefix = std::move(src.m_Prefix);
+        m_Suffix = std::move(src.m_Suffix);
+        m_DefaultValue = std::move(src.m_DefaultValue);
+
+        m_Keywords = std::move(src.m_Keywords);
+    }
+
+    /**
      * @brief Field::suffix
      * @return
      */
@@ -320,44 +395,6 @@ namespace entity {
     void Field::setDefaultValue(const QString &defaultValue)
     {
         m_DefaultValue = defaultValue;
-    }
-
-    /**
-     * @brief Field::clone
-     * @return
-     */
-    Field *Field::clone() const
-    {
-        return new Field(*this);
-    }
-
-    /**
-     * @brief Field::writeToFile
-     * @param fileName
-     */
-    void Field::writeToFile(const QString &fileName) const
-    {
-        utility::writeToFile(*this, fileName);
-    }
-
-    /**
-     * @brief Field::readFromFile
-     * @param fileName
-     * @return
-     */
-    bool Field::readFromFile(const QString &fileName)
-    {
-        return utility::readFromFile(*this, fileName);
-    }
-
-    /**
-     * @brief Field::id
-     * @return
-     */
-    QString Field::id() const
-    {
-        // TODO: stub method. Remove it in future and implement interface.
-        return "nil";
     }
 
 } // namespace entity

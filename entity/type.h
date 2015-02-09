@@ -25,6 +25,7 @@
 
 #include <QString>
 
+#include "basicentity.h"
 #include "icomponents.h"
 
 class QJsonObject;
@@ -37,7 +38,7 @@ namespace entity {
     /**
      * @brief The Type class
      */
-    class Type : public IComponents
+    class Type : public BasicEntity, public IComponents
     {
     public:
         Type();
@@ -52,23 +53,21 @@ namespace entity {
         QString name() const;
         void setName(const QString &name);
 
-        QString id() const;
-        void setId(const QString &id);
-
         QString scopeId() const;
         void setScopeId(const QString &scopeId);
 
         UserType type() const;
 
-        virtual QJsonObject toJson() const;
-        virtual void fromJson(const QJsonObject &src, QStringList &errorList);
-
-        void writeToFile(const QString &fileName) const;
-        bool readFromFile(const QString &fileName);
-
         virtual Type *clone() const;
 
         virtual bool isEqual(const Type &rhs) const;
+
+    public: // BasicEntity implementation
+        QString id() const override;
+        void setId(const QString &id) override;
+
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
     protected:
         virtual void moveFrom(Type &src);

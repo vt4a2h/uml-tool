@@ -1,33 +1,34 @@
 /*****************************************************************************
-** 
+**
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
 ** Created 29/10/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
-** 
+**
 ** Q-UML is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** Q-UML is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU Lesser General Public License for more details.
 
 ** You should have received a copy of the GNU Lesser General Public License
-** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>. 
+** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
 
 #pragma once
 
-#include "types.h"
-
 #include <type_traits>
 
 #include <QString>
+
+#include "basicentity.h"
+#include "types.h"
 
 namespace entity {
 
@@ -36,7 +37,7 @@ namespace entity {
     /**
      * @brief The Scope class
      */
-    class Scope
+    class Scope : public BasicEntity
     {
     public:
         Scope(Scope &&src);
@@ -68,17 +69,15 @@ namespace entity {
         void removeChildScope(const QString &typeId);
         ScopesList scopes() const;
 
-        QString id() const;
-        void setId(const QString &id);
-
         QString parentScopeId() const;
         void setParentScopeId(const QString &parentScopeId);
 
-        QJsonObject toJson() const;
-        void fromJson(const QJsonObject &src, QStringList &errorList);
+    public: // BasicEntity implementation
+        QString id() const override;
+        void setId(const QString &id) override;
 
-        void writeToFile(const QString &fileName) const;
-        bool readFromFile(const QString &fileName);
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
     private:
         void copyFrom(const Scope &src);

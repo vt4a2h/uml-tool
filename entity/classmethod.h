@@ -24,6 +24,8 @@
 #pragma once
 
 #include <QString>
+
+#include "basicentity.h"
 #include "types.h"
 
 class QJsonObject;
@@ -44,7 +46,7 @@ namespace entity {
     /**
      * @brief The ClassMethod class
      */
-    class ClassMethod
+    class ClassMethod : public BasicEntity
     {
     public:
         ClassMethod();
@@ -89,17 +91,13 @@ namespace entity {
         QString scopeId() const;
         void setScopeId(const QString &scopeId);
 
-        virtual QJsonObject toJson() const;
-        virtual void fromJson(const QJsonObject &src, QStringList &errorList);
-
         ClassMethodType type() const;
 
         virtual bool isEqual(const ClassMethod &rhs) const;
 
-        void writeToFile(const QString &fileName) const;
-        bool readFromFile(const QString &fileName);
-
-        QString id() const;
+    public: // BasicEntity implementation
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
     protected:
         virtual void moveFrom(ClassMethod &src);
