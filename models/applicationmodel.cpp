@@ -39,7 +39,7 @@ namespace models {
      */
     ApplicationModel::ApplicationModel(QObject *parent)
         : QObject(parent)
-        , m_TreeModel(std::make_shared<ProjectTreeModel>(m_Projects))
+        , m_TreeModel(std::make_shared<ProjectTreeModel>())
     {
         // make some test data
         makeProject("Project1", "/path1");
@@ -56,7 +56,9 @@ namespace models {
         cl1->addField("foo_field", cl1->id(), "m_");
         cl1->makeMethod("bar_method");
 
-        m_TreeModel->fillData();
+        // todo add signals from each entity to parent when new entity added
+        for (auto &&pr : m_Projects)
+            m_TreeModel->addProject(pr);
     }
 
     /**
@@ -75,7 +77,18 @@ namespace models {
     project::SharedProject ApplicationModel::makeProject(const QString &name, const QString &path)
     {
         project::SharedProject newProject(std::make_shared<project::Project>(name, path));
+        emit projectAdded(newProject);
         return *m_Projects.insert(newProject->id(), newProject);
+    }
+
+    /**
+     * @brief ApplicationModel::getProject
+     * @param id
+     * @return
+     */
+    project::SharedProject ApplicationModel::getProject(const QString &id) const
+    {
+        return m_Projects[id];
     }
 
     /**

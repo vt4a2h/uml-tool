@@ -38,6 +38,7 @@ namespace models {
         ~ApplicationModel();
 
         project::SharedProject makeProject(const QString &name, const QString &path);
+        project::SharedProject getProject(const QString &id) const;
         project::ProjectsList projects() const;
         bool removeProject(const QString &id);
         bool containsProject(const QString &id);
@@ -46,6 +47,9 @@ namespace models {
         bool setCurrentProject(const QString &id);
 
         SharedTreeModel treeModel() const;
+
+    signals:
+        void projectAdded(const project::SharedProject &pr);
 
     private:
         project::Projects m_Projects;

@@ -35,7 +35,7 @@ namespace models {
         Q_OBJECT
 
     public:
-        ProjectTreeModel(project::Projects &projects, QObject * parent = nullptr);
+        ProjectTreeModel(QObject * parent = nullptr);
 
         QVariant data(const QModelIndex &index, int role) const override;
         Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -48,10 +48,10 @@ namespace models {
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-        void fillData(); // to test period
-    private:
+    public slots:
+        void addProject(const project::SharedProject &pr);
 
-        project::Projects &m_Projects;
+    private:
         mutable QList<BasicTreeItem> m_Items;
     };
 

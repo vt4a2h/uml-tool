@@ -35,13 +35,42 @@
 
 namespace models {
 
+    namespace {
+        template <class ItemType>
+        BasicTreeItem *addItem(const ItemType &item, BasicTreeItem *parent, TreeItemType type)
+        {
+            return parent->makeChild(item, type);
+        }
+
+        void addProjectItem(const project::SharedProject &pr, QList<BasicTreeItem> &items)
+        {
+            items << BasicTreeItem(QVariant::fromValue(pr), TreeItemType::ProjectItem);
+
+            db::SharedProjectDatabase database = pr->database();
+            auto projectItem = &items.last();
+            for (auto &&scope : database->scopes()) {
+                auto scopeItem =
+                    addItem(QVariant::fromValue(scope), projectItem, TreeItemType::ScopeItem);
+
+                for (auto &&type : scope->types()) {
+                    auto typeItem =
+                        addItem(QVariant::fromValue(type), scopeItem, TreeItemType::TypeItem);
+
+                    for (auto &&field : type->fields())
+                        addItem(QVariant::fromValue(field), typeItem, TreeItemType::FieldItem);
+                    for (auto &&method : type->methods())
+                        addItem(QVariant::fromValue(method), typeItem, TreeItemType::MethodItem);
+                }
+            }
+        }
+    }
+
     /**
      * @brief ProjectTreeModel::ProjectTreeModel
      * @param parent
      */
-    ProjectTreeModel::ProjectTreeModel(project::Projects &projects, QObject *parent)
+    ProjectTreeModel::ProjectTreeModel(QObject *parent)
         : QAbstractItemModel(parent)
-        , m_Projects(projects)
     {
     }
 
@@ -160,28 +189,12 @@ namespace models {
     }
 
     /**
-     * @brief ProjectTreeModel::fillData
+     * @brief ProjectTreeModel::addProject
+     * @param pr
      */
-    void ProjectTreeModel::fillData()
+    void ProjectTreeModel::addProject(const project::SharedProject &pr)
     {
-        // NOTE: add sorting model after test period
-        for (auto &&pr : m_Projects) {
-            m_Items << BasicTreeItem(QVariant::fromValue(pr), TreeItemType::ProjectItem);
-
-            db::SharedProjectDatabase database = pr->database();
-            for (auto &&scope : database->scopes()) {
-                auto scopeItem = m_Items.last().makeChild(QVariant::fromValue(scope),
-                                                          TreeItemType::ScopeItem);
-                for (auto &&type : scope->types()) {
-                    auto typeItem = scopeItem->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
-
-                    for (auto &&field : type->fields())
-                        typeItem->makeChild(QVariant::fromValue(field), TreeItemType::FieldItem);
-                    for (auto &&method : type->methods())
-                        typeItem->makeChild(QVariant::fromValue(method), TreeItemType::MethodItem);
-                }
-            }
-        }
+        addProjectItem(pr, m_Items);
     }
 
 } // namespace models
