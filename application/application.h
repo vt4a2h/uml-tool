@@ -98,7 +98,7 @@ namespace application {
 
 //        QString m_currentScopeID;
 
-        models::UniqueApplicationModal m_ApplicationModel;
+        models::SharedApplicationModal m_ApplicationModel;
         gui::UniqueMainWindow m_MainWindow;
     };
 

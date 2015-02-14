@@ -32,6 +32,7 @@
 #include <QFileDialog>
 #include <QDebug>
 
+#include <models/applicationmodel.h>
 #include <models/projecttreemodel.h>
 
 #include "about.h"
@@ -53,10 +54,10 @@ namespace gui {
      * @brief MainWindow::MainWindow
      * @param parent
      */
-    MainWindow::MainWindow(models::ProjectTreeModel *treeModel, QWidget *parent)
+    MainWindow::MainWindow(const models::SharedApplicationModal &applicationModel, QWidget *parent)
         : QMainWindow(parent)
         , ui(new Ui::MainWindow)
-        , m_ProjectTreeModel(treeModel)
+        , m_ApplicationModel(applicationModel)
     {
         ui->setupUi(this);
 
@@ -127,7 +128,7 @@ namespace gui {
         m_ProjectTreeView->setHeaderHidden(true);
         m_ProjectTreeView->setIndentation(treeViewIndent);
         m_ProjectTreeView->setIconSize(iconSize());
-        m_ProjectTreeView->setModel(m_ProjectTreeModel);
+        m_ProjectTreeView->setModel(m_ApplicationModel->treeModel().get());
         m_MainVerticalSplitter->addWidget(m_ProjectTreeView);
 
         m_CanvasConsoleSplitter = new QSplitter(this);

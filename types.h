@@ -162,7 +162,7 @@ namespace models {
     using ChildItems = QList<BasicTreeItem*>;
 
     class ApplicationModel;
-    using UniqueApplicationModal = std::unique_ptr<ApplicationModel>;
+    using SharedApplicationModal = std::shared_ptr<ApplicationModel>;
 }
 
 Q_DECLARE_METATYPE(entity::SharedField)

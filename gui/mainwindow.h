@@ -23,7 +23,8 @@
 #pragma once
 
 #include <QMainWindow>
-#include <memory>
+
+#include "types.h"
 
 class QSplitter;
 class QHBoxLayout;
@@ -34,6 +35,7 @@ class QTextEdit;
 
 namespace models {
     class ProjectTreeModel;
+    class ApplicationModel;
 }
 
 /**
@@ -56,7 +58,7 @@ namespace gui {
         Q_OBJECT
 
     public:
-        explicit MainWindow(models::ProjectTreeModel *treeModel, QWidget *parent = 0);
+        explicit MainWindow(const models::SharedApplicationModal &applicationModel, QWidget *parent = 0);
         ~MainWindow();
 
     private slots:
@@ -84,7 +86,7 @@ namespace gui {
         About *m_AboutWidget;
         NewProject *m_NewProject;
 
-        models::ProjectTreeModel *m_ProjectTreeModel;
+        models::SharedApplicationModal m_ApplicationModel;
     };
 
 } // namespace gui
