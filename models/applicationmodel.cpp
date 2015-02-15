@@ -24,6 +24,7 @@
 
 #include <project/project.h>
 #include <db/projectdatabase.h>
+#include <db/database.h>
 #include <entity/scope.h>
 #include <entity/type.h>
 #include <entity/class.h>
@@ -39,8 +40,11 @@ namespace models {
      */
     ApplicationModel::ApplicationModel(QObject *parent)
         : QObject(parent)
+        , m_GlobalDatabase(std::make_shared<db::Database>())
         , m_TreeModel(std::make_shared<ProjectTreeModel>())
     {
+        connectTreeModel();
+
         // make some test data
         makeProject("Project1", "/path1");
         makeProject("Project2", "/path2");
@@ -56,7 +60,7 @@ namespace models {
         cl1->addField("foo_field", cl1->id(), "m_");
         cl1->makeMethod("bar_method");
 
-        // todo add signals from each entity to parent when new entity added
+        // duplication of projects... but still useful for tests
         for (auto &&pr : m_Projects)
             m_TreeModel->addProject(pr);
     }
@@ -149,6 +153,14 @@ namespace models {
     SharedTreeModel ApplicationModel::treeModel() const
     {
         return m_TreeModel;
+    }
+
+    /**
+     * @brief ApplicationModel::connectTreeModel
+     */
+    void ApplicationModel::connectTreeModel()
+    {
+        connect(this, &ApplicationModel::projectAdded, m_TreeModel.get(), &ProjectTreeModel::addProject);
     }
 
 } // namespace models

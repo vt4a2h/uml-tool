@@ -195,6 +195,7 @@ namespace models {
     void ProjectTreeModel::addProject(const project::SharedProject &pr)
     {
         addProjectItem(pr, m_Items);
+        // TODO: update model
     }
 
 } // namespace models

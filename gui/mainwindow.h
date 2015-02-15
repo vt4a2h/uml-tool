@@ -68,9 +68,12 @@ namespace gui {
         void onOpenProject();
         void onSaveProject();
 
+        void createNewProject(const QString &name, const QString &path);
+
     private:
         void createMainWindowWidgets();
         void createAdditionalWidgets();
+        void makeTitle(const project::SharedProject &pr = nullptr);
 
         Ui::MainWindow *ui;
 

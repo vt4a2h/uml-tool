@@ -23,6 +23,10 @@
 #include "newproject.h"
 #include "ui_newproject.h"
 
+#include <QFileInfo>
+#include <QFileDialog>
+#include <QMessageBox>
+
 namespace gui {
 
     /**
@@ -44,4 +48,51 @@ namespace gui {
         delete ui;
     }
 
+    /**
+     * @brief NewProject::on_btnCreateProject_clicked
+     */
+    void NewProject::on_btnCreateProject_clicked()
+    {
+        QString path = ui->editProjectPath->text();
+        QString name = ui->editProjectName->text().simplified().replace( " ", "_" );
+
+        if (!QFileInfo(path).exists()) {
+            // TODO: ask about creation path
+            QMessageBox::warning(this, tr( "Invalid path" ), tr("Directory is not exists."), QMessageBox::Ok);
+            return;
+        }
+
+        if (name.isEmpty()) {
+            QMessageBox::warning(this, tr( "Invalid name" ), tr("Name is empty."), QMessageBox::Ok);
+            return;
+        }
+
+        emit newProject(name, path);
+        clear();
+        reject();
+    }
+
+    /**
+     * @brief NewProject::on_btnChooseDirectory_clicked
+     */
+    void NewProject::on_btnChooseDirectory_clicked()
+    {
+        QString result = QFileDialog::getExistingDirectory(this, tr("Choose project directory"));
+
+        if (!result.isEmpty())
+            ui->editProjectPath->setText(result);
+
+        ui->editProjectPath->setFocus();
+    }
+
+    /**
+     * @brief NewProject::clear
+     */
+    void NewProject::clear()
+    {
+        ui->editProjectName->clear();
+        ui->editProjectPath->clear();
+    }
+
 } // namespace gui
+

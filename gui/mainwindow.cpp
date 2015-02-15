@@ -30,10 +30,13 @@
 #include <QGraphicsView>
 #include <QTextEdit>
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QDebug>
 
 #include <models/applicationmodel.h>
 #include <models/projecttreemodel.h>
+
+#include <project/project.h>
 
 #include "about.h"
 #include "newproject.h"
@@ -46,6 +49,8 @@ namespace {
     const double treeSizeFactor = 0.3;
     const double canvasSizeFactor = 0.7;
     const double consoleSizeFactor = 0.3;
+
+    const QString titleTemplate = "%1Q-UML";
 }
 
 namespace gui {
@@ -63,6 +68,8 @@ namespace gui {
 
         createMainWindowWidgets();
         createAdditionalWidgets();
+
+        makeTitle();
     }
 
     /**
@@ -106,7 +113,7 @@ namespace gui {
         QString dir(QApplication::applicationDirPath()); // temporary
         QString filter(tr("Q-UML Project files (*.%1)").arg(PROJECT_FILE_EXTENTION));
 
-        QString file = QFileDialog::getOpenFileName(this,caption, dir, filter);
+        QString file = QFileDialog::getOpenFileName(this, caption, dir, filter);
         Q_UNUSED(file)
     }
 
@@ -116,6 +123,40 @@ namespace gui {
     void MainWindow::onSaveProject()
     {
 
+    }
+
+    /**
+     * @brief MainWindow::createNewProject
+     * @param name
+     * @param path
+     */
+    void MainWindow::createNewProject(const QString &name, const QString &path)
+    {
+        if (project::SharedProject currentProject = m_ApplicationModel->currentProject()) {
+            if (!currentProject->isSaved()) {
+                int result = QMessageBox::question(this,
+                                                   tr("Project is not saved"),
+                                                   tr("Would you like to save a project %1").arg(currentProject->name()),
+                                                   QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+                switch (result) {
+                    case QMessageBox::Yes:
+                        currentProject->save();
+                        break;
+
+                    case QMessageBox::No:
+                        break;
+
+                    case QMessageBox::Cancel:
+                        return ;
+
+                    default: ;
+                }
+            }
+        }
+
+        auto newProject = m_ApplicationModel->makeProject( name, path );
+        m_ApplicationModel->setCurrentProject(newProject->id());
+        makeTitle(newProject);
     }
 
     /**
@@ -161,7 +202,19 @@ namespace gui {
     void MainWindow::createAdditionalWidgets()
     {
         m_AboutWidget = new About(this);
+
         m_NewProject = new NewProject(this);
+        connect(m_NewProject, &NewProject::newProject, this, &MainWindow::createNewProject);
+    }
+
+    /**
+     * @brief MainWindow::makeTitle
+     * @param pr
+     */
+    void MainWindow::makeTitle(const project::SharedProject &pr)
+    {
+        QString projectName = pr ? pr->name().append(pr->isSaved() ? "" : "*") : "";
+        setWindowTitle(titleTemplate.arg(!projectName.isEmpty() ? projectName.append(" - ") : ""));
     }
 
 } // namespace gui

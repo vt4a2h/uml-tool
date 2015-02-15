@@ -41,7 +41,16 @@ namespace gui {
         explicit NewProject(QWidget *parent = 0);
         ~NewProject();
 
+    signals:
+        void newProject(const QString &name, const QString &path);
+
+    private slots:
+        void on_btnCreateProject_clicked();
+        void on_btnChooseDirectory_clicked();
+
     private:
+        void clear();
+
         Ui::NewProject *ui;
     };
 
