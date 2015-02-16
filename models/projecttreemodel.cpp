@@ -23,6 +23,7 @@
 #include "projecttreemodel.h"
 
 #include <QPixmap>
+#include <QDebug>
 
 #include <project/project.h>
 
@@ -40,28 +41,6 @@ namespace models {
         BasicTreeItem *addItem(const ItemType &item, BasicTreeItem *parent, TreeItemType type)
         {
             return parent->makeChild(item, type);
-        }
-
-        void addProjectItem(const project::SharedProject &pr, QList<BasicTreeItem> &items)
-        {
-            items << BasicTreeItem(QVariant::fromValue(pr), TreeItemType::ProjectItem);
-
-            db::SharedProjectDatabase database = pr->database();
-            auto projectItem = &items.last();
-            for (auto &&scope : database->scopes()) {
-                auto scopeItem =
-                    addItem(QVariant::fromValue(scope), projectItem, TreeItemType::ScopeItem);
-
-                for (auto &&type : scope->types()) {
-                    auto typeItem =
-                        addItem(QVariant::fromValue(type), scopeItem, TreeItemType::TypeItem);
-
-                    for (auto &&field : type->fields())
-                        addItem(QVariant::fromValue(field), typeItem, TreeItemType::FieldItem);
-                    for (auto &&method : type->methods())
-                        addItem(QVariant::fromValue(method), typeItem, TreeItemType::MethodItem);
-                }
-            }
         }
     }
 
@@ -194,8 +173,37 @@ namespace models {
      */
     void ProjectTreeModel::addProject(const project::SharedProject &pr)
     {
-        addProjectItem(pr, m_Items);
-        // TODO: update model
+        addProjectItem(pr);
+    }
+
+    /**
+     * @brief ProjectTreeModel::addProjectItem
+     * @param pr
+     */
+    void ProjectTreeModel::addProjectItem(const project::SharedProject &pr)
+    {
+        beginInsertRows(QModelIndex(), rowCount(), rowCount() + 1);
+        m_Items << BasicTreeItem(QVariant::fromValue(pr), TreeItemType::ProjectItem);
+        endInsertRows();
+
+        // TODO: add beginInsertRows endInsertRows for all items
+
+        db::SharedProjectDatabase database = pr->database();
+        auto projectItem = &m_Items.last();
+        for (auto &&scope : database->scopes()) {
+            auto scopeItem =
+                addItem(QVariant::fromValue(scope), projectItem, TreeItemType::ScopeItem);
+
+            for (auto &&type : scope->types()) {
+                auto typeItem =
+                    addItem(QVariant::fromValue(type), scopeItem, TreeItemType::TypeItem);
+
+                for (auto &&field : type->fields())
+                    addItem(QVariant::fromValue(field), typeItem, TreeItemType::FieldItem);
+                for (auto &&method : type->methods())
+                    addItem(QVariant::fromValue(method), typeItem, TreeItemType::MethodItem);
+            }
+        }
     }
 
 } // namespace models

@@ -28,6 +28,7 @@
 #include <QSet>
 #include <QStringList>
 #include <QMultiHash>
+#include <QMetaType>
 #include <memory>
 
 using ErrorList = QStringList;

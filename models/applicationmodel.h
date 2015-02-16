@@ -48,12 +48,7 @@ namespace models {
 
         SharedTreeModel treeModel() const;
 
-    signals:
-        void projectAdded(const project::SharedProject &pr);
-
     private:
-        void connectTreeModel();
-
         project::Projects m_Projects;
         project::SharedProject m_CurrentProject;
 

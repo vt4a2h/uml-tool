@@ -48,10 +48,11 @@ namespace models {
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    public slots:
         void addProject(const project::SharedProject &pr);
 
     private:
+        void addProjectItem(const project::SharedProject &pr);
+
         mutable QList<BasicTreeItem> m_Items;
     };
 

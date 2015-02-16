@@ -43,26 +43,24 @@ namespace models {
         , m_GlobalDatabase(std::make_shared<db::Database>())
         , m_TreeModel(std::make_shared<ProjectTreeModel>())
     {
-        connectTreeModel();
+//        // make some test data
+//        makeProject("Project1", "/path1");
+//        makeProject("Project2", "/path2");
 
-        // make some test data
-        makeProject("Project1", "/path1");
-        makeProject("Project2", "/path2");
+//        project::SharedProject pr3 = makeProject("Project3", "/path3");
+//        db::SharedProjectDatabase db3 = pr3->database();
+//        db3->addScope("foo_scope");
+//        db3->addScope("bar_scope");
+//        entity::SharedScope sc1 = db3->addScope("baz_scope");
+//        sc1->addType("foo_type");
+//        sc1->addType("bar_type");
+//        entity::SharedClass cl1 = sc1->addType<entity::Class>("baz_type");
+//        cl1->addField("foo_field", cl1->id(), "m_");
+//        cl1->makeMethod("bar_method");
 
-        project::SharedProject pr3 = makeProject("Project3", "/path3");
-        db::SharedProjectDatabase db3 = pr3->database();
-        db3->addScope("foo_scope");
-        db3->addScope("bar_scope");
-        entity::SharedScope sc1 = db3->addScope("baz_scope");
-        sc1->addType("foo_type");
-        sc1->addType("bar_type");
-        entity::SharedClass cl1 = sc1->addType<entity::Class>("baz_type");
-        cl1->addField("foo_field", cl1->id(), "m_");
-        cl1->makeMethod("bar_method");
-
-        // duplication of projects... but still useful for tests
-        for (auto &&pr : m_Projects)
-            m_TreeModel->addProject(pr);
+//        // duplication of projects... but still useful for tests
+//        for (auto &&pr : m_Projects)
+//            m_TreeModel->addProject(pr);
     }
 
     /**
@@ -81,7 +79,7 @@ namespace models {
     project::SharedProject ApplicationModel::makeProject(const QString &name, const QString &path)
     {
         project::SharedProject newProject(std::make_shared<project::Project>(name, path));
-        emit projectAdded(newProject);
+        m_TreeModel->addProject(newProject);
         return *m_Projects.insert(newProject->id(), newProject);
     }
 
@@ -153,14 +151,6 @@ namespace models {
     SharedTreeModel ApplicationModel::treeModel() const
     {
         return m_TreeModel;
-    }
-
-    /**
-     * @brief ApplicationModel::connectTreeModel
-     */
-    void ApplicationModel::connectTreeModel()
-    {
-        connect(this, &ApplicationModel::projectAdded, m_TreeModel.get(), &ProjectTreeModel::addProject);
     }
 
 } // namespace models

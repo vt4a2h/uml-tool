@@ -134,10 +134,14 @@ namespace gui {
     {
         if (project::SharedProject currentProject = m_ApplicationModel->currentProject()) {
             if (!currentProject->isSaved()) {
-                int result = QMessageBox::question(this,
-                                                   tr("Project is not saved"),
-                                                   tr("Would you like to save a project %1").arg(currentProject->name()),
-                                                   QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+                int result =
+                    QMessageBox::question
+                        ( this
+                        , tr("Project is not saved")
+                        , tr("Would you like to save a project %1?").arg(currentProject->name())
+                        , QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel
+                        );
+
                 switch (result) {
                     case QMessageBox::Yes:
                         currentProject->save();
@@ -156,7 +160,8 @@ namespace gui {
 
         auto newProject = m_ApplicationModel->makeProject( name, path );
         m_ApplicationModel->setCurrentProject(newProject->id());
-        makeTitle(newProject);
+        newProject->save();
+        makeTitle(); // TODO: add signal to make it auto
     }
 
     /**
@@ -209,10 +214,10 @@ namespace gui {
 
     /**
      * @brief MainWindow::makeTitle
-     * @param pr
      */
-    void MainWindow::makeTitle(const project::SharedProject &pr)
+    void MainWindow::makeTitle()
     {
+        auto pr = m_ApplicationModel->currentProject();
         QString projectName = pr ? pr->name().append(pr->isSaved() ? "" : "*") : "";
         setWindowTitle(titleTemplate.arg(!projectName.isEmpty() ? projectName.append(" - ") : ""));
     }
