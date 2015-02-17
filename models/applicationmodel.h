@@ -37,6 +37,7 @@ namespace models {
         explicit ApplicationModel(QObject *parent = 0);
         ~ApplicationModel();
 
+        project::SharedProject makeProject();
         project::SharedProject makeProject(const QString &name, const QString &path);
         project::SharedProject getProject(const QString &id) const;
         project::ProjectsList projects() const;
@@ -45,6 +46,8 @@ namespace models {
 
         project::SharedProject currentProject() const;
         bool setCurrentProject(const QString &id);
+
+        db::SharedDatabase globalDatabase() const;
 
         SharedTreeModel treeModel() const;
 

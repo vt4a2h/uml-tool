@@ -67,6 +67,9 @@ namespace project {
 
         bool isSaved() const;
 
+        bool hasErrors() const;
+        ErrorList lastErrors() const;
+
     public slots:
         void setSaveStatus(bool newStatus);
         void setName(const QString &name);
@@ -97,6 +100,8 @@ namespace project {
         bool m_SaveStatus;
 
         db::SharedProjectDatabase m_Database;
+
+        ErrorList m_Errors;
     };
 
 } // namespace project

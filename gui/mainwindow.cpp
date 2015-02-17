@@ -113,8 +113,19 @@ namespace gui {
         QString dir(QApplication::applicationDirPath()); // temporary
         QString filter(tr("Q-UML Project files (*.%1)").arg(PROJECT_FILE_EXTENTION));
 
-        QString file = QFileDialog::getOpenFileName(this, caption, dir, filter);
-        Q_UNUSED(file)
+        QString path = QFileDialog::getOpenFileName(this, caption, dir, filter);
+        auto newProject = m_ApplicationModel->makeProject();
+        newProject->load(path);
+
+        if (newProject->hasErrors()) {
+            // TODO: show errors dialog
+            m_ApplicationModel->removeProject(newProject->id());
+        } else {
+            // TODO: check why new project is not set
+            m_ApplicationModel->setCurrentProject(newProject->id());
+            newProject->save();
+            makeTitle();
+        }
     }
 
     /**
@@ -122,7 +133,12 @@ namespace gui {
      */
     void MainWindow::onSaveProject()
     {
-
+        if (auto currentPtoject = m_ApplicationModel->currentProject()) {
+            if (!currentPtoject->isSaved()) {
+                currentPtoject->save();
+                makeTitle(); // TODO: add signal to make it auto
+            }
+        }
     }
 
     /**

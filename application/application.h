@@ -38,65 +38,12 @@ namespace application {
     class Application : public QObject
     {
         Q_OBJECT
-//        Q_PROPERTY(bool anyErrors READ hasErrors)
-//        Q_PROPERTY(ErrorList errors READ getErrors)
-//        Q_PROPERTY(QString currentScopeID READ currentScopeID WRITE setCurrentScopeID NOTIFY currentScopeIDChanged)
-
-//        Q_ENUMS(ProjectState)
-//        Q_ENUMS(UserType)
 
     public:
         explicit Application(QObject *parent = nullptr);
         ~Application();
 
         void run();
-
-//        bool hasErrors() const;
-//        ErrorList getErrors() const;
-
-//        project::SharedProject findProjectById(const QString &id) const;
-//        project::SharedProject findProjectByName(const QString &name) const;
-//        project::ProjectsList projects() const;
-//        uint projectsCount() const;
-//        void removeProjectById(const QString &id);
-//        void removeProjectByName(const QString &name);
-
-//        QString currentScopeID() const;
-
-//        enum ProjectState { ProjectOpened, NoProject };
-//        enum UserType : int;
-
-//    public slots:
-//        void createProject(const QString &name, const QString &path);
-//        bool openProject(const QString &path);
-//        bool setCurrentProject(const QString &id);
-//        bool setCurrentProjectDatabase();
-//        void setCurrentScopeID(const QString &id);
-
-//    signals:
-//        void projectCreated(const QJsonObject &project);
-//        void projectOpened(const QJsonObject &project);
-//        void errors(const QString &message, const ErrorList &errorlist);
-
-//        void currentScopeIDChanged(QString id);
-//        void projectChanged();
-
-    private:
-//        void init();
-//        void configuredGui();
-//        void readDatabase();
-//        void readConfig();
-
-//        project::Projects m_Projects;
-//        SharedErrorList m_ErrorList;
-
-//        db::SharedDatabase m_GlobalDatabase;
-
-//        project::SharedProject m_CurrentProject;
-
-//        db::SharedProjectDatabase m_CurrentProjectDatabase;
-
-//        QString m_currentScopeID;
 
         models::SharedApplicationModal m_ApplicationModel;
         gui::UniqueMainWindow m_MainWindow;

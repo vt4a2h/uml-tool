@@ -101,19 +101,19 @@ namespace project {
     {
         Q_ASSERT(!!m_Database);
 
-        ErrorList errorList;
+        m_Errors.clear();
 
         if (!utility::readFromFile(*this, path))
-            errorList << tr("Cannot read project file.");
+            m_Errors << tr("Cannot read project file.");
 
         m_Database->setPath(databasePath(m_Path));
         if (!utility::readFromFile(*m_Database, m_Database->path()))
-            errorList << tr("Cannot read database file.");
+            m_Errors << tr("Cannot read database file.");
 
-        setSaveStatus(errorList.isEmpty());
+        setSaveStatus(m_Errors.isEmpty());
 
-        if (!errorList.isEmpty())
-            errors(tr("Project load error%1").arg(errorList.count() <= 1 ? "" : "s"), errorList);
+        if (!m_Errors.isEmpty())
+            errors(tr("Project load error%1").arg(m_Errors.count() <= 1 ? "" : "s"), m_Errors);
     }
 
     /**
@@ -123,32 +123,32 @@ namespace project {
     {
         Q_ASSERT(!!m_Database);
 
-        ErrorList errorList;
+        m_Errors.clear();
 
         if (!m_Path.isEmpty()) {
             QDir dir(m_Path);
             if (!dir.exists())
                 if (!dir.mkpath(m_Path)) {
-                    errorList << tr("Cannot create project directory.");
-                    emit errors(tr("Make path error%1").arg(errorList.count() <= 1 ? "" : "s"), errorList);
+                    m_Errors << tr("Cannot create project directory.");
+                    emit errors(tr("Make path error%1").arg(m_Errors.count() <= 1 ? "" : "s"), m_Errors);
                     return;
                 }
 
             if (!utility::writeToFile(*this, projectPath(m_Path)))
-                errorList << tr("Cannot save project to file.");
+                m_Errors << tr("Cannot save project to file.");
 
             m_Database->setName(databaseFileName());
             m_Database->setPath(databasePath(m_Path));
             if (!utility::writeToFile(*m_Database, m_Database->path()))
-                errorList << tr("Cannot save database to file.");
+                m_Errors << tr("Cannot save database to file.");
         } else {
-            errorList << "Project path is empty.";
+            m_Errors << "Project path is empty.";
         }
 
-        setSaveStatus(errorList.isEmpty());
+        setSaveStatus(m_Errors.isEmpty());
 
-        if (!errorList.isEmpty())
-            emit errors(tr("Project save error%1").arg(errorList.count() <= 1 ? "" : "s"), errorList);
+        if (!m_Errors.isEmpty())
+            emit errors(tr("Project save error%1").arg(m_Errors.count() <= 1 ? "" : "s"), m_Errors);
     }
 
     /**
@@ -233,6 +233,24 @@ namespace project {
     bool Project::isSaved() const
     {
         return m_SaveStatus;
+    }
+
+    /**
+     * @brief Project::hasErrors
+     * @return
+     */
+    bool Project::hasErrors() const
+    {
+        return !m_Errors.isEmpty();
+    }
+
+    /**
+     * @brief Project::lastErrors
+     * @return
+     */
+    ErrorList Project::lastErrors() const
+    {
+        return m_Errors;
     }
 
     /**

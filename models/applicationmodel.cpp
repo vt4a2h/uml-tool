@@ -32,6 +32,8 @@
 
 #include "projecttreemodel.h"
 
+#include "constants.cpp"
+
 namespace models {
 
     /**
@@ -71,6 +73,15 @@ namespace models {
     }
 
     /**
+     * @brief ApplicationModel::makeProject
+     * @return
+     */
+    project::SharedProject ApplicationModel::makeProject()
+    {
+        return makeProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH);
+    }
+
+    /**
      * @brief ApplicationModal::makeProject
      * @param name
      * @param path
@@ -79,6 +90,7 @@ namespace models {
     project::SharedProject ApplicationModel::makeProject(const QString &name, const QString &path)
     {
         project::SharedProject newProject(std::make_shared<project::Project>(name, path));
+        newProject->setGloablDatabase(globalDatabase());
         m_TreeModel->addProject(newProject);
         return *m_Projects.insert(newProject->id(), newProject);
     }
@@ -142,6 +154,15 @@ namespace models {
 
         m_CurrentProject = m_Projects[id];
         return true;
+    }
+
+    /**
+     * @brief ApplicationModel::globalDatabase
+     * @return
+     */
+    db::SharedDatabase ApplicationModel::globalDatabase() const
+    {
+        return m_GlobalDatabase;
     }
 
     /**
