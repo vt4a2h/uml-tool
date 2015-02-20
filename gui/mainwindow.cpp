@@ -114,6 +114,9 @@ namespace gui {
         QString filter(tr("Q-UML Project files (*.%1)").arg(PROJECT_FILE_EXTENTION));
 
         QString path = QFileDialog::getOpenFileName(this, caption, dir, filter);
+        if (path.isEmpty())
+            return ;
+
         auto newProject = std::make_shared<project::Project>();
         newProject->load(path);
 
