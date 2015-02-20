@@ -39,6 +39,7 @@ namespace models {
 
         project::SharedProject makeProject();
         project::SharedProject makeProject(const QString &name, const QString &path);
+        bool addProject(const project::SharedProject &pr);
         project::SharedProject getProject(const QString &id) const;
         project::ProjectsList projects() const;
         bool removeProject(const QString &id);

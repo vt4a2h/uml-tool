@@ -114,17 +114,30 @@ namespace gui {
         QString filter(tr("Q-UML Project files (*.%1)").arg(PROJECT_FILE_EXTENTION));
 
         QString path = QFileDialog::getOpenFileName(this, caption, dir, filter);
-        auto newProject = m_ApplicationModel->makeProject();
+        auto newProject = std::make_shared<project::Project>();
         newProject->load(path);
 
         if (newProject->hasErrors()) {
-            // TODO: show errors dialog
-            m_ApplicationModel->removeProject(newProject->id());
+            QMessageBox::critical
+                ( this
+                , tr("Open project error%1").arg(newProject->lastErrors().size() > 1 ? "s" : "")
+                , newProject->lastErrors().join("\n")
+                , QMessageBox::Ok
+                );
         } else {
-            // TODO: check why new project is not set
-            m_ApplicationModel->setCurrentProject(newProject->id());
-            newProject->save();
-            makeTitle();
+            if (m_ApplicationModel->addProject(newProject))
+            {
+                m_ApplicationModel->setCurrentProject(newProject->id());
+                newProject->save();
+                makeTitle();
+            } else {
+                QMessageBox::information
+                    ( this
+                    , tr("Q-UML - Information")
+                    , tr("Project \"%1\" already exists.").arg(newProject->name())
+                    , QMessageBox::Ok
+                    );
+            }
         }
     }
 

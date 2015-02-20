@@ -96,6 +96,22 @@ namespace models {
     }
 
     /**
+     * @brief ApplicationModel::addProject
+     * @param pr
+     * @return
+     */
+    bool ApplicationModel::addProject(const project::SharedProject &pr)
+    {
+        if (!m_Projects.contains(pr->id())) {
+            m_Projects[pr->id()] = pr;
+            m_TreeModel->addProject(pr);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @brief ApplicationModel::getProject
      * @param id
      * @return
