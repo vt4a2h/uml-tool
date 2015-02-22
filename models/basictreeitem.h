@@ -72,6 +72,8 @@ namespace models {
         QVariant name() const;
         QString iconPath() const;
 
+        QVariant entity() const;
+
         QString id() const;
 
         int row() const;
@@ -96,3 +98,5 @@ namespace models {
     };
 
 } // namespace models
+
+Q_DECLARE_METATYPE(models::TreeItemType)

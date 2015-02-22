@@ -220,6 +220,15 @@ namespace models {
     }
 
     /**
+     * @brief models::BasicTreeItem::entity
+     * @return
+     */
+    QVariant BasicTreeItem::entity() const
+    {
+        return m_Entity;
+    }
+
+    /**
      * @brief BasicTreeItem::id
      * @return
      */
