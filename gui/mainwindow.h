@@ -68,6 +68,14 @@ namespace gui {
         void onOpenProject();
         void onSaveProject();
 
+        void onCreateScope();
+        void onAddAlias();
+        void onAddUnion();
+        void onAddStruct();
+        void onAddClass();
+        void onAddTemplate();
+        void onMakeRelation();
+
         void createNewProject(const QString &name, const QString &path);
         void makeTitle();
 
