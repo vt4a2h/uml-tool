@@ -45,7 +45,8 @@ SOURCES += \
     models/projecttreemodel.cpp \
     models/applicationmodel.cpp \
     entity/icomponents.cpp \
-    entity/basicentity.cpp
+    entity/basicentity.cpp \
+    gui/addscope.cpp
 
 HEADERS += \
     enums.h \
@@ -87,12 +88,14 @@ HEADERS += \
     models/projecttreemodel.h \
     models/applicationmodel.h \
     entity/icomponents.h \
-    entity/basicentity.h
+    entity/basicentity.h \
+    gui/addscope.h
 
 FORMS += \
     gui/mainwindow.ui \
     gui/about.ui \
-    gui/newproject.ui
+    gui/newproject.ui \
+    gui/addscope.ui
 
 RESOURCES += \
     gui/main.qrc

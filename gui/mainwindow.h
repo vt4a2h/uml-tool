@@ -45,6 +45,7 @@ namespace gui {
 
     class About;
     class NewProject;
+    class AddScope;
 
     namespace Ui {
         class MainWindow;
@@ -101,6 +102,7 @@ namespace gui {
 
         About *m_AboutWidget;
         NewProject *m_NewProject;
+        AddScope *m_AddScope;
 
         models::SharedApplicationModal m_ApplicationModel;
     };

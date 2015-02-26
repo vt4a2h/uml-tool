@@ -40,6 +40,7 @@
 
 #include "about.h"
 #include "newproject.h"
+#include "addscope.h"
 #include "constants.cpp"
 
 namespace {
@@ -70,6 +71,7 @@ namespace gui {
         , m_ConsoleOutput(new QTextEdit(this))
         , m_AboutWidget(new About(this))
         , m_NewProject(new NewProject(this))
+        , m_AddScope(new AddScope(this))
         , m_ApplicationModel(applicationModel)
     {
         ui->setupUi(this);
@@ -170,7 +172,7 @@ namespace gui {
      */
     void MainWindow::onCreateScope()
     {
-
+        m_AddScope->exec();
     }
 
     /**
