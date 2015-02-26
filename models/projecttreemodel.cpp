@@ -76,6 +76,18 @@ namespace models {
                 result = QPixmap(item->iconPath());
                 break;
 
+            case SharedData:
+                result = item->entity();
+                break;
+
+            case DataType:
+                result = QVariant::fromValue(item->itemType());
+                break;
+
+            case ID:
+                result = QVariant::fromValue(item->id());
+                break;
+
             default: ;
         }
 

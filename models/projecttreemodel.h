@@ -35,6 +35,8 @@ namespace models {
         Q_OBJECT
 
     public:
+        enum CustomRoles { SharedData = 32, DataType, ID };
+
         ProjectTreeModel(QObject * parent = nullptr);
 
         QVariant data(const QModelIndex &index, int role) const override;

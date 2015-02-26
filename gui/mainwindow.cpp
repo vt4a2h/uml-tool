@@ -62,12 +62,20 @@ namespace gui {
     MainWindow::MainWindow(const models::SharedApplicationModal &applicationModel, QWidget *parent)
         : QMainWindow(parent)
         , ui(new Ui::MainWindow)
+        , m_MainVerticalSplitter(new QSplitter(this))
+        , m_CanvasConsoleSplitter(new QSplitter(this))
+        , m_ProjectTreeMenu(new QMenu(this))
+        , m_ProjectTreeView(new QTreeView(this))
+        , m_MainView(new QGraphicsView(this))
+        , m_ConsoleOutput(new QTextEdit(this))
+        , m_AboutWidget(new About(this))
+        , m_NewProject(new NewProject(this))
         , m_ApplicationModel(applicationModel)
     {
         ui->setupUi(this);
 
-        createMainWindowWidgets();
-        createAdditionalWidgets();
+        setUpWidgets();
+        makeConnections();
 
         makeTitle();
     }
@@ -199,20 +207,16 @@ namespace gui {
     /**
      * @brief MainWindow::makeElemnts
      */
-    void MainWindow::createMainWindowWidgets()
+    void MainWindow::setUpWidgets()
     {
-        m_MainVerticalSplitter = new QSplitter(this);
-        m_ProjectTreeView = new QTreeView(this);
         m_ProjectTreeView->setHeaderHidden(true);
         m_ProjectTreeView->setIndentation(treeViewIndent);
         m_ProjectTreeView->setIconSize(iconSize());
+        m_ProjectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
         m_ProjectTreeView->setModel(m_ApplicationModel->treeModel().get());
         m_MainVerticalSplitter->addWidget(m_ProjectTreeView);
 
-        m_CanvasConsoleSplitter = new QSplitter(this);
         m_CanvasConsoleSplitter->setOrientation(Qt::Vertical);
-        m_MainView = new QGraphicsView(this);
-        m_ConsoleOutput = new QTextEdit(this);
         m_CanvasConsoleSplitter->addWidget(m_MainView);
         m_CanvasConsoleSplitter->addWidget(m_ConsoleOutput);
         m_CanvasConsoleSplitter->setStretchFactor(0, 9);
@@ -231,16 +235,18 @@ namespace gui {
         int canvasSize(std::round(this->height() * canvasSizeFactor));
         int consoleSize(std::round(this->height() * consoleSizeFactor));
         m_CanvasConsoleSplitter->setSizes({canvasSize, consoleSize});
+
+        auto a = m_ProjectTreeMenu->addAction("Make active");
+        connect(a, &QAction::triggered, this, &MainWindow::setCurrentProject);
     }
 
     /**
-     * @brief MainWindow::createAdditionalWidgets
+     * @brief MainWindow::makeConnections
      */
-    void MainWindow::createAdditionalWidgets()
+    void MainWindow::makeConnections()
     {
-        m_AboutWidget = new About(this);
+        connect(m_ProjectTreeView, &QTreeView::customContextMenuRequested, this, &MainWindow::onProjectTreeMenu);
 
-        m_NewProject = new NewProject(this);
         connect(m_NewProject, &NewProject::newProject, this, &MainWindow::createNewProject);
     }
 
@@ -252,6 +258,31 @@ namespace gui {
         auto pr = m_ApplicationModel->currentProject();
         QString projectName = pr ? pr->name().append(pr->isSaved() ? "" : "*") : "";
         setWindowTitle(titleTemplate.arg(!projectName.isEmpty() ? projectName.append(" - ") : ""));
+    }
+
+    /**
+     * @brief MainWindow::onTreeViewMenu
+     * @param p
+     */
+    void MainWindow::onProjectTreeMenu(const QPoint &p)
+    {
+        QModelIndex index = m_ProjectTreeView->indexAt(p);
+        QVariant data = index.data(models::ProjectTreeModel::SharedData);
+        if (index.isValid() && data.canConvert<project::SharedProject>()) // NOTE: temporary
+            m_ProjectTreeMenu->exec(m_ProjectTreeView->mapToGlobal(p));
+    }
+
+    /**
+     * @brief MainWindow::setCurrentProject
+     */
+    void MainWindow::setCurrentProject()
+    {
+        QModelIndex index = m_ProjectTreeView->selectionModel()->currentIndex();
+        QVariant data = index.data(models::ProjectTreeModel::SharedData);
+        if (index.isValid() && data.canConvert<project::SharedProject>()) {
+            m_ApplicationModel->setCurrentProject(index.data(models::ProjectTreeModel::ID).toString());
+            makeTitle(); // TODO: make it auto via signals
+        }
     }
 
 } // namespace gui

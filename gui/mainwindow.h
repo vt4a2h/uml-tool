@@ -71,14 +71,19 @@ namespace gui {
         void createNewProject(const QString &name, const QString &path);
         void makeTitle();
 
+        void onProjectTreeMenu(const QPoint &p);
+        void setCurrentProject();
+
     private:
-        void createMainWindowWidgets();
-        void createAdditionalWidgets();
+        void setUpWidgets();
+        void makeConnections();
 
         Ui::MainWindow *ui;
 
         QSplitter *m_MainVerticalSplitter;
         QSplitter *m_CanvasConsoleSplitter;
+
+        QMenu *m_ProjectTreeMenu;
 
         std::unique_ptr<QHBoxLayout> m_MainLayout;
 
