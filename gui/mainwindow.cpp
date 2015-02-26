@@ -166,6 +166,62 @@ namespace gui {
     }
 
     /**
+     * @brief MainWindow::onCreateScope
+     */
+    void MainWindow::onCreateScope()
+    {
+
+    }
+
+    /**
+     * @brief MainWindow::onAddAlias
+     */
+    void MainWindow::onAddAlias()
+    {
+
+    }
+
+    /**
+     * @brief MainWindow::onAddUnion
+     */
+    void MainWindow::onAddUnion()
+    {
+
+    }
+
+    /**
+     * @brief MainWindow::onAddStruct
+     */
+    void MainWindow::onAddStruct()
+    {
+
+    }
+
+    /**
+     * @brief MainWindow::onAddClass
+     */
+    void MainWindow::onAddClass()
+    {
+
+    }
+
+    /**
+     * @brief MainWindow::onAddTemplate
+     */
+    void MainWindow::onAddTemplate()
+    {
+
+    }
+
+    /**
+     * @brief MainWindow::onMakeRelation
+     */
+    void MainWindow::onMakeRelation()
+    {
+
+    }
+
+    /**
      * @brief MainWindow::createNewProject
      * @param name
      * @param path
