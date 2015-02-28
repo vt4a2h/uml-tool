@@ -38,6 +38,8 @@ namespace gui {
         explicit AddScope(QWidget *parent = 0);
         ~AddScope();
 
+        void setProjectName(const QString &name = "");
+
     private:
         Ui::AddScope *ui;
     };

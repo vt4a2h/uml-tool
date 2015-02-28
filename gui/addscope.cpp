@@ -23,8 +23,16 @@
 #include "addscope.h"
 #include "ui_addscope.h"
 
+namespace {
+    const QString defaultWidgetName = gui::AddScope::tr("Create new scope");
+}
+
 namespace gui {
 
+    /**
+     * @brief AddScope::AddScope
+     * @param parent
+     */
     AddScope::AddScope(QWidget *parent) :
         QDialog(parent),
         ui(new Ui::AddScope)
@@ -32,9 +40,21 @@ namespace gui {
         ui->setupUi(this);
     }
 
+    /**
+     * @brief AddScope::~AddScope
+     */
     AddScope::~AddScope()
     {
         delete ui;
+    }
+
+    /**
+     * @brief AddScope::setProjectName
+     * @param name
+     */
+    void AddScope::setProjectName(const QString &name)
+    {
+        setWindowTitle( !name.isEmpty() ? defaultWidgetName + tr(" in project %1").arg(name) : name);
     }
 
 } // namespace gui

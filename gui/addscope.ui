@@ -9,24 +9,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>345</width>
+    <width>354</width>
     <height>70</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>345</width>
+    <width>354</width>
     <height>70</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>345</width>
-    <height>70</height>
+    <width>16777215</width>
+    <height>80</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Create new scope</string>
+  </property>
+  <property name="inputMethodHints">
+   <set>Qt::ImhNone</set>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -103,5 +109,22 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pbCloseDialog</sender>
+   <signal>clicked()</signal>
+   <receiver>gui::AddScope</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>193</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>172</x>
+     <y>34</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

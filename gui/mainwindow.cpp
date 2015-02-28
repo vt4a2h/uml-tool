@@ -172,7 +172,11 @@ namespace gui {
      */
     void MainWindow::onCreateScope()
     {
-        m_AddScope->exec();
+        if (m_ApplicationModel->currentProject()) {
+            m_AddScope->setProjectName(m_ApplicationModel->currentProject()->name());
+            m_AddScope->exec();
+        } else
+            QMessageBox::information(this, tr("Information"), tr("No current project."), QMessageBox::Ok);
     }
 
     /**
