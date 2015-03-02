@@ -40,8 +40,14 @@ namespace gui {
 
         void setProjectName(const QString &name = "");
 
+        QString scopeName();
+
+    public slots:
+        void onCreateScope();
+
     private:
         Ui::AddScope *ui;
+        QString m_ScopeName;
     };
 
 } // namespace gui

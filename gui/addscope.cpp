@@ -33,11 +33,12 @@ namespace gui {
      * @brief AddScope::AddScope
      * @param parent
      */
-    AddScope::AddScope(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::AddScope)
+    AddScope::AddScope(QWidget *parent)
+        : QDialog(parent)
+        , ui(new Ui::AddScope)
     {
         ui->setupUi(this);
+        ui->leScopeName->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z_]+"), this));
     }
 
     /**
@@ -55,6 +56,23 @@ namespace gui {
     void AddScope::setProjectName(const QString &name)
     {
         setWindowTitle( !name.isEmpty() ? defaultWidgetName + tr(" in project %1").arg(name) : name);
+    }
+
+    /**
+     * @brief AddScope::scopeName
+     * @return
+     */
+    QString AddScope::scopeName()
+    {
+        return m_ScopeName;
+    }
+
+    /**
+     * @brief AddScope::onCreateScope
+     */
+    void AddScope::onCreateScope()
+    {
+       m_ScopeName = ui->leScopeName->text();
     }
 
 } // namespace gui

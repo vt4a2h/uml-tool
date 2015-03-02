@@ -150,6 +150,28 @@ namespace models {
     }
 
     /**
+     * @brief ApplicationModel::makeScope
+     * @param name
+     * @return
+     */
+    entity::SharedScope ApplicationModel::makeScope(const QString &name)
+    {
+        entity::SharedScope result;
+
+        if (m_CurrentProject) {
+            auto projectDB = m_CurrentProject->database();
+            Q_ASSERT(projectDB);
+            result = projectDB->addScope(name);
+            // TODO: add scope to the tree model
+            // TODO: add scope to with parent scope
+
+            currentProject()->touch();
+        }
+
+        return result;
+    }
+
+    /**
      * @brief ApplicationModal::currentProject
      * @return
      */

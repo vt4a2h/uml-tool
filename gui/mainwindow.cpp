@@ -162,7 +162,7 @@ namespace gui {
         if (auto currentPtoject = m_ApplicationModel->currentProject()) {
             if (!currentPtoject->isSaved()) {
                 currentPtoject->save();
-                makeTitle(); // TODO: add signal to make it auto
+                makeTitle(); // TODO: connect with project modified signal to make it auto
             }
         }
     }
@@ -174,7 +174,11 @@ namespace gui {
     {
         if (m_ApplicationModel->currentProject()) {
             m_AddScope->setProjectName(m_ApplicationModel->currentProject()->name());
-            m_AddScope->exec();
+            if (m_AddScope->exec())  {
+                QString scopeName = m_AddScope->scopeName();
+                if (!scopeName.isEmpty())
+                    m_ApplicationModel->makeScope(scopeName);
+            }
         } else
             QMessageBox::information(this, tr("Information"), tr("No current project."), QMessageBox::Ok);
     }
@@ -264,6 +268,18 @@ namespace gui {
         m_ApplicationModel->setCurrentProject(newProject->id());
         newProject->save();
         makeTitle(); // TODO: add signal to make it auto
+        // TODO: connect new project signals with slots
+    }
+
+    /**
+     * @brief MainWindow::createScope
+     * @param name
+     */
+    void MainWindow::createScope(const QString &name)
+    {
+        if (!m_ApplicationModel->makeScope(name)) {
+            QMessageBox::information(this, tr("Information"), tr("Cannot create scope."), QMessageBox::Ok);
+        }
     }
 
     /**

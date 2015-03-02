@@ -45,6 +45,8 @@ namespace models {
         bool removeProject(const QString &id);
         bool containsProject(const QString &id);
 
+        entity::SharedScope makeScope(const QString &name);
+
         project::SharedProject currentProject() const;
         bool setCurrentProject(const QString &id);
 

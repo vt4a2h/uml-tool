@@ -40,6 +40,15 @@ namespace entity {
     }
 
     /**
+     * @brief BasicEntity::parentID
+     * @return
+     */
+    QString BasicEntity::parentID() const
+    {
+        return topID;
+    }
+
+    /**
      * @brief BasicEntity::setId
      * @param id
      */

@@ -126,5 +126,40 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pbCreateScope</sender>
+   <signal>clicked()</signal>
+   <receiver>gui::AddScope</receiver>
+   <slot>onCreateScope()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>297</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>34</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pbCreateScope</sender>
+   <signal>clicked()</signal>
+   <receiver>gui::AddScope</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>297</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>34</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>onCreateScope()</slot>
+ </slots>
 </ui>

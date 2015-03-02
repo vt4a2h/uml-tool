@@ -33,6 +33,7 @@ namespace entity {
 
     public:
         virtual QString id() const;
+        virtual QString parentID() const; // TODO: implement! it's usefull
         virtual void setId(const QString &id);
 
         void writeToFile(const QString &fileName) const;
@@ -40,6 +41,8 @@ namespace entity {
 
         virtual QJsonObject toJson() const = 0;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList) = 0;
+
+        static constexpr const char *topID = "top_item_id";
     };
 
 } // namespace entity
