@@ -84,6 +84,8 @@ namespace gui {
         void onProjectTreeMenu(const QPoint &p);
         void setCurrentProject();
 
+        void setWindowState();
+
     private:
         void setUpWidgets();
         void makeConnections();

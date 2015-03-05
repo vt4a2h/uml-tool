@@ -80,6 +80,7 @@ namespace gui {
         makeConnections();
 
         makeTitle();
+        setWindowState();
     }
 
     /**
@@ -143,6 +144,7 @@ namespace gui {
                 m_ApplicationModel->setCurrentProject(newProject->id());
                 newProject->save();
                 makeTitle();
+                setWindowState(); // TODO: make it auto too
             } else {
                 QMessageBox::information
                     ( this
@@ -268,6 +270,7 @@ namespace gui {
         m_ApplicationModel->setCurrentProject(newProject->id());
         newProject->save();
         makeTitle(); // TODO: add signal to make it auto
+        setWindowState();
         // TODO: connect new project signals with slots
     }
 
@@ -361,6 +364,25 @@ namespace gui {
             m_ApplicationModel->setCurrentProject(index.data(models::ProjectTreeModel::ID).toString());
             makeTitle(); // TODO: make it auto via signals
         }
+
+        setWindowState();
+    }
+
+    /**
+     * @brief MainWindow::setWindowState
+     */
+    void MainWindow::setWindowState()
+    {
+        bool state = !!m_ApplicationModel->currentProject();
+
+        ui->actionAddAlias->setEnabled( state );
+        ui->actionAddClass->setEnabled( state );
+        ui->actionAddStruct->setEnabled( state );
+        ui->actionAddTemplate->setEnabled( state );
+        ui->actionAddUnion->setEnabled( state );
+        ui->actionCreateScope->setEnabled( state );
+        ui->actionMakeRelation->setEnabled( state );
+        ui->actionSaveProject->setEnabled(state && !m_ApplicationModel->currentProject()->isSaved() );
     }
 
 } // namespace gui
