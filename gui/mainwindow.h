@@ -62,6 +62,8 @@ namespace gui {
         explicit MainWindow(const models::SharedApplicationModal &applicationModel, QWidget *parent = 0);
         ~MainWindow();
 
+        void update();
+
     private slots:
         void onExit();
         void onAbout();
@@ -82,9 +84,11 @@ namespace gui {
         void makeTitle();
 
         void onProjectTreeMenu(const QPoint &p);
-        void setCurrentProject();
+        void setCurrentProjectViaMenu();
 
-        void setWindowState();
+        void updateWindowState();
+
+        void setCurrentProject(const QString &id);
 
     private:
         void setUpWidgets();

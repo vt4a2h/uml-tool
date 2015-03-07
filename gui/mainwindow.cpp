@@ -79,8 +79,7 @@ namespace gui {
         setUpWidgets();
         makeConnections();
 
-        makeTitle();
-        setWindowState();
+        update();
     }
 
     /**
@@ -92,11 +91,31 @@ namespace gui {
     }
 
     /**
+     * @brief MainWindow::update
+     */
+    void MainWindow::update()
+    {
+        makeTitle();
+        updateWindowState();
+    }
+
+    /**
      * @brief MainWindow::onExit
      */
     void MainWindow::onExit()
     {
-        this->close();
+        if (auto pr = m_ApplicationModel->currentProject()) {
+            if (!pr->isSaved()) {
+                int result = QMessageBox::question(this,
+                                                   tr("Confirmation"),
+                                                   tr("Project \"%1\" is not saved. Save?").arg(pr->name()),
+                                                   QMessageBox::Yes | QMessageBox::No);
+                if (result == QMessageBox::Yes)
+                    pr->save();
+            }
+        }
+
+        close();
     }
 
     /**
@@ -141,10 +160,9 @@ namespace gui {
         } else {
             if (m_ApplicationModel->addProject(newProject))
             {
-                m_ApplicationModel->setCurrentProject(newProject->id());
+                setCurrentProject(newProject->id());
                 newProject->save();
-                makeTitle();
-                setWindowState(); // TODO: make it auto too
+                update();
             } else {
                 QMessageBox::information
                     ( this
@@ -162,10 +180,10 @@ namespace gui {
     void MainWindow::onSaveProject()
     {
         if (auto currentPtoject = m_ApplicationModel->currentProject()) {
-            if (!currentPtoject->isSaved()) {
+            if (!currentPtoject->isSaved())
                 currentPtoject->save();
-                makeTitle(); // TODO: connect with project modified signal to make it auto
-            }
+        } else {
+            QMessageBox::information(this, tr("Information"), tr("Nothing to save."), QMessageBox::Ok);
         }
     }
 
@@ -267,11 +285,8 @@ namespace gui {
         }
 
         auto newProject = m_ApplicationModel->makeProject( name, path );
-        m_ApplicationModel->setCurrentProject(newProject->id());
+        setCurrentProject(newProject->id());
         newProject->save();
-        makeTitle(); // TODO: add signal to make it auto
-        setWindowState();
-        // TODO: connect new project signals with slots
     }
 
     /**
@@ -318,7 +333,7 @@ namespace gui {
         m_CanvasConsoleSplitter->setSizes({canvasSize, consoleSize});
 
         auto a = m_ProjectTreeMenu->addAction("Make active");
-        connect(a, &QAction::triggered, this, &MainWindow::setCurrentProject);
+        connect(a, &QAction::triggered, this, &MainWindow::setCurrentProjectViaMenu);
     }
 
     /**
@@ -356,22 +371,19 @@ namespace gui {
     /**
      * @brief MainWindow::setCurrentProject
      */
-    void MainWindow::setCurrentProject()
+    void MainWindow::setCurrentProjectViaMenu()
     {
         QModelIndex index = m_ProjectTreeView->selectionModel()->currentIndex();
         QVariant data = index.data(models::ProjectTreeModel::SharedData);
         if (index.isValid() && data.canConvert<project::SharedProject>()) {
-            m_ApplicationModel->setCurrentProject(index.data(models::ProjectTreeModel::ID).toString());
-            makeTitle(); // TODO: make it auto via signals
+           setCurrentProject(index.data(models::ProjectTreeModel::ID).toString());
         }
-
-        setWindowState();
     }
 
     /**
      * @brief MainWindow::setWindowState
      */
-    void MainWindow::setWindowState()
+    void MainWindow::updateWindowState()
     {
         bool state = !!m_ApplicationModel->currentProject();
 
@@ -383,6 +395,26 @@ namespace gui {
         ui->actionCreateScope->setEnabled( state );
         ui->actionMakeRelation->setEnabled( state );
         ui->actionSaveProject->setEnabled(state && !m_ApplicationModel->currentProject()->isSaved() );
+    }
+
+    /**
+     * @brief MainWindow::setCurrentProject
+     * @param id
+     */
+    void MainWindow::setCurrentProject(const QString &id)
+    {
+        if (m_ApplicationModel->currentProject())
+        {
+            disconnect(m_ApplicationModel->currentProject().get(), &project::Project::saved, this, &MainWindow::update);
+            disconnect(m_ApplicationModel->currentProject().get(), &project::Project::modified, this, &MainWindow::update);
+        }
+
+        if (m_ApplicationModel->setCurrentProject(id)) {
+            connect(m_ApplicationModel->currentProject().get(), &project::Project::saved, this, &MainWindow::update);
+            connect(m_ApplicationModel->currentProject().get(), &project::Project::modified, this, &MainWindow::update);
+        } else {
+            qWarning() << QString("Current project with id %1 is not found.").arg(id);
+        }
     }
 
 } // namespace gui
