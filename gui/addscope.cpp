@@ -72,7 +72,19 @@ namespace gui {
      */
     void AddScope::onCreateScope()
     {
-       m_ScopeName = ui->leScopeName->text();
+        m_ScopeName = ui->leScopeName->text();
+    }
+
+    /**
+     * @brief AddScope::showEvent
+     * @param ev
+     */
+    void AddScope::showEvent(QShowEvent *ev)
+    {
+        ui->leScopeName->clear();
+        ui->leScopeName->setFocus();
+
+        QDialog::showEvent(ev);
     }
 
 } // namespace gui

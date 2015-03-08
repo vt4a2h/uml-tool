@@ -162,7 +162,7 @@ namespace models {
             auto projectDB = m_CurrentProject->database();
             Q_ASSERT(projectDB);
             result = projectDB->addScope(name);
-            // TODO: add scope to the tree model
+            m_TreeModel->addScope(result, currentProject()->id());
             // TODO: add scope to with parent scope
 
             currentProject()->touch();

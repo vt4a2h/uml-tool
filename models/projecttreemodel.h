@@ -51,6 +51,7 @@ namespace models {
         int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
         void addProject(const project::SharedProject &pr);
+        void addScope(const entity::SharedScope &scope, const QString &projectId);
 
     private:
         void addProjectItem(const project::SharedProject &pr);

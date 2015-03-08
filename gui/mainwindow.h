@@ -91,6 +91,9 @@ namespace gui {
         void setCurrentProject(const QString &id);
 
     private:
+        bool maybeExit();
+        void closeEvent(QCloseEvent *ev);
+
         void setUpWidgets();
         void makeConnections();
 

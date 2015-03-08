@@ -46,6 +46,8 @@ namespace gui {
         void onCreateScope();
 
     private:
+        void showEvent(QShowEvent * ev);
+
         Ui::AddScope *ui;
         QString m_ScopeName;
     };

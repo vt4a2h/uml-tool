@@ -153,7 +153,7 @@ namespace models {
     {
         return std::equal(lhs.m_Children.begin(), lhs.m_Children.end(), rhs.m_Children.begin(),
                           [](BasicTreeItem const * l, BasicTreeItem const * r) {
-                             return l == r || *l == *r;
+                             return l == r || (l && r && *l == *r);
                           }) &&
                 lhs.m_Entity == rhs.m_Entity &&
                 lhs.m_Type   == rhs.m_Type   &&

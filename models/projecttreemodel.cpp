@@ -189,6 +189,23 @@ namespace models {
     }
 
     /**
+     * @brief ProjectTreeModel::addScope
+     * @param scope
+     * @param parent
+     */
+    void ProjectTreeModel::addScope(const entity::SharedScope &scope, const QString &projectId)
+    {
+        auto it = std::find_if(m_Items.begin(), m_Items.end(),
+                               [&](const BasicTreeItem &item){ return item.id() == projectId; });
+        if (it != m_Items.end()) {
+            int parentIndex = std::distance(m_Items.begin(), it);
+            beginInsertRows(index(parentIndex, 0), parentIndex, parentIndex + 1);
+            it->makeChild(QVariant::fromValue(scope), TreeItemType::ScopeItem);
+            endInsertRows();
+        }
+    }
+
+    /**
      * @brief ProjectTreeModel::addProjectItem
      * @param pr
      */

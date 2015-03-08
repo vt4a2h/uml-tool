@@ -31,6 +31,7 @@
 #include <QTextEdit>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QCloseEvent>
 #include <QDebug>
 
 #include <models/applicationmodel.h>
@@ -104,18 +105,8 @@ namespace gui {
      */
     void MainWindow::onExit()
     {
-        if (auto pr = m_ApplicationModel->currentProject()) {
-            if (!pr->isSaved()) {
-                int result = QMessageBox::question(this,
-                                                   tr("Confirmation"),
-                                                   tr("Project \"%1\" is not saved. Save?").arg(pr->name()),
-                                                   QMessageBox::Yes | QMessageBox::No);
-                if (result == QMessageBox::Yes)
-                    pr->save();
-            }
-        }
-
-        close();
+        if (maybeExit())
+            close();
     }
 
     /**
@@ -377,6 +368,7 @@ namespace gui {
         QVariant data = index.data(models::ProjectTreeModel::SharedData);
         if (index.isValid() && data.canConvert<project::SharedProject>()) {
            setCurrentProject(index.data(models::ProjectTreeModel::ID).toString());
+           update();
         }
     }
 
@@ -415,6 +407,48 @@ namespace gui {
         } else {
             qWarning() << QString("Current project with id %1 is not found.").arg(id);
         }
+    }
+
+    /**
+     * @brief MainWindow::maybeExit
+     * @return
+     */
+    bool MainWindow::maybeExit()
+    {
+        bool needExit = true;
+
+        if (auto pr = m_ApplicationModel->currentProject()) {
+            if (!pr->isSaved()) {
+                int result = QMessageBox::question(this,
+                                                   tr("Confirmation"),
+                                                   tr("Project \"%1\" is not saved. Save?").arg(pr->name()),
+                                                   QMessageBox::Abort | QMessageBox::Yes | QMessageBox::No);
+                switch (result) {
+                    case QMessageBox::Yes:
+                        pr->save();
+                    case QMessageBox::No:
+                        break;
+                    case QMessageBox::Abort:
+                        needExit = false;
+                        break;
+                    default: ;
+                }
+            }
+        }
+
+        return needExit;
+    }
+
+    /**
+     * @brief MainWindow::closeEvent
+     * @param ev
+     */
+    void MainWindow::closeEvent(QCloseEvent *ev)
+    {
+        if (maybeExit())
+            ev->accept();
+        else
+            ev->ignore();
     }
 
 } // namespace gui
