@@ -32,12 +32,15 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <QGraphicsScene>
 #include <QDebug>
 
 #include <models/applicationmodel.h>
 #include <models/projecttreemodel.h>
 
 #include <project/project.h>
+
+#include <gui/graphics/entity.h>
 
 #include "about.h"
 #include "newproject.h"
@@ -69,6 +72,7 @@ namespace gui {
         , m_ProjectTreeMenu(new QMenu(this))
         , m_ProjectTreeView(new QTreeView(this))
         , m_MainView(new QGraphicsView(this))
+        , m_MainScene(new QGraphicsScene(this))
         , m_ConsoleOutput(new QTextEdit(this))
         , m_AboutWidget(new About(this))
         , m_NewProject(new NewProject(this))
@@ -79,6 +83,8 @@ namespace gui {
 
         setUpWidgets();
         makeConnections();
+
+        m_MainView->installEventFilter(this);
 
         update();
     }
@@ -308,6 +314,9 @@ namespace gui {
         m_CanvasConsoleSplitter->addWidget(m_ConsoleOutput);
         m_CanvasConsoleSplitter->setStretchFactor(0, 9);
         m_MainVerticalSplitter->addWidget(m_CanvasConsoleSplitter);
+        m_MainView->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing |
+                                   QPainter::SmoothPixmapTransform);
+        m_MainView->setScene(m_MainScene);
 
         m_MainVerticalSplitter->setStretchFactor(1, 9);
 
@@ -322,6 +331,7 @@ namespace gui {
         int canvasSize(std::round(this->height() * canvasSizeFactor));
         int consoleSize(std::round(this->height() * consoleSizeFactor));
         m_CanvasConsoleSplitter->setSizes({canvasSize, consoleSize});
+        m_ConsoleOutput->setReadOnly(true);
 
         auto a = m_ProjectTreeMenu->addAction("Make active");
         connect(a, &QAction::triggered, this, &MainWindow::setCurrentProjectViaMenu);
@@ -335,6 +345,36 @@ namespace gui {
         connect(m_ProjectTreeView, &QTreeView::customContextMenuRequested, this, &MainWindow::onProjectTreeMenu);
 
         connect(m_NewProject, &NewProject::newProject, this, &MainWindow::createNewProject);
+    }
+
+    /**
+     * @brief MainWindow::eventFilter
+     * @param obj
+     * @param ev
+     * @return
+     */
+    bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
+    {
+        if (obj == m_MainView) {
+            if (ev->type() == QEvent::MouseButtonPress)  {
+                // TODO: handle all elemnts type
+                if (m_ApplicationModel && m_ApplicationModel->currentProject() && ui->actionAddClass->isChecked()) {
+                    auto event = static_cast<QMouseEvent* >(ev);
+                    auto pos = m_MainView->mapToScene(event->pos());
+                    // TODO: add a factory to make elements
+                    graphics::Entity * entity = new graphics::Entity();
+                    entity->setPos(pos);
+                    m_MainScene->addItem(entity);
+                    ui->actionAddClass->setChecked(false);
+                }
+
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return QMainWindow::eventFilter(obj, ev);
+        }
     }
 
     /**

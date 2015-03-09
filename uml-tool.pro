@@ -46,7 +46,8 @@ SOURCES += \
     models/applicationmodel.cpp \
     entity/icomponents.cpp \
     entity/basicentity.cpp \
-    gui/addscope.cpp
+    gui/addscope.cpp \
+    gui/graphics/entity.cpp
 
 HEADERS += \
     enums.h \
@@ -89,7 +90,8 @@ HEADERS += \
     models/applicationmodel.h \
     entity/icomponents.h \
     entity/basicentity.h \
-    gui/addscope.h
+    gui/addscope.h \
+    gui/graphics/entity.h
 
 FORMS += \
     gui/mainwindow.ui \

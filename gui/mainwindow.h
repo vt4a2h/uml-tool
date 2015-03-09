@@ -32,6 +32,7 @@ class QVBoxLayout;
 class QTreeView;
 class QGraphicsView;
 class QTextEdit;
+class QGraphicsScene;
 
 namespace models {
     class ProjectTreeModel;
@@ -63,6 +64,8 @@ namespace gui {
         ~MainWindow();
 
         void update();
+
+        bool eventFilter(QObject *obj, QEvent *ev) override;
 
     private slots:
         void onExit();
@@ -108,6 +111,7 @@ namespace gui {
 
         QTreeView *m_ProjectTreeView;
         QGraphicsView *m_MainView;
+        QGraphicsScene *m_MainScene;
         QTextEdit *m_ConsoleOutput;
 
         About *m_AboutWidget;
