@@ -36,8 +36,9 @@ namespace graphics {
      * @brief Entity::Entity
      * @param parent
      */
-    Entity::Entity(QGraphicsItem *parent)
+    Entity::Entity(const entity::SharedType & type, QGraphicsItem *parent)
         : QGraphicsObject(parent)
+        , m_Type(type)
     {
         setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     }
@@ -72,6 +73,26 @@ namespace graphics {
         Q_UNUSED(widget);
         painter->setBrush(Qt::black);
         painter->drawRect(QRectF(-tmpWidth / 2, -tmpHeight / 2, tmpWidth, tmpHeight));
+        painter->setPen(Qt::white);
+        painter->drawText(boundingRect(), Qt::AlignCenter, "Stub");
+    }
+
+    /**
+     * @brief Entity::typeObject
+     * @return
+     */
+    entity::SharedType Entity::typeObject() const
+    {
+        return m_Type;
+    }
+
+    /**
+     * @brief Entity::setTypeObject
+     * @param type
+     */
+    void Entity::setTypeObject(const entity::SharedType &type)
+    {
+        m_Type = type;
     }
 
 } // grpahics

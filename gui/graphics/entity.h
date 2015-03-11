@@ -22,6 +22,8 @@
 *****************************************************************************/
 #pragma once
 
+#include "types.h"
+
 #include <QGraphicsObject>
 
 /// namespace graphics
@@ -32,11 +34,18 @@ namespace graphics {
     {
         Q_OBJECT
     public:
-        Entity(QGraphicsItem *parent = nullptr);
+        Entity(const entity::SharedType & type, QGraphicsItem *parent = nullptr);
         ~Entity();
 
         QRectF boundingRect() const override;
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                   QWidget *widget = nullptr);
+
+        entity::SharedType typeObject() const;
+        void setTypeObject(const entity::SharedType &type);
+
+    private:
+        entity::SharedType m_Type;
     };
 
 } // grpahics

@@ -358,11 +358,12 @@ namespace gui {
         if (obj == m_MainView) {
             if (ev->type() == QEvent::MouseButtonPress)  {
                 // TODO: handle all elemnts type
-                if (m_ApplicationModel && m_ApplicationModel->currentProject() && ui->actionAddClass->isChecked()) {
+                if (m_ApplicationModel && m_ApplicationModel->currentProject() &&
+                    ui->actionAddClass->isChecked()) {
                     auto event = static_cast<QMouseEvent* >(ev);
                     auto pos = m_MainView->mapToScene(event->pos());
                     // TODO: add a factory to make elements
-                    graphics::Entity * entity = new graphics::Entity();
+                    graphics::Entity * entity = new graphics::Entity(entity::SharedType());
                     entity->setPos(pos);
                     m_MainScene->addItem(entity);
                     ui->actionAddClass->setChecked(false);
