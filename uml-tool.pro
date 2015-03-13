@@ -47,7 +47,8 @@ SOURCES += \
     entity/icomponents.cpp \
     entity/basicentity.cpp \
     gui/addscope.cpp \
-    gui/graphics/entity.cpp
+    gui/graphics/entity.cpp \
+    entity/entitiesfactory.cpp
 
 HEADERS += \
     enums.h \
@@ -91,7 +92,8 @@ HEADERS += \
     entity/icomponents.h \
     entity/basicentity.h \
     gui/addscope.h \
-    gui/graphics/entity.h
+    gui/graphics/entity.h \
+    entity/entitiesfactory.h
 
 FORMS += \
     gui/mainwindow.ui \

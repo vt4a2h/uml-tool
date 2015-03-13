@@ -47,6 +47,9 @@ namespace models {
 
         entity::SharedScope makeScope(const QString &name);
 
+        template <class T = entity::Type>
+        std::shared_ptr<T> makeType(const QString &scopeID, const QString &name = "");
+
         project::SharedProject currentProject() const;
         bool setCurrentProject(const QString &id);
 
@@ -62,5 +65,14 @@ namespace models {
 
         SharedTreeModel m_TreeModel;
     };
+
+    template <class T>
+    std::shared_ptr<T> ApplicationModel::makeType(const QString &scopeID, const QString &name)
+    {
+        Q_UNUSED(scopeID);
+        Q_UNUSED(name);
+
+        return std::shared_ptr<T>(); // stub
+    }
 
 } // namespace models
