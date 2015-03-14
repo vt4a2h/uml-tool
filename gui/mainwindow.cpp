@@ -42,6 +42,8 @@
 
 #include <gui/graphics/entity.h>
 
+#include <entity/entitiesfactory.h>
+
 #include "about.h"
 #include "newproject.h"
 #include "addscope.h"
@@ -362,10 +364,13 @@ namespace gui {
                     ui->actionAddClass->isChecked()) {
                     auto event = static_cast<QMouseEvent* >(ev);
                     auto pos = m_MainView->mapToScene(event->pos());
-                    // TODO: add a factory to make elements
-                    graphics::Entity * entity = new graphics::Entity(entity::SharedType());
-                    entity->setPos(pos);
-                    m_MainScene->addItem(entity);
+
+                    auto && factory = entity::EntitiesFactory::get();
+                    factory.makeClass(m_ApplicationModel,
+                                      m_ApplicationModel->currentProject()->database()->scopes().first()->id(), // tmp !!!
+                                      *m_MainScene,
+                                      pos);
+
                     ui->actionAddClass->setChecked(false);
                 }
 

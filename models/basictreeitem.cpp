@@ -160,9 +160,23 @@ namespace models {
                 lhs.m_Parent == rhs.m_Parent;
     }
 
+    /**
+     * @brief BasicTreeItem::child
+     * @param row
+     * @return
+     */
     BasicTreeItem * BasicTreeItem::child(int row) const
     {
         return m_Children.value(row);
+    }
+
+    /**
+     * @brief BasicTreeItem::children
+     * @return
+     */
+    ChildItems BasicTreeItem::childrenItems() const
+    {
+        return m_Children;
     }
 
     /**

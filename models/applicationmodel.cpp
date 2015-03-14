@@ -22,15 +22,9 @@
 *****************************************************************************/
 #include "applicationmodel.h"
 
-#include <project/project.h>
-#include <db/projectdatabase.h>
-#include <db/database.h>
-#include <entity/scope.h>
 #include <entity/type.h>
 #include <entity/class.h>
 #include <entity/classmethod.h>
-
-#include "projecttreemodel.h"
 
 #include "constants.cpp"
 

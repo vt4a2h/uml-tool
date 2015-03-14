@@ -35,8 +35,8 @@ namespace entity {
         static const EntitiesFactory &get();
 
         SharedClass makeClass(const models::SharedApplicationModal &model,
-                              const QString &scopeID,
-                              QGraphicsScene &scene) const;
+                              const QString &scopeID, QGraphicsScene &scene,
+                              const QPointF &pos) const;
 //        entity::SharedType makeStruct() const;
 //        entity::SharedType makeUnion() const;
 //        entity::SharedType makeTemplate() const;

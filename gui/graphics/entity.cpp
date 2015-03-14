@@ -24,6 +24,8 @@
 
 #include <QPainter>
 
+#include <entity/type.h>
+
 namespace graphics {
 
     namespace {
@@ -74,7 +76,7 @@ namespace graphics {
         painter->setBrush(Qt::black);
         painter->drawRect(QRectF(-tmpWidth / 2, -tmpHeight / 2, tmpWidth, tmpHeight));
         painter->setPen(Qt::white);
-        painter->drawText(boundingRect(), Qt::AlignCenter, "Stub");
+        painter->drawText(boundingRect(), Qt::AlignCenter, m_Type ? m_Type->name() : "Stub");
     }
 
     /**

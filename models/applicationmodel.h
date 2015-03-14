@@ -25,7 +25,13 @@
 
 #include <QObject>
 
-#include <types.h>
+#include <project/project.h>
+#include <db/projectdatabase.h>
+#include <entity/scope.h>
+
+#include "projecttreemodel.h"
+
+#include "types.h"
 
 namespace models {
 
@@ -69,8 +75,15 @@ namespace models {
     template <class T>
     std::shared_ptr<T> ApplicationModel::makeType(const QString &scopeID, const QString &name)
     {
-        Q_UNUSED(scopeID);
-        Q_UNUSED(name);
+        if (currentProject() && currentProject()->database()) {
+            if (auto scope = currentProject()->database()->getScope(scopeID)) {
+                if (auto type = scope->addType<T>(name)) {
+                    m_TreeModel->addType(type, scope->id(), currentProject()->id());
+
+                    return type;
+                }
+            }
+        }
 
         return std::shared_ptr<T>(); // stub
     }

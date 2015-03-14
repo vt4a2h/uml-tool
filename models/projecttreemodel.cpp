@@ -206,6 +206,30 @@ namespace models {
     }
 
     /**
+     * @brief ProjectTreeModel::addType
+     * @param type
+     * @param scopeId
+     * @param projectId
+     */
+    void ProjectTreeModel::addType(const entity::SharedType &type, const QString &scopeId, const QString &projectId)
+    {
+        auto projectIt = std::find_if(m_Items.begin(), m_Items.end(),
+                                      [&](const BasicTreeItem &item){ return item.id() == projectId; });
+
+        if (projectIt != m_Items.end()) {
+            auto scopes = projectIt->childrenItems();
+            auto scopeIt = std::find_if(scopes.begin(), scopes.end(),
+                                        [&](const BasicTreeItem *item){ return item->id() == scopeId; });
+            if (scopeIt != scopes.end()) {
+                int parentIndex = std::distance(scopes.begin(), scopeIt);
+                beginInsertRows(index(parentIndex - 1, 0), (*scopeIt)->childCount(), (*scopeIt)->childCount() + 1);
+                (*scopeIt)->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
+                endInsertRows();
+            }
+        }
+    }
+
+    /**
      * @brief ProjectTreeModel::addProjectItem
      * @param pr
      */

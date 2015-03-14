@@ -20,8 +20,15 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #include "entitiesfactory.h"
+
+#include <QGraphicsScene>
+
+#include <gui/graphics/entity.h>
+
+#include <models/applicationmodel.h>
+
+#include "class.h"
 
 namespace entity {
 
@@ -43,13 +50,18 @@ namespace entity {
      * @return
      */
     SharedClass EntitiesFactory::makeClass(const models::SharedApplicationModal &model,
-                                           const QString &scopeID, QGraphicsScene &scene) const
+                                           const QString &scopeID, QGraphicsScene &scene,
+                                           const QPointF &pos) const
     {
-        Q_UNUSED(model);
-        Q_UNUSED(scopeID);
-        Q_UNUSED(scene);
+        auto type = model->makeType<entity::Class>(scopeID);
 
-        return SharedClass();
+        graphics::Entity * entity = new graphics::Entity(type);
+        entity->setPos(pos);
+        scene.addItem(entity);
+
+        model->currentProject()->touch();
+
+        return type;
     }
 
     /**
