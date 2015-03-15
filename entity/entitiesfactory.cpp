@@ -30,6 +30,26 @@
 
 #include "class.h"
 
+namespace {
+    void connectEntity(graphics::Entity * entity, project::Project * currentProject)
+    {
+        Q_ASSERT(entity);
+        Q_ASSERT(currentProject);
+
+        QObject::connect(entity, &graphics::Entity::xChanged, currentProject, &project::Project::touch);
+        QObject::connect(entity, &graphics::Entity::yChanged, currentProject, &project::Project::touch);
+    }
+
+    graphics::Entity *newEntity(QGraphicsScene &scene, const QPointF &pos, const entity::SharedType &type = nullptr)
+    {
+        graphics::Entity * entity = new graphics::Entity(type);
+        entity->setPos(pos);
+        scene.addItem(entity);
+
+        return entity;
+    }
+}
+
 namespace entity {
 
     /**
@@ -55,13 +75,28 @@ namespace entity {
     {
         auto type = model->makeType<entity::Class>(scopeID);
 
-        graphics::Entity * entity = new graphics::Entity(type);
-        entity->setPos(pos);
-        scene.addItem(entity);
+        graphics::Entity * entity = newEntity(scene, pos);
 
-        model->currentProject()->touch();
+        project::Project * currentProject = model->currentProject().get();
+
+        connectEntity(entity, currentProject);
+
+        currentProject->touch();
 
         return type;
+    }
+
+    /**
+     * @brief EntitiesFactory::addEntity
+     * @param scene
+     * @param type
+     * @param pos
+     */
+    void EntitiesFactory::addEntity(QGraphicsScene &scene, const project::SharedProject &project,
+                                    const SharedType &type, const QPointF &pos) const
+    {
+        graphics::Entity * entity = newEntity(scene, pos, type);
+        connectEntity(entity, project.get());
     }
 
     /**

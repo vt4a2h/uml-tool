@@ -43,6 +43,7 @@
 #include <gui/graphics/entity.h>
 
 #include <entity/entitiesfactory.h>
+#include <entity/type.h>
 
 #include "about.h"
 #include "newproject.h"
@@ -58,6 +59,34 @@ namespace {
     const double consoleSizeFactor = 0.3;
 
     const QString titleTemplate = "%1Q-UML";
+
+    void storeItemsPosition(const QGraphicsScene *scene, db::ProjectDatabase *db)
+    {
+        Q_ASSERT(scene);
+        Q_ASSERT(db);
+
+        db::ItemsPos positions;
+
+        for (auto &&item: scene->items())
+            if (auto entityItem = dynamic_cast<graphics::Entity *>(item))
+                positions.append({entityItem->typeObject()->id(), entityItem->pos()});
+
+        db->setItemsPos(positions);
+    }
+
+    void addGraphicsItems(QGraphicsScene *scene, const project::SharedProject &project)
+    {
+        Q_ASSERT(scene);
+
+        scene->clear();
+
+        db::ProjectDatabase * database = project->database().get();
+        for (auto &&item : database->itemsPos()) {
+            if (const entity::SharedType &type = database->depthTypeSearch(item.first)) {
+                entity::EntitiesFactory::get().addEntity(*scene, project, type, item.second);
+            }
+        }
+    }
 }
 
 namespace gui {
@@ -179,8 +208,10 @@ namespace gui {
     void MainWindow::onSaveProject()
     {
         if (auto currentPtoject = m_ApplicationModel->currentProject()) {
-            if (!currentPtoject->isSaved())
+            if (!currentPtoject->isSaved()) {
+                storeItemsPosition(m_MainScene, currentPtoject->database().get());
                 currentPtoject->save();
+            }
         } else {
             QMessageBox::information(this, tr("Information"), tr("Nothing to save."), QMessageBox::Ok);
         }
@@ -450,6 +481,8 @@ namespace gui {
         if (m_ApplicationModel->setCurrentProject(id)) {
             connect(m_ApplicationModel->currentProject().get(), &project::Project::saved, this, &MainWindow::update);
             connect(m_ApplicationModel->currentProject().get(), &project::Project::modified, this, &MainWindow::update);
+
+            addGraphicsItems(m_MainScene, m_ApplicationModel->currentProject());
         } else {
             qWarning() << QString("Current project with id %1 is not found.").arg(id);
         }

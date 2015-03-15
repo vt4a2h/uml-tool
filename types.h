@@ -26,9 +26,12 @@
 #include <QHash>
 #include <QMap>
 #include <QSet>
+#include <QPair>
+#include <QVector>
 #include <QStringList>
 #include <QMultiHash>
 #include <QMetaType>
+#include <QPointF>
 #include <memory>
 
 using ErrorList = QStringList;
@@ -117,6 +120,9 @@ namespace db {
     class ProjectDatabase;
     using SharedDatabase = std::shared_ptr<Database>;
     using SharedProjectDatabase = std::shared_ptr<ProjectDatabase>;
+
+    using IDPos = QPair<QString, QPointF>;
+    using ItemsPos = QVector<IDPos>;
 }
 
 namespace translator {
@@ -173,3 +179,4 @@ Q_DECLARE_METATYPE(entity::SharedClass)
 Q_DECLARE_METATYPE(entity::SharedScope)
 Q_DECLARE_METATYPE(relationship::SharedRelation)
 Q_DECLARE_METATYPE(project::SharedProject)
+Q_DECLARE_METATYPE(db::IDPos)

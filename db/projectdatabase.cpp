@@ -162,8 +162,19 @@ namespace db {
         QJsonObject result(Database::toJson());
 
         QJsonArray relations;
-        for (auto &&val : m_Relations.values()) relations.append(val->toJson());
+        for (auto &&val : m_Relations.values())
+            relations.append(val->toJson());
         result.insert("Relations", relations);
+
+        QJsonArray positions;
+        for (auto &&val : m_ItemsPos) {
+            QJsonObject obj;
+            obj["id"] = val.first;
+            obj["x"]  = val.second.x();
+            obj["y"]  = val.second.y();
+            positions.append(obj);
+        }
+        result.insert("Positions", positions);
 
         return result;
     }
@@ -196,6 +207,18 @@ namespace db {
                 errorList << "Error: \"Relations\" is not array";
             }
         });
+
+        utility::checkAndSet(src, "Positions", errorList, [&, this](){
+            if (src["Positions"].isArray()) {
+                QJsonObject obj;
+                for (auto &&val : src["Positions"].toArray()) {
+                    obj = val.toObject();
+                    m_ItemsPos.append({obj["id"].toString(), {obj["x"].toDouble(), obj["y"].toDouble()}});
+                }
+            } else {
+                errorList << "Error: \"Positions\" is not array";
+            }
+        });
     }
 
     /**
@@ -206,6 +229,24 @@ namespace db {
     bool ProjectDatabase::isEqual(const ProjectDatabase &rhs) const
     {
         return *this == rhs;
+    }
+
+    /**
+     * @brief ProjectDatabase::setItemsPos
+     * @param positions
+     */
+    void ProjectDatabase::setItemsPos(const ItemsPos &positions)
+    {
+        m_ItemsPos = positions;
+    }
+
+    /**
+     * @brief ProjectDatabase::itemsPos
+     * @return
+     */
+    ItemsPos ProjectDatabase::itemsPos() const
+    {
+        return m_ItemsPos;
     }
 
     /**

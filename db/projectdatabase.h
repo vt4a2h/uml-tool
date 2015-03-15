@@ -59,6 +59,9 @@ namespace db {
 
         bool isEqual(const ProjectDatabase &rhs) const;
 
+        void setItemsPos(const ItemsPos &positions);
+        ItemsPos itemsPos() const;
+
     protected:
         virtual void copyFrom(const ProjectDatabase &src);
         virtual void moveFrom(ProjectDatabase &src);
@@ -66,6 +69,8 @@ namespace db {
     private:
         relationship::Relations m_Relations;
         db::SharedDatabase m_GlobalDatabase;
+
+        ItemsPos m_ItemsPos;
     };
 
 } // namespace db

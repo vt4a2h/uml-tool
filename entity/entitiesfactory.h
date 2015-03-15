@@ -44,6 +44,9 @@ namespace entity {
 
 //        entity::SharedScope makeScope() const;
 
+        void addEntity(QGraphicsScene &scene, const project::SharedProject &project,
+                       const entity::SharedType &type, const QPointF &pos) const;
+
     private:
         EntitiesFactory();
         EntitiesFactory(const EntitiesFactory &);

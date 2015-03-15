@@ -320,11 +320,13 @@ namespace entity {
         result.insert("Parent ID", m_ParentScopeId);
 
         QJsonArray scopes;
-        for (auto &&scope : m_Scopes.values()) scopes.append(scope->toJson());
+        for (auto &&scope : m_Scopes.values())
+            scopes.append(scope->toJson());
         result.insert("Scopes", scopes);
 
         QJsonArray types;
-        for (auto &&type : m_Types.values()) types.append(type->toJson());
+        for (auto &&type : m_Types.values())
+            types.append(type->toJson());
         result.insert("Types", types);
 
         return result;
