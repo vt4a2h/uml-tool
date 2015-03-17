@@ -64,10 +64,10 @@ namespace entity {
      * @param scopeName
      * @param scopeId
      */
-    Scope::Scope(const QString &scopeName, const QString &scopeId)
+    Scope::Scope(const QString &scopeName, const QString &parentScopeID)
         : m_Name(!scopeName.isEmpty() ? scopeName : DEFAULT_NAME)
         , m_Id(utility::genId())
-        , m_ParentScopeId(!scopeId.isEmpty() ? scopeId : GLOBAL_SCOPE_ID)
+        , m_ParentScopeId(!parentScopeID.isEmpty() ? parentScopeID : GLOBAL_SCOPE_ID)
     {
     }
 

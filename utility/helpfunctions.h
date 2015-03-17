@@ -141,6 +141,7 @@ namespace utility {
                           [](const ValueType &r, const ValueType &l){ return r == l || *r == *l; });
     }
 
+    // NOTE: maybe problems with unique id's
     template <class Hash, class KeyGetter>
     void deepCopySharedPointerHash(const Hash &src, Hash &dst, KeyGetter keyGetter)
     {

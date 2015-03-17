@@ -219,11 +219,14 @@ namespace models {
                                       [&](const BasicTreeItem &item){ return item.id() == projectId; });
 
         if (projectIt != m_Items.end()) {
+            auto projectIndex = std::distance(m_Items.begin(), projectIt);
+
             auto scopes = projectIt->childrenItems();
             auto scopeIt = std::find_if(scopes.begin(), scopes.end(),
                                         [&](const BasicTreeItem *item){ return item->id() == scopeId; });
             if (scopeIt != scopes.end()) {
                 int parentIndex = std::distance(scopes.begin(), scopeIt);
+                parentIndex += projectIndex;
                 beginInsertRows(index(parentIndex, 0), parentIndex, parentIndex + 1);
                 (*scopeIt)->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
                 endInsertRows();

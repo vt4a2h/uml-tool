@@ -396,11 +396,24 @@ namespace gui {
                     auto event = static_cast<QMouseEvent* >(ev);
                     auto pos = m_MainView->mapToScene(event->pos());
 
-                    auto && factory = entity::EntitiesFactory::get();
-                    factory.makeClass(m_ApplicationModel,
-                                      m_ApplicationModel->currentProject()->database()->scopes().first()->id(), // tmp !!!
-                                      *m_MainScene,
-                                      pos);
+                    const db::ProjectDatabase &projectDb =
+                        *m_ApplicationModel->currentProject()->database().get();
+
+                    if (projectDb.anyScopes()) {
+                        entity::SharedScope scope = projectDb.defaultScope();
+                        if (!scope)
+                            scope = projectDb.scopes().first();
+
+                        auto && factory = entity::EntitiesFactory::get();
+                        factory.makeClass(m_ApplicationModel, scope->id(), *m_MainScene, pos);
+                    } else {
+                        QMessageBox::information(
+                            this,
+                            tr("Information"),
+                            tr("You have no abilities to add a new class in "
+                               "project without any namespaces."),
+                            QMessageBox::Ok );
+                    }
 
                     ui->actionAddClass->setChecked(false);
                 }

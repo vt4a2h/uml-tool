@@ -1,23 +1,23 @@
 /*****************************************************************************
-** 
+**
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
 ** Created 03/11/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
-** 
+**
 ** Q-UML is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** Q-UML is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU Lesser General Public License for more details.
 
 ** You should have received a copy of the GNU Lesser General Public License
-** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>. 
+** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
 
@@ -57,7 +57,7 @@ namespace db {
         bool containsScope(const QString &id) const;
         bool anyScopes() const;
         void removeScope(const QString &id);
-        entity::ScopesList scopes();
+        entity::ScopesList scopes() const;
 
         entity::SharedScope depthScopeSearch(const QString &scopeId) const;
         entity::SharedType  depthTypeSearch(const QString &typeId)   const;
@@ -71,9 +71,16 @@ namespace db {
 
         virtual bool isEqual(const Database &rhs) const;
 
+        QString id() const;
+
     protected:
         virtual void copyFrom(const Database &src);
         virtual void moveFrom(Database &src);
+
+        QString        m_Name;
+        QString        m_Path;
+        QString        m_ID;
+        entity::Scopes m_Scopes;
 
     private:
         QStringList makeDepthIdList(const QString &id) const;
@@ -81,11 +88,6 @@ namespace db {
         void getDepthType(const entity::SharedScope &scope, const QString &id, entity::SharedType &result) const;
         QString makeFullPath() const;
         void recursiveFind(entity::SharedScope scope, const QString &id, QStringList &ids) const;
-
-        QString        m_Name;
-        QString        m_Path;
-        QString        m_ID;
-        entity::Scopes m_Scopes;
     };
 
 } // namespace db

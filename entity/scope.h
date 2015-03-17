@@ -42,7 +42,7 @@ namespace entity {
     public:
         Scope(Scope &&src);
         Scope(const Scope &src);
-        Scope(const QString &scopeName = "", const QString &scopeId = "");
+        Scope(const QString &scopeName = "", const QString &parentScopeID = "");
 
         Scope &operator =(Scope rhs);
         Scope &operator =(Scope &&rhs);

@@ -62,6 +62,9 @@ namespace db {
         void setItemsPos(const ItemsPos &positions);
         ItemsPos itemsPos() const;
 
+        QString defaultScopeID() const;
+        entity::SharedScope defaultScope() const;
+
     protected:
         virtual void copyFrom(const ProjectDatabase &src);
         virtual void moveFrom(ProjectDatabase &src);

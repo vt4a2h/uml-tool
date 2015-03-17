@@ -175,7 +175,8 @@ namespace db {
             auto searchResults = std::move(makeDepthIdList(parentScopeId));
             if (!searchResults.isEmpty()) {
                 auto depthScope = getScopeWithDepthList(searchResults);
-                if (depthScope) scope = depthScope->addChildScope(name);
+                if (depthScope)
+                    scope = depthScope->addChildScope(name);
             }
         }
 
@@ -214,7 +215,7 @@ namespace db {
      * @brief Database::scopes
      * @return
      */
-    entity::ScopesList Database::scopes()
+    entity::ScopesList Database::scopes() const
     {
         return m_Scopes.values();
     }
@@ -412,6 +413,15 @@ namespace db {
     bool Database::isEqual(const Database &rhs) const
     {
         return *this == rhs;
+    }
+
+    /**
+     * @brief Database::id
+     * @return
+     */
+    QString Database::id() const
+    {
+        return m_ID;
     }
 
     /**
