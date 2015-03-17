@@ -75,7 +75,7 @@ namespace entity {
     {
         auto type = model->makeType<entity::Class>(scopeID);
 
-        graphics::Entity * entity = newEntity(scene, pos);
+        graphics::Entity * entity = newEntity(scene, pos, type);
 
         project::Project * currentProject = model->currentProject().get();
 

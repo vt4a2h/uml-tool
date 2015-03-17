@@ -199,6 +199,8 @@ namespace models {
                                [&](const BasicTreeItem &item){ return item.id() == projectId; });
         if (it != m_Items.end()) {
             int parentIndex = std::distance(m_Items.begin(), it);
+            if (parentIndex == 0)
+                ++parentIndex;
             beginInsertRows(index(parentIndex, 0), parentIndex, parentIndex + 1);
             it->makeChild(QVariant::fromValue(scope), TreeItemType::ScopeItem);
             endInsertRows();
@@ -222,7 +224,7 @@ namespace models {
                                         [&](const BasicTreeItem *item){ return item->id() == scopeId; });
             if (scopeIt != scopes.end()) {
                 int parentIndex = std::distance(scopes.begin(), scopeIt);
-                beginInsertRows(index(parentIndex - 1, 0), (*scopeIt)->childCount(), (*scopeIt)->childCount() + 1);
+                beginInsertRows(index(parentIndex, 0), parentIndex, parentIndex + 1);
                 (*scopeIt)->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
                 endInsertRows();
             }
