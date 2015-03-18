@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 09/03/2015.
+** Created 18/03/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,47 +22,26 @@
 *****************************************************************************/
 #pragma once
 
-#include <memory>
-
-#include <QGraphicsObject>
-
-#include "types.h"
-
-class QMenu;
+#include <QDialog>
 
 namespace gui
 {
-    class EditEntityDialog;
-}
 
-/// namespace graphics
-namespace graphics {
+    namespace Ui {
+        class EditEntityDialog;
+    }
 
-    /// The Entity class
-    class Entity : public QGraphicsObject
+    /// The EditEntityDialog class
+    class EditEntityDialog : public QDialog
     {
         Q_OBJECT
+
     public:
-        Entity(const entity::SharedType & type, QGraphicsItem *parent = nullptr);
-        ~Entity();
-
-        QRectF boundingRect() const override;
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                   QWidget *widget = nullptr);
-
-        entity::SharedType typeObject() const;
-        void setTypeObject(const entity::SharedType &type);
+        explicit EditEntityDialog(QWidget *parent = 0);
+        ~EditEntityDialog();
 
     private:
-        bool event(QEvent *ev) override;
-        void showMenu(const QPoint &pos);
-        void addMenuActions();
-
-        // NOTE: widget and menu for each graphic object may be costly
-        std::unique_ptr<QMenu> m_Menu;
-        std::unique_ptr<gui::EditEntityDialog> m_EditDialog;
-
-        entity::SharedType m_Type;
+        Ui::EditEntityDialog *ui;
     };
 
-} // grpahics
+} // namespace gui

@@ -23,15 +23,21 @@
 #include "entity.h"
 
 #include <QPainter>
+#include <QEvent>
+#include <QMenu>
+#include <QGraphicsSceneContextMenuEvent>
+#include <QGraphicsScene>
+
+#include <gui/editentitydialog.h>
 
 #include <entity/type.h>
 
 namespace graphics {
 
     namespace {
-        constexpr double margin = 2.;
+        constexpr double margin    = 2.  ;
         constexpr double tmpHeight = 100.;
-        constexpr double tmpWidth = 100.;
+        constexpr double tmpWidth  = 100.;
     }
 
     /**
@@ -40,9 +46,12 @@ namespace graphics {
      */
     Entity::Entity(const entity::SharedType & type, QGraphicsItem *parent)
         : QGraphicsObject(parent)
+        , m_Menu(std::make_unique<QMenu>())
+        , m_EditDialog(std::make_unique<gui::EditEntityDialog>())
         , m_Type(type)
     {
         setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+        addMenuActions();
     }
 
     /**
@@ -95,6 +104,54 @@ namespace graphics {
     void Entity::setTypeObject(const entity::SharedType &type)
     {
         m_Type = type;
+    }
+
+    /**
+     * @brief Entity::event
+     * @param ev
+     * @return
+     */
+    bool Entity::event(QEvent *ev)
+    {
+        switch (ev->type()) {
+
+            case QEvent:: GraphicsSceneContextMenu:
+            {
+                QGraphicsSceneContextMenuEvent *menuEvent =
+                    static_cast<QGraphicsSceneContextMenuEvent *>(ev);
+                showMenu(menuEvent->screenPos());
+
+                return true;
+            }
+
+            default: ;
+        }
+
+        return QObject::event(ev);
+    }
+
+    /**
+     * @brief Entity::showMenu
+     * @param pos
+     */
+    void Entity::showMenu(const QPoint &pos)
+    {
+        m_Menu->exec(pos);
+    }
+
+    void Entity::addMenuActions()
+    {
+        auto actionEdit = m_Menu->addAction(tr("Edit"));
+        connect(actionEdit, &QAction::triggered,
+                [this]() {
+                    // We know that main window is the parent of scene
+                    Q_ASSERT(scene());
+                    m_EditDialog->setParent(static_cast<QWidget *>(scene()->parent()), Qt::Dialog);
+                    m_EditDialog->exec();
+                });
+
+        m_Menu->addSeparator();
+        m_Menu->addAction(tr("Delete"));
     }
 
 } // grpahics

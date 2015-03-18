@@ -48,7 +48,8 @@ SOURCES += \
     entity/basicentity.cpp \
     gui/addscope.cpp \
     gui/graphics/entity.cpp \
-    entity/entitiesfactory.cpp
+    entity/entitiesfactory.cpp \
+    gui/editentitydialog.cpp
 
 HEADERS += \
     enums.h \
@@ -93,13 +94,15 @@ HEADERS += \
     entity/basicentity.h \
     gui/addscope.h \
     gui/graphics/entity.h \
-    entity/entitiesfactory.h
+    entity/entitiesfactory.h \
+    gui/editentitydialog.h
 
 FORMS += \
     gui/mainwindow.ui \
     gui/about.ui \
     gui/newproject.ui \
-    gui/addscope.ui
+    gui/addscope.ui \
+    gui/editentitydialog.ui
 
 RESOURCES += \
     gui/main.qrc
