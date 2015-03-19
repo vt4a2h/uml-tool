@@ -37,11 +37,13 @@ namespace gui
         Q_OBJECT
 
     public:
+        Q_DISABLE_COPY(EditEntityDialog)
+
         explicit EditEntityDialog(QWidget *parent = 0);
         ~EditEntityDialog();
 
     private:
-        Ui::EditEntityDialog *ui;
+        QScopedPointer<Ui::EditEntityDialog> ui;
     };
 
 } // namespace gui

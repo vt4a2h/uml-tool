@@ -46,7 +46,6 @@ namespace gui {
      */
     AddScope::~AddScope()
     {
-        delete ui;
     }
 
     /**

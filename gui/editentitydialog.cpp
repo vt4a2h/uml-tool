@@ -41,7 +41,6 @@ namespace gui {
      */
     EditEntityDialog::~EditEntityDialog()
     {
-        delete ui;
     }
 
 } // namespace gui

@@ -38,6 +38,8 @@ namespace gui {
         Q_OBJECT
 
     public:
+        Q_DISABLE_COPY(NewProject)
+
         explicit NewProject(QWidget *parent = 0);
         ~NewProject();
 
@@ -51,7 +53,7 @@ namespace gui {
     private:
         void clear();
 
-        Ui::NewProject *ui;
+        QScopedPointer<Ui::NewProject> ui;
     };
 
 } // namespace gui

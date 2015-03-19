@@ -21,6 +21,7 @@
 **
 *****************************************************************************/
 #pragma once
+
 #include <QDialog>
 
 namespace gui {
@@ -37,11 +38,13 @@ namespace gui {
         Q_OBJECT
 
     public:
+        Q_DISABLE_COPY(About)
+
         explicit About(QWidget *parent = 0);
         ~About();
 
     private:
-        Ui::About *ui;
+        QScopedPointer<Ui::About> ui;
     };
 
 } // namespace gui

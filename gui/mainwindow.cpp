@@ -125,7 +125,7 @@ namespace gui {
      */
     MainWindow::~MainWindow()
     {
-        delete ui;
+
     }
 
     /**

@@ -60,7 +60,10 @@ namespace gui {
         Q_OBJECT
 
     public:
-        explicit MainWindow(const models::SharedApplicationModal &applicationModel, QWidget *parent = 0);
+        Q_DISABLE_COPY(MainWindow)
+
+        explicit MainWindow(const models::SharedApplicationModal &applicationModel,
+                            QWidget *parent = 0);
         ~MainWindow();
 
         void update();
@@ -100,7 +103,7 @@ namespace gui {
         void setUpWidgets();
         void makeConnections();
 
-        Ui::MainWindow *ui;
+        QScopedPointer<Ui::MainWindow> ui;
 
         QSplitter *m_MainVerticalSplitter;
         QSplitter *m_CanvasConsoleSplitter;

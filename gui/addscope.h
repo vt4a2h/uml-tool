@@ -35,6 +35,8 @@ namespace gui {
         Q_OBJECT
 
     public:
+        Q_DISABLE_COPY(AddScope)
+
         explicit AddScope(QWidget *parent = 0);
         ~AddScope();
 
@@ -48,7 +50,7 @@ namespace gui {
     private:
         void showEvent(QShowEvent * ev);
 
-        Ui::AddScope *ui;
+        QScopedPointer<Ui::AddScope> ui;
         QString m_ScopeName;
     };
 

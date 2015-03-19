@@ -41,7 +41,6 @@ namespace gui {
      */
     About::~About()
     {
-        delete ui;
     }
 
 } // namespace gui

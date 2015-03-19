@@ -45,7 +45,6 @@ namespace gui {
      */
     NewProject::~NewProject()
     {
-        delete ui;
     }
 
     /**
