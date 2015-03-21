@@ -39,6 +39,8 @@ namespace gui {
     {
         ui->setupUi(this);
         ui->leScopeName->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z_]+"), this));
+
+        connect(ui->leScopeName, &QLineEdit::textChanged, this, &AddScope::onTextChanged);
     }
 
     /**
@@ -55,6 +57,15 @@ namespace gui {
     void AddScope::setProjectName(const QString &name)
     {
         setWindowTitle( !name.isEmpty() ? defaultWidgetName + tr(" in project %1").arg(name) : name);
+    }
+
+    /**
+     * @brief AddScope::addExistingScopesNames
+     * @param scopes
+     */
+    void AddScope::addExistingScopesNames(const QStringList &scopes)
+    {
+        m_ExistingScopes = scopes;
     }
 
     /**
@@ -82,8 +93,20 @@ namespace gui {
     {
         ui->leScopeName->clear();
         ui->leScopeName->setFocus();
+        ui->pbCreateScope->setEnabled(false);
 
         QDialog::showEvent(ev);
+    }
+
+    /**
+     * @brief AddScope::onTextChanged
+     * @param text
+     */
+    void AddScope::onTextChanged(const QString &text)
+    {
+        bool valid = !text.isEmpty() && m_ExistingScopes.indexOf(text) == -1;
+        ui->pbCreateScope->setEnabled(valid);
+        ui->leScopeName->setStyleSheet(valid ? "" : "color: rgb(255, 0, 0);");
     }
 
 } // namespace gui

@@ -19,18 +19,21 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
      <width>611</width>
-     <height>26</height>
+     <height>27</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
      <widget class="QLineEdit" name="leName">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="placeholderText">
        <string>Enter entity name here...</string>
       </property>

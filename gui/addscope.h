@@ -41,6 +41,7 @@ namespace gui {
         ~AddScope();
 
         void setProjectName(const QString &name = "");
+        void addExistingScopesNames(const QStringList &scopes);
 
         QString scopeName();
 
@@ -49,9 +50,11 @@ namespace gui {
 
     private:
         void showEvent(QShowEvent * ev);
+        void onTextChanged(const QString &text);
 
         QScopedPointer<Ui::AddScope> ui;
         QString m_ScopeName;
+        QStringList m_ExistingScopes;
     };
 
 } // namespace gui

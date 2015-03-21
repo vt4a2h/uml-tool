@@ -223,7 +223,14 @@ namespace gui {
     void MainWindow::onCreateScope()
     {
         if (m_ApplicationModel->currentProject()) {
+
             m_AddScope->setProjectName(m_ApplicationModel->currentProject()->name());
+
+            QStringList lst;
+            for (auto &&scope : m_ApplicationModel->currentProject()->database()->scopes())
+                lst << scope->name();
+            m_AddScope->addExistingScopesNames(lst);
+
             if (m_AddScope->exec())  {
                 QString scopeName = m_AddScope->scopeName();
                 if (!scopeName.isEmpty())
