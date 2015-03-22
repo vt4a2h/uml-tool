@@ -33,6 +33,8 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QGraphicsScene>
+#include <QUndoView>
+#include <QUndoStack>
 #include <QDebug>
 
 #include <models/applicationmodel.h>
@@ -99,12 +101,14 @@ namespace gui {
         : QMainWindow(parent)
         , ui(new Ui::MainWindow)
         , m_MainVerticalSplitter(new QSplitter(this))
+        , m_TreeSplitter(new QSplitter(this))
         , m_CanvasConsoleSplitter(new QSplitter(this))
         , m_ProjectTreeMenu(new QMenu(this))
         , m_ProjectTreeView(new QTreeView(this))
         , m_MainView(new QGraphicsView(this))
         , m_MainScene(new QGraphicsScene(this))
         , m_ConsoleOutput(new QTextEdit(this))
+        , m_UndoView(new QUndoView(this))
         , m_AboutWidget(new About(this))
         , m_NewProject(new NewProject(this))
         , m_AddScope(new AddScope(this))
@@ -347,7 +351,13 @@ namespace gui {
         m_ProjectTreeView->setIconSize(iconSize());
         m_ProjectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
         m_ProjectTreeView->setModel(m_ApplicationModel->treeModel().get());
-        m_MainVerticalSplitter->addWidget(m_ProjectTreeView);
+        m_ProjectTreeView->setToolTip(tr("Projects"));
+        m_TreeSplitter->setOrientation(Qt::Vertical);
+        m_TreeSplitter->addWidget(m_ProjectTreeView);
+        m_TreeSplitter->addWidget(m_UndoView);
+        m_TreeSplitter->setToolTip(tr("Commands history"));
+        m_TreeSplitter->setStretchFactor(0, 9);
+        m_MainVerticalSplitter->addWidget(m_TreeSplitter);
 
         m_CanvasConsoleSplitter->setOrientation(Qt::Vertical);
         m_CanvasConsoleSplitter->addWidget(m_MainView);
@@ -372,6 +382,7 @@ namespace gui {
         int consoleSize(std::round(this->height() * consoleSizeFactor));
         m_CanvasConsoleSplitter->setSizes({canvasSize, consoleSize});
         m_ConsoleOutput->setReadOnly(true);
+        m_ConsoleOutput->setToolTip(tr("Output"));
 
         auto a = m_ProjectTreeMenu->addAction("Make active");
         connect(a, &QAction::triggered, this, &MainWindow::setCurrentProjectViaMenu);
@@ -484,6 +495,10 @@ namespace gui {
         ui->actionCreateScope->setEnabled( state );
         ui->actionMakeRelation->setEnabled( state );
         ui->actionSaveProject->setEnabled(state && !m_ApplicationModel->currentProject()->isSaved() );
+
+        project::Project const * pr = m_ApplicationModel->currentProject().get();
+        ui->actionRedo->setEnabled(pr && pr->commandsStack()->canRedo());
+        ui->actionUndo->setEnabled(pr && pr->commandsStack()->canUndo());
     }
 
     /**
@@ -492,15 +507,28 @@ namespace gui {
      */
     void MainWindow::setCurrentProject(const QString &id)
     {
-        if (m_ApplicationModel->currentProject())
+        if (project::Project * pr = m_ApplicationModel->currentProject().get())
         {
-            disconnect(m_ApplicationModel->currentProject().get(), &project::Project::saved, this, &MainWindow::update);
-            disconnect(m_ApplicationModel->currentProject().get(), &project::Project::modified, this, &MainWindow::update);
+            disconnect(pr, &project::Project::saved, this, &MainWindow::update);
+            disconnect(pr, &project::Project::modified, this, &MainWindow::update);
+
+            disconnect(pr->commandsStack(), &QUndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
+            disconnect(pr->commandsStack(), &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
+            disconnect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &QUndoStack::redo);
+            disconnect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &QUndoStack::undo);
         }
 
         if (m_ApplicationModel->setCurrentProject(id)) {
-            connect(m_ApplicationModel->currentProject().get(), &project::Project::saved, this, &MainWindow::update);
-            connect(m_ApplicationModel->currentProject().get(), &project::Project::modified, this, &MainWindow::update);
+            project::Project * pr = m_ApplicationModel->currentProject().get();
+
+            connect(pr, &project::Project::saved, this, &MainWindow::update);
+            connect(pr, &project::Project::modified, this, &MainWindow::update);
+
+            m_UndoView->setStack(pr->commandsStack());
+            connect(pr->commandsStack(), &QUndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
+            connect(pr->commandsStack(), &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
+            connect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &QUndoStack::redo);
+            connect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &QUndoStack::undo);
 
             addGraphicsItems(m_MainScene, m_ApplicationModel->currentProject());
         } else {

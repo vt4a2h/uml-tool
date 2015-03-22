@@ -27,6 +27,8 @@
 
 #include "types.h"
 
+class QUndoStack;
+
 /**
  * @brief project
  */
@@ -70,6 +72,9 @@ namespace project {
         bool hasErrors() const;
         ErrorList lastErrors() const;
 
+        QUndoStack * commandsStack();
+        const QUndoStack * commandsStack() const;
+
     public slots:
         void setSaveStatus(bool newStatus);
         void setName(const QString &name);
@@ -102,6 +107,8 @@ namespace project {
         db::SharedProjectDatabase m_Database;
 
         ErrorList m_Errors;
+
+        std::unique_ptr<QUndoStack> m_CommandsStack;
     };
 
 } // namespace project

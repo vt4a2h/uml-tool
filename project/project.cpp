@@ -26,6 +26,7 @@
 #include <QDir>
 #include <QFile>
 #include <QJsonObject>
+#include <QUndoStack>
 #include <QDebug>
 
 #include <db/projectdatabase.h>
@@ -54,6 +55,7 @@ namespace project {
         , m_ID(utility::genId())
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
+        , m_CommandsStack(std::make_unique<QUndoStack>())
     {}
 
     /**
@@ -68,6 +70,7 @@ namespace project {
         , m_SaveStatus(false)    // not saved
          // deep copy of project database and shallow copy of global database
         , m_Database(std::make_shared<db::ProjectDatabase>(*src.m_Database))
+        , m_CommandsStack(std::make_unique<QUndoStack>())
     {}
 
     /**
@@ -251,6 +254,24 @@ namespace project {
     ErrorList Project::lastErrors() const
     {
         return m_Errors;
+    }
+
+    /**
+     * @brief Project::commandsStack
+     * @return
+     */
+    QUndoStack *Project::commandsStack()
+    {
+        return m_CommandsStack.get();
+    }
+
+    /**
+     * @brief Project::commandsStack
+     * @return
+     */
+    const QUndoStack *Project::commandsStack() const
+    {
+        return m_CommandsStack.get();
     }
 
     /**

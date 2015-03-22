@@ -33,6 +33,7 @@ class QTreeView;
 class QGraphicsView;
 class QTextEdit;
 class QGraphicsScene;
+class QUndoView;
 
 namespace models {
     class ProjectTreeModel;
@@ -106,6 +107,7 @@ namespace gui {
         QScopedPointer<Ui::MainWindow> ui;
 
         QSplitter *m_MainVerticalSplitter;
+        QSplitter *m_TreeSplitter;
         QSplitter *m_CanvasConsoleSplitter;
 
         QMenu *m_ProjectTreeMenu;
@@ -116,6 +118,7 @@ namespace gui {
         QGraphicsView *m_MainView;
         QGraphicsScene *m_MainScene;
         QTextEdit *m_ConsoleOutput;
+        QUndoView *m_UndoView;
 
         About *m_AboutWidget;
         NewProject *m_NewProject;
