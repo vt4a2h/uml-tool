@@ -171,6 +171,30 @@ namespace models {
     }
 
     /**
+     * @brief BasicTreeItem::itemById
+     * @param id
+     * @return
+     */
+    BasicTreeItem *BasicTreeItem::itemById(const QString &id) const
+    {
+        for(auto &&item : m_Children)
+            if (item->id() == id)
+                return item;
+
+        return nullptr;
+    }
+
+    /**
+     * @brief BasicTreeItem::rowForItem
+     * @param item
+     * @return
+     */
+    int BasicTreeItem::rowForItem(BasicTreeItem *item) const
+    {
+        return m_Children.indexOf(item);
+    }
+
+    /**
      * @brief BasicTreeItem::children
      * @return
      */

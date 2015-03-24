@@ -208,6 +208,26 @@ namespace models {
     }
 
     /**
+     * @brief ProjectTreeModel::removeScope
+     * @param scopeId
+     * @param projectId
+     */
+    void ProjectTreeModel::removeScope(const QString &scopeId, const QString &projectId)
+    {
+        // TODO: add root_item for convenience search parent
+        auto it = std::find_if(m_Items.begin(), m_Items.end(),
+                               [&](const BasicTreeItem &item){ return item.id() == projectId; });
+        if (it != m_Items.end()) {
+            int parentIndex = std::distance(m_Items.begin(), it);
+            if (auto scopeItem = it->itemById(scopeId)) {
+                // TODO: remove all childrens
+                // TODO: implement removeRows functions
+                removeRow(it->rowForItem(scopeItem) + parentIndex, index(parentIndex, 0));
+            }
+        }
+    }
+
+    /**
      * @brief ProjectTreeModel::addType
      * @param type
      * @param scopeId

@@ -47,6 +47,8 @@
 #include <entity/entitiesfactory.h>
 #include <entity/type.h>
 
+#include <commands/createscope.h>
+
 #include "about.h"
 #include "newproject.h"
 #include "addscope.h"
@@ -238,7 +240,8 @@ namespace gui {
             if (m_AddScope->exec())  {
                 QString scopeName = m_AddScope->scopeName();
                 if (!scopeName.isEmpty())
-                    m_ApplicationModel->makeScope(scopeName);
+                    if (QUndoStack * stack = m_ApplicationModel->currentProject()->commandsStack())
+                        stack->push(new commands::CreateScope(scopeName, *m_ApplicationModel));
             }
         } else
             QMessageBox::information(this, tr("Information"), tr("No current project."), QMessageBox::Ok);

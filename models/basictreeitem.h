@@ -65,6 +65,8 @@ namespace models {
         void appendChild(BasicTreeItem *child);
         BasicTreeItem *makeChild(const QVariant &entity, const TreeItemType &type);
         BasicTreeItem *child(int row) const;
+        BasicTreeItem *itemById(const QString &id) const;
+        int rowForItem(BasicTreeItem * item) const;
         ChildItems childrenItems() const;
 
         int childCount() const;

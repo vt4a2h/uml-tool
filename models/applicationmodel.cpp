@@ -157,12 +157,24 @@ namespace models {
             Q_ASSERT(projectDB);
             result = projectDB->addScope(name);
             m_TreeModel->addScope(result, currentProject()->id());
-            // TODO: add scope to with parent scope
+            // TODO: add scope with parent scope
 
             currentProject()->touch();
         }
 
         return result;
+    }
+
+    /**
+     * @brief ApplicationModel::removeScope
+     * @param id
+     */
+    void ApplicationModel::removeScope(const QString &id)
+    {
+        if (m_CurrentProject) {
+            m_TreeModel->removeScope(id, m_CurrentProject->id());
+            m_CurrentProject->database()->removeScope(id);
+        }
     }
 
     /**

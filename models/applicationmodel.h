@@ -52,6 +52,7 @@ namespace models {
         bool containsProject(const QString &id);
 
         entity::SharedScope makeScope(const QString &name);
+        void removeScope(const QString &id);
 
         template <class T = entity::Type>
         std::shared_ptr<T> makeType(const QString &scopeID, const QString &name = "");
