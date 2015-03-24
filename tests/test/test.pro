@@ -3,6 +3,10 @@ TEMPLATE = app
 CONFIG += console qt c++14
 CONFIG -= app_bundle
 
+QT += widgets
+
+QMAKE_CXX = g++-5
+
 LIBS += -lgtest -lpthread
 
 INCLUDEPATH += ../../
