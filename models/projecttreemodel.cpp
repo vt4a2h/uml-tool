@@ -180,6 +180,33 @@ namespace models {
     }
 
     /**
+     * @brief ProjectTreeModel::removeRows
+     * @param row
+     * @param count
+     * @param parent
+     * @return
+     */
+    bool ProjectTreeModel::removeRows(int row, int count, const QModelIndex &parent)
+    {
+        beginRemoveRows(parent, row, row + count);
+
+        QList<BasicTreeItem*> items;
+        if (parent.isValid()) {
+            BasicTreeItem *item = static_cast<BasicTreeItem*>(parent.internalPointer());
+            items = item->childrenItems();
+        } else {
+            for (auto &&i : m_Items)
+                items.append(&i);
+        }
+        auto it = std::find(items.begin(), items.end(), items.at(row));
+        items.erase(it, it + count);
+
+        endRemoveRows();
+
+        return true; // TODO: add check
+    }
+
+    /**
      * @brief ProjectTreeModel::addProject
      * @param pr
      */
@@ -214,15 +241,11 @@ namespace models {
      */
     void ProjectTreeModel::removeScope(const QString &scopeId, const QString &projectId)
     {
-        // TODO: add root_item for convenience search parent
-        auto it = std::find_if(m_Items.begin(), m_Items.end(),
-                               [&](const BasicTreeItem &item){ return item.id() == projectId; });
-        if (it != m_Items.end()) {
-            int parentIndex = std::distance(m_Items.begin(), it);
-            if (auto scopeItem = it->itemById(scopeId)) {
-                // TODO: remove all childrens
-                // TODO: implement removeRows functions
-                removeRow(it->rowForItem(scopeItem) + parentIndex, index(parentIndex, 0));
+        if (auto pr = find(projectId)) {
+            if (auto scopeItem = pr->itemById(scopeId)) {
+                int parentIndex = indexOf(pr);
+                removeRows(pr->rowForItem(scopeItem) + parentIndex, scopeItem->childCount(),
+                           index(parentIndex, 0));
             }
         }
     }
@@ -233,8 +256,10 @@ namespace models {
      * @param scopeId
      * @param projectId
      */
-    void ProjectTreeModel::addType(const entity::SharedType &type, const QString &scopeId, const QString &projectId)
+    void ProjectTreeModel::addType(const entity::SharedType &type, const QString &scopeId,
+                                   const QString &projectId)
     {
+        // TODO: refactore
         auto projectIt = std::find_if(m_Items.begin(), m_Items.end(),
                                       [&](const BasicTreeItem &item){ return item.id() == projectId; });
 
@@ -282,6 +307,41 @@ namespace models {
                     addItem(QVariant::fromValue(method), typeItem, TreeItemType::MethodItem);
             }
         }
+    }
+
+    /**
+     * @brief ProjectTreeModel::indexOf
+     * @param parent
+     * @return
+     */
+    int ProjectTreeModel::indexOf(const BasicTreeItem *parent)
+    {
+        return m_Items.indexOf(*parent);
+    }
+
+    /**
+     * @brief ProjectTreeModel::find
+     * @param id
+     * @return
+     */
+    BasicTreeItem *ProjectTreeModel::find(const QString &id)
+    {
+        return const_cast<BasicTreeItem*>(const_cast<const ProjectTreeModel*>(this)->find(id));
+    }
+
+    /**
+     * @brief ProjectTreeModel::find
+     * @param id
+     * @return
+     */
+    const BasicTreeItem *ProjectTreeModel::find(const QString &id) const
+    {
+        auto projectIt = std::find_if(m_Items.cbegin(), m_Items.cend(),
+                                      [&](const BasicTreeItem &item){
+                                          return item.id() == id;
+                                      });
+
+        return projectIt != m_Items.cend() ? &*projectIt : nullptr;
     }
 
 } // namespace models

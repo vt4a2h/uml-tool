@@ -50,6 +50,8 @@ namespace models {
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
+        bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
+
         void addProject(const project::SharedProject &pr);
 
         void addScope(const entity::SharedScope &scope, const QString &projectId);
@@ -59,8 +61,11 @@ namespace models {
 
     private:
         void addProjectItem(const project::SharedProject &pr);
+        int indexOf(const BasicTreeItem *parent);
+        BasicTreeItem *find(const QString &id);
+        const BasicTreeItem *find(const QString &id) const;
 
-        mutable QList<BasicTreeItem> m_Items;
+        mutable QList<BasicTreeItem> m_Items; // TODO: store as pointers
     };
 
 } // namespace models
