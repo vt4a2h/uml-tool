@@ -188,22 +188,29 @@ namespace models {
      */
     bool ProjectTreeModel::removeRows(int row, int count, const QModelIndex &parent)
     {
+        // TODO: remove children from all interval: (row, row + count)
         beginRemoveRows(parent, row, row + count);
 
-        QList<BasicTreeItem*> items;
+        bool result = false;
         if (parent.isValid()) {
             BasicTreeItem *item = static_cast<BasicTreeItem*>(parent.internalPointer());
-            items = item->childrenItems();
+            result = item->removeChild(item->child(row));
         } else {
-            for (auto &&i : m_Items)
-                items.append(&i);
+            if (m_Items.size() < row) {
+                auto it = std::find(m_Items.begin(), m_Items.end(), m_Items.at(row));
+
+                if (it != m_Items.end()) {
+                    m_Items.erase(it, it + count);
+                    result = true;
+                }
+            } else {
+                result = false;
+            }
         }
-        auto it = std::find(items.begin(), items.end(), items.at(row));
-        items.erase(it, it + count);
 
         endRemoveRows();
 
-        return true; // TODO: add check
+        return result;
     }
 
     /**
@@ -244,8 +251,10 @@ namespace models {
         if (auto pr = find(projectId)) {
             if (auto scopeItem = pr->itemById(scopeId)) {
                 int parentIndex = indexOf(pr);
-                removeRows(pr->rowForItem(scopeItem) + parentIndex, scopeItem->childCount(),
-                           index(parentIndex, 0));
+                int currentIndex = pr->rowForItem(scopeItem) + parentIndex;
+                auto in = index(parentIndex, 0);
+
+                removeRows(currentIndex, currentIndex + scopeItem->childCount(), in);
             }
         }
     }

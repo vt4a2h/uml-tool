@@ -174,6 +174,7 @@ namespace models {
         if (m_CurrentProject) {
             m_TreeModel->removeScope(id, m_CurrentProject->id());
             m_CurrentProject->database()->removeScope(id);
+            m_CurrentProject->touch();
         }
     }
 

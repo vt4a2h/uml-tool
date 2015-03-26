@@ -185,6 +185,16 @@ namespace models {
     }
 
     /**
+     * @brief BasicTreeItem::removeChild
+     * @param child
+     * @return
+     */
+    bool BasicTreeItem::removeChild(BasicTreeItem *child)
+    {
+        return m_Children.removeOne(child);
+    }
+
+    /**
      * @brief BasicTreeItem::rowForItem
      * @param item
      * @return

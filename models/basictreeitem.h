@@ -66,6 +66,7 @@ namespace models {
         BasicTreeItem *makeChild(const QVariant &entity, const TreeItemType &type);
         BasicTreeItem *child(int row) const;
         BasicTreeItem *itemById(const QString &id) const;
+        bool removeChild(BasicTreeItem * child);
         int rowForItem(BasicTreeItem * item) const;
         ChildItems childrenItems() const;
 
