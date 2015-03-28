@@ -50,7 +50,8 @@ SOURCES += \
     gui/graphics/entity.cpp \
     entity/entitiesfactory.cpp \
     gui/editentitydialog.cpp \
-    commands/createscope.cpp
+    commands/createscope.cpp \
+    commands/basecommand.cpp
 
 HEADERS += \
     enums.h \
@@ -97,7 +98,8 @@ HEADERS += \
     gui/graphics/entity.h \
     entity/entitiesfactory.h \
     gui/editentitydialog.h \
-    commands/createscope.h
+    commands/createscope.h \
+    commands/basecommand.h
 
 FORMS += \
     gui/mainwindow.ui \

@@ -24,6 +24,8 @@
 
 #include <models/applicationmodel.h>
 
+#include "constants.cpp"
+
 namespace commands {
 
     /**
@@ -34,8 +36,9 @@ namespace commands {
      */
     CreateScope::CreateScope(const QString &name, models::ApplicationModel &model,
                              QUndoCommand *parent)
-        : QUndoCommand(tr("Create scope \"%1\"").arg(name), parent)
+        : BaseCommand(tr("Create scope \"%1\"").arg(name), parent)
         , m_ScopeName(name)
+        , m_NewScopeID(STUB_ID)
         , m_Model(model)
     {
     }
@@ -45,8 +48,13 @@ namespace commands {
      */
     void CreateScope::redo()
     {
-        // TODO: name should be unique (check all scopes and, if needed, make unique name)
-        m_NewScopeID = m_Model.makeScope(m_ScopeName)->id();
+        if (m_done) {
+
+        } else {
+            // TODO: name should be unique (check all scopes and, if needed, make unique name)
+            m_NewScopeID = m_Model.makeScope(m_ScopeName)->id();
+            m_done = true; // done first time
+        }
     }
 
     /**
@@ -54,6 +62,8 @@ namespace commands {
      */
     void CreateScope::undo()
     {
+        Q_ASSERT(m_NewScopeID != STUB_ID);
+
         m_Model.removeScope(m_NewScopeID);
     }
 

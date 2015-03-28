@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 24/03/2015.
+** Created 28/03/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,31 +20,19 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#pragma once
-
 #include "basecommand.h"
 
-namespace models {
-    class ApplicationModel;
-}
-
-/// namespace commands
 namespace commands {
 
-    /// The CreateScope class
-    class CreateScope : public BaseCommand
+    BaseCommand::BaseCommand(BaseCommand::QUndoCommand *parent)
+        : BaseCommand(tr("no specified name"), parent)
     {
-    public:
-        CreateScope(const QString &name, models::ApplicationModel &model,
-                    QUndoCommand *parent = nullptr);
+    }
 
-        void redo() override;
-        void undo() override;
-
-    private:
-        QString m_ScopeName;
-        QString m_NewScopeID;
-        models::ApplicationModel &m_Model;
-    };
+    BaseCommand::BaseCommand(const QString &text, BaseCommand::QUndoCommand *parent)
+        : QUndoCommand(text, parent)
+        , m_done(false)
+    {
+    }
 
 } // namespace commands
