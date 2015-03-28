@@ -184,6 +184,18 @@ namespace db {
     }
 
     /**
+     * @brief Database::addExistsScope
+     * @param scope
+     */
+    void Database::addExistsScope(const entity::SharedScope &scope)
+    {
+        if (scope) {
+            Q_ASSERT(!m_Scopes.contains(scope->id()));
+            m_Scopes[scope->id()] = scope;
+        }
+    }
+
+    /**
      * @brief Database::containsScope
      * @param id
      * @return

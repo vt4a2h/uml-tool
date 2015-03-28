@@ -23,6 +23,7 @@
 #pragma once
 
 #include "basecommand.h"
+#include "types.h"
 
 namespace models {
     class ApplicationModel;
@@ -43,7 +44,7 @@ namespace commands {
 
     private:
         QString m_ScopeName;
-        QString m_NewScopeID;
+        entity::SharedScope m_NewScope;
         models::ApplicationModel &m_Model;
     };
 

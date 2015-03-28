@@ -235,6 +235,18 @@ namespace entity {
     }
 
     /**
+     * @brief Scope::addExistsChildScope
+     * @param scope
+     */
+    void Scope::addExistsChildScope(const SharedScope &scope)
+    {
+        if (scope) {
+            Q_ASSERT(!m_Scopes.contains(scope->id()));
+            m_Scopes[scope->id()] = scope;
+        }
+    }
+
+    /**
      * @brief Scope::containsChildScope
      * @param typeId
      * @return

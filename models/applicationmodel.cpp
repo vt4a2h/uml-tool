@@ -156,13 +156,27 @@ namespace models {
             auto projectDB = m_CurrentProject->database();
             Q_ASSERT(projectDB);
             result = projectDB->addScope(name);
-            m_TreeModel->addScope(result, currentProject()->id());
+            m_TreeModel->addScope(result, m_CurrentProject->id());
             // TODO: add scope with parent scope
 
             currentProject()->touch();
         }
 
         return result;
+    }
+
+    /**
+     * @brief ApplicationModel::addExistsScope
+     * @param scope
+     */
+    void ApplicationModel::addExistsScope(const entity::SharedScope &scope)
+    {
+        if (m_CurrentProject && scope) {
+            auto projectDB = m_CurrentProject->database();
+            Q_ASSERT(projectDB);
+            projectDB->addExistsScope(scope);
+            m_TreeModel->addScope(scope, m_CurrentProject->id());
+        }
     }
 
     /**

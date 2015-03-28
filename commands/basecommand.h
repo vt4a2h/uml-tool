@@ -37,7 +37,7 @@ namespace commands {
         explicit BaseCommand(const QString &text, QUndoCommand *parent = nullptr);
 
     protected:
-        bool m_done; // do first time -- false, redo -- true
+        bool m_Done; // do first time -- false, redo -- true
     };
 
 } // namespace commands

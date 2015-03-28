@@ -38,7 +38,6 @@ namespace commands {
                              QUndoCommand *parent)
         : BaseCommand(tr("Create scope \"%1\"").arg(name), parent)
         , m_ScopeName(name)
-        , m_NewScopeID(STUB_ID)
         , m_Model(model)
     {
     }
@@ -48,12 +47,13 @@ namespace commands {
      */
     void CreateScope::redo()
     {
-        if (m_done) {
-
+        if (m_Done) {
+            if (m_NewScope)
+                m_Model.addExistsScope(m_NewScope);
         } else {
             // TODO: name should be unique (check all scopes and, if needed, make unique name)
-            m_NewScopeID = m_Model.makeScope(m_ScopeName)->id();
-            m_done = true; // done first time
+            m_NewScope = m_Model.makeScope(m_ScopeName);
+            m_Done = true; // done first time
         }
     }
 
@@ -62,9 +62,8 @@ namespace commands {
      */
     void CreateScope::undo()
     {
-        Q_ASSERT(m_NewScopeID != STUB_ID);
-
-        m_Model.removeScope(m_NewScopeID);
+        if (m_NewScope)
+            m_Model.removeScope(m_NewScope->id());
     }
 
 } // namespace commands

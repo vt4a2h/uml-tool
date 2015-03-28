@@ -52,6 +52,7 @@ namespace models {
         bool containsProject(const QString &id);
 
         entity::SharedScope makeScope(const QString &name);
+        void addExistsScope(const entity::SharedScope &scope);
         void removeScope(const QString &id);
 
         template <class T = entity::Type>

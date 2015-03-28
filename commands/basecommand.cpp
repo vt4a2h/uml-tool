@@ -24,14 +24,23 @@
 
 namespace commands {
 
+    /**
+     * @brief BaseCommand::BaseCommand
+     * @param parent
+     */
     BaseCommand::BaseCommand(BaseCommand::QUndoCommand *parent)
         : BaseCommand(tr("no specified name"), parent)
     {
     }
 
+    /**
+     * @brief BaseCommand::BaseCommand
+     * @param text
+     * @param parent
+     */
     BaseCommand::BaseCommand(const QString &text, BaseCommand::QUndoCommand *parent)
         : QUndoCommand(text, parent)
-        , m_done(false)
+        , m_Done(false)
     {
     }
 
