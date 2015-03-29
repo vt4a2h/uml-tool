@@ -111,23 +111,37 @@ namespace graphics {
      * @param ev
      * @return
      */
-    bool Entity::event(QEvent *ev)
+    bool Entity::sceneEvent(QEvent *ev)
     {
         switch (ev->type()) {
 
-            case QEvent:: GraphicsSceneContextMenu:
+            case QEvent::GraphicsSceneContextMenu:
             {
                 QGraphicsSceneContextMenuEvent *menuEvent =
                     static_cast<QGraphicsSceneContextMenuEvent *>(ev);
                 showMenu(menuEvent->screenPos());
 
-                return true;
+                break;
+            }
+
+            case QEvent::GraphicsSceneMousePress:
+            {
+                m_LastPos = pos();
+                break;
+            }
+
+            case QEvent::GraphicsSceneMouseRelease:
+            {
+                if (pos() != m_LastPos)
+                    emit moved(m_LastPos, pos());
+
+                break;
             }
 
             default: ;
         }
 
-        return QObject::event(ev);
+        return QGraphicsObject::sceneEvent(ev);
     }
 
     /**

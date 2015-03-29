@@ -28,9 +28,12 @@
 
 #include <models/applicationmodel.h>
 
+#include <commands/movegraphicobject.h>
+
 #include "class.h"
 
 namespace {
+
     void connectEntity(graphics::Entity * entity, project::Project * currentProject)
     {
         Q_ASSERT(entity);
@@ -38,6 +41,12 @@ namespace {
 
         QObject::connect(entity, &graphics::Entity::xChanged, currentProject, &project::Project::touch);
         QObject::connect(entity, &graphics::Entity::yChanged, currentProject, &project::Project::touch);
+        QObject::connect(entity, &graphics::Entity::moved,
+                         [=](const QPointF &from, const QPointF &to) {
+                            auto cmd = new commands::MoveGraphicObject(*entity, entity->typeObject()->name(),
+                                                                       from, to);
+                            currentProject->commandsStack()->push(cmd);
+                         });
     }
 
     graphics::Entity *newEntity(QGraphicsScene &scene, const QPointF &pos, const entity::SharedType &type = nullptr)
@@ -48,6 +57,7 @@ namespace {
 
         return entity;
     }
+
 }
 
 namespace entity {

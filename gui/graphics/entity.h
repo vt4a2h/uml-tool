@@ -53,8 +53,11 @@ namespace graphics {
         entity::SharedType typeObject() const;
         void setTypeObject(const entity::SharedType &type);
 
+    signals:
+        void moved(const QPointF &from, const QPointF &to);
+
     private:
-        bool event(QEvent *ev) override;
+        bool sceneEvent(QEvent *ev) override;
         void showMenu(const QPoint &pos);
         void addMenuActions();
 
@@ -63,6 +66,7 @@ namespace graphics {
         std::unique_ptr<gui::EditEntityDialog> m_EditDialog;
 
         entity::SharedType m_Type;
+        QPointF m_LastPos;
     };
 
 } // grpahics

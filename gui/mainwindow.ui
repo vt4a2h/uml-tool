@@ -285,10 +285,13 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Projects</string>
+    <string>&amp;Projects</string>
    </property>
    <property name="toolTip">
     <string>Show/hide projects dock widget</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+P</string>
    </property>
   </action>
   <action name="actionCommandsDockWidget">
@@ -296,10 +299,13 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Commands</string>
+    <string>&amp;Commands</string>
    </property>
    <property name="toolTip">
     <string>Show/hide commands dock widget</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
    </property>
   </action>
   <action name="actionMessagesDockWidget">
@@ -307,10 +313,13 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Messages</string>
+    <string>&amp;Messages</string>
    </property>
    <property name="toolTip">
     <string>Show/hide messages dock widget</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+M</string>
    </property>
   </action>
  </widget>
