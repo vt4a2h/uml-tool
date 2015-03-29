@@ -26,37 +26,37 @@
 
 namespace commands {
 
-/**
- * @brief MoveGraphicObject::MoveGraphicObject
- * @param object
- * @param name
- * @param from
- * @param to
- * @param parent
- */
-MoveGraphicObject::MoveGraphicObject(QGraphicsItem &object, const QString &name, const QPointF &from,
-                                     const QPointF &to, QUndoCommand *parent)
-    : BaseCommand(tr("Move object \"%1\"").arg(name), parent)
-    , m_Object(object)
-    , m_From(from)
-    , m_To(to)
-{
-}
+    /**
+     * @brief MoveGraphicObject::MoveGraphicObject
+     * @param object
+     * @param name
+     * @param from
+     * @param to
+     * @param parent
+     */
+    MoveGraphicObject::MoveGraphicObject(QGraphicsItem &object, const QString &name, const QPointF &from,
+                                         const QPointF &to, QUndoCommand *parent)
+        : BaseCommand(tr("Move object \"%1\"").arg(name), parent)
+        , m_Object(object)
+        , m_From(from)
+        , m_To(to)
+    {
+    }
 
-/**
- * @brief MoveGraphicObject::redo
- */
-void MoveGraphicObject::redo()
-{
-    m_Object.setPos(m_To);
-}
+    /**
+     * @brief MoveGraphicObject::redo
+     */
+    void MoveGraphicObject::redo()
+    {
+        m_Object.setPos(m_To);
+    }
 
-/**
- * @brief MoveGraphicObject::undo
- */
-void MoveGraphicObject::undo()
-{
-    m_Object.setPos(m_From);
-}
+    /**
+     * @brief MoveGraphicObject::undo
+     */
+    void MoveGraphicObject::undo()
+    {
+        m_Object.setPos(m_From);
+    }
 
 } // namespace commands
