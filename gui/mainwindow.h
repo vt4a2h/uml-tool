@@ -104,15 +104,12 @@ namespace gui {
         void setUpWidgets();
         void makeConnections();
 
+        void addDock(const QString &name, QAction * action, Qt::DockWidgetArea area, QWidget * widget,
+                     bool visible = true);
+
         QScopedPointer<Ui::MainWindow> ui;
 
-        QSplitter *m_MainVerticalSplitter;
-        QSplitter *m_TreeSplitter;
-        QSplitter *m_CanvasConsoleSplitter;
-
         QMenu *m_ProjectTreeMenu;
-
-        std::unique_ptr<QHBoxLayout> m_MainLayout;
 
         QTreeView *m_ProjectTreeView;
         QGraphicsView *m_MainView;

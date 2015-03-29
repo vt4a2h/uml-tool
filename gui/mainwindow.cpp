@@ -35,6 +35,7 @@
 #include <QGraphicsScene>
 #include <QUndoView>
 #include <QUndoStack>
+#include <QDockWidget>
 #include <QDebug>
 
 #include <models/applicationmodel.h>
@@ -102,9 +103,6 @@ namespace gui {
     MainWindow::MainWindow(const models::SharedApplicationModal &applicationModel, QWidget *parent)
         : QMainWindow(parent)
         , ui(new Ui::MainWindow)
-        , m_MainVerticalSplitter(new QSplitter(this))
-        , m_TreeSplitter(new QSplitter(this))
-        , m_CanvasConsoleSplitter(new QSplitter(this))
         , m_ProjectTreeMenu(new QMenu(this))
         , m_ProjectTreeView(new QTreeView(this))
         , m_MainView(new QGraphicsView(this))
@@ -349,46 +347,30 @@ namespace gui {
      */
     void MainWindow::setUpWidgets()
     {
+        // Canvas
+        m_MainView->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing |
+                                   QPainter::SmoothPixmapTransform);
+        m_MainView->setScene(m_MainScene);
+        ui->gridLayout->addWidget(m_MainView);
+
+        // Project
         m_ProjectTreeView->setHeaderHidden(true);
         m_ProjectTreeView->setIndentation(treeViewIndent);
         m_ProjectTreeView->setIconSize(iconSize());
         m_ProjectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
         m_ProjectTreeView->setModel(m_ApplicationModel->treeModel().get());
-        m_ProjectTreeView->setToolTip(tr("Projects"));
-        m_TreeSplitter->setOrientation(Qt::Vertical);
-        m_TreeSplitter->addWidget(m_ProjectTreeView);
-        m_TreeSplitter->addWidget(m_UndoView);
-        m_TreeSplitter->setToolTip(tr("Commands history"));
-        m_TreeSplitter->setStretchFactor(0, 9);
-        m_MainVerticalSplitter->addWidget(m_TreeSplitter);
+        addDock(tr("Projects"), ui->actionProjectsDockWidget, Qt::LeftDockWidgetArea, m_ProjectTreeView);
 
-        m_CanvasConsoleSplitter->setOrientation(Qt::Vertical);
-        m_CanvasConsoleSplitter->addWidget(m_MainView);
-        m_CanvasConsoleSplitter->addWidget(m_ConsoleOutput);
-        m_CanvasConsoleSplitter->setStretchFactor(0, 9);
-        m_MainVerticalSplitter->addWidget(m_CanvasConsoleSplitter);
-        m_MainView->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing |
-                                   QPainter::SmoothPixmapTransform);
-        m_MainView->setScene(m_MainScene);
-
-        m_MainVerticalSplitter->setStretchFactor(1, 9);
-
-        m_MainLayout = std::make_unique<QHBoxLayout>();
-        m_MainLayout->addWidget(m_MainVerticalSplitter);
-        ui->centralwidget->setLayout(m_MainLayout.get());
-
-        int treeSize(std::round(this->width() * treeSizeFactor));
-        int canvasConsoleSize(std::round(this->width() * canvasSizeFactor));
-        m_MainVerticalSplitter->setSizes({treeSize, canvasConsoleSize});
-
-        int canvasSize(std::round(this->height() * canvasSizeFactor));
-        int consoleSize(std::round(this->height() * consoleSizeFactor));
-        m_CanvasConsoleSplitter->setSizes({canvasSize, consoleSize});
-        m_ConsoleOutput->setReadOnly(true);
-        m_ConsoleOutput->setToolTip(tr("Output"));
-
+        // Project context menu
         auto a = m_ProjectTreeMenu->addAction("Make active");
         connect(a, &QAction::triggered, this, &MainWindow::setCurrentProjectViaMenu);
+
+        // Commands
+        addDock(tr("Commands"), ui->actionCommandsDockWidget, Qt::LeftDockWidgetArea, m_UndoView);
+
+        // Messages
+        m_ConsoleOutput->setReadOnly(true);
+        addDock(tr("Messages"), ui->actionMessagesDockWidget, Qt::BottomDockWidgetArea, m_ConsoleOutput, false);
     }
 
     /**
@@ -399,6 +381,25 @@ namespace gui {
         connect(m_ProjectTreeView, &QTreeView::customContextMenuRequested, this, &MainWindow::onProjectTreeMenu);
 
         connect(m_NewProject, &NewProject::newProject, this, &MainWindow::createNewProject);
+    }
+
+    /**
+     * @brief MainWindow::addDock
+     * @param name
+     * @param area
+     * @param widget
+     * @param visible
+     */
+    void MainWindow::addDock(const QString &name, QAction * action, Qt::DockWidgetArea area, QWidget *widget, bool visible)
+    {
+        QDockWidget * wgt = new QDockWidget(name, this);
+        wgt->setWidget(widget);
+        addDockWidget(area, wgt);
+
+        connect(action, &QAction::toggled, wgt, &QDockWidget::setVisible);
+        connect(wgt, &QDockWidget::visibilityChanged, action, &QAction::setChecked);
+
+        wgt->setVisible(visible);
     }
 
     /**
