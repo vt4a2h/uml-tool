@@ -52,7 +52,8 @@ SOURCES += \
     gui/editentitydialog.cpp \
     commands/createscope.cpp \
     commands/basecommand.cpp \
-    commands/movegraphicobject.cpp
+    commands/movegraphicobject.cpp \
+    commands/createentity.cpp
 
 HEADERS += \
     enums.h \
@@ -101,7 +102,8 @@ HEADERS += \
     gui/editentitydialog.h \
     commands/createscope.h \
     commands/basecommand.h \
-    commands/movegraphicobject.h
+    commands/movegraphicobject.h \
+    commands/createentity.h
 
 FORMS += \
     gui/mainwindow.ui \
