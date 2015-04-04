@@ -153,6 +153,9 @@ namespace graphics {
         m_Menu->exec(pos);
     }
 
+    /**
+     * @brief Entity::addMenuActions
+     */
     void Entity::addMenuActions()
     {
         auto actionEdit = m_Menu->addAction(tr("Edit"));

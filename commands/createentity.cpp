@@ -22,17 +22,38 @@
 *****************************************************************************/
 #include "createentity.h"
 
+#include <QGraphicsScene>
+
+#include "entity/entitiesfactory.h"
+
+#include "models/applicationmodel.h"
+
+#include "utility/helpfunctions.h"
+#include "constants.cpp"
+
 namespace commands {
 
     /**
      * @brief CreateEntity::CreateEntity
-     * @param text
+     * @param model
+     * @param type
+     * @param scopeID
+     * @param scene
+     * @param pos
      * @param parent
      */
-    CreateEntity::CreateEntity(const QString &text, QUndoCommand *parent)
-        : BaseCommand(text, parent)
+    CreateEntity::CreateEntity(const models::SharedApplicationModal &model, entity::UserType type,
+                               const QString &scopeID, QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent)
+        : BaseCommand(tr("Add %1").arg(utility::userTypeToString(type)), parent)
+        , m_Model(model)
+        , m_Type(type)
+        , m_ProjectID(model && model->currentProject() ? model->currentProject()->id() : STUB_ID)
+        , m_ScopeID(scopeID)
+        , m_TypeItem(nullptr)
+        , m_Pos(pos)
+        , m_Item(nullptr)
+        , m_Scene(scene)
     {
-
     }
 
     /**
@@ -40,7 +61,12 @@ namespace commands {
      */
     void CreateEntity::redo()
     {
+        if (m_Done) {
 
+        } else {
+
+            m_Done = true;
+        }
     }
 
     /**
