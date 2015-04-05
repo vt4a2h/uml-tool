@@ -426,7 +426,7 @@ namespace gui {
                         if (!scope)
                             scope = projectDb.scopes().first();
 
-                        auto && factory = entity::EntitiesFactory::get();
+                        auto &&factory = entity::EntitiesFactory::get();
                         factory.makeClass(m_ApplicationModel, scope->id(), *m_MainScene, pos);
                     } else {
                         QMessageBox::information(

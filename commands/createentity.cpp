@@ -24,11 +24,14 @@
 
 #include <QGraphicsScene>
 
-#include "entity/entitiesfactory.h"
+#include <entity/entitiesfactory.h>
+#include <entity/type.h>
+#include <entity/class.h>
 
-#include "models/applicationmodel.h"
+#include <models/applicationmodel.h>
 
-#include "utility/helpfunctions.h"
+#include <utility/helpfunctions.h>
+
 #include "constants.cpp"
 
 namespace commands {
@@ -63,7 +66,13 @@ namespace commands {
     {
         if (m_Done) {
 
+
         } else {
+            Q_ASSERT( m_Type == entity::UserClassType ); // only for classes now
+
+            auto&& factory = entity::EntitiesFactory::get();
+            // TODO: use other factory method which is not require static_cast
+            m_TypeItem = std::static_pointer_cast<entity::Type>(factory.makeClass(m_Model, m_ScopeID, m_Scene, m_Pos));
 
             m_Done = true;
         }

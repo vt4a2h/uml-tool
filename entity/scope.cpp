@@ -168,6 +168,16 @@ namespace entity {
     }
 
     /**
+     * @brief Scope::addExistsType
+     * @param type
+     */
+    SharedType Scope::addExistsType(const SharedType &type)
+    {
+        type->setScopeId(m_Id);
+        return *m_Types.insert(type->id(), type);
+    }
+
+    /**
      * @brief Scope::containsType
      * @param typeId
      * @return
