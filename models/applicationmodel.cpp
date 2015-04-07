@@ -193,6 +193,20 @@ namespace models {
     }
 
     /**
+     * @brief ApplicationModel::removeType
+     * @param projectID
+     * @param scopeID
+     * @param typeID
+     */
+    void ApplicationModel::removeType(const QString &projectID, const QString &scopeID, const QString &typeID)
+    {
+        // TODO: implement
+        Q_UNUSED(projectID);
+        Q_UNUSED(scopeID);
+        Q_UNUSED(typeID);
+    }
+
+    /**
      * @brief ApplicationModal::currentProject
      * @return
      */

@@ -57,6 +57,7 @@ namespace models {
 
         template <class T = entity::Type>
         std::shared_ptr<T> makeType(const QString &scopeID, const QString &name = "");
+        void removeType(const QString &projectID, const QString &scopeID, const QString &typeID);
 
         project::SharedProject currentProject() const;
         bool setCurrentProject(const QString &id);

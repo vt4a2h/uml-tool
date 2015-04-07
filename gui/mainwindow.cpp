@@ -49,6 +49,7 @@
 #include <entity/type.h>
 
 #include <commands/createscope.h>
+#include <commands/createentity.h>
 
 #include "about.h"
 #include "newproject.h"
@@ -426,8 +427,11 @@ namespace gui {
                         if (!scope)
                             scope = projectDb.scopes().first();
 
-                        auto &&factory = entity::EntitiesFactory::get();
-                        factory.makeClass(m_ApplicationModel, scope->id(), *m_MainScene, pos);
+                        if (auto stack = m_ApplicationModel->currentProject()->commandsStack()) {
+                            auto create = new commands::CreateEntity(m_ApplicationModel, entity::UserClassType,
+                                                                     scope->id(), *m_MainScene, pos);
+                            stack->push(create);
+                        }
                     } else {
                         QMessageBox::information(
                             this,

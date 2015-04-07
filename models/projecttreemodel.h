@@ -58,6 +58,7 @@ namespace models {
         void removeScope(const QString &scopeId, const QString &projectId);
 
         void addType(const entity::SharedType &type, const QString &scopeId, const QString &projectId);
+        void removeType(const QString &projectID, const QString &scopeID, const QString &typeID);
 
     private:
         void addProjectItem(const project::SharedProject &pr);

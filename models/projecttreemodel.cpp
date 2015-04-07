@@ -289,6 +289,20 @@ namespace models {
     }
 
     /**
+     * @brief ProjectTreeModel::removeType
+     * @param projectID
+     * @param scopeID
+     * @param typeID
+     */
+    void ProjectTreeModel::removeType(const QString &projectID, const QString &scopeID, const QString &typeID)
+    {
+        // TODO: implement
+        Q_UNUSED(projectID);
+        Q_UNUSED(scopeID);
+        Q_UNUSED(typeID);
+    }
+
+    /**
      * @brief ProjectTreeModel::addProjectItem
      * @param pr
      */

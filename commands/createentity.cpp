@@ -73,6 +73,7 @@ namespace commands {
             auto&& factory = entity::EntitiesFactory::get();
             // TODO: use other factory method which is not require static_cast
             m_TypeItem = std::static_pointer_cast<entity::Type>(factory.makeClass(m_Model, m_ScopeID, m_Scene, m_Pos));
+            // TODO: save graphics object
 
             m_Done = true;
         }
@@ -83,7 +84,16 @@ namespace commands {
      */
     void CreateEntity::undo()
     {
+        Q_ASSERT(m_Model);
+        Q_ASSERT(m_TypeItem);
 
+        if (auto pr = m_Model->currentProject())
+            if (auto db = pr->database())
+                if (auto scope = db->getScope(m_ScopeID))
+                    scope->removeType(m_TypeItem->id());
+
+        m_Scene.removeItem(m_Item);
+        m_Model->removeType(m_ProjectID, m_ScopeID, m_TypeItem->id());
     }
 
 } // namespace commands
