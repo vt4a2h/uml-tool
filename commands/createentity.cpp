@@ -28,6 +28,8 @@
 #include <entity/type.h>
 #include <entity/class.h>
 
+#include <gui/graphics/entity.h>
+
 #include <models/applicationmodel.h>
 
 #include <utility/helpfunctions.h>
@@ -65,15 +67,22 @@ namespace commands {
     void CreateEntity::redo()
     {
         if (m_Done) {
+            if (auto &&pr = m_Model->currentProject())
+                if (auto &&db = pr->database())
+                    if (auto &&scope = db->getScope(m_ScopeID))
+                        scope->addExistsType(m_TypeItem);
 
+            m_Scene.addItem(m_Item);
+            static_cast<graphics::Entity *>(m_Item)->setTypeObject(m_TypeItem);
 
         } else {
             Q_ASSERT( m_Type == entity::UserClassType ); // only for classes now
 
             auto&& factory = entity::EntitiesFactory::get();
             // TODO: use other factory method which is not require static_cast
-            m_TypeItem = std::static_pointer_cast<entity::Type>(factory.makeClass(m_Model, m_ScopeID, m_Scene, m_Pos));
-            // TODO: save graphics object
+            m_TypeItem = std::static_pointer_cast<entity::Type>(factory.makeClass(m_Model, m_ScopeID,
+                                                                                  m_Scene, m_Pos));
+            m_Item = m_Scene.itemAt(m_Pos, QTransform());
 
             m_Done = true;
         }
@@ -87,9 +96,9 @@ namespace commands {
         Q_ASSERT(m_Model);
         Q_ASSERT(m_TypeItem);
 
-        if (auto pr = m_Model->currentProject())
-            if (auto db = pr->database())
-                if (auto scope = db->getScope(m_ScopeID))
+        if (auto &&pr = m_Model->currentProject())
+            if (auto &&db = pr->database())
+                if (auto &&scope = db->getScope(m_ScopeID))
                     scope->removeType(m_TypeItem->id());
 
         m_Scene.removeItem(m_Item);
