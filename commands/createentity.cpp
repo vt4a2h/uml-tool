@@ -67,14 +67,10 @@ namespace commands {
     void CreateEntity::redo()
     {
         if (m_Done) {
-            if (auto &&pr = m_Model->currentProject())
-                if (auto &&db = pr->database())
-                    if (auto &&scope = db->getScope(m_ScopeID))
-                        scope->addExistsType(m_TypeItem);
+            m_Model->addExistsType(m_ProjectID, m_ScopeID, m_TypeItem);
 
             m_Scene.addItem(m_Item);
             static_cast<graphics::Entity *>(m_Item)->setTypeObject(m_TypeItem);
-
         } else {
             Q_ASSERT( m_Type == entity::UserClassType ); // only for classes now
 
@@ -95,11 +91,6 @@ namespace commands {
     {
         Q_ASSERT(m_Model);
         Q_ASSERT(m_TypeItem);
-
-        if (auto &&pr = m_Model->currentProject())
-            if (auto &&db = pr->database())
-                if (auto &&scope = db->getScope(m_ScopeID))
-                    scope->removeType(m_TypeItem->id());
 
         m_Scene.removeItem(m_Item);
         m_Model->removeType(m_ProjectID, m_ScopeID, m_TypeItem->id());

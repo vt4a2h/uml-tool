@@ -296,10 +296,19 @@ namespace models {
      */
     void ProjectTreeModel::removeType(const QString &projectID, const QString &scopeID, const QString &typeID)
     {
-        // TODO: implement
-        Q_UNUSED(projectID);
-        Q_UNUSED(scopeID);
-        Q_UNUSED(typeID);
+        if (auto &&pr = find(projectID)) {
+            if (auto &&scopeItem = pr->itemById(scopeID)) {
+                int parentIndexForScope = indexOf(pr);
+
+                if (auto &&typeItem = scopeItem->itemById(typeID)) {
+                    const int parentIndexForType = scopeItem->rowForItem(typeItem);
+                    const int currentIndex = pr->rowForItem(scopeItem) + parentIndexForScope + parentIndexForType;
+                    auto &&in = index(parentIndexForScope, 0);
+
+                    removeRows(currentIndex, 1, in); // TODO: imvestigate
+                }
+            }
+        }
     }
 
     /**

@@ -110,7 +110,7 @@ namespace models {
      * @param id
      * @return
      */
-    project::SharedProject ApplicationModel::getProject(const QString &id) const
+    project::SharedProject ApplicationModel::project(const QString &id) const
     {
         return m_Projects[id];
     }
@@ -193,6 +193,18 @@ namespace models {
     }
 
     /**
+     * @brief ApplicationModel::addExistsType
+     * @param type
+     */
+    void ApplicationModel::addExistsType(const QString &projectID, const QString &scopeID, const entity::SharedType &type)
+    {
+        if (auto &&pr = project(projectID))
+            if (auto &&db = pr->database())
+                if (auto &&scope = db->getScope(scopeID))
+                    scope->addExistsType(type);
+    }
+
+    /**
      * @brief ApplicationModel::removeType
      * @param projectID
      * @param scopeID
@@ -200,10 +212,12 @@ namespace models {
      */
     void ApplicationModel::removeType(const QString &projectID, const QString &scopeID, const QString &typeID)
     {
-        // TODO: implement
-        Q_UNUSED(projectID);
-        Q_UNUSED(scopeID);
-        Q_UNUSED(typeID);
+        if (auto &&pr = project(projectID))
+            if (auto &&db = pr->database())
+                if (auto &&scope = db->getScope(scopeID))
+                    scope->removeType(typeID);
+
+        m_TreeModel->removeType(projectID, scopeID, typeID);
     }
 
     /**
