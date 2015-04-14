@@ -202,6 +202,8 @@ namespace models {
             if (auto &&db = pr->database())
                 if (auto &&scope = db->getScope(scopeID))
                     scope->addExistsType(type);
+
+        m_TreeModel->addType(type, scopeID, projectID);
     }
 
     /**

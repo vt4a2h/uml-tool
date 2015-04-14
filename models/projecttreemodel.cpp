@@ -229,6 +229,7 @@ namespace models {
      */
     void ProjectTreeModel::addScope(const entity::SharedScope &scope, const QString &projectId)
     {
+        // TODO: refactore (make based of index structure)
         auto it = std::find_if(m_Items.begin(), m_Items.end(),
                                [&](const BasicTreeItem &item){ return item.id() == projectId; });
         if (it != m_Items.end()) {
@@ -248,6 +249,7 @@ namespace models {
      */
     void ProjectTreeModel::removeScope(const QString &scopeId, const QString &projectId)
     {
+        // TODO: refactore see. remove type
         if (auto pr = find(projectId)) {
             if (auto scopeItem = pr->itemById(scopeId)) {
                 int parentIndex = indexOf(pr);
@@ -296,16 +298,20 @@ namespace models {
      */
     void ProjectTreeModel::removeType(const QString &projectID, const QString &scopeID, const QString &typeID)
     {
+        // TODO: make universal remove function
         if (auto &&pr = find(projectID)) {
-            if (auto &&scopeItem = pr->itemById(scopeID)) {
-                int parentIndexForScope = indexOf(pr);
+            auto &&projectIndex = index(indexOf(pr), 0);
+            Q_ASSERT(projectIndex.isValid());
 
-                if (auto &&typeItem = scopeItem->itemById(typeID)) {
-                    const int parentIndexForType = scopeItem->rowForItem(typeItem);
-                    const int currentIndex = pr->rowForItem(scopeItem) + parentIndexForScope + parentIndexForType;
-                    auto &&in = index(parentIndexForScope, 0);
+            if (auto &&scope = pr->itemById(scopeID)) {
+                auto &&scopeIndex = projectIndex.child(pr->rowForItem( scope ), 0);
+                Q_ASSERT(scopeIndex.isValid());
 
-                    removeRows(currentIndex, 1, in); // TODO: imvestigate
+                if (auto &&type = scope->itemById(typeID)) {
+                    auto &&typeIndex = scopeIndex.child(scope->rowForItem(type), 0);
+                    Q_ASSERT(typeIndex.isValid());
+
+                    removeRow(typeIndex.row(), scopeIndex);
                 }
             }
         }
