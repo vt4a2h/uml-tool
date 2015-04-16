@@ -39,24 +39,6 @@ namespace models {
         , m_GlobalDatabase(std::make_shared<db::Database>())
         , m_TreeModel(std::make_shared<ProjectTreeModel>())
     {
-//        // make some test data
-//        makeProject("Project1", "/path1");
-//        makeProject("Project2", "/path2");
-
-//        project::SharedProject pr3 = makeProject("Project3", "/path3");
-//        db::SharedProjectDatabase db3 = pr3->database();
-//        db3->addScope("foo_scope");
-//        db3->addScope("bar_scope");
-//        entity::SharedScope sc1 = db3->addScope("baz_scope");
-//        sc1->addType("foo_type");
-//        sc1->addType("bar_type");
-//        entity::SharedClass cl1 = sc1->addType<entity::Class>("baz_type");
-//        cl1->addField("foo_field", cl1->id(), "m_");
-//        cl1->makeMethod("bar_method");
-
-//        // duplication of projects... but still useful for tests
-//        for (auto &&pr : m_Projects)
-//            m_TreeModel->addProject(pr);
     }
 
     /**
@@ -186,8 +168,8 @@ namespace models {
     void ApplicationModel::removeScope(const QString &id)
     {
         if (m_CurrentProject) {
-            m_TreeModel->removeScope(id, m_CurrentProject->id());
             m_CurrentProject->database()->removeScope(id);
+            m_TreeModel->removeScope(id, m_CurrentProject->id());
             m_CurrentProject->touch();
         }
     }
@@ -196,7 +178,8 @@ namespace models {
      * @brief ApplicationModel::addExistsType
      * @param type
      */
-    void ApplicationModel::addExistsType(const QString &projectID, const QString &scopeID, const entity::SharedType &type)
+    void ApplicationModel::addExistsType(const QString &projectID, const QString &scopeID,
+                                         const entity::SharedType &type)
     {
         if (auto &&pr = project(projectID))
             if (auto &&db = pr->database())
@@ -212,7 +195,8 @@ namespace models {
      * @param scopeID
      * @param typeID
      */
-    void ApplicationModel::removeType(const QString &projectID, const QString &scopeID, const QString &typeID)
+    void ApplicationModel::removeType(const QString &projectID, const QString &scopeID,
+                                      const QString &typeID)
     {
         if (auto &&pr = project(projectID))
             if (auto &&db = pr->database())

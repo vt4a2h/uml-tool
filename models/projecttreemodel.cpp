@@ -249,14 +249,15 @@ namespace models {
      */
     void ProjectTreeModel::removeScope(const QString &scopeId, const QString &projectId)
     {
-        // TODO: refactore see. remove type
-        if (auto pr = find(projectId)) {
-            if (auto scopeItem = pr->itemById(scopeId)) {
-                int parentIndex = indexOf(pr);
-                int currentIndex = pr->rowForItem(scopeItem) + parentIndex;
-                auto in = index(parentIndex, 0);
+        if (auto &&pr = find(projectId)) {
+            auto &&projectIndex = index(indexOf(pr), 0);
+            Q_ASSERT(projectIndex.isValid());
 
-                removeRows(currentIndex, currentIndex + scopeItem->childCount(), in);
+            if (auto &&scope = pr->itemById(scopeId)) {
+                auto &&scopeIndex = projectIndex.child(pr->rowForItem(scope), 0);
+                Q_ASSERT(scopeIndex.isValid());
+
+                removeRow( scopeIndex.row(), projectIndex );
             }
         }
     }
@@ -304,7 +305,7 @@ namespace models {
             Q_ASSERT(projectIndex.isValid());
 
             if (auto &&scope = pr->itemById(scopeID)) {
-                auto &&scopeIndex = projectIndex.child(pr->rowForItem( scope ), 0);
+                auto &&scopeIndex = projectIndex.child(pr->rowForItem(scope), 0);
                 Q_ASSERT(scopeIndex.isValid());
 
                 if (auto &&type = scope->itemById(typeID)) {
