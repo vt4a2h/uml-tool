@@ -299,7 +299,7 @@ namespace models {
             Q_ASSERT(projectIndex.isValid());
 
             if (auto &&scope = pr->itemById(scopeID)) {
-                auto &&scopeIndex = projectIndex.child(pr->rowForItem( scope ), 0);
+                auto &&scopeIndex = projectIndex.child(pr->rowForItem(scope), 0);
                 Q_ASSERT(scopeIndex.isValid());
 
                 if (auto &&type = scope->itemById(typeID)) {

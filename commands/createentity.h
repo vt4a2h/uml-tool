@@ -35,8 +35,9 @@ namespace commands {
     class CreateEntity : public BaseCommand
     {
     public:
-        CreateEntity(const models::SharedApplicationModal &model, entity::UserType type, const QString &scopeID,
-                     QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent = nullptr);
+        CreateEntity(const models::SharedApplicationModal &model, entity::UserType type,
+                     const QString &scopeID, QGraphicsScene &scene, const QPointF &pos,
+                     QUndoCommand *parent = nullptr);
 
         void redo() override;
         void undo() override;
