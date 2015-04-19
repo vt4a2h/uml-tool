@@ -17,6 +17,7 @@
         <file>pic/icon_action_union.png</file>
         <file>pic/icon_redo.png</file>
         <file>pic/icon_undo.png</file>
+        <file>pic/icon_properties.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>pic/main.png</file>

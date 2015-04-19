@@ -49,9 +49,12 @@ namespace {
                          });
     }
 
-    graphics::Entity *newEntity(QGraphicsScene &scene, const QPointF &pos, const entity::SharedType &type = nullptr)
+    graphics::Entity *newEntity(QGraphicsScene &scene, const QPointF &pos,
+                                const entity::SharedType &type = nullptr,
+                                const entity::SharedScope &scope = nullptr,
+                                const project::SharedProject &project = nullptr)
     {
-        graphics::Entity * entity = new graphics::Entity(type);
+        graphics::Entity * entity = new graphics::Entity(type, scope, project);
         entity->setPos(pos);
         scene.addItem(entity);
 
@@ -85,11 +88,13 @@ namespace entity {
     {
         auto type = model->makeType<entity::Class>(scopeID);
 
-        graphics::Entity * entity = newEntity(scene, pos, type);
 
-        project::Project * currentProject = model->currentProject().get();
+        auto &&currentProject = model->currentProject();
+        auto &&database = currentProject->database();
+        auto &&scope = database->getScope(scopeID);
 
-        connectEntity(entity, currentProject);
+        graphics::Entity * entity = newEntity(scene, pos, type, scope, currentProject);
+        connectEntity(entity, currentProject.get());
 
         currentProject->touch();
 

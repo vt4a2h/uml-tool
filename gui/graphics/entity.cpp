@@ -31,6 +31,9 @@
 #include <gui/editentitydialog.h>
 
 #include <entity/type.h>
+#include <entity/scope.h>
+
+#include <constants.cpp>
 
 namespace graphics {
 
@@ -38,17 +41,21 @@ namespace graphics {
         constexpr double margin    = 2.  ;
         constexpr double tmpHeight = 100.;
         constexpr double tmpWidth  = 100.;
+        const QString stub = Entity::tr( "Stub" );
     }
 
     /**
      * @brief Entity::Entity
      * @param parent
      */
-    Entity::Entity(const entity::SharedType & type, QGraphicsItem *parent)
+    Entity::Entity(const entity::SharedType &type, const entity::SharedScope &scope,
+                   const project::SharedProject &project, QGraphicsItem *parent)
         : QGraphicsObject(parent)
         , m_Menu(std::make_unique<QMenu>())
         , m_EditDialog(std::make_unique<gui::EditEntityDialog>())
         , m_Type(type)
+        , m_Scope(scope)
+        , m_Project(project)
     {
         setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
         addMenuActions();
@@ -85,7 +92,7 @@ namespace graphics {
         painter->setBrush(Qt::black);
         painter->drawRect(QRectF(-tmpWidth / 2, -tmpHeight / 2, tmpWidth, tmpHeight));
         painter->setPen(Qt::white);
-        painter->drawText(boundingRect(), Qt::AlignCenter, m_Type ? m_Type->name() : "Stub");
+        painter->drawText(boundingRect(), Qt::AlignCenter, m_Type ? m_Type->name() : stub);
     }
 
     /**
@@ -104,6 +111,42 @@ namespace graphics {
     void Entity::setTypeObject(const entity::SharedType &type)
     {
         m_Type = type;
+    }
+
+    /**
+     * @brief Entity::scope
+     * @return
+     */
+    entity::SharedScope Entity::scope() const
+    {
+        return m_Scope;
+    }
+
+    /**
+     * @brief Entity::setScope
+     * @param scope
+     */
+    void Entity::setScope(const entity::SharedScope &scope)
+    {
+        m_Scope = scope;
+    }
+
+    /**
+     * @brief Entity::project
+     * @return
+     */
+    project::SharedProject Entity::project() const
+    {
+        return m_Project;
+    }
+
+    /**
+     * @brief Entity::setProject
+     * @param project
+     */
+    void Entity::setProject(const project::SharedProject &project)
+    {
+        m_Project = project;
     }
 
     /**
@@ -164,6 +207,9 @@ namespace graphics {
                     // We know that main window is the parent of scene
                     Q_ASSERT(scene());
                     m_EditDialog->setParent(static_cast<QWidget *>(scene()->parent()), Qt::Dialog);
+                    m_EditDialog->setType(m_Type);
+                    m_EditDialog->setScope(m_Scope);
+                    m_EditDialog->setProject(m_Project);
                     m_EditDialog->exec();
                 });
 

@@ -43,4 +43,59 @@ namespace gui {
     {
     }
 
+    /**
+     * @brief EditEntityDialog::type
+     * @return
+     */
+    entity::SharedType EditEntityDialog::type() const
+    {
+        return m_Type;
+    }
+
+    /**
+     * @brief EditEntityDialog::setType
+     * @param type
+     */
+    void EditEntityDialog::setType(const entity::SharedType &type)
+    {
+        m_Type = type;
+    }
+
+    /**
+     * @brief EditEntityDialog::scope
+     * @return
+     */
+    entity::SharedScope EditEntityDialog::scope() const
+    {
+        return m_Scope;
+    }
+
+    /**
+     * @brief EditEntityDialog::setScope
+     * @param scope
+     */
+    void EditEntityDialog::setScope(const entity::SharedScope &scope)
+    {
+        m_Scope = scope;
+    }
+
+    /**
+     * @brief EditEntityDialog::project
+     * @return
+     */
+    project::SharedProject EditEntityDialog::project() const
+    {
+        return m_Project;
+    }
+
+    /**
+     * @brief EditEntityDialog::setProject
+     * @param project
+     */
+    void EditEntityDialog::setProject(const project::SharedProject &project)
+    {
+        m_Project = project;
+    }
+
+
 } // namespace gui
