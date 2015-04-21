@@ -47,6 +47,7 @@ namespace entity {
      * @param src
      */
     Field::Field(const Field &src)
+        : BasicEntity( src )
     {
         copyFrom(src);
     }
@@ -78,9 +79,9 @@ namespace entity {
      * @param section
      */
     Field::Field(const QString &name, const QString &typeId, const QString &prefix, Section section)
-        : m_TypeId(typeId)
+        : BasicEntity(name)
+        , m_TypeId(typeId)
         , m_Section(section)
-        , m_Name(name)
         , m_Prefix(prefix)
     {
     }
@@ -128,30 +129,12 @@ namespace entity {
     }
 
     /**
-     * @brief Field::name
-     * @return
-     */
-    QString Field::name() const
-    {
-        return m_Name;
-    }
-
-    /**
      * @brief Field::fullName
      * @return
      */
     QString Field::fullName() const
     {
         return QString("%1%2%3").arg(m_Prefix, m_Name, m_Suffix);
-    }
-
-    /**
-     * @brief Field::setName
-     * @param name
-     */
-    void Field::setName(const QString &name)
-    {
-        m_Name = name;
     }
 
     /**
@@ -329,7 +312,6 @@ namespace entity {
     {
         m_TypeId = src.m_TypeId;
         m_Section = src.m_Section;
-        m_Name = src.m_Name;
         m_Prefix = src.m_Prefix;
         m_Suffix = src.m_Suffix;
         m_DefaultValue = src.m_DefaultValue;

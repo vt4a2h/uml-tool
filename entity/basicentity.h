@@ -32,9 +32,20 @@ namespace entity {
         Q_OBJECT
 
     public:
+        BasicEntity() = default;
+        explicit BasicEntity(const QString &name);
+        BasicEntity(const BasicEntity &src);
+        BasicEntity(BasicEntity &&src);
+
+        BasicEntity &operator =(const BasicEntity &rhs);
+        BasicEntity &operator =(BasicEntity &&rhs);
+
         virtual QString id() const;
         virtual QString parentID() const; // TODO: implement! it's usefull
         virtual void setId(const QString &id);
+
+        QString name() const;
+        void setName(const QString &name);
 
         void writeToFile(const QString &fileName) const;
         bool readFromFile(const QString &fileName);
@@ -43,6 +54,9 @@ namespace entity {
         virtual void fromJson(const QJsonObject &src, QStringList &errorList) = 0;
 
         static constexpr const char *topID = "top_item_id";
+
+    protected:
+        QString m_Name;
     };
 
 } // namespace entity

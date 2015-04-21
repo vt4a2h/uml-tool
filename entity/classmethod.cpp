@@ -57,6 +57,7 @@ namespace entity {
      * @param src
      */
     ClassMethod::ClassMethod(const ClassMethod &src)
+        : BasicEntity(src)
     {
         copyFrom(src);
     }
@@ -66,8 +67,8 @@ namespace entity {
      * @param name
      */
     ClassMethod::ClassMethod(const QString &name)
-        : m_Type(SimpleMethod)
-        , m_Name(name)
+        : BasicEntity(name)
+        , m_Type(SimpleMethod)
         , m_ScopeId(STUB_ID)
         , m_Section(Public)
         , m_ConstStatus(false)
@@ -125,24 +126,6 @@ namespace entity {
                lhs.m_LhsIdentificators == rhs.m_LhsIdentificators &&
                utility::seqSharedPointerEq(lhs.m_Parameters, rhs.m_Parameters);
 
-    }
-
-    /**
-     * @brief ClassMethod::name
-     * @return
-     */
-    QString ClassMethod::name() const
-    {
-        return m_Name;
-    }
-
-    /**
-     * @brief ClassMethod::setName
-     * @param name
-     */
-    void ClassMethod::setName(const QString &name)
-    {
-        m_Name = name;
     }
 
     /**
@@ -443,7 +426,6 @@ namespace entity {
     {
         m_Type = src.m_Type;
 
-        m_Name = src.m_Name;
         m_ScopeId = src.m_ScopeId;
         m_Section = src.m_Section;
         m_ConstStatus = src.m_ConstStatus;

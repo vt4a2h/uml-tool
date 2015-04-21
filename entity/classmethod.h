@@ -60,9 +60,6 @@ namespace entity {
 
         friend bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs);
 
-        QString name() const;
-        void setName(const QString &name);
-
         Section section() const;
         void setSection(Section section);
 
@@ -106,7 +103,6 @@ namespace entity {
         ClassMethodType m_Type;
 
     private:
-        QString m_Name;
         QString m_ScopeId;
         Section m_Section;
         bool    m_ConstStatus;

@@ -57,6 +57,7 @@ namespace entity {
      * @param src
      */
     Type::Type(const Type &src)
+        : BasicEntity(src)
     {
         copyFrom(src);
     }
@@ -68,8 +69,8 @@ namespace entity {
      * @param typeId
      */
     Type::Type(const QString &name, const QString &scopeId, const QString &typeId)
-        : m_KindOfType(BasicType)
-        , m_Name(name)
+        : BasicEntity(name)
+        , m_KindOfType(BasicType)
         , m_Id(typeId.isEmpty() ? utility::genId() : typeId)
         , m_ScopeId(scopeId)
     {
@@ -114,24 +115,6 @@ namespace entity {
         moveFrom(rhs);
 
         return *this;
-    }
-
-    /**
-     * @brief Type::name
-     * @return
-     */
-    QString Type::name() const
-    {
-        return m_Name;
-    }
-
-    /**
-     * @brief Type::setName
-     * @param name
-     */
-    void Type::setName(const QString &name)
-    {
-        m_Name = name;
     }
 
     /**
@@ -254,7 +237,6 @@ namespace entity {
     void Type::copyFrom(const Type &src)
     {
         m_KindOfType = src.m_KindOfType;
-        m_Name = src.m_Name;
         m_Id = src.m_Id;
         m_ScopeId = src.m_ScopeId;
     }

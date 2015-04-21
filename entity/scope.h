@@ -49,9 +49,6 @@ namespace entity {
 
         friend bool operator ==(const Scope &lhs, const Scope &rhs);
 
-        QString name() const;
-        void setName(const QString &name);
-
         SharedType getType(const QString &typeId) const;
         SharedType takeType(const QString &typeId);
         template <class T = Type> std::shared_ptr<T> addType(const QString &name = "");
@@ -84,7 +81,6 @@ namespace entity {
         void copyFrom(const Scope &src);
         void moveFrom(Scope &src);
 
-        QString m_Name;
         QString m_Id;
         QString m_ParentScopeId;
         Scopes m_Scopes;

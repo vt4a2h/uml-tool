@@ -50,9 +50,6 @@ namespace entity {
         Type &operator =(Type &&rhs);
         friend bool operator ==(const Type &lhs, const Type &rhs);
 
-        QString name() const;
-        void setName(const QString &name);
-
         QString scopeId() const;
         void setScopeId(const QString &scopeId);
 
@@ -78,7 +75,6 @@ namespace entity {
     private:
         void generateUniqueName();
 
-        QString m_Name;
         QString m_Id;
         QString m_ScopeId;
 

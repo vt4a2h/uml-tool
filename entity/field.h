@@ -53,9 +53,7 @@ namespace entity {
         Field &operator =(Field rhs);
         friend bool operator== (const Field &lhs, const Field &rhs);
 
-        QString name() const;
         QString fullName() const;
-        void setName(const QString &name);
 
         Section section() const;
         void setSection(Section section);
@@ -90,7 +88,6 @@ namespace entity {
 
         QString m_TypeId;
         Section m_Section;
-        QString m_Name;
         QString m_Prefix;
         QString m_Suffix;
         QString m_DefaultValue;

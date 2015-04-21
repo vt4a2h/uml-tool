@@ -31,6 +31,60 @@ namespace entity {
     }
 
     /**
+     * @brief BasicEntity::BasicEntity
+     * @param name
+     */
+    BasicEntity::BasicEntity(const QString &name)
+        : m_Name(name)
+    {
+    }
+
+    /**
+     * @brief BasicEntity::BasicEntity
+     * @param src
+     */
+    BasicEntity::BasicEntity(const BasicEntity &src)
+        : QObject()
+    {
+        m_Name = src.m_Name;
+    }
+
+    /**
+     * @brief BasicEntity::BasicEntity
+     * @param src
+     */
+    BasicEntity::BasicEntity(BasicEntity &&src)
+    {
+        m_Name = std::move(src.m_Name);
+    }
+
+    /**
+     * @brief BasicEntity::operator =
+     * @param rhs
+     * @return
+     */
+    BasicEntity &BasicEntity::operator =(const BasicEntity &rhs)
+    {
+        if (this != &rhs)
+            m_Name = rhs.m_Name;
+
+        return *this;
+    }
+
+    /**
+     * @brief BasicEntity::operator =
+     * @param rhs
+     * @return
+     */
+    BasicEntity &BasicEntity::operator =(BasicEntity &&rhs)
+    {
+        if (this != &rhs)
+            m_Name = std::move(rhs.m_Name);
+
+        return *this;
+    }
+
+    /**
      * @brief BasicEntity::id
      * @return
      */
@@ -55,6 +109,24 @@ namespace entity {
     void BasicEntity::setId(const QString &id)
     {
         Q_UNUSED(id);
+    }
+
+    /**
+     * @brief BasicEntity::name
+     * @return
+     */
+    QString BasicEntity::name() const
+    {
+        return m_Name;
+    }
+
+    /**
+     * @brief BasicEntity::setName
+     * @param name
+     */
+    void BasicEntity::setName(const QString &name)
+    {
+        m_Name = name;
     }
 
     /**

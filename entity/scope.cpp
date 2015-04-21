@@ -55,6 +55,7 @@ namespace entity {
      * @param src
      */
     Scope::Scope(const Scope &src)
+        : BasicEntity(src)
     {
         copyFrom(src);
     }
@@ -65,10 +66,10 @@ namespace entity {
      * @param scopeId
      */
     Scope::Scope(const QString &scopeName, const QString &parentScopeID)
-        : m_Name(!scopeName.isEmpty() ? scopeName : DEFAULT_NAME)
-        , m_Id(utility::genId())
+        : m_Id(utility::genId())
         , m_ParentScopeId(!parentScopeID.isEmpty() ? parentScopeID : GLOBAL_SCOPE_ID)
     {
+        m_Name = !scopeName.isEmpty() ? scopeName : DEFAULT_NAME;
     }
 
     /**
@@ -108,24 +109,6 @@ namespace entity {
                lhs.m_ParentScopeId == rhs.m_ParentScopeId              &&
                utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes) &&
                utility::seqSharedPointerEq(lhs.m_Types, rhs.m_Types);
-    }
-
-    /**
-     * @brief Scope::name
-     * @return
-     */
-    QString Scope::name() const
-    {
-        return m_Name;
-    }
-
-    /**
-     * @brief Scope::setName
-     * @param name
-     */
-    void Scope::setName(const QString &name)
-    {
-        m_Name = name;
     }
 
     /**
