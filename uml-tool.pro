@@ -53,7 +53,8 @@ SOURCES += \
     commands/createscope.cpp \
     commands/basecommand.cpp \
     commands/movegraphicobject.cpp \
-    commands/createentity.cpp
+    commands/createentity.cpp \
+    commands/renameentity.cpp
 
 HEADERS += \
     enums.h \
@@ -103,7 +104,8 @@ HEADERS += \
     commands/createscope.h \
     commands/basecommand.h \
     commands/movegraphicobject.h \
-    commands/createentity.h
+    commands/createentity.h \
+    commands/renameentity.h
 
 FORMS += \
     gui/mainwindow.ui \

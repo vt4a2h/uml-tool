@@ -37,7 +37,11 @@
 using ErrorList = QStringList;
 using SharedErrorList = std::shared_ptr<ErrorList>;
 
+// TODO: split to the modules
 namespace entity {
+    class BasicEntity;
+    using SharedBasicEntity = std::shared_ptr<BasicEntity>;
+
     class Field;
     using SharedField = std::shared_ptr<Field>;
     using Fields      = QHash<QString, SharedField>;
