@@ -25,20 +25,41 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
        <item>
-        <widget class="QLineEdit" name="leName">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>3</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="placeholderText">
-          <string>Enter entity name here...</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLineEdit" name="leName">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>3</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="placeholderText">
+            <string>Enter entity name here...</string>
+           </property>
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbAcceptName">
+           <property name="toolTip">
+            <string>Accept new entity name</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="main.qrc">
+             <normaloff>:/icons/pic/icon_accept.png</normaloff>:/icons/pic/icon_accept.png</iconset>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="QListWidget" name="lstMembers">
@@ -156,6 +177,44 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item>
+        <widget class="QToolButton" name="tbUndo">
+         <property name="toolTip">
+          <string>Press to undo last action</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="main.qrc">
+           <normaloff>:/icons/pic/icon_undo.png</normaloff>:/icons/pic/icon_undo.png</iconset>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+Z</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="tbRedo">
+         <property name="toolTip">
+          <string>Press to redo last action</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="main.qrc">
+           <normaloff>:/icons/pic/icon_redo.png</normaloff>:/icons/pic/icon_redo.png</iconset>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+Shift+Z</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">

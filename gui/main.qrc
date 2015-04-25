@@ -18,6 +18,7 @@
         <file>pic/icon_redo.png</file>
         <file>pic/icon_undo.png</file>
         <file>pic/icon_properties.png</file>
+        <file>pic/icon_accept.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>pic/main.png</file>
