@@ -24,6 +24,8 @@
 
 #include <QDialog>
 
+#include "types.h"
+
 namespace gui
 {
 
@@ -42,8 +44,20 @@ namespace gui
         explicit EditEntityDialog(QWidget *parent = 0);
         ~EditEntityDialog();
 
+        entity::SharedType type() const;
+        void setType(const entity::SharedType &type);
+
+        entity::SharedScope scope() const;
+        void setScope(const entity::SharedScope &scope);
+
+        project::SharedProject project() const;
+        void setProject(const project::SharedProject &project);
+
     private:
         QScopedPointer<Ui::EditEntityDialog> ui;
+        entity::SharedType  m_Type;
+        entity::SharedScope m_Scope;
+        project::SharedProject m_Project;
     };
 
 } // namespace gui

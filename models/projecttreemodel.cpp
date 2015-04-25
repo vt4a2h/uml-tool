@@ -188,13 +188,13 @@ namespace models {
      */
     bool ProjectTreeModel::removeRows(int row, int count, const QModelIndex &parent)
     {
-        // TODO: remove children from all interval: (row, row + count)
         beginRemoveRows(parent, row, row + count);
 
         bool result = false;
         if (parent.isValid()) {
             BasicTreeItem *item = static_cast<BasicTreeItem*>(parent.internalPointer());
-            result = item->removeChild(item->child(row));
+            for (int i = row; i <= row + count; ++i)
+                result = item->removeChild(item->child(i));
         } else {
             if (m_Items.size() < row) {
                 auto it = std::find(m_Items.begin(), m_Items.end(), m_Items.at(row));
@@ -229,15 +229,13 @@ namespace models {
      */
     void ProjectTreeModel::addScope(const entity::SharedScope &scope, const QString &projectId)
     {
-        // TODO: refactore (make based of index structure)
-        auto it = std::find_if(m_Items.begin(), m_Items.end(),
-                               [&](const BasicTreeItem &item){ return item.id() == projectId; });
-        if (it != m_Items.end()) {
-            int parentIndex = std::distance(m_Items.begin(), it);
-            if (parentIndex == 0)
-                ++parentIndex;
-            beginInsertRows(index(parentIndex, 0), parentIndex, parentIndex + 1);
-            it->makeChild(QVariant::fromValue(scope), TreeItemType::ScopeItem);
+        if (auto &&pr = find(projectId)) {
+            auto &&projectIndex = index(indexOf(pr), 0);
+            Q_ASSERT(projectIndex.isValid());
+
+            auto pos = projectIndex.row() + 1;
+            beginInsertRows(projectIndex, pos, pos);
+            pr->makeChild(QVariant::fromValue(scope), TreeItemType::ScopeItem);
             endInsertRows();
         }
     }
@@ -254,10 +252,10 @@ namespace models {
             Q_ASSERT(projectIndex.isValid());
 
             if (auto &&scope = pr->itemById(scopeId)) {
-                auto &&scopeIndex = projectIndex.child(pr->rowForItem(scope), 0);
+                auto &&scopeIndex = projectIndex.child(pr->rowForItem( scope ), 0);
                 Q_ASSERT(scopeIndex.isValid());
 
-                removeRow( scopeIndex.row(), projectIndex );
+                removeRows(scopeIndex.row(), 0, projectIndex);
             }
         }
     }
@@ -271,21 +269,17 @@ namespace models {
     void ProjectTreeModel::addType(const entity::SharedType &type, const QString &scopeId,
                                    const QString &projectId)
     {
-        // TODO: refactore
-        auto projectIt = std::find_if(m_Items.begin(), m_Items.end(),
-                                      [&](const BasicTreeItem &item){ return item.id() == projectId; });
+        if (auto &&pr = find(projectId)) {
+            auto &&projectIndex = index(indexOf(pr), 0);
+            Q_ASSERT(projectIndex.isValid());
 
-        if (projectIt != m_Items.end()) {
-            auto projectIndex = std::distance(m_Items.begin(), projectIt);
+            if (auto &&scope = pr->itemById(scopeId)) {
+                auto &&scopeIndex = projectIndex.child(pr->rowForItem( scope ), 0);
+                Q_ASSERT(scopeIndex.isValid());
 
-            auto scopes = projectIt->childrenItems();
-            auto scopeIt = std::find_if(scopes.begin(), scopes.end(),
-                                        [&](const BasicTreeItem *item){ return item->id() == scopeId; });
-            if (scopeIt != scopes.end()) {
-                int parentIndex = std::distance(scopes.begin(), scopeIt);
-                parentIndex += projectIndex;
-                beginInsertRows(index(parentIndex, 0), parentIndex, parentIndex + 1);
-                (*scopeIt)->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
+                auto pos = scopeIndex.row() + 1;
+                beginInsertRows(scopeIndex, pos, pos);
+                scope->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
                 endInsertRows();
             }
         }
