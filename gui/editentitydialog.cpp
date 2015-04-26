@@ -23,6 +23,17 @@
 #include "editentitydialog.h"
 #include "ui_editentitydialog.h"
 
+#include <entity/type.h>
+#include <entity/scope.h>
+
+#include <project/project.h>
+
+#include <db/projectdatabase.h>
+
+#include <utility/helpfunctions.h>
+
+#include <enums.h>
+
 namespace gui {
 
     /**
@@ -34,6 +45,10 @@ namespace gui {
         , ui(new Ui::EditEntityDialog)
     {
         ui->setupUi(this);
+
+        for(int i = 0; i < int(entity::UserType::Count); ++i)
+            ui->cbType->addItem(utility::userTypeToString(entity::UserType(i)),
+                                QVariant::fromValue(entity::UserType(i)));
     }
 
     /**
@@ -97,5 +112,80 @@ namespace gui {
         m_Project = project;
     }
 
+    /**
+     * @brief EditEntityDialog::showEvent
+     * @param ev
+     */
+    void EditEntityDialog::showEvent(QShowEvent *ev)
+    {
+        init();
+
+        QDialog::showEvent(ev);
+    }
+
+    /**
+     * @brief EditEntityDialog::closeEvent
+     * @param ev
+     */
+    void EditEntityDialog::closeEvent(QCloseEvent *ev)
+    {
+        clear();
+
+        QDialog::closeEvent(ev);
+    }
+
+    /**
+     * @brief EditEntityDialog::init
+     */
+    void EditEntityDialog::init()
+    {
+        Q_ASSERT(m_Type);
+        Q_ASSERT(m_Scope);
+        Q_ASSERT(m_Project);
+
+        ui->leName->setText(m_Type->name());
+
+        setType();
+
+        auto &&db = m_Project->database();
+        for(auto &&scope : db->scopes())
+            ui->cbScopes->addItem(scope->name(), QVariant::fromValue(scope));
+        setScope();
+    }
+
+    /**
+     * @brief EditEntityDialog::clear
+     */
+    void EditEntityDialog::clear()
+    {
+        ui->leName->clear();
+        ui->cbScopes->clear();
+    }
+
+    /**
+     * @brief EditEntityDialog::setType
+     */
+    void EditEntityDialog::setType()
+    {
+        for (int i = 0; i < ui->cbType->count(); ++i) {
+            if (m_Type->type() == ui->cbType->itemData(i).value<entity::UserType>()) {
+                ui->cbType->setCurrentIndex(i);
+                break;
+            }
+        }
+    }
+
+    /**
+     * @brief EditEntityDialog::setScope
+     */
+    void EditEntityDialog::setScope()
+    {
+        for (int i = 0; i < ui->cbScopes->count(); ++i) {
+            if (m_Scope == ui->cbScopes->itemData(i).value<entity::SharedScope>()) {
+                ui->cbScopes->setCurrentIndex(i);
+                break;
+            }
+        }
+    }
 
 } // namespace gui

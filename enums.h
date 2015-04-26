@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <QMetaType>
+
 namespace entity {
 
     /// The Section enum
@@ -45,7 +47,8 @@ namespace entity {
         TemplateClassType,  ///< TemplateClassType
         UnionType,          ///< UnionType
         EnumType,           ///< EnumType
-        ExtendedTypeType    ///< ExtendedTypeType
+        ExtendedTypeType,    ///< ExtendedTypeType
+        Count
     };
 
     /// The RhsIdentificator enum
@@ -105,3 +108,5 @@ namespace relationship {
         MultiRelation           ///< MultiRelation
     };
 }
+
+Q_DECLARE_METATYPE(entity::UserType)

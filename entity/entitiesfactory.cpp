@@ -107,11 +107,13 @@ namespace entity {
      * @param type
      * @param pos
      */
-    void EntitiesFactory::addEntity(QGraphicsScene &scene, const project::SharedProject &project,
-                                    const SharedType &type, const QPointF &pos) const
+    graphics::Entity *EntitiesFactory::addEntity(QGraphicsScene &scene, const project::SharedProject &project,
+                                                 const entity::SharedScope &scope, const SharedType &type,
+                                                 const QPointF &pos) const
     {
-        graphics::Entity * entity = newEntity(scene, pos, type);
+        graphics::Entity * entity = newEntity(scene, pos, type, scope, project);
         connectEntity(entity, project.get());
+        return entity;
     }
 
     /**

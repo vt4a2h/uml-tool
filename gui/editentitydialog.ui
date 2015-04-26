@@ -45,20 +45,6 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QToolButton" name="tbAcceptName">
-           <property name="toolTip">
-            <string>Accept new entity name</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="main.qrc">
-             <normaloff>:/icons/pic/icon_accept.png</normaloff>:/icons/pic/icon_accept.png</iconset>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
        <item>

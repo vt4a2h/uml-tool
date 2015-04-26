@@ -51,7 +51,7 @@ namespace entity {
         friend bool operator ==(const Type &lhs, const Type &rhs);
 
         QString scopeId() const;
-        void setScopeId(const QString &scopeId);
+        void setScopeId(const QString &scopeId); // TODO: perhaps store it as weak pointer
 
         UserType type() const;
 

@@ -53,7 +53,16 @@ namespace gui
         project::SharedProject project() const;
         void setProject(const project::SharedProject &project);
 
+    protected:
+        void showEvent(QShowEvent *ev);
+        void closeEvent(QCloseEvent *ev);
+
     private:
+        void init();
+        void clear();
+        void setType();
+        void setScope();
+
         QScopedPointer<Ui::EditEntityDialog> ui;
         entity::SharedType  m_Type;
         entity::SharedScope m_Scope;
