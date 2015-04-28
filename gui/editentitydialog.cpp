@@ -32,6 +32,8 @@
 
 #include <utility/helpfunctions.h>
 
+#include <commands/renameentity.h>
+
 #include <enums.h>
 
 namespace gui {
@@ -49,6 +51,9 @@ namespace gui {
         for(int i = 0; i < int(entity::UserType::Count); ++i)
             ui->cbType->addItem(utility::userTypeToString(entity::UserType(i)),
                                 QVariant::fromValue(entity::UserType(i)));
+
+        connect(ui->pbAccept, &QPushButton::clicked, this, &EditEntityDialog::onAccepted);
+        connect(ui->pbReject, &QPushButton::clicked, this, &EditEntityDialog::onRejected);
     }
 
     /**
@@ -132,6 +137,35 @@ namespace gui {
         clear();
 
         QDialog::closeEvent(ev);
+    }
+
+    /**
+     * @brief EditEntityDialog::onAccepted
+     */
+    void EditEntityDialog::onAccepted()
+    {
+        // TODO: need to implement auto repeint and auto model update
+        auto &&stack = m_Project->commandsStack();
+        stack->beginMacro(tr("Edit entity dialog changes"));
+
+        // Check name
+        QString newName = ui->leName->text();
+        if (m_Type->name() != newName)
+        {
+            auto renameCmd = std::make_unique<commands::RenameEntity>(m_Type, newName);
+            stack->push(renameCmd.release());
+        }
+
+        stack->endMacro();
+        accept();
+    }
+
+    /**
+     * @brief EditEntityDialog::onRejected
+     */
+    void EditEntityDialog::onRejected()
+    {
+        reject();
     }
 
     /**

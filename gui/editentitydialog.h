@@ -57,6 +57,10 @@ namespace gui
         void showEvent(QShowEvent *ev);
         void closeEvent(QCloseEvent *ev);
 
+    private slots:
+        void onAccepted();
+        void onRejected();
+
     private:
         void init();
         void clear();

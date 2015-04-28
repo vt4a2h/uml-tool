@@ -206,10 +206,12 @@ namespace graphics {
                 [this]() {
                     // We know that main window is the parent of scene
                     Q_ASSERT(scene());
+
                     m_EditDialog->setParent(static_cast<QWidget *>(scene()->parent()), Qt::Dialog);
                     m_EditDialog->setType(m_Type);
                     m_EditDialog->setScope(m_Scope);
                     m_EditDialog->setProject(m_Project);
+
                     m_EditDialog->exec();
                 });
 
