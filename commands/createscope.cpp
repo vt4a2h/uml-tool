@@ -66,4 +66,20 @@ namespace commands {
             m_Model.removeScope(m_NewScope->id());
     }
 
+    /**
+     * @brief CreateScope::updateScene
+     */
+    bool CreateScope::updateScene() const
+    {
+        return false;
+    }
+
+    /**
+     * @brief CreateScope::updateModel
+     */
+    bool CreateScope::updateModel() const
+    {
+        return false;
+    }
+
 } // namespace commands

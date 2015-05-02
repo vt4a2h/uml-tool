@@ -96,4 +96,20 @@ namespace commands {
         m_Model->removeType(m_ProjectID, m_ScopeID, m_TypeItem->id());
     }
 
+    /**
+     * @brief CreateEntity::updateScene
+     */
+    bool CreateEntity::updateScene() const
+    {
+        return false;
+    }
+
+    /**
+     * @brief CreateEntity::updateModel
+     */
+    bool CreateEntity::updateModel() const
+    {
+        return false;
+    }
+
 } // namespace commands

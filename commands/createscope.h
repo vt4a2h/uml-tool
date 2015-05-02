@@ -42,6 +42,9 @@ namespace commands {
         void redo() override;
         void undo() override;
 
+        bool updateScene() const override;
+        bool updateModel() const override;
+
     private:
         QString m_ScopeName;
         entity::SharedScope m_NewScope;

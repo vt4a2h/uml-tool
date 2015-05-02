@@ -36,6 +36,9 @@ namespace commands {
         explicit BaseCommand(QUndoCommand *parent = nullptr);
         explicit BaseCommand(const QString &text, QUndoCommand *parent = nullptr);
 
+        virtual bool updateScene() const = 0;
+        virtual bool updateModel() const = 0;
+
     protected:
         bool m_Done; // do first time -- false, redo -- true
     };
