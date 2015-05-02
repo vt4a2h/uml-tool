@@ -94,6 +94,8 @@ namespace gui {
         void setCurrentProjectViaMenu();
 
         void updateWindowState();
+        void updateScene();
+        void updateModelView();
 
         void setCurrentProject(const QString &id);
 

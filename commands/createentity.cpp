@@ -107,7 +107,7 @@ namespace commands {
     /**
      * @brief CreateEntity::updateModel
      */
-    bool CreateEntity::updateModel() const
+    bool CreateEntity::updateModelView() const
     {
         return false;
     }

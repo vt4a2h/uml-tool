@@ -152,10 +152,7 @@ namespace gui {
         // Check name
         QString newName = ui->leName->text();
         if (m_Type->name() != newName)
-        {
-            auto renameCmd = std::make_unique<commands::RenameEntity>(m_Type, newName);
-            stack->push(renameCmd.release());
-        }
+            stack->push(std::make_unique<commands::RenameEntity>(m_Type, newName));
 
         stack->endMacro();
         accept();

@@ -274,13 +274,19 @@ namespace models {
             Q_ASSERT(projectIndex.isValid());
 
             if (auto &&scope = pr->itemById(scopeId)) {
-                auto &&scopeIndex = projectIndex.child(pr->rowForItem( scope ), 0);
+                auto &&scopeIndex = projectIndex.child(pr->rowForItem(scope), 0);
                 Q_ASSERT(scopeIndex.isValid());
 
                 auto pos = scopeIndex.row() + 1;
                 beginInsertRows(scopeIndex, pos, pos);
                 scope->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
                 endInsertRows();
+
+                // TODO: implement for all items
+                connect(type.get(), &entity::BasicEntity::nameChanged, [=](){
+                    emit dataChanged(projectIndex, scopeIndex.child(scope->rowForItem(scope->itemById(type->id())), 0));
+                    qDebug() << "name updated";
+                });
             }
         }
     }

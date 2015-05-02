@@ -34,7 +34,6 @@ namespace commands {
      */
     UndoStack::UndoStack(QObject *parent)
         : QObject(parent)
-        , m_QStack(new QUndoStack())
     {
     }
 
@@ -46,30 +45,13 @@ namespace commands {
     }
 
     /**
-     * @brief UndoStack::qstack
-     * @return
-     */
-    QUndoStack *UndoStack::qstack()
-    {
-        return const_cast<QUndoStack *>(const_cast<const UndoStack *>(this)->qstack());
-    }
-
-    /**
-     * @brief UndoStack::qstack
-     * @return
-     */
-    const QUndoStack *UndoStack::qstack() const
-    {
-        return m_QStack.data();
-    }
-
-    /**
      * @brief UndoStack::push
      * @param cmd
      */
-    void UndoStack::push(BaseCommand *cmd)
+    void UndoStack::push(commands::UniqueCommand &&cmd)
     {
-        m_QStack->push(cmd);
+        m_RedoStack.push(std::forward<commands::UniqueCommand>(cmd));
+        redo();
     }
 
     /**
@@ -78,7 +60,7 @@ namespace commands {
      */
     bool UndoStack::canUndo() const
     {
-        return m_QStack->canUndo();
+        return m_CanUndo;
     }
 
     /**
@@ -87,7 +69,7 @@ namespace commands {
      */
     bool UndoStack::canRedo() const
     {
-        return m_QStack->canRedo();
+        return m_CanRedo;
     }
 
     /**
@@ -96,7 +78,8 @@ namespace commands {
      */
     void UndoStack::beginMacro(const QString &text)
     {
-        m_QStack->beginMacro(text);
+        Q_UNUSED(text);
+//        m_QStack->beginMacro(text);
     }
 
     /**
@@ -104,7 +87,67 @@ namespace commands {
      */
     void UndoStack::endMacro()
     {
-        m_QStack->endMacro();
+        //        m_QStack->endMacro();
+    }
+
+    /**
+     * @brief UndoStack::redo
+     */
+    void UndoStack::redo()
+    {
+        m_UndoStack.push(m_RedoStack.pop());
+        m_UndoStack.top()->redo();
+
+        setUndoableRedoable();
+        checkStates(m_UndoStack.top());
+    }
+
+    /**
+     * @brief UndoStack::undo
+     */
+    void UndoStack::undo()
+    {
+        m_RedoStack.push(m_UndoStack.pop());
+        m_RedoStack.top()->undo();
+
+        setUndoableRedoable();
+        checkStates(m_RedoStack.top());
+    }
+
+    /**
+     * @brief UndoStack::checkStates
+     */
+    void UndoStack::checkStates(const SharedCommand &cmd)
+    {
+        Q_ASSERT(cmd);
+
+        if (cmd->updateScene())
+            emit needRepaint();
+
+        if (cmd->updateModelView())
+            emit needUpdateModelView();
+    }
+
+    void UndoStack::setUndoableRedoable()
+    {
+        setCanUndo(!m_UndoStack.isEmpty());
+        setCanRedo(!m_RedoStack.isEmpty());
+    }
+
+    void UndoStack::setCanUndo(bool newUndoState)
+    {
+        if (newUndoState != m_CanUndo) {
+            m_CanUndo = newUndoState;
+            emit canUndoChanged(m_CanUndo);
+        }
+    }
+
+    void UndoStack::setCanRedo(bool newRedoState)
+    {
+        if (newRedoState != m_CanRedo) {
+            m_CanRedo = newRedoState;
+            emit canRedoChanged(m_CanRedo);
+        }
     }
 
 } // namespace commands

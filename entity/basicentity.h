@@ -55,6 +55,9 @@ namespace entity {
 
         static constexpr const char *topID = "top_item_id";
 
+    signals:
+        void nameChanged(const QString &newName);
+
     protected:
         QString m_Name;
     };

@@ -77,7 +77,7 @@ namespace commands {
     /**
      * @brief CreateScope::updateModel
      */
-    bool CreateScope::updateModel() const
+    bool CreateScope::updateModelView() const
     {
         return false;
     }

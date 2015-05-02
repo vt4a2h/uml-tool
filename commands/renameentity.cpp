@@ -73,9 +73,9 @@ namespace commands
     /**
      * @brief RenameEntity::updateModel
      */
-    bool RenameEntity::updateModel() const
+    bool RenameEntity::updateModelView() const
     {
-        return false;
+        return true;
     }
 
 } // namespace commands

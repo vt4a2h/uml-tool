@@ -40,7 +40,7 @@ namespace commands
         void undo() override;
 
         bool updateScene() const override;
-        bool updateModel() const override;
+        bool updateModelView() const override;
 
     private:
         entity::SharedBasicEntity m_Entity;

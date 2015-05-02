@@ -23,8 +23,9 @@
 #pragma once
 
 #include <QObject>
+#include <QStack>
 
-class QUndoStack;
+#include "types.h"
 
 namespace commands {
 
@@ -41,10 +42,7 @@ namespace commands {
         explicit UndoStack(QObject *parent = nullptr);
         ~UndoStack() override;
 
-        QUndoStack *qstack();
-        const QUndoStack *qstack() const;
-
-        void push(BaseCommand *cmd);
+        void push(commands::UniqueCommand &&cmd);
 
         bool canUndo() const;
         bool canRedo() const;
@@ -52,8 +50,30 @@ namespace commands {
         void beginMacro(const QString &text);
         void endMacro();
 
+    public slots:
+        void redo();
+        void undo();
+
+    signals:
+        void needRepaint();
+        void needUpdateModelView();
+
+        void canRedoChanged(bool val);
+        void canUndoChanged(bool val);
+
     private:
-        QScopedPointer<QUndoStack> m_QStack;
+        void checkStates(const commands::SharedCommand &cmd);
+        void setUndoableRedoable();
+        void setCanUndo(bool newUndoState);
+        void setCanRedo(bool newRedoState);
+
+        using Stack = QStack<commands::SharedCommand>;
+
+        bool m_CanUndo = false;
+        bool m_CanRedo = false;
+
+        Stack m_RedoStack;
+        Stack m_UndoStack;
     };
 
 } // namespace commands

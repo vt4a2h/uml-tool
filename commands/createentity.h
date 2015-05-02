@@ -43,7 +43,7 @@ namespace commands {
         void undo() override;
 
         bool updateScene() const override;
-        bool updateModel() const override;
+        bool updateModelView() const override;
 
     private:
         models::SharedApplicationModal m_Model;

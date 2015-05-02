@@ -240,7 +240,7 @@ namespace gui {
                 QString scopeName = m_AddScope->scopeName();
                 if (!scopeName.isEmpty())
                     if (commands::UndoStack * stack = m_ApplicationModel->currentProject()->commandsStack())
-                        stack->push(new commands::CreateScope(scopeName, *m_ApplicationModel));
+                        stack->push(std::make_unique<commands::CreateScope>(scopeName, *m_ApplicationModel));
             }
         } else
             QMessageBox::information(this, tr("Information"), tr("No current project."), QMessageBox::Ok);
@@ -428,9 +428,9 @@ namespace gui {
                             scope = projectDb.scopes().first();
 
                         if (auto stack = m_ApplicationModel->currentProject()->commandsStack()) {
-                            auto create = new commands::CreateEntity(m_ApplicationModel, entity::UserClassType,
-                                                                     scope->id(), *m_MainScene, pos);
-                            stack->push(create);
+                            auto create = std::make_unique<commands::CreateEntity>(
+                                m_ApplicationModel, entity::UserClassType, scope->id(), *m_MainScene, pos);
+                            stack->push(std::move(create));
                         }
                     } else {
                         QMessageBox::information(
@@ -510,33 +510,53 @@ namespace gui {
     }
 
     /**
+     * @brief MainWindow::updateScene
+     */
+    void MainWindow::updateScene()
+    {
+        m_MainScene->update();
+    }
+
+    /**
+     * @brief MainWindow::updateModel
+     */
+    void MainWindow::updateModelView()
+    {
+        // note: must be implemented via model::datachanged!
+    }
+
+    /**
      * @brief MainWindow::setCurrentProject
      * @param id
      */
     void MainWindow::setCurrentProject(const QString &id)
     {
-        if (project::Project * pr = m_ApplicationModel->currentProject().get())
+        if (auto &&pr = m_ApplicationModel->currentProject().get())
         {
             disconnect(pr, &project::Project::saved, this, &MainWindow::update);
             disconnect(pr, &project::Project::modified, this, &MainWindow::update);
 
-            disconnect(pr->commandsStack()->qstack(), &QUndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
-            disconnect(pr->commandsStack()->qstack(), &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
-            disconnect(ui->actionRedo, &QAction::triggered, pr->commandsStack()->qstack(), &QUndoStack::redo);
-            disconnect(ui->actionUndo, &QAction::triggered, pr->commandsStack()->qstack(), &QUndoStack::undo);
+            disconnect(pr->commandsStack(), &commands::UndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
+            disconnect(pr->commandsStack(), &commands::UndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
+            disconnect(pr->commandsStack(), &commands::UndoStack::needRepaint, this, &MainWindow::updateScene);
+            disconnect(pr->commandsStack(), &commands::UndoStack::needUpdateModelView, this, &MainWindow::updateModelView);
+            disconnect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &commands::UndoStack::redo);
+            disconnect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &commands::UndoStack::undo);
         }
 
         if (m_ApplicationModel->setCurrentProject(id)) {
-            project::Project * pr = m_ApplicationModel->currentProject().get();
+            auto &&pr = m_ApplicationModel->currentProject().get();
 
             connect(pr, &project::Project::saved, this, &MainWindow::update);
             connect(pr, &project::Project::modified, this, &MainWindow::update);
 
-            m_UndoView->setStack(pr->commandsStack()->qstack());
-            connect(pr->commandsStack()->qstack(), &QUndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
-            connect(pr->commandsStack()->qstack(), &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
-            connect(ui->actionRedo, &QAction::triggered, pr->commandsStack()->qstack(), &QUndoStack::redo);
-            connect(ui->actionUndo, &QAction::triggered, pr->commandsStack()->qstack(), &QUndoStack::undo);
+//            m_UndoView->setStack(pr->commandsStack()->qstack());
+            connect(pr->commandsStack(), &commands::UndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
+            connect(pr->commandsStack(), &commands::UndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
+            connect(pr->commandsStack(), &commands::UndoStack::needRepaint, this, &MainWindow::updateScene);
+            connect(pr->commandsStack(), &commands::UndoStack::needUpdateModelView, this, &MainWindow::updateModelView);
+            connect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &commands::UndoStack::redo);
+            connect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &commands::UndoStack::undo);
 
             addGraphicsItems(m_MainScene, m_ApplicationModel->currentProject());
         } else {

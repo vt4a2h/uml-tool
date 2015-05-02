@@ -70,7 +70,7 @@ namespace commands {
     /**
      * @brief MoveGraphicObject::updateModel
      */
-    bool MoveGraphicObject::updateModel() const
+    bool MoveGraphicObject::updateModelView() const
     {
         return false;
     }
