@@ -39,9 +39,6 @@ namespace commands {
         void redo() override;
         void undo() override;
 
-        bool updateScene() const override;
-        bool updateModelView() const override;
-
     private:
         QGraphicsItem &m_Object;
         QPointF m_From;

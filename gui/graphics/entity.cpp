@@ -59,6 +59,9 @@ namespace graphics {
     {
         setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
         addMenuActions();
+
+        Q_ASSERT(type);
+        connect(type.get(), &entity::BasicEntity::nameChanged, [=]{ update(); });
     }
 
     /**
@@ -212,7 +215,7 @@ namespace graphics {
                     m_EditDialog->setScope(m_Scope);
                     m_EditDialog->setProject(m_Project);
 
-                    m_EditDialog->exec();
+                    m_EditDialog->exec(); updateMicroFocus();
                 });
 
         m_Menu->addSeparator();

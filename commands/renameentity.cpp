@@ -62,21 +62,5 @@ namespace commands
         m_Entity->setName(m_OldName);
     }
 
-    /**
-     * @brief RenameEntity::updateScene
-     */
-    bool RenameEntity::updateScene() const
-    {
-        return true;
-    }
-
-    /**
-     * @brief RenameEntity::updateModel
-     */
-    bool RenameEntity::updateModelView() const
-    {
-        return true;
-    }
-
 } // namespace commands
 

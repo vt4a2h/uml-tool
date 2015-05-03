@@ -50,7 +50,6 @@
 
 #include <commands/createscope.h>
 #include <commands/createentity.h>
-#include <commands/undostack.h>
 
 #include "about.h"
 #include "newproject.h"
@@ -239,8 +238,8 @@ namespace gui {
             if (m_AddScope->exec())  {
                 QString scopeName = m_AddScope->scopeName();
                 if (!scopeName.isEmpty())
-                    if (commands::UndoStack * stack = m_ApplicationModel->currentProject()->commandsStack())
-                        stack->push(std::make_unique<commands::CreateScope>(scopeName, *m_ApplicationModel));
+                    if (auto stack = m_ApplicationModel->currentProject()->commandsStack())
+                        stack->push(std::make_unique<commands::CreateScope>(scopeName, *m_ApplicationModel).release());
             }
         } else
             QMessageBox::information(this, tr("Information"), tr("No current project."), QMessageBox::Ok);
@@ -430,7 +429,7 @@ namespace gui {
                         if (auto stack = m_ApplicationModel->currentProject()->commandsStack()) {
                             auto create = std::make_unique<commands::CreateEntity>(
                                 m_ApplicationModel, entity::UserClassType, scope->id(), *m_MainScene, pos);
-                            stack->push(std::move(create));
+                            stack->push(create.release());
                         }
                     } else {
                         QMessageBox::information(
@@ -536,12 +535,10 @@ namespace gui {
             disconnect(pr, &project::Project::saved, this, &MainWindow::update);
             disconnect(pr, &project::Project::modified, this, &MainWindow::update);
 
-            disconnect(pr->commandsStack(), &commands::UndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
-            disconnect(pr->commandsStack(), &commands::UndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
-            disconnect(pr->commandsStack(), &commands::UndoStack::needRepaint, this, &MainWindow::updateScene);
-            disconnect(pr->commandsStack(), &commands::UndoStack::needUpdateModelView, this, &MainWindow::updateModelView);
-            disconnect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &commands::UndoStack::redo);
-            disconnect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &commands::UndoStack::undo);
+            disconnect(pr->commandsStack(), &QUndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
+            disconnect(pr->commandsStack(), &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
+            disconnect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &QUndoStack::redo);
+            disconnect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &QUndoStack::undo);
         }
 
         if (m_ApplicationModel->setCurrentProject(id)) {
@@ -550,13 +547,11 @@ namespace gui {
             connect(pr, &project::Project::saved, this, &MainWindow::update);
             connect(pr, &project::Project::modified, this, &MainWindow::update);
 
-//            m_UndoView->setStack(pr->commandsStack()->qstack());
-            connect(pr->commandsStack(), &commands::UndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
-            connect(pr->commandsStack(), &commands::UndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
-            connect(pr->commandsStack(), &commands::UndoStack::needRepaint, this, &MainWindow::updateScene);
-            connect(pr->commandsStack(), &commands::UndoStack::needUpdateModelView, this, &MainWindow::updateModelView);
-            connect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &commands::UndoStack::redo);
-            connect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &commands::UndoStack::undo);
+            m_UndoView->setStack(pr->commandsStack());
+            connect(pr->commandsStack(), &QUndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
+            connect(pr->commandsStack(), &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
+            connect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &QUndoStack::redo);
+            connect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &QUndoStack::undo);
 
             addGraphicsItems(m_MainScene, m_ApplicationModel->currentProject());
         } else {

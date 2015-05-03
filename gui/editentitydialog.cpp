@@ -33,9 +33,8 @@
 #include <utility/helpfunctions.h>
 
 #include <commands/renameentity.h>
-#include <commands/undostack.h>
 
-#include <enums.h>
+#include "enums.h"
 
 namespace gui {
 
@@ -152,7 +151,7 @@ namespace gui {
         // Check name
         QString newName = ui->leName->text();
         if (m_Type->name() != newName)
-            stack->push(std::make_unique<commands::RenameEntity>(m_Type, newName));
+            stack->push(std::make_unique<commands::RenameEntity>(m_Type, newName).release());
 
         stack->endMacro();
         accept();

@@ -27,12 +27,11 @@
 #include <QFile>
 #include <QJsonObject>
 #include <QDebug>
+#include <QUndoStack>
 
 #include <db/projectdatabase.h>
 
 #include <utility/helpfunctions.h>
-
-#include <commands/undostack.h>
 
 #include "constants.cpp"
 
@@ -57,7 +56,7 @@ namespace project {
         , m_ID(utility::genId())
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
-        , m_CommandsStack(std::make_unique<commands::UndoStack>())
+        , m_CommandsStack(std::make_unique<QUndoStack>())
     {}
 
     /**
@@ -72,7 +71,7 @@ namespace project {
         , m_SaveStatus(false)    // not saved
          // deep copy of project database and shallow copy of global database
         , m_Database(std::make_shared<db::ProjectDatabase>(*src.m_Database))
-        , m_CommandsStack(std::make_unique<commands::UndoStack>())
+        , m_CommandsStack(std::make_unique<QUndoStack>())
     {}
 
     /**
@@ -262,7 +261,7 @@ namespace project {
      * @brief Project::commandsStack
      * @return
      */
-    commands::UndoStack *Project::commandsStack()
+    QUndoStack *Project::commandsStack()
     {
         return m_CommandsStack.get();
     }
@@ -271,7 +270,7 @@ namespace project {
      * @brief Project::commandsStack
      * @return
      */
-    const commands::UndoStack *Project::commandsStack() const
+    const QUndoStack *Project::commandsStack() const
     {
         return m_CommandsStack.get();
     }

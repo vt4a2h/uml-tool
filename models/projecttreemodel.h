@@ -65,6 +65,8 @@ namespace models {
         int indexOf(const BasicTreeItem *parent);
         BasicTreeItem *find(const QString &id);
         const BasicTreeItem *find(const QString &id) const;
+        void update(BasicTreeItem *item);
+        void observeItemChanging(entity::BasicEntity * entity, BasicTreeItem *item);
 
         mutable QList<BasicTreeItem> m_Items; // TODO: store as pointers
     };

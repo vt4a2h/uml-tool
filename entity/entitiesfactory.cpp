@@ -29,7 +29,6 @@
 #include <models/applicationmodel.h>
 
 #include <commands/movegraphicobject.h>
-#include <commands/undostack.h>
 
 #include "class.h"
 
@@ -46,7 +45,7 @@ namespace {
                          [=](const QPointF &from, const QPointF &to) {
                             auto &&cmd = std::make_unique<commands::MoveGraphicObject>(*entity, entity->typeObject()->name(),
                                                                                        from, to);
-                            currentProject->commandsStack()->push(std::move(cmd));
+                            currentProject->commandsStack()->push(cmd.release());
                          });
     }
 

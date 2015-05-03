@@ -235,8 +235,10 @@ namespace models {
 
             auto pos = projectIndex.row() + 1;
             beginInsertRows(projectIndex, pos, pos);
-            pr->makeChild(QVariant::fromValue(scope), TreeItemType::ScopeItem);
+            auto &&newItem = pr->makeChild(QVariant::fromValue(scope), TreeItemType::ScopeItem);
             endInsertRows();
+
+            observeItemChanging(scope.get(), newItem);
         }
     }
 
@@ -279,14 +281,10 @@ namespace models {
 
                 auto pos = scopeIndex.row() + 1;
                 beginInsertRows(scopeIndex, pos, pos);
-                scope->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
+                auto &&newItem = scope->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
                 endInsertRows();
 
-                // TODO: implement for all items
-                connect(type.get(), &entity::BasicEntity::nameChanged, [=](){
-                    emit dataChanged(projectIndex, scopeIndex.child(scope->rowForItem(scope->itemById(type->id())), 0));
-                    qDebug() << "name updated";
-                });
+                observeItemChanging(type.get(), newItem);
             }
         }
     }
@@ -328,24 +326,29 @@ namespace models {
         m_Items << BasicTreeItem(QVariant::fromValue(pr), TreeItemType::ProjectItem);
         endInsertRows();
 
-        // TODO: add beginInsertRows endInsertRows for all items
-
         db::SharedProjectDatabase database = pr->database();
         auto projectItem = &m_Items.last();
         for (auto &&scope : database->scopes()) {
-            auto scopeItem =
-                addItem(QVariant::fromValue(scope), projectItem, TreeItemType::ScopeItem);
+            auto scopeItem = addItem(QVariant::fromValue(scope), projectItem, TreeItemType::ScopeItem);
+            observeItemChanging(scope.get(), scopeItem);
 
             for (auto &&type : scope->types()) {
-                auto typeItem =
-                    addItem(QVariant::fromValue(type), scopeItem, TreeItemType::TypeItem);
+                auto typeItem = addItem(QVariant::fromValue(type), scopeItem, TreeItemType::TypeItem);
+                observeItemChanging(type.get(), typeItem);
 
-                for (auto &&field : type->fields())
-                    addItem(QVariant::fromValue(field), typeItem, TreeItemType::FieldItem);
-                for (auto &&method : type->methods())
-                    addItem(QVariant::fromValue(method), typeItem, TreeItemType::MethodItem);
+                for (auto &&field : type->fields()) {
+                    auto fieldItem = addItem(QVariant::fromValue(field), typeItem, TreeItemType::FieldItem);
+                    observeItemChanging(field.get(), fieldItem);
+                }
+
+                for (auto &&method : type->methods()) {
+                    auto methodItem = addItem(QVariant::fromValue(method), typeItem, TreeItemType::MethodItem);
+                    observeItemChanging(method.get(), methodItem);
+                }
             }
         }
+
+        connect(pr.get(), &project::Project::nameChanged, [=]{ update(projectItem); });
     }
 
     /**
@@ -381,6 +384,47 @@ namespace models {
                                       });
 
         return projectIt != m_Items.cend() ? &*projectIt : nullptr;
+    }
+
+    /**
+     * @brief ProjectTreeModel::update
+     * @param item
+     */
+    void ProjectTreeModel::update(BasicTreeItem *item)
+    {
+        Q_ASSERT(item);
+        auto parent = item; // can be Project
+        QList<BasicTreeItem *> items;
+        items.push_front(parent);
+        while (parent->parentNode()) {
+            parent = parent->parentNode();
+            items.push_front(parent);
+        }
+
+        Q_ASSERT(parent);
+        auto topLeftIndex = index(indexOf(parent), 0);
+        Q_ASSERT(topLeftIndex.isValid());
+
+        // update project name
+        if (parent == item) {
+            emit dataChanged(topLeftIndex, topLeftIndex);
+            return;
+        }
+
+        auto bottomRightIndex = topLeftIndex;
+        auto currentItem = items.first();
+        for (int i = 1, count = items.count(); i < count; ++i) {
+            bottomRightIndex = index(currentItem->rowForItem(items[i]), 0, bottomRightIndex);
+            Q_ASSERT(bottomRightIndex.isValid());
+            currentItem = items[i];
+        }
+
+        emit dataChanged(topLeftIndex, bottomRightIndex);
+    }
+
+    void ProjectTreeModel::observeItemChanging(entity::BasicEntity * entity, BasicTreeItem *item)
+    {
+        connect(entity, &entity::BasicEntity::nameChanged, [=]{ update(item); }); // TODO: project should be marked as changed
     }
 
 } // namespace models

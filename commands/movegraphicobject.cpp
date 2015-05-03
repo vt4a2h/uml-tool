@@ -59,20 +59,4 @@ namespace commands {
         m_Object.setPos(m_From);
     }
 
-    /**
-     * @brief MoveGraphicObject::updateScene
-     */
-    bool MoveGraphicObject::updateScene() const
-    {
-        return false;
-    }
-
-    /**
-     * @brief MoveGraphicObject::updateModel
-     */
-    bool MoveGraphicObject::updateModelView() const
-    {
-        return false;
-    }
-
 } // namespace commands
