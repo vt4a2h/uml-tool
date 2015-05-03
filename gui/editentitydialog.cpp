@@ -33,6 +33,7 @@
 #include <utility/helpfunctions.h>
 
 #include <commands/renameentity.h>
+#include <commands/undostack.h>
 
 #include <enums.h>
 

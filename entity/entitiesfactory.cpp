@@ -29,6 +29,7 @@
 #include <models/applicationmodel.h>
 
 #include <commands/movegraphicobject.h>
+#include <commands/undostack.h>
 
 #include "class.h"
 

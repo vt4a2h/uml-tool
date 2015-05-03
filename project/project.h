@@ -27,7 +27,9 @@
 
 #include "types.h"
 
-class QUndoStack;
+namespace commands {
+    class UndoStack;
+}
 
 /**
  * @brief project
@@ -72,8 +74,8 @@ namespace project {
         bool hasErrors() const;
         ErrorList lastErrors() const;
 
-        QUndoStack * commandsStack();
-        const QUndoStack * commandsStack() const;
+        commands::UndoStack * commandsStack();
+        const commands::UndoStack * commandsStack() const;
 
     public slots:
         void setSaveStatus(bool newStatus);
@@ -108,7 +110,7 @@ namespace project {
 
         ErrorList m_Errors;
 
-        std::unique_ptr<QUndoStack> m_CommandsStack;
+        std::unique_ptr<commands::UndoStack> m_CommandsStack;
     };
 
 } // namespace project

@@ -54,7 +54,8 @@ SOURCES += \
     commands/basecommand.cpp \
     commands/movegraphicobject.cpp \
     commands/createentity.cpp \
-    commands/renameentity.cpp
+    commands/renameentity.cpp \
+    commands/undostack.cpp
 
 HEADERS += \
     enums.h \
@@ -105,7 +106,8 @@ HEADERS += \
     commands/basecommand.h \
     commands/movegraphicobject.h \
     commands/createentity.h \
-    commands/renameentity.h
+    commands/renameentity.h \
+    commands/undostack.h
 
 FORMS += \
     gui/mainwindow.ui \
