@@ -29,6 +29,10 @@
 #include <QDebug>
 #include <QUndoStack>
 
+#include <entity/basicentity.h>
+#include <entity/type.h>
+#include <entity/scope.h>
+
 #include <db/projectdatabase.h>
 
 #include <utility/helpfunctions.h>
@@ -115,6 +119,10 @@ namespace project {
             m_Errors << tr("Cannot read database file.");
 
         setSaveStatus(m_Errors.isEmpty());
+
+        for (auto &&scope : m_Database->scopes())
+            for (auto &&entity : scope->types())
+                connect(entity.get(), &entity::BasicEntity::nameChanged, this, &Project::touch);
 
         if (!m_Errors.isEmpty())
             errors(tr("Project load error%1").arg(m_Errors.count() <= 1 ? "" : "s"), m_Errors);

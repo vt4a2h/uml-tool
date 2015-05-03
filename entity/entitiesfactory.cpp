@@ -88,7 +88,6 @@ namespace entity {
     {
         auto type = model->makeType<entity::Class>(scopeID);
 
-
         auto &&currentProject = model->currentProject();
         auto &&database = currentProject->database();
         auto &&scope = database->getScope(scopeID);

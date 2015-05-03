@@ -424,7 +424,7 @@ namespace models {
 
     void ProjectTreeModel::observeItemChanging(entity::BasicEntity * entity, BasicTreeItem *item)
     {
-        connect(entity, &entity::BasicEntity::nameChanged, [=]{ update(item); }); // TODO: project should be marked as changed
+        connect(entity, &entity::BasicEntity::nameChanged, [=]{ update(item); });
     }
 
 } // namespace models

@@ -83,6 +83,8 @@ namespace models {
             if (auto scope = currentProject()->database()->getScope(scopeID)) {
                 if (auto type = scope->addType<T>(name)) {
                     m_TreeModel->addType(type, scope->id(), currentProject()->id());
+                    connect(type.get(), &entity::BasicEntity::nameChanged,
+                            m_CurrentProject.get(), &project::Project::touch);
 
                     return type;
                 }

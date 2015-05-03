@@ -183,8 +183,11 @@ namespace models {
     {
         if (auto &&pr = project(projectID))
             if (auto &&db = pr->database())
-                if (auto &&scope = db->getScope(scopeID))
+                if (auto &&scope = db->getScope(scopeID)) {
                     scope->addExistsType(type);
+                    connect(type.get(), &entity::BasicEntity::nameChanged,
+                            m_CurrentProject.get(), &project::Project::touch);
+                }
 
         m_TreeModel->addType(type, scopeID, projectID);
     }
