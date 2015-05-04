@@ -144,7 +144,6 @@ namespace gui {
      */
     void EditEntityDialog::onAccepted()
     {
-        // TODO: need to implement auto repeint and auto model update
         auto &&stack = m_Project->commandsStack();
         stack->beginMacro(tr("Edit entity dialog changes"));
 
@@ -152,6 +151,11 @@ namespace gui {
         QString newName = ui->leName->text();
         if (m_Type->name() != newName)
             stack->push(std::make_unique<commands::RenameEntity>(m_Type, newName).release());
+
+        // Check scope
+        auto scope = ui->cbScopes->currentData().value<entity::SharedScope>();
+        if (scope->id() != m_Type->scopeId())
+            // implement
 
         stack->endMacro();
         accept();
