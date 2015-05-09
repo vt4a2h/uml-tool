@@ -107,7 +107,16 @@ HEADERS += \
     commands/movegraphicobject.h \
     commands/createentity.h \
     commands/renameentity.h \
-    commands/movetypetootherscope.h
+    commands/movetypetootherscope.h \
+    entity/entity_types.hpp \
+    relationship/relationship_types.hpp \
+    db/db_types.hpp \
+    translator/translator_types.hpp \
+    generator/generator_types.hpp \
+    project/project_types.hpp \
+    gui/gui_types.hpp \
+    models/models_types.hpp \
+    commands/commands_types.hpp
 
 FORMS += \
     gui/mainwindow.ui \

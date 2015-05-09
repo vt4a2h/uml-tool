@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 03/11/2014.
+** Created 10/05/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,12 +20,20 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
 
 #include <memory>
 
-#include <QStringList>
+#include <QList>
 
-using ErrorList = QStringList;
-using SharedErrorList = std::shared_ptr<ErrorList>;
+namespace models {
+    class ProjectTreeModel;
+    using UniqueTreeModel = std::unique_ptr<ProjectTreeModel>;
+    using SharedTreeModel = std::shared_ptr<ProjectTreeModel>;
+
+    class BasicTreeItem;
+    using ChildItems = QList<BasicTreeItem*>;
+
+    class ApplicationModel;
+    using SharedApplicationModal = std::shared_ptr<ApplicationModel>;
+}
