@@ -25,7 +25,9 @@
 #include <memory>
 
 #include <QPair>
+#include <QVector>
 #include <QPointF>
+#include <QString>
 #include <QMetaType>
 
 namespace db {

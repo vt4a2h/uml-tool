@@ -27,8 +27,9 @@
 
 #include <QString>
 
+#include <entity/entity_types.hpp>
+
 #include "basicentity.h"
-#include "types.h"
 
 namespace entity {
 

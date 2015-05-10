@@ -25,7 +25,9 @@
 
 #include <QString>
 
-#include "types.h"
+#include <entity/entity_types.hpp>
+
+#include "relationship_types.hpp"
 
 class QJsonObject;
 

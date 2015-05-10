@@ -31,6 +31,9 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include <db/db_types.hpp>
+#include <entity/entity_types.hpp>
+
 #include "types.h"
 
 class QString;

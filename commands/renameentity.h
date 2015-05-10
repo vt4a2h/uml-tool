@@ -22,9 +22,9 @@
 *****************************************************************************/
 #pragma once
 
-#include "basecommand.h"
+#include <entity/entity_types.hpp>
 
-#include "types.h"
+#include "basecommand.h"
 
 namespace commands
 {

@@ -25,6 +25,8 @@
 #include <QObject>
 #include <QJsonObject>
 
+#include <db/db_types.hpp>
+
 #include "types.h"
 
 class QUndoStack;

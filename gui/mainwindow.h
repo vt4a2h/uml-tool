@@ -24,7 +24,7 @@
 
 #include <QMainWindow>
 
-#include "types.h"
+#include <models/models_types.hpp>
 
 class QSplitter;
 class QHBoxLayout;

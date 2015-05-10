@@ -26,7 +26,7 @@
 #include <QString>
 
 #include "basicentity.h"
-#include "types.h"
+#include "entity_types.hpp"
 
 class QJsonObject;
 

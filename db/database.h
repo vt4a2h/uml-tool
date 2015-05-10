@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "types.h"
+#include <entity/entity_types.hpp>
 
 /**
  *  @brief namespace db

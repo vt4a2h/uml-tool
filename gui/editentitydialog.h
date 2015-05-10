@@ -24,7 +24,9 @@
 
 #include <QDialog>
 
-#include "types.h"
+#include <project/project_types.hpp>
+
+#include <entity/entity_types.hpp>
 
 namespace gui
 {

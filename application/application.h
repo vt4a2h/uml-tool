@@ -25,7 +25,8 @@
 
 #include <QObject>
 
-#include "types.h"
+#include <models/models_types.hpp>
+#include <gui/gui_types.hpp>
 
 /**
  * @brief namespace application

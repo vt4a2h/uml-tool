@@ -22,8 +22,11 @@
 *****************************************************************************/
 #pragma once
 
+#include <entity/entity_types.hpp>
+
+#include <models/models_types.hpp>
+
 #include "basecommand.h"
-#include "types.h"
 
 namespace commands {
 

@@ -27,7 +27,7 @@
 
 #include "basicentity.h"
 
-#include "types.h"
+#include <entity/entity_types.hpp>
 
 class QJsonObject;
 class QStringList;

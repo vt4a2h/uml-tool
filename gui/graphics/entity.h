@@ -26,7 +26,9 @@
 
 #include <QGraphicsObject>
 
-#include "types.h"
+#include <entity/entity_types.hpp>
+
+#include <project/project_types.hpp>
 
 class QMenu;
 

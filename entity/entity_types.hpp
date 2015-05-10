@@ -25,6 +25,7 @@
 #include <memory>
 
 #include <QHash>
+#include <QSet>
 #include <QStringList>
 
 namespace entity {

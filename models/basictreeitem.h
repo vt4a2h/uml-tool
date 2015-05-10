@@ -30,7 +30,7 @@
 #include <QVariant>
 #include <QCoreApplication>
 
-#include "types.h"
+#include "models_types.hpp"
 
 /// Namespace models
 namespace models {

@@ -27,8 +27,8 @@
 
 #include <gtest/gtest.h>
 
-#include <types.h>
 #include <project/project.h>
+#include <project/project_types.hpp>
 
 class Project : public ::testing::Test
 {

@@ -22,7 +22,11 @@
 *****************************************************************************/
 #pragma once
 
-#include "types.h"
+#include "entity_types.hpp"
+
+#include <project/project_types.hpp>
+
+#include <models/models_types.hpp>
 
 class QGraphicsScene;
 

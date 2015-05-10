@@ -23,7 +23,8 @@
 #pragma once
 
 #include "basecommand.h"
-#include "types.h"
+
+#include <entity/entity_types.hpp>
 
 namespace models {
     class ApplicationModel;

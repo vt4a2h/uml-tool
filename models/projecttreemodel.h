@@ -24,9 +24,10 @@
 
 #include <QAbstractItemModel>
 
-#include "basictreeitem.h"
+#include <entity/entity_types.hpp>
+#include <project/project_types.hpp>
 
-#include "types.h"
+#include "basictreeitem.h"
 
 namespace models {
 

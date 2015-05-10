@@ -22,8 +22,13 @@
 *****************************************************************************/
 #pragma once
 
+#include <QPointF>
+
+#include <entity/entity_types.hpp>
+
+#include <models/models_types.hpp>
+
 #include "enums.h"
-#include "types.h"
 #include "basecommand.h"
 
 class QGraphicsItem;

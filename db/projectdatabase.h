@@ -24,7 +24,9 @@
 #pragma once
 
 #include "database.h"
-#include "types.h"
+#include "db_types.hpp"
+
+#include <relationship/relationship_types.hpp>
 
 namespace db {
 
