@@ -133,6 +133,15 @@ namespace entity {
     }
 
     /**
+     * @brief BasicEntity::textMarker
+     * @return
+     */
+    QString BasicEntity::textMarker() const
+    {
+        return "basic_entity";
+    }
+
+    /**
      * @brief BasicEntity::writeToFile
      * @param fileName
      */

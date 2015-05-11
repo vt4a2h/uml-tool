@@ -40,17 +40,6 @@ namespace entity {
         StructType ///< StructType
     };
 
-    /// The UserType enum
-    enum UserType : int {
-        BasicType,          ///< BasicType
-        UserClassType,      ///< UserClassType
-        TemplateClassType,  ///< TemplateClassType
-        UnionType,          ///< UnionType
-        EnumType,           ///< EnumType
-        ExtendedTypeType,    ///< ExtendedTypeType
-        Count
-    };
-
     /// The RhsIdentificator enum
     enum RhsIdentificator : int {
         None,       ///< None
@@ -108,5 +97,3 @@ namespace relationship {
         MultiRelation           ///< MultiRelation
     };
 }
-
-Q_DECLARE_METATYPE(entity::UserType)

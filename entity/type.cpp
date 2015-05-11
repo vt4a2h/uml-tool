@@ -70,7 +70,6 @@ namespace entity {
      */
     Type::Type(const QString &name, const QString &scopeId, const QString &typeId)
         : BasicEntity(name)
-        , m_KindOfType(BasicType)
         , m_Id(typeId.isEmpty() ? utility::genId() : typeId)
         , m_ScopeId(scopeId)
     {
@@ -99,8 +98,7 @@ namespace entity {
      */
     bool operator ==(const Type &lhs, const Type &rhs)
     {
-        return lhs.m_KindOfType == rhs.m_KindOfType &&
-               lhs.m_Name       == rhs.m_Name       &&
+        return lhs.m_Name       == rhs.m_Name       &&
                lhs.m_Id         == rhs.m_Id         &&
                lhs.m_ScopeId    == rhs.m_ScopeId;
     }
@@ -154,12 +152,12 @@ namespace entity {
     }
 
     /**
-     * @brief Type::type
+     * @brief Type::textMarker
      * @return
      */
-    UserType Type::type() const
+    QString Type::textMarker() const
     {
-        return m_KindOfType;
+        return "type";
     }
 
     /**
@@ -173,7 +171,7 @@ namespace entity {
         result.insert("Name", m_Name);
         result.insert("Scope ID", m_ScopeId);
         result.insert("ID", m_Id);
-        result.insert("Kind of type", m_KindOfType);
+        result.insert("Kind of type", textMarker());
 
         return result;
     }
@@ -193,9 +191,6 @@ namespace entity {
         });
         utility::checkAndSet(src, "ID", errorList, [&src, this](){
             m_Id = src["ID"].toString();
-        });
-        utility::checkAndSet(src, "Kind of type", errorList, [&src, this](){
-            m_KindOfType = static_cast<UserType>(src["Kind of type"].toInt());
         });
     }
 
@@ -224,10 +219,9 @@ namespace entity {
      */
     void Type::moveFrom(Type &src)
     {
-        m_KindOfType = std::move(src.m_KindOfType); // not necessary
-        m_Name       = std::move(src.m_Name);
-        m_Id         = std::move(src.m_Id);
-        m_ScopeId    = std::move(src.m_ScopeId);
+        m_Name    = std::move(src.m_Name);
+        m_Id      = std::move(src.m_Id);
+        m_ScopeId = std::move(src.m_ScopeId);
     }
 
     /**

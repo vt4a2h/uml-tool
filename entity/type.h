@@ -33,7 +33,6 @@ class QJsonObject;
 namespace entity {
 
     class Scope;
-    enum UserType : int;
 
     /**
      * @brief The Type class
@@ -53,7 +52,7 @@ namespace entity {
         QString scopeId() const;
         void setScopeId(const QString &scopeId); // TODO: perhaps store it as weak pointer
 
-        UserType type() const;
+        virtual QString textMarker() const override;
 
         virtual Type *clone() const;
 
@@ -69,8 +68,6 @@ namespace entity {
     protected:
         virtual void moveFrom(Type &src);
         virtual void copyFrom(const Type &src);
-
-        UserType m_KindOfType;
 
     private:
         void generateUniqueName();

@@ -74,7 +74,7 @@ namespace utility {
     QString genId();
     void checkAndSet(const QJsonObject& object, const QString& key, QStringList& lst, std::function<void()> func);
 
-    std::shared_ptr<entity::Type> makeType(entity::UserType type);
+    std::shared_ptr<entity::Type> makeType(const QString &marker);
     std::shared_ptr<relationship::Relation> makeRelation(relationship::RelationType relation);
     std::shared_ptr<entity::ClassMethod> makeMethod(entity::ClassMethodType methodType);
 
@@ -219,7 +219,6 @@ namespace utility {
     QString fieldKeywordToString(entity::FieldKeyword keyword);
     QString methodLhsIdToString(entity::LhsIdentificator id);
     QString methodRhsIdToString(entity::RhsIdentificator id);
-    QString userTypeToString(entity::UserType type);
     QString sectionToString(entity::Section section);
 }
 

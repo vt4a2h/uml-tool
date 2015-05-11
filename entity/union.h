@@ -54,6 +54,8 @@ namespace entity {
 
         bool isEqual(const Union &rhs) const;
 
+        virtual QString textMarker() const override;
+
     public: // IComponent omplementation
         FieldsList fields() const override;
 

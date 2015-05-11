@@ -97,24 +97,19 @@ namespace utility {
                                    {entity::Private, "private"}
                                  };
 
-        UserTypeString kUserType { {entity::BasicType, "type"}, {entity::UserClassType, "class"},
-                                   {entity::TemplateClassType, "template"},
-                                   {entity::UnionType, "union"}, {entity::EnumType, "enum"},
-                                   {entity::ExtendedTypeType, "extended type"}
-                                 };
-
         using MakerT  = std::function<entity::SharedType()>;
-        using MakersT = const std::map<entity::UserType, MakerT>;
+        using MakersT = const std::map<QString, MakerT>;
         using MakerM  = std::function<entity::SharedMethod()>;
         using MakersM = const std::map<entity::ClassMethodType, MakerM>;
         using MakerR  = std::function<relationship::SharedRelation()>;
         using MakersR = const std::map<relationship::RelationType, MakerR>;
 
-        MakersT kType = { {entity::BasicType,         [](){ return std::make_shared<entity::Type>();          }},
-                          {entity::UserClassType,     [](){ return std::make_shared<entity::Class>();         }},
-                          {entity::TemplateClassType, [](){ return std::make_shared<entity::TemplateClass>(); }},
-                          {entity::UnionType,         [](){ return std::make_shared<entity::Union>();         }},
-                          {entity::EnumType,          [](){ return std::make_shared<entity::Enum>();          }}
+        MakersT kType = { {"type",     [](){ return std::make_shared<entity::Type>();          }},
+                          {"class",    [](){ return std::make_shared<entity::Class>();         }},
+                          {"template", [](){ return std::make_shared<entity::TemplateClass>(); }},
+                          {"union",    [](){ return std::make_shared<entity::Union>();         }},
+                          {"enum",     [](){ return std::make_shared<entity::Enum>();          }}
+                          // TODO: investigate where is extended type???
                         };
 
         MakersR kRelation = {
@@ -138,11 +133,11 @@ namespace utility {
      * @param type
      * @return
      */
-    std::shared_ptr<entity::Type> makeType(entity::UserType type)
+    std::shared_ptr<entity::Type> makeType(const QString &marker)
     {
         MakerT defaultMaker([](){ return std::make_shared<entity::Type>(); });
 
-        return mapSearchHelper(kType, type, defaultMaker)();
+        return mapSearchHelper(kType, marker, defaultMaker)();
     }
 
     /**
@@ -229,15 +224,4 @@ namespace utility {
 
         return result;
     }
-
-    /**
-     * @brief userTypeToString
-     * @param type
-     * @return
-     */
-    QString userTypeToString(entity::UserType type)
-    {
-        return mapSearchHelper(kUserType, type, QString("unknown"));
-    }
-
 }
