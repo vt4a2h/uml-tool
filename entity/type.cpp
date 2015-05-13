@@ -230,7 +230,6 @@ namespace entity {
      */
     void Type::copyFrom(const Type &src)
     {
-        m_KindOfType = src.m_KindOfType;
         m_Id = src.m_Id;
         m_ScopeId = src.m_ScopeId;
     }
@@ -241,7 +240,7 @@ namespace entity {
     void Type::generateUniqueName()
     {
         // TODO: investigate why always "type"
-        m_Name = utility::userTypeToString(m_KindOfType);
+        m_Name = "type";
     }
 
 } // namespace entity
