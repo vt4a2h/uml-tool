@@ -423,7 +423,7 @@ namespace translator {
         QString result(CLASS_TEMPLATE);
 
         entity::SharedTemplateClass tc(nullptr);
-        if (_class->type() == entity::TemplateClassType) {
+        if (typeid(*_class).hash_code() == typeid(entity::TemplateClass).hash_code()) {
             tc = std::dynamic_pointer_cast<entity::TemplateClass>(_class);
             if (tc)
                 generateTemplatePart(result, std::static_pointer_cast<entity::Template>(tc));

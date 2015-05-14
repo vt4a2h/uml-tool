@@ -203,7 +203,7 @@ namespace gui {
     void EditEntityDialog::setType()
     {
         for (int i = 0; i < ui->cbType->count(); ++i) {
-            if (m_Type->type() == ui->cbType->itemData(i).value<entity::UserType>()) {
+            if (m_Type == ui->cbType->itemData(i).value<entity::UserType>()) {
                 ui->cbType->setCurrentIndex(i);
                 break;
             }
