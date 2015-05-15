@@ -160,4 +160,22 @@ namespace entity {
         return utility::readFromFile(*this, fileName);
     }
 
+    /**
+     * @brief BasicEntity::hashType
+     * @return
+     */
+    size_t BasicEntity::hashType() const
+    {
+        return BasicEntity::staticHashType();
+    }
+
+    /**
+     * @brief BasicEntity::staticHashType
+     * @return
+     */
+    size_t BasicEntity::staticHashType()
+    {
+        return typeid(BasicEntity).hash_code();
+    }
+
 }

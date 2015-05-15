@@ -536,6 +536,24 @@ namespace entity {
     }
 
     /**
+     * @brief Class::hashType
+     * @return
+     */
+    size_t Class::hashType() const
+    {
+        return Class::staticHashType();
+    }
+
+    /**
+     * @brief Class::staticHashType
+     * @return
+     */
+    size_t Class::staticHashType()
+    {
+        return typeid(Class).hash_code();
+    }
+
+    /**
      * @brief Class::isEqual
      * @param rhs
      * @return

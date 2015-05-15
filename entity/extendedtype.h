@@ -74,6 +74,9 @@ namespace entity {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
+        size_t hashType() const override;
+        static size_t staticHashType();
+
     protected:
         bool    m_ConstStatus;
         QString m_TypeId;

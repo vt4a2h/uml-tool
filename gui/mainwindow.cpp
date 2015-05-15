@@ -428,7 +428,7 @@ namespace gui {
 
                         if (auto stack = m_ApplicationModel->currentProject()->commandsStack()) {
                             auto create = std::make_unique<commands::CreateEntity>(
-                                m_ApplicationModel, entity::UserClassType, scope->id(), *m_MainScene, pos);
+                                m_ApplicationModel, scope->id(), *m_MainScene, pos);
                             stack->push(create.release());
                         }
                     } else {

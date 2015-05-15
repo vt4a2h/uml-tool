@@ -57,6 +57,9 @@ namespace entity {
 
         static constexpr const char *topID = "top_item_id";
 
+        virtual size_t hashType() const;
+        static size_t staticHashType();
+
     signals:
         void nameChanged(const QString &newName);
 

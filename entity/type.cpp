@@ -195,6 +195,24 @@ namespace entity {
     }
 
     /**
+     * @brief Type::hashType
+     * @return
+     */
+    size_t Type::hashType() const
+    {
+        return Type::staticHashType();
+    }
+
+    /**
+     * @brief Type::staticHashType
+     * @return
+     */
+    size_t Type::staticHashType()
+    {
+        return typeid(Type).hash_code();
+    }
+
+    /**
      * @brief Type::clone
      * @return
      */

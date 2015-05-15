@@ -47,11 +47,10 @@ namespace commands {
      * @param pos
      * @param parent
      */
-    CreateEntity::CreateEntity(const models::SharedApplicationModal &model, entity::UserType type,
-                               const QString &scopeID, QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent)
-        : BaseCommand(tr("Add %1").arg(utility::userTypeToString(type)), parent)
+    CreateEntity::CreateEntity(const models::SharedApplicationModal &model, const QString &scopeID,
+                               QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent)
+        : BaseCommand(tr("Add type"), parent)
         , m_Model(model)
-        , m_Type(type)
         , m_ProjectID(model && model->currentProject() ? model->currentProject()->id() : STUB_ID)
         , m_ScopeID(scopeID)
         , m_TypeItem(nullptr)
@@ -72,8 +71,6 @@ namespace commands {
             m_Scene.addItem(m_Item);
             static_cast<graphics::Entity *>(m_Item)->setTypeObject(m_TypeItem);
         } else {
-            Q_ASSERT( m_Type == entity::UserClassType ); // only for classes now
-
             auto&& factory = entity::EntitiesFactory::get();
             // TODO: use other factory method which is not require static_cast
             m_TypeItem = std::static_pointer_cast<entity::Type>(factory.makeClass(m_Model, m_ScopeID,

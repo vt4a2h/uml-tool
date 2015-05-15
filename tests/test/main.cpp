@@ -672,10 +672,9 @@ TEST_F(RelationMaker, Dependency)
 
 TEST_F(TypeMaker, MakesRightTypes)
 {
-    for (auto typeName : _typesNames)
-        EXPECT_EQ(_types[typeName]->type(),
-                  static_cast<entity::UserType>(_typesNames.indexOf(typeName))
-                  ) << typeName.toStdString() << " class object sholud has valid type id";
+    EXPECT_TRUE(std::equal(_types.begin(), _types.end(), _typeHashes.begin(), _typeHashes.end(),
+                           [](const entity::SharedType &t, size_t hash){ return hash == t->hashType(); }))
+    << "Types should be equal";
 }
 
 TEST_F(DepthSearch, ScopeSearchWorks)

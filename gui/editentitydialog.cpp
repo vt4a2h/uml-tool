@@ -25,6 +25,11 @@
 
 #include <entity/type.h>
 #include <entity/scope.h>
+#include <entity/enum.h>
+#include <entity/union.h>
+#include <entity/class.h>
+#include <entity/templateclass.h>
+#include <entity/extendedtype.h>
 
 #include <project/project.h>
 
@@ -38,6 +43,18 @@
 
 namespace gui {
 
+    namespace {
+        const QVector< QPair< QString, size_t > > names =
+            {
+                { EditEntityDialog::tr( "Type" ), entity::Type::staticHashType() },
+                { EditEntityDialog::tr( "Enum" ), entity::Enum::staticHashType() },
+                { EditEntityDialog::tr( "Union" ), entity::Union::staticHashType() },
+                { EditEntityDialog::tr( "Class" ), entity::Class::staticHashType() },
+                { EditEntityDialog::tr( "Template class" ), entity::TemplateClass::staticHashType() },
+                { EditEntityDialog::tr( "Extended type" ), entity::ExtendedType::staticHashType() }
+            };
+    }
+
     /**
      * @brief EditEntityDialog::EditEntityDialog
      * @param parent
@@ -48,9 +65,8 @@ namespace gui {
     {
         ui->setupUi(this);
 
-        for(int i = 0; i < int(entity::UserType::Count); ++i)
-            ui->cbType->addItem(utility::userTypeToString(entity::UserType(i)),
-                                QVariant::fromValue(entity::UserType(i)));
+        for(auto &&pair : names)
+            ui->cbType->addItem(pair.first, QVariant::fromValue(pair.second));
 
         connect(ui->pbAccept, &QPushButton::clicked, this, &EditEntityDialog::onAccepted);
         connect(ui->pbReject, &QPushButton::clicked, this, &EditEntityDialog::onRejected);
@@ -153,8 +169,8 @@ namespace gui {
             stack->push(std::make_unique<commands::RenameEntity>(m_Type, newName).release());
 
         // Check scope
-        auto scope = ui->cbScopes->currentData().value<entity::SharedScope>();
-        if (scope->id() != m_Type->scopeId())
+//        auto scope = ui->cbScopes->currentData().value<entity::SharedScope>();
+//        if (scope->id() != m_Type->scopeId())
             // implement
 
         stack->endMacro();
@@ -203,7 +219,7 @@ namespace gui {
     void EditEntityDialog::setType()
     {
         for (int i = 0; i < ui->cbType->count(); ++i) {
-            if (m_Type == ui->cbType->itemData(i).value<entity::UserType>()) {
+            if (m_Type->hashType() == ui->cbType->itemData(i).value<size_t>()) {
                 ui->cbType->setCurrentIndex(i);
                 break;
             }

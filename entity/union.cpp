@@ -207,6 +207,24 @@ namespace entity {
     }
 
     /**
+     * @brief Union::hashType
+     * @return
+     */
+    size_t Union::hashType() const
+    {
+        return Union::staticHashType();
+    }
+
+    /**
+     * @brief Union::staticHashType
+     * @return
+     */
+    size_t Union::staticHashType()
+    {
+        return typeid(Union).hash_code();
+    }
+
+    /**
      * @brief Union::clone
      * @return
      */

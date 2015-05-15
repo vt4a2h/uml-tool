@@ -54,32 +54,32 @@ namespace {
                          std::function<translator::Code(const entity::SharedType &, const translator::ProjectTranslator &)>>;
 
     const CodeMap codeMap
-        {{typeid(entity::Type).hash_code(),
+        {{entity::Type::staticHashType(),
           [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
                 return translator.translate(type);
           }
          },
-         {typeid(entity::Enum).hash_code(),
+         {entity::Enum::staticHashType(),
           [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
                 return translator.translate(std::static_pointer_cast<entity::Enum>(type));
           }
          },
-         {typeid(entity::ExtendedType).hash_code(),
+         {entity::ExtendedType::staticHashType(),
           [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
                 return translator.translate(std::static_pointer_cast<entity::ExtendedType>(type));
           }
          },
-         {typeid(entity::Union).hash_code(),
+         {entity::Union::staticHashType(),
           [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
                 return translator.translate(std::static_pointer_cast<entity::Union>(type));
           }
          },
-         {typeid(entity::TemplateClass).hash_code(),
+         {entity::TemplateClass::staticHashType(),
           [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
                 return generateHelper<entity::TemplateClass>(type, translator);
           }
          },
-         {typeid(entity::Class).hash_code(),
+         {entity::Class::staticHashType(),
           [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
                 return generateHelper<entity::Class>(type, translator);
           }
@@ -88,9 +88,9 @@ namespace {
     translator::Code gen(const entity::SharedType &type, const translator::ProjectTranslator &translator)
     {
         Q_ASSERT(type);
-        Q_ASSERT(codeMap.contains(typeid(*type).hash_code()));
+        Q_ASSERT(codeMap.contains(type->hashType()));
 
-        return codeMap[typeid(*type).hash_code()](type, translator);
+        return codeMap[type->hashType()](type, translator);
     }
 }
 

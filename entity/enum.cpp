@@ -214,6 +214,24 @@ namespace entity {
     }
 
     /**
+     * @brief Enum::hashType
+     * @return
+     */
+    size_t Enum::hashType() const
+    {
+        return Enum::staticHashType();
+    }
+
+    /**
+     * @brief Enum::staticHashType
+     * @return
+     */
+    size_t Enum::staticHashType()
+    {
+        return typeid(Enum).hash_code();
+    }
+
+    /**
      * @brief Enum::isEqual
      * @param rhs
      * @return
