@@ -1,7 +1,9 @@
 TEMPLATE = app
 
-CONFIG += console qt c++14
+CONFIG += console qt
 CONFIG -= app_bundle
+
+QMAKE_CXXFLAGS += -std=c++1y
 
 QT += widgets
 
