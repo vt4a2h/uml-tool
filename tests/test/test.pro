@@ -5,8 +5,6 @@ CONFIG -= app_bundle
 
 QT += widgets
 
-QMAKE_CXX = g++-5
-
 LIBS += -lgtest -lpthread
 
 INCLUDEPATH += ../../
