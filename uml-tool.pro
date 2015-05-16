@@ -1,7 +1,5 @@
 CONFIG += core gui c++14
 
-QMAKE_CXXFLAGS += "-std=gnu++14"
-
 QT += widgets
 
 SOURCES += \
