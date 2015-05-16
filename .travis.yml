@@ -11,10 +11,8 @@ install:
    - sudo apt-get install -qq g++-4.9
    - sudo apt-get install -qq qt5-qmake qtbase5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev
    - export CXX="g++-4.9"
-   - export CXXFLAGS="-std=c++0x"
    
 script:
-   - echo $CXXFLAGS
    - qmake -qt=qt5 -v
    - qmake -qt=qt5
    - make
