@@ -5,8 +5,6 @@ CONFIG -= app_bundle
 
 QT += widgets
 
-QMAKE_CXXFLAGS += "-std=gnu++14"
-
 LIBS += -lgtest -lpthread
 
 INCLUDEPATH += ../../
