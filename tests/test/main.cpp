@@ -988,12 +988,12 @@ TEST_F(ProjectMaker, MakeClass)
 
     read_from(tstHeader, fTstHeader, testDataPath_ + empClass->name().toLower() + ".h")
     read_from(genHeader, fGenHeader, rootPath_ + sep_ + empClass->name().toLower() + ".h")
-    EXPECT_EQ(tstHeader, genHeader)
+    EXPECT_EQ(tstHeader.toStdString(), genHeader.toStdString())
             << "Generated data for header must be the same with test data";
 
     read_from(tstSource, fTstSource, testDataPath_ + empClass->name().toLower() + ".cpp")
     read_from(genSource, fGenSource, rootPath_ +  sep_ + empClass->name().toLower() + ".cpp")
-    EXPECT_EQ(tstSource, genSource)
+    EXPECT_EQ(tstSource.toStdString(), genSource.toStdString())
             << "Generated data for source must be the same with test data";
 }
 

@@ -74,6 +74,7 @@ namespace entity {
      */
     Class::Class(const QString &name, const QString &scopeId)
         : Type(name, scopeId)
+        , m_Kind(Kind::ClassType)
         , m_FinalStatus(false)
     {
     }

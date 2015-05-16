@@ -108,7 +108,7 @@ namespace translator {
             return "";
 
         entity::SharedExtendedType st = nullptr;
-        if (typeid(t).hash_code() == typeid(entity::SharedExtendedType).hash_code())
+        if (t->hashType() == entity::ExtendedType::staticHashType())
             st = std::dynamic_pointer_cast<entity::ExtendedType>(t);
 
         return (st ? translate(st, options, localeDatabase, classDatabase)
@@ -423,7 +423,7 @@ namespace translator {
         QString result(CLASS_TEMPLATE);
 
         entity::SharedTemplateClass tc(nullptr);
-        if (typeid(*_class).hash_code() == typeid(entity::TemplateClass).hash_code()) {
+        if (_class->hashType() == entity::TemplateClass::staticHashType()) {
             tc = std::dynamic_pointer_cast<entity::TemplateClass>(_class);
             if (tc)
                 generateTemplatePart(result, std::static_pointer_cast<entity::Template>(tc));
