@@ -1,6 +1,6 @@
-CONFIG += core gui
+CONFIG += core gui c++14
 
-QMAKE_CXXFLAGS += -std=c++1y
+QMAKE_CXXFLAGS += "-std=c++14"
 
 QT += widgets
 

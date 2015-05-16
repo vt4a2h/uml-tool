@@ -1,11 +1,11 @@
 TEMPLATE = app
 
-CONFIG += console qt
+CONFIG += console qt c++14
 CONFIG -= app_bundle
 
-QMAKE_CXXFLAGS += -std=c++1y
-
 QT += widgets
+
+QMAKE_CXXFLAGS += "-std=c++14"
 
 LIBS += -lgtest -lpthread
 
