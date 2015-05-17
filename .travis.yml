@@ -28,8 +28,7 @@ script:
    - cd tests/test
    - qmake
    - make -j4
-   - cd ../..
-   - ./tests/test/test
+   - ./test
    
 after_success:
-   - coveralls -r ../.. -E ".*external.*" -E "moc*" -E "ui*" -E "tests*"
+   - coveralls -r ../.. -E ".*external.*" -E "moc.*" -E "ui.*" -E ".*tests/test/.*.cpp*" -E ".*tests/test/.*.h*"
