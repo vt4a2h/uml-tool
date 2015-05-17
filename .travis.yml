@@ -11,7 +11,8 @@ before_install:
    - sudo apt-get update -qq
    
 install:
-   - sudo pip install cpp-coveralls
+   - sudo pip install -H --upgrade pip
+   - sudo pip install -H cpp-coveralls
    - sudo apt-get install -qq gcc-5 g++-5
    - sudo apt-get install -qq ggcov
    - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
