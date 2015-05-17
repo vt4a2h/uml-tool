@@ -22,7 +22,7 @@ script:
    # build application
    - qmake -v
    - qmake
-   - make -j4 CXXFLAGS="-fprofile-arcs -ftest-coverage"
+   - make -j4
    
    # build and run tests
    - cd tests/test

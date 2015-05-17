@@ -3,7 +3,9 @@ CONFIG += core gui c++14
 QT += widgets
 
 QMAKE_CXX = g++-5
-QMAKE_CXXFLAGS += -std=c++1y
+QMAKE_CXXFLAGS += -std=c++1y -fprofile-arcs -ftest-coverage
+
+LIBS += -lgcov -coverage
 
 SOURCES += \
     main.cpp \
