@@ -16,6 +16,13 @@ install:
    - sudo apt-get install zlib1g-dev libudev-dev
    
 script:
+   # build application
    - qmake -v
    - qmake
-   - make
+   - make -j4
+   
+   # build and run tests
+   - cd tests/test
+   - qmake
+   - make -j4
+   - ./test
