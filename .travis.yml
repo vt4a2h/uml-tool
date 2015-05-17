@@ -34,4 +34,4 @@ script:
    
 after_success:
    - gcov -v
-   - coveralls --root ../..
+   coveralls --verbose --root ${DIR_PROJECT_ROOT} -E ".*externals*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"
