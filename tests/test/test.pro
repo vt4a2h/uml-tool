@@ -6,9 +6,9 @@ CONFIG -= app_bundle
 QT += widgets
 
 QMAKE_CXX = g++-5
-QMAKE_CXXFLAGS += -std=c++1y
+QMAKE_CXXFLAGS += -std=c++1y -fprofile-arcs -ftest-coverage
 
-LIBS += -lgtest -lpthread
+LIBS += -lgtest -lpthread -lgcov -coverage
 
 INCLUDEPATH += ../../
 
