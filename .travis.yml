@@ -31,4 +31,4 @@ script:
    - ./test
    
 after_success:
-   - coveralls -r ../.. -E ".*external.*" -E "moc.*" -E "ui.*" -E ".*tests/test/.*.cpp*" -E ".*tests/test/.*.h*"
+   - coveralls --root ../.. -E ".*external.*" -E ".*moc.*.cpp*" -E ".*ui.*.h*" -E ".*tests/test/.*.cpp*" -E ".*tests/test/.*.h*" -E ".*tests/test_data/.*.cpp*" -E ".*tests/test_data/.*.h*"
