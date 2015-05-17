@@ -11,8 +11,8 @@ before_install:
    - sudo apt-get update -qq
    
 install:
-   - sudo pip install -H --upgrade pip
-   - sudo pip install -H cpp-coveralls
+   - sudo pip install --upgrade pip
+   - sudo pip install cpp-coveralls
    - sudo apt-get install -qq gcc-5 g++-5
    - sudo apt-get install -qq ggcov
    - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
@@ -35,4 +35,5 @@ script:
    
 after_success:
    - gcov -v
-   - coveralls --verbose --root ../.. -E ".*externals*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"
+   - cd ../..
+   - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
