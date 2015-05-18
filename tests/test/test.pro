@@ -6,9 +6,10 @@ CONFIG -= app_bundle
 QT += widgets
 
 QMAKE_CXX = g++-5
-QMAKE_CXXFLAGS += -std=c++1y -fprofile-arcs -ftest-coverage
+QMAKE_CXXFLAGS += -std=c++1y --coverage -g
+QMAKE_LFLAGS += --coverage
 
-LIBS += -lgtest -lpthread -lgcov -coverage
+LIBS += -lgtest -lpthread
 
 INCLUDEPATH += ../../
 
@@ -59,3 +60,15 @@ SOURCES += main.cpp \
            ../../generator/basiccppprojectgenerator.cpp \
            ../../project/project.cpp \
            ../../translator/code.cpp \
+
+Release:DESTDIR = release
+Release:OBJECTS_DIR = release/.obj
+Release:MOC_DIR = release/.moc
+Release:RCC_DIR = release/.rcc
+Release:UI_DIR = release/.ui
+
+debug:DESTDIR = debug
+debug:OBJECTS_DIR = debug/.obj
+debug:MOC_DIR = debug/.moc
+debug:RCC_DIR = debug/.rcc
+debug:UI_DIR = debug/.ui
