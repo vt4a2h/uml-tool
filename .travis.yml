@@ -2,20 +2,6 @@ language: cpp
 
 compiler: gcc
 
-env:
-  global:
-   - secure: "ZM3iC+ZRBxI0ZD19g1hFVaIlm9bRWQ0KVM3YcVsLVRhY/s5U4r5/hc0DCrgcsByhpTYUJTvew17CVPN4iOh4Az233Yj1FoDD6H9exZN5r5LHhvgX7sRD9eFV999FFTb3JD0GW1aUWYuW7stGMIit+xj6mWLkeItNb1E6XODbGXECdP+ChzFxN9btYg15FgTPDXNVljJF6+A4/Jkk/LD93SjCzh+rARzicUFEEY8K4bUEqg7+zJhJyo1qTmBXWzHYCAFJBsBgrdL6jwPiGS4xXgliUNNXZbBltty2jmVMIB5Y4vObkAAPE/OeYhY4RoUFqDQ8nM5zafg+00PTOIuaz3Y40tLBj3ZVzqJ/mNOMc3kR5PNgwAKtw6iX9AA/zIwYQBJX44oFogV+MXbtBbiqxWOM4oz4TwrvFqpIJqi0+plcMmWqTICCSk8AuecQ6NjSeFnFw7qVi/zFjbiiGM/hiOtvSDjTeJuwaCAPH0jFbBMJxga9YGiwzCw9mxtB9ZuqigG3dIOIZYQFmN5JnbaNp0BvBJ0llfX46yO1R02MFwDECciOYsMSbjqcWhtvOCA0jDxsacB7nEr1xOj2v+oYk2fftcepE1Y5p4ijYvxOwavDqksg4Q/4267WMeBZ5KbSUS2FEeNyAtJQ79KtxATZXbB/tvUdSh9jxdmH5PTDbFE="
-
-addons:
-   coverity_scan:
-      project:
-         name: "vt4a2h/uml-tool"
-         description: "Build submitted via Travis CI"
-      notification_email: vt4a2h@gmail.com
-      build_command_prepend: "qmake"
-      build_command:   "make -j4"
-      branch_pattern: master   
-
 before_install:
    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
    - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu trusty universe"
@@ -25,8 +11,8 @@ before_install:
    - sudo apt-get update -qq
    
 install:
-   - sudo pip install --upgrade pip
-   - sudo pip install cpp-coveralls
+#   - sudo pip install --upgrade pip
+#   - sudo pip install cpp-coveralls
    - sudo apt-get install -qq gcc-5 g++-5
    - sudo apt-get install -qq ggcov
    - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
@@ -38,12 +24,13 @@ install:
 script:
    # build application
    - qmake -v
-   - qmake
+   - qmake QMAKE_CXX=g++-5 CONFIG+=debug QMAKE_CXXFLAGS+="-std=c++1y --coverage -g" QMAKE_LFLAGS+=--coverage
    - make -j4
    
    # build and run tests
    - cd tests/test
-   - qmake
+   - qmake QMAKE_CXX=g++-5 CONFIG+=debug QMAKE_CXXFLAGS+="-std=c++1y --coverage -g" QMAKE_LFLAGS+=--coverage
    - make -j4
+   - ls
    - ./test
    
