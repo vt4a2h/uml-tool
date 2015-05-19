@@ -125,3 +125,5 @@ FORMS += \
 
 RESOURCES += \
     gui/main.qrc
+
+debug:MOC_DIR = debug/moc
