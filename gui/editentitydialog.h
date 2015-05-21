@@ -28,6 +28,8 @@
 
 #include <entity/entity_types.hpp>
 
+#include <models/models_types.hpp>
+
 namespace gui
 {
 
@@ -55,6 +57,9 @@ namespace gui
         project::SharedProject project() const;
         void setProject(const project::SharedProject &project);
 
+        models::SharedApplicationModal applicationModel() const;
+        void setApplicationModel(const models::SharedApplicationModal &applicationModel);
+
     protected:
         void showEvent(QShowEvent *ev);
         void closeEvent(QCloseEvent *ev);
@@ -73,6 +78,7 @@ namespace gui
         entity::SharedType  m_Type;
         entity::SharedScope m_Scope;
         project::SharedProject m_Project;
+        models::SharedApplicationModal m_ApplicationModel;
     };
 
 } // namespace gui

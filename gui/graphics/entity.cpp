@@ -161,14 +161,14 @@ namespace graphics {
     {
         switch (ev->type()) {
 
-            case QEvent::GraphicsSceneContextMenu:
-            {
-                QGraphicsSceneContextMenuEvent *menuEvent =
-                    static_cast<QGraphicsSceneContextMenuEvent *>(ev);
-                showMenu(menuEvent->screenPos());
+//            case QEvent::GraphicsSceneContextMenu:
+//            {
+//                QGraphicsSceneContextMenuEvent *menuEvent =
+//                    static_cast<QGraphicsSceneContextMenuEvent *>(ev);
+//                showMenu(menuEvent->screenPos());
 
-                break;
-            }
+//                break;
+//            }
 
             case QEvent::GraphicsSceneMousePress:
             {

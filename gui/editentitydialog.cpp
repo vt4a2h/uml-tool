@@ -38,6 +38,7 @@
 #include <utility/helpfunctions.h>
 
 #include <commands/renameentity.h>
+#include <commands/movetypetootherscope.h>
 
 #include "enums.h"
 
@@ -169,9 +170,22 @@ namespace gui {
             stack->push(std::make_unique<commands::RenameEntity>(m_Type, newName).release());
 
         // Check scope
-//        auto scope = ui->cbScopes->currentData().value<entity::SharedScope>();
-//        if (scope->id() != m_Type->scopeId())
-            // implement
+        auto scope = ui->cbScopes->currentData().value<entity::SharedScope>();
+        Q_ASSERT(scope);
+        if (scope->id() != m_Type->scopeId())
+        {
+            auto db = m_Project->database();
+
+            auto srcScope = db->getScope(m_Type->scopeId());
+            Q_ASSERT(srcScope);
+
+            auto dstScope = db->getScope(scope->id());
+            Q_ASSERT(dstScope);
+
+            Q_ASSERT(m_ApplicationModel);
+            auto cmd = std::make_unique<commands::MoveTypeToOtherScope>(m_Type, m_ApplicationModel, srcScope, dstScope);
+            stack->push(cmd.release());
+        }
 
         stack->endMacro();
         accept();
@@ -237,6 +251,24 @@ namespace gui {
                 break;
             }
         }
+    }
+
+    /**
+     * @brief EditEntityDialog::applicationModel
+     * @return
+     */
+    models::SharedApplicationModal EditEntityDialog::applicationModel() const
+    {
+        return m_ApplicationModel;
+    }
+
+    /**
+     * @brief EditEntityDialog::setApplicationModel
+     * @param applicationModel
+     */
+    void EditEntityDialog::setApplicationModel(const models::SharedApplicationModal &applicationModel)
+    {
+        m_ApplicationModel = applicationModel;
     }
 
 } // namespace gui
