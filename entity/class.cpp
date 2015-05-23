@@ -305,7 +305,7 @@ namespace entity {
      * @param section
      * @return
      */
-    SharedField Class::addField(const QString &name, const QString &typeId, const QString prefix, Section section)
+    SharedField Class::addField(const QString &name, const QString &typeId, const QString &prefix, Section section)
     {
         auto field = std::make_shared<Field>(name, typeId, prefix, section);
         if (containsField(name))

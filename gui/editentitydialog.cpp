@@ -31,6 +31,8 @@
 #include <entity/templateclass.h>
 #include <entity/extendedtype.h>
 
+#include <models/applicationmodel.h>
+
 #include <project/project.h>
 
 #include <db/projectdatabase.h>
@@ -81,57 +83,19 @@ namespace gui {
     }
 
     /**
-     * @brief EditEntityDialog::type
-     * @return
+     * @brief EditEntityDialog::setData
+     * @param model
+     * @param id
      */
-    entity::SharedType EditEntityDialog::type() const
+    void EditEntityDialog::setData(const models::SharedApplicationModal &model, const entity::SharedType &type)
     {
-        return m_Type;
-    }
+        Q_ASSERT(model);
+        Q_ASSERT(type);
 
-    /**
-     * @brief EditEntityDialog::setType
-     * @param type
-     */
-    void EditEntityDialog::setType(const entity::SharedType &type)
-    {
+        m_ApplicationModel = model;
+        m_Project = m_ApplicationModel->currentProject();
+        m_Scope = m_Project->database()->getScope(type->scopeId());
         m_Type = type;
-    }
-
-    /**
-     * @brief EditEntityDialog::scope
-     * @return
-     */
-    entity::SharedScope EditEntityDialog::scope() const
-    {
-        return m_Scope;
-    }
-
-    /**
-     * @brief EditEntityDialog::setScope
-     * @param scope
-     */
-    void EditEntityDialog::setScope(const entity::SharedScope &scope)
-    {
-        m_Scope = scope;
-    }
-
-    /**
-     * @brief EditEntityDialog::project
-     * @return
-     */
-    project::SharedProject EditEntityDialog::project() const
-    {
-        return m_Project;
-    }
-
-    /**
-     * @brief EditEntityDialog::setProject
-     * @param project
-     */
-    void EditEntityDialog::setProject(const project::SharedProject &project)
-    {
-        m_Project = project;
     }
 
     /**
@@ -188,6 +152,8 @@ namespace gui {
         }
 
         stack->endMacro();
+
+        clear();
         accept();
     }
 
@@ -196,6 +162,7 @@ namespace gui {
      */
     void EditEntityDialog::onRejected()
     {
+        clear();
         reject();
     }
 
@@ -251,24 +218,6 @@ namespace gui {
                 break;
             }
         }
-    }
-
-    /**
-     * @brief EditEntityDialog::applicationModel
-     * @return
-     */
-    models::SharedApplicationModal EditEntityDialog::applicationModel() const
-    {
-        return m_ApplicationModel;
-    }
-
-    /**
-     * @brief EditEntityDialog::setApplicationModel
-     * @param applicationModel
-     */
-    void EditEntityDialog::setApplicationModel(const models::SharedApplicationModal &applicationModel)
-    {
-        m_ApplicationModel = applicationModel;
     }
 
 } // namespace gui

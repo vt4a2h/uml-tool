@@ -51,14 +51,11 @@ namespace graphics {
     Entity::Entity(const entity::SharedType &type, const entity::SharedScope &scope,
                    const project::SharedProject &project, QGraphicsItem *parent)
         : QGraphicsObject(parent)
-        , m_Menu(std::make_unique<QMenu>())
-        , m_EditDialog(std::make_unique<gui::EditEntityDialog>())
         , m_Type(type)
         , m_Scope(scope)
         , m_Project(project)
     {
         setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
-        addMenuActions();
 
         Q_ASSERT(type);
         connect(type.get(), &entity::BasicEntity::nameChanged, [=]{ update(); });
@@ -69,7 +66,6 @@ namespace graphics {
      */
     Entity::~Entity()
     {
-
     }
 
     /**
@@ -160,16 +156,6 @@ namespace graphics {
     bool Entity::sceneEvent(QEvent *ev)
     {
         switch (ev->type()) {
-
-//            case QEvent::GraphicsSceneContextMenu:
-//            {
-//                QGraphicsSceneContextMenuEvent *menuEvent =
-//                    static_cast<QGraphicsSceneContextMenuEvent *>(ev);
-//                showMenu(menuEvent->screenPos());
-
-//                break;
-//            }
-
             case QEvent::GraphicsSceneMousePress:
             {
                 m_LastPos = pos();
@@ -188,40 +174,6 @@ namespace graphics {
         }
 
         return QGraphicsObject::sceneEvent(ev);
-    }
-
-    /**
-     * @brief Entity::showMenu
-     * @param pos
-     */
-    void Entity::showMenu(const QPoint &pos)
-    {
-        m_Menu->exec(pos);
-    }
-
-    /**
-     * @brief Entity::addMenuActions
-     */
-    void Entity::addMenuActions()
-    {
-        auto actionEdit = m_Menu->addAction(tr("Edit"));
-        connect(actionEdit, &QAction::triggered,
-                [this]() {
-                    // We know that main window is the parent of scene
-                    Q_ASSERT(scene());
-
-                    // TODO: move to main window it'll be better (maybe menu)
-
-                    m_EditDialog->setParent(static_cast<QWidget *>(scene()->parent()), Qt::Dialog);
-                    m_EditDialog->setType(m_Type);
-                    m_EditDialog->setScope(m_Scope);
-                    m_EditDialog->setProject(m_Project);
-
-                    m_EditDialog->exec();
-                });
-
-        m_Menu->addSeparator();
-        m_Menu->addAction(tr("Delete"));
     }
 
 } // grpahics

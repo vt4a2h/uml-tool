@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 18/03/2015.
+** Created 23/05/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,54 +22,50 @@
 *****************************************************************************/
 #pragma once
 
-#include <QDialog>
-
-#include <project/project_types.hpp>
-
-#include <entity/entity_types.hpp>
+#include <QObject>
+#include <QPointer>
 
 #include <models/models_types.hpp>
 
-namespace gui
-{
+class QGraphicsScene;
+class QMenu;
 
-    namespace Ui {
-        class EditEntityDialog;
-    }
+namespace graphics {
+    class Entity;
+}
 
-    /// The EditEntityDialog class
-    class EditEntityDialog : public QDialog
+namespace models {
+    class ApplicationModel;
+}
+
+namespace gui {
+
+    class EditEntityDialog;
+
+    /// The SceneFilter class
+    class SceneFilter : public QObject
     {
         Q_OBJECT
 
     public:
-        Q_DISABLE_COPY(EditEntityDialog)
-
-        explicit EditEntityDialog(QWidget *parent = 0);
-        ~EditEntityDialog();
-
-        // Call after show dialog
-        void setData(const models::SharedApplicationModal &model,
-                     const entity::SharedType &type);
+        explicit SceneFilter(const models::SharedApplicationModal &model,
+                             QGraphicsScene *scene,
+                             QWidget *parentForm,
+                             QObject *parent = 0);
+        ~SceneFilter();
 
     protected:
-        void showEvent(QShowEvent *ev);
-        void closeEvent(QCloseEvent *ev);
-
-    private slots:
-        void onAccepted();
-        void onRejected();
+        bool eventFilter(QObject *o, QEvent *e) override;
 
     private:
-        void init();
-        void clear();
-        void setType();
-        void setScope();
+        void makeMenu();
 
-        QScopedPointer<Ui::EditEntityDialog> ui;
-        entity::SharedType  m_Type;
-        entity::SharedScope m_Scope;
-        project::SharedProject m_Project;
+        QPointer<QGraphicsScene> m_Scene;
+        QPointer<graphics::Entity> m_CurrentEntity;
+
+        std::unique_ptr<QMenu> m_Menu;
+        std::unique_ptr<EditEntityDialog> m_EditDialog;
+
         models::SharedApplicationModal m_ApplicationModel;
     };
 

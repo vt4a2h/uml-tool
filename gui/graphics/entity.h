@@ -67,12 +67,6 @@ namespace graphics {
 
     private:
         bool sceneEvent(QEvent *ev) override;
-        void showMenu(const QPoint &pos);
-        void addMenuActions();
-
-        // NOTE: widget and menu for each graphic object may be costly
-        std::unique_ptr<QMenu> m_Menu;
-        std::unique_ptr<gui::EditEntityDialog> m_EditDialog;
 
         entity::SharedType m_Type;
         QPointF m_LastPos;

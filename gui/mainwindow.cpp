@@ -56,6 +56,7 @@
 #include "newproject.h"
 #include "addscope.h"
 #include "constants.cpp"
+#include "scenefilter.h"
 
 namespace {
     const int treeViewIndent = 20;
@@ -93,30 +94,6 @@ namespace {
                 if (auto &&scope = database->depthScopeSearch(type->scopeId()))
                     entity::EntitiesFactory::get().addEntity(*scene, project, scope, type, item.second /*pos*/);
     }
-
-    struct SceneFilter : public QObject
-    {
-        QPointer<QGraphicsScene> m_Scene;
-
-        SceneFilter(QGraphicsScene *scene, QObject *parent = nullptr)
-            : QObject(parent), m_Scene(scene) {}
-
-        bool eventFilter(QObject *o, QEvent *e)
-        {
-            if ( o == m_Scene ) {
-                if ( e->type() == QEvent::GraphicsSceneContextMenu ) {
-                    qDebug() << "cm";
-
-                    e->accept();
-                    return true;
-                }
-            } else {
-                e->ignore();
-            }
-
-            return false;
-        }
-    };
 }
 
 namespace gui {
@@ -145,7 +122,7 @@ namespace gui {
         makeConnections();
 
         m_MainView->installEventFilter(this);
-        m_MainScene->installEventFilter(new SceneFilter(m_MainScene, this));
+        m_MainScene->installEventFilter(new SceneFilter(m_ApplicationModel, m_MainScene, this, this));
 
         update();
     }

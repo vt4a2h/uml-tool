@@ -53,7 +53,8 @@ SOURCES += \
     commands/movegraphicobject.cpp \
     commands/createentity.cpp \
     commands/renameentity.cpp \
-    commands/movetypetootherscope.cpp
+    commands/movetypetootherscope.cpp \
+    gui/scenefilter.cpp
 
 HEADERS += \
     enums.h \
@@ -114,7 +115,8 @@ HEADERS += \
     project/project_types.hpp \
     gui/gui_types.hpp \
     models/models_types.hpp \
-    commands/commands_types.hpp
+    commands/commands_types.hpp \
+    gui/scenefilter.h
 
 FORMS += \
     gui/mainwindow.ui \
