@@ -52,13 +52,19 @@ namespace gui
         void setData(const models::SharedApplicationModal &model,
                      const entity::SharedType &type);
 
-    protected:
-        void showEvent(QShowEvent *ev);
-        void closeEvent(QCloseEvent *ev);
+    signals:
+        void needNewScope();
+
+    public slots:
+        void onScopeAdded(const entity::SharedScope &scope);
 
     private slots:
         void onAccepted();
         void onRejected();
+
+    protected:
+        void showEvent(QShowEvent *ev);
+        void closeEvent(QCloseEvent *ev);
 
     private:
         void init();

@@ -32,6 +32,7 @@
 
 #include "graphics/entity.h"
 #include "editentitydialog.h"
+#include "mainwindow.h"
 
 namespace gui {
 
@@ -43,7 +44,7 @@ namespace gui {
      * @param parent
      */
     SceneFilter::SceneFilter(const models::SharedApplicationModal &model, QGraphicsScene *scene,
-                             QWidget *parentForm, QObject *parent)
+                             MainWindow *parentForm, QObject *parent)
         : QObject(parent)
         , m_Scene(scene)
         , m_Menu(std::make_unique<QMenu>())
@@ -51,6 +52,10 @@ namespace gui {
         , m_ApplicationModel(model)
     {
         makeMenu();
+
+        connect(m_EditDialog.get(), &EditEntityDialog::needNewScope, parentForm, &MainWindow::onCreateScope);
+        connect(m_ApplicationModel.get(), &models::ApplicationModel::scopeAdded,
+                m_EditDialog.get(), &EditEntityDialog::onScopeAdded);
     }
 
     /**

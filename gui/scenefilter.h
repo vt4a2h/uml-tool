@@ -41,6 +41,7 @@ namespace models {
 namespace gui {
 
     class EditEntityDialog;
+    class MainWindow;
 
     /// The SceneFilter class
     class SceneFilter : public QObject
@@ -50,7 +51,7 @@ namespace gui {
     public:
         explicit SceneFilter(const models::SharedApplicationModal &model,
                              QGraphicsScene *scene,
-                             QWidget *parentForm,
+                             MainWindow *parentForm,
                              QObject *parent = 0);
         ~SceneFilter();
 

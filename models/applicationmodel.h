@@ -39,6 +39,7 @@ namespace models {
     class ApplicationModel : public QObject
     {
         Q_OBJECT
+
     public:
         explicit ApplicationModel(QObject *parent = 0);
         ~ApplicationModel();
@@ -66,6 +67,9 @@ namespace models {
         db::SharedDatabase globalDatabase() const;
 
         SharedTreeModel treeModel() const;
+
+    signals:
+        void scopeAdded(const entity::SharedScope &scope);
 
     private:
         project::Projects m_Projects;

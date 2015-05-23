@@ -142,6 +142,7 @@ namespace models {
             // TODO: add scope with parent scope
 
             currentProject()->touch();
+            emit scopeAdded(result);
         }
 
         return result;
@@ -158,6 +159,7 @@ namespace models {
             Q_ASSERT(projectDB);
             projectDB->addExistsScope(scope);
             m_TreeModel->addScope(scope, m_CurrentProject->id());
+            emit scopeAdded(scope);
         }
     }
 

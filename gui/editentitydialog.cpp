@@ -73,6 +73,7 @@ namespace gui {
 
         connect(ui->pbAccept, &QPushButton::clicked, this, &EditEntityDialog::onAccepted);
         connect(ui->pbReject, &QPushButton::clicked, this, &EditEntityDialog::onRejected);
+        connect(ui->pbCreateScope, &QPushButton::clicked, this, &EditEntityDialog::needNewScope);
     }
 
     /**
@@ -96,6 +97,15 @@ namespace gui {
         m_Project = m_ApplicationModel->currentProject();
         m_Scope = m_Project->database()->getScope(type->scopeId());
         m_Type = type;
+    }
+
+    /**
+     * @brief EditEntityDialog::onScopeAdded
+     * @param scope
+     */
+    void EditEntityDialog::onScopeAdded(const entity::SharedScope &scope)
+    {
+        ui->cbScopes->addItem(scope->name(), QVariant::fromValue(scope));
     }
 
     /**

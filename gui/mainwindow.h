@@ -71,6 +71,9 @@ namespace gui {
 
         bool eventFilter(QObject *obj, QEvent *ev) override;
 
+    public slots:
+        void onCreateScope();
+
     private slots:
         void onExit();
         void onAbout();
@@ -78,7 +81,6 @@ namespace gui {
         void onOpenProject();
         void onSaveProject();
 
-        void onCreateScope();
         void onAddAlias();
         void onAddUnion();
         void onAddStruct();
