@@ -54,7 +54,8 @@ SOURCES += \
     commands/createentity.cpp \
     commands/renameentity.cpp \
     commands/movetypetootherscope.cpp \
-    gui/scenefilter.cpp
+    gui/scenefilter.cpp \
+    models/classcomponentsmodel.cpp
 
 HEADERS += \
     enums.h \
@@ -116,7 +117,9 @@ HEADERS += \
     gui/gui_types.hpp \
     models/models_types.hpp \
     commands/commands_types.hpp \
-    gui/scenefilter.h
+    gui/scenefilter.h \
+    models/classcomponentsmodel.h \
+    entity/iclasscomponent.h
 
 FORMS += \
     gui/mainwindow.ui \

@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 29/10/2014.
+** Created 24/05/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,33 +20,22 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
 
-#include "classmethod.h"
-#include "template.h"
+#include <QAbstractTableModel>
 
-namespace entity {
+namespace gui {
 
-    /**
-     * @brief The TemplateClassMethod class
-     */
-    class TemplateClassMethod : public ClassMethod, public Template
+    /// The ClassComponentsModel class
+    class ClassComponentsModel : public QAbstractTableModel
     {
     public:
-        TemplateClassMethod();
-        TemplateClassMethod(const QString &name);
+        ClassComponentsModel(QObject *parent = nullptr);
 
-        friend bool operator ==(const TemplateClassMethod &lhs, const TemplateClassMethod &rhs);
-
-        bool isEqual(const TemplateClassMethod &rhs) const;
-
-    public: // BasicEntity implementation
-        QJsonObject toJson() const override;
-        void fromJson(const QJsonObject &src, QStringList &errorList) override;
-
-        size_t hashType() const override;
-        static size_t staticHashType();
+    public: // QAbstractItemModel implementation
+        int rowCount(const QModelIndex &parent) const;
+        int columnCount(const QModelIndex &parent) const;
+        QVariant data(const QModelIndex &index, int role) const;
     };
 
-} // namespace entity
+} // namespace gui

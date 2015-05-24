@@ -305,6 +305,24 @@ namespace entity {
     }
 
     /**
+     * @brief Field::hashType
+     * @return
+     */
+    size_t Field::hashType() const
+    {
+        return Field::staticHashType();
+    }
+
+    /**
+     * @brief Field::staticHashType
+     * @return
+     */
+    size_t Field::staticHashType()
+    {
+        return typeid(Field).hash_code();
+    }
+
+    /**
      * @brief Field::copyFrom
      * @param src
      */

@@ -82,6 +82,9 @@ namespace entity {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
+        size_t hashType() const override;
+        static size_t staticHashType();
+
     private:
         void copyFrom(const Field &src);
         void moveFrom(Field &src);
