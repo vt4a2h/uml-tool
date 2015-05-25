@@ -19,6 +19,8 @@
         <file>pic/icon_undo.png</file>
         <file>pic/icon_properties.png</file>
         <file>pic/icon_accept.png</file>
+        <file>pic/icon_reject.png</file>
+        <file>pic/icon_accept_edit_dialog.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>pic/main.png</file>

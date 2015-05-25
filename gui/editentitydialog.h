@@ -30,6 +30,8 @@
 
 #include <models/models_types.hpp>
 
+class QListWidgetItem;
+
 namespace gui
 {
 
@@ -61,6 +63,8 @@ namespace gui
     private slots:
         void onAccepted();
         void onRejected();
+        void onNewComponentClicked();
+        void onCurrentItemChange(QListWidgetItem *current, QListWidgetItem *previous);
 
     protected:
         void showEvent(QShowEvent *ev);

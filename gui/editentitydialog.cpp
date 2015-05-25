@@ -56,6 +56,19 @@ namespace gui {
                 { EditEntityDialog::tr( "Template class" ), entity::TemplateClass::staticHashType() },
                 { EditEntityDialog::tr( "Extended type" ), entity::ExtendedType::staticHashType() }
             };
+
+        enum class ComponentCustomRoles : int {
+            Single = 300,
+        };
+
+        void setButtonLabel(QPushButton *btn, QListWidgetItem *item)
+        {
+            Q_ASSERT(btn); Q_ASSERT(item);
+
+            btn->setText(
+                EditEntityDialog::tr("Add new %1").arg(item->data(int(ComponentCustomRoles::Single)).toString())
+            );
+        }
     }
 
     /**
@@ -71,9 +84,15 @@ namespace gui {
         for(auto &&pair : names)
             ui->cbType->addItem(pair.first, QVariant::fromValue(pair.second));
 
+        ui->lstMembers->item(0)->setData(int(ComponentCustomRoles::Single), tr("property"));
+        ui->lstMembers->item(1)->setData(int(ComponentCustomRoles::Single), tr("method"));
+        ui->lstMembers->item(2)->setData(int(ComponentCustomRoles::Single), tr("field"));
+        ui->lstMembers->setCurrentRow(0);
+
         connect(ui->pbAccept, &QPushButton::clicked, this, &EditEntityDialog::onAccepted);
         connect(ui->pbReject, &QPushButton::clicked, this, &EditEntityDialog::onRejected);
         connect(ui->pbCreateScope, &QPushButton::clicked, this, &EditEntityDialog::needNewScope);
+        connect(ui->lstMembers, &QListWidget::currentItemChanged, this, &EditEntityDialog::onCurrentItemChange);
     }
 
     /**
@@ -177,6 +196,25 @@ namespace gui {
     }
 
     /**
+     * @brief EditEntityDialog::onNewComponentClicked
+     */
+    void EditEntityDialog::onNewComponentClicked()
+    {
+
+    }
+
+    /**
+     * @brief EditEntityDialog::onCurrentItemChange
+     * @param current
+     * @param previous
+     */
+    void EditEntityDialog::onCurrentItemChange(QListWidgetItem *current, QListWidgetItem *previous)
+    {
+        Q_UNUSED(previous);
+        setButtonLabel(ui->pbNewComponent, current);
+    }
+
+    /**
      * @brief EditEntityDialog::init
      */
     void EditEntityDialog::init()
@@ -193,6 +231,8 @@ namespace gui {
         for(auto &&scope : db->scopes())
             ui->cbScopes->addItem(scope->name(), QVariant::fromValue(scope));
         setScope();
+
+        setButtonLabel(ui->pbNewComponent, ui->lstMembers->currentItem());
     }
 
     /**

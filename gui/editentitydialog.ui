@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>704</width>
-    <height>350</height>
+    <width>636</width>
+    <height>326</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
@@ -87,7 +87,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
+      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
@@ -157,11 +157,18 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="pbNewComponent">
+         <property name="text">
+          <string>&amp;Add new class component</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>
    </item>
-   <item>
+   <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -219,12 +226,23 @@
        <property name="text">
         <string>Reject</string>
        </property>
+       <property name="icon">
+        <iconset resource="main.qrc">
+         <normaloff>:/icons/pic/icon_reject.png</normaloff>:/icons/pic/icon_reject.png</iconset>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pbAccept">
        <property name="text">
         <string>Accept</string>
+       </property>
+       <property name="icon">
+        <iconset resource="main.qrc">
+         <normaloff>:/icons/pic/icon_accept_edit_dialog.png</normaloff>:/icons/pic/icon_accept_edit_dialog.png</iconset>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
        </property>
       </widget>
      </item>

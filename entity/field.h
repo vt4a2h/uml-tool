@@ -26,8 +26,8 @@
 #include <QString>
 
 #include "basicentity.h"
-
-#include <entity/entity_types.hpp>
+#include "iclasscomponent.h"
+#include "entity_types.hpp"
 
 class QJsonObject;
 class QStringList;
@@ -40,7 +40,7 @@ namespace entity {
     /**
      * @brief The Field class
      */
-    class Field : public BasicEntity
+    class Field : public BasicEntity, public IClassComponent
     {
     public:
         Field();
@@ -84,6 +84,9 @@ namespace entity {
 
         size_t hashType() const override;
         static size_t staticHashType();
+
+    public: // IClassComponent implementation
+        QString shortSignature() const override;
 
     private:
         void copyFrom(const Field &src);
