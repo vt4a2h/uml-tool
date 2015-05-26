@@ -118,13 +118,4 @@ namespace entity {
         return *this == rhs;
     }
 
-    /**
-     * @brief TemplateClass::textMarker
-     * @return
-     */
-    QString TemplateClass::textMarker() const
-    {
-        return "template";
-    }
-
 } // namespace entity

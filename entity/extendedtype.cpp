@@ -293,13 +293,4 @@ namespace entity {
         return *this == rhs;
     }
 
-    /**
-     * @brief ExtendedType::textMarker
-     * @return
-     */
-    QString ExtendedType::textMarker() const
-    {
-        return "extended type";
-    }
-
 } // namespace entity

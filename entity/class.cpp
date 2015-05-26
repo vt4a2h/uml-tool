@@ -565,15 +565,6 @@ namespace entity {
     }
 
     /**
-     * @brief Class::textMarker
-     * @return
-     */
-    QString Class::textMarker() const
-    {
-        return "class";
-    }
-
-    /**
      * @brief Class::moveFrom
      * @param src
      */

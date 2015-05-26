@@ -68,8 +68,6 @@ namespace entity {
 
         bool isEqual(const ExtendedType &rhs) const;
 
-        virtual QString textMarker() const override;
-
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;

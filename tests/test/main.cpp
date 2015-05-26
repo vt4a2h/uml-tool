@@ -758,6 +758,8 @@ TEST_F(FileJson, TypeJson)
 
     auto type_comp(std::make_shared<entity::Type>());
     json_eq(type, type_comp, "Type")
+
+    // TODO: add tests to check hash
 }
 
 TEST_F(FileJson, ExtendedTypeJson)

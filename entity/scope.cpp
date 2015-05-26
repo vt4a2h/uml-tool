@@ -370,7 +370,7 @@ namespace entity {
                 for (auto &&val : src["Types"].toArray()) {
                     obj = val.toObject();
                     utility::checkAndSet(obj, "Kind of type", errorList, [&obj, &type, &errorList, this](){
-                        type = utility::makeType(obj["Kind of type"].toString());
+                        type = utility::makeType(obj.value("Kind of type").toVariant().value<size_t>());
                         type->fromJson(obj, errorList);
                         m_Types.insert(type->id(), type);
                     });

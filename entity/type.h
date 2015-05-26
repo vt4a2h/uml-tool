@@ -52,8 +52,6 @@ namespace entity {
         QString scopeId() const;
         void setScopeId(const QString &scopeId); // TODO: perhaps store it as weak pointer
 
-        virtual QString textMarker() const override;
-
         virtual Type *clone() const;
 
         virtual bool isEqual(const Type &rhs) const;

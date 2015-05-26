@@ -21,6 +21,7 @@
         <file>pic/icon_accept.png</file>
         <file>pic/icon_reject.png</file>
         <file>pic/icon_accept_edit_dialog.png</file>
+        <file>pic/icon_elements.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>pic/main.png</file>

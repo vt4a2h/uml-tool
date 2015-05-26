@@ -241,13 +241,4 @@ namespace entity {
         return *this == rhs;
     }
 
-    /**
-     * @brief Enum::textMarker
-     * @return
-     */
-    QString Enum::textMarker() const
-    {
-        return "enum";
-    }
-
 } // namespace entity

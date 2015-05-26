@@ -152,15 +152,6 @@ namespace entity {
     }
 
     /**
-     * @brief Type::textMarker
-     * @return
-     */
-    QString Type::textMarker() const
-    {
-        return "type";
-    }
-
-    /**
      * @brief Type::toJson
      * @return
      */
@@ -171,7 +162,7 @@ namespace entity {
         result.insert("Name", m_Name);
         result.insert("Scope ID", m_ScopeId);
         result.insert("ID", m_Id);
-        result.insert("Kind of type", textMarker());
+        result.insert("Kind of type", QJsonValue::fromVariant(QVariant::fromValue(hashType())));
 
         return result;
     }

@@ -47,8 +47,6 @@ namespace entity {
         QString name() const;
         void setName(const QString &name);
 
-        virtual QString textMarker() const;
-
         void writeToFile(const QString &fileName) const;
         bool readFromFile(const QString &fileName);
 

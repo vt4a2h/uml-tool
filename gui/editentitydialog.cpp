@@ -47,14 +47,38 @@
 namespace gui {
 
     namespace {
-        const QVector< QPair< QString, size_t > > names =
+        const QVector<QPair<QString, size_t>> names =
             {
-                { EditEntityDialog::tr( "Type" ), entity::Type::staticHashType() },
-                { EditEntityDialog::tr( "Enum" ), entity::Enum::staticHashType() },
-                { EditEntityDialog::tr( "Union" ), entity::Union::staticHashType() },
-                { EditEntityDialog::tr( "Class" ), entity::Class::staticHashType() },
-                { EditEntityDialog::tr( "Template class" ), entity::TemplateClass::staticHashType() },
-                { EditEntityDialog::tr( "Extended type" ), entity::ExtendedType::staticHashType() }
+                { EditEntityDialog::tr("Type"), entity::Type::staticHashType() },
+                { EditEntityDialog::tr("Enum"), entity::Enum::staticHashType() },
+                { EditEntityDialog::tr("Union"), entity::Union::staticHashType() },
+                { EditEntityDialog::tr("Class"), entity::Class::staticHashType() },
+                { EditEntityDialog::tr("Template class"), entity::TemplateClass::staticHashType() },
+                { EditEntityDialog::tr("Extended type"), entity::ExtendedType::staticHashType() }
+            };
+
+        const QVector<QPair<QString, QString>> componentsNames =
+            {
+                { EditEntityDialog::tr("Properties"), EditEntityDialog::tr("property") },
+                { EditEntityDialog::tr("Methods")   , EditEntityDialog::tr("method")   },
+                { EditEntityDialog::tr("Fields")    , EditEntityDialog::tr("field")    },
+                { EditEntityDialog::tr("Elements")  , EditEntityDialog::tr("element")  },
+            };
+
+        const QMap<size_t, QStringList> componentsPreset =
+            {
+                { entity::Class::staticHashType()        , { EditEntityDialog::tr("Methods"),
+                                                             EditEntityDialog::tr("Properties"),
+                                                             EditEntityDialog::tr("Fields") } },
+
+                { entity::TemplateClass::staticHashType(), { EditEntityDialog::tr("Methods"),
+                                                             EditEntityDialog::tr("Properties"),
+                                                             EditEntityDialog::tr("Fields") } },
+
+                { entity::Union::staticHashType()       , { EditEntityDialog::tr("Fields")   } },
+                { entity::Enum::staticHashType()        , { EditEntityDialog::tr("Elements") } },
+                { entity::Type::staticHashType()        , {} },
+                { entity::ExtendedType::staticHashType(), {} }
             };
 
         enum class ComponentCustomRoles : int {
@@ -68,6 +92,30 @@ namespace gui {
             btn->setText(
                 EditEntityDialog::tr("Add new %1").arg(item->data(int(ComponentCustomRoles::Single)).toString())
             );
+        }
+
+        QListWidgetItem *itemByName(const QString &name, const QListWidget *wgt)
+        {
+            QListWidgetItem *result = nullptr;
+            for (int i = 0; i < wgt->count(); ++i)
+            {
+                if (wgt->item(i)->text() == name) {
+                    result = wgt->item(i);
+                    break;
+                }
+            }
+
+            Q_ASSERT(result);
+            return result;
+        }
+
+        void configure(const QScopedPointer<Ui::EditEntityDialog> &ui, const entity::SharedType &type)
+        {
+            for (int i = 0; i < ui->lstMembers->count(); ++i)
+                ui->lstMembers->item(i)->setHidden(true);
+
+            for (auto &&name : componentsPreset[type->hashType()])
+                itemByName(name, ui->lstMembers)->setHidden(false);
         }
     }
 
@@ -84,9 +132,9 @@ namespace gui {
         for(auto &&pair : names)
             ui->cbType->addItem(pair.first, QVariant::fromValue(pair.second));
 
-        ui->lstMembers->item(0)->setData(int(ComponentCustomRoles::Single), tr("property"));
-        ui->lstMembers->item(1)->setData(int(ComponentCustomRoles::Single), tr("method"));
-        ui->lstMembers->item(2)->setData(int(ComponentCustomRoles::Single), tr("field"));
+        for (auto &&p : componentsNames)
+            itemByName(p.first, ui->lstMembers )->setData(int(ComponentCustomRoles::Single), p.second);
+
         ui->lstMembers->setCurrentRow(0);
 
         connect(ui->pbAccept, &QPushButton::clicked, this, &EditEntityDialog::onAccepted);
@@ -200,7 +248,7 @@ namespace gui {
      */
     void EditEntityDialog::onNewComponentClicked()
     {
-
+        Q_ASSERT(m_Type);
     }
 
     /**
@@ -233,6 +281,7 @@ namespace gui {
         setScope();
 
         setButtonLabel(ui->pbNewComponent, ui->lstMembers->currentItem());
+        configure(ui, m_Type);
     }
 
     /**

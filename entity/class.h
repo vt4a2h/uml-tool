@@ -91,8 +91,6 @@ namespace entity {
 
         bool isEqual(const Class &rhs) const;
 
-        virtual QString textMarker() const override;
-
     public: // IComponent omplementation
         MethodsList methods() const override;
         FieldsList fields() const override;

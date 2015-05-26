@@ -57,7 +57,7 @@
          </property>
          <item>
           <property name="text">
-           <string>Properties</string>
+           <string notr="true">Properties</string>
           </property>
           <property name="icon">
            <iconset resource="main.qrc">
@@ -66,7 +66,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Methods</string>
+           <string notr="true">Methods</string>
           </property>
           <property name="icon">
            <iconset resource="main.qrc">
@@ -75,11 +75,20 @@
          </item>
          <item>
           <property name="text">
-           <string>Fields</string>
+           <string notr="true">Fields</string>
           </property>
           <property name="icon">
            <iconset resource="main.qrc">
             <normaloff>:/icons/pic/icon_field.png</normaloff>:/icons/pic/icon_field.png</iconset>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string notr="true">Elements</string>
+          </property>
+          <property name="icon">
+           <iconset resource="main.qrc">
+            <normaloff>:/icons/pic/icon_elements.png</normaloff>:/icons/pic/icon_elements.png</iconset>
           </property>
          </item>
         </widget>

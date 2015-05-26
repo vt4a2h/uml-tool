@@ -98,19 +98,20 @@ namespace utility {
                                  };
 
         using MakerT  = std::function<entity::SharedType()>;
-        using MakersT = const std::map<QString, MakerT>;
+        using MakersT = const std::map<size_t, MakerT>;
         using MakerM  = std::function<entity::SharedMethod()>;
         using MakersM = const std::map<entity::ClassMethodType, MakerM>;
         using MakerR  = std::function<relationship::SharedRelation()>;
         using MakersR = const std::map<relationship::RelationType, MakerR>;
 
-        MakersT kType = { {"type",     [](){ return std::make_shared<entity::Type>();          }},
-                          {"class",    [](){ return std::make_shared<entity::Class>();         }},
-                          {"template", [](){ return std::make_shared<entity::TemplateClass>(); }},
-                          {"union",    [](){ return std::make_shared<entity::Union>();         }},
-                          {"enum",     [](){ return std::make_shared<entity::Enum>();          }}
-                          // TODO: investigate where is extended type???
-                        };
+        MakersT kType =
+            { {entity::Type::staticHashType(),          [](){ return std::make_shared<entity::Type>();          }},
+              {entity::Class::staticHashType(),         [](){ return std::make_shared<entity::Class>();         }},
+              {entity::TemplateClass::staticHashType(), [](){ return std::make_shared<entity::TemplateClass>(); }},
+              {entity::Union::staticHashType(),         [](){ return std::make_shared<entity::Union>();         }},
+              {entity::Enum::staticHashType(),          [](){ return std::make_shared<entity::Enum>();          }}
+              // TODO: investigate where is extended type???
+            };
 
         MakersR kRelation = {
             {relationship::AggregationRelation,    [](){ return std::make_shared<relationship::MultiplyAssociation>(); }},
@@ -133,11 +134,11 @@ namespace utility {
      * @param type
      * @return
      */
-    std::shared_ptr<entity::Type> makeType(const QString &marker)
+    std::shared_ptr<entity::Type> makeType(size_t hash)
     {
         MakerT defaultMaker([](){ return std::make_shared<entity::Type>(); });
 
-        return mapSearchHelper(kType, marker, defaultMaker)();
+        return mapSearchHelper(kType, hash, defaultMaker)();
     }
 
     /**

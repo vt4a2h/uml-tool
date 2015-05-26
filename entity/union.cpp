@@ -244,15 +244,6 @@ namespace entity {
     }
 
     /**
-     * @brief Union::textMarker
-     * @return
-     */
-    QString Union::textMarker() const
-    {
-        return "union";
-    }
-
-    /**
      * @brief Union::moveFrom
      * @param src
      */
