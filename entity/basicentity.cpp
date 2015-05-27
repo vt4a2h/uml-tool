@@ -169,4 +169,22 @@ namespace entity {
         return typeid(BasicEntity).hash_code();
     }
 
+    /**
+     * @brief BasicEntity::marker
+     * @return
+     */
+    QString BasicEntity::marker() const
+    {
+        return BasicEntity::staticMarker();
+    }
+
+    /**
+     * @brief BasicEntity::staticMarker
+     * @return
+     */
+    QString BasicEntity::staticMarker()
+    {
+        return "BasicEntity";
+    }
+
 }

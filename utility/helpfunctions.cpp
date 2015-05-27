@@ -41,6 +41,7 @@
 #include <entity/classmethod.h>
 #include <entity/templateclassmethod.h>
 #include <entity/enum.h>
+#include <entity/extendedtype.h>
 #include <relationship/association.h>
 #include <relationship/dependency.h>
 #include <relationship/generalization.h>
@@ -98,19 +99,19 @@ namespace utility {
                                  };
 
         using MakerT  = std::function<entity::SharedType()>;
-        using MakersT = const std::map<size_t, MakerT>;
+        using MakersT = const std::map<QString, MakerT>;
         using MakerM  = std::function<entity::SharedMethod()>;
         using MakersM = const std::map<entity::ClassMethodType, MakerM>;
         using MakerR  = std::function<relationship::SharedRelation()>;
         using MakersR = const std::map<relationship::RelationType, MakerR>;
 
         MakersT kType =
-            { {entity::Type::staticHashType(),          [](){ return std::make_shared<entity::Type>();          }},
-              {entity::Class::staticHashType(),         [](){ return std::make_shared<entity::Class>();         }},
-              {entity::TemplateClass::staticHashType(), [](){ return std::make_shared<entity::TemplateClass>(); }},
-              {entity::Union::staticHashType(),         [](){ return std::make_shared<entity::Union>();         }},
-              {entity::Enum::staticHashType(),          [](){ return std::make_shared<entity::Enum>();          }}
-              // TODO: investigate where is extended type???
+            { {entity::Type::staticMarker(),          [](){ return std::make_shared<entity::Type>();          }},
+              {entity::Class::staticMarker(),         [](){ return std::make_shared<entity::Class>();         }},
+              {entity::TemplateClass::staticMarker(), [](){ return std::make_shared<entity::TemplateClass>(); }},
+              {entity::Union::staticMarker(),         [](){ return std::make_shared<entity::Union>();         }},
+              {entity::Enum::staticMarker(),          [](){ return std::make_shared<entity::Enum>();          }},
+              {entity::ExtendedType::staticMarker(),  [](){ return std::make_shared<entity::ExtendedType>();  }}
             };
 
         MakersR kRelation = {
@@ -134,7 +135,7 @@ namespace utility {
      * @param type
      * @return
      */
-    std::shared_ptr<entity::Type> makeType(size_t hash)
+    std::shared_ptr<entity::Type> makeType(const QString &hash)
     {
         MakerT defaultMaker([](){ return std::make_shared<entity::Type>(); });
 

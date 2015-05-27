@@ -58,6 +58,9 @@ namespace entity {
         virtual size_t hashType() const;
         static size_t staticHashType();
 
+        virtual QString marker() const;
+        static QString staticMarker();
+
     signals:
         void nameChanged(const QString &newName);
 

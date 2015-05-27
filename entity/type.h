@@ -66,6 +66,9 @@ namespace entity {
         size_t hashType() const override;
         static size_t staticHashType();
 
+        QString marker() const override;
+        static QString staticMarker();
+
     protected:
         virtual void moveFrom(Type &src);
         virtual void copyFrom(const Type &src);

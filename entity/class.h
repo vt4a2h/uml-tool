@@ -102,6 +102,9 @@ namespace entity {
         size_t hashType() const override;
         static size_t staticHashType();
 
+        QString marker() const override;
+        static QString staticMarker();
+
     protected:
         void moveFrom(Class &src);
         void copyFrom(const Class &src);

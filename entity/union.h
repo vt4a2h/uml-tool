@@ -64,6 +64,9 @@ namespace entity {
         size_t hashType() const override;
         static size_t staticHashType();
 
+        QString marker() const override;
+        static QString staticMarker();
+
     private:
         void moveFrom(Union &src);
         void copyFrom(const Union &src);

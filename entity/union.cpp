@@ -225,6 +225,24 @@ namespace entity {
     }
 
     /**
+     * @brief Union::marker
+     * @return
+     */
+    QString Union::marker() const
+    {
+        return Union::staticMarker();
+    }
+
+    /**
+     * @brief Union::staticMarker
+     * @return
+     */
+    QString Union::staticMarker()
+    {
+        return "Union";
+    }
+
+    /**
      * @brief Union::clone
      * @return
      */

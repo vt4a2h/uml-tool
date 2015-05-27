@@ -284,6 +284,24 @@ namespace entity {
     }
 
     /**
+     * @brief ExtendedType::marker
+     * @return
+     */
+    QString ExtendedType::marker() const
+    {
+        return ExtendedType::staticMarker();
+    }
+
+    /**
+     * @brief ExtendedType::staticMarker
+     * @return
+     */
+    QString ExtendedType::staticMarker()
+    {
+        return "ExtendedType";
+    }
+
+    /**
      * @brief ExtendedType::isEqual
      * @param rhs
      * @return

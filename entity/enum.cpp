@@ -232,6 +232,24 @@ namespace entity {
     }
 
     /**
+     * @brief Enum::marker
+     * @return
+     */
+    QString Enum::marker() const
+    {
+        return Enum::staticMarker();
+    }
+
+    /**
+     * @brief Enum::staticMarker
+     * @return
+     */
+    QString Enum::staticMarker()
+    {
+        return "Enum";
+    }
+
+    /**
      * @brief Enum::isEqual
      * @param rhs
      * @return

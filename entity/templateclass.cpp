@@ -109,6 +109,24 @@ namespace entity {
     }
 
     /**
+     * @brief TemplateClass::marker
+     * @return
+     */
+    QString TemplateClass::marker() const
+    {
+        return TemplateClass::staticMarker();
+    }
+
+    /**
+     * @brief TemplateClass::staticMarker
+     * @return
+     */
+    QString TemplateClass::staticMarker()
+    {
+        return "TemplateClass";
+    }
+
+    /**
      * @brief TemplateClass::isEqual
      * @param rhs
      * @return

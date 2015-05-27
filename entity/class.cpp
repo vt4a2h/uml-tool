@@ -555,6 +555,24 @@ namespace entity {
     }
 
     /**
+     * @brief Class::marker
+     * @return
+     */
+    QString Class::marker() const
+    {
+        return Class::staticMarker();
+    }
+
+    /**
+     * @brief Class::staticMarker
+     * @return
+     */
+    QString Class::staticMarker()
+    {
+        return "Class";
+    }
+
+    /**
      * @brief Class::isEqual
      * @param rhs
      * @return

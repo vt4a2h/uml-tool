@@ -98,9 +98,10 @@ namespace entity {
      */
     bool operator ==(const Type &lhs, const Type &rhs)
     {
-        return lhs.m_Name       == rhs.m_Name       &&
-               lhs.m_Id         == rhs.m_Id         &&
-               lhs.m_ScopeId    == rhs.m_ScopeId;
+        return lhs.m_Name       == rhs.m_Name    &&
+               lhs.m_Id         == rhs.m_Id      &&
+               lhs.m_ScopeId    == rhs.m_ScopeId &&
+               lhs.hashType()   == rhs.hashType();
     }
 
     /**
@@ -162,7 +163,7 @@ namespace entity {
         result.insert("Name", m_Name);
         result.insert("Scope ID", m_ScopeId);
         result.insert("ID", m_Id);
-        result.insert("Kind of type", QJsonValue::fromVariant(QVariant::fromValue(hashType())));
+        result.insert("Kind of type", marker());
 
         return result;
     }
@@ -201,6 +202,24 @@ namespace entity {
     size_t Type::staticHashType()
     {
         return typeid(Type).hash_code();
+    }
+
+    /**
+     * @brief Type::marker
+     * @return
+     */
+    QString Type::marker() const
+    {
+        return Type::staticMarker();
+    }
+
+    /**
+     * @brief Type::staticMarker
+     * @return
+     */
+    QString Type::staticMarker()
+    {
+        return "Type";
     }
 
     /**
