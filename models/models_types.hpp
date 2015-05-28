@@ -36,4 +36,7 @@ namespace models {
 
     class ApplicationModel;
     using SharedApplicationModal = std::shared_ptr<ApplicationModel>;
+
+    class ClassComponentsModel;
+    using UniqueClassComponentsModel = std::unique_ptr<ClassComponentsModel>;
 }

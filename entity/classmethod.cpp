@@ -491,5 +491,13 @@ namespace entity {
         m_ReturnTypeId = returnTypeId;
     }
 
+    /**
+     * @brief ClassMethod::shortSignature
+     * @return
+     */
+    QString ClassMethod::shortSignature() const
+    {
+        return name(); // tst output
+    }
 
 } // namespace entity

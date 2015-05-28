@@ -30,8 +30,10 @@
 #include <entity/class.h>
 #include <entity/templateclass.h>
 #include <entity/extendedtype.h>
+#include <entity/classmethod.h> // TODO: remove
 
 #include <models/applicationmodel.h>
+#include <models/classcomponentsmodel.h>
 
 #include <project/project.h>
 
@@ -126,6 +128,7 @@ namespace gui {
     EditEntityDialog::EditEntityDialog(QWidget *parent)
         : QDialog(parent)
         , ui(new Ui::EditEntityDialog)
+        , m_ComponentsModel(std::make_unique<models::ClassComponentsModel>(nullptr))
     {
         ui->setupUi(this);
 
@@ -136,6 +139,7 @@ namespace gui {
             itemByName(p.first, ui->lstMembers )->setData(int(ComponentCustomRoles::Single), p.second);
 
         ui->lstMembers->setCurrentRow(0);
+        ui->viewMembers->setModel(m_ComponentsModel.get());
 
         connect(ui->pbAccept, &QPushButton::clicked, this, &EditEntityDialog::onAccepted);
         connect(ui->pbReject, &QPushButton::clicked, this, &EditEntityDialog::onRejected);
@@ -164,6 +168,12 @@ namespace gui {
         m_Project = m_ApplicationModel->currentProject();
         m_Scope = m_Project->database()->getScope(type->scopeId());
         m_Type = type;
+
+        auto cl = std::static_pointer_cast<entity::Class>(m_Type); // Temporary
+        cl->makeMethod("foo");
+        cl->makeMethod("bar");
+        cl->makeMethod("baz");
+        m_ComponentsModel->setComponents(m_Type);
     }
 
     /**

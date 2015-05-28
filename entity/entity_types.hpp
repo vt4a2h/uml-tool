@@ -97,6 +97,9 @@ namespace entity {
     using SharedScope = std::shared_ptr<Scope>;
     using Scopes      = QHash<QString, SharedScope>;
     using ScopesList  = QList<SharedScope>;
+
+    class IComponents;
+    using SharedComponents = std::shared_ptr<IComponents>;
 }
 
 Q_DECLARE_METATYPE(entity::SharedField)

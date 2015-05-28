@@ -22,14 +22,22 @@
 *****************************************************************************/
 #include "classcomponentsmodel.h"
 
-namespace gui {
+#include <entity/class.h>
+#include <entity/classmethod.h>
+
+namespace models {
+
+    namespace  {
+        const int colCount = 2;
+    }
 
     /**
      * @brief ClassComponentsModel::ClassComponentsModel
      * @param parent
      */
-    ClassComponentsModel::ClassComponentsModel(QObject *parent)
+    ClassComponentsModel::ClassComponentsModel(const entity::SharedComponents &components, QObject *parent)
         : QAbstractTableModel(parent)
+        , m_Components(components)
     {
     }
 
@@ -41,7 +49,7 @@ namespace gui {
     int ClassComponentsModel::rowCount(const QModelIndex &parent) const
     {
         Q_UNUSED(parent);
-        return 0;
+        return m_Components ? m_Components->methods().count() : 0; // only methods for test period
     }
 
     /**
@@ -52,7 +60,7 @@ namespace gui {
     int ClassComponentsModel::columnCount(const QModelIndex &parent) const
     {
         Q_UNUSED(parent);
-        return 0;
+        return colCount;
     }
 
     /**
@@ -63,8 +71,42 @@ namespace gui {
      */
     QVariant ClassComponentsModel::data(const QModelIndex &index, int role) const
     {
-        Q_UNUSED(index); Q_UNUSED(role);
+        if (role == Qt::DisplayRole && m_Components) {
+            if (index.column() == 0) {
+                QVariant result;
+
+                switch (m_display) {
+                    case DisplayPart::Methods:
+                        result = m_Components->methods()[index.row()]->name(); // only methods for test period
+                        return result;
+
+                    default: ;
+                }
+            }
+        }
+
         return QVariant();
     }
 
-} // namespace gui
+    /**
+     * @brief ClassComponentsModel::components
+     * @return
+     */
+    entity::SharedComponents ClassComponentsModel::components() const
+    {
+        return m_Components;
+    }
+
+    /**
+     * @brief ClassComponentsModel::setComponents
+     * @param components
+     */
+    void ClassComponentsModel::setComponents(const entity::SharedComponents &components)
+    {
+        beginResetModel();
+        m_Components = components;
+        endResetModel();
+    }
+
+
+} // namespace models

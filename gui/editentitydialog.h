@@ -30,6 +30,8 @@
 
 #include <models/models_types.hpp>
 
+#include <gui/gui_types.hpp>
+
 class QListWidgetItem;
 
 namespace gui
@@ -50,7 +52,7 @@ namespace gui
         explicit EditEntityDialog(QWidget *parent = 0);
         ~EditEntityDialog();
 
-        // Call after show dialog
+        // Call before show dialog
         void setData(const models::SharedApplicationModal &model,
                      const entity::SharedType &type);
 
@@ -81,6 +83,7 @@ namespace gui
         entity::SharedScope m_Scope;
         project::SharedProject m_Project;
         models::SharedApplicationModal m_ApplicationModel;
+        models::UniqueClassComponentsModel m_ComponentsModel;
     };
 
 } // namespace gui
