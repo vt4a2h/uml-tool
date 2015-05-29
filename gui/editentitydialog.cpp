@@ -140,6 +140,8 @@ namespace gui {
 
         ui->lstMembers->setCurrentRow(0);
         ui->viewMembers->setModel(m_ComponentsModel.get());
+        ui->viewMembers->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+        ui->viewMembers->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
 
         connect(ui->pbAccept, &QPushButton::clicked, this, &EditEntityDialog::onAccepted);
         connect(ui->pbReject, &QPushButton::clicked, this, &EditEntityDialog::onRejected);
