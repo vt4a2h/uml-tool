@@ -167,14 +167,26 @@
          <property name="sizeAdjustPolicy">
           <enum>QAbstractScrollArea::AdjustIgnored</enum>
          </property>
+         <property name="showGrid">
+          <bool>false</bool>
+         </property>
          <property name="cornerButtonEnabled">
           <bool>true</bool>
          </property>
          <attribute name="horizontalHeaderVisible">
           <bool>false</bool>
          </attribute>
+         <attribute name="horizontalHeaderMinimumSectionSize">
+          <number>32</number>
+         </attribute>
          <attribute name="verticalHeaderVisible">
           <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>26</number>
+         </attribute>
+         <attribute name="verticalHeaderMinimumSectionSize">
+          <number>26</number>
          </attribute>
         </widget>
        </item>

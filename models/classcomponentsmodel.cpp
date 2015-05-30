@@ -42,6 +42,16 @@ namespace models {
     }
 
     /**
+     * @brief ClassComponentsModel::clear
+     */
+    void ClassComponentsModel::clear()
+    {
+        beginResetModel();
+        m_Components.reset();
+        endResetModel();
+    }
+
+    /**
      * @brief ClassComponentsModel::rowCount
      * @param parent
      * @return
@@ -89,6 +99,21 @@ namespace models {
     }
 
     /**
+     * @brief ClassComponentsModel::flags
+     * @param index
+     * @return
+     */
+    Qt::ItemFlags ClassComponentsModel::flags(const QModelIndex &index) const
+    {
+        Qt::ItemFlags flags = Qt::ItemIsEnabled;
+
+        if (index.isValid() && index.column() == ShortSignature)
+            flags |= Qt::ItemIsSelectable;
+
+        return  flags;
+    }
+
+    /**
      * @brief ClassComponentsModel::components
      * @return
      */
@@ -106,6 +131,10 @@ namespace models {
         beginResetModel();
         m_Components = components;
         endResetModel();
+
+        // only methods for test period
+        for (int i = 0; i < m_Components->methods().count(); ++i)
+            emit showButtonsForIndex(index(i, 1));
     }
 
 

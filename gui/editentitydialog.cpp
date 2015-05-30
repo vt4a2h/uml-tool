@@ -45,6 +45,7 @@
 #include <commands/movetypetootherscope.h>
 
 #include "enums.h"
+#include "classcomponentseditdelegate.h"
 
 namespace gui {
 
@@ -140,8 +141,19 @@ namespace gui {
 
         ui->lstMembers->setCurrentRow(0);
         ui->viewMembers->setModel(m_ComponentsModel.get());
-        ui->viewMembers->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-        ui->viewMembers->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+
+        auto delegat = new ClassComponentsEditDelegate(this);
+        ui->viewMembers->setItemDelegateForColumn(models::ClassComponentsModel::Buttons, delegat);
+        connect(m_ComponentsModel.get(), &models::ClassComponentsModel::showButtonsForIndex,
+                [view = ui->viewMembers](auto index) {
+                    Q_ASSERT(index.isValid());
+                    view->openPersistentEditor(index);
+                });
+
+        QHeaderView * header = ui->viewMembers->horizontalHeader();
+        header->setSectionResizeMode(models::ClassComponentsModel::ShortSignature, QHeaderView::Stretch);
+        header->setSectionResizeMode(models::ClassComponentsModel::Buttons, QHeaderView::Fixed);
+        ui->viewMembers->setColumnWidth(models::ClassComponentsModel::Buttons, delegat->size().width());
 
         connect(ui->pbAccept, &QPushButton::clicked, this, &EditEntityDialog::onAccepted);
         connect(ui->pbReject, &QPushButton::clicked, this, &EditEntityDialog::onRejected);
@@ -172,9 +184,13 @@ namespace gui {
         m_Type = type;
 
         auto cl = std::static_pointer_cast<entity::Class>(m_Type); // Temporary
-        cl->makeMethod("foo");
-        cl->makeMethod("bar");
-        cl->makeMethod("baz");
+
+        if (cl->methods().isEmpty()) {
+            cl->makeMethod("foo");
+            cl->makeMethod("bar");
+            cl->makeMethod("baz");
+        }
+
         m_ComponentsModel->setComponents(m_Type);
     }
 
@@ -303,6 +319,7 @@ namespace gui {
     {
         ui->leName->clear();
         ui->cbScopes->clear();
+        m_ComponentsModel->clear();
     }
 
     /**

@@ -28,26 +28,42 @@
 
 namespace models {
 
+    /// The DisplayPart enum
     enum class DisplayPart : int {
-        Methods,
-        Fields,
-        Variables,
-        Properties,
+        Methods,    ///< Methods
+        Fields,     ///< Fields
+        Variables,  ///< Variables
+        Properties, ///< Properties
     };
 
     /// The ClassComponentsModel class
     class ClassComponentsModel : public QAbstractTableModel
     {
+        Q_OBJECT
+
+    public: // types
+        /// The ComponentColName enum
+        enum ComponentColName {
+            ShortSignature, ///< ShortSignature
+            Buttons,        ///< Buttons
+        };
+
     public:
         ClassComponentsModel(const entity::SharedComponents &components, QObject *parent = nullptr);
+
+        void clear();
 
     public: // QAbstractItemModel implementation
         int rowCount(const QModelIndex &parent) const;
         int columnCount(const QModelIndex &parent) const;
         QVariant data(const QModelIndex &index, int role) const;
+        Qt::ItemFlags flags(const QModelIndex &index) const;
 
         entity::SharedComponents components() const;
         void setComponents(const entity::SharedComponents &components);
+
+    signals:
+        void showButtonsForIndex(const QModelIndex &index);
 
     private:
         entity::SharedComponents m_Components;
