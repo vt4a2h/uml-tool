@@ -93,7 +93,7 @@ namespace gui {
             Q_ASSERT(btn); Q_ASSERT(item);
 
             btn->setText(
-                EditEntityDialog::tr("Add new %1").arg(item->data(int(ComponentCustomRoles::Single)).toString())
+                EditEntityDialog::tr("&Add new %1").arg(item->data(int(ComponentCustomRoles::Single)).toString())
             );
         }
 

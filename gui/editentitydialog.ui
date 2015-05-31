@@ -191,11 +191,72 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pbNewComponent">
-         <property name="text">
-          <string>&amp;Add new class component</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QPushButton" name="pbNewComponent">
+           <property name="toolTip">
+            <string>Click to add a new component</string>
+           </property>
+           <property name="text">
+            <string>&amp;Add new class component</string>
+           </property>
+           <property name="icon">
+            <iconset resource="main.qrc">
+             <normaloff>:/icons/pic/icon_component_plus.png</normaloff>:/icons/pic/icon_component_plus.png</iconset>
+           </property>
+           <property name="shortcut">
+            <string>Ctrl+Shift+N</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbEdit">
+           <property name="toolTip">
+            <string>Click to edit selected component</string>
+           </property>
+           <property name="text">
+            <string>&amp;Edit</string>
+           </property>
+           <property name="icon">
+            <iconset resource="main.qrc">
+             <normaloff>:/icons/pic/icon_component_edit.png</normaloff>:/icons/pic/icon_component_edit.png</iconset>
+           </property>
+           <property name="shortcut">
+            <string>Ctrl+E</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbDelete">
+           <property name="toolTip">
+            <string>Click to remove selected components</string>
+           </property>
+           <property name="text">
+            <string>&amp;Delete</string>
+           </property>
+           <property name="icon">
+            <iconset resource="main.qrc">
+             <normaloff>:/icons/pic/icon_component_delete.png</normaloff>:/icons/pic/icon_component_delete.png</iconset>
+           </property>
+           <property name="shortcut">
+            <string>Del</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
@@ -256,8 +317,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="pbReject">
+       <property name="toolTip">
+        <string>Click to forget all changes</string>
+       </property>
        <property name="text">
-        <string>Reject</string>
+        <string>&amp;Reject</string>
        </property>
        <property name="icon">
         <iconset resource="main.qrc">
@@ -267,12 +331,18 @@
      </item>
      <item>
       <widget class="QPushButton" name="pbAccept">
+       <property name="toolTip">
+        <string>Click to save all changes</string>
+       </property>
        <property name="text">
-        <string>Accept</string>
+        <string>&amp;Accept</string>
        </property>
        <property name="icon">
         <iconset resource="main.qrc">
          <normaloff>:/icons/pic/icon_accept_edit_dialog.png</normaloff>:/icons/pic/icon_accept_edit_dialog.png</iconset>
+       </property>
+       <property name="default">
+        <bool>true</bool>
        </property>
        <property name="flat">
         <bool>false</bool>
