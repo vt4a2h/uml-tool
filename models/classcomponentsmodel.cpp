@@ -22,13 +22,36 @@
 *****************************************************************************/
 #include "classcomponentsmodel.h"
 
+#include <type_traits>
+
 #include <entity/class.h>
 #include <entity/classmethod.h>
+#include <entity/enum.h>
+#include <entity/field.h>
 
 namespace models {
 
     namespace  {
         const int colCount = 2;
+
+        int count(const entity::SharedComponents &components, DisplayPart part)
+        {
+            switch (part) {
+                case DisplayPart::Fields:
+                    return components->fields().count();
+
+                case DisplayPart::Methods:
+                    return components->methods().count();
+
+                case DisplayPart::Variables:
+                    return components->variables().count();
+
+                case DisplayPart::Properties:
+                    return 0;
+            }
+
+            return 0;
+        }
     }
 
     /**
@@ -59,7 +82,7 @@ namespace models {
     int ClassComponentsModel::rowCount(const QModelIndex &parent) const
     {
         Q_UNUSED(parent);
-        return m_Components ? m_Components->methods().count() : 0; // only methods for test period
+        return m_Components ? count(m_Components, m_display) : 0;
     }
 
     /**
@@ -83,14 +106,18 @@ namespace models {
     {
         if (role == Qt::DisplayRole && m_Components) {
             if (index.column() == 0) {
-                QVariant result;
-
                 switch (m_display) {
                     case DisplayPart::Methods:
-                        result = m_Components->methods()[index.row()]->name(); // only methods for test period
-                        return result;
+                        return m_Components->methods()[index.row()]->name();
 
-                    default: ;
+                    case DisplayPart::Fields:
+                        return m_Components->fields()[index.row()]->name();
+
+//                    case DisplayPart::Variables:
+//                        return m_Components->variables()[index.row()]->name();
+
+                    case DisplayPart::Properties:
+                        return "stub";
                 }
             }
         }

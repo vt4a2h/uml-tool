@@ -20,8 +20,9 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #include "icomponents.h"
+
+#include <entity/enum.h>
 
 namespace entity {
 
@@ -48,6 +49,15 @@ namespace entity {
     FieldsList IComponents::fields() const
     {
         return FieldsList();
+    }
+
+    /**
+     * @brief IComponents::variables
+     * @return
+     */
+    VariablesList IComponents::variables() const
+    {
+        return VariablesList();
     }
 
 } // end of namespace entity

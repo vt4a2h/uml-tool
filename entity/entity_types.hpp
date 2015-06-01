@@ -100,6 +100,10 @@ namespace entity {
 
     class IComponents;
     using SharedComponents = std::shared_ptr<IComponents>;
+
+    class Variable;
+    using Variables = QHash<QString, Variable>;
+    using VariablesList = QList<Variable>;
 }
 
 Q_DECLARE_METATYPE(entity::SharedField)

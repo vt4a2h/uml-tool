@@ -93,9 +93,9 @@ namespace entity {
      * @param name
      * @return
      */
-    Enum::Variable &Enum::addVariable(const QString &name)
+    Variable &Enum::addVariable(const QString &name)
     {
-        m_Variables.append(std::make_pair(name, m_Variables.size()));
+        m_Variables.append(Variable(name, m_Variables.size()));
         return m_Variables.last();
     }
 
@@ -104,11 +104,11 @@ namespace entity {
      * @param name
      * @return
      */
-    Enum::Variable Enum::getVariable(const QString &name) const
+    Variable Enum::getVariable(const QString &name) const
     {
         auto it = std::find_if(m_Variables.cbegin(), m_Variables.cend(),
                                [&name](const Variable &v){ return v.first == name; });
-        return (it != m_Variables.end() ? *it : std::make_pair(DEFAULT_NAME, -1));
+        return (it != m_Variables.end() ? *it : Variable(DEFAULT_NAME, -1));
     }
 
     /**
@@ -138,7 +138,7 @@ namespace entity {
      * @brief Enum::variables
      * @return
      */
-    Enum::VariablesList Enum::variables() const
+    VariablesList Enum::variables() const
     {
         return m_Variables;
     }

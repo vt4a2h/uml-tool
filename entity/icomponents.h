@@ -34,6 +34,7 @@ namespace entity {
 
         virtual MethodsList methods() const;
         virtual FieldsList fields() const;
+        virtual VariablesList variables() const;
     };
 
 } // end of namespace entity

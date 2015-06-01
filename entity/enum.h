@@ -31,16 +31,17 @@
 
 namespace entity {
 
-    /**
-     * @brief The Enum class
-     */
+    /// The Vsriable class
+    struct Variable : public QPair<QString, int>
+    {
+        Variable() : QPair<QString, int>() {}
+        Variable(const QString &id, int value) : QPair<QString, int>(id, value) {}
+    };
+
+    /// The Enum class
     class Enum : public Type
     {
     public:
-        using Variable  = std::pair<QString, int>;
-        using Variables = QHash<QString, Variable>;
-        using VariablesList = QList<Variable>;
-
         Enum();
         Enum(const QString &name, const QString &scopeId);
 
@@ -53,7 +54,7 @@ namespace entity {
         Variable getVariable(const QString &name) const;
         void removeVariable(const QString &name);
         bool containsVariable(const QString &name);
-        VariablesList variables() const;
+        VariablesList variables() const override;
 
         QString enumTypeId() const;
         void setEnumTypeId(const QString &enumTypeId);
