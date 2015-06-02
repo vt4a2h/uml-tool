@@ -84,8 +84,17 @@ namespace gui {
                 { entity::ExtendedType::staticHashType(), {} }
             };
 
+        const QVector<QPair<QString, models::DisplayPart>> display =
+            {
+                { EditEntityDialog::tr("Properties"), models::DisplayPart::Properties },
+                { EditEntityDialog::tr("Methods")   , models::DisplayPart::Methods    },
+                { EditEntityDialog::tr("Fields")    , models::DisplayPart::Fields     },
+                { EditEntityDialog::tr("Elements")  , models::DisplayPart::Elements   },
+            };
+
         enum class ComponentCustomRoles : int {
             Single = 300,
+            Display,
         };
 
         void setButtonLabel(QPushButton *btn, QListWidgetItem *item)
@@ -137,7 +146,10 @@ namespace gui {
             ui->cbType->addItem(pair.first, QVariant::fromValue(pair.second));
 
         for (auto &&p : componentsNames)
-            itemByName(p.first, ui->lstMembers )->setData(int(ComponentCustomRoles::Single), p.second);
+            itemByName(p.first, ui->lstMembers)->setData(int(ComponentCustomRoles::Single), p.second);
+        for (auto &&p : display)
+            itemByName(p.first, ui->lstMembers)->setData(int(ComponentCustomRoles::Display),
+                                                         QVariant::fromValue(p.second));
 
         ui->lstMembers->setCurrentRow(0);
         ui->viewMembers->setModel(m_ComponentsModel.get());
@@ -183,13 +195,20 @@ namespace gui {
         m_Scope = m_Project->database()->getScope(type->scopeId());
         m_Type = type;
 
-        auto cl = std::static_pointer_cast<entity::Class>(m_Type); // Temporary
+        // Temporary {
+        auto cl = std::static_pointer_cast<entity::Class>(m_Type);
 
         if (cl->methods().isEmpty()) {
             cl->makeMethod("foo");
             cl->makeMethod("bar");
             cl->makeMethod("baz");
         }
+
+        if (cl->fields().isEmpty()) {
+            cl->addField("f1", "stub");
+            cl->addField("f2", "stub");
+        }
+        // }
 
         m_ComponentsModel->setComponents(m_Type);
     }
@@ -288,6 +307,7 @@ namespace gui {
     {
         Q_UNUSED(previous);
         setButtonLabel(ui->pbNewComponent, current);
+        m_ComponentsModel->setDisplay(current->data(int(ComponentCustomRoles::Display)).value<models::DisplayPart>());
     }
 
     /**

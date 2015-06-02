@@ -32,8 +32,9 @@ namespace models {
     enum class DisplayPart : int {
         Methods,    ///< Methods
         Fields,     ///< Fields
-        Variables,  ///< Variables
+        Elements,   ///< Elements
         Properties, ///< Properties
+        Invalid,    ///< Invalid
     };
 
     /// The ClassComponentsModel class
@@ -62,12 +63,17 @@ namespace models {
         entity::SharedComponents components() const;
         void setComponents(const entity::SharedComponents &components);
 
+        DisplayPart display() const;
+        void setDisplay(const DisplayPart &display);
+
     signals:
         void showButtonsForIndex(const QModelIndex &index);
 
     private:
         entity::SharedComponents m_Components;
-        DisplayPart m_display = DisplayPart::Methods;
+        DisplayPart m_display = DisplayPart::Invalid;
     };
 
 } // namespace models
+
+Q_DECLARE_METATYPE(models::DisplayPart)

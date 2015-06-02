@@ -43,10 +43,13 @@ namespace models {
                 case DisplayPart::Methods:
                     return components->methods().count();
 
-                case DisplayPart::Variables:
+                case DisplayPart::Elements:
                     return components->variables().count();
 
                 case DisplayPart::Properties:
+                    return 0;
+
+                case DisplayPart::Invalid:
                     return 0;
             }
 
@@ -113,11 +116,14 @@ namespace models {
                     case DisplayPart::Fields:
                         return m_Components->fields()[index.row()]->name();
 
-//                    case DisplayPart::Variables:
-//                        return m_Components->variables()[index.row()]->name();
+                    case DisplayPart::Elements:
+                        return m_Components->variables()[index.row()].first;
 
                     case DisplayPart::Properties:
                         return "stub";
+
+                    case DisplayPart::Invalid:
+                        return tr("Invalid display value");
                 }
             }
         }
@@ -159,10 +165,33 @@ namespace models {
         m_Components = components;
         endResetModel();
 
-        // only methods for test period
-        for (int i = 0; i < m_Components->methods().count(); ++i)
+        for (int i = 0; i < count(m_Components, m_display); ++i)
             emit showButtonsForIndex(index(i, 1));
     }
 
+    /**
+     * @brief ClassComponentsModel::display
+     * @return
+     */
+    DisplayPart ClassComponentsModel::display() const
+    {
+        return m_display;
+    }
+
+    /**
+     * @brief ClassComponentsModel::setDisplay
+     * @param display
+     */
+    void ClassComponentsModel::setDisplay(const DisplayPart &display)
+    {
+        if (display != m_display) {
+            beginResetModel();
+            m_display = display;
+            endResetModel();
+
+            for (int i = 0; i < count(m_Components, m_display); ++i)
+                emit showButtonsForIndex(index(i, 1));
+        }
+    }
 
 } // namespace models
