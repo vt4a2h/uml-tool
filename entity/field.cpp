@@ -323,15 +323,6 @@ namespace entity {
     }
 
     /**
-     * @brief Field::shortSignature
-     * @return
-     */
-    QString Field::shortSignature() const
-    {
-        return fullName(); // NOTE: tmp tst output
-    }
-
-    /**
      * @brief Field::copyFrom
      * @param src
      */

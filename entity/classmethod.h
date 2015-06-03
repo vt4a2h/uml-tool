@@ -26,7 +26,6 @@
 #include <QString>
 
 #include "basicentity.h"
-#include "iclasscomponent.h"
 #include "entity_types.hpp"
 
 class QJsonObject;
@@ -47,7 +46,7 @@ namespace entity {
     /**
      * @brief The ClassMethod class
      */
-    class ClassMethod : public BasicEntity, IClassComponent
+    class ClassMethod : public BasicEntity
     {
     public:
         ClassMethod();
@@ -92,9 +91,6 @@ namespace entity {
         ClassMethodType type() const;
 
         virtual bool isEqual(const ClassMethod &rhs) const;
-
-    public: // IClassComponent implementation
-        QString shortSignature() const override;
 
     public: // BasicEntity implementation
         QJsonObject toJson() const override;

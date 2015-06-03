@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 24/05/2015.
+** Created 03/06/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,17 +20,40 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#pragma once
+#include "signaturemaker.h"
 
-class QString;
+namespace gui {
 
-namespace entity {
-
-    /// The IClassComponent interface
-    class IClassComponent
+    /**
+     * @brief SignatureMaker::SignatureMaker
+     * @param model
+     * @param project
+     * @param scope
+     * @param type
+     */
+    SignatureMaker::SignatureMaker(const models::SharedApplicationModal &model, const project::SharedProject &project,
+                                   const entity::SharedScope &scope, const entity::SharedType &type)
+        : m_Type(type)
+        , m_Scope(scope)
+        , m_Project(project)
+        , m_ApplicationModel(model)
     {
-    public:
-        virtual QString shortSignature() const = 0;
-    };
+        Q_ASSERT(m_Type);
+        Q_ASSERT(m_Scope);
+        Q_ASSERT(m_Project);
+        Q_ASSERT(m_ApplicationModel);
+    }
 
-}
+    /**
+     * @brief SignatureMaker::signature
+     * @param entity
+     * @return
+     */
+    QString SignatureMaker::signature(const entity::SharedBasicEntity &entity)
+    {
+        Q_UNUSED(entity);
+        return "stub";
+    }
+
+} // namespace gui
+

@@ -37,6 +37,48 @@
 namespace entity {
 
     /**
+     * @brief Variable::toJson
+     * @return
+     */
+    QJsonObject Variable::toJson() const
+    {
+        QJsonObject result;
+        result.insert("Name", first);
+        result.insert("Number", second);
+
+        return result;
+    }
+
+    /**
+     * @brief Variable::fromJson
+     * @param src
+     * @param errorList
+     */
+    void Variable::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        utility::checkAndSet(src, "Name",   errorList, [&src, this](){ first  = src["Name"].toString(); });
+        utility::checkAndSet(src, "Number", errorList, [&src, this](){ second = src["Number"].toInt();  });
+    }
+
+    /**
+     * @brief Variable::hashType
+     * @return
+     */
+    size_t Variable::hashType() const
+    {
+        return Variable::staticHashType();
+    }
+
+    /**
+     * @brief Variable::staticHashType
+     * @return
+     */
+    size_t Variable::staticHashType()
+    {
+        return typeid(Variable).hash_code();
+    }
+
+    /**
      * @brief Enum::Enum
      */
     Enum::Enum()
@@ -173,12 +215,9 @@ namespace entity {
         result.insert("Strong status", m_StrongStatus);
 
         QJsonArray variables;
-        QJsonObject variable;
-        for (auto &&v : m_Variables) {
-            variable.insert("Name", v.first);
-            variable.insert("Number", v.second);
-            variables.append(variable);
-        }
+        for (auto &&v : m_Variables)
+            variables.append(v.toJson());
+
         result.insert("Variables", variables);
 
         return result;
@@ -199,14 +238,8 @@ namespace entity {
         m_Variables.clear();
         utility::checkAndSet(src, "Variables", errorList, [&src, &errorList, this](){
             if (src["Variables"].isArray()) {
-                QJsonObject obj;
-                Variable var;
-                for (auto &&value : src["Variables"].toArray()) {
-                    obj = value.toObject();
-                    utility::checkAndSet(obj, "Name",   errorList, [&obj, &var, this](){ var.first  = obj["Name"].toString(); });
-                    utility::checkAndSet(obj, "Number", errorList, [&obj, &var, this](){ var.second = obj["Number"].toInt();  });
-                    m_Variables.append(var);
-                  }
+                for (auto &&value : src["Variables"].toArray())
+                    m_Variables.append(Variable(value.toObject(), errorList));
             } else {
                 errorList << "Error: \"Varibles\" is not array";
             }

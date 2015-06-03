@@ -59,6 +59,16 @@ namespace entity {
     }
 
     /**
+     * @brief BasicEntity::BasicEntity
+     * @param src
+     * @param errorList
+     */
+    BasicEntity::BasicEntity(const QJsonObject &src, QStringList &errorList)
+    {
+        fromJson(src, errorList);
+    }
+
+    /**
      * @brief BasicEntity::operator =
      * @param rhs
      * @return
@@ -149,6 +159,26 @@ namespace entity {
     bool BasicEntity::readFromFile(const QString &fileName)
     {
         return utility::readFromFile(*this, fileName);
+    }
+
+    /**
+     * @brief BasicEntity::toJson
+     * @return
+     */
+    QJsonObject BasicEntity::toJson() const
+    {
+        return QJsonObject();
+    }
+
+    /**
+     * @brief BasicEntity::fromJson
+     * @param src
+     * @param errorList
+     */
+    void BasicEntity::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        Q_UNUSED(src);
+        Q_UNUSED(errorList);
     }
 
     /**

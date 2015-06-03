@@ -20,22 +20,30 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
 
 #include "type.h"
 
-#include <utility>
 #include <QHash>
 #include <QStringList>
 
 namespace entity {
 
     /// The Vsriable class
-    struct Variable : public QPair<QString, int>
+    struct Variable : public QPair<QString, int>, public BasicEntity
     {
         Variable() : QPair<QString, int>() {}
         Variable(const QString &id, int value) : QPair<QString, int>(id, value) {}
+        Variable(const QJsonObject &src, QStringList &errorList) : QPair<QString, int>(), BasicEntity(src, errorList) {
+            fromJson(src, errorList);
+        }
+
+    // BasicEntity implementation
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
+
+        size_t hashType() const override;
+        static size_t staticHashType();
     };
 
     /// The Enum class
