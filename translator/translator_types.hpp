@@ -27,4 +27,5 @@
 namespace translator {
     class ProjectTranslator;
     using SharedTranslator = std::shared_ptr<ProjectTranslator>;
+    using UniqueTranslator = std::unique_ptr<ProjectTranslator>;
 }

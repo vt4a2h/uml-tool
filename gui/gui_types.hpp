@@ -27,4 +27,7 @@
 namespace gui {
     class MainWindow;
     using UniqueMainWindow = std::unique_ptr<MainWindow>;
+
+    class SignatureMaker;
+    using UniqueSignatureMaker = std::unique_ptr<SignatureMaker>;
 }

@@ -46,6 +46,7 @@
 
 #include "enums.h"
 #include "classcomponentseditdelegate.h"
+#include "signaturemaker.h"
 
 namespace gui {
 
@@ -139,6 +140,7 @@ namespace gui {
         : QDialog(parent)
         , ui(new Ui::EditEntityDialog)
         , m_ComponentsModel(std::make_unique<models::ClassComponentsModel>(nullptr))
+        , m_SignatureMaker(std::make_unique<SignatureMaker>())
     {
         ui->setupUi(this);
 
@@ -210,6 +212,10 @@ namespace gui {
         }
         // }
 
+        m_SignatureMaker->setType(m_Type);
+        m_SignatureMaker->setScope(m_Scope);
+        m_SignatureMaker->setProject(m_Project);
+        m_SignatureMaker->setApplicationModel(m_ApplicationModel);
         m_ComponentsModel->setComponents(m_Type);
     }
 

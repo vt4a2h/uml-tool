@@ -22,26 +22,47 @@
 *****************************************************************************/
 #pragma once
 
+#include <QCoreApplication>
+
 #include <models/models_types.hpp>
 #include <entity/entity_types.hpp>
 #include <project/project_types.hpp>
+#include <translator/translator_types.hpp>
 
 namespace gui {
 
     /// The SignatureMaker class
     class SignatureMaker
     {
+        Q_DECLARE_TR_FUNCTIONS(SignatureMaker)
+
     public:
+        SignatureMaker();
         SignatureMaker(const models::SharedApplicationModal &model, const project::SharedProject &project,
                        const entity::SharedScope &scope, const entity::SharedType &type);
 
-        QString signature(const entity::SharedBasicEntity &entity);
+        ~SignatureMaker();
+
+        QString signature(const entity::SharedBasicEntity &component);
+
+        entity::SharedType type() const;
+        void setType(const entity::SharedType &type);
+
+        entity::SharedScope scope() const;
+        void setScope(const entity::SharedScope &scope);
+
+        project::SharedProject project() const;
+        void setProject(const project::SharedProject &project);
+
+        models::SharedApplicationModal applicationModel() const;
+        void setApplicationModel(const models::SharedApplicationModal &applicationModel);
 
     private:
         entity::SharedType  m_Type;
         entity::SharedScope m_Scope;
         project::SharedProject m_Project;
         models::SharedApplicationModal m_ApplicationModel;
+        translator::UniqueTranslator m_Translator;
     };
 
 } // namespace gui

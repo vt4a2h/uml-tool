@@ -79,11 +79,16 @@ namespace gui
         void setScope();
 
         QScopedPointer<Ui::EditEntityDialog> ui;
+
         entity::SharedType  m_Type;
         entity::SharedScope m_Scope;
+
         project::SharedProject m_Project;
+
         models::SharedApplicationModal m_ApplicationModel;
         models::UniqueClassComponentsModel m_ComponentsModel;
+
+        UniqueSignatureMaker m_SignatureMaker;
     };
 
 } // namespace gui

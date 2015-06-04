@@ -22,7 +22,24 @@
 *****************************************************************************/
 #include "signaturemaker.h"
 
+#include <entity/field.h>
+#include <entity/classmethod.h>
+#include <entity/enum.h>
+
+#include <models/applicationmodel.h>
+
+#include <translator/projecttranslator.h>
+#include <translator/code.h>
+
 namespace gui {
+
+    /**
+     * @brief SignatureMaker::SignatureMaker
+     */
+    SignatureMaker::SignatureMaker()
+        : SignatureMaker(nullptr, nullptr, nullptr, nullptr)
+    {
+    }
 
     /**
      * @brief SignatureMaker::SignatureMaker
@@ -38,10 +55,16 @@ namespace gui {
         , m_Project(project)
         , m_ApplicationModel(model)
     {
-        Q_ASSERT(m_Type);
-        Q_ASSERT(m_Scope);
-        Q_ASSERT(m_Project);
-        Q_ASSERT(m_ApplicationModel);
+        if (m_Project && m_ApplicationModel)
+            m_Translator = std::make_unique<translator::ProjectTranslator>(m_ApplicationModel->globalDatabase(),
+                                                                           m_Project->database());
+    }
+
+    /**
+     * @brief SignatureMaker::~SignatureMaker
+     */
+    SignatureMaker::~SignatureMaker()
+    {
     }
 
     /**
@@ -49,10 +72,92 @@ namespace gui {
      * @param entity
      * @return
      */
-    QString SignatureMaker::signature(const entity::SharedBasicEntity &entity)
+    QString SignatureMaker::signature(const entity::SharedBasicEntity &component)
     {
-        Q_UNUSED(entity);
-        return "stub";
+        if (!m_Translator)
+            m_Translator = std::make_unique<translator::ProjectTranslator>(m_ApplicationModel->globalDatabase(),
+                                                                           m_Project->database());
+
+        size_t hash = component->hashType();
+        if (hash == entity::Field::staticHashType())
+            return m_Translator->translate(std::static_pointer_cast<entity::Field>(component)).toHeader;
+        else if (hash == entity::ClassMethod::staticHashType())
+            return m_Translator->translate(std::static_pointer_cast<entity::ClassMethod>(component)).toHeader;
+        // TODO: handle variable case
+
+        return tr("Wrong component");
+    }
+
+    /**
+     * @brief SignatureMaker::type
+     * @return
+     */
+    entity::SharedType SignatureMaker::type() const
+    {
+        return m_Type;
+    }
+
+    /**
+     * @brief SignatureMaker::setType
+     * @param type
+     */
+    void SignatureMaker::setType(const entity::SharedType &type)
+    {
+        m_Type = type;
+    }
+
+    /**
+     * @brief SignatureMaker::Scope
+     * @return
+     */
+    entity::SharedScope SignatureMaker::scope() const
+    {
+        return m_Scope;
+    }
+
+    /**
+     * @brief SignatureMaker::setScope
+     * @param scope
+     */
+    void SignatureMaker::setScope(const entity::SharedScope &scope)
+    {
+        m_Scope = scope;
+    }
+
+    /**
+     * @brief SignatureMaker::Project
+     * @return
+     */
+    project::SharedProject SignatureMaker::project() const
+    {
+        return m_Project;
+    }
+
+    /**
+     * @brief SignatureMaker::setProject
+     * @param project
+     */
+    void SignatureMaker::setProject(const project::SharedProject &project)
+    {
+        m_Project = project;
+    }
+
+    /**
+     * @brief SignatureMaker::ApplicationModel
+     * @return
+     */
+    models::SharedApplicationModal SignatureMaker::applicationModel() const
+    {
+        return m_ApplicationModel;
+    }
+
+    /**
+     * @brief SignatureMaker::setApplicationModel
+     * @param applicationModel
+     */
+    void SignatureMaker::setApplicationModel(const models::SharedApplicationModal &applicationModel)
+    {
+        m_ApplicationModel = applicationModel;
     }
 
 } // namespace gui
