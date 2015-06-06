@@ -25,6 +25,7 @@
 #include <QAbstractTableModel>
 
 #include <entity/entity_types.hpp>
+#include <gui/gui_types.hpp>
 
 namespace models {
 
@@ -51,8 +52,10 @@ namespace models {
 
     public:
         ClassComponentsModel(const entity::SharedComponents &components, QObject *parent = nullptr);
-
+        void setSignatureMaker(gui::UniqueSignatureMaker &&maker);
         void clear();
+
+        ~ClassComponentsModel();
 
     public: // QAbstractItemModel implementation
         int rowCount(const QModelIndex &parent) const;
@@ -71,6 +74,7 @@ namespace models {
 
     private:
         entity::SharedComponents m_Components;
+        gui::UniqueSignatureMaker m_SignatureMaker;
         DisplayPart m_display = DisplayPart::Invalid;
     };
 

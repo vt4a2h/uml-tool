@@ -30,8 +30,6 @@
 
 #include <models/models_types.hpp>
 
-#include <gui/gui_types.hpp>
-
 class QListWidgetItem;
 
 namespace gui
@@ -87,8 +85,6 @@ namespace gui
 
         models::SharedApplicationModal m_ApplicationModel;
         models::UniqueClassComponentsModel m_ComponentsModel;
-
-        UniqueSignatureMaker m_SignatureMaker;
     };
 
 } // namespace gui

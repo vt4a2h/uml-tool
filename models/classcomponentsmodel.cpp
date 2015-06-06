@@ -29,6 +29,8 @@
 #include <entity/enum.h>
 #include <entity/field.h>
 
+#include <gui/signaturemaker.h>
+
 namespace models {
 
     namespace  {
@@ -68,6 +70,15 @@ namespace models {
     }
 
     /**
+     * @brief ClassComponentsModel::setSignatureMaker
+     * @param maker
+     */
+    void ClassComponentsModel::setSignatureMaker(gui::UniqueSignatureMaker &&maker)
+    {
+        m_SignatureMaker = std::move(maker);
+    }
+
+    /**
      * @brief ClassComponentsModel::clear
      */
     void ClassComponentsModel::clear()
@@ -75,6 +86,14 @@ namespace models {
         beginResetModel();
         m_Components.reset();
         endResetModel();
+    }
+
+    /**
+     * @brief ClassComponentsModel::~ClassComponentsModel
+     */
+    ClassComponentsModel::~ClassComponentsModel()
+    {
+
     }
 
     /**
@@ -107,17 +126,19 @@ namespace models {
      */
     QVariant ClassComponentsModel::data(const QModelIndex &index, int role) const
     {
+        Q_ASSERT(m_SignatureMaker);
+
         if (role == Qt::DisplayRole && m_Components) {
             if (index.column() == 0) {
                 switch (m_display) {
                     case DisplayPart::Methods:
-                        return m_Components->methods()[index.row()]->name();
+                        return m_SignatureMaker->signature(m_Components->methods()[index.row()]);
 
                     case DisplayPart::Fields:
-                        return m_Components->fields()[index.row()]->name();
+                        return m_SignatureMaker->signature(m_Components->fields()[index.row()]);
 
                     case DisplayPart::Elements:
-                        return m_Components->variables()[index.row()].first;
+                        return m_Components->variables()[index.row()].first; // TODO: add variables to signature maker
 
                     case DisplayPart::Properties:
                         return "stub";

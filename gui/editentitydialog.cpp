@@ -48,6 +48,8 @@
 #include "classcomponentseditdelegate.h"
 #include "signaturemaker.h"
 
+#include "constants.cpp"
+
 namespace gui {
 
     namespace {
@@ -140,7 +142,6 @@ namespace gui {
         : QDialog(parent)
         , ui(new Ui::EditEntityDialog)
         , m_ComponentsModel(std::make_unique<models::ClassComponentsModel>(nullptr))
-        , m_SignatureMaker(std::make_unique<SignatureMaker>())
     {
         ui->setupUi(this);
 
@@ -201,8 +202,11 @@ namespace gui {
         auto cl = std::static_pointer_cast<entity::Class>(m_Type);
 
         if (cl->methods().isEmpty()) {
-            cl->makeMethod("foo");
-            cl->makeMethod("bar");
+            auto intType = m_Scope->addType("int");
+            auto doubleType = m_Scope->addType("double");
+
+            cl->makeMethod("foo")->setReturnTypeId(intType->id());
+            cl->makeMethod("bar")->setReturnTypeId(doubleType->id());
             cl->makeMethod("baz");
         }
 
@@ -212,10 +216,8 @@ namespace gui {
         }
         // }
 
-        m_SignatureMaker->setType(m_Type);
-        m_SignatureMaker->setScope(m_Scope);
-        m_SignatureMaker->setProject(m_Project);
-        m_SignatureMaker->setApplicationModel(m_ApplicationModel);
+        auto signatureMaker(std::make_unique<SignatureMaker>(m_ApplicationModel, m_Project, m_Scope, m_Type));
+        m_ComponentsModel->setSignatureMaker(std::move(signatureMaker));
         m_ComponentsModel->setComponents(m_Type);
     }
 
