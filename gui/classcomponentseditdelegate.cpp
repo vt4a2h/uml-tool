@@ -58,6 +58,8 @@ namespace gui {
                 setLayout(hbl);
             }
 
+            ~Buttons() { disconnect(); }
+
             QPushButton * m_Edit = new QPushButton(this);
             QPushButton * m_Delete = new QPushButton(this);
         };
@@ -92,9 +94,12 @@ namespace gui {
                                                        const QModelIndex &index) const
     {
         Q_UNUSED(option);
-        Q_UNUSED(index);
 
-        return new Buttons(parent);
+        auto wgt = new Buttons(parent);
+        connect(wgt->m_Edit, &QPushButton::clicked, [index, this](){ emit editButtonClicked(index); });
+        connect(wgt->m_Delete, &QPushButton::clicked, [index, this](){ emit deleteButtonClicked(index); });
+
+        return wgt;
     }
 
 } // namespace gui

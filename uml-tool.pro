@@ -57,7 +57,8 @@ SOURCES += \
     gui/scenefilter.cpp \
     models/classcomponentsmodel.cpp \
     gui/classcomponentseditdelegate.cpp \
-    gui/signaturemaker.cpp
+    gui/signaturemaker.cpp \
+    gui/editmethoddialog.cpp
 
 HEADERS += \
     enums.h \
@@ -122,14 +123,16 @@ HEADERS += \
     gui/scenefilter.h \
     models/classcomponentsmodel.h \
     gui/classcomponentseditdelegate.h \
-    gui/signaturemaker.h
+    gui/signaturemaker.h \
+    gui/editmethoddialog.h
 
 FORMS += \
     gui/mainwindow.ui \
     gui/about.ui \
     gui/newproject.ui \
     gui/addscope.ui \
-    gui/editentitydialog.ui
+    gui/editentitydialog.ui \
+    gui/editmethoddialog.ui
 
 RESOURCES += \
     gui/main.qrc

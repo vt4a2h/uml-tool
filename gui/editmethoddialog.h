@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 30/05/2015.
+** Created 07/06/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,29 +22,26 @@
 *****************************************************************************/
 #pragma once
 
-#include <QStyledItemDelegate>
+#include <QDialog>
 
 namespace gui {
 
-    class ClassComponentsEditDelegate : public QStyledItemDelegate
+    namespace Ui {
+        class EditMethodDialog;
+    }
+
+    /// The EditMethodDialog class
+    class EditMethodDialog : public QDialog
     {
         Q_OBJECT
 
     public:
-        ClassComponentsEditDelegate(QObject * parent = nullptr);
-
-        QSize size() const;
-
-    public: // QAbstractItemDelegate implementation
-        QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                              const QModelIndex &index) const override;
-
-    signals:
-        void editButtonClicked(const QModelIndex &index) const;
-        void deleteButtonClicked(const QModelIndex &index) const;
+        explicit EditMethodDialog(QWidget *parent = 0);
+        ~EditMethodDialog();
 
     private:
-        bool m_Pressed = false;
+        QScopedPointer<Ui::EditMethodDialog> ui;
     };
+
 
 } // namespace gui

@@ -158,6 +158,10 @@ namespace gui {
         ui->viewMembers->setModel(m_ComponentsModel.get());
 
         auto delegat = new ClassComponentsEditDelegate(this);
+        connect(delegat, &ClassComponentsEditDelegate::editButtonClicked,
+                this, &EditEntityDialog::onEditComponentClicked);
+        connect(delegat, &ClassComponentsEditDelegate::deleteButtonClicked,
+                this, &EditEntityDialog::onDeleteComponentClicked);
         ui->viewMembers->setItemDelegateForColumn(models::ClassComponentsModel::Buttons, delegat);
         connect(m_ComponentsModel.get(), &models::ClassComponentsModel::showButtonsForIndex,
                 [view = ui->viewMembers](auto index) {
@@ -316,6 +320,24 @@ namespace gui {
         Q_UNUSED(previous);
         setButtonLabel(ui->pbNewComponent, current);
         m_ComponentsModel->setDisplay(current->data(int(ComponentCustomRoles::Display)).value<models::DisplayPart>());
+    }
+
+    /**
+     * @brief EditEntityDialog::onEditComponentClicked
+     * @param index
+     */
+    void EditEntityDialog::onEditComponentClicked(const QModelIndex &index)
+    {
+        Q_UNUSED(index);
+    }
+
+    /**
+     * @brief EditEntityDialog::onDeleteComponentClicked
+     * @param index
+     */
+    void EditEntityDialog::onDeleteComponentClicked(const QModelIndex &index)
+    {
+        Q_UNUSED(index);
     }
 
     /**

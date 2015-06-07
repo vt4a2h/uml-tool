@@ -65,6 +65,8 @@ namespace gui
         void onRejected();
         void onNewComponentClicked();
         void onCurrentItemChange(QListWidgetItem *current, QListWidgetItem *previous);
+        void onEditComponentClicked(const QModelIndex &index);
+        void onDeleteComponentClicked(const QModelIndex &index);
 
     protected:
         void showEvent(QShowEvent *ev);
