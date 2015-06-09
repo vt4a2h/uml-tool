@@ -35,6 +35,8 @@ class QListWidgetItem;
 namespace gui
 {
 
+    class EditMethodDialog;
+
     namespace Ui {
         class EditEntityDialog;
     }
@@ -79,6 +81,7 @@ namespace gui
         void setScope();
 
         QScopedPointer<Ui::EditEntityDialog> ui;
+        QScopedPointer<EditMethodDialog> m_EditMethodDialog;
 
         entity::SharedType  m_Type;
         entity::SharedScope m_Scope;

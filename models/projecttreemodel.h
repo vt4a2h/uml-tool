@@ -36,7 +36,7 @@ namespace models {
         Q_OBJECT
 
     public:
-        enum CustomRoles { SharedData = 32, DataType, ID };
+        enum CustomRoles { SharedData = 0x0100, DataType, ID };
 
         ProjectTreeModel(QObject * parent = nullptr);
 

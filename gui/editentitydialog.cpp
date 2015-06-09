@@ -44,10 +44,11 @@
 #include <commands/renameentity.h>
 #include <commands/movetypetootherscope.h>
 
-#include "enums.h"
 #include "classcomponentseditdelegate.h"
 #include "signaturemaker.h"
+#include "editmethoddialog.h"
 
+#include "enums.h"
 #include "constants.cpp"
 
 namespace gui {
@@ -141,13 +142,13 @@ namespace gui {
     EditEntityDialog::EditEntityDialog(QWidget *parent)
         : QDialog(parent)
         , ui(new Ui::EditEntityDialog)
+        , m_EditMethodDialog(new EditMethodDialog(this))
         , m_ComponentsModel(std::make_unique<models::ClassComponentsModel>(nullptr))
     {
         ui->setupUi(this);
 
         for(auto &&pair : names)
             ui->cbType->addItem(pair.first, QVariant::fromValue(pair.second));
-
         for (auto &&p : componentsNames)
             itemByName(p.first, ui->lstMembers)->setData(int(ComponentCustomRoles::Single), p.second);
         for (auto &&p : display)
@@ -328,7 +329,16 @@ namespace gui {
      */
     void EditEntityDialog::onEditComponentClicked(const QModelIndex &index)
     {
-        Q_UNUSED(index);
+        // TODO: cover other components (fields, enum elements and properties)
+        if (m_ComponentsModel->display() == models::DisplayPart::Methods) {
+            auto data = index.data(models::ClassComponentsModel::InternalData);
+
+            Q_ASSERT(data.isValid());
+            Q_ASSERT(data.canConvert<entity::SharedMethod>());
+
+            m_EditMethodDialog->setCurrentMethod(data.value<entity::SharedMethod>());
+            m_EditMethodDialog->show(); // NOTE: maybe use exec to handle result
+        }
     }
 
     /**

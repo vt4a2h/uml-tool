@@ -25,6 +25,10 @@
 
 namespace gui {
 
+    /**
+     * @brief EditMethodDialog::EditMethodDialog
+     * @param parent
+     */
     EditMethodDialog::EditMethodDialog(QWidget *parent)
         : QDialog(parent)
         , ui(new Ui::EditMethodDialog)
@@ -32,8 +36,47 @@ namespace gui {
         ui->setupUi(this);
     }
 
+    /**
+     * @brief EditMethodDialog::~EditMethodDialog
+     */
     EditMethodDialog::~EditMethodDialog()
     {
+    }
+
+    /**
+     * @brief EditMethodDialog::currentMethod
+     * @return
+     */
+    entity::SharedMethod EditMethodDialog::currentMethod() const
+    {
+        return m_CurrentMethod;
+    }
+
+    /**
+     * @brief EditMethodDialog::setCurrentMethod
+     * @param currentMethod
+     */
+    void EditMethodDialog::setCurrentMethod(const entity::SharedMethod &currentMethod)
+    {
+        m_CurrentMethod = currentMethod;
+    }
+
+    /**
+     * @brief EditMethodDialog::closeEvent
+     * @param ev
+     */
+    void EditMethodDialog::closeEvent(QCloseEvent *ev)
+    {
+        clear();
+        QDialog::closeEvent(ev);
+    }
+
+    /**
+     * @brief EditMethodDialog::clear
+     */
+    void EditMethodDialog::clear()
+    {
+        // clear exists data
     }
 
 } // namespace gui

@@ -24,6 +24,8 @@
 
 #include <QDialog>
 
+#include <entity/entity_types.hpp>
+
 namespace gui {
 
     namespace Ui {
@@ -39,8 +41,17 @@ namespace gui {
         explicit EditMethodDialog(QWidget *parent = 0);
         ~EditMethodDialog();
 
+        entity::SharedMethod currentMethod() const;
+        void setCurrentMethod(const entity::SharedMethod &currentMethod);
+
+    protected:
+        void closeEvent(QCloseEvent *ev) override;
+
     private:
+        void clear();
+
         QScopedPointer<Ui::EditMethodDialog> ui;
+        entity::SharedMethod m_CurrentMethod;
     };
 
 

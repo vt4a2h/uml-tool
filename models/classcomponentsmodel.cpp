@@ -127,6 +127,7 @@ namespace models {
     QVariant ClassComponentsModel::data(const QModelIndex &index, int role) const
     {
         Q_ASSERT(m_SignatureMaker);
+        // TODO: use maps of lambdas instead
 
         if (role == Qt::DisplayRole && m_Components) {
             if (index.column() == 0) {
@@ -146,6 +147,25 @@ namespace models {
                     case DisplayPart::Invalid:
                         return tr("Invalid display value");
                 }
+            }
+        }
+
+        if (role == InternalData && m_Components) {
+            switch (m_display) {
+                case DisplayPart::Methods:
+                    return QVariant::fromValue(m_Components->methods()[index.row()]);
+
+                case DisplayPart::Fields:
+                    return QVariant::fromValue(m_Components->fields()[index.row()]);
+
+                case DisplayPart::Elements:
+                    return QVariant::fromValue(m_Components->variables()[index.row()]);
+
+                case DisplayPart::Properties:
+                    return QVariant(); // TODO: implement
+
+                case DisplayPart::Invalid:
+                    return QVariant();
             }
         }
 

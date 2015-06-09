@@ -86,3 +86,5 @@ namespace entity {
     };
 
 } // namespace entity
+
+Q_DECLARE_METATYPE(entity::Variable)

@@ -50,6 +50,11 @@ namespace models {
             Buttons,        ///< Buttons
         };
 
+        /// The CustomRoles enum
+        enum CustomRoles {
+            InternalData = 0x0100, ///< InternalData
+        };
+
     public:
         ClassComponentsModel(const entity::SharedComponents &components, QObject *parent = nullptr);
         void setSignatureMaker(gui::UniqueSignatureMaker &&maker);
