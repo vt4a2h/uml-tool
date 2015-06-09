@@ -33,7 +33,7 @@
 #include <entity/classmethod.h> // TODO: remove
 
 #include <models/applicationmodel.h>
-#include <models/classcomponentsmodel.h>
+#include <models/componentsmodel.h>
 
 #include <project/project.h>
 
@@ -54,6 +54,11 @@
 namespace gui {
 
     namespace {
+        const QString newFieldName   = "newField"  ;
+        const QString newMethodName  = "newMethod" ;
+        const QString newElementName = "newElement";
+
+
         const QVector<QPair<QString, size_t>> names =
             {
                 { EditEntityDialog::tr("Type"), entity::Type::staticHashType() },
@@ -94,6 +99,26 @@ namespace gui {
                 { EditEntityDialog::tr("Methods")   , models::DisplayPart::Methods    },
                 { EditEntityDialog::tr("Fields")    , models::DisplayPart::Fields     },
                 { EditEntityDialog::tr("Elements")  , models::DisplayPart::Elements   },
+            };
+
+        const QMap<models::DisplayPart, std::function<void(const entity::SharedType &type)>> newComponentsMakers =
+            {
+                { models::DisplayPart::Methods,
+                  [](const entity::SharedType &type){
+                      std::static_pointer_cast<entity::Class>(type)->makeMethod(newMethodName); } },
+
+                { models::DisplayPart::Fields,
+                  [](const entity::SharedType &type){
+                      if (type->hashType() == entity::Class::staticHashType())
+                          std::static_pointer_cast<entity::Class>(type)->addField(newFieldName,STUB_ID);
+                      else if (type->hashType() == entity::Union::staticHashType())
+                          std::static_pointer_cast<entity::Union>(type)->addField(newFieldName, STUB_ID); } },
+
+                { models::DisplayPart::Elements,
+                  [](const entity::SharedType &type){
+                      std::static_pointer_cast<entity::Enum>(type)->addVariable(newElementName); } },
+
+                { models::DisplayPart::Properties, [](const entity::SharedType &type){ Q_UNUSED(type); /*implement*/ } },
             };
 
         enum class ComponentCustomRoles : int {
@@ -143,7 +168,7 @@ namespace gui {
         : QDialog(parent)
         , ui(new Ui::EditEntityDialog)
         , m_EditMethodDialog(new EditMethodDialog(this))
-        , m_ComponentsModel(std::make_unique<models::ClassComponentsModel>(nullptr))
+        , m_ComponentsModel(std::make_unique<models::ComponentsModel>(nullptr))
     {
         ui->setupUi(this);
 
@@ -163,21 +188,22 @@ namespace gui {
                 this, &EditEntityDialog::onEditComponentClicked);
         connect(delegat, &ClassComponentsEditDelegate::deleteButtonClicked,
                 this, &EditEntityDialog::onDeleteComponentClicked);
-        ui->viewMembers->setItemDelegateForColumn(models::ClassComponentsModel::Buttons, delegat);
-        connect(m_ComponentsModel.get(), &models::ClassComponentsModel::showButtonsForIndex,
+        ui->viewMembers->setItemDelegateForColumn(models::ComponentsModel::Buttons, delegat);
+        connect(m_ComponentsModel.get(), &models::ComponentsModel::showButtonsForIndex,
                 [view = ui->viewMembers](auto index) {
                     Q_ASSERT(index.isValid());
                     view->openPersistentEditor(index);
                 });
 
         QHeaderView * header = ui->viewMembers->horizontalHeader();
-        header->setSectionResizeMode(models::ClassComponentsModel::ShortSignature, QHeaderView::Stretch);
-        header->setSectionResizeMode(models::ClassComponentsModel::Buttons, QHeaderView::Fixed);
-        ui->viewMembers->setColumnWidth(models::ClassComponentsModel::Buttons, delegat->size().width());
+        header->setSectionResizeMode(models::ComponentsModel::ShortSignature, QHeaderView::Stretch);
+        header->setSectionResizeMode(models::ComponentsModel::Buttons, QHeaderView::Fixed);
+        ui->viewMembers->setColumnWidth(models::ComponentsModel::Buttons, delegat->size().width());
 
         connect(ui->pbAccept, &QPushButton::clicked, this, &EditEntityDialog::onAccepted);
         connect(ui->pbReject, &QPushButton::clicked, this, &EditEntityDialog::onRejected);
         connect(ui->pbCreateScope, &QPushButton::clicked, this, &EditEntityDialog::needNewScope);
+        connect(ui->pbNewComponent, &QPushButton::clicked, this, &EditEntityDialog::onNewComponentClicked);
         connect(ui->lstMembers, &QListWidget::currentItemChanged, this, &EditEntityDialog::onCurrentItemChange);
     }
 
@@ -308,7 +334,7 @@ namespace gui {
      */
     void EditEntityDialog::onNewComponentClicked()
     {
-        Q_ASSERT(m_Type);
+        newComponentsMakers[m_ComponentsModel->display()](m_Type);
     }
 
     /**
@@ -331,7 +357,7 @@ namespace gui {
     {
         // TODO: cover other components (fields, enum elements and properties)
         if (m_ComponentsModel->display() == models::DisplayPart::Methods) {
-            auto data = index.data(models::ClassComponentsModel::InternalData);
+            auto data = index.data(models::ComponentsModel::InternalData);
 
             Q_ASSERT(data.isValid());
             Q_ASSERT(data.canConvert<entity::SharedMethod>());

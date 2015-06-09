@@ -55,10 +55,10 @@ SOURCES += \
     commands/renameentity.cpp \
     commands/movetypetootherscope.cpp \
     gui/scenefilter.cpp \
-    models/classcomponentsmodel.cpp \
     gui/classcomponentseditdelegate.cpp \
     gui/signaturemaker.cpp \
-    gui/editmethoddialog.cpp
+    gui/editmethoddialog.cpp \
+    models/componentsmodel.cpp
 
 HEADERS += \
     enums.h \
@@ -121,10 +121,10 @@ HEADERS += \
     models/models_types.hpp \
     commands/commands_types.hpp \
     gui/scenefilter.h \
-    models/classcomponentsmodel.h \
     gui/classcomponentseditdelegate.h \
     gui/signaturemaker.h \
-    gui/editmethoddialog.h
+    gui/editmethoddialog.h \
+    models/componentsmodel.h
 
 FORMS += \
     gui/mainwindow.ui \

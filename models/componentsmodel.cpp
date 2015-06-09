@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "classcomponentsmodel.h"
+#include "componentsmodel.h"
 
 #include <type_traits>
 
@@ -63,7 +63,7 @@ namespace models {
      * @brief ClassComponentsModel::ClassComponentsModel
      * @param parent
      */
-    ClassComponentsModel::ClassComponentsModel(const entity::SharedComponents &components, QObject *parent)
+    ComponentsModel::ComponentsModel(const entity::SharedComponents &components, QObject *parent)
         : QAbstractTableModel(parent)
         , m_Components(components)
     {
@@ -73,7 +73,7 @@ namespace models {
      * @brief ClassComponentsModel::setSignatureMaker
      * @param maker
      */
-    void ClassComponentsModel::setSignatureMaker(gui::UniqueSignatureMaker &&maker)
+    void ComponentsModel::setSignatureMaker(gui::UniqueSignatureMaker &&maker)
     {
         m_SignatureMaker = std::move(maker);
     }
@@ -81,7 +81,7 @@ namespace models {
     /**
      * @brief ClassComponentsModel::clear
      */
-    void ClassComponentsModel::clear()
+    void ComponentsModel::clear()
     {
         beginResetModel();
         m_Components.reset();
@@ -91,7 +91,7 @@ namespace models {
     /**
      * @brief ClassComponentsModel::~ClassComponentsModel
      */
-    ClassComponentsModel::~ClassComponentsModel()
+    ComponentsModel::~ComponentsModel()
     {
 
     }
@@ -101,7 +101,7 @@ namespace models {
      * @param parent
      * @return
      */
-    int ClassComponentsModel::rowCount(const QModelIndex &parent) const
+    int ComponentsModel::rowCount(const QModelIndex &parent) const
     {
         Q_UNUSED(parent);
         return m_Components ? count(m_Components, m_display) : 0;
@@ -112,7 +112,7 @@ namespace models {
      * @param parent
      * @return
      */
-    int ClassComponentsModel::columnCount(const QModelIndex &parent) const
+    int ComponentsModel::columnCount(const QModelIndex &parent) const
     {
         Q_UNUSED(parent);
         return colCount;
@@ -124,7 +124,7 @@ namespace models {
      * @param role
      * @return
      */
-    QVariant ClassComponentsModel::data(const QModelIndex &index, int role) const
+    QVariant ComponentsModel::data(const QModelIndex &index, int role) const
     {
         Q_ASSERT(m_SignatureMaker);
         // TODO: use maps of lambdas instead
@@ -177,7 +177,7 @@ namespace models {
      * @param index
      * @return
      */
-    Qt::ItemFlags ClassComponentsModel::flags(const QModelIndex &index) const
+    Qt::ItemFlags ComponentsModel::flags(const QModelIndex &index) const
     {
         Qt::ItemFlags flags = Qt::ItemIsEnabled;
 
@@ -191,7 +191,7 @@ namespace models {
      * @brief ClassComponentsModel::components
      * @return
      */
-    entity::SharedComponents ClassComponentsModel::components() const
+    entity::SharedComponents ComponentsModel::components() const
     {
         return m_Components;
     }
@@ -200,7 +200,7 @@ namespace models {
      * @brief ClassComponentsModel::setComponents
      * @param components
      */
-    void ClassComponentsModel::setComponents(const entity::SharedComponents &components)
+    void ComponentsModel::setComponents(const entity::SharedComponents &components)
     {
         beginResetModel();
         m_Components = components;
@@ -214,7 +214,7 @@ namespace models {
      * @brief ClassComponentsModel::display
      * @return
      */
-    DisplayPart ClassComponentsModel::display() const
+    DisplayPart ComponentsModel::display() const
     {
         return m_display;
     }
@@ -223,7 +223,7 @@ namespace models {
      * @brief ClassComponentsModel::setDisplay
      * @param display
      */
-    void ClassComponentsModel::setDisplay(const DisplayPart &display)
+    void ComponentsModel::setDisplay(const DisplayPart &display)
     {
         if (display != m_display) {
             beginResetModel();

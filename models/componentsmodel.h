@@ -39,7 +39,7 @@ namespace models {
     };
 
     /// The ClassComponentsModel class
-    class ClassComponentsModel : public QAbstractTableModel
+    class ComponentsModel : public QAbstractTableModel
     {
         Q_OBJECT
 
@@ -56,11 +56,11 @@ namespace models {
         };
 
     public:
-        ClassComponentsModel(const entity::SharedComponents &components, QObject *parent = nullptr);
+        ComponentsModel(const entity::SharedComponents &components, QObject *parent = nullptr);
         void setSignatureMaker(gui::UniqueSignatureMaker &&maker);
         void clear();
 
-        ~ClassComponentsModel();
+        ~ComponentsModel();
 
     public: // QAbstractItemModel implementation
         int rowCount(const QModelIndex &parent) const;
