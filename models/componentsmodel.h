@@ -61,6 +61,9 @@ namespace models {
         void clear();
 
         entity::SharedMethod addMethod();
+        bool removeMethod(const entity::SharedMethod &method);
+        bool removeMethod(const QModelIndex &index);
+
         void addField();
         void addElement();
         void addProperty();

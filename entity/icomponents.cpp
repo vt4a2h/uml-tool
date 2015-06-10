@@ -42,6 +42,17 @@ namespace entity {
     }
 
     /**
+     * @brief IComponents::removeMethod
+     * @param method
+     * @return
+     */
+    bool IComponents::removeMethod(const SharedMethod &method)
+    {
+        Q_UNUSED(method);
+        return false;
+    }
+
+    /**
      * @brief IComponents::methods
      * @return
      */

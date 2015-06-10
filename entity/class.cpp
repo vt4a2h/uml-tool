@@ -244,9 +244,9 @@ namespace entity {
      * @brief Class::removeMethod
      * @param method
      */
-    void Class::removeMethod(const SharedMethod &method)
+    bool Class::removeMethod(const SharedMethod &method)
     {
-        m_Methods.removeOne(method);
+        return m_Methods.removeOne(method);
     }
 
     /**

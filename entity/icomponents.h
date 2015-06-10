@@ -33,6 +33,7 @@ namespace entity {
         virtual ~IComponents();
 
         virtual entity::SharedMethod addNewMethod();
+        virtual bool removeMethod(const entity::SharedMethod &method);
         virtual MethodsList methods() const;
 
         virtual FieldsList fields() const;

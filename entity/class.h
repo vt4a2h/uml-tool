@@ -67,7 +67,6 @@ namespace entity {
         MethodsList getMethod(const QString &name);
         bool containsMethod(const QString &name);
         void removeMethods(const QString &name);
-        void removeMethod(const SharedMethod &method);
         bool anyMethods() const;
 
         bool containsMethods(Section section) const;
@@ -92,6 +91,7 @@ namespace entity {
         bool isEqual(const Class &rhs) const;
 
     public: // IComponent omplementation
+        bool removeMethod(const SharedMethod &method) override;
         entity::SharedMethod addNewMethod() override;
         MethodsList methods() const override;
         FieldsList fields() const override;

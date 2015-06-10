@@ -368,7 +368,7 @@ namespace gui {
      */
     void EditEntityDialog::onDeleteComponentClicked(const QModelIndex &index)
     {
-        Q_UNUSED(index);
+        m_ComponentsModel->removeMethod(index); // TODO: cover other entities
     }
 
     /**

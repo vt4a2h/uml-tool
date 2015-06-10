@@ -104,6 +104,33 @@ namespace models {
     }
 
     /**
+     * @brief ComponentsModel::removeMethod
+     * @param method
+     * @return
+     */
+    bool ComponentsModel::removeMethod(const entity::SharedMethod &method)
+    {
+        return removeMethod(index(m_Components->methods().indexOf(method), 0));
+    }
+
+    /**
+     * @brief ComponentsModel::removeMethod
+     * @param index
+     * @return
+     */
+    bool ComponentsModel::removeMethod(const QModelIndex &index)
+    {
+        if (!index.isValid())
+            return false;
+
+        beginRemoveRows(QModelIndex(), index.row(), index.row());
+        bool result = m_Components->removeMethod(m_Components->methods()[index.row()]);
+        endRemoveRows();
+
+        return result;
+    }
+
+    /**
      * @brief ComponentsModel::addField
      */
     void ComponentsModel::addField()
