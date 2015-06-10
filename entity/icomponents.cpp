@@ -34,6 +34,14 @@ namespace entity {
     }
 
     /**
+     * @brief IComponents::addNewMethod
+     */
+    SharedMethod IComponents::addNewMethod()
+    {
+        return entity::SharedMethod();
+    }
+
+    /**
      * @brief IComponents::methods
      * @return
      */

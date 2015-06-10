@@ -32,8 +32,11 @@ namespace entity {
     public:
         virtual ~IComponents();
 
+        virtual entity::SharedMethod addNewMethod();
         virtual MethodsList methods() const;
+
         virtual FieldsList fields() const;
+
         virtual VariablesList variables() const;
     };
 

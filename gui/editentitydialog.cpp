@@ -101,24 +101,19 @@ namespace gui {
                 { EditEntityDialog::tr("Elements")  , models::DisplayPart::Elements   },
             };
 
-        const QMap<models::DisplayPart, std::function<void(const entity::SharedType &type)>> newComponentsMakers =
+        const QMap<models::DisplayPart, std::function<void(const models::UniqueClassComponentsModel &model)>> newComponentsMakers =
             {
                 { models::DisplayPart::Methods,
-                  [](const entity::SharedType &type){
-                      std::static_pointer_cast<entity::Class>(type)->makeMethod(newMethodName); } },
+                  [](const models::UniqueClassComponentsModel &model){ model->addMethod(); } },
 
                 { models::DisplayPart::Fields,
-                  [](const entity::SharedType &type){
-                      if (type->hashType() == entity::Class::staticHashType())
-                          std::static_pointer_cast<entity::Class>(type)->addField(newFieldName,STUB_ID);
-                      else if (type->hashType() == entity::Union::staticHashType())
-                          std::static_pointer_cast<entity::Union>(type)->addField(newFieldName, STUB_ID); } },
+                  [](const models::UniqueClassComponentsModel &model){ model->addField(); } },
 
                 { models::DisplayPart::Elements,
-                  [](const entity::SharedType &type){
-                      std::static_pointer_cast<entity::Enum>(type)->addVariable(newElementName); } },
+                  [](const models::UniqueClassComponentsModel &model){ model->addElement(); } },
 
-                { models::DisplayPart::Properties, [](const entity::SharedType &type){ Q_UNUSED(type); /*implement*/ } },
+                { models::DisplayPart::Properties,
+                  [](const models::UniqueClassComponentsModel &model){ model->addProperty(); } },
             };
 
         enum class ComponentCustomRoles : int {
@@ -334,7 +329,7 @@ namespace gui {
      */
     void EditEntityDialog::onNewComponentClicked()
     {
-        newComponentsMakers[m_ComponentsModel->display()](m_Type);
+        newComponentsMakers[m_ComponentsModel->display()](m_ComponentsModel);
     }
 
     /**

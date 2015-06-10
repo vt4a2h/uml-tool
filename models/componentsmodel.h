@@ -60,6 +60,11 @@ namespace models {
         void setSignatureMaker(gui::UniqueSignatureMaker &&maker);
         void clear();
 
+        entity::SharedMethod addMethod();
+        void addField();
+        void addElement();
+        void addProperty();
+
         ~ComponentsModel();
 
     public: // QAbstractItemModel implementation

@@ -89,6 +89,45 @@ namespace models {
     }
 
     /**
+     * @brief ComponentsModel::addMethod
+     */
+    entity::SharedMethod ComponentsModel::addMethod()
+    {
+        int count = m_Components->methods().count();
+        beginInsertRows(QModelIndex(), count, count);
+        auto newMethod =  m_Components->addNewMethod();
+        endInsertRows();
+
+        showButtonsForIndex(index(count, 1));
+
+        return newMethod;
+    }
+
+    /**
+     * @brief ComponentsModel::addField
+     */
+    void ComponentsModel::addField()
+    {
+        // TODO: implemet
+    }
+
+    /**
+     * @brief ComponentsModel::addElement
+     */
+    void ComponentsModel::addElement()
+    {
+        // TODO: implemet
+    }
+
+    /**
+     * @brief ComponentsModel::addProperty
+     */
+    void ComponentsModel::addProperty()
+    {
+        // TODO: implemet
+    }
+
+    /**
      * @brief ClassComponentsModel::~ClassComponentsModel
      */
     ComponentsModel::~ComponentsModel()

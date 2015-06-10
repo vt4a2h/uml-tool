@@ -38,6 +38,10 @@
 
 #include <utility/helpfunctions.h>
 
+namespace {
+    const QString newMethodName = entity::Class::tr("newMethod");
+}
+
 namespace entity {
 
     /**
@@ -580,6 +584,15 @@ namespace entity {
     bool Class::isEqual(const Class &rhs) const
     {
         return *this == rhs;
+    }
+
+    /**
+     * @brief Class::addNewMethod
+     * @return
+     */
+    SharedMethod Class::addNewMethod()
+    {
+        return makeMethod(newMethodName);
     }
 
     /**

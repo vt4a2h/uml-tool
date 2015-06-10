@@ -92,6 +92,7 @@ namespace entity {
         bool isEqual(const Class &rhs) const;
 
     public: // IComponent omplementation
+        entity::SharedMethod addNewMethod() override;
         MethodsList methods() const override;
         FieldsList fields() const override;
 
