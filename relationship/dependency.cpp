@@ -71,7 +71,7 @@ namespace relationship {
      */
     void Dependency::make()
     {
-        m_TailClass->addMethod(m_Method);
+        m_TailClass->addExistsMethod(m_Method);
     }
 
     /**

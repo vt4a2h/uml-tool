@@ -196,16 +196,6 @@ namespace entity {
     }
 
     /**
-     * @brief Class::addMethod
-     * @param method
-     */
-    void Class::addMethod(SharedMethod method)
-    {
-        method->setScopeId(scopeId());
-        m_Methods << method;
-    }
-
-    /**
      * @brief Class::getMethod
      * @param name
      * @return
@@ -244,9 +234,11 @@ namespace entity {
      * @brief Class::removeMethod
      * @param method
      */
-    bool Class::removeMethod(const SharedMethod &method)
+    int Class::removeMethod(const SharedMethod &method)
     {
-        return m_Methods.removeOne(method);
+        int pos = m_Methods.indexOf(method);
+        m_Methods.removeOne(method);
+        return pos;
     }
 
     /**
@@ -593,6 +585,19 @@ namespace entity {
     SharedMethod Class::addNewMethod()
     {
         return makeMethod(newMethodName);
+    }
+
+    /**
+     * @brief Class::addExistsMethod
+     * @param method
+     */
+    void Class::addExistsMethod(const SharedMethod &method, int pos)
+    {
+        method->setScopeId(scopeId());
+        if (pos == -1)
+            m_Methods << method;
+        else
+            m_Methods.insert(pos, method);
     }
 
     /**

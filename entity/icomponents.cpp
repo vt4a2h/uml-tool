@@ -42,14 +42,24 @@ namespace entity {
     }
 
     /**
+     * @brief IComponents::addExistsMethod
+     * @param method
+     */
+    void IComponents::addExistsMethod(const SharedMethod &method, int pos)
+    {
+        Q_UNUSED(method);
+        Q_UNUSED(pos);
+    }
+
+    /**
      * @brief IComponents::removeMethod
      * @param method
      * @return
      */
-    bool IComponents::removeMethod(const SharedMethod &method)
+    int IComponents::removeMethod(const SharedMethod &method)
     {
         Q_UNUSED(method);
-        return false;
+        return -1;
     }
 
     /**

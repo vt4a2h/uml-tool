@@ -63,7 +63,7 @@ namespace gui {
     public:
         Q_DISABLE_COPY(MainWindow)
 
-        explicit MainWindow(const models::SharedApplicationModal &applicationModel,
+        explicit MainWindow(const models::SharedApplicationModel &applicationModel,
                             QWidget *parent = 0);
         ~MainWindow();
 
@@ -125,7 +125,7 @@ namespace gui {
         NewProject *m_NewProject;
         AddScope *m_AddScope;
 
-        models::SharedApplicationModal m_ApplicationModel;
+        models::SharedApplicationModel m_ApplicationModel;
     };
 
 } // namespace gui

@@ -35,8 +35,9 @@ namespace models {
     using ChildItems = QList<BasicTreeItem*>;
 
     class ApplicationModel;
-    using SharedApplicationModal = std::shared_ptr<ApplicationModel>;
+    using SharedApplicationModel = std::shared_ptr<ApplicationModel>;
 
     class ComponentsModel;
     using UniqueClassComponentsModel = std::unique_ptr<ComponentsModel>;
+    using SharedClassComponentsModel = std::shared_ptr<ComponentsModel>;
 }

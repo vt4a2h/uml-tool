@@ -38,7 +38,7 @@ namespace gui {
 
     public:
         SignatureMaker();
-        SignatureMaker(const models::SharedApplicationModal &model, const project::SharedProject &project,
+        SignatureMaker(const models::SharedApplicationModel &model, const project::SharedProject &project,
                        const entity::SharedScope &scope, const entity::SharedType &type);
 
         ~SignatureMaker();
@@ -54,14 +54,14 @@ namespace gui {
         project::SharedProject project() const;
         void setProject(const project::SharedProject &project);
 
-        models::SharedApplicationModal applicationModel() const;
-        void setApplicationModel(const models::SharedApplicationModal &applicationModel);
+        models::SharedApplicationModel applicationModel() const;
+        void setApplicationModel(const models::SharedApplicationModel &applicationModel);
 
     private:
         entity::SharedType  m_Type;
         entity::SharedScope m_Scope;
         project::SharedProject m_Project;
-        models::SharedApplicationModal m_ApplicationModel;
+        models::SharedApplicationModel m_ApplicationModel;
         translator::UniqueTranslator m_Translator;
     };
 

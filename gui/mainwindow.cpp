@@ -102,7 +102,7 @@ namespace gui {
      * @brief MainWindow::MainWindow
      * @param parent
      */
-    MainWindow::MainWindow(const models::SharedApplicationModal &applicationModel, QWidget *parent)
+    MainWindow::MainWindow(const models::SharedApplicationModel &applicationModel, QWidget *parent)
         : QMainWindow(parent)
         , ui(new Ui::MainWindow)
         , m_ProjectTreeMenu(new QMenu(this))

@@ -23,6 +23,8 @@
 #include "editentitydialog.h"
 #include "ui_editentitydialog.h"
 
+#include <QMessageBox>
+
 #include <entity/type.h>
 #include <entity/scope.h>
 #include <entity/enum.h>
@@ -43,6 +45,8 @@
 
 #include <commands/renameentity.h>
 #include <commands/movetypetootherscope.h>
+#include <commands/addcomponentscommands.h>
+#include <commands/removecomponentscommands.h>
 
 #include "classcomponentseditdelegate.h"
 #include "signaturemaker.h"
@@ -101,19 +105,22 @@ namespace gui {
                 { EditEntityDialog::tr("Elements")  , models::DisplayPart::Elements   },
             };
 
-        const QMap<models::DisplayPart, std::function<void(const models::UniqueClassComponentsModel &model)>> newComponentsMakers =
+        const QMap<models::DisplayPart, std::function<void(const models::SharedClassComponentsModel &model,
+                                                           QUndoStack * stack)>> newComponentsMakers =
             {
                 { models::DisplayPart::Methods,
-                  [](const models::UniqueClassComponentsModel &model){ model->addMethod(); } },
+                  [](const models::SharedClassComponentsModel &model, QUndoStack * stack){
+                      stack->push(new commands::AddMethod(model));
+                } },
 
                 { models::DisplayPart::Fields,
-                  [](const models::UniqueClassComponentsModel &model){ model->addField(); } },
+                  [](const models::SharedClassComponentsModel &model, QUndoStack * stack){ model->addField(); Q_UNUSED(stack);} },
 
                 { models::DisplayPart::Elements,
-                  [](const models::UniqueClassComponentsModel &model){ model->addElement(); } },
+                  [](const models::SharedClassComponentsModel &model, QUndoStack * stack){ model->addElement(); Q_UNUSED(stack); } },
 
                 { models::DisplayPart::Properties,
-                  [](const models::UniqueClassComponentsModel &model){ model->addProperty(); } },
+                  [](const models::SharedClassComponentsModel &model, QUndoStack * stack){ model->addProperty(); Q_UNUSED(stack); } },
             };
 
         enum class ComponentCustomRoles : int {
@@ -132,17 +139,10 @@ namespace gui {
 
         QListWidgetItem *itemByName(const QString &name, const QListWidget *wgt)
         {
-            QListWidgetItem *result = nullptr;
-            for (int i = 0; i < wgt->count(); ++i)
-            {
-                if (wgt->item(i)->text() == name) {
-                    result = wgt->item(i);
-                    break;
-                }
-            }
+            auto items = wgt->findItems(name, Qt::MatchFixedString);
+            Q_ASSERT(items.count() == 1);
 
-            Q_ASSERT(result);
-            return result;
+            return items.first();
         }
 
         void configure(const QScopedPointer<Ui::EditEntityDialog> &ui, const entity::SharedType &type)
@@ -163,7 +163,8 @@ namespace gui {
         : QDialog(parent)
         , ui(new Ui::EditEntityDialog)
         , m_EditMethodDialog(new EditMethodDialog(this))
-        , m_ComponentsModel(std::make_unique<models::ComponentsModel>(nullptr))
+        , m_CommandsStack(new QUndoStack(this))
+        , m_ComponentsModel(std::make_shared<models::ComponentsModel>(nullptr))
     {
         ui->setupUi(this);
 
@@ -200,6 +201,11 @@ namespace gui {
         connect(ui->pbCreateScope, &QPushButton::clicked, this, &EditEntityDialog::needNewScope);
         connect(ui->pbNewComponent, &QPushButton::clicked, this, &EditEntityDialog::onNewComponentClicked);
         connect(ui->lstMembers, &QListWidget::currentItemChanged, this, &EditEntityDialog::onCurrentItemChange);
+
+        connect(m_CommandsStack.data(), &QUndoStack::canRedoChanged, ui->tbRedo, &QToolButton::setEnabled);
+        connect(m_CommandsStack.data(), &QUndoStack::canUndoChanged, ui->tbUndo, &QToolButton::setEnabled);
+        connect(ui->tbRedo, &QToolButton::clicked, m_CommandsStack.data(), &QUndoStack::redo);
+        connect(ui->tbUndo, &QToolButton::clicked, m_CommandsStack.data(), &QUndoStack::undo);
     }
 
     /**
@@ -214,7 +220,7 @@ namespace gui {
      * @param model
      * @param id
      */
-    void EditEntityDialog::setData(const models::SharedApplicationModal &model, const entity::SharedType &type)
+    void EditEntityDialog::setData(const models::SharedApplicationModel &model, const entity::SharedType &type)
     {
         Q_ASSERT(model);
         Q_ASSERT(type);
@@ -329,7 +335,7 @@ namespace gui {
      */
     void EditEntityDialog::onNewComponentClicked()
     {
-        newComponentsMakers[m_ComponentsModel->display()](m_ComponentsModel);
+        newComponentsMakers[m_ComponentsModel->display()](m_ComponentsModel, m_CommandsStack.data());
     }
 
     /**
@@ -368,7 +374,16 @@ namespace gui {
      */
     void EditEntityDialog::onDeleteComponentClicked(const QModelIndex &index)
     {
-        m_ComponentsModel->removeMethod(index); // TODO: cover other entities
+        Q_ASSERT(index.isValid());
+        auto result = QMessageBox::question(this,
+                                            tr("Removing component"),
+                                            tr("Component will be removed.\n Are you sure that you like to remove it?"),
+                                            QMessageBox::Yes | QMessageBox::No);
+        if (result == QMessageBox::Yes) {
+            auto method = m_ComponentsModel->data(index, models::ComponentsModel::InternalData);
+            if (method.canConvert<entity::SharedMethod>())
+                m_CommandsStack->push(new commands::RemoveMethod(m_ComponentsModel, method.value<entity::SharedMethod>()));
+        }
     }
 
     /**
@@ -391,6 +406,9 @@ namespace gui {
 
         setButtonLabel(ui->pbNewComponent, ui->lstMembers->currentItem());
         configure(ui, m_Type);
+
+        ui->tbRedo->setEnabled(false);
+        ui->tbUndo->setEnabled(false);
     }
 
     /**
@@ -401,6 +419,7 @@ namespace gui {
         ui->leName->clear();
         ui->cbScopes->clear();
         m_ComponentsModel->clear();
+        m_CommandsStack->clear();
     }
 
     /**

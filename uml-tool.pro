@@ -58,7 +58,9 @@ SOURCES += \
     gui/classcomponentseditdelegate.cpp \
     gui/signaturemaker.cpp \
     gui/editmethoddialog.cpp \
-    models/componentsmodel.cpp
+    models/componentsmodel.cpp \
+    commands/removecomponentscommands.cpp \
+    commands/addcomponentscommands.cpp
 
 HEADERS += \
     enums.h \
@@ -124,7 +126,9 @@ HEADERS += \
     gui/classcomponentseditdelegate.h \
     gui/signaturemaker.h \
     gui/editmethoddialog.h \
-    models/componentsmodel.h
+    models/componentsmodel.h \
+    commands/removecomponentscommands.h \
+    commands/addcomponentscommands.h
 
 FORMS += \
     gui/mainwindow.ui \

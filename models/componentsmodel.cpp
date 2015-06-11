@@ -104,11 +104,25 @@ namespace models {
     }
 
     /**
+     * @brief ComponentsModel::addExistsMethod
+     * @param method
+     */
+    void ComponentsModel::addExistsMethod(const entity::SharedMethod &method, int pos)
+    {
+        int innerIndex = pos == -1 ? m_Components->methods().count() : pos;
+        beginInsertRows(QModelIndex(), innerIndex, innerIndex);
+        m_Components->addExistsMethod(method, innerIndex);
+        endInsertRows();
+
+        showButtonsForIndex(index(innerIndex, 1));
+    }
+
+    /**
      * @brief ComponentsModel::removeMethod
      * @param method
      * @return
      */
-    bool ComponentsModel::removeMethod(const entity::SharedMethod &method)
+    int ComponentsModel::removeMethod(const entity::SharedMethod &method)
     {
         return removeMethod(index(m_Components->methods().indexOf(method), 0));
     }
@@ -118,16 +132,16 @@ namespace models {
      * @param index
      * @return
      */
-    bool ComponentsModel::removeMethod(const QModelIndex &index)
+    int ComponentsModel::removeMethod(const QModelIndex &index)
     {
         if (!index.isValid())
             return false;
 
         beginRemoveRows(QModelIndex(), index.row(), index.row());
-        bool result = m_Components->removeMethod(m_Components->methods()[index.row()]);
+        int pos = m_Components->removeMethod(m_Components->methods()[index.row()]);
         endRemoveRows();
 
-        return result;
+        return pos;
     }
 
     /**

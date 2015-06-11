@@ -43,7 +43,7 @@ namespace entity {
     public:
         static const EntitiesFactory &get();
 
-        SharedClass makeClass(const models::SharedApplicationModal &model,
+        SharedClass makeClass(const models::SharedApplicationModel &model,
                               const QString &scopeID, QGraphicsScene &scene,
                               const QPointF &pos) const;
         // TODO: also add make which sill be based on entity::UserType and returns shared type

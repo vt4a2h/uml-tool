@@ -49,7 +49,7 @@ namespace gui {
         Q_OBJECT
 
     public:
-        explicit SceneFilter(const models::SharedApplicationModal &model,
+        explicit SceneFilter(const models::SharedApplicationModel &model,
                              QGraphicsScene *scene,
                              MainWindow *parentForm,
                              QObject *parent = 0);
@@ -67,7 +67,7 @@ namespace gui {
         std::unique_ptr<QMenu> m_Menu;
         std::unique_ptr<EditEntityDialog> m_EditDialog;
 
-        models::SharedApplicationModal m_ApplicationModel;
+        models::SharedApplicationModel m_ApplicationModel;
     };
 
 } // namespace gui

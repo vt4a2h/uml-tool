@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 03/11/2014.
+** Created 11/06/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,34 +20,31 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
 
-#include <QObject>
+#include "basecommand.h"
 
+#include <models/componentsmodel.h>
 #include <models/models_types.hpp>
-#include <gui/gui_types.hpp>
 
-/**
- * @brief namespace application
- */
-namespace application {
+namespace commands {
 
-    /**
-     * @brief The Application class
-     */
-    class Application : public QObject
+    /// The class AddMethod
+    class AddMethod : public BaseCommand
     {
-        Q_OBJECT
-
     public:
-        explicit Application(QObject *parent = nullptr);
-        ~Application();
+        AddMethod(const models::SharedClassComponentsModel &model, const entity::SharedMethod &method = nullptr,
+                  int pos = -1, QUndoCommand *parent = nullptr);
 
-        void run();
+        void redo() override;
+        void undo() override;
 
-        models::SharedApplicationModel m_ApplicationModel;
-        gui::UniqueMainWindow m_MainWindow;
+    private:
+        models::SharedClassComponentsModel m_Model;
+        entity::SharedComponents m_Components;
+        entity::SharedMethod m_Method;
+        int m_Pos;
     };
 
-} // namespace application
+} // namespace commands
+

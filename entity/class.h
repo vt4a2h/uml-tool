@@ -63,7 +63,6 @@ namespace entity {
         ParentsList parents() const;
 
         template <class T = ClassMethod> std::shared_ptr<T> makeMethod(const QString &name);
-        void addMethod(SharedMethod method);
         MethodsList getMethod(const QString &name);
         bool containsMethod(const QString &name);
         void removeMethods(const QString &name);
@@ -91,8 +90,9 @@ namespace entity {
         bool isEqual(const Class &rhs) const;
 
     public: // IComponent omplementation
-        bool removeMethod(const SharedMethod &method) override;
         entity::SharedMethod addNewMethod() override;
+        void addExistsMethod(const SharedMethod &method, int pos = -1) override;
+        int removeMethod(const SharedMethod &method) override;
         MethodsList methods() const override;
         FieldsList fields() const override;
 

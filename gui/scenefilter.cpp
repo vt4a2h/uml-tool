@@ -43,7 +43,7 @@ namespace gui {
      * @param parentForm
      * @param parent
      */
-    SceneFilter::SceneFilter(const models::SharedApplicationModal &model, QGraphicsScene *scene,
+    SceneFilter::SceneFilter(const models::SharedApplicationModel &model, QGraphicsScene *scene,
                              MainWindow *parentForm, QObject *parent)
         : QObject(parent)
         , m_Scene(scene)

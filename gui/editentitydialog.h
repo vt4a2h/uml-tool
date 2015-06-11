@@ -31,6 +31,7 @@
 #include <models/models_types.hpp>
 
 class QListWidgetItem;
+class QUndoStack;
 
 namespace gui
 {
@@ -53,7 +54,7 @@ namespace gui
         ~EditEntityDialog();
 
         // Call before show dialog
-        void setData(const models::SharedApplicationModal &model,
+        void setData(const models::SharedApplicationModel &model,
                      const entity::SharedType &type);
 
     signals:
@@ -82,14 +83,15 @@ namespace gui
 
         QScopedPointer<Ui::EditEntityDialog> ui;
         QScopedPointer<EditMethodDialog> m_EditMethodDialog;
+        QScopedPointer<QUndoStack> m_CommandsStack;
 
         entity::SharedType  m_Type;
         entity::SharedScope m_Scope;
 
         project::SharedProject m_Project;
 
-        models::SharedApplicationModal m_ApplicationModel;
-        models::UniqueClassComponentsModel m_ComponentsModel;
+        models::SharedApplicationModel m_ApplicationModel;
+        models::SharedClassComponentsModel m_ComponentsModel;
     };
 
 } // namespace gui

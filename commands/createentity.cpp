@@ -47,7 +47,7 @@ namespace commands {
      * @param pos
      * @param parent
      */
-    CreateEntity::CreateEntity(const models::SharedApplicationModal &model, const QString &scopeID,
+    CreateEntity::CreateEntity(const models::SharedApplicationModel &model, const QString &scopeID,
                                QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent)
         : BaseCommand(tr("Add type"), parent)
         , m_Model(model)

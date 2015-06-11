@@ -34,7 +34,7 @@ namespace commands {
     class MoveTypeToOtherScope : public BaseCommand
     {
     public:
-        MoveTypeToOtherScope(const entity::SharedType &type, const models::SharedApplicationModal &appModel,
+        MoveTypeToOtherScope(const entity::SharedType &type, const models::SharedApplicationModel &appModel,
                              const entity::SharedScope &srcScope, const entity::SharedScope &dstScope,
                              QUndoCommand *parent = nullptr);
 
@@ -47,7 +47,7 @@ namespace commands {
         entity::SharedScope m_SrcScope;
         entity::SharedScope m_DstScope;
 
-        models::SharedApplicationModal m_Model;
+        models::SharedApplicationModel m_Model;
     };
 
 } // namespace commands

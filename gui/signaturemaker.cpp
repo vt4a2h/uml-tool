@@ -48,7 +48,7 @@ namespace gui {
      * @param scope
      * @param type
      */
-    SignatureMaker::SignatureMaker(const models::SharedApplicationModal &model, const project::SharedProject &project,
+    SignatureMaker::SignatureMaker(const models::SharedApplicationModel &model, const project::SharedProject &project,
                                    const entity::SharedScope &scope, const entity::SharedType &type)
         : m_Type(type)
         , m_Scope(scope)
@@ -146,7 +146,7 @@ namespace gui {
      * @brief SignatureMaker::ApplicationModel
      * @return
      */
-    models::SharedApplicationModal SignatureMaker::applicationModel() const
+    models::SharedApplicationModel SignatureMaker::applicationModel() const
     {
         return m_ApplicationModel;
     }
@@ -155,7 +155,7 @@ namespace gui {
      * @brief SignatureMaker::setApplicationModel
      * @param applicationModel
      */
-    void SignatureMaker::setApplicationModel(const models::SharedApplicationModal &applicationModel)
+    void SignatureMaker::setApplicationModel(const models::SharedApplicationModel &applicationModel)
     {
         m_ApplicationModel = applicationModel;
     }

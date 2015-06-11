@@ -82,7 +82,7 @@ namespace entity {
      * @param scene
      * @return
      */
-    SharedClass EntitiesFactory::makeClass(const models::SharedApplicationModal &model,
+    SharedClass EntitiesFactory::makeClass(const models::SharedApplicationModel &model,
                                            const QString &scopeID, QGraphicsScene &scene,
                                            const QPointF &pos) const
     {

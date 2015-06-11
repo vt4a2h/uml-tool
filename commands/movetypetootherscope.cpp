@@ -38,7 +38,7 @@ namespace commands {
      * @param parent
      */
     MoveTypeToOtherScope::MoveTypeToOtherScope(const entity::SharedType &type,
-                                               const models::SharedApplicationModal &appModel,
+                                               const models::SharedApplicationModel &appModel,
                                                const entity::SharedScope &srcScope,
                                                const entity::SharedScope &dstScope,
                                                QUndoCommand *parent)

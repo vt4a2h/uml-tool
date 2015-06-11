@@ -146,11 +146,11 @@ namespace relationship {
         for (auto &&method : m_Methods) {
             m = std::make_shared<entity::ClassMethod>(*method.get());
             m->setRhsIdentificator(entity::PureVirtual);
-            head->addMethod(m);
+            head->addExistsMethod(m);
 
             m = std::make_shared<entity::ClassMethod>(*method.get());
             m->setRhsIdentificator(entity::Override);
-            m_TailClass->addMethod(m);
+            m_TailClass->addExistsMethod(m);
         }
     }
 
