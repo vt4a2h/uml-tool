@@ -22,6 +22,8 @@
 *****************************************************************************/
 #pragma once
 
+#include <functional>
+
 #include <QAbstractTableModel>
 
 #include <entity/entity_types.hpp>
@@ -65,7 +67,11 @@ namespace models {
         int removeMethod(const entity::SharedMethod &method);
         int removeMethod(const QModelIndex &index);
 
-        void addField();
+        entity::SharedField addField();
+        void addExistsField(const entity::SharedField &field, int pos = -1);
+        int removeField(const entity::SharedField &field);
+        int removeField(const QModelIndex &index);
+
         void addElement();
         void addProperty();
 
@@ -85,6 +91,22 @@ namespace models {
 
     signals:
         void showButtonsForIndex(const QModelIndex &index);
+
+    private:
+        template<class Component>
+        decltype(auto) add(const std::function<Component()> &componentMaker, int count)
+        {
+            beginInsertRows(QModelIndex(), count, count);
+            auto component = componentMaker();
+            endInsertRows();
+
+            showButtonsForIndex(index(count, 1));
+
+            return component;
+        }
+
+        void addExists(const std::function<void(int)> &inserter, int count, int pos);
+        int remove(const std::function<int(int)> &deleter, const QModelIndex &index);
 
     private:
         entity::SharedComponents m_Components;

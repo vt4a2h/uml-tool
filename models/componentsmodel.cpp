@@ -93,14 +93,7 @@ namespace models {
      */
     entity::SharedMethod ComponentsModel::addMethod()
     {
-        int count = m_Components->methods().count();
-        beginInsertRows(QModelIndex(), count, count);
-        auto newMethod =  m_Components->addNewMethod();
-        endInsertRows();
-
-        showButtonsForIndex(index(count, 1));
-
-        return newMethod;
+        return add<entity::SharedMethod>([this](){ return m_Components->addNewMethod(); }, m_Components->methods().count());
     }
 
     /**
@@ -109,12 +102,8 @@ namespace models {
      */
     void ComponentsModel::addExistsMethod(const entity::SharedMethod &method, int pos)
     {
-        int innerIndex = pos == -1 ? m_Components->methods().count() : pos;
-        beginInsertRows(QModelIndex(), innerIndex, innerIndex);
-        m_Components->addExistsMethod(method, innerIndex);
-        endInsertRows();
-
-        showButtonsForIndex(index(innerIndex, 1));
+        int count = m_Components->methods().count();
+        addExists([this, &method](int pos){ m_Components->addExistsMethod(method, pos); }, count, pos);
     }
 
     /**
@@ -134,22 +123,46 @@ namespace models {
      */
     int ComponentsModel::removeMethod(const QModelIndex &index)
     {
-        if (!index.isValid())
-            return false;
-
-        beginRemoveRows(QModelIndex(), index.row(), index.row());
-        int pos = m_Components->removeMethod(m_Components->methods()[index.row()]);
-        endRemoveRows();
-
-        return pos;
+        return remove([this](int pos){ return m_Components->removeMethod(m_Components->methods()[pos]); }, index);
     }
 
     /**
      * @brief ComponentsModel::addField
      */
-    void ComponentsModel::addField()
+    entity::SharedField ComponentsModel::addField()
     {
-        // TODO: implemet
+        return add<entity::SharedField>([this](){ return m_Components->addNewFiled(); }, m_Components->fields().count());
+    }
+
+    /**
+     * @brief ComponentsModel::addExistsField
+     * @param field
+     * @param pos
+     */
+    void ComponentsModel::addExistsField(const entity::SharedField &field, int pos)
+    {
+        int count = m_Components->fields().count();
+        addExists([this, &field](int pos){ m_Components->addExistsFiled(field, pos); }, count, pos);
+    }
+
+    /**
+     * @brief ComponentsModel::removeField
+     * @param field
+     * @return
+     */
+    int ComponentsModel::removeField(const entity::SharedField &field)
+    {
+        return removeField(index(m_Components->fields().indexOf(field), 0));
+    }
+
+    /**
+     * @brief ComponentsModel::removeField
+     * @param index
+     * @return
+     */
+    int ComponentsModel::removeField(const QModelIndex &index)
+    {
+        return remove([this](int pos){ return m_Components->removeField(m_Components->fields()[pos]); }, index);
     }
 
     /**
@@ -173,7 +186,6 @@ namespace models {
      */
     ComponentsModel::~ComponentsModel()
     {
-
     }
 
     /**
@@ -310,9 +322,43 @@ namespace models {
             m_display = display;
             endResetModel();
 
-            for (int i = 0; i < count(m_Components, m_display); ++i)
+            for (int i = 0, max = count(m_Components, m_display); i < max; ++i)
                 emit showButtonsForIndex(index(i, 1));
         }
+    }
+
+    /**
+     * @brief ComponentsModel::addExists
+     * @param inserter
+     * @param count
+     * @param pos
+     */
+    void ComponentsModel::addExists(const std::function<void (int)> &inserter, int count, int pos)
+    {
+        int innerIndex = pos == -1 ? count : pos;
+        beginInsertRows(QModelIndex(), innerIndex, innerIndex);
+        inserter(innerIndex);
+        endInsertRows();
+
+        showButtonsForIndex(index(innerIndex, 1));
+    }
+
+    /**
+     * @brief ComponentsModel::remove
+     * @param deleter
+     * @param index
+     * @return
+     */
+    int ComponentsModel::remove(const std::function<int(int)> &deleter, const QModelIndex &index)
+    {
+        if (!index.isValid())
+            return -1;
+
+        beginRemoveRows(QModelIndex(), index.row(), index.row());
+        int pos = deleter(index.row());
+        endRemoveRows();
+
+        return pos;
     }
 
 } // namespace models

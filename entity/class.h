@@ -94,6 +94,10 @@ namespace entity {
         void addExistsMethod(const SharedMethod &method, int pos = -1) override;
         int removeMethod(const SharedMethod &method) override;
         MethodsList methods() const override;
+
+        SharedField addNewFiled() override;
+        void addExistsFiled(const SharedField &field, int pos) override;
+        int removeField(const SharedField &field) override;
         FieldsList fields() const override;
 
     public: // BasicEntity implementation

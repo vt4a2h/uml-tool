@@ -35,6 +35,10 @@
 
 namespace entity {
 
+    namespace {
+        const QString newFiledName = Union::tr("newField");
+    }
+
     /**
      * @brief Union::Union
      */
@@ -259,6 +263,40 @@ namespace entity {
     bool Union::isEqual(const Union &rhs) const
     {
         return *this == rhs;
+    }
+
+    /**
+     * @brief Union::addNewFiled
+     * @return
+     */
+    SharedField Union::addNewFiled()
+    {
+        return addField(newFiledName, STUB_ID);
+    }
+
+    /**
+     * @brief Union::addExistsFiled
+     * @param field
+     * @param pos
+     */
+    void Union::addExistsFiled(const SharedField &field, int pos)
+    {
+        if (pos == -1)
+            m_Fields << field;
+        else
+            m_Fields.insert(pos, field);
+    }
+
+    /**
+     * @brief Union::removeField
+     * @param field
+     * @return
+     */
+    int Union::removeField(const SharedField &field)
+    {
+        int pos = m_Fields.indexOf(field);
+        m_Fields.removeOne(field);
+        return pos;
     }
 
     /**

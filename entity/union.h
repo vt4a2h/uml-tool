@@ -54,7 +54,10 @@ namespace entity {
 
         bool isEqual(const Union &rhs) const;
 
-    public: // IComponent omplementation
+    public: // IComponent implementation
+        SharedField addNewFiled() override;
+        void addExistsFiled(const SharedField &field, int pos = -1) override;
+        int removeField(const SharedField &field) override;
         FieldsList fields() const override;
 
     public: // BasicEntity implementation

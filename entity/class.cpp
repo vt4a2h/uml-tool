@@ -40,6 +40,7 @@
 
 namespace {
     const QString newMethodName = entity::Class::tr("newMethod");
+    const QString newFieldName  = entity::Class::tr("newField");
 }
 
 namespace entity {
@@ -248,6 +249,40 @@ namespace entity {
     MethodsList Class::methods() const
     {
         return m_Methods;
+    }
+
+    /**
+     * @brief Class::addNewFiled
+     * @return
+     */
+    SharedField Class::addNewFiled()
+    {
+        return addField(newFieldName, STUB_ID);
+    }
+
+    /**
+     * @brief Class::addExistsFiled
+     * @param field
+     * @param pos
+     */
+    void Class::addExistsFiled(const SharedField &field, int pos)
+    {
+        if (pos == -1)
+            m_Fields << field;
+        else
+            m_Fields.insert(pos, field);
+    }
+
+    /**
+     * @brief Class::removeField
+     * @param field
+     * @return
+     */
+    int Class::removeField(const SharedField &field)
+    {
+        int pos = m_Fields.indexOf(field);
+        m_Fields.removeOne(field);
+        return pos;
     }
 
     /**

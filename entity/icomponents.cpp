@@ -72,6 +72,37 @@ namespace entity {
     }
 
     /**
+     * @brief IComponents::addNewFiled
+     * @return
+     */
+    SharedField IComponents::addNewFiled()
+    {
+        return SharedField();
+    }
+
+    /**
+     * @brief IComponents::addExistsFiled
+     * @param field
+     * @param pos
+     */
+    void IComponents::addExistsFiled(const SharedField &field, int pos)
+    {
+        Q_UNUSED(field);
+        Q_UNUSED(pos);
+    }
+
+    /**
+     * @brief IComponents::removeField
+     * @param field
+     * @return
+     */
+    int IComponents::removeField(const SharedField &field)
+    {
+        Q_UNUSED(field);
+        return -1;
+    }
+
+    /**
      * @brief IComponents::fields
      * @return
      */
