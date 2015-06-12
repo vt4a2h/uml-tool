@@ -35,11 +35,7 @@ namespace commands {
      */
     RemoveMethod::RemoveMethod(const models::SharedClassComponentsModel &model, const entity::SharedMethod &method,
                                int pos, QUndoCommand *parent)
-        : BaseCommand(tr("Add new method"), parent)
-        , m_Model(model)
-        , m_Components(model ? model->components() : nullptr)
-        , m_Method(method)
-        , m_Pos(pos)
+        : RemoveComponentBaseCommand<entity::SharedMethod>(tr("Remove method"), model, method, pos, parent)
     {}
 
     /**
@@ -47,17 +43,7 @@ namespace commands {
      */
     void RemoveMethod::redo()
     {
-        entity::SharedComponents tmp;
-        if (m_Model->components() != m_Components)
-        {
-            tmp = m_Model->components();
-            m_Model->setComponents(m_Components);
-        }
-
-        m_Pos = m_Model->removeMethod(m_Method);
-
-        if (tmp)
-            m_Model->setComponents(tmp);
+        redoImpl([this](){ return m_Model->removeMethod(m_Component); });
     }
 
     /**
@@ -65,7 +51,35 @@ namespace commands {
      */
     void RemoveMethod::undo()
     {
-        AddMethod(m_Model, m_Method, m_Pos).redo();
+        AddMethod(m_Model, m_Component, m_Pos).redo();
+    }
+
+    /**
+     * @brief RemoveField::RemoveField
+     * @param model
+     * @param field
+     * @param pos
+     * @param parent
+     */
+    RemoveField::RemoveField(const models::SharedClassComponentsModel &model, const entity::SharedField &field, int pos,
+                             QUndoCommand *parent)
+        : RemoveComponentBaseCommand<entity::SharedField>(tr("Remove field"), model, field, pos, parent)
+    {}
+
+    /**
+     * @brief RemoveField::redo
+     */
+    void RemoveField::redo()
+    {
+        redoImpl([this](){ return m_Model->removeField(m_Component); });
+    }
+
+    /**
+     * @brief RemoveField::undo
+     */
+    void RemoveField::undo()
+    {
+        AddField(m_Model, m_Component, m_Pos).redo();
     }
 
 } // commands

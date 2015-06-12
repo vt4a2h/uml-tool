@@ -80,6 +80,7 @@ namespace gui
         void clear();
         void setType();
         void setScope();
+        void fillMaps() const;
 
         QScopedPointer<Ui::EditEntityDialog> ui;
         QScopedPointer<EditMethodDialog> m_EditMethodDialog;

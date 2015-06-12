@@ -22,6 +22,8 @@
 *****************************************************************************/
 #pragma once
 
+#include <functional>
+
 #include "basecommand.h"
 
 #include <models/componentsmodel.h>
@@ -29,8 +31,44 @@
 
 namespace commands {
 
-    /// The class RemoveMethod
-    class RemoveMethod : public BaseCommand
+    /// The RemoveComponentBaseCommand class
+    template<class Component>
+    class RemoveComponentBaseCommand : public BaseCommand
+    {
+    public:
+        RemoveComponentBaseCommand(const QString &name, const models::SharedClassComponentsModel &model,
+                                   const Component &component, int pos = -1, QUndoCommand *parent = nullptr)
+            : BaseCommand(name, parent)
+            , m_Model(model)
+            , m_Components(model ? model->components() : nullptr)
+            , m_Component(component)
+            , m_Pos(pos)
+        {}
+
+    protected:
+        void redoImpl(const std::function<int()> &deleter)
+        {
+            entity::SharedComponents tmp;
+            if (m_Model->components() != m_Components)
+            {
+                tmp = m_Model->components();
+                m_Model->setComponents(m_Components);
+            }
+
+            m_Pos = deleter();
+
+            if (tmp)
+                m_Model->setComponents(tmp);
+        }
+
+        models::SharedClassComponentsModel m_Model;
+        entity::SharedComponents m_Components;
+        Component m_Component;
+        int m_Pos;
+    };
+
+    /// The RemoveMethod class
+    class RemoveMethod : public RemoveComponentBaseCommand<entity::SharedMethod>
     {
     public:
         RemoveMethod(const models::SharedClassComponentsModel &model, const entity::SharedMethod &method, int pos = -1,
@@ -38,12 +76,17 @@ namespace commands {
 
         void redo() override;
         void undo() override;
+    };
 
-    private:
-        models::SharedClassComponentsModel m_Model;
-        entity::SharedComponents m_Components;
-        entity::SharedMethod m_Method;
-        int m_Pos;
+    /// The RemoveField class
+    class RemoveField : public RemoveComponentBaseCommand<entity::SharedField>
+    {
+    public:
+        RemoveField(const models::SharedClassComponentsModel &model, const entity::SharedField &field, int pos = -1,
+                     QUndoCommand *parent = nullptr);
+
+        void redo() override;
+        void undo() override;
     };
 
 } // namespace commands

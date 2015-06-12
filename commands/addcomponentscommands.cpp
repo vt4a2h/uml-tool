@@ -35,11 +35,7 @@ namespace commands {
      */
     AddMethod::AddMethod(const models::SharedClassComponentsModel &model, const entity::SharedMethod &method,
                          int pos, QUndoCommand *parent)
-        : BaseCommand(tr("Add new method"), parent)
-        , m_Model(model)
-        , m_Components(model ? model->components() : nullptr)
-        , m_Method(method)
-        , m_Pos(pos)
+        : AddComponentBaseCommand<entity::SharedMethod>(tr("Add new method"), model, method, pos, parent)
     {}
 
     /**
@@ -47,27 +43,7 @@ namespace commands {
      */
     void AddMethod::redo()
     {
-        if (m_Done) {
-            Q_ASSERT(m_Method);
-
-            entity::SharedComponents tmp;
-
-            if (m_Model->components() != m_Components)
-            {
-                tmp = m_Model->components();
-                m_Model->setComponents(m_Components);
-            }
-
-            m_Model->addExistsMethod(m_Method, m_Pos);
-
-            if (tmp)
-                m_Model->setComponents(tmp);
-        } else {
-            if (m_Method)
-                m_Model->addExistsMethod(m_Method, m_Pos);
-            else
-                m_Method = m_Model->addMethod();
-        }
+        redoImpl([this](){ m_Model->addExistsMethod(m_Component, m_Pos); }, [this](){ return m_Model->addMethod(); });
     }
 
     /**
@@ -75,7 +51,35 @@ namespace commands {
      */
     void AddMethod::undo()
     {
-        RemoveMethod(m_Model, m_Method).redo();
+        RemoveMethod(m_Model, m_Component).redo();
+    }
+
+    /**
+     * @brief AddField::AddField
+     * @param model
+     * @param field
+     * @param pos
+     * @param parent
+     */
+    AddField::AddField(const models::SharedClassComponentsModel &model, const entity::SharedField &field, int pos,
+                       QUndoCommand *parent)
+        : AddComponentBaseCommand<entity::SharedField>(tr("Add new field"), model, field, pos, parent)
+    {}
+
+    /**
+     * @brief AddField::redo
+     */
+    void AddField::redo()
+    {
+        redoImpl([this](){ m_Model->addExistsField(m_Component, m_Pos); }, [this](){ return m_Model->addField(); });
+    }
+
+    /**
+     * @brief AddField::undo
+     */
+    void AddField::undo()
+    {
+        RemoveField(m_Model, m_Component).redo();
     }
 
 } // namespace commands

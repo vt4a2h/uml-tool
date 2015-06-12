@@ -339,8 +339,6 @@ namespace entity {
     SharedField Class::addField(const QString &name, const QString &typeId, const QString &prefix, Section section)
     {
         auto field = std::make_shared<Field>(name, typeId, prefix, section);
-        if (containsField(name))
-            removeField(name);
         m_Fields.append(field);
 
         return field;

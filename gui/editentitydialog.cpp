@@ -106,7 +106,7 @@ namespace gui {
             };
 
         const QMap<models::DisplayPart, std::function<void(const models::SharedClassComponentsModel &model,
-                                                           QUndoStack * stack)>> newComponentsMakers =
+                                                           QUndoStack * stack)>> componentMakers =
             {
                 { models::DisplayPart::Methods,
                   [](const models::SharedClassComponentsModel &model, QUndoStack * stack){
@@ -114,7 +114,9 @@ namespace gui {
                 } },
 
                 { models::DisplayPart::Fields,
-                  [](const models::SharedClassComponentsModel &model, QUndoStack * stack){ model->addField(); Q_UNUSED(stack);} },
+                  [](const models::SharedClassComponentsModel &model, QUndoStack * stack){
+                      stack->push(new commands::AddField(model));
+                } },
 
                 { models::DisplayPart::Elements,
                   [](const models::SharedClassComponentsModel &model, QUndoStack * stack){ model->addElement(); Q_UNUSED(stack); } },
@@ -122,6 +124,8 @@ namespace gui {
                 { models::DisplayPart::Properties,
                   [](const models::SharedClassComponentsModel &model, QUndoStack * stack){ model->addProperty(); Q_UNUSED(stack); } },
             };
+
+        QMap<models::DisplayPart, std::function<void(const QModelIndex &index)>> componentDeleters;
 
         enum class ComponentCustomRoles : int {
             Single = 300,
@@ -152,6 +156,13 @@ namespace gui {
 
             for (auto &&name : componentsPreset[type->hashType()])
                 itemByName(name, ui->lstMembers)->setHidden(false);
+        }
+
+        template<class Command, class Component>
+        void addRemoveCommand(const models::SharedClassComponentsModel &model, const QModelIndex &index, QUndoStack * stack)
+        {
+            auto component = model->data(index, models::ComponentsModel::InternalData);
+            stack->push(new Command(model, component.value<Component>()));
         }
     }
 
@@ -186,7 +197,7 @@ namespace gui {
                 this, &EditEntityDialog::onDeleteComponentClicked);
         ui->viewMembers->setItemDelegateForColumn(models::ComponentsModel::Buttons, delegat);
         connect(m_ComponentsModel.get(), &models::ComponentsModel::showButtonsForIndex,
-                [view = ui->viewMembers](auto index) {
+                [view = ui->viewMembers](auto&& index) {
                     Q_ASSERT(index.isValid());
                     view->openPersistentEditor(index);
                 });
@@ -251,6 +262,8 @@ namespace gui {
         auto signatureMaker(std::make_unique<SignatureMaker>(m_ApplicationModel, m_Project, m_Scope, m_Type));
         m_ComponentsModel->setSignatureMaker(std::move(signatureMaker));
         m_ComponentsModel->setComponents(m_Type);
+
+        fillMaps();
     }
 
     /**
@@ -335,7 +348,7 @@ namespace gui {
      */
     void EditEntityDialog::onNewComponentClicked()
     {
-        newComponentsMakers[m_ComponentsModel->display()](m_ComponentsModel, m_CommandsStack.data());
+        componentMakers[m_ComponentsModel->display()](m_ComponentsModel, m_CommandsStack.data());
     }
 
     /**
@@ -380,9 +393,7 @@ namespace gui {
                                             tr("Component will be removed.\n Are you sure that you like to remove it?"),
                                             QMessageBox::Yes | QMessageBox::No);
         if (result == QMessageBox::Yes) {
-            auto method = m_ComponentsModel->data(index, models::ComponentsModel::InternalData);
-            if (method.canConvert<entity::SharedMethod>())
-                m_CommandsStack->push(new commands::RemoveMethod(m_ComponentsModel, method.value<entity::SharedMethod>()));
+            componentDeleters[m_ComponentsModel->display()](index);
         }
     }
 
@@ -420,6 +431,8 @@ namespace gui {
         ui->cbScopes->clear();
         m_ComponentsModel->clear();
         m_CommandsStack->clear();
+
+        componentDeleters.clear();
     }
 
     /**
@@ -446,6 +459,23 @@ namespace gui {
                 break;
             }
         }
+    }
+
+    /**
+     * @brief EditEntityDialog::fillMaps
+     */
+    void EditEntityDialog::fillMaps() const
+    {
+        componentDeleters[models::DisplayPart::Elements] = [](const QModelIndex &){ /*Implement*/ };
+        componentDeleters[models::DisplayPart::Fields] =
+            [this](const QModelIndex &index){
+                addRemoveCommand<commands::RemoveField, entity::SharedField>(m_ComponentsModel, index, m_CommandsStack.data());
+            };
+        componentDeleters[models::DisplayPart::Methods] =
+            [this](const QModelIndex &index){
+                addRemoveCommand<commands::RemoveMethod, entity::SharedMethod>(m_ComponentsModel, index, m_CommandsStack.data());
+            };
+        componentDeleters[models::DisplayPart::Properties] = [](const QModelIndex &){ /*Implement*/ };
     }
 
 } // namespace gui
