@@ -40,7 +40,7 @@ namespace entity {
      * @brief Variable::toJson
      * @return
      */
-    QJsonObject Variable::toJson() const
+    QJsonObject Element::toJson() const
     {
         QJsonObject result;
         result.insert("Name", first);
@@ -54,7 +54,7 @@ namespace entity {
      * @param src
      * @param errorList
      */
-    void Variable::fromJson(const QJsonObject &src, QStringList &errorList)
+    void Element::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         utility::checkAndSet(src, "Name",   errorList, [&src, this](){ first  = src["Name"].toString(); });
         utility::checkAndSet(src, "Number", errorList, [&src, this](){ second = src["Number"].toInt();  });
@@ -64,18 +64,18 @@ namespace entity {
      * @brief Variable::hashType
      * @return
      */
-    size_t Variable::hashType() const
+    size_t Element::hashType() const
     {
-        return Variable::staticHashType();
+        return Element::staticHashType();
     }
 
     /**
      * @brief Variable::staticHashType
      * @return
      */
-    size_t Variable::staticHashType()
+    size_t Element::staticHashType()
     {
-        return typeid(Variable).hash_code();
+        return typeid(Element).hash_code();
     }
 
     /**
@@ -109,7 +109,7 @@ namespace entity {
         return static_cast<const Type&>(lhs).isEqual(rhs) &&
                lhs.m_EnumTypeId   == rhs.m_EnumTypeId     &&
                lhs.m_StrongStatus == rhs.m_StrongStatus   &&
-               lhs.m_Variables    == rhs.m_Variables;
+               utility::seqSharedPointerEq(lhs.m_Elements, rhs.m_Elements);
     }
 
     /**
@@ -135,10 +135,11 @@ namespace entity {
      * @param name
      * @return
      */
-    Variable &Enum::addVariable(const QString &name)
+    SharedElement Enum::addVariable(const QString &name)
     {
-        m_Variables.append(Variable(name, m_Variables.size()));
-        return m_Variables.last();
+        auto variable = std::make_shared<Element>(name, m_Elements.size());
+        m_Elements << variable;
+        return variable;
     }
 
     /**
@@ -146,11 +147,11 @@ namespace entity {
      * @param name
      * @return
      */
-    Variable Enum::getVariable(const QString &name) const
+    SharedElement Enum::getVariable(const QString &name) const
     {
-        auto it = std::find_if(m_Variables.cbegin(), m_Variables.cend(),
-                               [&name](const Variable &v){ return v.first == name; });
-        return (it != m_Variables.end() ? *it : Variable(DEFAULT_NAME, -1));
+        auto it = std::find_if(m_Elements.cbegin(), m_Elements.cend(),
+                               [&name](const SharedElement &v){ return v->first == name; });
+        return it != m_Elements.cend() ? *it : std::make_shared<Element>(DEFAULT_NAME, -1);
     }
 
     /**
@@ -159,9 +160,10 @@ namespace entity {
      */
     void Enum::removeVariable(const QString &name)
     {
-        auto it = std::find_if(m_Variables.begin(), m_Variables.end(),
-                               [&name](Variable &v){ return v.first == name; });
-        if (it != m_Variables.end()) m_Variables.erase(it);
+        auto it = std::find_if(m_Elements.begin(), m_Elements.end(),
+                               [&name](const SharedElement &v){ return v->first == name; });
+        if (it != m_Elements.end())
+            m_Elements.erase(it);
     }
 
     /**
@@ -169,20 +171,20 @@ namespace entity {
      * @param name
      * @return
      */
-    bool Enum::containsVariable(const QString &name)
+    bool Enum::containsVariable(const QString &name) const
     {
-        return (std::find_if(m_Variables.begin(), m_Variables.end(),
-                            [&name](Variable &v){ return v.first == name; }) !=
-                m_Variables.end());
+        return std::find_if(m_Elements.cbegin(),
+                            m_Elements.cend(),
+                            [&name](const SharedElement &v){ return v->first == name; }) != m_Elements.cend();
     }
 
     /**
      * @brief Enum::variables
      * @return
      */
-    VariablesList Enum::variables() const
+    ElementsList Enum::variables() const
     {
-        return m_Variables;
+        return m_Elements;
     }
 
     /**
@@ -214,11 +216,11 @@ namespace entity {
         result.insert("Enum type id", m_EnumTypeId);
         result.insert("Strong status", m_StrongStatus);
 
-        QJsonArray variables;
-        for (auto &&v : m_Variables)
-            variables.append(v.toJson());
+        QJsonArray elements;
+        for (auto &&v : m_Elements)
+            elements.append(v->toJson());
 
-        result.insert("Variables", variables);
+        result.insert("Elements", elements);
 
         return result;
     }
@@ -235,13 +237,13 @@ namespace entity {
         utility::checkAndSet(src, "Enum type id",  errorList, [&src, this](){ m_EnumTypeId   = src["Enum type id"].toString(); });
         utility::checkAndSet(src, "Strong status", errorList, [&src, this](){ m_StrongStatus = src["Strong status"].toBool();  });
 
-        m_Variables.clear();
-        utility::checkAndSet(src, "Variables", errorList, [&src, &errorList, this](){
-            if (src["Variables"].isArray()) {
-                for (auto &&value : src["Variables"].toArray())
-                    m_Variables.append(Variable(value.toObject(), errorList));
+        m_Elements.clear();
+        utility::checkAndSet(src, "Elements", errorList, [&src, &errorList, this](){
+            if (src["Elements"].isArray()) {
+                for (auto &&value : src["Elements"].toArray())
+                    m_Elements.append(std::make_shared<Element>(value.toObject(), errorList));
             } else {
-                errorList << "Error: \"Varibles\" is not array";
+                errorList << "Error: \"Elements\" is not array";
             }
         });
     }

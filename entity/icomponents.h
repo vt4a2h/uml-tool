@@ -42,7 +42,7 @@ namespace entity {
         virtual int removeField(const SharedField &field);
         virtual FieldsList fields() const;
 
-        virtual VariablesList variables() const;
+        virtual ElementsList variables() const;
     };
 
 } // end of namespace entity

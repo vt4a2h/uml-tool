@@ -115,9 +115,9 @@ namespace entity {
      * @brief IComponents::variables
      * @return
      */
-    VariablesList IComponents::variables() const
+    ElementsList IComponents::variables() const
     {
-        return VariablesList();
+        return ElementsList();
     }
 
 } // end of namespace entity

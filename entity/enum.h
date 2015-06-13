@@ -30,11 +30,11 @@
 namespace entity {
 
     /// The Vsriable class
-    struct Variable : public QPair<QString, int>, public BasicEntity
+    struct Element : public QPair<QString, int>, public BasicEntity
     {
-        Variable() : QPair<QString, int>() {}
-        Variable(const QString &id, int value) : QPair<QString, int>(id, value) {}
-        Variable(const QJsonObject &src, QStringList &errorList) : QPair<QString, int>(), BasicEntity(src, errorList) {
+        Element() : QPair<QString, int>() {}
+        Element(const QString &id, int value) : QPair<QString, int>(id, value) {}
+        Element(const QJsonObject &src, QStringList &errorList) : QPair<QString, int>(), BasicEntity(src, errorList) {
             fromJson(src, errorList);
         }
 
@@ -58,11 +58,11 @@ namespace entity {
         bool isStrong() const;
         void setStrongStatus(bool status);
 
-        Variable &addVariable(const QString &name);
-        Variable getVariable(const QString &name) const;
+        SharedElement addVariable(const QString &name);
+        SharedElement getVariable(const QString &name) const;
         void removeVariable(const QString &name);
-        bool containsVariable(const QString &name);
-        VariablesList variables() const override;
+        bool containsVariable(const QString &name) const;
+        ElementsList variables() const override;
 
         QString enumTypeId() const;
         void setEnumTypeId(const QString &enumTypeId);
@@ -82,9 +82,10 @@ namespace entity {
     private:
         QString m_EnumTypeId;
         bool m_StrongStatus;
-        VariablesList m_Variables;
+        ElementsList m_Elements;
     };
 
 } // namespace entity
 
-Q_DECLARE_METATYPE(entity::Variable)
+Q_DECLARE_METATYPE(entity::Element)
+Q_DECLARE_METATYPE(entity::SharedElement)

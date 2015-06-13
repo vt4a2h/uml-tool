@@ -11,8 +11,6 @@ before_install:
    - sudo apt-get update -qq
    
 install:
-#   - sudo pip install --upgrade pip
-#   - sudo pip install cpp-coveralls
    - sudo apt-get install -qq gcc-5 g++-5
    - sudo apt-get install -qq ggcov
    - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
@@ -24,13 +22,12 @@ install:
 script:
    # build application
    - qmake -v
-   - qmake QMAKE_CXX=g++-5 CONFIG+=debug QMAKE_CXXFLAGS+="-std=c++1y --coverage -g" QMAKE_LFLAGS+=--coverage
+   - qmake QMAKE_CXX=g++-5 CONFIG+=debug QMAKE_CXXFLAGS+="-std=c++1y" QMAKE_LFLAGS+=--coverage
    - make -j4
    
    # build and run tests
    - cd tests/test
-   - qmake QMAKE_CXX=g++-5 CONFIG+=debug QMAKE_CXXFLAGS+="-std=c++1y --coverage -g" QMAKE_LFLAGS+=--coverage
+   - qmake QMAKE_CXX=g++-5 CONFIG+=debug QMAKE_CXXFLAGS+="-std=c++1y" QMAKE_LFLAGS+=--coverage
    - make -j4
-   - ls
    - ./test
    
