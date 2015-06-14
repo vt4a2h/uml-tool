@@ -112,10 +112,41 @@ namespace entity {
     }
 
     /**
+     * @brief IComponents::addNewElement
+     * @return
+     */
+    SharedElement IComponents::addNewElement()
+    {
+        return SharedElement();
+    }
+
+    /**
+     * @brief IComponents::addExistsElement
+     * @param element
+     * @param pos
+     */
+    void IComponents::addExistsElement(const SharedElement &element, int pos)
+    {
+        Q_UNUSED(element);
+        Q_UNUSED(pos);
+    }
+
+    /**
+     * @brief IComponents::removeElement
+     * @param element
+     * @return
+     */
+    int IComponents::removeElement(const SharedElement &element)
+    {
+        Q_UNUSED(element);
+        return -1;
+    }
+
+    /**
      * @brief IComponents::variables
      * @return
      */
-    ElementsList IComponents::variables() const
+    ElementsList IComponents::elements() const
     {
         return ElementsList();
     }

@@ -89,5 +89,16 @@ namespace commands {
         void undo() override;
     };
 
+    /// The RemoveElement class
+    class RemoveElement : public RemoveComponentBaseCommand<entity::SharedElement>
+    {
+    public:
+        RemoveElement(const models::SharedClassComponentsModel &model, const entity::SharedElement &element, int pos = -1,
+                    QUndoCommand *parent = nullptr);
+
+        void redo() override;
+        void undo() override;
+    };
+
 } // namespace commands
 

@@ -99,5 +99,16 @@ namespace commands {
         void undo() override;
     };
 
+    /// The AddElement class
+    class AddElement : public AddComponentBaseCommand<entity::SharedElement>
+    {
+    public:
+        AddElement(const models::SharedClassComponentsModel &model, const entity::SharedElement &element = nullptr,
+                  int pos = -1, QUndoCommand *parent = nullptr);
+
+        void redo() override;
+        void undo() override;
+    };
+
 } // namespace commands
 

@@ -31,6 +31,7 @@
 #include <entity/class.h>
 #include <entity/classmethod.h>
 #include <entity/field.h>
+#include <entity/union.h>
 
 #include <db/projectdatabase.h>
 

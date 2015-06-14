@@ -271,10 +271,10 @@ namespace translator {
 
         QStringList values;
         if (options & GenerateNumbers) {
-            for (auto &&v : _enum->variables())
+            for (auto &&v : _enum->elements())
                 values << QString("%1 = %2").arg(v->first, QString::number(v->second));
         } else {
-            for (auto &&v : _enum->variables())
+            for (auto &&v : _enum->elements())
                 values << v->first;
         }
         result.replace("%values%", values.isEmpty() ? "" : values.join(", "));

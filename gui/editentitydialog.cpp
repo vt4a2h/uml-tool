@@ -119,7 +119,9 @@ namespace gui {
                 } },
 
                 { models::DisplayPart::Elements,
-                  [](const models::SharedClassComponentsModel &model, QUndoStack * stack){ model->addElement(); Q_UNUSED(stack); } },
+                  [](const models::SharedClassComponentsModel &model, QUndoStack * stack){
+                      stack->push(new commands::AddElement(model));
+                } },
 
                 { models::DisplayPart::Properties,
                   [](const models::SharedClassComponentsModel &model, QUndoStack * stack){ model->addProperty(); Q_UNUSED(stack); } },
@@ -466,7 +468,10 @@ namespace gui {
      */
     void EditEntityDialog::fillMaps() const
     {
-        componentDeleters[models::DisplayPart::Elements] = [](const QModelIndex &){ /*Implement*/ };
+        componentDeleters[models::DisplayPart::Elements] =
+            [this](const QModelIndex &index){
+                addRemoveCommand<commands::RemoveElement, entity::SharedElement>(m_ComponentsModel, index, m_CommandsStack.data());
+            };
         componentDeleters[models::DisplayPart::Fields] =
             [this](const QModelIndex &index){
                 addRemoveCommand<commands::RemoveField, entity::SharedField>(m_ComponentsModel, index, m_CommandsStack.data());

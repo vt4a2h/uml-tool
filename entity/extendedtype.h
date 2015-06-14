@@ -25,6 +25,7 @@
 
 #include "type.h"
 #include "types.h"
+#include "entity_types.hpp"
 
 #include <QString>
 #include <QList>

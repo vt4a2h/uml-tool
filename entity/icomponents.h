@@ -32,6 +32,10 @@ namespace entity {
     public:
         virtual ~IComponents();
 
+        void addExists(const SharedMethod &method, int pos);
+        int remove(const SharedMethod &method);
+        MethodsList components() const;
+
         virtual SharedMethod addNewMethod();
         virtual void addExistsMethod(const SharedMethod &method, int pos);
         virtual int removeMethod(const SharedMethod &method);
@@ -42,7 +46,10 @@ namespace entity {
         virtual int removeField(const SharedField &field);
         virtual FieldsList fields() const;
 
-        virtual ElementsList variables() const;
+        virtual SharedElement addNewElement();
+        virtual void addExistsElement(const SharedElement &element, int pos);
+        virtual int removeElement(const SharedElement &element);
+        virtual ElementsList elements() const;
     };
 
 } // end of namespace entity

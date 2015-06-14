@@ -62,6 +62,7 @@ namespace models {
         void setSignatureMaker(gui::UniqueSignatureMaker &&maker);
         void clear();
 
+        // TODO: try to use templates {
         entity::SharedMethod addMethod();
         void addExistsMethod(const entity::SharedMethod &method, int pos = -1);
         int removeMethod(const entity::SharedMethod &method);
@@ -72,8 +73,13 @@ namespace models {
         int removeField(const entity::SharedField &field);
         int removeField(const QModelIndex &index);
 
-        void addElement();
+        entity::SharedElement addElement();
+        void addExistsElement(const entity::SharedElement &element, int pos = -1);
+        int removeElement(const entity::SharedElement &element);
+        int removeElement(const QModelIndex &index);
+
         void addProperty();
+        // }
 
         ~ComponentsModel();
 

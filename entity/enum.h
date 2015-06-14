@@ -58,16 +58,21 @@ namespace entity {
         bool isStrong() const;
         void setStrongStatus(bool status);
 
-        SharedElement addVariable(const QString &name);
-        SharedElement getVariable(const QString &name) const;
-        void removeVariable(const QString &name);
-        bool containsVariable(const QString &name) const;
-        ElementsList variables() const override;
+        SharedElement addElement(const QString &name);
+        SharedElement element(const QString &name) const;
+        void removeElement(const QString &name);
+        bool containsElement(const QString &name) const;
 
         QString enumTypeId() const;
         void setEnumTypeId(const QString &enumTypeId);
 
         bool isEqual(const Enum &rhs) const;
+
+    public: // IComponents implmentaion
+        SharedElement addNewElement() override;
+        void addExistsElement(const SharedElement &element, int pos) override;
+        int removeElement(const SharedElement &element) override;
+        ElementsList elements() const override;
 
     public: // BasicEntity implementation
         QJsonObject toJson() const override;

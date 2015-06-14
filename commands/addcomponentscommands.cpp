@@ -82,5 +82,33 @@ namespace commands {
         RemoveField(m_Model, m_Component).redo();
     }
 
+    /**
+     * @brief AddElement::AddElement
+     * @param model
+     * @param element
+     * @param pos
+     * @param parent
+     */
+    AddElement::AddElement(const models::SharedClassComponentsModel &model, const entity::SharedElement &element,
+                           int pos, QUndoCommand *parent)
+        : AddComponentBaseCommand<entity::SharedElement>(tr("Add new element"), model, element, pos, parent)
+    {}
+
+    /**
+     * @brief AddElement::redo
+     */
+    void AddElement::redo()
+    {
+        redoImpl([this](){ m_Model->addExistsElement(m_Component, m_Pos); }, [this](){ return m_Model->addElement(); } );
+    }
+
+    /**
+     * @brief AddElement::undo
+     */
+    void AddElement::undo()
+    {
+        RemoveElement(m_Model, m_Component).redo();
+    }
+
 } // namespace commands
 

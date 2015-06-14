@@ -46,7 +46,7 @@ namespace models {
                     return components->methods().count();
 
                 case DisplayPart::Elements:
-                    return components->variables().count();
+                    return components->elements().count();
 
                 case DisplayPart::Properties:
                     return 0;
@@ -168,9 +168,41 @@ namespace models {
     /**
      * @brief ComponentsModel::addElement
      */
-    void ComponentsModel::addElement()
+    entity::SharedElement ComponentsModel::addElement()
     {
-        // TODO: implemet
+         return add<entity::SharedElement>([this](){ return m_Components->addNewElement(); },
+                                            m_Components->elements().count());
+    }
+
+    /**
+     * @brief ComponentsModel::addExistsElement
+     * @param element
+     * @param pos
+     */
+    void ComponentsModel::addExistsElement(const entity::SharedElement &element, int pos)
+    {
+        int count = m_Components->elements().count();
+        addExists([this, &element](int pos){ m_Components->addExistsElement(element, pos); }, count, pos);
+    }
+
+    /**
+     * @brief ComponentsModel::removeElement
+     * @param element
+     * @return
+     */
+    int ComponentsModel::removeElement(const entity::SharedElement &element)
+    {
+        return removeElement(index(m_Components->elements().indexOf(element), 0));
+    }
+
+    /**
+     * @brief ComponentsModel::removeElement
+     * @param index
+     * @return
+     */
+    int ComponentsModel::removeElement(const QModelIndex &index)
+    {
+        return remove([this](int pos){ return m_Components->removeElement(m_Components->elements()[pos]); }, index);
     }
 
     /**
@@ -231,7 +263,7 @@ namespace models {
                         return m_SignatureMaker->signature(m_Components->fields()[index.row()]);
 
                     case DisplayPart::Elements:
-                        return m_Components->variables()[index.row()]->first; // TODO: add variables to signature maker
+                        return m_Components->elements()[index.row()]->first; // TODO: add variables to signature maker
 
                     case DisplayPart::Properties:
                         return "stub";
@@ -251,7 +283,7 @@ namespace models {
                     return QVariant::fromValue(m_Components->fields()[index.row()]);
 
                 case DisplayPart::Elements:
-                    return QVariant::fromValue(m_Components->variables()[index.row()]);
+                    return QVariant::fromValue(m_Components->elements()[index.row()]);
 
                 case DisplayPart::Properties:
                     return QVariant(); // TODO: implement

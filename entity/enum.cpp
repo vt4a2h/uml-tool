@@ -36,6 +36,10 @@
 
 namespace entity {
 
+    namespace {
+        const QString newElementName = Element::tr("newElement");
+    }
+
     /**
      * @brief Variable::toJson
      * @return
@@ -135,7 +139,7 @@ namespace entity {
      * @param name
      * @return
      */
-    SharedElement Enum::addVariable(const QString &name)
+    SharedElement Enum::addElement(const QString &name)
     {
         auto variable = std::make_shared<Element>(name, m_Elements.size());
         m_Elements << variable;
@@ -147,7 +151,7 @@ namespace entity {
      * @param name
      * @return
      */
-    SharedElement Enum::getVariable(const QString &name) const
+    SharedElement Enum::element(const QString &name) const
     {
         auto it = std::find_if(m_Elements.cbegin(), m_Elements.cend(),
                                [&name](const SharedElement &v){ return v->first == name; });
@@ -158,7 +162,7 @@ namespace entity {
      * @brief Enum::removeVariable
      * @param name
      */
-    void Enum::removeVariable(const QString &name)
+    void Enum::removeElement(const QString &name)
     {
         auto it = std::find_if(m_Elements.begin(), m_Elements.end(),
                                [&name](const SharedElement &v){ return v->first == name; });
@@ -171,7 +175,7 @@ namespace entity {
      * @param name
      * @return
      */
-    bool Enum::containsVariable(const QString &name) const
+    bool Enum::containsElement(const QString &name) const
     {
         return std::find_if(m_Elements.cbegin(),
                             m_Elements.cend(),
@@ -182,7 +186,7 @@ namespace entity {
      * @brief Enum::variables
      * @return
      */
-    ElementsList Enum::variables() const
+    ElementsList Enum::elements() const
     {
         return m_Elements;
     }
@@ -292,6 +296,37 @@ namespace entity {
     bool Enum::isEqual(const Enum &rhs) const
     {
         return *this == rhs;
+    }
+
+    /**
+     * @brief Enum::addNewElement
+     * @return
+     */
+    SharedElement Enum::addNewElement()
+    {
+        return addElement(newElementName + QString::number(m_Elements.count()));
+    }
+
+    /**
+     * @brief Enum::addExistsElement
+     * @param element
+     * @param pos
+     */
+    void Enum::addExistsElement(const SharedElement &element, int pos)
+    {
+        m_Elements.insert(pos, element);
+    }
+
+    /**
+     * @brief Enum::removeElement
+     * @param element
+     * @return
+     */
+    int Enum::removeElement(const SharedElement &element)
+    {
+        int pos = m_Elements.indexOf(element);
+        m_Elements.removeAt(pos);
+        return pos;
     }
 
 } // namespace entity
