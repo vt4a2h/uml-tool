@@ -265,8 +265,8 @@ TEST_F(ProjectTranslatorTest, Enum)
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "enum class Foo : int {bar, baz};";
-    fooEnum->addVariable("bar");
-    fooEnum->addVariable("baz");
+    fooEnum->addElement("bar");
+    fooEnum->addElement("baz");
     code = _translator->translate(fooEnum);
     ASSERT_EQ(futureResult, code.toHeader);
 
@@ -789,8 +789,8 @@ TEST_F(FileJson, EnumJson)
 {
     entity::SharedEnum enum_(std::make_shared<entity::Enum>("stub_name", "stub_scope_id"));
     enum_->setStrongStatus(true);
-    enum_->addVariable("a");
-    enum_->addVariable("b");
+    enum_->addElement("a");
+    enum_->addElement("b");
     enum_->writeToFile(m_JsonFileName);
 
     auto enum_comp(std::make_shared<entity::Enum>());
