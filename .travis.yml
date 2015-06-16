@@ -31,5 +31,6 @@ script:
    - qmake CONFIG+=debug
    - make -j4
    - ./test
-   - ls
+   - cd ../../
+   - coveralls -r tests/test -E "moc_*"
    
