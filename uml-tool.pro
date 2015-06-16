@@ -140,3 +140,10 @@ FORMS += \
 
 RESOURCES += \
     gui/main.qrc
+
+debug {
+    QMAKE_CXX = gcc-5
+    QMAKE_LINK = gcc-5
+    QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage -std=c++1y
+    QMAKE_LFLAGS += -fprofile-arcs -ftest-coverage -lstdc++
+}
