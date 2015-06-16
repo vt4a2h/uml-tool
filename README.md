@@ -3,6 +3,7 @@
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/5161/badge.svg"/>
 </a>
+[![Coverage Status](https://coveralls.io/repos/vt4a2h/uml-tool/badge.svg?branch=edit-dialog-models)](https://coveralls.io/r/vt4a2h/uml-tool?branch=edit-dialog-models)
 
 UML tool for Qt.<br>
 License LGPL v3.
