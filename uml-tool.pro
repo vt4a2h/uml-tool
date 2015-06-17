@@ -1,6 +1,16 @@
-CONFIG += core gui c++14
+TEMPLATE = app
+
+CONFIG += core gui
 
 QT += widgets
+
+QMAKE_CXX = gcc-5
+QMAKE_LINK = gcc-5
+QMAKE_LFLAGS *= -lstdc++
+QMAKE_CXXFLAGS *= -std=c++1y
+
+QMAKE_CXXFLAGS_DEBUG *= --coverage
+QMAKE_LFLAGS_DEBUG *= --coverage
 
 SOURCES += \
     main.cpp \
@@ -140,10 +150,3 @@ FORMS += \
 
 RESOURCES += \
     gui/main.qrc
-
-debug {
-    QMAKE_CXX = gcc-5
-    QMAKE_LINK = gcc-5
-    QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage -std=c++1y
-    QMAKE_LFLAGS += -fprofile-arcs -ftest-coverage -lstdc++
-}
