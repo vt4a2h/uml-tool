@@ -37,7 +37,7 @@
 
 #include <utility/helpfunctions.h>
 
-#include "constants.cpp"
+#include "constants.h"
 
 namespace project {
 

@@ -31,7 +31,7 @@
 #include <relationship/relation.h>
 #include <utility/helpfunctions.h>
 
-#include "constants.cpp"
+#include "constants.h"
 
 namespace {
 

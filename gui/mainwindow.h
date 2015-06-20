@@ -48,6 +48,7 @@ namespace gui {
     class About;
     class NewProject;
     class AddScope;
+    class ChooseGlobalDatabaseDialog;
 
     namespace Ui {
         class MainWindow;
@@ -103,10 +104,14 @@ namespace gui {
 
     private:
         bool maybeExit();
-        void closeEvent(QCloseEvent *ev);
+        void closeEvent(QCloseEvent *ev) override;
+        void showEvent(QShowEvent *ev) override;
 
         void setUpWidgets();
         void makeConnections();
+
+        void readSettings();
+        void writeSettings();
 
         void addDock(const QString &name, QAction * action, Qt::DockWidgetArea area, QWidget * widget,
                      bool visible = true);
@@ -115,15 +120,16 @@ namespace gui {
 
         QMenu *m_ProjectTreeMenu;
 
-        QTreeView *m_ProjectTreeView;
-        QGraphicsView *m_MainView;
-        QGraphicsScene *m_MainScene;
-        QTextEdit *m_ConsoleOutput;
-        QUndoView *m_UndoView;
+        QTreeView      *m_ProjectTreeView;
+        QGraphicsView  *m_MainView       ;
+        QGraphicsScene *m_MainScene      ;
+        QTextEdit      *m_ConsoleOutput  ;
+        QUndoView      *m_UndoView       ;
 
-        About *m_AboutWidget;
-        NewProject *m_NewProject;
-        AddScope *m_AddScope;
+        About                      *m_AboutWidget;
+        NewProject                 *m_NewProject ;
+        AddScope                   *m_AddScope   ;
+        ChooseGlobalDatabaseDialog *m_ChooseDb   ;
 
         models::SharedApplicationModel m_ApplicationModel;
     };

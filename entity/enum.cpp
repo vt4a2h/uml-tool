@@ -22,7 +22,7 @@
 *****************************************************************************/
 
 #include "enum.h"
-#include "constants.cpp"
+#include "constants.h"
 #include "enums.h"
 
 #include <algorithm>

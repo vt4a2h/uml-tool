@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 03/11/2014.
+** Created 20/06/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,18 +20,26 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+#pragma once
 
-#include <QApplication>
-#include <application/application.h>
+#include <QVariant>
+#include <QSettings>
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
-    QApplication::setOrganizationName("QUml");
-    QApplication::setApplicationName("QUml tools");
+#include "constants.h"
 
-    application::Application app;
-    app.run();
+namespace application {
 
-    return a.exec();
-}
+    struct Setting {
+        QString name;
+        QVariant defaultValue;
+    };
+
+    // Main window
+    static const QString groupMainWindow = "mainWindow";
+    static const Setting mwGeometry = { "size", QRect(0, 0, 640, 480) };
+
+    // Path
+    static const QString path = "path";
+    static const Setting pathGlobalDB = { QString("db.%1").arg(DATABASE_FILE_EXTENTION), "" };
+
+} // namespace application

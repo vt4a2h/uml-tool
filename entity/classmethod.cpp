@@ -25,7 +25,7 @@
 #include "extendedtype.h"
 #include "field.h"
 #include "enums.h"
-#include "constants.cpp"
+#include "constants.h"
 
 #include <QStringList>
 #include <QJsonObject>

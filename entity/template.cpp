@@ -24,7 +24,7 @@
 #include "template.h"
 #include "extendedtype.h"
 #include "type.h"
-#include "constants.cpp"
+#include "constants.h"
 
 #include <algorithm>
 #include <utility>

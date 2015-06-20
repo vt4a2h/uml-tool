@@ -33,7 +33,7 @@ namespace application {
      */
     void Application::run()
     {
-        m_MainWindow->showMaximized();
+        m_MainWindow->show();
     }
 
     /**

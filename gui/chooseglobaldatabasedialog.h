@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 03/11/2014.
+** Created 20/06/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,18 +20,31 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+#pragma once
 
-#include <QApplication>
-#include <application/application.h>
+#include <QDialog>
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
-    QApplication::setOrganizationName("QUml");
-    QApplication::setApplicationName("QUml tools");
+namespace gui {
 
-    application::Application app;
-    app.run();
+    namespace Ui {
+        class ChooseGlobalDatabaseDialog;
+    }
 
-    return a.exec();
-}
+    /// The ChooseGlobalDatabaseDialog class
+    class ChooseGlobalDatabaseDialog : public QDialog
+    {
+        Q_OBJECT
+
+    public:
+        explicit ChooseGlobalDatabaseDialog(QWidget *parent = 0);
+        ~ChooseGlobalDatabaseDialog();
+
+        QString path() const;
+
+    private:
+        QScopedPointer<Ui::ChooseGlobalDatabaseDialog> ui;
+
+        QString m_Path;
+    };
+
+} // namespace gui

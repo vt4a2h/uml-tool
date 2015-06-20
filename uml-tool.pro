@@ -14,7 +14,6 @@ QMAKE_LFLAGS_DEBUG *= --coverage
 
 SOURCES += \
     main.cpp \
-    constants.cpp \
     templates.cpp \
     db/database.cpp \
     db/projectdatabase.cpp \
@@ -70,7 +69,8 @@ SOURCES += \
     gui/editmethoddialog.cpp \
     models/componentsmodel.cpp \
     commands/removecomponentscommands.cpp \
-    commands/addcomponentscommands.cpp
+    commands/addcomponentscommands.cpp \
+    gui/chooseglobaldatabasedialog.cpp
 
 HEADERS += \
     enums.h \
@@ -138,7 +138,10 @@ HEADERS += \
     gui/editmethoddialog.h \
     models/componentsmodel.h \
     commands/removecomponentscommands.h \
-    commands/addcomponentscommands.h
+    commands/addcomponentscommands.h \
+    application/settings.h \
+    constants.h \
+    gui/chooseglobaldatabasedialog.h
 
 FORMS += \
     gui/mainwindow.ui \
@@ -146,7 +149,8 @@ FORMS += \
     gui/newproject.ui \
     gui/addscope.ui \
     gui/editentitydialog.ui \
-    gui/editmethoddialog.ui
+    gui/editmethoddialog.ui \
+    gui/chooseglobaldatabasedialog.ui
 
 RESOURCES += \
     gui/main.qrc

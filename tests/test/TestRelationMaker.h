@@ -42,7 +42,7 @@
 
 #include <types.h>
 
-#include <constants.cpp>
+#include <constants.h>
 
 class RelationMaker : public ::testing::Test
 {

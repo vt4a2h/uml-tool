@@ -24,7 +24,7 @@
 #include "projecttranslator.h"
 #include "enums.h"
 #include "templates.cpp"
-#include "constants.cpp"
+#include "constants.h"
 #include "code.h"
 
 #include <QRegularExpression>

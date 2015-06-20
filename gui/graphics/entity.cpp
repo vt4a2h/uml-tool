@@ -33,7 +33,7 @@
 #include <entity/type.h>
 #include <entity/scope.h>
 
-#include <constants.cpp>
+#include <constants.h>
 
 namespace graphics {
 

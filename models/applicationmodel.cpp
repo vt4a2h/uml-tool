@@ -26,7 +26,7 @@
 #include <entity/class.h>
 #include <entity/classmethod.h>
 
-#include "constants.cpp"
+#include "constants.h"
 
 namespace models {
 

@@ -24,7 +24,7 @@
 #include "association.h"
 #include "enums.h"
 #include "types.h"
-#include "constants.cpp"
+#include "constants.h"
 
 #include <QJsonObject>
 

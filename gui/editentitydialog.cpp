@@ -53,7 +53,7 @@
 #include "editmethoddialog.h"
 
 #include "enums.h"
-#include "constants.cpp"
+#include "constants.h"
 
 namespace gui {
 

@@ -24,7 +24,7 @@
 
 #include <models/applicationmodel.h>
 
-#include "constants.cpp"
+#include "constants.h"
 
 namespace commands {
 

@@ -22,7 +22,7 @@
 *****************************************************************************/
 
 #include "templateclass.h"
-#include "constants.cpp"
+#include "constants.h"
 #include "enums.h"
 
 #include <QJsonObject>

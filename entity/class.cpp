@@ -27,7 +27,7 @@
 #include "classmethod.h"
 #include "enums.h"
 #include "extendedtype.h"
-#include "constants.cpp"
+#include "constants.h"
 
 #include <utility>
 #include <algorithm>

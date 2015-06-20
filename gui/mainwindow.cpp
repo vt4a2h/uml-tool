@@ -39,6 +39,8 @@
 #include <QPointer>
 #include <QDebug>
 
+#include <application/settings.h>
+
 #include <models/applicationmodel.h>
 #include <models/projecttreemodel.h>
 
@@ -55,8 +57,8 @@
 #include "about.h"
 #include "newproject.h"
 #include "addscope.h"
-#include "constants.cpp"
 #include "scenefilter.h"
+#include "chooseglobaldatabasedialog.h"
 
 namespace {
     const int treeViewIndent = 20;
@@ -114,6 +116,7 @@ namespace gui {
         , m_AboutWidget(new About(this))
         , m_NewProject(new NewProject(this))
         , m_AddScope(new AddScope(this))
+        , m_ChooseDb(new ChooseGlobalDatabaseDialog(this))
         , m_ApplicationModel(applicationModel)
     {
         ui->setupUi(this);
@@ -387,6 +390,53 @@ namespace gui {
     }
 
     /**
+     * @brief MainWindow::readSettings
+     */
+    void MainWindow::readSettings()
+    {
+        QSettings settings;
+        settings.beginGroup(application::groupMainWindow);
+
+        if (settings.contains(application::mwGeometry.name))
+            setGeometry(settings.value(application::mwGeometry.name).toRect());
+        else
+            setWindowState(windowState() | Qt::WindowMaximized);
+
+        settings.endGroup();
+
+        settings.beginGroup(application::path);
+
+        auto db = m_ApplicationModel->globalDatabase();
+        if (settings.contains(application::pathGlobalDB.name))
+            db->setPath(settings.value(application::pathGlobalDB.name).toString());
+        else
+            db->setPath(application::pathGlobalDB.defaultValue.toString());
+
+        QStringList errors;
+        db->load(errors);
+
+        if (!errors.isEmpty()) {
+            QMessageBox::critical(this, tr("Problems with loading global database"), errors.join("\n"), QMessageBox::Ok);
+            db->clear();
+
+            m_ChooseDb->exec();
+        }
+
+        settings.endGroup();
+    }
+
+    /**
+     * @brief MainWindow::writeSettings
+     */
+    void MainWindow::writeSettings()
+    {
+        QSettings settings;
+        settings.beginGroup(application::groupMainWindow);
+        settings.setValue(application::mwGeometry.name, geometry());
+        settings.endGroup();
+    }
+
+    /**
      * @brief MainWindow::addDock
      * @param name
      * @param area
@@ -598,10 +648,22 @@ namespace gui {
      */
     void MainWindow::closeEvent(QCloseEvent *ev)
     {
-        if (maybeExit())
+        if (maybeExit()) {
             ev->accept();
+            writeSettings();
+        }
         else
             ev->ignore();
+    }
+
+    /**
+     * @brief MainWindow::showEvent
+     * @param ev
+     */
+    void MainWindow::showEvent(QShowEvent *ev)
+    {
+        readSettings();
+        QMainWindow::showEvent(ev);
     }
 
 } // namespace gui

@@ -24,7 +24,7 @@
 #include "helpfunctions.h"
 
 #include "enums.h"
-#include "constants.cpp"
+#include "constants.h"
 
 #include <functional>
 

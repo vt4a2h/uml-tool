@@ -32,7 +32,7 @@
 
 #include "utility/helpfunctions.h"
 #include "entity/scope.h"
-#include "constants.cpp"
+#include "constants.h"
 
 namespace db {
 
@@ -63,6 +63,7 @@ namespace db {
         : m_Name(name.isEmpty() ? DEFAULT_DATABASE_NAME : name)
         , m_Path(path.isEmpty() ? DEFAULT_DATABASE_PATH : QDir::currentPath())
         , m_ID(utility::genId())
+        , m_Valid(false)
 
     {
     }
@@ -340,6 +341,8 @@ namespace db {
         } else {
             errorList << QObject::tr("Can't load database: %1.").arg(f.fileName());
         }
+
+        m_Valid = errorList.isEmpty();
     }
 
     /**
@@ -437,14 +440,24 @@ namespace db {
     }
 
     /**
+     * @brief Database::valid
+     * @return
+     */
+    bool Database::valid() const
+    {
+        return m_Valid;
+    }
+
+    /**
      * @brief Database::moveFrom
      * @param src
      */
     void Database::moveFrom(Database &src)
     {
-        m_Name = std::move(src.m_Name);
-        m_Path = std::move(src.m_Path);
-        m_ID   = std::move(src.m_ID);
+        m_Name  = std::move(src.m_Name);
+        m_Path  = std::move(src.m_Path);
+        m_ID    = std::move(src.m_ID);
+        m_Valid = std::move(src.m_Valid);
 
         m_Scopes = std::move(src.m_Scopes);
     }
@@ -455,9 +468,10 @@ namespace db {
      */
     void Database::copyFrom(const Database &src)
     {
-        m_Name = src.m_Name;
-        m_Path = src.m_Path;
-        m_ID   = src.m_ID;
+        m_Name  = src.m_Name;
+        m_Path  = src.m_Path;
+        m_ID    = src.m_ID;
+        m_Valid = src.m_Valid;
 
         utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &entity::Scope::id);
     }

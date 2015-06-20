@@ -73,14 +73,17 @@ namespace db {
         virtual bool isEqual(const Database &rhs) const;
 
         QString id() const;
+        bool valid() const;
 
     protected:
         virtual void copyFrom(const Database &src);
         virtual void moveFrom(Database &src);
 
-        QString        m_Name;
-        QString        m_Path;
-        QString        m_ID;
+        QString        m_Name  ;
+        QString        m_Path  ;
+        QString        m_ID    ;
+        bool           m_Valid ;
+
         entity::Scopes m_Scopes;
 
     private:

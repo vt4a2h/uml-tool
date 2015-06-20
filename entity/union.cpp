@@ -24,7 +24,7 @@
 #include "union.h"
 #include "field.h"
 #include "extendedtype.h"
-#include "constants.cpp"
+#include "constants.h"
 #include "enums.h"
 
 #include <QJsonObject>

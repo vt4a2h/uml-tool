@@ -23,7 +23,7 @@
 
 #include "realization.h"
 #include "enums.h"
-#include "constants.cpp"
+#include "constants.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
