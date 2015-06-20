@@ -20,6 +20,7 @@ INCLUDEPATH += ../../
 HEADERS += ../../enums.h \
     ../../project/project.h \
     ../../entity/basicentity.h \
+    ../../constants.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -54,7 +55,6 @@ SOURCES += main.cpp \
            ../../relationship/multiplyassociation.cpp \
            ../../entity/templateclassmethod.cpp \
            ../../translator/projecttranslator.cpp \
-           ../../constants.cpp \
            ../../templates.cpp \
            ../../entity/scope.cpp \
            ../../generator/virtualfile.cpp \
