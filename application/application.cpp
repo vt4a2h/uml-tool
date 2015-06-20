@@ -20,20 +20,80 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #include "application.h"
 
+#include <QMessageBox>
+#include <QApplication>
+
 #include <gui/mainwindow.h>
+#include <gui/chooseglobaldatabasedialog.h>
 #include <models/applicationmodel.h>
+
+#include "settings.h"
 
 namespace application {
 
     /**
      * @brief Application::run
      */
-    void Application::run()
+    bool Application::run()
     {
         m_MainWindow->show();
+
+        QSettings settings;
+        settings.beginGroup(path);
+
+        auto db = m_ApplicationModel->globalDatabase();
+        Q_ASSERT(db);
+        db->setPath(value<QString>(settings, pathGlobalDB));
+        db->setName(value<QString>(settings, nameGlobalDB));
+
+        QStringList errors;
+        db->load(errors);
+
+        if (!errors.isEmpty()) {
+            QMessageBox::warning(m_MainWindow.get(), tr("Problems with loading global database"), errors.join("\n"),
+                                 QMessageBox::Ok);
+            db->clear();
+            errors.clear();
+
+            gui::ChooseGlobalDatabaseDialog dlg(db->name(), db->path(), m_MainWindow.get());
+            if (dlg.exec() == QDialog::Accepted)
+            {
+                db->setName(dlg.name());
+                db->setPath(dlg.path());
+
+                if (QFile::exists(db->fullPath())) {
+                    db->load(errors);
+
+                    if (!errors.isEmpty()) {
+                        QMessageBox::critical(m_MainWindow.get(), tr("Database reading error"), errors.join("\n"),
+                                              QMessageBox::Ok);
+                        return false;
+                    }
+                } else {
+                    // Create new database
+                    if (!db->save()) {
+                        QMessageBox::critical(m_MainWindow.get(),
+                                              tr("Database creating error"),
+                                              tr("Cannot create new database: %1.").arg(db->fullPath()),
+                                              QMessageBox::Ok);
+                        return false;
+                    }
+                }
+
+                settings.setValue(pathGlobalDB.name, db->path());
+                settings.setValue(nameGlobalDB.name, db->name());
+            } else {
+                QMessageBox::information(m_MainWindow.get(), tr("Ohh"), tr("You cannot run application without database!"),
+                                         QMessageBox::Ok );
+                return false;
+            }
+        }
+
+        settings.endGroup();
+
+        return true;
     }
 
     /**

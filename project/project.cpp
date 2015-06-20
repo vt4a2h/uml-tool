@@ -114,9 +114,9 @@ namespace project {
         if (!utility::readFromFile(*this, path))
             m_Errors << tr("Cannot read project file.");
 
-        m_Database->setPath(databasePath(m_Path));
-        if (!utility::readFromFile(*m_Database, m_Database->path()))
-            m_Errors << tr("Cannot read database file.");
+        m_Database->setPath(m_Path);
+        m_Database->setName(databaseFileName());
+        m_Database->load(m_Errors);
 
         setSaveStatus(m_Errors.isEmpty());
 
@@ -150,8 +150,8 @@ namespace project {
                 m_Errors << tr("Cannot save project to file.");
 
             m_Database->setName(databaseFileName());
-            m_Database->setPath(databasePath(m_Path));
-            if (!utility::writeToFile(*m_Database, m_Database->path()))
+            m_Database->setPath(m_Path);
+            if (!m_Database->save())
                 m_Errors << tr("Cannot save database to file.");
         } else {
             m_Errors << "Project path is empty.";
@@ -387,17 +387,6 @@ namespace project {
     {
         QChar sep = QDir(basePath).separator();
         return basePath + sep + projectFileName() + "." + PROJECT_FILE_EXTENTION;
-    }
-
-    /**
-     * @brief Project::makeDatabasePath
-     * @param basePath
-     * @return
-     */
-    QString Project::databasePath(const QString &basePath) const
-    {
-        QChar sep = QDir(basePath).separator();
-        return basePath + sep + databaseFileName() + "." + DATABASE_FILE_EXTENTION;
     }
 
 } // namespace project

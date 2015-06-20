@@ -58,7 +58,7 @@
 #include "newproject.h"
 #include "addscope.h"
 #include "scenefilter.h"
-#include "chooseglobaldatabasedialog.h"
+#include "constants.h"
 
 namespace {
     const int treeViewIndent = 20;
@@ -116,7 +116,6 @@ namespace gui {
         , m_AboutWidget(new About(this))
         , m_NewProject(new NewProject(this))
         , m_AddScope(new AddScope(this))
-        , m_ChooseDb(new ChooseGlobalDatabaseDialog(this))
         , m_ApplicationModel(applicationModel)
     {
         ui->setupUi(this);
@@ -401,26 +400,6 @@ namespace gui {
             setGeometry(settings.value(application::mwGeometry.name).toRect());
         else
             setWindowState(windowState() | Qt::WindowMaximized);
-
-        settings.endGroup();
-
-        settings.beginGroup(application::path);
-
-        auto db = m_ApplicationModel->globalDatabase();
-        if (settings.contains(application::pathGlobalDB.name))
-            db->setPath(settings.value(application::pathGlobalDB.name).toString());
-        else
-            db->setPath(application::pathGlobalDB.defaultValue.toString());
-
-        QStringList errors;
-        db->load(errors);
-
-        if (!errors.isEmpty()) {
-            QMessageBox::critical(this, tr("Problems with loading global database"), errors.join("\n"), QMessageBox::Ok);
-            db->clear();
-
-            m_ChooseDb->exec();
-        }
 
         settings.endGroup();
     }

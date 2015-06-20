@@ -34,20 +34,33 @@ namespace gui {
      * @brief ChooseGlobalDatabaseDialog::ChooseGlobalDatabaseDialog
      * @param parent
      */
-    ChooseGlobalDatabaseDialog::ChooseGlobalDatabaseDialog(QWidget *parent)
+    ChooseGlobalDatabaseDialog::ChooseGlobalDatabaseDialog(const QString &name, const QString &path, QWidget *parent)
         : QDialog(parent)
         , ui(new Ui::ChooseGlobalDatabaseDialog)
-        , m_Path("")
+        , m_Path(path)
+        , m_Name(name)
     {
         ui->setupUi(this);
 
-        connect(ui->pbAccept, &QPushButton::clicked, [this](){ m_Path = ui->lePath->text(); accept(); });
-        connect(ui->pbReject, &QPushButton::clicked, [this](){ m_Path.clear(); reject(); });
+        connect(ui->pbAccept, &QPushButton::clicked, [this](){
+            m_Path = ui->lePath->text();
+            m_Name = ui->leName->text();
+            accept();
+        });
+        connect(ui->pbReject, &QPushButton::clicked, [this](){
+            m_Path.clear();
+            m_Name.clear();
+            reject();
+        });
         connect(ui->tbSelectFile, &QToolButton::clicked, [this]() {
-            ui->lePath->setText(QFileDialog::getOpenFileName(
+            auto result = QFileDialog::getOpenFileName(
                                     this, tr("Select database file."), QApplication::applicationDirPath(),
-                                    QString("Qt-Uml files(.%1)").arg(DATABASE_FILE_EXTENTION)
-                                ));
+                                    tr("Q-UML Project files (*.%1)").arg(DATABASE_FILE_EXTENTION)
+                          );
+
+            QFileInfo f(result);
+            ui->leName->setText(f.baseName());
+            ui->lePath->setText(f.absolutePath());
         } );
     }
 
@@ -66,5 +79,44 @@ namespace gui {
     {
         return m_Path;
     }
+
+    /**
+     * @brief ChooseGlobalDatabaseDialog::showEvent
+     * @param ev
+     */
+    void ChooseGlobalDatabaseDialog::showEvent(QShowEvent *ev)
+    {
+        ui->lePath->setText(m_Path);
+        ui->leName->setText(m_Name);
+        QDialog::showEvent(ev);
+    }
+
+    /**
+     * @brief ChooseGlobalDatabaseDialog::Name
+     * @return
+     */
+    QString ChooseGlobalDatabaseDialog::name() const
+    {
+        return m_Name;
+    }
+
+    /**
+     * @brief ChooseGlobalDatabaseDialog::setName
+     * @param name
+     */
+    void ChooseGlobalDatabaseDialog::setName(const QString &name)
+    {
+        m_Name = name;
+    }
+
+    /**
+     * @brief ChooseGlobalDatabaseDialog::setPath
+     * @param path
+     */
+    void ChooseGlobalDatabaseDialog::setPath(const QString &path)
+    {
+        m_Path = path;
+    }
+
 
 } // namespace gui

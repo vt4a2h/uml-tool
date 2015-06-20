@@ -126,10 +126,9 @@ namespace gui {
         QTextEdit      *m_ConsoleOutput  ;
         QUndoView      *m_UndoView       ;
 
-        About                      *m_AboutWidget;
-        NewProject                 *m_NewProject ;
-        AddScope                   *m_AddScope   ;
-        ChooseGlobalDatabaseDialog *m_ChooseDb   ;
+        About      *m_AboutWidget;
+        NewProject *m_NewProject ;
+        AddScope   *m_AddScope   ;
 
         models::SharedApplicationModel m_ApplicationModel;
     };

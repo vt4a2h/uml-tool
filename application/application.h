@@ -44,7 +44,7 @@ namespace application {
         explicit Application(QObject *parent = nullptr);
         ~Application();
 
-        void run();
+        bool run();
 
         models::SharedApplicationModel m_ApplicationModel;
         gui::UniqueMainWindow m_MainWindow;

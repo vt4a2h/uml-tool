@@ -23,16 +23,31 @@
 #pragma once
 
 #include <QVariant>
+#include <QDir>
 #include <QSettings>
-
-#include "constants.h"
 
 namespace application {
 
+    /// The struct settings
     struct Setting {
         QString name;
         QVariant defaultValue;
     };
+
+    /**
+     * @brief value
+     * @param settings
+     * @param s
+     * @return
+     */
+    template<class ValueType>
+    ValueType value(const QSettings &settings, const Setting &s)
+    {
+        if (settings.contains(s.name))
+            return settings.value(s.name).value<ValueType>();
+        else
+            return s.defaultValue.value<ValueType>();
+    }
 
     // Main window
     static const QString groupMainWindow = "mainWindow";
@@ -40,6 +55,7 @@ namespace application {
 
     // Path
     static const QString path = "path";
-    static const Setting pathGlobalDB = { QString("db.%1").arg(DATABASE_FILE_EXTENTION), "" };
+    static const Setting pathGlobalDB = { "fullPath", QDir::currentPath() };
+    static const Setting nameGlobalDB = { "name"    , "global"            };
 
 } // namespace application

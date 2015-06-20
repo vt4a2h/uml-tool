@@ -31,7 +31,5 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName("QUml tools");
 
     application::Application app;
-    app.run();
-
-    return a.exec();
+    return app.run() ? a.exec() : 0;
 }

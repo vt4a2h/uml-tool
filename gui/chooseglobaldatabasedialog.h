@@ -36,15 +36,21 @@ namespace gui {
         Q_OBJECT
 
     public:
-        explicit ChooseGlobalDatabaseDialog(QWidget *parent = 0);
+        explicit ChooseGlobalDatabaseDialog(const QString &name = "", const QString &path = "", QWidget *parent = 0);
         ~ChooseGlobalDatabaseDialog();
 
+        void setPath(const QString &path);
         QString path() const;
 
-    private:
-        QScopedPointer<Ui::ChooseGlobalDatabaseDialog> ui;
+        QString name() const;
+        void setName(const QString &name);
 
+    private:
+        void showEvent(QShowEvent *ev) override;
+
+        QScopedPointer<Ui::ChooseGlobalDatabaseDialog> ui;
         QString m_Path;
+        QString m_Name;
     };
 
 } // namespace gui

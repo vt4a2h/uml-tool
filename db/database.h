@@ -52,6 +52,8 @@ namespace db {
         QString name() const;
         void setName(const QString &name);
 
+        QString fullPath() const;
+
         entity::SharedScope getScope(const QString &id) const;
         entity::SharedScope addScope(const QString &name = "", const QString &parentScopeId = "");
         void addExistsScope(const entity::SharedScope &scope);

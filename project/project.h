@@ -98,7 +98,6 @@ namespace project {
         QString projectFileName() const;
         QString databaseFileName() const;
         QString projectPath(const QString &basePath) const;
-        QString databasePath(const QString &basePath) const;
 
         QString m_Name;
         QString m_Path;

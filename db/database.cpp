@@ -150,6 +150,15 @@ namespace db {
     }
 
     /**
+     * @brief Database::fullPath
+     * @return
+     */
+    QString Database::fullPath() const
+    {
+        return makeFullPath();
+    }
+
+    /**
      * @brief Database::getScope
      * @param id
      * @return
@@ -359,6 +368,10 @@ namespace db {
      */
     bool Database::save() const
     {
+        if (!QDir(m_Path).exists())
+            if (!QDir().mkpath(m_Path))
+                return false;
+
         QFile f(makeFullPath());
         if (f.open(QIODevice::WriteOnly)) {
             QJsonDocument jdoc(toJson());
@@ -366,6 +379,7 @@ namespace db {
             stream << jdoc.toJson();
             return true;
         }
+
         return false;
     }
 
@@ -484,7 +498,10 @@ namespace db {
     {
         return QDir::toNativeSeparators(
                    QString("%1%2%3.%4").arg(
-                        m_Path, m_Path.isEmpty() ? "" : "/", m_Name.toLower(), DEFAULT_DATABASE_EXTENSION
+                        m_Path,
+                        m_Path.isEmpty() || m_Path.endsWith(QDir::separator()) ? "" : "/",
+                        m_Name.toLower(),
+                        DEFAULT_DATABASE_EXTENSION
                    )
                );
     }
