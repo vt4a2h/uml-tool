@@ -27,6 +27,7 @@
 
 #include <gui/mainwindow.h>
 #include <gui/chooseglobaldatabasedialog.h>
+
 #include <models/applicationmodel.h>
 
 #include "settings.h"

@@ -58,9 +58,14 @@ namespace gui {
                                     tr("Q-UML Project files (*.%1)").arg(DATABASE_FILE_EXTENTION)
                           );
 
-            QFileInfo f(result);
-            ui->leName->setText(f.baseName());
-            ui->lePath->setText(f.absolutePath());
+            if (!result.isEmpty()) {
+                QFileInfo f(result);
+                ui->leName->setText(f.baseName());
+                ui->lePath->setText(f.absolutePath());
+            } else {
+                ui->leName->clear();
+                ui->lePath->clear();
+            }
         } );
     }
 
