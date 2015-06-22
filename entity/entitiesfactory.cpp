@@ -24,44 +24,9 @@
 
 #include <QGraphicsScene>
 
-#include <gui/graphics/entity.h>
-
-#include <models/applicationmodel.h>
-
 #include <commands/movegraphicobject.h>
 
 #include "class.h"
-
-namespace {
-
-    void connectEntity(graphics::Entity * entity, project::Project * currentProject)
-    {
-        Q_ASSERT(entity);
-        Q_ASSERT(currentProject);
-
-        QObject::connect(entity, &graphics::Entity::xChanged, currentProject, &project::Project::touch);
-        QObject::connect(entity, &graphics::Entity::yChanged, currentProject, &project::Project::touch);
-        QObject::connect(entity, &graphics::Entity::moved,
-                         [=](const QPointF &from, const QPointF &to) {
-                            auto &&cmd = std::make_unique<commands::MoveGraphicObject>(*entity, entity->typeObject()->name(),
-                                                                                       from, to);
-                            currentProject->commandsStack()->push(cmd.release());
-                         });
-    }
-
-    graphics::Entity *newEntity(QGraphicsScene &scene, const QPointF &pos,
-                                const entity::SharedType &type = nullptr,
-                                const entity::SharedScope &scope = nullptr,
-                                const project::SharedProject &project = nullptr)
-    {
-        graphics::Entity * entity = new graphics::Entity(type, scope, project);
-        entity->setPos(pos);
-        scene.addItem(entity);
-
-        return entity;
-    }
-
-}
 
 namespace entity {
 
@@ -73,31 +38,6 @@ namespace entity {
     {
         static EntitiesFactory instance;
         return instance;
-    }
-
-    /**
-     * @brief EntitiesFactory::makeClass
-     * @param model
-     * @param scopeID
-     * @param scene
-     * @return
-     */
-    SharedClass EntitiesFactory::makeClass(const models::SharedApplicationModel &model,
-                                           const QString &scopeID, QGraphicsScene &scene,
-                                           const QPointF &pos) const
-    {
-        auto type = model->makeType<entity::Class>(scopeID);
-
-        auto &&currentProject = model->currentProject();
-        auto &&database = currentProject->database();
-        auto &&scope = database->getScope(scopeID);
-
-        graphics::Entity * entity = newEntity(scene, pos, type, scope, currentProject);
-        connectEntity(entity, currentProject.get());
-
-        currentProject->touch();
-
-        return type;
     }
 
     /**
@@ -120,6 +60,33 @@ namespace entity {
      */
     EntitiesFactory::EntitiesFactory()
     {
+    }
+
+    void EntitiesFactory::connectEntity(graphics::Entity * entity, project::Project * currentProject) const
+    {
+        Q_ASSERT(entity);
+        Q_ASSERT(currentProject);
+
+        QObject::connect(entity, &graphics::Entity::xChanged, currentProject, &project::Project::touch);
+        QObject::connect(entity, &graphics::Entity::yChanged, currentProject, &project::Project::touch);
+        QObject::connect(entity, &graphics::Entity::moved,
+                         [=](const QPointF &from, const QPointF &to) {
+                            auto &&cmd = std::make_unique<commands::MoveGraphicObject>(*entity, entity->typeObject()->name(),
+                                                                                       from, to);
+                            currentProject->commandsStack()->push(cmd.release());
+                         });
+    }
+
+    graphics::Entity *EntitiesFactory::newEntity(QGraphicsScene &scene, const QPointF &pos,
+                                const entity::SharedType &type,
+                                const entity::SharedScope &scope,
+                                const project::SharedProject &project) const
+    {
+        graphics::Entity * entity = new graphics::Entity(type, scope, project);
+        entity->setPos(pos);
+        scene.addItem(entity);
+
+        return entity;
     }
 
 } // namespace entity

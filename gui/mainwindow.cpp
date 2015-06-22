@@ -126,6 +126,8 @@ namespace gui {
         m_MainView->installEventFilter(this);
         m_MainScene->installEventFilter(new SceneFilter(m_ApplicationModel, m_MainScene, this, this));
 
+        configureAddActions();
+
         update();
     }
 
@@ -248,46 +250,6 @@ namespace gui {
             }
         } else
             QMessageBox::information(this, tr("Information"), tr("No current project."), QMessageBox::Ok);
-    }
-
-    /**
-     * @brief MainWindow::onAddAlias
-     */
-    void MainWindow::onAddAlias()
-    {
-
-    }
-
-    /**
-     * @brief MainWindow::onAddUnion
-     */
-    void MainWindow::onAddUnion()
-    {
-
-    }
-
-    /**
-     * @brief MainWindow::onAddStruct
-     */
-    void MainWindow::onAddStruct()
-    {
-
-    }
-
-    /**
-     * @brief MainWindow::onAddClass
-     */
-    void MainWindow::onAddClass()
-    {
-
-    }
-
-    /**
-     * @brief MainWindow::onAddTemplate
-     */
-    void MainWindow::onAddTemplate()
-    {
-
     }
 
     /**
@@ -416,6 +378,62 @@ namespace gui {
     }
 
     /**
+     * @brief MainWindow::configureAddActions
+     */
+    void MainWindow::configureAddActions()
+    {
+        m_AddActions = {
+            { ui->actionAddAlias,
+              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
+                  const QPointF &pos, QUndoCommand *parent) {
+                      return std::make_unique<commands::MakeAlias>(model, scopeID, scene, pos, parent);
+              } },
+            { ui->actionAddUnion,
+              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
+                  const QPointF &pos, QUndoCommand *parent) {
+                      return std::make_unique<commands::MakeUnion>(model, scopeID, scene, pos, parent);
+              } },
+            { ui->actionAddClass,
+              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
+                  const QPointF &pos, QUndoCommand *parent) {
+                      return std::make_unique<commands::MakeClass>(model, scopeID, scene, pos, parent);
+              } },
+            { ui->actionAddStruct,
+              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
+                  const QPointF &pos, QUndoCommand *parent) {
+                      auto cmd = std::make_unique<commands::MakeClass>(model, scopeID, scene, pos, parent);
+                      cmd->entity()->setKind(entity::Kind::StructType);
+                      return cmd;
+              } },
+            { ui->actionAddTemplate,
+              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
+                  const QPointF &pos, QUndoCommand *parent) {
+                      return std::make_unique<commands::MakeTemplate>(model, scopeID, scene, pos, parent);
+              } },
+            { ui->actionAddEnum,
+              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
+                  const QPointF &pos, QUndoCommand *parent) {
+                      return std::make_unique<commands::MakeEnum>(model, scopeID, scene, pos, parent);
+              } }
+            };
+
+        for (auto action : m_AddActions)
+            connect(action.first, &QAction::triggered, [=](){
+                if (action.first->isChecked()) {
+                    ui->actionMakeRelation->setChecked(false);
+                    for (auto a : m_AddActions)
+                        a.first->setChecked(a.first == action.first);
+                }
+            });
+
+        connect(ui->actionMakeRelation, &QAction::triggered, [=](){
+            if (ui->actionMakeRelation->isChecked())
+                for (auto action : m_AddActions)
+                    action.first->setChecked(false);
+        });
+    }
+
+    /**
      * @brief MainWindow::addDock
      * @param name
      * @param area
@@ -444,38 +462,41 @@ namespace gui {
     {
         if (obj == m_MainView) {
             if (ev->type() == QEvent::MouseButtonPress)  {
-                // TODO: handle all elemnts type
-                if (m_ApplicationModel && m_ApplicationModel->currentProject() &&
-                    ui->actionAddClass->isChecked()) {
-                    auto event = static_cast<QMouseEvent* >(ev);
-                    auto pos = m_MainView->mapToScene(event->pos());
+                auto it = std::find_if(m_AddActions.begin(), m_AddActions.end(),
+                                       [](const ActionMaker &am) { return am.first->isChecked(); });
+                if (it != m_AddActions.end()) {
+                    if (m_ApplicationModel && m_ApplicationModel->currentProject()) {
+                        auto event = static_cast<QMouseEvent* >(ev);
+                        auto pos = m_MainView->mapToScene(event->pos());
 
-                    const db::ProjectDatabase &projectDb =
-                        *m_ApplicationModel->currentProject()->database().get();
+                        const db::ProjectDatabase &projectDb =
+                            *m_ApplicationModel->currentProject()->database().get();
 
-                    if (projectDb.anyScopes()) {
-                        entity::SharedScope scope = projectDb.defaultScope();
-                        if (!scope)
-                            scope = projectDb.scopes().first();
+                        if (projectDb.anyScopes()) {
+                            entity::SharedScope scope = projectDb.defaultScope();
+                            if (!scope)
+                                scope = projectDb.scopes().first();
 
-                        if (auto stack = m_ApplicationModel->currentProject()->commandsStack()) {
-                            auto create = std::make_unique<commands::CreateEntity>(
-                                m_ApplicationModel, scope->id(), *m_MainScene, pos);
-                            stack->push(create.release());
+                            if (auto stack = m_ApplicationModel->currentProject()->commandsStack()) {
+                                //
+                                auto create = it->second(m_ApplicationModel, scope->id(), *m_MainScene, pos, nullptr);
+                                //
+                                stack->push(create.release());
+                            }
+                        } else {
+                            QMessageBox::information(
+                                this,
+                                tr("Information"),
+                                tr("You have no abilities to add a new entity in "
+                                   "project without any namespaces."),
+                                QMessageBox::Ok );
                         }
-                    } else {
-                        QMessageBox::information(
-                            this,
-                            tr("Information"),
-                            tr("You have no abilities to add a new class in "
-                               "project without any namespaces."),
-                            QMessageBox::Ok );
                     }
 
-                    ui->actionAddClass->setChecked(false);
+                    return true;
+                } else {
+                    return false;
                 }
-
-                return true;
             } else {
                 return false;
             }

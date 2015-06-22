@@ -34,6 +34,7 @@ class QGraphicsView;
 class QTextEdit;
 class QGraphicsScene;
 class QUndoView;
+class QUndoCommand;
 
 namespace models {
     class ProjectTreeModel;
@@ -82,11 +83,6 @@ namespace gui {
         void onOpenProject();
         void onSaveProject();
 
-        void onAddAlias();
-        void onAddUnion();
-        void onAddStruct();
-        void onAddClass();
-        void onAddTemplate();
         void onMakeRelation();
 
         void createNewProject(const QString &name, const QString &path);
@@ -113,6 +109,8 @@ namespace gui {
         void readSettings();
         void writeSettings();
 
+        void configureAddActions();
+
         void addDock(const QString &name, QAction * action, Qt::DockWidgetArea area, QWidget * widget,
                      bool visible = true);
 
@@ -129,6 +127,12 @@ namespace gui {
         About      *m_AboutWidget;
         NewProject *m_NewProject ;
         AddScope   *m_AddScope   ;
+
+        using CommandFunction = std::function<std::unique_ptr<QUndoCommand>(
+                                    const models::SharedApplicationModel &, const QString &, QGraphicsScene &,
+                                    const QPointF &, QUndoCommand *)>;
+        using ActionMaker = QPair<QAction*, CommandFunction>;
+        QList<ActionMaker> m_AddActions;
 
         models::SharedApplicationModel m_ApplicationModel;
     };

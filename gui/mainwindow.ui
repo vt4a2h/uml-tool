@@ -108,6 +108,7 @@
    <addaction name="actionAddStruct"/>
    <addaction name="actionAddClass"/>
    <addaction name="actionAddTemplate"/>
+   <addaction name="actionAddEnum"/>
    <addaction name="separator"/>
    <addaction name="actionMakeRelation"/>
   </widget>
@@ -322,6 +323,14 @@
     <string>Ctrl+Shift+M</string>
    </property>
   </action>
+  <action name="actionAddEnum">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>actionAddEnum</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="main.qrc"/>
@@ -412,86 +421,6 @@
    <signal>triggered()</signal>
    <receiver>gui::MainWindow</receiver>
    <slot>onCreateScope()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionAddAlias</sender>
-   <signal>triggered()</signal>
-   <receiver>gui::MainWindow</receiver>
-   <slot>onAddAlias()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionAddUnion</sender>
-   <signal>triggered()</signal>
-   <receiver>gui::MainWindow</receiver>
-   <slot>onAddUnion()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionAddStruct</sender>
-   <signal>triggered()</signal>
-   <receiver>gui::MainWindow</receiver>
-   <slot>onAddStruct()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionAddClass</sender>
-   <signal>triggered()</signal>
-   <receiver>gui::MainWindow</receiver>
-   <slot>onAddClass()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionAddTemplate</sender>
-   <signal>triggered()</signal>
-   <receiver>gui::MainWindow</receiver>
-   <slot>onAddTemplate()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>

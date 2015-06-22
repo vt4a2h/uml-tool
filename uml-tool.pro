@@ -60,7 +60,6 @@ SOURCES += \
     commands/createscope.cpp \
     commands/basecommand.cpp \
     commands/movegraphicobject.cpp \
-    commands/createentity.cpp \
     commands/renameentity.cpp \
     commands/movetypetootherscope.cpp \
     gui/scenefilter.cpp \

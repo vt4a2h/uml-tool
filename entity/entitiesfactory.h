@@ -26,14 +26,12 @@
 
 #include <project/project_types.hpp>
 
+#include <gui/graphics/entity.h>
+
+#include <models/applicationmodel.h>
 #include <models/models_types.hpp>
 
 class QGraphicsScene;
-
-namespace graphics
-{
-    class Entity;
-}
 
 namespace entity {
 
@@ -43,16 +41,25 @@ namespace entity {
     public:
         static const EntitiesFactory &get();
 
-        SharedClass makeClass(const models::SharedApplicationModel &model,
-                              const QString &scopeID, QGraphicsScene &scene,
-                              const QPointF &pos) const;
-        // TODO: also add make which sill be based on entity::UserType and returns shared type
-//        entity::SharedType makeStruct() const;
-//        entity::SharedType makeUnion() const;
-//        entity::SharedType makeTemplate() const;
-//        entity::SharedType makeAlias() const;
+        template<class Type>
+        std::shared_ptr<Type> makeEntity(const models::SharedApplicationModel &model,
+                                         const QString &scopeID, QGraphicsScene &scene,
+                                         const QPointF &pos) const
+        {
+            auto type = model->makeType<Type>(scopeID);
 
-//        entity::SharedScope makeScope() const;
+            auto &&currentProject = model->currentProject();
+            auto &&database = currentProject->database();
+            auto &&scope = database->getScope(scopeID);
+
+            graphics::Entity * entity = newEntity(scene, pos, type, scope, currentProject);
+            connectEntity(entity, currentProject.get());
+
+            currentProject->touch();
+
+            return type;
+        }
+
 
         graphics::Entity *addEntity(QGraphicsScene &scene, const project::SharedProject &project,
                                     const SharedScope &scope, const entity::SharedType &type, const QPointF &pos) const;
@@ -61,6 +68,13 @@ namespace entity {
         EntitiesFactory();
         EntitiesFactory(const EntitiesFactory &);
         EntitiesFactory &operator=(const EntitiesFactory &);
+
+        graphics::Entity *newEntity(QGraphicsScene &scene, const QPointF &pos,
+                                    const entity::SharedType &type = nullptr,
+                                    const entity::SharedScope &scope = nullptr,
+                                    const project::SharedProject &project = nullptr) const;
+
+        void connectEntity(graphics::Entity * entity, project::Project * currentProject) const;
     };
 
 } // namespace entity

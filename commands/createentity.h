@@ -23,11 +23,25 @@
 #pragma once
 
 #include <QPointF>
+#include <QGraphicsScene>
 
 #include <entity/entity_types.hpp>
+#include <entity/entitiesfactory.h>
+#include <entity/type.h>
+#include <entity/class.h>
+#include <entity/enum.h>
+#include <entity/union.h>
+#include <entity/extendedtype.h>
+#include <entity/templateclass.h>
+
+#include <gui/graphics/entity.h>
 
 #include <models/models_types.hpp>
+#include <models/applicationmodel.h>
 
+#include <utility/helpfunctions.h>
+
+#include "constants.h"
 #include "enums.h"
 #include "basecommand.h"
 
@@ -37,23 +51,64 @@ class QGraphicsScene;
 namespace commands {
 
     /// The class CreateEntity
+    template<class Type>
     class CreateEntity : public BaseCommand
     {
     public:
         CreateEntity(const models::SharedApplicationModel &model, const QString &scopeID,
-                     QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent = nullptr);
+                     QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent = nullptr)
+            : BaseCommand(tr("Add type"), parent)
+            , m_Model(model)
+            , m_ProjectID(model && model->currentProject() ? model->currentProject()->id() : STUB_ID)
+            , m_ScopeID(scopeID)
+            , m_TypeItem(nullptr)
+            , m_Pos(pos)
+            , m_Item(nullptr)
+            , m_Scene(scene)
+        {
+        }
 
-        void redo() override;
-        void undo() override;
+        void redo() override
+        {
+            if (m_Done) {
+                m_Model->addExistsType(m_ProjectID, m_ScopeID, m_TypeItem);
+
+                m_Scene.addItem(m_Item);
+                static_cast<graphics::Entity *>(m_Item)->setTypeObject(m_TypeItem);
+            } else {
+                auto&& factory = entity::EntitiesFactory::get();
+                m_TypeItem = factory.makeEntity<Type>(m_Model, m_ScopeID, m_Scene, m_Pos);
+                m_Item = m_Scene.itemAt(m_Pos, QTransform());
+
+                m_Done = true;
+            }
+        }
+
+        void undo() override
+        {
+            Q_ASSERT(m_Model);
+            Q_ASSERT(m_TypeItem);
+
+            m_Scene.removeItem(m_Item);
+            m_Model->removeType(m_ProjectID, m_ScopeID, m_TypeItem->id());
+        }
+
+        std::shared_ptr<Type> entity() { return m_TypeItem; }
 
     private:
         models::SharedApplicationModel m_Model;
         QString m_ProjectID;
         QString m_ScopeID;
-        entity::SharedType m_TypeItem;
+        std::shared_ptr<Type> m_TypeItem;
         QPointF m_Pos;
         QGraphicsItem  * m_Item;
         QGraphicsScene & m_Scene;
     };
+
+    using MakeClass = CreateEntity<entity::Class>;
+    using MakeAlias = CreateEntity<entity::ExtendedType>;
+    using MakeEnum  = CreateEntity<entity::Enum>;
+    using MakeUnion = CreateEntity<entity::Union>;
+    using MakeTemplate = CreateEntity<entity::TemplateClass>;
 
 } // namespace commands
