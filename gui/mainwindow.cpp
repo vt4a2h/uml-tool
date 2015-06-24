@@ -552,6 +552,7 @@ namespace gui {
         ui->actionAddStruct->setEnabled( state );
         ui->actionAddTemplate->setEnabled( state );
         ui->actionAddUnion->setEnabled( state );
+        ui->actionAddEnum->setEnabled( state );
         ui->actionCreateScope->setEnabled( state );
         ui->actionMakeRelation->setEnabled( state );
         ui->actionSaveProject->setEnabled(state && !m_ApplicationModel->currentProject()->isSaved() );

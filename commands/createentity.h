@@ -50,6 +50,15 @@ class QGraphicsScene;
 
 namespace commands {
 
+    const QMap<size_t, QString> hashName = {
+        { entity::Type::staticHashType(), BaseCommand::tr("type") },
+        { entity::Class::staticHashType(), BaseCommand::tr("class (struct)") },
+        { entity::Enum::staticHashType(), BaseCommand::tr("enum") },
+        { entity::Union::staticHashType(), BaseCommand::tr("union") },
+        { entity::ExtendedType::staticHashType(), BaseCommand::tr("type alias") },
+        { entity::TemplateClass::staticHashType(), BaseCommand::tr("template class") },
+    };
+
     /// The class CreateEntity
     template<class Type>
     class CreateEntity : public BaseCommand
@@ -57,15 +66,16 @@ namespace commands {
     public:
         CreateEntity(const models::SharedApplicationModel &model, const QString &scopeID,
                      QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent = nullptr)
-            : BaseCommand(tr("Add type"), parent)
+            : BaseCommand(tr("Add %1").arg(hashName[typeid(Type).hash_code()]), parent)
             , m_Model(model)
             , m_ProjectID(model && model->currentProject() ? model->currentProject()->id() : STUB_ID)
             , m_ScopeID(scopeID)
-            , m_TypeItem(nullptr)
             , m_Pos(pos)
             , m_Item(nullptr)
             , m_Scene(scene)
+            , m_TypeItem(entity::EntitiesFactory::get().makeEntity<Type>(m_Model, m_ScopeID, m_Scene, m_Pos))
         {
+            Q_ASSERT(m_TypeItem);
         }
 
         void redo() override
@@ -76,10 +86,7 @@ namespace commands {
                 m_Scene.addItem(m_Item);
                 static_cast<graphics::Entity *>(m_Item)->setTypeObject(m_TypeItem);
             } else {
-                auto&& factory = entity::EntitiesFactory::get();
-                m_TypeItem = factory.makeEntity<Type>(m_Model, m_ScopeID, m_Scene, m_Pos);
                 m_Item = m_Scene.itemAt(m_Pos, QTransform());
-
                 m_Done = true;
             }
         }
@@ -99,10 +106,10 @@ namespace commands {
         models::SharedApplicationModel m_Model;
         QString m_ProjectID;
         QString m_ScopeID;
-        std::shared_ptr<Type> m_TypeItem;
         QPointF m_Pos;
         QGraphicsItem  * m_Item;
         QGraphicsScene & m_Scene;
+        std::shared_ptr<Type> m_TypeItem;
     };
 
     using MakeClass = CreateEntity<entity::Class>;

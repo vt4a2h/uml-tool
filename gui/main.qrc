@@ -25,6 +25,7 @@
         <file>pic/icon_component_edit.png</file>
         <file>pic/icon_component_delete.png</file>
         <file>pic/icon_component_plus.png</file>
+        <file>pic/icon_action_enum.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>pic/main.png</file>

@@ -327,6 +327,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="main.qrc">
+     <normaloff>:/icons/pic/icon_action_enum.png</normaloff>:/icons/pic/icon_action_enum.png</iconset>
+   </property>
    <property name="text">
     <string>actionAddEnum</string>
    </property>
