@@ -244,20 +244,22 @@ namespace gui {
         m_Type = type;
 
         // Temporary {
-        auto cl = std::static_pointer_cast<entity::Class>(m_Type);
+        if (m_Type->hashType() == entity::Class::staticHashType()) {
+            auto cl = std::static_pointer_cast<entity::Class>(m_Type);
 
-        if (cl->methods().isEmpty()) {
-            auto intType = m_Scope->addType("int");
-            auto doubleType = m_Scope->addType("double");
+            if (cl->methods().isEmpty()) {
+                auto intType = m_Scope->addType("int");
+                auto doubleType = m_Scope->addType("double");
 
-            cl->makeMethod("foo")->setReturnTypeId(intType->id());
-            cl->makeMethod("bar")->setReturnTypeId(doubleType->id());
-            cl->makeMethod("baz");
-        }
+                cl->makeMethod("foo")->setReturnTypeId(intType->id());
+                cl->makeMethod("bar")->setReturnTypeId(doubleType->id());
+                cl->makeMethod("baz");
+            }
 
-        if (cl->fields().isEmpty()) {
-            cl->addField("f1", "stub");
-            cl->addField("f2", "stub");
+            if (cl->fields().isEmpty()) {
+                cl->addField("f1", "stub");
+                cl->addField("f2", "stub");
+            }
         }
         // }
 
