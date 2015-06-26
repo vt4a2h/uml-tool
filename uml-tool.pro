@@ -69,7 +69,8 @@ SOURCES += \
     models/componentsmodel.cpp \
     commands/removecomponentscommands.cpp \
     commands/addcomponentscommands.cpp \
-    gui/chooseglobaldatabasedialog.cpp
+    gui/chooseglobaldatabasedialog.cpp \
+    entity/property.cpp
 
 HEADERS += \
     enums.h \
@@ -140,7 +141,8 @@ HEADERS += \
     commands/addcomponentscommands.h \
     application/settings.h \
     constants.h \
-    gui/chooseglobaldatabasedialog.h
+    gui/chooseglobaldatabasedialog.h \
+    entity/property.h
 
 FORMS += \
     gui/mainwindow.ui \
