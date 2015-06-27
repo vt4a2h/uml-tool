@@ -210,12 +210,6 @@ namespace utility {
         return false;
     }
 
-    template <class Type, class Interface>
-    bool implements_interface()
-    {
-        return std::is_convertible<Type, Interface>::value;
-    }
-
     QString fieldKeywordToString(entity::FieldKeyword keyword);
     QString methodLhsIdToString(entity::LhsIdentificator id);
     QString methodRhsIdToString(entity::RhsIdentificator id);

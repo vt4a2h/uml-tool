@@ -33,43 +33,59 @@ namespace entity {
     {
     public:
         Property();
-        Property(const QString &name, const QString &id, QObject *parent = nullptr);
+        Property(const QString &name, const QString &typeId, QObject *parent = nullptr);
+        Property(const QJsonObject &src, QStringList &errorList);
+
+        SharedField field() const;
 
         Property &addGetter(const QString &customName = "");
-        SharedMethod deleteGetter();
+        void deleteGetter();
         SharedMethod getter() const;
 
         Property &addSetter(const QString &customName = "");
-        SharedMethod &deleteSetter();
-        SharedMethod setter();
+        void deleteSetter();
+        SharedMethod setter() const;
 
         Property &addResetter(const QString &customName = "");
-        SharedMethod deleteResetter();
+        void deleteResetter();
         SharedMethod resetter() const;
 
         Property &addNotifier(const QString &customName = "");
-        SharedMethod deleteNotifier();
+        void deleteNotifier();
         SharedMethod notifier() const;
 
         int revision() const;
         Property &setRevision(int revision);
+        bool isRevisionDefault() const;
 
         bool isDesignable() const;
+        bool isDesignableDefault() const;
+        Property &addDesignableGetter(const QString &customName = "");
+        SharedMethod designableGetter() const;
+        void deleteDesignableGetter();
         Property &setDesignable(bool designable);
 
         bool isScriptable() const;
-        Property &setScriptable() const;
+        bool isScriptableDefault() const;
+        Property &addScriptableGetter(const QString &customName = "");
+        SharedMethod scriptableGetter() const;
+        void deleteScriptableGetter();
+        Property &setScriptable(bool scriptable);
 
         bool isStored() const;
+        bool isStoredDefault() const;
         Property &setStored(bool stored);
 
         bool isUser() const;
+        bool isUserDefault() const;
         Property &setUser(bool user);
 
         bool isConstant() const;
+        bool isConstantDefault() const;
         Property &setConstant(bool constant);
 
         bool isFinal() const;
+        bool isFinalDefault() const;
         Property &setFinal(bool final);
 
     public: // BasicEntity implementation
@@ -87,6 +103,25 @@ namespace entity {
 
     private:
         QString m_Id;
+
+        SharedField m_Field;
+
+        SharedMethod m_Getter;
+        SharedMethod m_Setter;
+        SharedMethod m_Resetter;
+        SharedMethod m_Notifier;
+
+        SharedMethod m_DesignableGetter;
+        SharedMethod m_ScriptableGetter;
+
+        int m_Revision;
+
+        bool m_Designable;
+        bool m_Scriptable;
+        bool m_Stored;
+        bool m_User;
+        bool m_Constant;
+        bool m_Final;
     };
 
 } // namespace entity
