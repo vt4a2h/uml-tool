@@ -58,6 +58,26 @@ namespace entity {
 
     /**
      * @brief Property::Property
+     * @param src
+     */
+    Property::Property(Property &&src)
+        : BasicEntity(std::forward<Property>(src))
+    {
+        moveFrom(std::forward<Property>(src));
+    }
+
+    /**
+     * @brief Property::Property
+     * @param src
+     */
+    Property::Property(const Property &src)
+        : BasicEntity(src)
+    {
+        copyFrom(src);
+    }
+
+    /**
+     * @brief Property::Property
      * @param name
      * @param parent
      */
@@ -65,6 +85,12 @@ namespace entity {
         : BasicEntity(name)
         , m_Id(utility::genId())
         , m_Field(std::make_shared<entity::Field>(name, typeId))
+        , m_Revision(defaultRevision)
+        , m_Designable(defaultDesignable)
+        , m_Stored(defaultStored)
+        , m_User(defaultUser)
+        , m_Constant(defaultConstant)
+        , m_Final(defaultFinal)
     {
         setParent(parent);
     }
@@ -77,6 +103,67 @@ namespace entity {
     Property::Property(const QJsonObject &src, QStringList &errorList)
         : BasicEntity(src, errorList)
     {
+    }
+
+    /**
+     * @brief Property::operator =
+     * @param rhs
+     * @return
+     */
+    Property &Property::operator =(const Property &rhs)
+    {
+        if (this != &rhs) {
+            BasicEntity::operator =(rhs);
+            copyFrom(rhs);
+        }
+
+        return *this;
+    }
+
+    /**
+     * @brief Property::operator =
+     * @param rhs
+     * @return
+     */
+    Property &Property::operator =(Property &&rhs)
+    {
+        if (this != &rhs) {
+            BasicEntity::operator =(std::forward<Property>(rhs));
+            moveFrom(std::forward<Property>(rhs));
+        }
+
+        return *this;
+    }
+
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator ==(const Property &lhs, const Property &rhs)
+    {
+        return lhs.m_Name == rhs.m_Name &&
+               lhs.m_Id == rhs.m_Id &&
+
+               *lhs.m_Field == *rhs.m_Field &&
+
+               *lhs.m_Getter   == *rhs.m_Getter &&
+               *lhs.m_Setter   == *rhs.m_Setter &&
+               *lhs.m_Resetter == *rhs.m_Resetter &&
+               *lhs.m_Notifier == *rhs.m_Notifier &&
+
+               *lhs.m_DesignableGetter == *rhs.m_DesignableGetter &&
+               *lhs.m_ScriptableGetter == *rhs.m_ScriptableGetter &&
+
+               lhs.m_Revision == rhs.m_Revision &&
+
+               lhs.m_Designable == rhs.m_Designable &&
+               lhs.m_Scriptable == rhs.m_Scriptable &&
+               lhs.m_Stored     == rhs.m_Stored &&
+               lhs.m_User       == rhs.m_User &&
+               lhs.m_Constant   == rhs.m_Constant &&
+               lhs.m_Final      == rhs.m_Final;
     }
 
     /**
@@ -588,6 +675,58 @@ namespace entity {
     void Property::setId(const QString &id)
     {
         m_Id = id;
+    }
+
+    /**
+     * @brief Property::moveFrom
+     * @param src
+     */
+    void Property::moveFrom(Property &&src)
+    {
+        m_Id = std::move(src.m_Id);
+
+        m_Field = std::move(src.m_Field);
+
+        m_Getter = std::move(src.m_Getter);
+        m_Setter = std::move(src.m_Setter);
+        m_Resetter = std::move(src.m_Resetter);
+        m_Notifier = std::move(src.m_Notifier);
+
+        m_DesignableGetter = std::move(src.m_DesignableGetter);
+        m_ScriptableGetter = std::move(src.m_ScriptableGetter);
+
+        m_Revision = std::move(src.m_Revision);
+
+        m_Designable = std::move(src.m_Designable);
+        m_Scriptable = std::move(src.m_Scriptable);
+        m_Stored     = std::move(src.m_Stored);
+        m_User       = std::move(src.m_User);
+        m_Constant   = std::move(src.m_Constant);
+        m_Final      = std::move(src.m_Final);
+    }
+
+    void Property::copyFrom(const Property &src)
+    {
+        m_Id = src.m_Id;
+
+        m_Field = std::make_shared<Field>(*src.m_Field);
+
+        m_Getter   = std::make_shared<ClassMethod>(*src.m_Getter);
+        m_Setter   = std::make_shared<ClassMethod>(*src.m_Setter);
+        m_Resetter = std::make_shared<ClassMethod>(*src.m_Resetter);
+        m_Notifier = std::make_shared<ClassMethod>(*src.m_Notifier);
+
+        m_DesignableGetter = std::make_shared<ClassMethod>(*src.m_DesignableGetter);
+        m_ScriptableGetter = std::make_shared<ClassMethod>(*src.m_ScriptableGetter);
+
+        m_Revision = src.m_Revision;
+
+        m_Designable = src.m_Designable;
+        m_Scriptable = src.m_Scriptable;
+        m_Stored     = src.m_Stored;
+        m_User       = src.m_User;
+        m_Constant   = src.m_Constant;
+        m_Final      = src.m_Final;
     }
 
 } // namespace entity

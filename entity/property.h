@@ -33,8 +33,14 @@ namespace entity {
     {
     public:
         Property();
+        Property(Property &&src);
+        Property(const Property &src);
         Property(const QString &name, const QString &typeId, QObject *parent = nullptr);
         Property(const QJsonObject &src, QStringList &errorList);
+
+        Property &operator =(const Property &rhs);
+        Property &operator =(Property &&rhs);
+        friend bool operator ==(const Property &lhs, const Property &rhs);
 
         SharedField field() const;
 
@@ -100,6 +106,10 @@ namespace entity {
 
         QString id() const override;
         void setId(const QString &id) override;
+
+    protected:
+        void moveFrom(Property &&src);
+        void copyFrom(const Property &src);
 
     private:
         QString m_Id;
