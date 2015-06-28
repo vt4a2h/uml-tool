@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 03/11/2014.
+** Created 28/06/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,19 +20,13 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include <gtest/gtest.h>
+#pragma once
 
-#include <cases/projecttranslatortestcases.h>
-#include <cases/relationmakertestcases.h>
-#include <cases/depthsearchtestcases.h>
-#include <cases/filemakertestcases.h>
-#include <cases/filejsontestcases.h>
-#include <cases/projectmakertestcases.h>
-#include <cases/projecttestcases.h>
-#include <cases/typemakertestcases.h>
+#include "TestTypeMaker.h"
 
-int main(int argc, char **argv)
+TEST_F(TypeMaker, MakesRightTypes)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    EXPECT_TRUE(std::equal(_types.begin(), _types.end(), _typeHashes.begin(), _typeHashes.end(),
+                           [](const entity::SharedType &t, size_t hash){ return hash == t->hashType(); }))
+    << "Types should be equal";
 }

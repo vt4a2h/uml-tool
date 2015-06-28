@@ -98,6 +98,9 @@ namespace entity {
     using Scopes      = QHash<QString, SharedScope>;
     using ScopesList  = QList<SharedScope>;
 
+    class Property;
+    using SharedProperty = std::shared_ptr<Property>;
+
     class IComponents;
     using SharedComponents = std::shared_ptr<IComponents>;
 

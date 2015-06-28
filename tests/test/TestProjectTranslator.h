@@ -27,14 +27,21 @@
 
 #include <db/projectdatabase.h>
 #include <db/database.h>
+
 #include <entity/scope.h>
 #include <entity/enum.h>
-#include <enums.h>
 #include <entity/extendedtype.h>
-#include <translator/projecttranslator.h>
+#include <entity/field.h>
+#include <entity/union.h>
+#include <entity/class.h>
+#include <entity/templateclass.h>
 #include <entity/templateclassmethod.h>
+
+#include <translator/projecttranslator.h>
 #include <translator/translator_types.hpp>
 #include <translator/code.h>
+
+#include <enums.h>
 
 class ProjectTranslatorTest : public ::testing::Test
 {

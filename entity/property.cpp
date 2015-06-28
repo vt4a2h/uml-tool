@@ -44,6 +44,40 @@ namespace {
     const bool defaultUser       = false;
     const bool defaultConstant   = false;
     const bool defaultFinal      = false;
+
+    const QString nameMark = "Name";
+    const QString idMark = "ID";
+
+    const QString fieldMark = "Field";
+
+    const QString getterMark = "Getter";
+    const QString setterMark = "Setter";
+    const QString resetterMark = "Resetter";
+    const QString notifierMark = "Notifier";
+
+    const QString designableGetterMark = "DesignableGetter";
+    const QString scriptableGetterMark = "ScriptableGetter";
+
+    const QString revisionMark = "revision";
+
+    const QString designableMark = "Designable";
+    const QString scriptableMark = "Scriptable";
+    const QString storedMark = "Stored";
+    const QString userMark = "User";
+    const QString constantMark = "Constant";
+    const QString finalMark = "Final";
+
+    void readOptionalMethod(const QJsonValue &val, entity::SharedMethod &dst, ErrorList &errors)
+    {
+        if (val.isObject()) {
+            if (!dst)
+                dst = std::make_shared<entity::ClassMethod>();
+
+            dst->fromJson(val.toObject(), errors);
+        } else {
+            dst.reset();
+        }
+    }
 }
 
 namespace entity {
@@ -143,18 +177,20 @@ namespace entity {
      */
     bool operator ==(const Property &lhs, const Property &rhs)
     {
+        using namespace utility;
+
         return lhs.m_Name == rhs.m_Name &&
                lhs.m_Id == rhs.m_Id &&
 
-               *lhs.m_Field == *rhs.m_Field &&
+               sharedPtrEq(lhs.m_Field, rhs.m_Field) &&
 
-               *lhs.m_Getter   == *rhs.m_Getter &&
-               *lhs.m_Setter   == *rhs.m_Setter &&
-               *lhs.m_Resetter == *rhs.m_Resetter &&
-               *lhs.m_Notifier == *rhs.m_Notifier &&
+               sharedPtrEq(lhs.m_Getter, rhs.m_Getter) &&
+               sharedPtrEq(lhs.m_Setter, rhs.m_Setter) &&
+               sharedPtrEq(lhs.m_Resetter, rhs.m_Resetter) &&
+               sharedPtrEq(lhs.m_Notifier, rhs.m_Notifier) &&
 
-               *lhs.m_DesignableGetter == *rhs.m_DesignableGetter &&
-               *lhs.m_ScriptableGetter == *rhs.m_ScriptableGetter &&
+               sharedPtrEq(lhs.m_DesignableGetter, rhs.m_DesignableGetter) &&
+               sharedPtrEq(lhs.m_ScriptableGetter, rhs.m_ScriptableGetter) &&
 
                lhs.m_Revision == rhs.m_Revision &&
 
@@ -610,7 +646,30 @@ namespace entity {
      */
     QJsonObject Property::toJson() const
     {
-        return QJsonObject();
+        QJsonObject result;
+
+        result.insert(nameMark, m_Name);
+        result.insert(idMark, m_Id);
+        result.insert(fieldMark, m_Field->toJson());
+
+        result.insert(getterMark, m_Getter ? m_Getter->toJson() : QJsonValue(""));
+        result.insert(setterMark, m_Setter ? m_Setter->toJson() : QJsonValue(""));
+        result.insert(resetterMark, m_Resetter ? m_Resetter->toJson() : QJsonValue(""));
+        result.insert(notifierMark, m_Notifier ? m_Notifier->toJson() : QJsonValue(""));
+
+        result.insert(designableGetterMark, m_DesignableGetter ? m_DesignableGetter->toJson() : QJsonValue(""));
+        result.insert(scriptableGetterMark, m_ScriptableGetter ? m_ScriptableGetter->toJson() : QJsonValue(""));
+
+        result.insert(revisionMark, m_Revision);
+
+        result.insert(designableMark, m_Designable);
+        result.insert(scriptableMark, m_Scriptable);
+        result.insert(storedMark, m_Stored);
+        result.insert(userMark, m_User);
+        result.insert(constantMark, m_Constant);
+        result.insert(finalMark, m_Final);
+
+        return result;
     }
 
     /**
@@ -620,7 +679,33 @@ namespace entity {
      */
     void Property::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        Q_UNUSED(src); Q_UNUSED(errorList);
+        using namespace utility;
+
+        checkAndSet(src, nameMark, errorList, [&](){ m_Name = src[nameMark].toString(); });
+        checkAndSet(src, idMark, errorList, [&](){ m_Id = src[idMark].toString(); });
+
+        checkAndSet(src, fieldMark, errorList, [&](){ m_Field->fromJson( src[fieldMark].toObject(), errorList ); });
+
+        checkAndSet(src, getterMark, errorList, [&](){ readOptionalMethod(src[getterMark], m_Getter, errorList); });
+        checkAndSet(src, setterMark, errorList, [&](){ readOptionalMethod(src[setterMark], m_Setter, errorList); });
+        checkAndSet(src, resetterMark, errorList, [&](){ readOptionalMethod(src[resetterMark], m_Resetter, errorList); });
+        checkAndSet(src, notifierMark, errorList, [&](){ readOptionalMethod(src[notifierMark], m_Notifier, errorList); });
+
+        checkAndSet(src, designableGetterMark, errorList, [&](){
+            readOptionalMethod(src[designableGetterMark], m_DesignableGetter, errorList);
+        });
+        checkAndSet(src, scriptableGetterMark, errorList, [&](){
+            readOptionalMethod(src[scriptableGetterMark], m_ScriptableGetter, errorList);
+        });
+
+        checkAndSet(src, revisionMark, errorList, [&](){ m_Revision = src[revisionMark].toInt(); });
+
+        checkAndSet(src, designableMark, errorList, [&](){ m_Designable = src[designableMark].toBool(); });
+        checkAndSet(src, scriptableMark, errorList, [&](){ m_Scriptable = src[scriptableMark].toBool(); });
+        checkAndSet(src, storedMark, errorList, [&](){ m_Stored = src[storedMark].toBool(); });
+        checkAndSet(src, userMark, errorList, [&](){ m_User = src[userMark].toBool(); });
+        checkAndSet(src, constantMark, errorList, [&](){ m_Constant = src[constantMark].toBool(); });
+        checkAndSet(src, finalMark, errorList, [&](){ m_Final = src[finalMark].toBool(); });
     }
 
     /**
@@ -711,13 +796,13 @@ namespace entity {
 
         m_Field = std::make_shared<Field>(*src.m_Field);
 
-        m_Getter   = std::make_shared<ClassMethod>(*src.m_Getter);
-        m_Setter   = std::make_shared<ClassMethod>(*src.m_Setter);
-        m_Resetter = std::make_shared<ClassMethod>(*src.m_Resetter);
-        m_Notifier = std::make_shared<ClassMethod>(*src.m_Notifier);
+        m_Getter   = src.m_Getter ? std::make_shared<ClassMethod>(*src.m_Getter) : nullptr;
+        m_Setter   = src.m_Setter ? std::make_shared<ClassMethod>(*src.m_Setter) : nullptr;
+        m_Resetter = src.m_Resetter ? std::make_shared<ClassMethod>(*src.m_Resetter) : nullptr;
+        m_Notifier = src.m_Notifier ? std::make_shared<ClassMethod>(*src.m_Notifier) : nullptr;
 
-        m_DesignableGetter = std::make_shared<ClassMethod>(*src.m_DesignableGetter);
-        m_ScriptableGetter = std::make_shared<ClassMethod>(*src.m_ScriptableGetter);
+        m_DesignableGetter = src.m_DesignableGetter ? std::make_shared<ClassMethod>(*src.m_DesignableGetter) : nullptr;
+        m_ScriptableGetter = src.m_ScriptableGetter ? std::make_shared<ClassMethod>(*src.m_ScriptableGetter) : nullptr;
 
         m_Revision = src.m_Revision;
 

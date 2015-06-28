@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 03/11/2014.
+** Created 28/06/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,19 +20,24 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include <gtest/gtest.h>
+#pragma once
 
-#include <cases/projecttranslatortestcases.h>
-#include <cases/relationmakertestcases.h>
-#include <cases/depthsearchtestcases.h>
-#include <cases/filemakertestcases.h>
-#include <cases/filejsontestcases.h>
-#include <cases/projectmakertestcases.h>
-#include <cases/projecttestcases.h>
-#include <cases/typemakertestcases.h>
+#include "TestProject.h"
 
-int main(int argc, char **argv)
+TEST_F(Project, LoadSaveProject)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    project_->database()->addScope("foo")->addType("bar");
+    project_->save();
+
+    EXPECT_TRUE(project_->isSaved())
+            << "Project should be saved.";
+
+    project::SharedProject newProject(std::make_shared<project::Project>("no name here ", "no path here"));
+    newProject->load(rootPath_ + sep_ + project_->name().toLower().replace(" ", "_") + "." + PROJECT_FILE_EXTENTION);
+
+    EXPECT_TRUE(newProject->isSaved())
+            << "Project should be saved.";
+
+    EXPECT_EQ(*project_, *newProject)
+            << "Saved and loaded projects must be equal";
 }

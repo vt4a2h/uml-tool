@@ -29,7 +29,15 @@ HEADERS += ../../enums.h \
     TestJson.h \
     TestProjectTranslator.h \
     TestProjectMaker.h \
-    TestProject.h
+    TestProject.h \
+    cases/projecttranslatortestcases.h \
+    cases/relationmakertestcases.h \
+    cases/depthsearchtestcases.h \
+    cases/filemakertestcases.h \
+    cases/filejsontestcases.h \
+    cases/projectmakertestcases.h \
+    cases/projecttestcases.h \
+    cases/typemakertestcases.h
 
 SOURCES += main.cpp \
            ../../entity/type.cpp \
@@ -43,6 +51,7 @@ SOURCES += main.cpp \
            ../../entity/templateclass.cpp \
            ../../entity/extendedtype.cpp\
            ../../entity/template.cpp \
+           ../../entity/property.cpp \
            ../../utility/helpfunctions.cpp \
            ../../db/database.cpp \
            ../../db/projectdatabase.cpp \

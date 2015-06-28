@@ -68,7 +68,7 @@ namespace utility {
      * @param lst
      * @param func
      */
-    void checkAndSet(const QJsonObject &object, const QString &key, QStringList &lst, std::function<void ()> func)
+    void checkAndSet(const QJsonObject &object, const QString &key, QStringList &lst, const std::function<void()> &func)
     {
         object.contains(key) ? func() : lst.append(QObject::tr("Key \"%1\" not found!").arg(key));
     }

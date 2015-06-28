@@ -72,7 +72,7 @@ namespace db {
 namespace utility {
 
     QString genId();
-    void checkAndSet(const QJsonObject& object, const QString& key, QStringList& lst, std::function<void()> func);
+    void checkAndSet(const QJsonObject& object, const QString& key, QStringList& lst, const std::function<void()>& func);
 
     std::shared_ptr<entity::Type> makeType(const QString &hash);
     std::shared_ptr<relationship::Relation> makeRelation(relationship::RelationType relation);
@@ -206,6 +206,19 @@ namespace utility {
                 }
             }
         }
+
+        return false;
+    }
+
+    template<class T>
+    bool sharedPtrEq(const std::shared_ptr<T> &lhs, const std::shared_ptr<T> &rhs)
+    {
+        // The same pointers
+        if (lhs == rhs || (!lhs && !rhs))
+            return true;
+
+        if (lhs && rhs)
+            return *lhs == *rhs;
 
         return false;
     }
