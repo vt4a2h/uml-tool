@@ -121,22 +121,13 @@ namespace entity {
         , m_Field(std::make_shared<entity::Field>(name, typeId))
         , m_Revision(defaultRevision)
         , m_Designable(defaultDesignable)
+        , m_Scriptable(defaultScriptable)
         , m_Stored(defaultStored)
         , m_User(defaultUser)
         , m_Constant(defaultConstant)
         , m_Final(defaultFinal)
     {
         setParent(parent);
-    }
-
-    /**
-     * @brief Property::Property
-     * @param src
-     * @param errorList
-     */
-    Property::Property(const QJsonObject &src, QStringList &errorList)
-        : BasicEntity(src, errorList)
-    {
     }
 
     /**
@@ -652,13 +643,14 @@ namespace entity {
         result.insert(idMark, m_Id);
         result.insert(fieldMark, m_Field->toJson());
 
-        result.insert(getterMark, m_Getter ? m_Getter->toJson() : QJsonValue(""));
-        result.insert(setterMark, m_Setter ? m_Setter->toJson() : QJsonValue(""));
-        result.insert(resetterMark, m_Resetter ? m_Resetter->toJson() : QJsonValue(""));
-        result.insert(notifierMark, m_Notifier ? m_Notifier->toJson() : QJsonValue(""));
 
-        result.insert(designableGetterMark, m_DesignableGetter ? m_DesignableGetter->toJson() : QJsonValue(""));
-        result.insert(scriptableGetterMark, m_ScriptableGetter ? m_ScriptableGetter->toJson() : QJsonValue(""));
+        result.insert(getterMark, m_Getter ? m_Getter->toJson() : QJsonValue(QString("")));
+        result.insert(setterMark, m_Setter ? m_Setter->toJson() : QJsonValue(QString("")));
+        result.insert(resetterMark, m_Resetter ? m_Resetter->toJson() : QJsonValue(QString("")));
+        result.insert(notifierMark, m_Notifier ? m_Notifier->toJson() : QJsonValue(QString("")));
+
+        result.insert(designableGetterMark, m_DesignableGetter ? m_DesignableGetter->toJson() : QJsonValue(QString("")));
+        result.insert(scriptableGetterMark, m_ScriptableGetter ? m_ScriptableGetter->toJson() : QJsonValue(QString("")));
 
         result.insert(revisionMark, m_Revision);
 

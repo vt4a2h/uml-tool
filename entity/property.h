@@ -36,7 +36,6 @@ namespace entity {
         Property(Property &&src);
         Property(const Property &src);
         Property(const QString &name, const QString &typeId, QObject *parent = nullptr);
-        Property(const QJsonObject &src, QStringList &errorList);
 
         Property &operator =(const Property &rhs);
         Property &operator =(Property &&rhs);
