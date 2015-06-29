@@ -20,15 +20,6 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
-#include "class.h"
-#include "enums.h"
-#include "field.h"
-#include "classmethod.h"
-#include "enums.h"
-#include "extendedtype.h"
-#include "constants.h"
-
 #include <utility>
 #include <algorithm>
 
@@ -37,6 +28,15 @@
 #include <QStringList>
 
 #include <utility/helpfunctions.h>
+
+#include "class.h"
+#include "enums.h"
+#include "field.h"
+#include "classmethod.h"
+#include "enums.h"
+#include "extendedtype.h"
+#include "property.h"
+#include "constants.h"
 
 namespace {
     const QString newMethodName = entity::Class::tr("newMethod");
@@ -122,7 +122,8 @@ namespace entity {
                 lhs.m_FinalStatus == rhs.m_FinalStatus    &&
                 lhs.m_Parents     == rhs.m_Parents        &&
                 utility::seqSharedPointerEq(lhs.m_Methods, rhs.m_Methods) &&
-                utility::seqSharedPointerEq(lhs.m_Fields,  rhs.m_Fields);
+                utility::seqSharedPointerEq(lhs.m_Fields,  rhs.m_Fields)  &&
+                utility::seqSharedPointerEq(lhs.m_Properties, rhs.m_Properties);
     }
 
     /**
@@ -395,6 +396,68 @@ namespace entity {
     }
 
     /**
+     * @brief Class::addProperty
+     * @param name
+     * @param typeId
+     * @return
+     */
+    SharedProperty Class::addProperty(const QString &name, const QString &typeId)
+    {
+        SharedProperty property(std::make_shared<Property>(name, typeId));
+        m_Properties.append(property);
+        return property;
+    }
+
+    /**
+     * @brief Class::property
+     * @param name
+     * @return
+     */
+    ConstSharedProperty Class::property(const QString &name) const
+    {
+        auto it = std::find_if(m_Properties.cbegin(), m_Properties.cend(), [&](auto &&prop){ return prop->name() == name; });
+        return it != m_Properties.end() ? *it : SharedProperty();
+    }
+
+    /**
+     * @brief Class::property
+     * @param name
+     * @return
+     */
+    SharedProperty Class::property(const QString &name)
+    {
+        return std::const_pointer_cast<Property>(const_cast<const Class *>(this)->property(name));
+    }
+
+    /**
+     * @brief Class::properties
+     * @return
+     */
+    PropertiesList Class::properties() const
+    {
+        return m_Properties;
+    }
+
+    /**
+     * @brief Class::removeProperty
+     * @param name
+     */
+    void Class::removeProperty(const QString &name)
+    {
+        if (auto prop = property(name))
+            m_Properties.removeOne(prop);
+    }
+
+    /**
+     * @brief Class::anyProperties
+     * @return
+     */
+    bool Class::anyProperties() const
+    {
+        return !m_Properties.empty();
+    }
+
+    /**
      * @brief Class::containsFields
      * @param section
      * @return
@@ -485,12 +548,19 @@ namespace entity {
         result.insert("Parents", parents);
 
         QJsonArray methods;
-        for (auto &&value : m_Methods) methods.append(value->toJson());
+        for (auto &&value : m_Methods)
+            methods.append(value->toJson());
         result.insert("Methods", methods);
 
         QJsonArray fields;
-        for (auto &&value : m_Fields) fields.append(value->toJson());
+        for (auto &&value : m_Fields)
+            fields.append(value->toJson());
         result.insert("Fields", fields);
+
+        QJsonArray properties;
+        for (auto &&value : m_Properties)
+            properties.append(value->toJson());
+        result.insert("Properties", properties);
 
         return result;
     }
@@ -561,6 +631,20 @@ namespace entity {
                 }
             } else {
                 errorList << "Error: \"Fields\" is not array";
+            }
+        });
+
+        m_Properties.clear();
+        utility::checkAndSet(src, "Properties", errorList, [&src, &errorList, this](){
+            if (src["Properties"].isArray()) {
+                SharedProperty property;
+                for (auto &&value : src["Properties"].toArray()) {
+                    property = std::make_shared<Property>();
+                    property->fromJson(value.toObject(), errorList);
+                    m_Properties << property;
+                }
+            } else {
+                errorList << "Error: \"Properties\" is not array";
             }
         });
     }
@@ -647,6 +731,7 @@ namespace entity {
         m_Parents = std::move(src.m_Parents);
         m_Methods = std::move(src.m_Methods);
         m_Fields  = std::move(src.m_Fields );
+        m_Properties = std::move(src.m_Properties);
     }
 
     /**
@@ -661,6 +746,7 @@ namespace entity {
 
         utility::deepCopySharedPointerList(src.m_Methods, m_Methods);
         utility::deepCopySharedPointerList(src.m_Fields,  m_Fields );
+        utility::deepCopySharedPointerList(src.m_Properties, m_Properties);
     }
 
 } // namespace entity

@@ -100,6 +100,8 @@ namespace entity {
 
     class Property;
     using SharedProperty = std::shared_ptr<Property>;
+    using ConstSharedProperty = std::shared_ptr<const Property>;
+    using PropertiesList = QList<SharedProperty>;
 
     class IComponents;
     using SharedComponents = std::shared_ptr<IComponents>;

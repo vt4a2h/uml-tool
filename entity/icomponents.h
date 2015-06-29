@@ -50,6 +50,8 @@ namespace entity {
         virtual void addExistsElement(const SharedElement &element, int pos);
         virtual int removeElement(const SharedElement &element);
         virtual ElementsList elements() const;
+
+        // TODO: add properties here
     };
 
 } // end of namespace entity

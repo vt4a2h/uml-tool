@@ -78,6 +78,14 @@ namespace entity {
         void removeField(const QString &name);
         bool anyFields() const;
 
+        SharedProperty addProperty(const QString &name, const QString &typeId);
+        ConstSharedProperty property(const QString &name) const;
+        SharedProperty property(const QString &name);
+        PropertiesList properties() const;
+        bool containsProperty(const QString &name);
+        void removeProperty(const QString &name);
+        bool anyProperties() const;
+
         bool containsFields(Section section) const;
         FieldsList fields(Section section) const;
 
@@ -121,6 +129,7 @@ namespace entity {
         ParentsList m_Parents;
         MethodsList m_Methods;
         FieldsList  m_Fields;
+        PropertiesList m_Properties;
     };
 
     template <class T>
