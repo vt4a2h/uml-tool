@@ -37,7 +37,9 @@ HEADERS += ../../enums.h \
     cases/filejsontestcases.h \
     cases/projectmakertestcases.h \
     cases/projecttestcases.h \
-    cases/typemakertestcases.h
+    cases/typemakertestcases.h \
+    TestIComponents.h \
+    cases/icomponentstestcases.h
 
 SOURCES += main.cpp \
            ../../entity/type.cpp \

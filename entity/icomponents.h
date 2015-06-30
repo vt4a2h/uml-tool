@@ -51,7 +51,10 @@ namespace entity {
         virtual int removeElement(const SharedElement &element);
         virtual ElementsList elements() const;
 
-        // TODO: add properties here
+        virtual SharedProperty addNewProperty();
+        virtual void addExistsProperty(const SharedProperty &property, int pos);
+        virtual int removeProperty(const SharedProperty &property);
+        virtual PropertiesList properties() const;
     };
 
 } // end of namespace entity

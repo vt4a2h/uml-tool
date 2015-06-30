@@ -81,7 +81,6 @@ namespace entity {
         SharedProperty addProperty(const QString &name, const QString &typeId);
         ConstSharedProperty property(const QString &name) const;
         SharedProperty property(const QString &name);
-        PropertiesList properties() const;
         bool containsProperty(const QString &name);
         void removeProperty(const QString &name);
         bool anyProperties() const;
@@ -107,6 +106,11 @@ namespace entity {
         void addExistsFiled(const SharedField &field, int pos) override;
         int removeField(const SharedField &field) override;
         FieldsList fields() const override;
+
+        SharedProperty addNewProperty() override;
+        void addExistsProperty(const SharedProperty &property, int pos) override;
+        int removeProperty(const SharedProperty &property) override;
+        PropertiesList properties() const override;
 
     public: // BasicEntity implementation
         QJsonObject toJson() const override;

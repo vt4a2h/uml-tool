@@ -151,4 +151,44 @@ namespace entity {
         return ElementsList();
     }
 
+    /**
+     * @brief IComponents::addNewProperty
+     * @return
+     */
+    SharedProperty IComponents::addNewProperty()
+    {
+        return SharedProperty();
+    }
+
+    /**
+     * @brief IComponents::addExistsProperty
+     * @param property
+     * @param pos
+     */
+    void IComponents::addExistsProperty(const SharedProperty &property, int pos)
+    {
+        Q_UNUSED(property);
+        Q_UNUSED(pos);
+    }
+
+    /**
+     * @brief IComponents::removeProperty
+     * @param property
+     * @return
+     */
+    int IComponents::removeProperty(const SharedProperty &property)
+    {
+        Q_UNUSED(property);
+        return -1;
+    }
+
+    /**
+     * @brief IComponents::properties
+     * @return
+     */
+    PropertiesList IComponents::properties() const
+    {
+        return PropertiesList();
+    }
+
 } // end of namespace entity

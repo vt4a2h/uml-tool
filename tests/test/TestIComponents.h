@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 03/11/2014.
+** Created 01/07/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,20 +20,18 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+#pragma once
+
 #include <gtest/gtest.h>
 
-#include <cases/projecttranslatortestcases.h>
-#include <cases/relationmakertestcases.h>
-#include <cases/depthsearchtestcases.h>
-#include <cases/filemakertestcases.h>
-#include <cases/filejsontestcases.h>
-#include <cases/projectmakertestcases.h>
-#include <cases/projecttestcases.h>
-#include <cases/typemakertestcases.h>
-#include <cases/icomponentstestcases.h>
-
-int main(int argc, char **argv)
+class Components : public ::testing::Test
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
+protected:
+    virtual void SetUp() override
+    {
+    }
+
+    virtual void TearDown() override
+    {
+    }
+};

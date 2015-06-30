@@ -41,6 +41,7 @@
 namespace {
     const QString newMethodName = entity::Class::tr("newMethod");
     const QString newFieldName  = entity::Class::tr("newField");
+    const QString newPropertyName = entity::Class::tr("newProperty");
 }
 
 namespace entity {
@@ -374,7 +375,8 @@ namespace entity {
     void Class::removeField(const QString &name)
     {
         auto f = getField(name);
-        if (f) m_Fields.removeAt(m_Fields.indexOf(f));
+        if (f)
+            m_Fields.removeAt(m_Fields.indexOf(f));
     }
 
     /**
@@ -384,6 +386,50 @@ namespace entity {
     FieldsList Class::fields() const
     {
         return m_Fields;
+    }
+
+    /**
+     * @brief Class::addNewProperty
+     * @return
+     */
+    SharedProperty Class::addNewProperty()
+    {
+        return addProperty(newPropertyName, STUB_ID);
+    }
+
+    /**
+     * @brief Class::addExistsProperty
+     * @param property
+     * @param pos
+     */
+    void Class::addExistsProperty(const SharedProperty &property, int pos)
+    {
+        if (pos == -1)
+            m_Properties << property;
+        else
+            m_Properties.insert(pos, property);
+    }
+
+    /**
+     * @brief Class::removeProperty
+     * @param property
+     * @return
+     */
+    int Class::removeProperty(const SharedProperty &property)
+    {
+        int pos = m_Properties.indexOf(property);
+        m_Properties.removeOne(property);
+
+        return pos;
+    }
+
+    /**
+     * @brief Class::properties
+     * @return
+     */
+    PropertiesList Class::properties() const
+    {
+        return m_Properties;
     }
 
     /**
@@ -427,15 +473,6 @@ namespace entity {
     SharedProperty Class::property(const QString &name)
     {
         return std::const_pointer_cast<Property>(const_cast<const Class *>(this)->property(name));
-    }
-
-    /**
-     * @brief Class::properties
-     * @return
-     */
-    PropertiesList Class::properties() const
-    {
-        return m_Properties;
     }
 
     /**
