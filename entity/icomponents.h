@@ -32,17 +32,13 @@ namespace entity {
     public:
         virtual ~IComponents();
 
-        void addExists(const SharedMethod &method, int pos);
-        int remove(const SharedMethod &method);
-        MethodsList components() const;
-
         virtual SharedMethod addNewMethod();
         virtual void addExistsMethod(const SharedMethod &method, int pos);
         virtual int removeMethod(const SharedMethod &method);
         virtual MethodsList methods() const;
 
-        virtual SharedField addNewFiled();
-        virtual void addExistsFiled(const SharedField &field, int pos);
+        virtual SharedField addNewField();
+        virtual void addExistsField(const SharedField &field, int pos);
         virtual int removeField(const SharedField &field);
         virtual FieldsList fields() const;
 

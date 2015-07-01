@@ -24,14 +24,36 @@
 
 #include <gtest/gtest.h>
 
+#include <entity/type.h>
+#include <entity/extendedtype.h>
+#include <entity/enum.h>
+#include <entity/union.h>
+#include <entity/class.h>
+
 class Components : public ::testing::Test
 {
 protected:
     virtual void SetUp() override
     {
+        _type = std::make_shared<entity::Type>();
+        _extendedType = std::make_shared<entity::ExtendedType>();
+        _enum = std::make_shared<entity::Enum>();
+        _union = std::make_shared<entity::Union>();
+        _class = std::make_shared<entity::Class>();
     }
 
     virtual void TearDown() override
     {
+        _type.reset();
+        _extendedType.reset();
+        _enum.reset();
+        _union.reset();
+        _class.reset();
     }
+
+    entity::SharedComponents _type;
+    entity::SharedComponents _extendedType;
+    entity::SharedComponents _enum;
+    entity::SharedComponents _union;
+    entity::SharedComponents _class;
 };

@@ -75,7 +75,7 @@ namespace entity {
      * @brief IComponents::addNewFiled
      * @return
      */
-    SharedField IComponents::addNewFiled()
+    SharedField IComponents::addNewField()
     {
         return SharedField();
     }
@@ -85,7 +85,7 @@ namespace entity {
      * @param field
      * @param pos
      */
-    void IComponents::addExistsFiled(const SharedField &field, int pos)
+    void IComponents::addExistsField(const SharedField &field, int pos)
     {
         Q_UNUSED(field);
         Q_UNUSED(pos);

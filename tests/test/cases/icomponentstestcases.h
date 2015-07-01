@@ -24,26 +24,69 @@
 
 #include "TestIComponents.h"
 
+#define TEST_COMPONENTS(capName, pluralForm, capPluralForm) \
+    void test##capPluralForm( entity::SharedComponents &components, bool contains ) \
+    { \
+        ASSERT_TRUE(components->pluralForm().empty()) \
+                << "Methods should be empty first time."; \
+\
+        auto new##capName = components->addNew##capName(); \
+        if (contains) \
+            ASSERT_TRUE(new##capName.get()); \
+        else \
+            ASSERT_FALSE(new##capName.get()); \
+\
+        auto index = components->remove##capName(new##capName); \
+        ASSERT_EQ(index, contains ? 0 : -1); \
+\
+        components->addExists##capName(new##capName, 0); \
+        auto count = components->pluralForm().count(); \
+        ASSERT_EQ(count, contains ? 1 : 0); \
+    }
+
+namespace {
+    TEST_COMPONENTS(Method, methods, Methods)
+    TEST_COMPONENTS(Field, fields, Fields)
+    TEST_COMPONENTS(Element, elements, Elements)
+    TEST_COMPONENTS(Property, properties, Properties)
+}
+
 TEST_F(Components, SimpleType)
 {
-}
-
-TEST_F(Components, Class)
-{
-}
-
-TEST_F(Components, Union)
-{
-}
-
-TEST_F(Components, Enum)
-{
+    testMethods(_type, false);
+    testFields(_type, false);
+    testElements(_type, false);
+    testProperties(_type, false);
 }
 
 TEST_F(Components, ExtendedType)
 {
+    testMethods(_extendedType, false);
+    testFields(_extendedType, false);
+    testElements(_extendedType, false);
+    testProperties(_extendedType, false);
 }
 
-TEST_F(Components, TemplateClass)
+TEST_F(Components, Class)
 {
+    testMethods(_class, true);
+    testFields(_class, true);
+    testElements(_class, false);
+    testProperties(_class, true);
+}
+
+TEST_F(Components, Union)
+{
+    testMethods(_union, false);
+    testFields(_union, true);
+    testElements(_union, false);
+    testProperties(_union, false);
+}
+
+TEST_F(Components, Enum)
+{
+    testMethods(_enum, false);
+    testFields(_enum, false);
+    testElements(_enum, true);
+    testProperties(_enum, false);
 }

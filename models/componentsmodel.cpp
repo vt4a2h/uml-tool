@@ -131,7 +131,7 @@ namespace models {
      */
     entity::SharedField ComponentsModel::addField()
     {
-        return add<entity::SharedField>([this](){ return m_Components->addNewFiled(); }, m_Components->fields().count());
+        return add<entity::SharedField>([this](){ return m_Components->addNewField(); }, m_Components->fields().count());
     }
 
     /**
@@ -142,7 +142,7 @@ namespace models {
     void ComponentsModel::addExistsField(const entity::SharedField &field, int pos)
     {
         int count = m_Components->fields().count();
-        addExists([this, &field](int pos){ m_Components->addExistsFiled(field, pos); }, count, pos);
+        addExists([this, &field](int pos){ m_Components->addExistsField(field, pos); }, count, pos);
     }
 
     /**

@@ -257,7 +257,7 @@ namespace entity {
      * @brief Class::addNewFiled
      * @return
      */
-    SharedField Class::addNewFiled()
+    SharedField Class::addNewField()
     {
         return addField(newFieldName, STUB_ID);
     }
@@ -267,7 +267,7 @@ namespace entity {
      * @param field
      * @param pos
      */
-    void Class::addExistsFiled(const SharedField &field, int pos)
+    void Class::addExistsField(const SharedField &field, int pos)
     {
         if (pos == -1)
             m_Fields << field;

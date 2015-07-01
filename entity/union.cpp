@@ -269,7 +269,7 @@ namespace entity {
      * @brief Union::addNewFiled
      * @return
      */
-    SharedField Union::addNewFiled()
+    SharedField Union::addNewField()
     {
         return addField(newFiledName, STUB_ID);
     }
@@ -279,7 +279,7 @@ namespace entity {
      * @param field
      * @param pos
      */
-    void Union::addExistsFiled(const SharedField &field, int pos)
+    void Union::addExistsField(const SharedField &field, int pos)
     {
         if (pos == -1)
             m_Fields << field;
