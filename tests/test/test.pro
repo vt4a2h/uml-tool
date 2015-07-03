@@ -39,7 +39,9 @@ HEADERS += ../../enums.h \
     cases/projecttestcases.h \
     cases/typemakertestcases.h \
     TestIComponents.h \
-    cases/icomponentstestcases.h
+    cases/icomponentstestcases.h \
+    cases/entitiestestcases.h \
+    TestEntities.h
 
 SOURCES += main.cpp \
            ../../entity/type.cpp \
