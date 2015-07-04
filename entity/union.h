@@ -50,8 +50,6 @@ namespace entity {
         void removeField(const QString &name);
         bool containsField(const QString &name);
 
-        Union *clone() const;
-
         bool isEqual(const Union &rhs) const;
 
     public: // IComponent implementation

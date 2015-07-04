@@ -37,12 +37,12 @@ class Enteties : public ::testing::Test
 protected:
     virtual void SetUp() override
     {
-        _type          = std::make_shared<entity::Type>()         ;
-        _extendedType  = std::make_shared<entity::ExtendedType>() ;
-        _enum          = std::make_shared<entity::Enum>()         ;
-        _union         = std::make_shared<entity::Union>()        ;
-        _class         = std::make_shared<entity::Class>()        ;
-        _templateClass = std::make_shared<entity::TemplateClass>();
+        _type          = std::make_unique<entity::Type>()         ;
+        _extendedType  = std::make_unique<entity::ExtendedType>() ;
+        _enum          = std::make_unique<entity::Enum>()         ;
+        _union         = std::make_unique<entity::Union>()        ;
+        _class         = std::make_unique<entity::Class>()        ;
+        _templateClass = std::make_unique<entity::TemplateClass>();
     }
 
     virtual void TearDown() override
@@ -55,10 +55,10 @@ protected:
         _templateClass.reset();
     }
 
-    entity::SharedType          _type         ;
-    entity::SharedExtendedType  _extendedType ;
-    entity::SharedEnum          _enum         ;
-    entity::SharedUnion         _union        ;
-    entity::SharedClass         _class        ;
-    entity::SharedTemplateClass _templateClass;
+    std::unique_ptr<entity::Type>          _type         ;
+    std::unique_ptr<entity::ExtendedType>  _extendedType ;
+    std::unique_ptr<entity::Enum>          _enum         ;
+    std::unique_ptr<entity::Union>         _union        ;
+    std::unique_ptr<entity::Class>         _class        ;
+    std::unique_ptr<entity::TemplateClass> _templateClass;
 };

@@ -247,15 +247,6 @@ namespace entity {
     }
 
     /**
-     * @brief Union::clone
-     * @return
-     */
-    Union *Union::clone() const
-    {
-        return new Union(*this);
-    }
-
-    /**
      * @brief Union::isEqual
      * @param rhs
      * @return

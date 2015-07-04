@@ -44,16 +44,16 @@ namespace entity {
         Type(const Type &src);
         Type(const QString &name, const QString &scopeId, const QString &typeId = "");
 
-        Type &operator =(Type rhs);
+        Type &operator =(const Type &rhs);
         Type &operator =(Type &&rhs);
         friend bool operator ==(const Type &lhs, const Type &rhs);
 
         QString scopeId() const;
         void setScopeId(const QString &scopeId); // TODO: perhaps store it as weak pointer
 
-        virtual Type *clone() const;
-
         virtual bool isEqual(const Type &rhs) const;
+
+        bool invalid() const;
 
     public: // BasicEntity implementation
         QString id() const override;
@@ -73,7 +73,7 @@ namespace entity {
         virtual void copyFrom(const Type &src);
 
     private:
-        void generateUniqueName();
+        void baseTypeName();
 
         QString m_Id;
         QString m_ScopeId;
@@ -81,6 +81,8 @@ namespace entity {
         // position
         QString m_X;
         QString m_Y;
+
+        bool m_Invalid;
     };
 
 } // namespace entity

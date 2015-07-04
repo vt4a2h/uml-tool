@@ -72,9 +72,10 @@ namespace entity {
         : BasicEntity(name)
         , m_Id(typeId.isEmpty() ? utility::genId() : typeId)
         , m_ScopeId(scopeId)
+        , m_Invalid(false)
     {
         if (m_Name.isEmpty() || m_Name == DEFAULT_NAME)
-            generateUniqueName();
+            baseTypeName();
     }
 
     /**
@@ -109,9 +110,10 @@ namespace entity {
      * @param rhs
      * @return
      */
-    Type &Type::operator =(Type rhs)
+    Type &Type::operator =(const Type &rhs)
     {
-        moveFrom(rhs);
+        if (this != &rhs)
+            copyFrom(rhs);
 
         return *this;
     }
@@ -223,15 +225,6 @@ namespace entity {
     }
 
     /**
-     * @brief Type::clone
-     * @return
-     */
-    Type *Type::clone() const
-    {
-        return new Type(*this);
-    }
-
-    /**
      * @brief Type::isEqual
      * @param rhs
      * @return
@@ -239,6 +232,15 @@ namespace entity {
     bool Type::isEqual(const Type &rhs) const
     {
         return *this == rhs;
+    }
+
+    /**
+     * @brief Type::invalid
+     * @return
+     */
+    bool Type::invalid() const
+    {
+        return m_Invalid;
     }
 
     /**
@@ -250,6 +252,8 @@ namespace entity {
         m_Name    = std::move(src.m_Name);
         m_Id      = std::move(src.m_Id);
         m_ScopeId = std::move(src.m_ScopeId);
+
+        m_Invalid = true;
     }
 
     /**
@@ -258,6 +262,7 @@ namespace entity {
      */
     void Type::copyFrom(const Type &src)
     {
+        m_Name = src.m_Name;
         m_Id = src.m_Id;
         m_ScopeId = src.m_ScopeId;
     }
@@ -265,10 +270,9 @@ namespace entity {
     /**
      * @brief Type::generateUniqueName
      */
-    void Type::generateUniqueName()
+    void Type::baseTypeName()
     {
-        // TODO: investigate why always "type"
-        m_Name = "type";
+        m_Name = BASE_TYPE_NAME;
     }
 
 } // namespace entity

@@ -23,9 +23,39 @@
 #pragma once
 
 #include "TestEntities.h"
+#include "constants.h"
 
 TEST_F(Enteties, SimpleType)
 {
+    ASSERT_STREQ(_type->name().toStdString().c_str(), BASE_TYPE_NAME);
+    ASSERT_STREQ(_type->scopeId().toStdString().c_str(), GLOBAL_SCOPE_ID);
+
+    _type->setName("some name");
+    _type->setId("some id");
+    _type->setScopeId("global scope id");
+
+    // copy ctor
+    auto newCopyType(std::make_unique<entity::Type>(*_type));
+    ASSERT_EQ(*_type, *newCopyType);
+
+    // copy operator
+    newCopyType.reset();
+    newCopyType = std::make_unique<entity::Type>();
+    *newCopyType = *_type;
+    ASSERT_EQ(*_type, *newCopyType);
+
+    // move ctor
+    entity::Type tmp(*_type);
+    entity::Type moveType(std::move(tmp));
+    ASSERT_TRUE(tmp.invalid());
+    ASSERT_EQ(moveType, *_type);
+
+    // move operator
+    entity::Type tmpEq(*_type);
+    entity::Type moveTypeEq;
+    moveTypeEq = std::move(tmpEq);
+    ASSERT_TRUE(tmpEq.invalid());
+    ASSERT_EQ(moveTypeEq, *_type);
 }
 
 TEST_F(Enteties, ExtendedType)
