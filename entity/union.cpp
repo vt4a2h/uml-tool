@@ -121,10 +121,9 @@ namespace entity {
      */
     SharedField Union::getField(const QString &name) const
     {
-        auto it = std::find_if(m_Fields.begin(), m_Fields.end(),
-                               [&](const SharedField &f) {return f->name() == name;});
+        auto it = utility::find_if(m_Fields, [&](auto &&f) {return f->name() == name;});
 
-        return (it != m_Fields.end() ? *it : nullptr);
+        return it != m_Fields.cend() ? *it : SharedField();
     }
 
     /**

@@ -223,6 +223,18 @@ namespace utility {
         return false;
     }
 
+    template <class Sequence, class UnaryPredicate>
+    inline decltype(auto) find_if( const Sequence& seq, UnaryPredicate pred)
+    {
+        return std::find_if(std::begin(seq), std::end(seq), pred);
+    }
+
+    template <class Sequence, class UnaryPredicate>
+    inline decltype(auto) find_if( Sequence& seq, UnaryPredicate pred)
+    {
+        return std::find_if(std::begin(seq), std::end(seq), pred);
+    }
+
     QString fieldKeywordToString(entity::FieldKeyword keyword);
     QString methodLhsIdToString(entity::LhsIdentificator id);
     QString methodRhsIdToString(entity::RhsIdentificator id);

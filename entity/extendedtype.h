@@ -46,11 +46,11 @@ namespace entity {
 
         friend bool operator ==(const ExtendedType &lhs, const ExtendedType &rhs);
 
-        bool isLink() const;
+        bool isPointer() const;
         void addPointerStatus(bool pointerToConst = false);
         void removePointerStatus();
 
-        bool isPointer() const;
+        bool isLink() const;
         void addLinkStatus();
         void removeLinkStatus();
 

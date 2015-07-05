@@ -52,12 +52,54 @@ TEST_F(Enteties, SimpleType)
     _type->setId("some id");
     _type->setScopeId("global scope id");
 
-    test_copy_move(Type, _type)
+    test_copy_move(Type, _type);
 }
 
 TEST_F(Enteties, ExtendedType)
 {
-    test_copy_move(ExtendedType, _extendedType)
+    ASSERT_STREQ(_extendedType->name().toStdString().c_str(), BASE_TYPE_NAME);
+    ASSERT_STREQ(_extendedType->typeId().toStdString().c_str(), STUB_ID);
+    ASSERT_FALSE(_extendedType->isConst());
+
+    ASSERT_FALSE(_extendedType->isLink());
+    _extendedType->addLinkStatus();
+    ASSERT_TRUE(_extendedType->isLink());
+    _extendedType->removeLinkStatus();
+    ASSERT_FALSE(_extendedType->isLink());
+
+    ASSERT_FALSE(_extendedType->isPointer());
+    _extendedType->addPointerStatus();
+    ASSERT_TRUE(_extendedType->isPointer());
+    _extendedType->removePointerStatus();
+    ASSERT_FALSE(_extendedType->isPointer());
+
+    _extendedType->addPointerStatus();
+    _extendedType->addLinkStatus();
+    ASSERT_TRUE(_extendedType->isLink());
+    ASSERT_TRUE(_extendedType->isPointer());
+
+    _extendedType->setConstStatus(true);
+    ASSERT_TRUE(_extendedType->isConst());
+    _extendedType->setConstStatus(false);
+    ASSERT_FALSE(_extendedType->isConst());
+
+    const QString par1 = "par1";
+    const QString par2 = "par2";
+
+    _extendedType->addTemplateParameter(par1);
+    ASSERT_TRUE(_extendedType->containsTemplateParameter(par1));
+    _extendedType->addTemplateParameter(par2);
+    ASSERT_TRUE(_extendedType->containsTemplateParameter(par2));
+
+    _extendedType->removeTemplateParameters(par1);
+    _extendedType->removeTemplateParameters(par2);
+
+    ASSERT_TRUE(_extendedType->templateParameters().isEmpty());
+
+    // Re-add one parameter to test copy and move
+    _extendedType->addTemplateParameter(par1);
+
+    test_copy_move(ExtendedType, _extendedType);
 }
 
 TEST_F(Enteties, Class)

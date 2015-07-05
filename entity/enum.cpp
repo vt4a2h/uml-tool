@@ -153,9 +153,8 @@ namespace entity {
      */
     SharedElement Enum::element(const QString &name) const
     {
-        auto it = std::find_if(m_Elements.cbegin(), m_Elements.cend(),
-                               [&name](const SharedElement &v){ return v->first == name; });
-        return it != m_Elements.cend() ? *it : std::make_shared<Element>(DEFAULT_NAME, -1);
+        auto it = utility::find_if(m_Elements, [&name](const SharedElement &v){ return v->first == name; });
+        return it != m_Elements.cend() ? *it : SharedElement();
     }
 
     /**
@@ -164,8 +163,7 @@ namespace entity {
      */
     void Enum::removeElement(const QString &name)
     {
-        auto it = std::find_if(m_Elements.begin(), m_Elements.end(),
-                               [&name](const SharedElement &v){ return v->first == name; });
+        auto it = utility::find_if(m_Elements, [&name](const SharedElement &v){ return v->first == name; });
         if (it != m_Elements.end())
             m_Elements.erase(it);
     }
@@ -177,9 +175,7 @@ namespace entity {
      */
     bool Enum::containsElement(const QString &name) const
     {
-        return std::find_if(m_Elements.cbegin(),
-                            m_Elements.cend(),
-                            [&name](const SharedElement &v){ return v->first == name; }) != m_Elements.cend();
+        return utility::find_if(m_Elements, [&name](const SharedElement &v){ return v->first == name; }) != m_Elements.cend();
     }
 
     /**

@@ -74,7 +74,7 @@ namespace entity {
      */
     bool ExtendedType::isLink() const
     {
-        return !m_PointersAndLinks.isEmpty() && m_PointersAndLinks.last().first == "&";
+        return utility::find_if(m_PointersAndLinks, [](const Pl &pl){ return pl.first == "&"; }) != m_PointersAndLinks.end();
     }
 
     /**
@@ -83,7 +83,7 @@ namespace entity {
      */
     void ExtendedType::addPointerStatus(bool pointerToConst)
     {
-        m_PointersAndLinks.append(std::make_pair("*", pointerToConst));
+        m_PointersAndLinks.append({"*", pointerToConst});
     }
 
     /**
@@ -91,7 +91,8 @@ namespace entity {
      */
     void ExtendedType::removePointerStatus()
     {
-        if (isPointer()) m_PointersAndLinks.removeLast();
+        if (!m_PointersAndLinks.isEmpty() && m_PointersAndLinks.last().first == "*")
+            m_PointersAndLinks.removeLast();
     }
 
     /**
@@ -100,7 +101,7 @@ namespace entity {
      */
     bool ExtendedType::isPointer() const
     {
-        return !m_PointersAndLinks.isEmpty() && m_PointersAndLinks.last().first == "*";
+        return utility::find_if(m_PointersAndLinks, [](const Pl &pl){ return pl.first == "*"; }) != m_PointersAndLinks.end();
     }
 
     /**
@@ -108,7 +109,7 @@ namespace entity {
      */
     void ExtendedType::addLinkStatus()
     {
-        m_PointersAndLinks.append(std::make_pair("&", false));
+        m_PointersAndLinks.append({"&", false});
     }
 
     /**
@@ -116,7 +117,8 @@ namespace entity {
      */
     void ExtendedType::removeLinkStatus()
     {
-        if (isLink()) m_PointersAndLinks.removeLast();
+        if (!m_PointersAndLinks.isEmpty() && m_PointersAndLinks.last().first == "&")
+            m_PointersAndLinks.removeLast();
     }
 
     /**

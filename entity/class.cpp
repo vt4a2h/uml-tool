@@ -165,9 +165,7 @@ namespace entity {
      */
     bool Class::containsParent(const QString &typeId)
     {
-        auto it = std::find_if(m_Parents.begin(), m_Parents.end(),
-                               [&](const Parent &p) { return p.first == typeId; });
-        return (it != m_Parents.end());
+        return utility::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; }) != m_Parents.end();
     }
 
     /**
@@ -176,9 +174,9 @@ namespace entity {
      */
     void Class::removeParent(const QString &typeId)
     {
-        auto it = std::find_if(m_Parents.begin(), m_Parents.end(),
-                               [&](const Parent &p) { return p.first == typeId; });
-        if (it != m_Parents.end()) m_Parents.erase(it);
+        auto it = utility::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; });
+        if (it != m_Parents.end())
+            m_Parents.erase(it);
     }
 
     /**
@@ -354,9 +352,8 @@ namespace entity {
      */
     SharedField Class::getField(const QString &name) const
     {
-        auto it = std::find_if(m_Fields.begin(), m_Fields.end(),
-                               [&name](const SharedField &f){ return f->name() == name; });
-        return (it != m_Fields.end() ? *it : nullptr);
+        auto it = utility::find_if(m_Fields, [&name](const SharedField &f){ return f->name() == name; });
+        return it != m_Fields.end() ? *it : SharedField();
     }
 
     /**
@@ -462,7 +459,7 @@ namespace entity {
      */
     ConstSharedProperty Class::property(const QString &name) const
     {
-        auto it = std::find_if(m_Properties.cbegin(), m_Properties.cend(), [&](auto &&prop){ return prop->name() == name; });
+        auto it = utility::find_if(m_Properties, [&](auto &&prop){ return prop->name() == name; });
         return it != m_Properties.end() ? *it : SharedProperty();
     }
 

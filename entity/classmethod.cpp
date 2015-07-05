@@ -235,10 +235,8 @@ namespace entity {
      */
     SharedField ClassMethod::getParameter(const QString &name)
     {
-        auto it = std::find_if(m_Parameters.begin(), m_Parameters.end(),
-                               [&name](const SharedField &f){ return f->name() == name; });
-
-        return (it != m_Parameters.end() ? *it : nullptr);
+        auto it = utility::find_if(m_Parameters, [&name](const SharedField &f){ return f->name() == name; });
+        return it != m_Parameters.end() ? *it : SharedField();
     }
 
     /**

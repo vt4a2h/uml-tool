@@ -35,6 +35,8 @@
 
 #include <db/projectdatabase.h>
 
+#include <utility/helpfunctions.h>
+
 namespace models {
 
     namespace {
@@ -379,11 +381,7 @@ namespace models {
      */
     const BasicTreeItem *ProjectTreeModel::find(const QString &id) const
     {
-        auto projectIt = std::find_if(m_Items.cbegin(), m_Items.cend(),
-                                      [&](const BasicTreeItem &item){
-                                          return item.id() == id;
-                                      });
-
+        auto projectIt = utility::find_if(m_Items, [&](auto &&item){ return item.id() == id; });
         return projectIt != m_Items.cend() ? &*projectIt : nullptr;
     }
 

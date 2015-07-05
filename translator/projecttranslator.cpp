@@ -225,14 +225,8 @@ namespace translator {
            return false;
 
         entity::FieldsList fields(m->parameters());
-        auto it = std::find_if(fields.begin(), fields.end(), [&](const entity::SharedField &f) {
-            return classDatabase->depthTypeSearch(f->typeId()) /*!= nullptr*/;
-        });
-
-        if (it != fields.end() || classDatabase->depthTypeSearch(m->returnTypeId()) /*!= nullptr*/)
-           return true;
-
-        return false;
+        auto it = utility::find_if(fields, [&](auto &&f) { return classDatabase->depthTypeSearch(f->typeId()); });
+        return it != fields.end() || classDatabase->depthTypeSearch(m->returnTypeId());
     }
 
     /**

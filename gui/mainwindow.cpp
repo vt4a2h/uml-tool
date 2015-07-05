@@ -462,8 +462,7 @@ namespace gui {
     {
         if (obj == m_MainView) {
             if (ev->type() == QEvent::MouseButtonPress)  {
-                auto it = std::find_if(m_AddActions.begin(), m_AddActions.end(),
-                                       [](const ActionMaker &am) { return am.first->isChecked(); });
+                auto it = utility::find_if(m_AddActions, [](auto &&am) { return am.first->isChecked(); });
                 if (it != m_AddActions.end()) {
                     if (m_ApplicationModel && m_ApplicationModel->currentProject()) {
                         auto event = static_cast<QMouseEvent* >(ev);
