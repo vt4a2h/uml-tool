@@ -51,7 +51,7 @@ namespace entity {
         Class(const QString &name, const QString &scopeId);
 
         Class &operator =(Class &&rhs);
-        Class &operator =(Class rhs);
+        Class &operator =(const Class &rhs);
 
         friend bool operator ==(const Class &lhs, const Class &rhs);
 

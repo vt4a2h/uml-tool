@@ -72,7 +72,6 @@ namespace entity {
         : BasicEntity(name)
         , m_Id(typeId.isEmpty() ? utility::genId() : typeId)
         , m_ScopeId(scopeId)
-        , m_Invalid(false)
     {
         if (m_Name.isEmpty() || m_Name == DEFAULT_NAME)
             baseTypeName();
@@ -235,15 +234,6 @@ namespace entity {
     }
 
     /**
-     * @brief Type::invalid
-     * @return
-     */
-    bool Type::invalid() const
-    {
-        return m_Invalid;
-    }
-
-    /**
      * @brief Type::moveFrom
      * @param src
      */
@@ -252,8 +242,6 @@ namespace entity {
         m_Name    = std::move(src.m_Name);
         m_Id      = std::move(src.m_Id);
         m_ScopeId = std::move(src.m_ScopeId);
-
-        m_Invalid = true;
     }
 
     /**

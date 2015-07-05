@@ -53,8 +53,6 @@ namespace entity {
 
         virtual bool isEqual(const Type &rhs) const;
 
-        bool invalid() const;
-
     public: // BasicEntity implementation
         QString id() const override;
         void setId(const QString &id) override;
@@ -81,8 +79,6 @@ namespace entity {
         // position
         QString m_X;
         QString m_Y;
-
-        bool m_Invalid;
     };
 
 } // namespace entity

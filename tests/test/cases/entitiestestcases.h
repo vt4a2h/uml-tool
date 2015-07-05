@@ -25,6 +25,24 @@
 #include "TestEntities.h"
 #include "constants.h"
 
+#define test_copy_move(entType, obj) \
+    auto newCopyType(std::make_unique<entity::entType>(*obj)); \
+    ASSERT_EQ(*obj, *newCopyType); \
+    \
+    newCopyType.reset(); \
+    newCopyType = std::make_unique<entity::entType>();\
+    *newCopyType = *obj;\
+    ASSERT_EQ(*obj, *newCopyType);\
+    \
+    entity::entType tmp(*obj); \
+    entity::entType moveType(std::move(tmp)); \
+    ASSERT_EQ(moveType, *obj); \
+    \
+    entity::entType tmpEq(*obj); \
+    entity::entType moveTypeEq; \
+    moveTypeEq = std::move(tmpEq); \
+    ASSERT_EQ(moveTypeEq, *obj); \
+
 TEST_F(Enteties, SimpleType)
 {
     ASSERT_STREQ(_type->name().toStdString().c_str(), BASE_TYPE_NAME);
@@ -34,46 +52,30 @@ TEST_F(Enteties, SimpleType)
     _type->setId("some id");
     _type->setScopeId("global scope id");
 
-    // copy ctor
-    auto newCopyType(std::make_unique<entity::Type>(*_type));
-    ASSERT_EQ(*_type, *newCopyType);
-
-    // copy operator
-    newCopyType.reset();
-    newCopyType = std::make_unique<entity::Type>();
-    *newCopyType = *_type;
-    ASSERT_EQ(*_type, *newCopyType);
-
-    // move ctor
-    entity::Type tmp(*_type);
-    entity::Type moveType(std::move(tmp));
-    ASSERT_TRUE(tmp.invalid());
-    ASSERT_EQ(moveType, *_type);
-
-    // move operator
-    entity::Type tmpEq(*_type);
-    entity::Type moveTypeEq;
-    moveTypeEq = std::move(tmpEq);
-    ASSERT_TRUE(tmpEq.invalid());
-    ASSERT_EQ(moveTypeEq, *_type);
+    test_copy_move(Type, _type)
 }
 
 TEST_F(Enteties, ExtendedType)
 {
+    test_copy_move(ExtendedType, _extendedType)
 }
 
 TEST_F(Enteties, Class)
 {
+    test_copy_move(Class, _class)
 }
 
 TEST_F(Enteties, Union)
 {
+    test_copy_move(Union, _union)
 }
 
 TEST_F(Enteties, Enum)
 {
+    test_copy_move(Enum, _enum)
 }
 
 TEST_F(Enteties, TemplateClass)
 {
+    test_copy_move(TemplateClass, _templateClass)
 }

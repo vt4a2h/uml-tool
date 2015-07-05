@@ -41,7 +41,7 @@ namespace entity {
         Union(const Union &src);
         Union(const QString &name, const QString &scopeId);
 
-        Union &operator= (Union rhs);
+        Union &operator= (const Union &rhs);
         Union &operator= (Union &&rhs);
         friend bool operator ==(const Union &lhs, const Union &rhs);
 

@@ -103,9 +103,10 @@ namespace entity {
      * @param rhs
      * @return
      */
-    Class &Class::operator =(Class rhs)
+    Class &Class::operator =(const Class &rhs)
     {
-        moveFrom(rhs);
+        if (this != &rhs)
+            copyFrom(rhs);
 
         return *this;
     }
@@ -777,6 +778,8 @@ namespace entity {
      */
     void Class::copyFrom(const Class &src)
     {
+        Type::copyFrom(src);
+
         m_Kind = src.m_Kind;
         m_FinalStatus = src.m_FinalStatus;
         m_Parents = src.m_Parents;
