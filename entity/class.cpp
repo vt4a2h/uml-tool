@@ -137,25 +137,22 @@ namespace entity {
     Parent Class::addParent(const QString &typeId, Section section)
     {
         auto parent = Parent(typeId, section);
-        if (containsParent(typeId)) removeParent(typeId);
+        if (containsParent(typeId))
+            removeParent(typeId);
         m_Parents.append(parent);
 
         return parent;
     }
 
     /**
-     * @brief Class::getParents
+     * @brief Class::parent
      * @param typeId
      * @return
      */
-    ParentsList Class::getParents(const QString &typeId)
+    Parent Class::parent(const QString &typeId) const
     {
-        ParentsList result;
-
-        for (auto &&p : m_Parents)
-            if (p.first == typeId) result << p;
-
-        return result;
+        auto it = utility::find_if(m_Parents, [&](auto &&parent){ return parent.first == typeId; });
+        return it != m_Parents.cend() ? *it : Parent();
     }
 
     /**

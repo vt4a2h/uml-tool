@@ -104,6 +104,36 @@ TEST_F(Enteties, ExtendedType)
 
 TEST_F(Enteties, Class)
 {
+    ASSERT_FALSE(_class->isFinal());
+    ASSERT_EQ(_class->kind(), entity::ClassType);
+
+    // Parents test
+    const QString parentID = "stub_id";
+    auto parent = _class->addParent(parentID, entity::Private);
+    auto parents = _class->parents();
+
+    ASSERT_FALSE(parents.isEmpty());
+    ASSERT_TRUE(_class->containsParent(parentID));
+    ASSERT_TRUE(_class->anyParents());
+    ASSERT_EQ(parents.count(), 1);
+    ASSERT_EQ(parent, parents.first());
+    ASSERT_EQ(parent, _class->parent(parentID));
+
+    _class->removeParent(parentID);
+    ASSERT_TRUE(_class->parents().isEmpty());
+
+    _class->addParent(parentID, entity::Private);
+    _class->addParent(parentID + "42", entity::Private);
+    ASSERT_EQ(_class->parents().count(), 2);
+
+    // Methods test
+    auto method = _class->makeMethod("Simple method");
+    auto templateMethod = _class->makeMethod<entity::TemplateClassMethod>("Template method");
+    ASSERT_EQ(method->hashType(), entity::ClassMethod::staticHashType());
+    ASSERT_EQ(templateMethod->hashType(), entity::TemplateClassMethod::staticHashType());
+    ASSERT_EQ(method, _class->getMethod(method->name()).first());
+    ASSERT_EQ(templateMethod, _class->getMethod(templateMethod->name()).first());
+
     test_copy_move(Class, _class)
 }
 

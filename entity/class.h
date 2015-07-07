@@ -56,7 +56,7 @@ namespace entity {
         friend bool operator ==(const Class &lhs, const Class &rhs);
 
         Parent addParent(const QString &typeId, Section section);
-        ParentsList getParents(const QString &typeId);
+        Parent parent(const QString &typeId) const;
         bool containsParent(const QString &typeId);
         void removeParent(const QString &typeId);
         bool anyParents() const;
