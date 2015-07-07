@@ -233,7 +233,7 @@ namespace entity {
      * @param name
      * @return
      */
-    SharedField ClassMethod::getParameter(const QString &name)
+    SharedField ClassMethod::getParameter(const QString &name) const
     {
         auto it = utility::find_if(m_Parameters, [&name](const SharedField &f){ return f->name() == name; });
         return it != m_Parameters.end() ? *it : SharedField();

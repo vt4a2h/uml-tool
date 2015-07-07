@@ -126,13 +126,34 @@ TEST_F(Enteties, Class)
     _class->addParent(parentID + "42", entity::Private);
     ASSERT_EQ(_class->parents().count(), 2);
 
-    // Methods test
+    // Methods test (some parts covered in IComponents tests)
     auto method = _class->makeMethod("Simple method");
     auto templateMethod = _class->makeMethod<entity::TemplateClassMethod>("Template method");
     ASSERT_EQ(method->hashType(), entity::ClassMethod::staticHashType());
     ASSERT_EQ(templateMethod->hashType(), entity::TemplateClassMethod::staticHashType());
     ASSERT_EQ(method, _class->getMethod(method->name()).first());
     ASSERT_EQ(templateMethod, _class->getMethod(templateMethod->name()).first());
+    ASSERT_TRUE(_class->containsMethod(method->name()));
+    ASSERT_TRUE(_class->containsMethod(templateMethod->name()));
+    ASSERT_TRUE(_class->anyMethods());
+
+    _class->removeMethods(method->name());
+    ASSERT_FALSE(_class->containsMethod(method->name()));
+    _class->addExistsMethod(method);
+
+    ASSERT_TRUE(_class->containsMethods(entity::Public));
+    ASSERT_EQ(_class->methods(entity::Public).count(), 2);
+
+    method->setSection(entity::Private);
+    templateMethod->setSection(entity::Protected);
+
+    ASSERT_FALSE(_class->containsMethods(entity::Public));
+    ASSERT_EQ(_class->methods(entity::Public).count(), 0);
+
+    ASSERT_TRUE(_class->containsMethods(entity::Private));
+    ASSERT_EQ(_class->methods(entity::Private).count(), 1);
+    ASSERT_TRUE(_class->containsMethods(entity::Protected));
+    ASSERT_EQ(_class->methods(entity::Protected).count(), 1);
 
     test_copy_move(Class, _class)
 }

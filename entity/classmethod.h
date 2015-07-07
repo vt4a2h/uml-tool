@@ -78,7 +78,7 @@ namespace entity {
         bool hasLhsIdentificators() const;
         void removeLhsIdentificator(LhsIdentificator identificator);
 
-        SharedField getParameter(const QString &name);
+        SharedField getParameter(const QString &name) const;
         SharedField addParameter(const QString &name, const QString &typeId);
         bool containsParameter(const QString &name);
         bool hasParameters() const;

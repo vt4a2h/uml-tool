@@ -299,16 +299,7 @@ namespace entity {
      */
     bool Class::containsMethods(Section section) const
     {
-        bool result(false);
-
-        for (auto &&method : m_Methods) {
-            if (method->section() == section) {
-                result = true;
-                break;
-            }
-        }
-
-        return result;
+        return end(m_Methods) != utility::find_if(m_Methods, [&](auto &&method){ return method->section() == section; });
     }
 
     /**
