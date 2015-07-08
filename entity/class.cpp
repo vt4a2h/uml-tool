@@ -351,7 +351,7 @@ namespace entity {
      */
     bool Class::containsField(const QString &name) const
     {
-        return getField(name).operator bool();
+        return getField(name) != nullptr;
     }
 
     /**
@@ -360,8 +360,7 @@ namespace entity {
      */
     void Class::removeField(const QString &name)
     {
-        auto f = getField(name);
-        if (f)
+        if (auto f = getField(name))
             m_Fields.removeAt(m_Fields.indexOf(f));
     }
 
@@ -462,6 +461,16 @@ namespace entity {
     }
 
     /**
+     * @brief Class::containsProperty
+     * @param name
+     * @return
+     */
+    bool Class::containsProperty(const QString &name) const
+    {
+        return property(name) != nullptr;
+    }
+
+    /**
      * @brief Class::removeProperty
      * @param name
      */
@@ -487,16 +496,7 @@ namespace entity {
      */
     bool Class::containsFields(Section section) const
     {
-        bool result(false);
-
-        for (auto &&field : m_Fields) {
-            if (field->section() == section) {
-                result = true;
-                break;
-            }
-        }
-
-        return result;
+        return end(m_Fields) != utility::find_if(m_Fields, [&](auto &&f){ return f->section() == section; });
     }
 
     /**
@@ -509,7 +509,8 @@ namespace entity {
         FieldsList result;
 
         for (auto &&field : m_Fields)
-            if (field->section() == section) result << field;
+            if (field->section() == section)
+                result << field;
 
         return result;
     }

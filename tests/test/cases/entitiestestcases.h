@@ -155,6 +155,36 @@ TEST_F(Enteties, Class)
     ASSERT_TRUE(_class->containsMethods(entity::Protected));
     ASSERT_EQ(_class->methods(entity::Protected).count(), 1);
 
+    // Fields
+    ASSERT_FALSE(_class->anyFields());
+    auto field = _class->addField("Some field", "some_id");
+    ASSERT_TRUE(_class->anyFields());
+    ASSERT_TRUE(_class->containsField(field->name()));
+    ASSERT_EQ(_class->getField(field->name()), field);
+    _class->removeField(field->name());
+    ASSERT_FALSE(_class->anyFields());
+
+    ASSERT_FALSE(_class->containsFields(entity::Public));
+    ASSERT_FALSE(_class->containsFields(entity::Private));
+    ASSERT_FALSE(_class->containsFields(entity::Protected));
+    _class->addExistsField(field);
+    ASSERT_TRUE(_class->containsFields(entity::Public));
+    field->setSection(entity::Private);
+    ASSERT_TRUE(_class->containsFields(entity::Private));
+    field->setSection(entity::Protected);
+    ASSERT_TRUE(_class->containsFields(entity::Protected));
+
+    // Properties
+    ASSERT_FALSE(_class->anyProperties());
+    auto property = _class->addProperty("some name", "some_id");
+    ASSERT_TRUE(_class->anyProperties());
+    ASSERT_EQ(property, _class->property(property->name()));
+    ASSERT_TRUE(_class->containsProperty(property->name()));
+    ASSERT_FALSE(_class->containsProperty("foobar"));
+    _class->removeProperty(property->name());
+    ASSERT_FALSE(_class->anyProperties());
+    _class->addExistsProperty(property);
+
     test_copy_move(Class, _class)
 }
 

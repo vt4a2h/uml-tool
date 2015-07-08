@@ -81,7 +81,7 @@ namespace entity {
         SharedProperty addProperty(const QString &name, const QString &typeId);
         ConstSharedProperty property(const QString &name) const;
         SharedProperty property(const QString &name);
-        bool containsProperty(const QString &name);
+        bool containsProperty(const QString &name) const;
         void removeProperty(const QString &name);
         bool anyProperties() const;
 
@@ -103,12 +103,12 @@ namespace entity {
         MethodsList methods() const override;
 
         SharedField addNewField() override;
-        void addExistsField(const SharedField &field, int pos) override;
+        void addExistsField(const SharedField &field, int pos = -1) override;
         int removeField(const SharedField &field) override;
         FieldsList fields() const override;
 
         SharedProperty addNewProperty() override;
-        void addExistsProperty(const SharedProperty &property, int pos) override;
+        void addExistsProperty(const SharedProperty &property, int pos = -1) override;
         int removeProperty(const SharedProperty &property) override;
         PropertiesList properties() const override;
 
