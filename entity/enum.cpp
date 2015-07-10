@@ -46,7 +46,7 @@ namespace entity {
      * @brief Element::Element
      */
     Element::Element()
-        : BasicEntity()
+        : Element(DEFAULT_NAME, 0)
     {}
 
     /**
@@ -65,6 +65,7 @@ namespace entity {
      */
     Element::Element(const QJsonObject &src, QStringList &errorList)
         : BasicEntity(src, errorList)
+        , m_Value(0)
     {
         fromJson(src, errorList);
     }

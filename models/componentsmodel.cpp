@@ -263,7 +263,7 @@ namespace models {
                         return m_SignatureMaker->signature(m_Components->fields()[index.row()]);
 
                     case DisplayPart::Elements:
-                        return m_Components->elements()[index.row()]->first; // TODO: add variables to signature maker
+                        return m_Components->elements()[index.row()]->name(); // TODO: add variables to signature maker
 
                     case DisplayPart::Properties:
                         return "stub";
