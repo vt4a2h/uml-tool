@@ -45,8 +45,8 @@ namespace entity {
      */
     BasicEntity::BasicEntity(const BasicEntity &src)
         : QObject()
+        , m_Name(src.m_Name)
     {
-        m_Name = src.m_Name;
     }
 
     /**

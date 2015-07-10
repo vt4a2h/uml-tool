@@ -226,7 +226,7 @@ namespace utility {
     template <class Sequence, class UnaryPredicate>
     inline decltype(auto) find_if( const Sequence& seq, UnaryPredicate pred)
     {
-        return std::find_if(std::begin(seq), std::end(seq), pred);
+        return std::find_if(std::cbegin(seq), std::cend(seq), pred);
     }
 
     template <class Sequence, class UnaryPredicate>

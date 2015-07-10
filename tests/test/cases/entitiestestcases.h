@@ -190,11 +190,32 @@ TEST_F(Enteties, Class)
 
 TEST_F(Enteties, Union)
 {
+    auto field = _union->addField("some field", "some_id");
+    ASSERT_EQ(field, _union->getField(field->name()));
+    ASSERT_TRUE(_union->containsField(field->name()));
+    _union->removeField(field->name());
+    ASSERT_EQ(nullptr, _union->getField(field->name()));
+    ASSERT_FALSE(_union->containsField(field->name()));
+
+    _union->addExistsField(field);
     test_copy_move(Union, _union)
 }
 
 TEST_F(Enteties, Enum)
 {
+    ASSERT_STREQ(STUB_ID, _enum->enumTypeId().toStdString().c_str());
+    const QString newId("stub");
+    _enum->setEnumTypeId(newId);
+    ASSERT_STREQ(newId.toStdString().c_str(), _enum->enumTypeId().toStdString().c_str());
+
+    auto element = _enum->addElement("new element");
+    ASSERT_EQ(*element, *_enum->element(element->name()));
+    ASSERT_TRUE(_enum->containsElement(element->name()));
+    _enum->removeElement(element);
+    ASSERT_EQ(nullptr, _enum->element(element->name()));
+    ASSERT_FALSE(_enum->containsElement(element->name()));
+
+    _enum->addExistsElement(element);
     test_copy_move(Enum, _enum)
 }
 

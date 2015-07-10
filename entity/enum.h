@@ -29,21 +29,28 @@
 
 namespace entity {
 
-    /// The Vsriable class
-    struct Element : public QPair<QString, int>, public BasicEntity
+    /// The Variable class
+    class Element : public BasicEntity
     {
-        Element() : QPair<QString, int>() {}
-        Element(const QString &id, int value) : QPair<QString, int>(id, value) {}
-        Element(const QJsonObject &src, QStringList &errorList) : QPair<QString, int>(), BasicEntity(src, errorList) {
-            fromJson(src, errorList);
-        }
+    public:
+        Element();
+        Element(const QString &name, int value);
+        Element(const QJsonObject &src, QStringList &errorList);
 
-    // BasicEntity implementation
+        friend bool operator ==(const Element &lhs, const Element &rhs);
+
+        int value() const;
+        void setValue(int value);
+
+    public: // BasicEntity implementation
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
         size_t hashType() const override;
         static size_t staticHashType();
+
+    private:
+        int m_Value;
     };
 
     /// The Enum class
@@ -70,7 +77,7 @@ namespace entity {
 
     public: // IComponents implmentaion
         SharedElement addNewElement() override;
-        void addExistsElement(const SharedElement &element, int pos) override;
+        void addExistsElement(const SharedElement &element, int pos = -1) override;
         int removeElement(const SharedElement &element) override;
         ElementsList elements() const override;
 

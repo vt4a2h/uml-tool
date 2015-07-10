@@ -152,7 +152,7 @@ namespace generator {
     void BasicCppProjectGenerator::generateFiles(const entity::SharedScope &scope,
                                                  const SharedVirtualDirectory &directory)
     {
-        SharedVirtualDirectory dir(m_Options & NamespacesInSubfolders ?
+        SharedVirtualDirectory dir((m_Options & NamespacesInSubfolders) ?
                                        directory->addDirectory(scope->name().toLower()) : directory);
 
         for (auto &&t : scope->types()) {

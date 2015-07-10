@@ -45,6 +45,7 @@ namespace entity {
         Union &operator= (Union &&rhs);
         friend bool operator ==(const Union &lhs, const Union &rhs);
 
+        // TODO: extract this functionality for class and union to the separate class
         SharedField getField(const QString &name) const;
         SharedField addField(const QString &name, const QString &typeId);
         void removeField(const QString &name);

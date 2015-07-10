@@ -266,10 +266,10 @@ namespace translator {
         QStringList values;
         if (options & GenerateNumbers) {
             for (auto &&v : _enum->elements())
-                values << QString("%1 = %2").arg(v->first, QString::number(v->second));
+                values << QString("%1 = %2").arg(v->name(), QString::number(v->value()));
         } else {
             for (auto &&v : _enum->elements())
-                values << v->first;
+                values << v->name();
         }
         result.replace("%values%", values.isEmpty() ? "" : values.join(", "));
 
@@ -328,7 +328,7 @@ namespace translator {
             p->removePrefix();
             p->removeSuffix();
 
-            TranslatorOptions newOptions(options & NoDefaultName ? NoDefaultName : NoOptions);
+            TranslatorOptions newOptions((options & NoDefaultName) ? NoDefaultName : NoOptions);
             auto t = utility::findType(p->typeId(), localeDatabase,
                                        m_GlobalDatabase, m_ProjectDatabase);
             if (!t || method->scopeId() != t->scopeId() || method->scopeId() == STUB_ID)

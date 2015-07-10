@@ -38,17 +38,58 @@ namespace entity {
 
     namespace {
         const QString newElementName = Element::tr("newElement");
+        const QString nameMark   = "Name";
+        const QString numberMark = "Number";
     }
+
+    /**
+     * @brief Element::Element
+     */
+    Element::Element()
+        : BasicEntity()
+    {}
+
+    /**
+     * @brief Element::Element
+     * @param name
+     * @param value
+     */
+    Element::Element(const QString &name, int value)
+        : BasicEntity(name)
+        , m_Value(value)
+    {}
 
     /**
      * @brief Variable::toJson
      * @return
      */
+    Element::Element(const QJsonObject &src, QStringList &errorList)
+        : BasicEntity(src, errorList)
+    {
+        fromJson(src, errorList);
+    }
+
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator ==(const Element &lhs, const Element &rhs)
+    {
+        return lhs.m_Name  == rhs.m_Name &&
+               lhs.m_Value == rhs.m_Value;
+    }
+
+    /**
+     * @brief Element::toJson
+     * @return
+     */
     QJsonObject Element::toJson() const
     {
         QJsonObject result;
-        result.insert("Name", first);
-        result.insert("Number", second);
+        result.insert(nameMark, m_Name);
+        result.insert(numberMark, m_Value);
 
         return result;
     }
@@ -60,8 +101,8 @@ namespace entity {
      */
     void Element::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Name",   errorList, [&src, this](){ first  = src["Name"].toString(); });
-        utility::checkAndSet(src, "Number", errorList, [&src, this](){ second = src["Number"].toInt();  });
+        utility::checkAndSet(src, nameMark,   errorList, [&src, this](){ m_Name  = src[nameMark].toString(); });
+        utility::checkAndSet(src, numberMark, errorList, [&src, this](){ m_Value = src[numberMark].toInt();  });
     }
 
     /**
@@ -80,6 +121,24 @@ namespace entity {
     size_t Element::staticHashType()
     {
         return typeid(Element).hash_code();
+    }
+
+    /**
+     * @brief Element::value
+     * @return
+     */
+    int Element::value() const
+    {
+        return m_Value;
+    }
+
+    /**
+     * @brief Element::setValue
+     * @param value
+     */
+    void Element::setValue(int value)
+    {
+        m_Value = value;
     }
 
     /**
@@ -141,9 +200,9 @@ namespace entity {
      */
     SharedElement Enum::addElement(const QString &name)
     {
-        auto variable = std::make_shared<Element>(name, m_Elements.size());
-        m_Elements << variable;
-        return variable;
+        auto element = std::make_shared<Element>(name, m_Elements.size());
+        m_Elements << element;
+        return element;
     }
 
     /**
@@ -153,8 +212,8 @@ namespace entity {
      */
     SharedElement Enum::element(const QString &name) const
     {
-        auto it = utility::find_if(m_Elements, [&name](const SharedElement &v){ return v->first == name; });
-        return it != m_Elements.cend() ? *it : SharedElement();
+        auto it = utility::find_if(m_Elements, [&](auto &&e){ return e->name() == name; });
+        return it != cend(m_Elements) ? *it : SharedElement();
     }
 
     /**
@@ -163,7 +222,7 @@ namespace entity {
      */
     void Enum::removeElement(const QString &name)
     {
-        auto it = utility::find_if(m_Elements, [&name](const SharedElement &v){ return v->first == name; });
+        auto it = utility::find_if(m_Elements, [&](auto &&v){ return v->name() == name; });
         if (it != m_Elements.end())
             m_Elements.erase(it);
     }
@@ -175,7 +234,7 @@ namespace entity {
      */
     bool Enum::containsElement(const QString &name) const
     {
-        return utility::find_if(m_Elements, [&name](const SharedElement &v){ return v->first == name; }) != m_Elements.cend();
+        return utility::find_if(m_Elements, [&](auto &&v){ return v->name() == name; }) != m_Elements.cend();
     }
 
     /**
