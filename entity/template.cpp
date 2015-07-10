@@ -74,11 +74,13 @@ namespace entity {
      * @param typeId
      * @param defaultTypeId
      */
-    void Template::addTemplateParameter(const QString &typeId, const QString &defaultTypeId)
+    TemplateParameter Template::addTemplateParameter(const QString &typeId, const QString &defaultTypeId)
     {
-        if (contains(typeId)) removeParameter(typeId);
-        m_TemplateParameters.append(TemplateParameter(typeId,
-                                                      defaultTypeId.isEmpty() ? STUB_ID : defaultTypeId));
+        if (contains(typeId))
+            removeParameter(typeId);
+
+        m_TemplateParameters.append({typeId, defaultTypeId.isEmpty() ? STUB_ID : defaultTypeId});
+        return m_TemplateParameters.last();
     }
 
     /**
@@ -124,7 +126,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedType Template::getLocaleType(const QString &typeId) const
+    SharedType Template::getLocalType(const QString &typeId) const
     {
         return m_LocalDatabase->anyScopes() ?
                     m_LocalDatabase->scopes()[0]->getType(typeId) : nullptr;
@@ -135,7 +137,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Template::containsLocaleType(const QString &typeId) const
+    bool Template::containsLocalType(const QString &typeId) const
     {
         return m_LocalDatabase->anyScopes() ?
                     m_LocalDatabase->scopes()[0]->containsType(typeId) : false;
@@ -145,7 +147,7 @@ namespace entity {
      * @brief Template::removeLocaleType
      * @param typeId
      */
-    void Template::removeLocaleType(const QString &typeId)
+    void Template::removeLocalType(const QString &typeId)
     {
         if (m_LocalDatabase->anyScopes())
             m_LocalDatabase->scopes()[0]->removeType(typeId);
@@ -155,7 +157,7 @@ namespace entity {
      * @brief Template::localeTypes
      * @return
      */
-    TypesList Template::localeTypes() const
+    TypesList Template::localTypes() const
     {
         return m_LocalDatabase->anyScopes() ?
                     m_LocalDatabase->scopes()[0]->types() : TypesList();

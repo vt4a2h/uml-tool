@@ -90,14 +90,14 @@ TEST_F(ProjectMaker, MakeTemplateClass)
     linkToPtr->setTypeId(ptrClass->id());
     linkToPtr->addLinkStatus();
 
-    auto typeT       = ptrClass->addLocaleType("Value");
+    auto typeT       = ptrClass->addLocalType("Value");
     ptrClass->addTemplateParameter(typeT->id());
 
-    auto pointerToT = ptrClass->addLocaleType<entity::ExtendedType>();
+    auto pointerToT = ptrClass->addLocalType<entity::ExtendedType>();
     pointerToT->setTypeId(typeT->id());
     pointerToT->addPointerStatus();
 
-    auto cPointerToT = ptrClass->addLocaleType<entity::ExtendedType>();
+    auto cPointerToT = ptrClass->addLocalType<entity::ExtendedType>();
     cPointerToT->setTypeId(typeT->id());
     cPointerToT->addPointerStatus();
     cPointerToT->setConstStatus(true);

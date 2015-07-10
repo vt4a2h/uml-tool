@@ -118,9 +118,9 @@ TEST_F(FileJson, TemplateClassJson)
     entity::SharedTemplateClass class_(std::make_shared<entity::TemplateClass>("stub_name", "stub_scope_id"));
     class_->addTemplateParameter("stub_type_id", "stub_default_id");
     class_->addTemplateParameter("stub_type_id_1", "stub_default_id_1");
-    EXPECT_TRUE(class_->addLocaleType("type").operator bool())
+    EXPECT_TRUE(class_->addLocalType("type").operator bool())
             << "Locale type must be added.";
-    EXPECT_TRUE(class_->addLocaleType("type_1").operator bool())
+    EXPECT_TRUE(class_->addLocalType("type_1").operator bool())
             << "Locale type must be added.";
     class_->writeToFile(m_JsonFileName);
 
@@ -131,9 +131,9 @@ TEST_F(FileJson, TemplateClassJson)
 TEST_F(FileJson, TemplateClassMethodJson)
 {
     entity::SharedTemplateClassMethod method(std::make_shared<entity::TemplateClassMethod>("stub name"));
-    EXPECT_TRUE(method->addLocaleType("type").operator bool())
+    EXPECT_TRUE(method->addLocalType("type").operator bool())
             << "Locale type must be added.";
-    EXPECT_TRUE(method->addLocaleType("type_1").operator bool())
+    EXPECT_TRUE(method->addLocalType("type_1").operator bool())
             << "Locale type must be added.";
     method->writeToFile(m_JsonFileName);
 

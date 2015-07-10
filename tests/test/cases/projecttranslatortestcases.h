@@ -198,13 +198,13 @@ TEST_F(ProjectTranslatorTest, TemplateClassMethod)
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "template <class T>\nswap()";
-    auto t = method->addLocaleType("T");
+    auto t = method->addLocalType("T");
     method->addTemplateParameter(t->id());
     code = _translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "template <class T>\nswap(T *first, T *second)";
-    auto ptrT = method->addLocaleType<entity::ExtendedType>();
+    auto ptrT = method->addLocalType<entity::ExtendedType>();
     ptrT->setTypeId(t->id());
     ptrT->addPointerStatus();
     method->addParameter("first", ptrT->id());
@@ -223,7 +223,7 @@ TEST_F(ProjectTranslatorTest, TemplateClassMethod)
     method->addParameter("name", constLinkToQstr->id());
 
     auto foo = _projectScope->addType("Foo");
-    t = method->addLocaleType("T");
+    t = method->addLocalType("T");
     method->addTemplateParameter(t->id(), foo->id());
 
     auto stdScope = _globalDb->addScope("std");
@@ -385,7 +385,7 @@ TEST_F(ProjectTranslatorTest, TemplateClass)
     auto nodeStruct = _projectScope->addType<entity::TemplateClass>("Node");
     nodeStruct->setKind(entity::StructType);
 
-    auto tType = nodeStruct->addLocaleType("T");
+    auto tType = nodeStruct->addLocalType("T");
     nodeStruct->addTemplateParameter(tType->id());
 
     auto dataField = nodeStruct->addField("data", tType->id());
@@ -438,9 +438,9 @@ TEST_F(ProjectTranslatorTest, ClassImplementation)
                           "}\n");
     entity::SharedTemplateClassMethod swapMethod(classFoo->makeMethod<entity::TemplateClassMethod>("swap"));
     swapMethod->setReturnTypeId(voidType->id());
-    entity::SharedType typeT(swapMethod->addLocaleType("T"));
+    entity::SharedType typeT(swapMethod->addLocalType("T"));
     swapMethod->addTemplateParameter(typeT->id());
-    entity::SharedExtendedType typeTLink(swapMethod->addLocaleType<entity::ExtendedType>());
+    entity::SharedExtendedType typeTLink(swapMethod->addLocalType<entity::ExtendedType>());
     typeTLink->setTypeId(typeT->id());
     typeTLink->addLinkStatus();
     swapMethod->addParameter("src", typeTLink->id());
@@ -465,9 +465,9 @@ TEST_F(ProjectTranslatorTest, TemplateClassImplementation)
     entity::SharedType dd(_std->addType("default_delete"));
 
     entity::SharedTemplateClass scopedPointer(_projectScope->addType<entity::TemplateClass>("ScopedPointer"));
-    entity::SharedType value(scopedPointer->addLocaleType("Value"));
-    entity::SharedType deleter(scopedPointer->addLocaleType("Deleter"));
-    entity::SharedExtendedType defaultDelete(scopedPointer->addLocaleType<entity::ExtendedType>());
+    entity::SharedType value(scopedPointer->addLocalType("Value"));
+    entity::SharedType deleter(scopedPointer->addLocalType("Deleter"));
+    entity::SharedExtendedType defaultDelete(scopedPointer->addLocalType<entity::ExtendedType>());
     defaultDelete->setTypeId(dd->id());
     defaultDelete->addTemplateParameter(value->id());
     scopedPointer->addTemplateParameter(value->id());
@@ -475,7 +475,7 @@ TEST_F(ProjectTranslatorTest, TemplateClassImplementation)
 
     entity::SharedMethod resetMethod(scopedPointer->makeMethod("reset"));
     resetMethod->setReturnTypeId(voidType->id());
-    entity::SharedExtendedType valuePtr(scopedPointer->addLocaleType<entity::ExtendedType>());
+    entity::SharedExtendedType valuePtr(scopedPointer->addLocalType<entity::ExtendedType>());
     valuePtr->setTypeId(value->id());
     valuePtr->addPointerStatus();
     resetMethod->addParameter("other", valuePtr->id());

@@ -221,5 +221,28 @@ TEST_F(Enteties, Enum)
 
 TEST_F(Enteties, TemplateClass)
 {
+    ASSERT_TRUE(_templateClass->templateParameters().empty());
+    auto p = _templateClass->addTemplateParameter("stub_id");
+    auto p1 = _templateClass->addTemplateParameter("stub_id1");
+    ASSERT_EQ(_templateClass->getTemplateParameter(p.first), p);
+    ASSERT_FALSE(_templateClass->templateParameters().empty());
+    ASSERT_TRUE(_templateClass->contains(p.first));
+    ASSERT_TRUE(_templateClass->contains(p1.first));
+    _templateClass->removeParameter(p.first);
+    ASSERT_FALSE(_templateClass->contains(p.first));
+
+    ASSERT_TRUE(!!_templateClass->database());
+    ASSERT_EQ(_templateClass->database()->scopes().count(), 1);
+
+    ASSERT_TRUE(_templateClass->localTypes().empty());
+    auto localType = _templateClass->addLocalType("T");
+    auto localType1 = _templateClass->addLocalType("T1");
+    ASSERT_TRUE(!!localType);
+    ASSERT_TRUE(!!localType1);
+    ASSERT_FALSE(_templateClass->localTypes().empty());
+    ASSERT_TRUE(_templateClass->containsLocalType(localType1->id()));
+    _templateClass->removeLocalType(localType1->id());
+    ASSERT_FALSE(_templateClass->containsLocalType(localType1->id()));
+
     test_copy_move(TemplateClass, _templateClass)
 }
