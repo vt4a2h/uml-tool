@@ -48,8 +48,10 @@
 #include <commands/addcomponentscommands.h>
 #include <commands/removecomponentscommands.h>
 
-#include "classcomponentseditdelegate.h"
+#include "componentseditdelegate.h"
+#include "signatureeditdelegate.h"
 #include "signaturemaker.h"
+#include "componentsmaker.h"
 #include "editmethoddialog.h"
 
 #include "enums.h"
@@ -192,22 +194,25 @@ namespace gui {
         ui->lstMembers->setCurrentRow(0);
         ui->viewMembers->setModel(m_ComponentsModel.get());
 
-        auto delegat = new ClassComponentsEditDelegate(this);
-        connect(delegat, &ClassComponentsEditDelegate::editButtonClicked,
+        auto componentsEditDelegat = new ComponentsEditDelegate(this);
+        connect(componentsEditDelegat, &ComponentsEditDelegate::editButtonClicked,
                 this, &EditEntityDialog::onEditComponentClicked);
-        connect(delegat, &ClassComponentsEditDelegate::deleteButtonClicked,
+        connect(componentsEditDelegat, &ComponentsEditDelegate::deleteButtonClicked,
                 this, &EditEntityDialog::onDeleteComponentClicked);
-        ui->viewMembers->setItemDelegateForColumn(models::ComponentsModel::Buttons, delegat);
+        ui->viewMembers->setItemDelegateForColumn(models::ComponentsModel::Buttons, componentsEditDelegat);
         connect(m_ComponentsModel.get(), &models::ComponentsModel::showButtonsForIndex,
                 [view = ui->viewMembers](auto&& index) {
                     Q_ASSERT(index.isValid());
                     view->openPersistentEditor(index);
                 });
 
+        m_SignatureEditDelegate = std::make_unique<SignatureEditDelegate>();
+        ui->viewMembers->setItemDelegateForColumn(models::ComponentsModel::ShortSignature, m_SignatureEditDelegate.get());
+
         QHeaderView * header = ui->viewMembers->horizontalHeader();
         header->setSectionResizeMode(models::ComponentsModel::ShortSignature, QHeaderView::Stretch);
         header->setSectionResizeMode(models::ComponentsModel::Buttons, QHeaderView::Fixed);
-        ui->viewMembers->setColumnWidth(models::ComponentsModel::Buttons, delegat->size().width());
+        ui->viewMembers->setColumnWidth(models::ComponentsModel::Buttons, componentsEditDelegat->size().width());
 
         connect(ui->pbAccept, &QPushButton::clicked, this, &EditEntityDialog::onAccepted);
         connect(ui->pbReject, &QPushButton::clicked, this, &EditEntityDialog::onRejected);
@@ -242,6 +247,11 @@ namespace gui {
         m_Project = m_ApplicationModel->currentProject();
         m_Scope = m_Project->database()->getScope(type->scopeId());
         m_Type = type;
+
+        ComponentsMaker &maker = m_SignatureEditDelegate->maker();
+        maker.setModel(m_ApplicationModel);
+        maker.setScope(m_Scope);
+        maker.setEntity(m_Type);
 
         // Temporary {
         if (m_Type->hashType() == entity::Class::staticHashType()) {

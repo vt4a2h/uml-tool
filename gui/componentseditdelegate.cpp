@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "classcomponentseditdelegate.h"
+#include "componentseditdelegate.h"
 
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -69,7 +69,7 @@ namespace gui {
      * @brief ClassComponentsEditDelegate::ClassComponentsEditDelegate
      * @param parent
      */
-    ClassComponentsEditDelegate::ClassComponentsEditDelegate(QObject *parent)
+    ComponentsEditDelegate::ComponentsEditDelegate(QObject *parent)
         : QStyledItemDelegate(parent)
     {
     }
@@ -78,7 +78,7 @@ namespace gui {
      * @brief ClassComponentsEditDelegate::size
      * @return
      */
-    QSize ClassComponentsEditDelegate::size() const
+    QSize ComponentsEditDelegate::size() const
     {
         return {buttonSize.width() * 2 + space, buttonSize.height() * 2};
     }
@@ -90,8 +90,8 @@ namespace gui {
      * @param index
      * @return
      */
-    QWidget *ClassComponentsEditDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                                                       const QModelIndex &index) const
+    QWidget *ComponentsEditDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                                                  const QModelIndex &index) const
     {
         Q_UNUSED(option);
 

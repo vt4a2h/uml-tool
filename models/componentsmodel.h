@@ -84,10 +84,11 @@ namespace models {
         ~ComponentsModel();
 
     public: // QAbstractItemModel implementation
-        int rowCount(const QModelIndex &parent) const;
-        int columnCount(const QModelIndex &parent) const;
-        QVariant data(const QModelIndex &index, int role) const;
-        Qt::ItemFlags flags(const QModelIndex &index) const;
+        int rowCount(const QModelIndex &parent) const override;
+        int columnCount(const QModelIndex &parent) const override;
+        QVariant data(const QModelIndex &index, int role) const override;
+        Qt::ItemFlags flags(const QModelIndex &index) const override;
+        bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
         entity::SharedComponents components() const;
         void setComponents(const entity::SharedComponents &components);

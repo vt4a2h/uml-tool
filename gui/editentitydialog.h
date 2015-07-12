@@ -30,6 +30,8 @@
 
 #include <models/models_types.hpp>
 
+#include "gui_types.hpp"
+
 class QListWidgetItem;
 class QUndoStack;
 
@@ -93,6 +95,8 @@ namespace gui
 
         models::SharedApplicationModel m_ApplicationModel;
         models::SharedClassComponentsModel m_ComponentsModel;
+
+        UniqueSignatureEditDelegate m_SignatureEditDelegate;
     };
 
 } // namespace gui

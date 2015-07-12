@@ -28,6 +28,7 @@
 #include <entity/classmethod.h>
 #include <entity/enum.h>
 #include <entity/field.h>
+#include <entity/property.h>
 
 #include <gui/signaturemaker.h>
 
@@ -266,7 +267,7 @@ namespace models {
                         return m_Components->elements()[index.row()]->name(); // TODO: add variables to signature maker
 
                     case DisplayPart::Properties:
-                        return "stub";
+                        return m_Components->properties()[index.row()]->name(); // TODO: add variables to signature maker
 
                     case DisplayPart::Invalid:
                         return tr("Invalid display value");
@@ -286,12 +287,15 @@ namespace models {
                     return QVariant::fromValue(m_Components->elements()[index.row()]);
 
                 case DisplayPart::Properties:
-                    return QVariant(); // TODO: implement
+                    return QVariant::fromValue(m_Components->properties()[index.row()]);
 
                 case DisplayPart::Invalid:
                     return QVariant();
             }
         }
+
+        if (role == Qt::ToolTipRole && index.column() == 0)
+            return tr("Component short signature. Double click to fast edit.");
 
         return QVariant();
     }
@@ -306,9 +310,21 @@ namespace models {
         Qt::ItemFlags flags = Qt::ItemIsEnabled;
 
         if (index.isValid() && index.column() == ShortSignature)
-            flags |= Qt::ItemIsSelectable;
+            flags |= Qt::ItemIsSelectable | Qt::ItemIsEditable;
 
         return  flags;
+    }
+
+    /**
+     * @brief ComponentsModel::setData
+     * @param index
+     * @param value
+     * @param role
+     * @return
+     */
+    bool ComponentsModel::setData(const QModelIndex &index, const QVariant &value, int role)
+    {
+        return QAbstractTableModel::setData(index, value, role);
     }
 
     /**

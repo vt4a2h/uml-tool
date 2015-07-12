@@ -30,4 +30,10 @@ namespace gui {
 
     class SignatureMaker;
     using UniqueSignatureMaker = std::unique_ptr<SignatureMaker>;
+
+    class ComponentsMaker;
+    using UniqueComponentsMaker = std::unique_ptr<ComponentsMaker>;
+
+    class SignatureEditDelegate;
+    using UniqueSignatureEditDelegate = std::unique_ptr<SignatureEditDelegate>;
 }

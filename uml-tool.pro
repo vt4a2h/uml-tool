@@ -63,14 +63,16 @@ SOURCES += \
     commands/renameentity.cpp \
     commands/movetypetootherscope.cpp \
     gui/scenefilter.cpp \
-    gui/classcomponentseditdelegate.cpp \
     gui/signaturemaker.cpp \
     gui/editmethoddialog.cpp \
     models/componentsmodel.cpp \
     commands/removecomponentscommands.cpp \
     commands/addcomponentscommands.cpp \
     gui/chooseglobaldatabasedialog.cpp \
-    entity/property.cpp
+    entity/property.cpp \
+    gui/componentseditdelegate.cpp \
+    gui/signatureeditdelegate.cpp \
+    gui/componentsmaker.cpp
 
 HEADERS += \
     enums.h \
@@ -133,7 +135,6 @@ HEADERS += \
     models/models_types.hpp \
     commands/commands_types.hpp \
     gui/scenefilter.h \
-    gui/classcomponentseditdelegate.h \
     gui/signaturemaker.h \
     gui/editmethoddialog.h \
     models/componentsmodel.h \
@@ -142,7 +143,10 @@ HEADERS += \
     application/settings.h \
     constants.h \
     gui/chooseglobaldatabasedialog.h \
-    entity/property.h
+    entity/property.h \
+    gui/componentseditdelegate.h \
+    gui/signatureeditdelegate.h \
+    gui/componentsmaker.h
 
 FORMS += \
     gui/mainwindow.ui \

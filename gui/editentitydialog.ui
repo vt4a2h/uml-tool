@@ -34,9 +34,6 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="styleSheet">
-            <string notr="true"/>
-           </property>
            <property name="placeholderText">
             <string>Enter entity name here...</string>
            </property>
@@ -150,6 +147,9 @@
              <property name="shortcut">
               <string>Ctrl+N</string>
              </property>
+             <property name="autoDefault">
+              <bool>false</bool>
+             </property>
             </widget>
            </item>
           </layout>
@@ -207,6 +207,9 @@
            <property name="shortcut">
             <string>Ctrl+Shift+N</string>
            </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
           </widget>
          </item>
          <item>
@@ -237,6 +240,9 @@
            <property name="shortcut">
             <string>Ctrl+E</string>
            </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
           </widget>
          </item>
          <item>
@@ -253,6 +259,9 @@
            </property>
            <property name="shortcut">
             <string>Del</string>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -327,6 +336,9 @@
         <iconset resource="main.qrc">
          <normaloff>:/icons/pic/icon_reject.png</normaloff>:/icons/pic/icon_reject.png</iconset>
        </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
      <item>
@@ -341,8 +353,11 @@
         <iconset resource="main.qrc">
          <normaloff>:/icons/pic/icon_accept_edit_dialog.png</normaloff>:/icons/pic/icon_accept_edit_dialog.png</iconset>
        </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
        <property name="default">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="flat">
         <bool>false</bool>

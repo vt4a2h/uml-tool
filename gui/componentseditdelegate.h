@@ -26,12 +26,12 @@
 
 namespace gui {
 
-    class ClassComponentsEditDelegate : public QStyledItemDelegate
+    class ComponentsEditDelegate : public QStyledItemDelegate
     {
         Q_OBJECT
 
     public:
-        ClassComponentsEditDelegate(QObject * parent = nullptr);
+        ComponentsEditDelegate(QObject *parent = nullptr);
 
         QSize size() const;
 
