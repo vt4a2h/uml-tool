@@ -37,7 +37,7 @@ namespace gui {
         ComponentsMaker(const models::SharedApplicationModel &model, const entity::SharedType &entity,
                         const entity::SharedScope &scope);
 
-        bool signatureValid(const QString &signature, models::DisplayPart display) const;
+        bool signatureValid(const QString &signature, models::DisplayPart display);
         entity::SharedBasicEntity makeComponent(const QString &signature, models::DisplayPart display);
 
         models::SharedApplicationModel model() const;
@@ -53,6 +53,9 @@ namespace gui {
         models::SharedApplicationModel m_Model;
         entity::SharedType m_Entity;
         entity::SharedScope m_Scope;
+
+        QStringList m_LastCaptured;
+        QString m_LastSignature;
     };
 
 } // namespace gui

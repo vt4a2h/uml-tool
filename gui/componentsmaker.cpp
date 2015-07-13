@@ -28,26 +28,30 @@
 namespace gui {
 
     namespace {
-        const QSet<QString> reservedKeywords = { "alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor",
-                                                 "bool", "break", "case", "catch", "char", "char16_t", "char32_t", "class",
-                                                 "compl", "const", "constexpr", "const_cast", "continue", "decltype",
-                                                 "default", "delete", "do", "double", "dynamic_cast", "else", "enum",
-                                                 "explicit", "export", "extern", "false", "float", "for", "friend", "goto",
-                                                 "if", "inline", "int", "long", "mutable", "namespace", "new", "noexcept",
-                                                 "not", "not_eq", "nullptr", "operator", "or", "or_eq", "private",
-                                                 "protected", "public", "register", "reinterpret_cast", "return", "short",
-                                                 "signed", "sizeof", "static", "static_assert", "static_cast", "struct",
-                                                 "switch", "template", "this", "thread_local", "throw", "true", "try",
-                                                 "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual",
-                                                 "void", "volatile", "wchar_t", "while", "xor", "xor_eq" };
+        using Keywords = QSet<QString>;
+        using CapIndexKeywords = std::pair<int, Keywords>; // Capture index, keywords which MUST NOT contains in captured text
+
+        const Keywords types = {"bool", "char16_t", "char32_t", "float", "int", "long", "short", "signed",
+                                "wchar_t", "double", "void" };
+        const Keywords reservedKeywords = { "alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor",
+                                            "break", "case", "catch", "char",  "class",
+                                            "compl", "const", "constexpr", "const_cast", "continue", "decltype",
+                                            "default", "delete", "do", "dynamic_cast", "else", "enum",
+                                            "explicit", "export", "extern", "false", "for", "friend", "goto",
+                                            "if", "inline",  "mutable", "namespace", "new", "noexcept",
+                                            "not", "not_eq", "nullptr", "operator", "or", "or_eq", "private",
+                                            "protected", "public", "register", "reinterpret_cast", "return",
+                                            "sizeof", "static", "static_assert", "static_cast", "struct",
+                                            "switch", "template", "this", "thread_local", "throw", "true", "try",
+                                            "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual",
+                                            "volatile", "while", "xor", "xor_eq" };
 
         // NOTE: Just simple patterns now, must be improved in future (prefer to use simple parser)
-        // TODO: fix regexp
         const QString fieldPattern = "^((?:volatile|static|mutable)\\s)?" // 1 -- lhs keywords
                                      "(const\\s)?"                        // 2 -- const
                                      "((?:\\w+:{2,})*)"                   // 3 -- namespaces
                                      "(\\w+)"                             // 4 -- typename
-                                     "\\s*([\\*\\s\\&const]*)"            // 5 -- &*const
+                                     "\\s+([\\*\\s\\&const]*)"            // 5 -- &*const
                                      "\\s*(\\w+)$";                       // 6 -- field name
 
         const QMap<models::DisplayPart, QString> componentPatternMap =
@@ -55,18 +59,25 @@ namespace gui {
             {models::DisplayPart::Fields, fieldPattern},
         };
 
-        const QMap<models::DisplayPart, QVector<int>> componentIndexesMap =
+        const QMap<models::DisplayPart, QVector<CapIndexKeywords>> componentIndexesMap =
         {
-            {models::DisplayPart::Fields, {3, 4, 6}},
+            {models::DisplayPart::Fields, {{3, Keywords()}, {4, reservedKeywords}, {6, types}}},
         };
 
-        bool notContainsInvalidKeyword(const QRegularExpressionMatch &match, models::DisplayPart display)
+        bool notContainsInvalidKeyword(const QRegularExpressionMatch &match, models::DisplayPart display, QStringList &captured)
         {
-            QSet<QString> captured;
-            for (auto &&index : componentIndexesMap[display])
-                captured |= match.captured(index).split("::", QString::SkipEmptyParts).toSet();
+            for (auto &&indexKeywords : componentIndexesMap[display]) {
+                const QString &cap = match.captured(indexKeywords.first).trimmed();
+                const QStringList &tmpList = cap.split("::", QString::SkipEmptyParts);
+                if (!(tmpList.toSet() & indexKeywords.second).isEmpty()) {
+                    captured.clear();
+                    return false;
+                }
 
-            return (captured & reservedKeywords).isEmpty();
+                captured.append(tmpList);
+            }
+
+            return true;
         }
     }
 
@@ -89,6 +100,7 @@ namespace gui {
         : m_Model(model)
         , m_Entity(entity)
         , m_Scope(scope)
+        , m_LastSignature("")
     {
     }
 
@@ -97,7 +109,7 @@ namespace gui {
      * @param signature
      * @return
      */
-    bool ComponentsMaker::signatureValid(const QString &signature, models::DisplayPart display) const
+    bool ComponentsMaker::signatureValid(const QString &signature, models::DisplayPart display)
     {
         const QString &pattern = componentPatternMap[display];
         if (pattern.isEmpty())
@@ -105,8 +117,14 @@ namespace gui {
 
         const QRegularExpression re(pattern);
         const auto match =  re.match(signature.trimmed());
-        if (match.hasMatch())
-            return /*notContainsInvalidKeyword(match, display)*/true;
+        if (match.hasMatch()) {
+            m_LastCaptured.clear();
+            m_LastSignature.clear();
+
+            const bool result = notContainsInvalidKeyword(match, display, m_LastCaptured);
+            if (result)
+                m_LastSignature = signature;
+        }
 
         return false;
     }
