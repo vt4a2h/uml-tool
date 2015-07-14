@@ -34,6 +34,8 @@
 
 namespace models {
 
+    // TODO: handle projects ID changing
+
     /// The ApplicationModal class
     class ApplicationModel : public QObject
     {

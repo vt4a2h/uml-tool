@@ -1,0 +1,184 @@
+{
+    "ID": "{be919426-2a91-49ab-b08d-422dfff35063}",
+    "Name": "new_db",
+    "Path": "/home/vt4a2h/Projects/uml_tst-out_",
+    "Positions": [
+        {
+            "id": "{ff157369-5c60-499d-9a0e-5c3b11d80ee0}",
+            "x": -1488,
+            "y": -319
+        },
+        {
+            "id": "{9a4cf2ac-3bb1-4f6c-bf7e-e81e97b76f1c}",
+            "x": -1638,
+            "y": -531
+        },
+        {
+            "id": "{f44de486-f4ae-4299-b43e-d3000d1e7adb}",
+            "x": -1239,
+            "y": -453
+        },
+        {
+            "id": "{2bd03cc5-57a3-4503-b03b-b44d914a13bc}",
+            "x": -822,
+            "y": -264
+        }
+    ],
+    "Relations": [
+    ],
+    "Scopes": [
+        {
+            "ID": "{9376f65d-cea6-45cf-8a7f-16f77e0a30c0}",
+            "Name": "sc",
+            "Parent ID": "_global_scope",
+            "Scopes": [
+            ],
+            "Types": [
+                {
+                    "Fields": [
+                        {
+                            "DefaultValue": "",
+                            "Keywords": [
+                            ],
+                            "Name": "f1",
+                            "Prefix": "",
+                            "Section": 0,
+                            "Suffix": "",
+                            "Type ID": "stub"
+                        },
+                        {
+                            "DefaultValue": "",
+                            "Keywords": [
+                            ],
+                            "Name": "f2",
+                            "Prefix": "",
+                            "Section": 0,
+                            "Suffix": "",
+                            "Type ID": "stub"
+                        }
+                    ],
+                    "Final status": false,
+                    "ID": "{f44de486-f4ae-4299-b43e-d3000d1e7adb}",
+                    "Kind": 0,
+                    "Kind of type": "Class",
+                    "Methods": [
+                        {
+                            "Const status": false,
+                            "Lhs identificators": [
+                            ],
+                            "Name": "foo",
+                            "Parameters": [
+                            ],
+                            "Return type id": "{ac4961d2-3e1c-4f07-86dc-c83c023ff240}",
+                            "Rhs identificator": 0,
+                            "ScopeID": "{be919426-2a91-49ab-b08d-422dfff35063}__project_global_scope",
+                            "Section": 0,
+                            "Type": 0
+                        },
+                        {
+                            "Const status": false,
+                            "Lhs identificators": [
+                            ],
+                            "Name": "bar",
+                            "Parameters": [
+                            ],
+                            "Return type id": "{aeaebec8-8eab-4d52-b53b-754a832cd0a1}",
+                            "Rhs identificator": 0,
+                            "ScopeID": "{be919426-2a91-49ab-b08d-422dfff35063}__project_global_scope",
+                            "Section": 0,
+                            "Type": 0
+                        },
+                        {
+                            "Const status": false,
+                            "Lhs identificators": [
+                            ],
+                            "Name": "baz",
+                            "Parameters": [
+                            ],
+                            "Return type id": "_void",
+                            "Rhs identificator": 0,
+                            "ScopeID": "{be919426-2a91-49ab-b08d-422dfff35063}__project_global_scope",
+                            "Section": 0,
+                            "Type": 0
+                        }
+                    ],
+                    "Name": "type",
+                    "Parents": [
+                    ],
+                    "Properties": [
+                    ],
+                    "Scope ID": "{9376f65d-cea6-45cf-8a7f-16f77e0a30c0}"
+                }
+            ]
+        },
+        {
+            "ID": "{be919426-2a91-49ab-b08d-422dfff35063}__project_global_scope",
+            "Name": "::",
+            "Parent ID": "_global_scope",
+            "Scopes": [
+            ],
+            "Types": [
+                {
+                    "Fields": [
+                    ],
+                    "Final status": false,
+                    "ID": "{ff157369-5c60-499d-9a0e-5c3b11d80ee0}",
+                    "Kind": 0,
+                    "Kind of type": "Class",
+                    "Methods": [
+                    ],
+                    "Name": "type",
+                    "Parents": [
+                    ],
+                    "Properties": [
+                    ],
+                    "Scope ID": "{be919426-2a91-49ab-b08d-422dfff35063}__project_global_scope"
+                },
+                {
+                    "ID": "{ac4961d2-3e1c-4f07-86dc-c83c023ff240}",
+                    "Kind of type": "Type",
+                    "Name": "int",
+                    "Scope ID": "{be919426-2a91-49ab-b08d-422dfff35063}__project_global_scope"
+                },
+                {
+                    "Fields": [
+                    ],
+                    "Final status": false,
+                    "ID": "{9a4cf2ac-3bb1-4f6c-bf7e-e81e97b76f1c}",
+                    "Kind": 0,
+                    "Kind of type": "Class",
+                    "Methods": [
+                    ],
+                    "Name": "type",
+                    "Parents": [
+                    ],
+                    "Properties": [
+                    ],
+                    "Scope ID": "{be919426-2a91-49ab-b08d-422dfff35063}__project_global_scope"
+                },
+                {
+                    "Fields": [
+                    ],
+                    "Final status": false,
+                    "ID": "{2bd03cc5-57a3-4503-b03b-b44d914a13bc}",
+                    "Kind": 0,
+                    "Kind of type": "Class",
+                    "Methods": [
+                    ],
+                    "Name": "type",
+                    "Parents": [
+                    ],
+                    "Properties": [
+                    ],
+                    "Scope ID": "{be919426-2a91-49ab-b08d-422dfff35063}__project_global_scope"
+                },
+                {
+                    "ID": "{aeaebec8-8eab-4d52-b53b-754a832cd0a1}",
+                    "Kind of type": "Type",
+                    "Name": "double",
+                    "Scope ID": "{be919426-2a91-49ab-b08d-422dfff35063}__project_global_scope"
+                }
+            ]
+        }
+    ]
+}

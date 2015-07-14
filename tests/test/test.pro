@@ -21,6 +21,9 @@ HEADERS += ../../enums.h \
     ../../project/project.h \
     ../../entity/basicentity.h \
     ../../constants.h \
+    ../../models/applicationmodel.h \
+    ../../models/projecttreemodel.h \
+    ../../models/basictreeitem.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -41,7 +44,9 @@ HEADERS += ../../enums.h \
     TestIComponents.h \
     cases/icomponentstestcases.h \
     cases/entitiestestcases.h \
-    TestEntities.h
+    TestEntities.h \
+    ComponentsMaker.h \
+    cases/componentsmakercases.h
 
 SOURCES += main.cpp \
            ../../entity/type.cpp \
@@ -77,3 +82,7 @@ SOURCES += main.cpp \
            ../../generator/basiccppprojectgenerator.cpp \
            ../../project/project.cpp \
            ../../translator/code.cpp \
+           ../../gui/componentsmaker.cpp \
+           ../../models/applicationmodel.cpp \
+           ../../models/projecttreemodel.cpp \
+           ../../models/basictreeitem.cpp \

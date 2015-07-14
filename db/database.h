@@ -24,6 +24,7 @@
 #pragma once
 
 #include <entity/entity_types.hpp>
+#include <types.h>
 
 /**
  *  @brief namespace db
@@ -65,7 +66,7 @@ namespace db {
         entity::SharedScope depthScopeSearch(const QString &scopeId) const;
         entity::SharedType  depthTypeSearch(const QString &typeId)   const;
 
-        void load(QStringList &errorList);
+        void load(ErrorList &errorList);
         bool save() const;
         virtual void clear();
 

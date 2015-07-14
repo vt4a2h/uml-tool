@@ -122,8 +122,10 @@ namespace gui {
             m_LastSignature.clear();
 
             const bool result = notContainsInvalidKeyword(match, display, m_LastCaptured);
-            if (result)
+            if (result) {
                 m_LastSignature = signature;
+                return result;
+            }
         }
 
         return false;

@@ -32,6 +32,7 @@
 #include <cases/typemakertestcases.h>
 #include <cases/icomponentstestcases.h>
 #include <cases/entitiestestcases.h>
+#include <cases/componentsmakercases.h>
 
 int main(int argc, char **argv)
 {

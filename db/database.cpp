@@ -335,7 +335,7 @@ namespace db {
      * @brief Database::load
      * @param errorList
      */
-    void Database::load(QStringList &errorList)
+    void Database::load(ErrorList &errorList)
     {
         QFile f(makeFullPath());
         if (f.open(QIODevice::ReadOnly)) {
