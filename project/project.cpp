@@ -114,6 +114,9 @@ namespace project {
         if (!utility::readFromFile(*this, path))
             m_Errors << tr("Cannot read project file.");
 
+        if (m_Path != path)
+            m_Path = QFileInfo(path).absolutePath();
+
         m_Database->setPath(m_Path);
         m_Database->setName(databaseFileName());
         m_Database->load(m_Errors);

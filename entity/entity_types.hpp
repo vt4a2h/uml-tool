@@ -27,6 +27,7 @@
 #include <QHash>
 #include <QSet>
 #include <QStringList>
+#include <QMetaType>
 
 namespace entity {
     class BasicEntity;
