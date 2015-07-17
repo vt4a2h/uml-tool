@@ -217,7 +217,6 @@ namespace project {
         QJsonObject result;
 
         result.insert("Name", m_Name);
-        result.insert("Path", m_Path);
         result.insert("ID"  , m_ID  );
 
         return result;
@@ -232,9 +231,6 @@ namespace project {
     {
         utility::checkAndSet(src, "Name", errorList, [&src, this](){
             m_Name = src["Name"].toString();
-        });
-        utility::checkAndSet(src, "Path", errorList, [&src, this](){
-            m_Path = src["Path"].toString();
         });
         utility::checkAndSet(src, "ID", errorList, [&src, this](){
             m_ID = src["ID"].toString();
