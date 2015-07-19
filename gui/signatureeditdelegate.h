@@ -47,7 +47,6 @@ namespace gui {
         void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 
     private slots:
-        void onEditFinished();
         void onTextEdited();
 
     private:

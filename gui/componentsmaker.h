@@ -54,8 +54,10 @@ namespace gui {
         entity::SharedType m_Entity;
         entity::SharedScope m_Scope;
 
-        QStringList m_LastCaptured;
+        QVector<QString> m_LastCaptured;
         QString m_LastSignature;
+
+        entity::SharedBasicEntity makeField();
     };
 
 } // namespace gui

@@ -24,12 +24,21 @@
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
+#include <QDebug>
+
+#include <entity/field.h>
+#include <entity/scope.h>
+
+#include <models/applicationmodel.h>
+
+#include <utility/helpfunctions.h>
+
+#include "enums.h"
 
 namespace gui {
 
     namespace {
         using Keywords = QSet<QString>;
-        using CapIndexKeywords = std::pair<int, Keywords>; // Capture index, keywords which MUST NOT contains in captured text
 
         const Keywords types = {"bool", "char16_t", "char32_t", "float", "int", "long", "short", "signed",
                                 "wchar_t", "double", "void" };
@@ -46,10 +55,13 @@ namespace gui {
                                             "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual",
                                             "volatile", "while", "xor", "xor_eq" };
 
-        // NOTE: Just simple patterns now, must be improved in future (prefer to use simple parser)
+        enum class FieldGroupNames { LhsKeywords = 1, ConstStatus, Namespaces, Typename, PLC, Name, GroupsCount };
+
+        // TODO: Just simple patterns now, must be improved in future (prefer to use simple parser)
+        // TODO: 5 section may contains wrong combination of "*&const" it must be fixed.
         const QString fieldPattern = "^((?:volatile|static|mutable)\\s)?" // 1 -- lhs keywords
                                      "(const\\s)?"                        // 2 -- const
-                                     "((?:\\w+:{2,})*)"                   // 3 -- namespaces
+                                     "((?:\\w*:{2,})*)"                   // 3 -- namespaces
                                      "(\\w+)"                             // 4 -- typename
                                      "\\s+([\\*\\s\\&const]*)"            // 5 -- &*const
                                      "\\s*(\\w+)$";                       // 6 -- field name
@@ -59,22 +71,44 @@ namespace gui {
             {models::DisplayPart::Fields, fieldPattern},
         };
 
-        const QMap<models::DisplayPart, QVector<CapIndexKeywords>> componentIndexesMap =
+        const QMap<models::DisplayPart, int> componentsGroupCount =
         {
-            {models::DisplayPart::Fields, {{3, Keywords()}, {4, reservedKeywords}, {6, types}}},
+            {models::DisplayPart::Fields, int(FieldGroupNames::GroupsCount)},
         };
 
-        bool notContainsInvalidKeyword(const QRegularExpressionMatch &match, models::DisplayPart display, QStringList &captured)
-        {
-            for (auto &&indexKeywords : componentIndexesMap[display]) {
-                const QString &cap = match.captured(indexKeywords.first).trimmed();
-                const QStringList &tmpList = cap.split("::", QString::SkipEmptyParts);
-                if (!(tmpList.toSet() & indexKeywords.second).isEmpty()) {
-                    captured.clear();
-                    return false;
-                }
+        // Capture index, keywords which MUST NOT contains in captured text
+        using CapIndexKeywords = std::pair<FieldGroupNames, Keywords>;
 
-                captured.append(tmpList);
+        const QMap<models::DisplayPart, QVector<CapIndexKeywords>> componentIndexesMap =
+        {
+            {models::DisplayPart::Fields, {{FieldGroupNames::Namespaces, reservedKeywords|types},
+                                           {FieldGroupNames::Typename, reservedKeywords},
+                                           {FieldGroupNames::Name, types}}},
+        };
+
+        using MakerFunction = std::function<entity::SharedBasicEntity()>;
+        QMap<models::DisplayPart, MakerFunction> componentMakerMap;
+
+        bool notContainsInvalidKeyword(const QRegularExpressionMatch &match, models::DisplayPart display,
+                                       QVector<QString> &captured)
+        {
+            const int groupsCount = int(componentsGroupCount[display]);
+            captured.resize(groupsCount);
+
+            const QVector<CapIndexKeywords> &rules = componentIndexesMap[display];
+            for (int groupIndex = 1; groupIndex < groupsCount; ++groupIndex)
+            {
+                const QString &cap = match.captured(groupIndex).trimmed();
+                captured[groupIndex] = cap;
+
+                auto it = utility::find_if(rules, [&](const CapIndexKeywords &c){ return int(c.first) == groupIndex; });
+                if (it != cend(rules)) {
+                    const QStringList &tmpList = cap.split("::", QString::SkipEmptyParts);
+                    if (!(tmpList.toSet() & it->second).isEmpty()) {
+                        captured.clear();
+                        return false;
+                    }
+                }
             }
 
             return true;
@@ -102,6 +136,7 @@ namespace gui {
         , m_Scope(scope)
         , m_LastSignature("")
     {
+        componentMakerMap[models::DisplayPart::Fields] = [&]{ return makeField(); };
     }
 
     /**
@@ -138,8 +173,10 @@ namespace gui {
      */
     entity::SharedBasicEntity ComponentsMaker::makeComponent(const QString &signature, models::DisplayPart display)
     {
-        Q_UNUSED(signature);
-        Q_UNUSED(display);
+        if ((signature.isEmpty() && !m_LastSignature.isEmpty() && !m_LastCaptured.isEmpty()) ||
+            (signature == m_LastSignature && !m_LastCaptured.isEmpty()) ||
+            signatureValid(signature, display))
+            return componentMakerMap[display]();
 
         return entity::SharedBasicEntity();
     }
@@ -196,6 +233,33 @@ namespace gui {
     void ComponentsMaker::setScope(const entity::SharedScope &scope)
     {
         m_Scope = scope;
+    }
+
+    /**
+     * @brief ComponentsMaker::makeField
+     * @return
+     */
+    entity::SharedBasicEntity ComponentsMaker::makeField()
+    {
+        Q_ASSERT(!m_LastCaptured.isEmpty() && !m_LastCaptured[int(FieldGroupNames::Typename)].isEmpty() &&
+                 !m_LastCaptured[int(FieldGroupNames::Name)].isEmpty());
+
+        auto newField = std::make_shared<entity::Field>();
+        newField->setName(m_LastCaptured[int(FieldGroupNames::Name)]);
+        if (!m_LastCaptured[int(FieldGroupNames::LhsKeywords)].isEmpty()) {
+            auto keyword = utility::fieldKeywordFromString(m_LastCaptured[int(FieldGroupNames::LhsKeywords)]);
+            Q_ASSERT(keyword != entity::FieldKeyword::Invalid);
+            newField->addKeyword(keyword);
+        }
+        qDebug() << "created new field with name: " << m_LastCaptured[int(FieldGroupNames::Name)];
+
+        const QString &typeName = m_LastCaptured[int(FieldGroupNames::Typename)];
+        const entity::ScopesList &scopes = m_Model->globalDatabase()->scopes();
+        entity::SharedType type;
+        utility::find_if(scopes, [&](auto &&scope){ type = scope->typeByName(typeName); return !!type; });
+        qDebug() << "found type: " << !!type << " with name: " << typeName;
+
+        return newField;
     }
 
 } // namespace gui

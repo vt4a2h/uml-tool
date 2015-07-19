@@ -118,7 +118,17 @@ namespace entity {
      */
     SharedType Scope::getType(const QString &typeId) const
     {
-        return (m_Types.contains(typeId) ? m_Types[typeId] : nullptr);
+        return m_Types.value(typeId);
+    }
+
+    /**
+     * @brief Scope::getType
+     * @param typeId
+     * @return
+     */
+    SharedType Scope::getType(const QString &typeId)
+    {
+        return m_Types.value(typeId);
     }
 
     /**
@@ -136,6 +146,27 @@ namespace entity {
         }
 
         return result;
+    }
+
+    /**
+     * @brief Scope::typeByName
+     * @param name
+     * @return
+     */
+    SharedType Scope::typeByName(const QString &name) const
+    {
+        auto it = utility::find_if(m_Types, [&](auto &&type){ return name == type->name(); });
+        return it != m_Types.cend() ? *it : nullptr;
+    }
+
+    /**
+     * @brief Scope::typeByName
+     * @param name
+     * @return
+     */
+    SharedType Scope::typeByName(const QString &name)
+    {
+        return const_cast<const Scope*>(this)->typeByName(name);
     }
 
     /**

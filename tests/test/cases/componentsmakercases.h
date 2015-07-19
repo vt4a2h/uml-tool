@@ -28,17 +28,17 @@ namespace {
     const QVector<QPair<QString, bool>> fieldData =
     {
         {"int ",                                          false},
-        {"int a",                                         true},
+        {"int a",                                         true },
         {"const int",                                     false},
-        {"foo::bar::int a",                               true},
-        {"const foo::bar::int a",                         true},
-        {"constfoo::bar::int a",                          true},
+        {"foo::bar::int a",                               true },
+        {"const foo::bar::int a",                         true },
+        {"constfoo::bar::int a",                          true },
         {"scons foo::bar::int a",                         false},
         {"constt foo::bar::int a",                        false},
-        {"static const foo::bar::int a",                  true},
+        {"static const foo::bar::int a",                  true },
         {"staticconst foo::bar::int a",                   false},
-        {"static const std::foo::baz::int * const **& a", true},
-        {"int *consta",                                   true},
+        {"static const std::foo::baz::int * const **& a", true },
+        {"int *consta",                                   true },
     };
 }
 

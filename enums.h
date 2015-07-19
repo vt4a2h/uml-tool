@@ -61,9 +61,10 @@ namespace entity {
 
     /// The FieldKeyword enum
     enum FieldKeyword     : int {
-        Volatile,   ///< Volatile
-        Mutable,    ///< Mutable
-        FieldStatic ///< FieldStatic
+        Volatile,    ///< Volatile
+        Mutable,     ///< Mutable
+        FieldStatic, ///< FieldStatic
+        Invalid      ///< Invalid
     };
 
     /// The ClassMethodType enum

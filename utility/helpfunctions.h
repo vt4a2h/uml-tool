@@ -236,6 +236,8 @@ namespace utility {
     }
 
     QString fieldKeywordToString(entity::FieldKeyword keyword);
+    entity::FieldKeyword fieldKeywordFromString(const QString &keyword);
+
     QString methodLhsIdToString(entity::LhsIdentificator id);
     QString methodRhsIdToString(entity::RhsIdentificator id);
     QString sectionToString(entity::Section section);

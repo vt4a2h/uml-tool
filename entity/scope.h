@@ -51,7 +51,12 @@ namespace entity {
         friend bool operator ==(const Scope &lhs, const Scope &rhs);
 
         SharedType getType(const QString &typeId) const;
+        SharedType getType(const QString &typeId);
         SharedType takeType(const QString &typeId);
+
+        SharedType typeByName(const QString &name) const;
+        SharedType typeByName(const QString &name) ;
+
         template <class T = Type> std::shared_ptr<T> addType(const QString &name = "");
         void addClonedType(const SharedType &type);
         SharedType addExistsType(const SharedType &type);

@@ -75,6 +75,8 @@ namespace utility {
 
     namespace {
         using KeywordsString = const std::map<entity::FieldKeyword,     QString>;
+        using StringKeywords = const std::map<QString,     entity::FieldKeyword>;
+
         using LhsIdString    = const std::map<entity::LhsIdentificator, QString>;
         using RhsIdString    = const std::map<entity::RhsIdentificator, QString>;
         using SectionString  = const std::map<entity::Section,          QString>;
@@ -83,6 +85,9 @@ namespace utility {
         KeywordsString kKeywords { {entity::Volatile, "volatile"}, {entity::Mutable, "mutable"},
                                    {entity::FieldStatic, "static"}
                                  };
+        StringKeywords kStrKey { {"volatile", entity::Volatile}, {"mutable", entity::Mutable},
+                                 {"static", entity::FieldStatic}
+                               };
 
         LhsIdString    kLhsId    { {entity::Explicit, "explicit"},   {entity::Inline, "inline"},
                                    {entity::MethodStatic, "static"}, {entity::Virtual, "virtual"},
@@ -226,4 +231,15 @@ namespace utility {
 
         return result;
     }
+
+    /**
+     * @brief fieldKeywordFromString
+     * @param keyword
+     * @return
+     */
+    entity::FieldKeyword fieldKeywordFromString(const QString &keyword)
+    {
+        return mapSearchHelper(kStrKey, keyword, entity::FieldKeyword::Invalid);
+    }
+
 }

@@ -83,7 +83,6 @@ namespace gui {
         Q_UNUSED(index);
 
         auto le = new QLineEdit(parent);
-        connect(le, &QLineEdit::editingFinished, this, &SignatureEditDelegate::onEditFinished);
         connect(le, &QLineEdit::textEdited, this, &SignatureEditDelegate::onTextEdited);
 
         return le;
@@ -117,22 +116,14 @@ namespace gui {
         auto le = static_cast<QLineEdit*>(editor);
         auto currentSignature = model->data(index, models::ComponentsModel::ShortSignature).toString();
         if (currentSignature != le->text()) {
+            auto e = static_cast<QLineEdit*>(editor);
+            m_ComponentsMaker->makeComponent(e->text(), m_DisplayPart);
+            e->setStyleSheet("");
+
             qDebug() << "set model data";
         } else {
             qDebug() << "data is not changed";
         }
-    }
-
-    /**
-     * @brief SignatureEditDelegate::onEditFinished
-     */
-    void SignatureEditDelegate::onEditFinished()
-    {
-        auto editor = qobject_cast<QLineEdit*>(sender());
-        editor->setStyleSheet("");
-
-        emit commitData(editor);
-        emit closeEditor(editor);
     }
 
     /**

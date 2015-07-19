@@ -259,9 +259,9 @@ namespace db {
      */
     entity::SharedType Database::depthTypeSearch(const QString &typeId) const
     {
-        entity::SharedType result(nullptr);
+        entity::SharedType result;
 
-        for (auto scope : m_Scopes.values()) {
+        for (auto &&scope : m_Scopes.values()) {
             getDepthType(scope, typeId, result);
             if (result)
                 break;
@@ -323,8 +323,9 @@ namespace db {
             result = scope->getType(id);
             return;
         } else if (scope->hasChildScopes()){
-            for (auto child_scope : scope->scopes()) {
-                if (result) break;
+            for (auto &&child_scope : scope->scopes()) {
+                if (result)
+                    break;
                 getDepthType(child_scope, id, result);
             }
         }
