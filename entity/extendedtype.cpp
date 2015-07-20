@@ -308,9 +308,9 @@ namespace entity {
      * @param rhs
      * @return
      */
-    bool ExtendedType::isEqual(const ExtendedType &rhs) const
+    bool ExtendedType::isEqual(const Type &rhs) const
     {
-        return *this == rhs;
+        return *this == dynamic_cast<const ExtendedType&>(rhs);
     }
 
 } // namespace entity

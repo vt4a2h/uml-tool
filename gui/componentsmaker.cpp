@@ -28,6 +28,8 @@
 
 #include <entity/field.h>
 #include <entity/scope.h>
+#include <entity/type.h>
+#include <entity/extendedtype.h>
 
 #include <models/applicationmodel.h>
 
@@ -258,6 +260,43 @@ namespace gui {
         entity::SharedType type;
         utility::find_if(scopes, [&](auto &&scope){ type = scope->typeByName(typeName); return !!type; });
         qDebug() << "found type: " << !!type << " with name: " << typeName;
+
+        entity::SharedExtendedType extendedType = std::make_shared<entity::ExtendedType>();
+        extendedType->setTypeId(type->id());
+        extendedType->setConstStatus(!m_LastCaptured[int(FieldGroupNames::ConstStatus)].isEmpty());
+
+        if (!m_LastCaptured[int(FieldGroupNames::PLC)].isEmpty()) {
+            QString plc = m_LastCaptured[int(FieldGroupNames::PLC)];
+            plc.remove(QChar::Space);
+
+            if (plc.startsWith("const")) {
+                extendedType->setConstStatus(true);
+                plc.remove(0, 4);
+            }
+
+            while (!plc.isEmpty()) {
+                if (plc.startsWith("const")) {
+                    plc.remove(0, 4);
+                } else if (plc.startsWith("*const")) {
+                    extendedType->addPointerStatus(true);
+                    plc.remove(0, 5);
+                } else if (plc.startsWith("*")) {
+                    extendedType->addPointerStatus();
+                    plc.remove(0, 1);
+                } else if (plc.startsWith("&")) {
+                    extendedType->addLinkStatus();
+                    plc.remove(0, 1);
+                }
+            }
+        }
+
+        if (extendedType->isConst() || !extendedType->pl().isEmpty()) {
+            const entity::TypesList &types = m_Scope->types();
+            auto it = utility::find_if(types, [&](auto &&type){ return extendedType->isEqual(*type); });
+            if (it == cend(types)) {
+                m_Scope->addExistsType(extendedType);
+            }
+        }
 
         return newField;
     }
