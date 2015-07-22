@@ -61,11 +61,7 @@ namespace entity {
      */
     bool operator ==(const ExtendedType &lhs, const ExtendedType &rhs)
     {
-        return static_cast<const Type&>(lhs).isEqual(rhs)         &&
-               lhs.m_ConstStatus        == rhs.m_ConstStatus      &&
-               lhs.m_TypeId             == rhs.m_TypeId           &&
-               lhs.m_PointersAndLinks   == rhs.m_PointersAndLinks &&
-               lhs.m_TemplateParameters == rhs.m_TemplateParameters;
+        return lhs.isEqual(rhs);
     }
 
     /**
@@ -308,9 +304,14 @@ namespace entity {
      * @param rhs
      * @return
      */
-    bool ExtendedType::isEqual(const Type &rhs) const
+    bool ExtendedType::isEqual(const Type &rhs, bool withTypeid) const
     {
-        return *this == dynamic_cast<const ExtendedType&>(rhs);
+        auto r = static_cast<const ExtendedType &>(rhs);
+        return Type::isEqual(r, withTypeid)                 &&
+               m_ConstStatus        == r.m_ConstStatus      &&
+               m_TypeId             == r.m_TypeId           &&
+               m_PointersAndLinks   == r.m_PointersAndLinks &&
+               m_TemplateParameters == r.m_TemplateParameters;
     }
 
 } // namespace entity

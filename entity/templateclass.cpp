@@ -60,8 +60,7 @@ namespace entity {
      */
     bool operator ==(const TemplateClass &lhs, const TemplateClass &rhs)
     {
-        return static_cast<const Class&>(lhs).isEqual(rhs) &&
-               static_cast<const Template&>(lhs).templatePartEq(rhs);
+        return lhs.isEqual(rhs);
     }
 
     /**
@@ -131,9 +130,10 @@ namespace entity {
      * @param rhs
      * @return
      */
-    bool TemplateClass::isEqual(const TemplateClass &rhs) const
+    bool TemplateClass::isEqual(const Type &rhs, bool withTypeid) const
     {
-        return *this == rhs;
+        auto r = static_cast<const TemplateClass &>(rhs);
+        return Class::isEqual(r, withTypeid) && Template::templatePartEq(r);
     }
 
 } // namespace entity

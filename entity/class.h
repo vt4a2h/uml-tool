@@ -94,7 +94,7 @@ namespace entity {
         bool isFinal() const;
         void setFinalStatus(bool status);
 
-        bool isEqual(const Class &rhs) const;
+        bool isEqual(const Type &rhs, bool withTypeid = true) const override;
 
     public: // IComponent omplementation
         entity::SharedMethod addNewMethod() override;

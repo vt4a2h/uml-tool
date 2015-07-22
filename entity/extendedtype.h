@@ -67,7 +67,7 @@ namespace entity {
         QString typeId() const;
         void setTypeId(const QString &typeId);
 
-        bool isEqual(const Type &rhs) const override;
+        bool isEqual(const Type &rhs, bool withTypeid = true) const override;
 
     public: // BasicEntity implementation
         QJsonObject toJson() const override;

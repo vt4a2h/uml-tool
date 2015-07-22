@@ -170,10 +170,7 @@ namespace entity {
      */
     bool operator==(const Enum &lhs, const Enum &rhs)
     {
-        return static_cast<const Type&>(lhs).isEqual(rhs) &&
-               lhs.m_EnumTypeId   == rhs.m_EnumTypeId     &&
-               lhs.m_StrongStatus == rhs.m_StrongStatus   &&
-               utility::seqSharedPointerEq(lhs.m_Elements, rhs.m_Elements);
+        return lhs.isEqual(rhs);
     }
 
     /**
@@ -349,9 +346,13 @@ namespace entity {
      * @param rhs
      * @return
      */
-    bool Enum::isEqual(const Enum &rhs) const
+    bool Enum::isEqual(const Type &rhs, bool withTypeid) const
     {
-        return *this == rhs;
+        auto r = static_cast<const Enum&>(rhs);
+        return Type::isEqual(r, withTypeid)       &&
+               m_EnumTypeId   == r.m_EnumTypeId   &&
+               m_StrongStatus == r.m_StrongStatus &&
+               utility::seqSharedPointerEq(m_Elements, r.m_Elements);
     }
 
     /**

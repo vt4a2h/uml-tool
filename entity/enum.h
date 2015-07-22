@@ -73,7 +73,7 @@ namespace entity {
         QString enumTypeId() const;
         void setEnumTypeId(const QString &enumTypeId);
 
-        bool isEqual(const Enum &rhs) const;
+        bool isEqual(const Type &rhs, bool withTypeid = true) const override;
 
     public: // IComponents implmentaion
         SharedElement addNewElement() override;

@@ -98,10 +98,7 @@ namespace entity {
      */
     bool operator ==(const Type &lhs, const Type &rhs)
     {
-        return lhs.m_Name       == rhs.m_Name    &&
-               lhs.m_Id         == rhs.m_Id      &&
-               lhs.m_ScopeId    == rhs.m_ScopeId &&
-               lhs.hashType()   == rhs.hashType();
+        return lhs.isEqual(rhs);
     }
 
     /**
@@ -228,9 +225,12 @@ namespace entity {
      * @param rhs
      * @return
      */
-    bool Type::isEqual(const Type &rhs) const
+    bool Type::isEqual(const Type &rhs, bool withTypeid) const
     {
-        return *this == rhs;
+        return m_Name       == rhs.m_Name               &&
+               ( withTypeid ? m_Id == rhs.m_Id : true ) &&
+               m_ScopeId    == rhs.m_ScopeId            &&
+               hashType()   == rhs.hashType();
     }
 
     /**

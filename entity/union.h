@@ -51,7 +51,7 @@ namespace entity {
         void removeField(const QString &name);
         bool containsField(const QString &name);
 
-        bool isEqual(const Union &rhs) const;
+        bool isEqual(const Type &rhs, bool withTypeid = true) const override;
 
     public: // IComponent implementation
         SharedField addNewField() override;

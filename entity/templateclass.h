@@ -39,7 +39,7 @@ namespace entity {
 
         friend bool operator ==(const TemplateClass &lhs, const TemplateClass &rhs);
 
-        bool isEqual(const TemplateClass &rhs) const;
+        bool isEqual(const Type &rhs, bool withTypeid = true) const override;
 
     public: // BasicEntity implementation
         QJsonObject toJson() const override;

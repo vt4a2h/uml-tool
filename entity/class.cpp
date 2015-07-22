@@ -119,13 +119,7 @@ namespace entity {
      */
     bool operator ==(const Class &lhs, const Class &rhs)
     {
-        return static_cast<const Type&>(lhs).isEqual(rhs) &&
-                lhs.m_Kind        == rhs.m_Kind           &&
-                lhs.m_FinalStatus == rhs.m_FinalStatus    &&
-                lhs.m_Parents     == rhs.m_Parents        &&
-                utility::seqSharedPointerEq(lhs.m_Methods, rhs.m_Methods) &&
-                utility::seqSharedPointerEq(lhs.m_Fields,  rhs.m_Fields)  &&
-                utility::seqSharedPointerEq(lhs.m_Properties, rhs.m_Properties);
+        return lhs.isEqual(rhs);
     }
 
     /**
@@ -714,9 +708,16 @@ namespace entity {
      * @param rhs
      * @return
      */
-    bool Class::isEqual(const Class &rhs) const
+    bool Class::isEqual(const Type &rhs, bool withTypeid) const
     {
-        return *this == rhs;
+        auto r = static_cast<const Class &>(rhs);
+        return Type::isEqual(r, withTypeid)        &&
+               m_Kind        == r.m_Kind           &&
+               m_FinalStatus == r.m_FinalStatus    &&
+               m_Parents     == r.m_Parents        &&
+               utility::seqSharedPointerEq(m_Methods, r.m_Methods) &&
+               utility::seqSharedPointerEq(m_Fields,  r.m_Fields)  &&
+               utility::seqSharedPointerEq(m_Properties, r.m_Properties);
     }
 
     /**

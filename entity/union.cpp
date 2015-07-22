@@ -110,8 +110,7 @@ namespace entity {
      */
     bool operator ==(const Union &lhs, const Union &rhs)
     {
-        return static_cast<const Type&>(lhs).isEqual(rhs) &&
-               utility::seqSharedPointerEq(lhs.m_Fields, rhs.m_Fields);
+        return lhs.isEqual(rhs);
     }
 
     /**
@@ -251,9 +250,11 @@ namespace entity {
      * @param rhs
      * @return
      */
-    bool Union::isEqual(const Union &rhs) const
+    bool Union::isEqual(const Type &rhs, bool withTypeid) const
     {
-        return *this == rhs;
+        auto r = static_cast<const Union &>(rhs);
+        return Type::isEqual(r, withTypeid) &&
+               utility::seqSharedPointerEq(m_Fields, r.m_Fields);
     }
 
     /**
