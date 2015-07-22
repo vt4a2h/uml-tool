@@ -229,8 +229,7 @@ namespace entity {
     {
         return m_Name       == rhs.m_Name               &&
                ( withTypeid ? m_Id == rhs.m_Id : true ) &&
-               m_ScopeId    == rhs.m_ScopeId            &&
-               hashType()   == rhs.hashType();
+               m_ScopeId    == rhs.m_ScopeId;
     }
 
     /**
