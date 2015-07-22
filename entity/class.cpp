@@ -711,15 +711,6 @@ namespace entity {
     bool Class::isEqual(const Type &rhs, bool withTypeid) const
     {
         auto r = static_cast<const Class &>(rhs);
-
-        bool t = Type::isEqual(r, withTypeid);
-        bool k = m_Kind == r.m_Kind;
-        bool f = m_FinalStatus == r.m_FinalStatus;
-        bool p = m_Parents     == r.m_Parents;
-        bool m = utility::seqSharedPointerEq(m_Methods, r.m_Methods);
-        bool fi = utility::seqSharedPointerEq(m_Fields,  r.m_Fields);
-        bool prop = utility::seqSharedPointerEq(m_Properties, r.m_Properties);
-
         return Type::isEqual(r, withTypeid)        &&
                m_Kind        == r.m_Kind           &&
                m_FinalStatus == r.m_FinalStatus    &&
