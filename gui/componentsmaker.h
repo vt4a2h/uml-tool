@@ -22,6 +22,8 @@
 *****************************************************************************/
 #pragma once
 
+#include <QCoreApplication>
+
 #include <entity/entity_types.hpp>
 
 #include <models/models_types.hpp>
@@ -29,16 +31,20 @@
 
 namespace gui {
 
+    using MessageEntity = QPair<QString, entity::SharedBasicEntity>;
+
     /// The ComponentsMaker class
     class ComponentsMaker
     {
+        Q_DECLARE_TR_FUNCTIONS(ComponentsMaker)
+
     public:
         ComponentsMaker();
         ComponentsMaker(const models::SharedApplicationModel &model, const entity::SharedType &entity,
                         const entity::SharedScope &scope);
 
         bool signatureValid(const QString &signature, models::DisplayPart display);
-        entity::SharedBasicEntity makeComponent(const QString &signature, models::DisplayPart display);
+        MessageEntity makeComponent(const QString &signature, models::DisplayPart display);
 
         models::SharedApplicationModel model() const;
         void setModel(const models::SharedApplicationModel &model);
@@ -57,7 +63,7 @@ namespace gui {
         QVector<QString> m_LastCaptured;
         QString m_LastSignature;
 
-        entity::SharedBasicEntity makeField();
+        MessageEntity makeField();
     };
 
 } // namespace gui

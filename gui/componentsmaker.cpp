@@ -88,7 +88,7 @@ namespace gui {
                                            {FieldGroupNames::Name, types}}},
         };
 
-        using MakerFunction = std::function<entity::SharedBasicEntity()>;
+        using MakerFunction = std::function<MessageEntity()>;
         QMap<models::DisplayPart, MakerFunction> componentMakerMap;
 
         bool notContainsInvalidKeyword(const QRegularExpressionMatch &match, models::DisplayPart display,
@@ -173,14 +173,14 @@ namespace gui {
      * @param signature
      * @return
      */
-    entity::SharedBasicEntity ComponentsMaker::makeComponent(const QString &signature, models::DisplayPart display)
+    MessageEntity ComponentsMaker::makeComponent(const QString &signature, models::DisplayPart display)
     {
         if ((signature.isEmpty() && !m_LastSignature.isEmpty() && !m_LastCaptured.isEmpty()) ||
             (signature == m_LastSignature && !m_LastCaptured.isEmpty()) ||
             signatureValid(signature, display))
             return componentMakerMap[display]();
 
-        return entity::SharedBasicEntity();
+        return {tr("Wrong signature"), entity::SharedBasicEntity()};
     }
 
     /**
@@ -241,7 +241,7 @@ namespace gui {
      * @brief ComponentsMaker::makeField
      * @return
      */
-    entity::SharedBasicEntity ComponentsMaker::makeField()
+    MessageEntity ComponentsMaker::makeField()
     {
         Q_ASSERT(!m_LastCaptured.isEmpty() && !m_LastCaptured[int(FieldGroupNames::Typename)].isEmpty() &&
                  !m_LastCaptured[int(FieldGroupNames::Name)].isEmpty());
@@ -259,10 +259,13 @@ namespace gui {
         const entity::ScopesList &scopes = m_Model->globalDatabase()->scopes();
         entity::SharedType type;
         utility::find_if(scopes, [&](auto &&scope){ type = scope->typeByName(typeName); return !!type; });
-        qDebug() << "found type: " << !!type << " with name: " << typeName;
+        qDebug() << "found type: " << !!type << ", with name: " << typeName;
+        if (!type)
+            return {tr("Wrong type: %1.").arg(typeName), nullptr};
 
         entity::SharedExtendedType extendedType = std::make_shared<entity::ExtendedType>();
         extendedType->setTypeId(type->id());
+        extendedType->setScopeId(m_Scope->id());
         extendedType->setConstStatus(!m_LastCaptured[int(FieldGroupNames::ConstStatus)].isEmpty());
 
         if (!m_LastCaptured[int(FieldGroupNames::PLC)].isEmpty()) {
@@ -291,14 +294,17 @@ namespace gui {
         }
 
         if (extendedType->isConst() || !extendedType->pl().isEmpty()) {
-            const entity::TypesList &types = m_Scope->types();
-            auto it = utility::find_if(types, [&](auto &&type){ return extendedType->isEqual(*type); });
+            entity::TypesList types = m_Scope->types();
+            auto it = utility::find_if(types, [=](const entity::SharedType &type){ return extendedType->isEqual(*type, false); });
             if (it == cend(types)) {
                 m_Scope->addExistsType(extendedType);
+                qDebug() << "existing type added";
+            } else {
+                qDebug() << "existing type found";
             }
         }
 
-        return newField;
+        return {"", newField};
     }
 
 } // namespace gui

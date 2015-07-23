@@ -117,7 +117,12 @@ namespace gui {
         auto currentSignature = model->data(index, models::ComponentsModel::ShortSignature).toString();
         if (currentSignature != le->text()) {
             auto e = static_cast<QLineEdit*>(editor);
-            m_ComponentsMaker->makeComponent(e->text(), m_DisplayPart);
+            auto optionalEntity = m_ComponentsMaker->makeComponent(e->text(), m_DisplayPart);
+            if (optionalEntity.second)
+                qDebug() << "ok";
+            else
+                qDebug() << "Fail: " << optionalEntity.first;
+
             e->setStyleSheet("");
 
             qDebug() << "set model data";
