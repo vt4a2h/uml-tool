@@ -71,6 +71,8 @@ namespace db {
 
 namespace utility {
 
+    // TODO: move something to helpers.h / cpp
+
     QString genId();
     void checkAndSet(const QJsonObject& object, const QString& key, QStringList& lst, const std::function<void()>& func);
 

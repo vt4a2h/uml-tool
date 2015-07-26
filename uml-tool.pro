@@ -72,7 +72,8 @@ SOURCES += \
     entity/property.cpp \
     gui/componentseditdelegate.cpp \
     gui/signatureeditdelegate.cpp \
-    gui/componentsmaker.cpp
+    gui/componentsmaker.cpp \
+    helpers/entityhelpres.cpp
 
 HEADERS += \
     enums.h \
@@ -146,7 +147,8 @@ HEADERS += \
     entity/property.h \
     gui/componentseditdelegate.h \
     gui/signatureeditdelegate.h \
-    gui/componentsmaker.h
+    gui/componentsmaker.h \
+    helpers/entityhelpres.h
 
 FORMS += \
     gui/mainwindow.ui \

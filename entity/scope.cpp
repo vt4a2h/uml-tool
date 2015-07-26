@@ -38,6 +38,7 @@
 #include <QStringList>
 
 #include <utility/helpfunctions.h>
+#include <helpers/entityhelpres.h>
 
 namespace entity {
 
@@ -259,6 +260,16 @@ namespace entity {
     }
 
     /**
+     * @brief Scope::chainScopeSearch
+     * @param scopesNames
+     * @return
+     */
+    SharedScope Scope::chainScopeSearch(const QStringList &scopesNames) const
+    {
+        return entity::chainScopeSearch(m_Scopes, scopesNames);
+    }
+
+    /**
      * @brief Scope::addExistsChildScope
      * @param scope
      */
@@ -275,7 +286,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Scope::containsChildScope(const QString &typeId)
+    bool Scope::containsChildScope(const QString &typeId) const
     {
         return m_Scopes.contains(typeId);
     }

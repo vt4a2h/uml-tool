@@ -41,3 +41,21 @@ TEST_F(DepthSearch, TypeSearchWorks)
     invalid_case(depthTypeSearch, "foobarbaz")
 }
 
+TEST_F(DepthSearch, ChainScopeSearch)
+{
+    auto nullSc = _scopes["sc1"]->chainScopeSearch({});
+    ASSERT_EQ(nullSc, nullptr)
+            << "Null should be returned for empty scopes list.";
+
+    auto sc2 = _scopes["sc1"]->chainScopeSearch({"sc2"});
+    ASSERT_EQ(sc2, _scopes["sc2"])
+            << "Scope sc2 should be exists: sc1::sc2";
+
+    auto sc3 = _scopes["sc1"]->chainScopeSearch({"sc2", "sc3"});
+    ASSERT_EQ(sc3, _scopes["sc3"])
+            << "Scope sc3 should be exists: sc1::sc2::sc3.";
+
+    sc3 = _d->chainScopeSearch({"sc1", "sc2", "sc3"});
+    ASSERT_EQ(sc3, _scopes["sc3"])
+            << "Scopes sc1 should be found in database: sc1::sc2::sc3.";
+}

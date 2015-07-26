@@ -24,6 +24,7 @@ HEADERS += ../../enums.h \
     ../../models/applicationmodel.h \
     ../../models/projecttreemodel.h \
     ../../models/basictreeitem.h \
+    ../../helpers/entityhelpres.h\
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -86,3 +87,4 @@ SOURCES += main.cpp \
            ../../models/applicationmodel.cpp \
            ../../models/projecttreemodel.cpp \
            ../../models/basictreeitem.cpp \
+           ../../helpers/entityhelpres.cpp \

@@ -58,6 +58,7 @@ namespace db {
         entity::SharedScope getScope(const QString &id) const;
         entity::SharedScope addScope(const QString &name = "", const QString &parentScopeId = "");
         void addExistsScope(const entity::SharedScope &scope);
+        entity::SharedScope chainScopeSearch(const QStringList& scopesNames) const;
         bool containsScope(const QString &id) const;
         bool anyScopes() const;
         void removeScope(const QString &id);

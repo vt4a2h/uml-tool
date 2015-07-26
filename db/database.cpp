@@ -30,7 +30,9 @@
 #include <QJsonArray>
 #include <QTextStream>
 
-#include "utility/helpfunctions.h"
+#include <utility/helpfunctions.h>
+#include <helpers/entityhelpres.h>
+
 #include "entity/scope.h"
 #include "constants.h"
 
@@ -203,6 +205,16 @@ namespace db {
             Q_ASSERT(!m_Scopes.contains(scope->id()));
             m_Scopes[scope->id()] = scope;
         }
+    }
+
+    /**
+     * @brief Database::chainScopeSearch
+     * @param scopesNames
+     * @return
+     */
+    entity::SharedScope Database::chainScopeSearch(const QStringList &scopesNames) const
+    {
+        return entity::chainScopeSearch(m_Scopes, scopesNames);
     }
 
     /**

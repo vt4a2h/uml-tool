@@ -67,8 +67,9 @@ namespace entity {
         SharedScope getChildScope(const QString &typeId);
         SharedScope takeChildScope(const QString &typeId);
         SharedScope addChildScope(const QString &name = "");
+        SharedScope chainScopeSearch(const QStringList& scopesNames) const;
         void addExistsChildScope(const SharedScope &scope);
-        bool containsChildScope(const QString &typeId);
+        bool containsChildScope(const QString &typeId) const;
         bool hasChildScopes() const;
         void removeChildScope(const QString &typeId);
         ScopesList scopes() const;

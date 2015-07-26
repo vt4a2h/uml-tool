@@ -294,14 +294,18 @@ namespace gui {
         }
 
         if (extendedType->isConst() || !extendedType->pl().isEmpty()) {
-            entity::TypesList types = m_Scope->types();
-            auto it = utility::find_if(types, [=](const entity::SharedType &type){ return extendedType->isEqual(*type, false); });
-            if (it == cend(types)) {
-                m_Scope->addExistsType(extendedType);
-                qDebug() << "existing type added";
+            QStringList namespaces = m_LastCaptured[int(FieldGroupNames::Namespaces)].remove(QChar::Space).split("::");
+            entity::TypesList types;
+            if (!namespaces.isEmpty()) {
             } else {
-                qDebug() << "existing type found";
+                types = m_Scope->types();
+                auto it = utility::find_if(types,
+                                           [=](const entity::SharedType &type) { return extendedType->isEqual(*type, false); });
+                if (it == cend(types))
+                    m_Scope->addExistsType(extendedType);
             }
+         } else {
+            newField->setTypeId(type->id());
         }
 
         return {"", newField};
