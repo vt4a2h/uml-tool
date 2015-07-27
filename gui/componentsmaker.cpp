@@ -246,6 +246,11 @@ namespace gui {
         Q_ASSERT(!m_LastCaptured.isEmpty() && !m_LastCaptured[int(FieldGroupNames::Typename)].isEmpty() &&
                  !m_LastCaptured[int(FieldGroupNames::Name)].isEmpty());
 
+        Q_ASSERT(m_Model);
+        Q_ASSERT(m_Model->globalDatabase());
+        Q_ASSERT(m_Model->currentProject());
+        Q_ASSERT(m_Model->currentProject()->database());
+
         auto newField = std::make_shared<entity::Field>();
         newField->setName(m_LastCaptured[int(FieldGroupNames::Name)]);
         if (!m_LastCaptured[int(FieldGroupNames::LhsKeywords)].isEmpty()) {
@@ -256,9 +261,27 @@ namespace gui {
         qDebug() << "created new field with name: " << m_LastCaptured[int(FieldGroupNames::Name)];
 
         const QString &typeName = m_LastCaptured[int(FieldGroupNames::Typename)];
-        const entity::ScopesList &scopes = m_Model->globalDatabase()->scopes();
         entity::SharedType type;
-        utility::find_if(scopes, [&](auto &&scope){ type = scope->typeByName(typeName); return !!type; });
+
+        if (!m_LastCaptured[int(FieldGroupNames::Namespaces)].isEmpty()) {
+            auto names = m_LastCaptured[int(FieldGroupNames::Namespaces)].split("::");
+            auto scope = m_Model->globalDatabase()->chainScopeSearch(names);
+            if (!scope)
+                scope = m_Model->currentProject()->database()->chainScopeSearch(names);
+
+            if (scope)
+                type = scope->typeByName(typeName);
+        } else {
+            // First of all check in all scopes of global database
+            const entity::ScopesList &scopes = m_Model->globalDatabase()->scopes();
+            utility::find_if(scopes, [&](auto &&scope){ type = scope->typeByName(typeName); return !!type; });
+
+            // If not found, try to check project database
+            if (!type) {
+                auto db = m_Model->currentProject()->database();
+                utility::find_if(db->scopes(), [&](auto &&scope){ type = scope->typeByName(typeName); return !!type; });
+            }
+        }
         qDebug() << "found type: " << !!type << ", with name: " << typeName;
         if (!type)
             return {tr("Wrong type: %1.").arg(typeName), nullptr};
@@ -299,8 +322,9 @@ namespace gui {
             if (!namespaces.isEmpty()) {
             } else {
                 types = m_Scope->types();
-                auto it = utility::find_if(types,
-                                           [=](const entity::SharedType &type) { return extendedType->isEqual(*type, false); });
+                auto it = utility::find_if(types, [=](const entity::SharedType &type) {
+                                                      return extendedType->isEqual(*type, false);
+                                                  });
                 if (it == cend(types))
                     m_Scope->addExistsType(extendedType);
             }
