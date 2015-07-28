@@ -24,6 +24,8 @@
 
 #include "ComponentsMaker.h"
 
+#include <entity/field.h>
+
 namespace {
     const QVector<QPair<QString, bool>> fieldData =
     {
@@ -40,6 +42,8 @@ namespace {
         {"static const std::foo::baz::int * const **& a", true },
         {"int *consta",                                   true },
     };
+
+    auto to_f(const entity::BasicEntity* e){ return static_cast<const entity::Field*>(e); }
 }
 
 TEST_F(ComponentsMaker, CheckSignature)
@@ -48,4 +52,17 @@ TEST_F(ComponentsMaker, CheckSignature)
     for (auto &&testData: fieldData)
         ASSERT_EQ(m_Maker->signatureValid(testData.first, models::DisplayPart::Fields), testData.second)
             << "Signature: " << testData.first.toStdString().c_str();
+}
+
+TEST_F(ComponentsMaker, MakingField)
+{
+    auto result = m_Maker->makeComponent("int a", models::DisplayPart::Fields);
+    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
+
+    auto field = to_f(result.second.get());
+    ASSERT_EQ(field->name(), QString("a"));
+
+    auto t = m_GlobalDatabase->depthTypeSearch(field->typeId());
+    ASSERT_TRUE(!!t) << "Type with name int is not found in global database";
+    ASSERT_STREQ(t->name().toStdString().c_str(), QString("int").toStdString().c_str());
 }
