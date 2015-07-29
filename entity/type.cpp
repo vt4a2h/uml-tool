@@ -227,7 +227,8 @@ namespace entity {
      */
     bool Type::isEqual(const Type &rhs, bool withTypeid) const
     {
-        return m_Name       == rhs.m_Name               &&
+        return rhs.hashType() == this->hashType()       &&
+                m_Name        == rhs.m_Name             &&
                ( withTypeid ? m_Id == rhs.m_Id : true ) &&
                m_ScopeId    == rhs.m_ScopeId;
     }

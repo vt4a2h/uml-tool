@@ -43,7 +43,8 @@ namespace {
         {"int *consta",                                   true },
     };
 
-    auto to_f(const entity::BasicEntity* e){ return static_cast<const entity::Field*>(e); }
+    auto to_f(const entity::BasicEntity *e){ return static_cast<const entity::Field*>(e); }
+    auto to_et(const entity::Type *e){ return static_cast<const entity::ExtendedType*>(e); }
 }
 
 TEST_F(ComponentsMaker, CheckSignature)
@@ -56,13 +57,35 @@ TEST_F(ComponentsMaker, CheckSignature)
 
 TEST_F(ComponentsMaker, MakingField)
 {
+    // type and name
     auto result = m_Maker->makeComponent("int a", models::DisplayPart::Fields);
     ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
 
     auto field = to_f(result.second.get());
-    ASSERT_EQ(field->name(), QString("a"));
+    ASSERT_EQ(field->name(), "a");
 
     auto t = m_GlobalDatabase->depthTypeSearch(field->typeId());
     ASSERT_TRUE(!!t) << "Type with name int is not found in global database";
-    ASSERT_STREQ(t->name().toStdString().c_str(), QString("int").toStdString().c_str());
+    ASSERT_STREQ(t->name().toStdString().c_str(), "int");
+
+    // const and name
+    result = m_Maker->makeComponent("const int a", models::DisplayPart::Fields);
+    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
+
+    field = to_f(result.second.get());
+    t = m_GlobalDatabase->depthTypeSearch(field->typeId());
+    ASSERT_FALSE(!!t) << "Type shouldn't be added to the global database.";
+    t = m_Project->database()->depthTypeSearch(field->typeId());
+    ASSERT_TRUE(!!t) << "Type should be added to the project database.";
+    ASSERT_TRUE(to_et(t.get())->isConst()) << "Type should be const.";
+
+    // const ptr to const
+    result = m_Maker->makeComponent("const int * const a", models::DisplayPart::Fields);
+    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
+    field = to_f(result.second.get());
+    t = m_Project->database()->depthTypeSearch(field->typeId());
+    const entity::ExtendedType::PlList& pl = to_et(t.get())->pl();
+    ASSERT_FALSE(pl.isEmpty()) << "* const should be caught.";
+
+    // static const
 }

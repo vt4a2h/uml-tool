@@ -710,9 +710,11 @@ namespace entity {
      */
     bool Class::isEqual(const Type &rhs, bool withTypeid) const
     {
+        if (!Type::isEqual(rhs, withTypeid))
+            return false;
+
         auto r = static_cast<const Class &>(rhs);
-        return Type::isEqual(r, withTypeid)        &&
-               m_Kind        == r.m_Kind           &&
+        return m_Kind        == r.m_Kind           &&
                m_FinalStatus == r.m_FinalStatus    &&
                m_Parents     == r.m_Parents        &&
                utility::seqSharedPointerEq(m_Methods, r.m_Methods) &&

@@ -302,10 +302,10 @@ namespace gui {
 
             while (!plc.isEmpty()) {
                 if (plc.startsWith("const")) {
-                    plc.remove(0, 4);
+                    plc.remove(0, 5);
                 } else if (plc.startsWith("*const")) {
                     extendedType->addPointerStatus(true);
-                    plc.remove(0, 5);
+                    plc.remove(0, 6);
                 } else if (plc.startsWith("*")) {
                     extendedType->addPointerStatus();
                     plc.remove(0, 1);
@@ -317,20 +317,23 @@ namespace gui {
         }
 
         if (extendedType->isConst() || !extendedType->pl().isEmpty()) {
-            QStringList namespaces = m_LastCaptured[int(FieldGroupNames::Namespaces)].remove(QChar::Space).split("::");
-            entity::TypesList types;
+            QStringList namespaces = m_LastCaptured[int(FieldGroupNames::Namespaces)]
+                                    .remove(QChar::Space)
+                                    .split("::", QString::SkipEmptyParts);
             if (!namespaces.isEmpty()) {
             } else {
-                types = m_Scope->types();
-                auto it = utility::find_if(types, [=](const entity::SharedType &type) {
+                const entity::TypesList &types = m_Scope->types();
+                auto it = utility::find_if(types, [&](const entity::SharedType &type) {
                                                       return extendedType->isEqual(*type, false);
                                                   });
                 if (it == cend(types))
                     m_Scope->addExistsType(extendedType);
             }
+
+            newField->setTypeId(extendedType->id());
          } else {
             newField->setTypeId(type->id());
-        }
+         }
 
         return {"", newField};
     }

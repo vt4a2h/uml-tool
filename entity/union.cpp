@@ -252,9 +252,11 @@ namespace entity {
      */
     bool Union::isEqual(const Type &rhs, bool withTypeid) const
     {
+        if (!Type::isEqual(rhs, withTypeid))
+            return false;
+
         auto r = static_cast<const Union &>(rhs);
-        return Type::isEqual(r, withTypeid) &&
-               utility::seqSharedPointerEq(m_Fields, r.m_Fields);
+        return utility::seqSharedPointerEq(m_Fields, r.m_Fields);
     }
 
     /**

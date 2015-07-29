@@ -348,9 +348,11 @@ namespace entity {
      */
     bool Enum::isEqual(const Type &rhs, bool withTypeid) const
     {
+        if (!Type::isEqual(rhs, withTypeid))
+            return false;
+
         auto r = static_cast<const Enum&>(rhs);
-        return Type::isEqual(r, withTypeid)       &&
-               m_EnumTypeId   == r.m_EnumTypeId   &&
+        return m_EnumTypeId   == r.m_EnumTypeId   &&
                m_StrongStatus == r.m_StrongStatus &&
                utility::seqSharedPointerEq(m_Elements, r.m_Elements);
     }

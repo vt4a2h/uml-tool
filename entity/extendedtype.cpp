@@ -306,6 +306,9 @@ namespace entity {
      */
     bool ExtendedType::isEqual(const Type &rhs, bool withTypeid) const
     {
+        if (rhs.hashType() != this->hashType())
+            return false;
+
         auto r = static_cast<const ExtendedType &>(rhs);
         return Type::isEqual(r, withTypeid)                 &&
                m_ConstStatus        == r.m_ConstStatus      &&
