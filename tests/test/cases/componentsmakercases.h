@@ -87,5 +87,21 @@ TEST_F(ComponentsMaker, MakingField)
     const entity::ExtendedType::PlList& pl = to_et(t.get())->pl();
     ASSERT_FALSE(pl.isEmpty()) << "* const should be caught.";
 
-    // static const
+    // static
+    result = m_Maker->makeComponent("static int a", models::DisplayPart::Fields);
+    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
+    field = to_f(result.second.get());
+    const entity::FieldKeywordsList& lst = field->keywords();
+    ASSERT_FALSE(lst.isEmpty());
+    ASSERT_EQ(lst.count(), 1);
+    ASSERT_EQ(lst[0], entity::FieldKeyword::FieldStatic) << "Filed should be static.";
+
+    // std
+    result = m_Maker->makeComponent("std::unordered_set a", models::DisplayPart::Fields);
+    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
+    field = to_f(result.second.get());
+    auto scopeStd = m_GlobalDatabase->chainScopeSearch(QStringList() << "std");
+    ASSERT_TRUE(!!scopeStd) << "Scope std should be found.";
+    t = m_GlobalDatabase->depthTypeSearch(field->typeId());
+    ASSERT_TRUE(!!t) << "std::unordered_set should be placed in global database.";
 }

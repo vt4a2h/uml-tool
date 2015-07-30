@@ -264,7 +264,7 @@ namespace gui {
         entity::SharedType type;
 
         if (!m_LastCaptured[int(FieldGroupNames::Namespaces)].isEmpty()) {
-            auto names = m_LastCaptured[int(FieldGroupNames::Namespaces)].split("::");
+            auto names = m_LastCaptured[int(FieldGroupNames::Namespaces)].split("::", QString::SkipEmptyParts);
             auto scope = m_Model->globalDatabase()->chainScopeSearch(names);
             if (!scope)
                 scope = m_Model->currentProject()->database()->chainScopeSearch(names);
