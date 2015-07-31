@@ -26,6 +26,8 @@
 
 #include <entity/field.h>
 
+#include "constants.h"
+
 namespace {
     const QVector<QPair<QString, bool>> fieldData =
     {
@@ -64,16 +66,17 @@ TEST_F(ComponentsMaker, MakingField)
     auto field = to_f(result.second.get());
     ASSERT_EQ(field->name(), "a");
 
-    auto t = m_GlobalDatabase->depthTypeSearch(field->typeId());
+    auto globalScope = m_GlobalDatabase->getScope(GLOBAL);
+    auto t = globalScope->getType(field->typeId());
     ASSERT_TRUE(!!t) << "Type with name int is not found in global database";
-    ASSERT_STREQ(t->name().toStdString().c_str(), "int");
+    ASSERT_EQ(t->name(), "int");
 
     // const and name
     result = m_Maker->makeComponent("const int a", models::DisplayPart::Fields);
     ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
 
     field = to_f(result.second.get());
-    t = m_GlobalDatabase->depthTypeSearch(field->typeId());
+    t = globalScope->getType(field->typeId());
     ASSERT_FALSE(!!t) << "Type shouldn't be added to the global database.";
     t = m_Project->database()->depthTypeSearch(field->typeId());
     ASSERT_TRUE(!!t) << "Type should be added to the project database.";

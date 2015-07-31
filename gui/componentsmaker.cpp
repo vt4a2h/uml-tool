@@ -274,12 +274,12 @@ namespace gui {
         } else {
             // First of all check in all scopes of global database
             const entity::ScopesList &scopes = m_Model->globalDatabase()->scopes();
-            utility::find_if(scopes, [&](auto &&scope){ type = scope->typeByName(typeName); return !!type; });
+            utility::find_if(scopes, [&](auto scope){ type = scope->typeByName(typeName); return !!type; });
 
             // If not found, try to check project database
             if (!type) {
                 auto db = m_Model->currentProject()->database();
-                utility::find_if(db->scopes(), [&](auto &&scope){ type = scope->typeByName(typeName); return !!type; });
+                utility::find_if(db->scopes(), [&](auto scope){ type = scope->typeByName(typeName); return !!type; });
             }
         }
         qDebug() << "found type: " << !!type << ", with name: " << typeName;
@@ -323,7 +323,7 @@ namespace gui {
             if (!namespaces.isEmpty()) {
             } else {
                 const entity::TypesList &types = m_Scope->types();
-                auto it = utility::find_if(types, [&](const entity::SharedType &type) {
+                auto it = utility::find_if(types, [=](const entity::SharedType &type) {
                                                       return extendedType->isEqual(*type, false);
                                                   });
                 if (it == cend(types))
