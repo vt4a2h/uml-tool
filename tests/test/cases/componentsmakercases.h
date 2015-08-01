@@ -43,6 +43,12 @@ namespace {
         {"staticconst foo::bar::int a",                   false},
         {"static const std::foo::baz::int * const **& a", true },
         {"int *consta",                                   true },
+        {"std::vector<int> vec",                          true },
+        {"std::vector<int, MyAlloc> vec",                 true },
+        {"std::vector<int,> vec",                         true },
+        {"std::vector<int><int> vec",                     false},
+        {"std::vector< vec",                              false},
+        {"std::vector> vec",                              false},
     };
 
     auto to_f(const entity::BasicEntity *e){ return static_cast<const entity::Field*>(e); }

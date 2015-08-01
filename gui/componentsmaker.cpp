@@ -57,16 +57,17 @@ namespace gui {
                                             "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual",
                                             "volatile", "while", "xor", "xor_eq" };
 
-        enum class FieldGroupNames { LhsKeywords = 1, ConstStatus, Namespaces, Typename, PLC, Name, GroupsCount };
+        enum class FieldGroupNames { LhsKeywords = 1, ConstStatus, Namespaces, Typename, TemplateArgs, PLC, Name, GroupsCount };
 
         // TODO: Just simple patterns now, must be improved in future (prefer to use simple parser)
-        // TODO: 5 section may contains wrong combination of "*&const" it must be fixed.
-        const QString fieldPattern = "^((?:volatile|static|mutable)\\s)?" // 1 -- lhs keywords
-                                     "(const\\s)?"                        // 2 -- const
-                                     "((?:\\w*:{2,})*)"                   // 3 -- namespaces
-                                     "(\\w+)"                             // 4 -- typename
-                                     "\\s+([\\*\\s\\&const]*)"            // 5 -- &*const
-                                     "\\s*(\\w+)$";                       // 6 -- field name
+        // TODO: 6 section may contains wrong combination of "*&const" it must be fixed.
+        const QString fieldPattern = "^((?:volatile|static|mutable)\\s)?"                 // 1 -- lhs keywords
+                                     "(const\\s)?"                                        // 2 -- const
+                                     "((?:\\w*:{2,})*)"                                   // 3 -- namespaces
+                                     "(\\w+)"                                             // 4 -- typename
+                                     "(?:\\s*<\\s*((?:\\w+(?:\\s*,\\s*)?)+)\\s*>\\s*)?"   // 5 -- template args
+                                     "\\s+([\\*\\s\\&const]*)"                            // 6 -- &*const
+                                     "\\s*(\\w+)$";                                       // 7 -- field name
 
         const QMap<models::DisplayPart, QString> componentPatternMap =
         {
