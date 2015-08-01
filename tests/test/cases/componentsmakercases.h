@@ -49,6 +49,7 @@ namespace {
         {"std::vector<int><int> vec",                     false},
         {"std::vector< vec",                              false},
         {"std::vector> vec",                              false},
+        {"std::vector<class, const> vec",                 false},
     };
 
     auto to_f(const entity::BasicEntity *e){ return static_cast<const entity::Field*>(e); }
@@ -113,4 +114,11 @@ TEST_F(ComponentsMaker, MakingField)
     ASSERT_TRUE(!!scopeStd) << "Scope std should be found.";
     t = m_GlobalDatabase->depthTypeSearch(field->typeId());
     ASSERT_TRUE(!!t) << "std::unordered_set should be placed in global database.";
+
+    // with templates parameters
+    result = m_Maker->makeComponent("std::vector<int> v", models::DisplayPart::Fields);
+    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
+    field = to_f(result.second.get());
+    auto vecOfInt = m_Project->database()->depthTypeSearch(field->typeId());
+    ASSERT_TRUE(!!vecOfInt) << "Vector of int must be created in project database.";
 }
