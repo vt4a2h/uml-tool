@@ -24,7 +24,6 @@
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
-#include <QDebug>
 
 #include <entity/field.h>
 #include <entity/scope.h>
@@ -61,13 +60,14 @@ namespace gui {
 
         // TODO: Just simple patterns now, must be improved in future (prefer to use simple parser)
         // TODO: 6 section may contains wrong combination of "*&const" it must be fixed.
-        const QString fieldPattern = "^((?:volatile|static|mutable)\\s)?"                 // 1 -- lhs keywords
-                                     "(const\\s)?"                                        // 2 -- const
-                                     "((?:\\w*:{2,})*)"                                   // 3 -- namespaces
-                                     "(\\w+)"                                             // 4 -- typename
-                                     "(?:\\s*<\\s*((?:\\w+(?:\\s*,\\s*)?)+)\\s*>\\s*)?"   // 5 -- template args
-                                     "\\s+([\\*\\s\\&const]*)"                            // 6 -- &*const
-                                     "\\s*(\\w+)$";                                       // 7 -- field name
+        // TODO: for 5 required recursive parsing to detect nested types with templates
+        const QString fieldPattern = "^((?:volatile|static|mutable)\\s)?"                               // 1 -- lhs keywords
+                                     "(const\\s)?"                                                      // 2 -- const
+                                     "((?:\\w*:{2,})*)"                                                 // 3 -- namespaces
+                                     "(\\w+)"                                                           // 4 -- typename
+                                     "(?:\\s*<\\s*((?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?"   // 5 -- template args
+                                     "\\s+([\\*\\s\\&const]*)"                                          // 6 -- &*const
+                                     "\\s*(\\w+)$";                                                     // 7 -- field name
 
         const QMap<models::DisplayPart, QString> componentPatternMap =
         {
@@ -260,7 +260,6 @@ namespace gui {
             Q_ASSERT(keyword != entity::FieldKeyword::Invalid);
             newField->addKeyword(keyword);
         }
-        qDebug() << "created new field with name: " << m_LastCaptured[int(FieldGroupNames::Name)];
 
         const QString &typeName = m_LastCaptured[int(FieldGroupNames::Typename)];
         entity::SharedType type;
@@ -284,7 +283,7 @@ namespace gui {
                 utility::find_if(db->scopes(), [&](auto scope){ type = scope->typeByName(typeName); return !!type; });
             }
         }
-        qDebug() << "found type: " << !!type << ", with name: " << typeName;
+
         if (!type)
             return {tr("Wrong type: %1.").arg(typeName), nullptr};
 

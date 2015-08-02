@@ -200,10 +200,12 @@ namespace gui {
         connect(componentsEditDelegat, &ComponentsEditDelegate::deleteButtonClicked,
                 this, &EditEntityDialog::onDeleteComponentClicked);
         ui->viewMembers->setItemDelegateForColumn(models::ComponentsModel::Buttons, componentsEditDelegat);
-        connect(m_ComponentsModel.get(), &models::ComponentsModel::showButtonsForIndex,
-                [view = ui->viewMembers](auto&& index) {
-                    Q_ASSERT(index.isValid());
-                    view->openPersistentEditor(index);
+        connect(m_ComponentsModel.get(), &models::ComponentsModel::showButtons,
+                [view = ui->viewMembers](auto &&indexes) {
+                    for (auto &&index: indexes) {
+                        Q_ASSERT(index.isValid());
+                        view->openPersistentEditor(index);
+                    }
                 });
 
         m_SignatureEditDelegate = std::make_unique<SignatureEditDelegate>();

@@ -346,8 +346,7 @@ namespace models {
         m_Components = components;
         endResetModel();
 
-        for (int i = 0; i < count(m_Components, m_display); ++i)
-            emit showButtonsForIndex(index(i, 1));
+        updateAllComponents();
     }
 
     /**
@@ -370,8 +369,7 @@ namespace models {
             m_display = display;
             endResetModel();
 
-            for (int i = 0, max = count(m_Components, m_display); i < max; ++i)
-                emit showButtonsForIndex(index(i, 1));
+            updateAllComponents();
         }
     }
 
@@ -388,7 +386,7 @@ namespace models {
         inserter(innerIndex);
         endInsertRows();
 
-        showButtonsForIndex(index(innerIndex, 1));
+        showButtons(QModelIndexList() << index(innerIndex, 1));
     }
 
     /**
@@ -407,6 +405,20 @@ namespace models {
         endRemoveRows();
 
         return pos;
+    }
+
+    /**
+     * @brief ComponentsModel::updateAll
+     */
+    void ComponentsModel::updateAllComponents()
+    {
+        int componentsCount = count(m_Components, m_display);
+        QModelIndexList out;
+        out.reserve(componentsCount);
+        for (int i = 0; i < componentsCount; ++i)
+            out << index(i, 1);
+
+       emit showButtons(out);
     }
 
 } // namespace models

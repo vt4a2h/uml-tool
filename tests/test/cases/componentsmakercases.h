@@ -50,6 +50,7 @@ namespace {
         {"std::vector< vec",                              false},
         {"std::vector> vec",                              false},
         {"std::vector<class, const> vec",                 false},
+        {"std::vector<std::vector> vec",                  true },
     };
 
     auto to_f(const entity::BasicEntity *e){ return static_cast<const entity::Field*>(e); }
