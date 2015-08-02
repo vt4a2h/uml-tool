@@ -97,7 +97,7 @@ namespace models {
         void setDisplay(const DisplayPart &display);
 
     signals:
-        void showButtonsForIndex(const QModelIndex &index);
+        void showButtons(const QModelIndexList &index);
 
     private:
         template<class Component>
@@ -107,13 +107,14 @@ namespace models {
             auto component = componentMaker();
             endInsertRows();
 
-            showButtonsForIndex(index(count, 1));
+            showButtons(QModelIndexList() << index(count, 1));
 
             return component;
         }
 
         void addExists(const std::function<void(int)> &inserter, int count, int pos);
         int remove(const std::function<int(int)> &deleter, const QModelIndex &index);
+        void updateAllComponents();
 
     private:
         entity::SharedComponents m_Components;
