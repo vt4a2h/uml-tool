@@ -31,7 +31,12 @@
 
 namespace gui {
 
-    using MessageEntity = QPair<QString, entity::SharedBasicEntity>;
+    //
+    struct OptionalEntity
+    {
+        QString errorMessage;
+        entity::SharedBasicEntity resultEntity;
+    };
 
     /// The ComponentsMaker class
     class ComponentsMaker
@@ -44,7 +49,7 @@ namespace gui {
                         const entity::SharedScope &scope);
 
         bool signatureValid(const QString &signature, models::DisplayPart display);
-        MessageEntity makeComponent(const QString &signature, models::DisplayPart display);
+        OptionalEntity makeComponent(const QString &signature, models::DisplayPart display);
 
         models::SharedApplicationModel model() const;
         void setModel(const models::SharedApplicationModel &model);
@@ -63,7 +68,7 @@ namespace gui {
         QVector<QString> m_LastCaptured;
         QString m_LastSignature;
 
-        MessageEntity makeField();
+        OptionalEntity makeField();
     };
 
 } // namespace gui

@@ -69,9 +69,10 @@ TEST_F(ComponentsMaker, MakingField)
 {
     // type and name
     auto result = m_Maker->makeComponent("int a", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
+    ASSERT_TRUE(result.errorMessage.isEmpty())
+            << "There are some message: " << result.errorMessage.toStdString().c_str();
 
-    auto field = to_f(result.second.get());
+    auto field = to_f(result.resultEntity.get());
     ASSERT_EQ(field->name(), "a");
 
     auto globalScope = m_GlobalDatabase->getScope(GLOBAL);
@@ -81,9 +82,10 @@ TEST_F(ComponentsMaker, MakingField)
 
     // const and name
     result = m_Maker->makeComponent("const int a", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
+    ASSERT_TRUE(result.errorMessage.isEmpty())
+            << "There are some message: " << result.errorMessage.toStdString().c_str();
 
-    field = to_f(result.second.get());
+    field = to_f(result.resultEntity.get());
     t = globalScope->getType(field->typeId());
     ASSERT_FALSE(!!t) << "Type shouldn't be added to the global database.";
     t = m_Project->database()->depthTypeSearch(field->typeId());
@@ -92,16 +94,18 @@ TEST_F(ComponentsMaker, MakingField)
 
     // const ptr to const
     result = m_Maker->makeComponent("const int * const a", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
-    field = to_f(result.second.get());
+    ASSERT_TRUE(result.errorMessage.isEmpty())
+            << "There are some message: " << result.errorMessage.toStdString().c_str();
+    field = to_f(result.resultEntity.get());
     t = m_Project->database()->depthTypeSearch(field->typeId());
     const entity::ExtendedType::PlList& pl = to_et(t.get())->pl();
     ASSERT_FALSE(pl.isEmpty()) << "* const should be caught.";
 
     // static
     result = m_Maker->makeComponent("static int a", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
-    field = to_f(result.second.get());
+    ASSERT_TRUE(result.errorMessage.isEmpty())
+            << "There are some message: " << result.errorMessage.toStdString().c_str();
+    field = to_f(result.resultEntity.get());
     const entity::FieldKeywordsList& lst = field->keywords();
     ASSERT_FALSE(lst.isEmpty());
     ASSERT_EQ(lst.count(), 1);
@@ -109,8 +113,9 @@ TEST_F(ComponentsMaker, MakingField)
 
     // std
     result = m_Maker->makeComponent("std::unordered_set a", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
-    field = to_f(result.second.get());
+    ASSERT_TRUE(result.errorMessage.isEmpty())
+            << "There are some message: " << result.errorMessage.toStdString().c_str();
+    field = to_f(result.resultEntity.get());
     auto scopeStd = m_GlobalDatabase->chainScopeSearch(QStringList() << "std");
     ASSERT_TRUE(!!scopeStd) << "Scope std should be found.";
     t = m_GlobalDatabase->depthTypeSearch(field->typeId());
@@ -118,8 +123,8 @@ TEST_F(ComponentsMaker, MakingField)
 
     // with templates parameters
     result = m_Maker->makeComponent("std::vector<int> v", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.first.isEmpty()) << "There are some message: " << result.first.toStdString().c_str();
-    field = to_f(result.second.get());
+    ASSERT_TRUE(result.errorMessage.isEmpty()) << "There are some message: " << result.errorMessage.toStdString().c_str();
+    field = to_f(result.resultEntity.get());
     auto vecOfInt = m_Project->database()->depthTypeSearch(field->typeId());
     ASSERT_TRUE(!!vecOfInt) << "Vector of int must be created in project database.";
 }

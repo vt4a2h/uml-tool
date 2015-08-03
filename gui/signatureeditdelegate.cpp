@@ -23,7 +23,7 @@
 #include "signatureeditdelegate.h"
 
 #include <QLineEdit>
-#include <QDebug>
+#include <QMessageBox>
 
 #include <models/componentsmodel.h>
 
@@ -118,16 +118,9 @@ namespace gui {
         if (currentSignature != le->text()) {
             auto e = static_cast<QLineEdit*>(editor);
             auto optionalEntity = m_ComponentsMaker->makeComponent(e->text(), m_DisplayPart);
-            if (optionalEntity.second)
-                qDebug() << "ok";
-            else
-                qDebug() << "Fail: " << optionalEntity.first;
-
-            e->setStyleSheet("");
-
-            qDebug() << "set model data";
-        } else {
-            qDebug() << "data is not changed";
+            if (optionalEntity.resultEntity){
+            } else
+                QMessageBox::warning(le, tr("Signature changed error"), optionalEntity.errorMessage, QMessageBox::Ok);
         }
     }
 

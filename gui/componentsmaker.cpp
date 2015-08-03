@@ -90,7 +90,7 @@ namespace gui {
                                            {FieldGroupNames::TemplateArgs, reservedKeywords}}},
         };
 
-        using MakerFunction = std::function<MessageEntity()>;
+        using MakerFunction = std::function<OptionalEntity()>;
         QMap<models::DisplayPart, MakerFunction> componentMakerMap;
 
         bool notContainsInvalidKeyword(const QRegularExpressionMatch &match, models::DisplayPart display,
@@ -175,7 +175,7 @@ namespace gui {
      * @param signature
      * @return
      */
-    MessageEntity ComponentsMaker::makeComponent(const QString &signature, models::DisplayPart display)
+    OptionalEntity ComponentsMaker::makeComponent(const QString &signature, models::DisplayPart display)
     {
         if ((signature.isEmpty() && !m_LastSignature.isEmpty() && !m_LastCaptured.isEmpty()) ||
             (signature == m_LastSignature && !m_LastCaptured.isEmpty()) ||
@@ -243,7 +243,7 @@ namespace gui {
      * @brief ComponentsMaker::makeField
      * @return
      */
-    MessageEntity ComponentsMaker::makeField()
+    OptionalEntity ComponentsMaker::makeField()
     {
         Q_ASSERT(!m_LastCaptured.isEmpty() && !m_LastCaptured[int(FieldGroupNames::Typename)].isEmpty() &&
                  !m_LastCaptured[int(FieldGroupNames::Name)].isEmpty());
@@ -340,8 +340,10 @@ namespace gui {
             auto it = utility::find_if(types, [=](const entity::SharedType &type) {
                                                   return extendedType->isEqual(*type, false);
                                               });
-            if (it == cend(types))
+            if (it == cend(types)) {
                 m_Scope->addExistsType(extendedType);
+                // TODO: use cmd here
+            }
 
             newField->setTypeId(extendedType->id());
          } else {
