@@ -324,7 +324,16 @@ namespace models {
      */
     bool ComponentsModel::setData(const QModelIndex &index, const QVariant &value, int role)
     {
-        return QAbstractTableModel::setData(index, value, role);
+        switch (role) {
+
+            case UpdateSignature:
+                auto data = data(index, InternalData); // TODO: finish
+                dataChanged(index, index);
+                return true;
+
+            default:
+                return QAbstractTableModel::setData(index, value, role);
+        }
     }
 
     /**

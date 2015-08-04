@@ -190,7 +190,6 @@ namespace models {
                     connect(type.get(), &entity::BasicEntity::nameChanged,
                             m_CurrentProject.get(), &project::Project::touch);
                     // todo: connect scope id change to project touch
-                    // note: moce to the factory class?
                 }
 
         m_TreeModel->addType(type, scopeID, projectID);

@@ -52,9 +52,14 @@ namespace models {
             Buttons,        ///< Buttons
         };
 
-        /// The CustomRoles enum
-        enum CustomRoles {
-            InternalData = 0x0100, ///< InternalData
+        /// The DataRoles enum
+        enum DataRoles {
+            InternalData = 0x0101, ///< InternalData
+        };
+
+        /// The DataChangedRoles enum
+        enum DataChangedRoles {
+            UpdateSignature = 0x0102, ///< UpdateSignature
         };
 
     public:

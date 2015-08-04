@@ -119,6 +119,8 @@ namespace gui {
             auto e = static_cast<QLineEdit*>(editor);
             auto optionalEntity = m_ComponentsMaker->makeComponent(e->text(), m_DisplayPart);
             if (optionalEntity.resultEntity){
+                model->setData(index, QVariant::fromValue(optionalEntity.resultEntity),
+                               models::ComponentsModel::UpdateSignature);
             } else
                 QMessageBox::warning(le, tr("Signature changed error"), optionalEntity.errorMessage, QMessageBox::Ok);
         }

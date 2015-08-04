@@ -340,10 +340,8 @@ namespace gui {
             auto it = utility::find_if(types, [=](const entity::SharedType &type) {
                                                   return extendedType->isEqual(*type, false);
                                               });
-            if (it == cend(types)) {
-                m_Scope->addExistsType(extendedType);
-                // TODO: use cmd here
-            }
+            if (it == cend(types))
+                m_Model->addExistsType(m_Model->currentProject()->id(), m_Scope->id(), extendedType);
 
             newField->setTypeId(extendedType->id());
          } else {
