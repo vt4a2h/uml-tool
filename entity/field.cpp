@@ -328,6 +328,7 @@ namespace entity {
      */
     void Field::copyFrom(const Field &src)
     {
+        setName(src.name());
         m_TypeId = src.m_TypeId;
         m_Section = src.m_Section;
         m_Prefix = src.m_Prefix;
@@ -343,9 +344,10 @@ namespace entity {
      */
     void Field::moveFrom(Field &src)
     {
+        // TODO: refactore all operators
+        m_Name = std::move(src.m_Name);
         m_TypeId = std::move(src.m_TypeId);
         m_Section = std::move(src.m_Section);
-        m_Name = std::move(src.m_Name);
         m_Prefix = std::move(src.m_Prefix);
         m_Suffix = std::move(src.m_Suffix);
         m_DefaultValue = std::move(src.m_DefaultValue);

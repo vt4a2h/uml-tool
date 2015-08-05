@@ -7160,73 +7160,73 @@
             ],
             "Types": [
                 {
-                    "ID": "10",
+                    "ID": "-10",
                     "Kind of type": "Type",
                     "Name": "unordered_set",
                     "Scope ID": "std"
                 },
                 {
-                    "ID": "5",
+                    "ID": "-5",
                     "Kind of type": "Type",
                     "Name": "map",
                     "Scope ID": "std"
                 },
                 {
-                    "ID": "8",
+                    "ID": "-8",
                     "Kind of type": "Type",
                     "Name": "stack",
                     "Scope ID": "std"
                 },
                 {
-                    "ID": "1",
+                    "ID": "-1",
                     "Kind of type": "Type",
                     "Name": "array",
                     "Scope ID": "std"
                 },
                 {
-                    "ID": "0",
+                    "ID": "-0",
                     "Kind of type": "Type",
                     "Name": "nullptr_t",
                     "Scope ID": "std"
                 },
                 {
-                    "ID": "3",
+                    "ID": "-3",
                     "Kind of type": "Type",
                     "Name": "forward_list",
                     "Scope ID": "std"
                 },
                 {
-                    "ID": "9",
+                    "ID": "-9",
                     "Kind of type": "Type",
                     "Name": "unordered_map",
                     "Scope ID": "std"
                 },
                 {
-                    "ID": "11",
+                    "ID": "-11",
                     "Kind of type": "Type",
                     "Name": "vector",
                     "Scope ID": "std"
                 },
                 {
-                    "ID": "4",
+                    "ID": "-4",
                     "Kind of type": "Type",
                     "Name": "list",
                     "Scope ID": "std"
                 },
                 {
-                    "ID": "6",
+                    "ID": "-6",
                     "Kind of type": "Type",
                     "Name": "queue",
                     "Scope ID": "std"
                 },
                 {
-                    "ID": "7",
+                    "ID": "-7",
                     "Kind of type": "Type",
                     "Name": "set",
                     "Scope ID": "std"
                 },
                 {
-                    "ID": "2",
+                    "ID": "-2",
                     "Kind of type": "Type",
                     "Name": "deque",
                     "Scope ID": "std"

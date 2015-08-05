@@ -70,6 +70,7 @@ namespace models {
         void observeItemChanging(entity::BasicEntity * entity, BasicTreeItem *item);
 
         mutable QList<BasicTreeItem> m_Items; // TODO: store as pointers
+        project::SharedProject m_Project;
     };
 
 } // namespace models

@@ -327,9 +327,29 @@ namespace models {
         switch (role) {
 
             case UpdateSignature:
-                auto data = data(index, InternalData); // TODO: finish
+            {
+                auto ent = data(index, InternalData);
+
+                switch (m_display) {
+
+                    case DisplayPart::Fields:
+                    {
+                        auto dstField = ent.value<entity::SharedField>();
+                        Q_ASSERT(dstField);
+
+                        auto srcField = value.value<entity::SharedBasicEntity>();
+                        Q_ASSERT(srcField);
+
+                        *dstField = *std::static_pointer_cast<entity::Field>(srcField);
+                        break;
+                    }
+
+                    default: ;
+                }
+
                 dataChanged(index, index);
                 return true;
+            }
 
             default:
                 return QAbstractTableModel::setData(index, value, role);

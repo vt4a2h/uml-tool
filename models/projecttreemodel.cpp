@@ -222,6 +222,7 @@ namespace models {
      */
     void ProjectTreeModel::addProject(const project::SharedProject &pr)
     {
+        m_Project = pr;
         addProjectItem(pr);
     }
 
@@ -423,7 +424,11 @@ namespace models {
 
     void ProjectTreeModel::observeItemChanging(entity::BasicEntity * entity, BasicTreeItem *item)
     {
+        Q_ASSERT(m_Project);
+
         connect(entity, &entity::BasicEntity::nameChanged, [=]{ update(item); });
+        // TODO: investigate why it is not working
+        connect(entity, &entity::BasicEntity::nameChanged, m_Project.get(), &project::Project::touch);
     }
 
 } // namespace models
