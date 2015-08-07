@@ -84,6 +84,7 @@ namespace gui {
         else if (hash == entity::ClassMethod::staticHashType())
             return m_Translator->translate(std::static_pointer_cast<entity::ClassMethod>(component)).toHeader;
         // TODO: handle variable case
+        // TODO: don't use translator. We need a separate methods.
 
         return tr("Wrong component");
     }

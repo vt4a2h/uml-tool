@@ -49,7 +49,7 @@ namespace entity {
         Field(const QString &name, const QString &typeId, const QString &prefix, Section section);
 
         Field &operator =(Field &&rhs);
-        Field &operator =(Field rhs);
+        Field &operator =(const Field &rhs);
         friend bool operator== (const Field &lhs, const Field &rhs);
 
         QString fullName() const;

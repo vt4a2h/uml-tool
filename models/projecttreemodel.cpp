@@ -427,7 +427,6 @@ namespace models {
         Q_ASSERT(m_Project);
 
         connect(entity, &entity::BasicEntity::nameChanged, [=]{ update(item); });
-        // TODO: investigate why it is not working
         connect(entity, &entity::BasicEntity::nameChanged, m_Project.get(), &project::Project::touch);
     }
 

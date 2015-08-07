@@ -104,9 +104,10 @@ namespace entity {
      * @param rhs
      * @return
      */
-    Field &Field::operator =(Field rhs)
+    Field &Field::operator =(const Field &rhs)
     {
-        moveFrom(rhs);
+        if (this != &rhs)
+            copyFrom(rhs);
 
         return *this;
     }
