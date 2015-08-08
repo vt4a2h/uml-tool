@@ -58,6 +58,8 @@ namespace gui {
         void setApplicationModel(const models::SharedApplicationModel &applicationModel);
 
     private:
+        QString makeType(const entity::SharedType &type) const;
+
         entity::SharedType  m_Type;
         entity::SharedScope m_Scope;
         project::SharedProject m_Project;

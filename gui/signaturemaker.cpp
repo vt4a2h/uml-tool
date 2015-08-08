@@ -31,7 +31,16 @@
 #include <translator/projecttranslator.h>
 #include <translator/code.h>
 
+#include <utility/helpfunctions.h>
+
+#include "constants.h"
+
 namespace gui {
+
+    namespace {
+        const QString noSignature = SignatureMaker::tr("Not available.");
+        const QSet<QString> globalIds = {GLOBAL_SCOPE_ID, PROJECT_GLOBAL_SCOPE_ID, GLOBAL, STUB_ID};
+    }
 
     /**
      * @brief SignatureMaker::SignatureMaker
@@ -159,6 +168,36 @@ namespace gui {
     void SignatureMaker::setApplicationModel(const models::SharedApplicationModel &applicationModel)
     {
         m_ApplicationModel = applicationModel;
+    }
+
+    /**
+     * @brief SignatureMaker::makeType
+     * @param type
+     * @return
+     */
+    QString SignatureMaker::makeType(const entity::SharedType &type) const
+    {
+        Q_ASSERT(type && type->hashType() == entity::Type::staticHashType());
+
+        QString result;
+
+        QStringList scopes;
+        auto scopeId = type->scopeId();
+        while (!globalIds.contains(scopeId)) {
+            if (auto scope = utility::findScope(scopeId, m_Project->database(), m_ApplicationModel->globalDatabase())) {
+                scopes.prepend(scope->name());
+                scopeId = scope->parentScopeId();
+            } else {
+                return "";
+            }
+        }
+
+        if (!scopes.isEmpty())
+            result.prepend(scopes.join("::").append("::"));
+
+        result.append(type->name());
+
+        return result;
     }
 
 } // namespace gui
