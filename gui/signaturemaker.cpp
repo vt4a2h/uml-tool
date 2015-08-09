@@ -25,6 +25,7 @@
 #include <entity/field.h>
 #include <entity/classmethod.h>
 #include <entity/enum.h>
+#include <entity/extendedtype.h>
 
 #include <models/applicationmodel.h>
 
@@ -89,7 +90,7 @@ namespace gui {
 
         size_t hash = component->hashType();
         if (hash == entity::Field::staticHashType())
-            return m_Translator->translate(std::static_pointer_cast<entity::Field>(component)).toHeader;
+            return makeField(std::static_pointer_cast<entity::Field>(component));
         else if (hash == entity::ClassMethod::staticHashType())
             return m_Translator->translate(std::static_pointer_cast<entity::ClassMethod>(component)).toHeader;
         // TODO: handle variable case
@@ -177,14 +178,15 @@ namespace gui {
      */
     QString SignatureMaker::makeType(const entity::SharedType &type) const
     {
-        Q_ASSERT(type && type->hashType() == entity::Type::staticHashType());
+        if (!type)
+            return "";
 
         QString result;
 
         QStringList scopes;
         auto scopeId = type->scopeId();
         while (!globalIds.contains(scopeId)) {
-            if (auto scope = utility::findScope(scopeId, m_Project->database(), m_ApplicationModel->globalDatabase())) {
+            if (auto scope = findScope(scopeId)) {
                 scopes.prepend(scope->name());
                 scopeId = scope->parentScopeId();
             } else {
@@ -198,6 +200,129 @@ namespace gui {
         result.append(type->name());
 
         return result;
+    }
+
+    /**
+     * @brief SignatureMaker::makeSharedType
+     * @param type
+     * @return
+     */
+    QString SignatureMaker::makeExtType(const entity::SharedExtendedType &type) const
+    {
+        if (!type)
+            return "";
+
+        // Has alias... Just return it.
+        if (type->name() != DEFAULT_NAME && type->name() != BASE_TYPE_NAME)
+            return type->name();
+
+        if (auto baseType = findType(type->typeId())) {
+            QString result = makeTypeOrExtType(baseType);
+            if (result.isEmpty())
+                return result;
+
+            if (type->isConst())
+                result.prepend(QChar::Space).prepend("const");
+
+            const auto& paramIds = type->templateParameters();
+            if (!paramIds.isEmpty()) {
+                QStringList parameters;
+                parameters.reserve(paramIds.size());
+                for (auto &&id : paramIds) {
+                    const auto& type = findType(id);
+                    if (type)
+                        parameters << makeTypeOrExtType(type);
+                    else
+                        return "";
+
+                    result.append("<").append(parameters.join(", ")).append(">");
+                }
+            }
+
+            const auto& pl = type->pl();
+            if (!pl.isEmpty()) {
+                QStringList tmpPl;
+                for (auto &&e :  pl) {
+                    // Append * or &
+                    tmpPl << e.first;
+                    if (e.second)
+                        tmpPl << "const";
+                }
+
+                result.append(QChar::Space).append(tmpPl.join(QChar::Space));
+            }
+
+            return result;
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * @brief SignatureMaker::makeTypeOrExt
+     * @param type
+     * @return
+     */
+    QString SignatureMaker::makeTypeOrExtType(const entity::SharedType &type) const
+    {
+        if (!type)
+            return "";
+
+        if (type->hashType() == entity::ExtendedType::staticHashType())
+            // Return extended type which may be alias (with optioanl *, &, const)
+            return makeExtType(std::static_pointer_cast<entity::ExtendedType>(type));
+        else
+            // Or return name (with namespaces) of type, class, enum or union
+            return makeType(type);
+    }
+
+    /**
+     * @brief SignatureMaker::makeField
+     * @param field
+     * @return
+     */
+    QString SignatureMaker::makeField(const entity::SharedField &field) const
+    {
+        if (!field)
+            return tr("No field");
+
+        QString result = makeTypeOrExtType(findType(field->typeId()));
+        if (result.isEmpty())
+            return tr("Type is not found");
+
+        result.append(QChar::Space).append(field->fullName());
+
+        const auto& keywords = field->keywords();
+        if (!keywords.isEmpty()) {
+            QStringList kw;
+            kw.reserve(keywords.size());
+            for (auto &&keyword : keywords)
+                kw << utility::fieldKeywordToString(keyword);
+
+            result.prepend(QChar::Space).prepend(kw.join(QChar::Space));
+        }
+
+        return result;
+    }
+
+    /**
+     * @brief SignatureMaker::findScope
+     * @param scope
+     * @return
+     */
+    entity::SharedScope SignatureMaker::findScope(const QString &scopeId) const
+    {
+        return utility::findScope(scopeId, m_Project->database(), m_ApplicationModel->globalDatabase());
+    }
+
+    /**
+     * @brief SignatureMaker::type
+     * @param typeId
+     * @return
+     */
+    entity::SharedType SignatureMaker::findType(const QString &typeId) const
+    {
+        return utility::findType(typeId, m_Project->database(), m_ApplicationModel->globalDatabase());
     }
 
 } // namespace gui

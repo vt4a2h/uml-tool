@@ -38,6 +38,7 @@ namespace entity {
     class ExtendedType : public Type
     {
     public:
+        // TODO: no QString, use enum to indicate * or &
         using Pl     = std::pair<QString, bool>; // (pointer or link, const for pointer)
         using PlList = QList<Pl>;
 

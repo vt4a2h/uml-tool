@@ -59,6 +59,13 @@ namespace gui {
 
     private:
         QString makeType(const entity::SharedType &type) const;
+        QString makeExtType(const entity::SharedExtendedType &type) const;
+        QString makeTypeOrExtType(const entity::SharedType &type) const;
+
+        QString makeField(const entity::SharedField &field) const;
+
+        entity::SharedType findType(const QString &typeId) const;
+        entity::SharedScope findScope(const QString &scopeId) const;
 
         entity::SharedType  m_Type;
         entity::SharedScope m_Scope;
