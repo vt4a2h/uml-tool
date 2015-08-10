@@ -187,13 +187,15 @@ namespace gui {
         auto scopeId = type->scopeId();
         while (!globalIds.contains(scopeId)) {
             if (auto scope = findScope(scopeId)) {
-                scopes.prepend(scope->name());
+                if (!scope->name().isEmpty() && scope->id() != m_Project->database()->defaultScopeID())
+                    scopes.prepend(scope->name());
                 scopeId = scope->parentScopeId();
             } else {
                 return "";
             }
         }
 
+        scopes.removeAll("");
         if (!scopes.isEmpty())
             result.prepend(scopes.join("::").append("::"));
 
@@ -235,7 +237,9 @@ namespace gui {
                     else
                         return "";
 
-                    result.append("<").append(parameters.join(", ")).append(">");
+                    parameters.removeAll("");
+                    if (!parameters.isEmpty())
+                        result.append("<").append(parameters.join(", ")).append(">");
                 }
             }
 
