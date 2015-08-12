@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 03/11/2014.
+** Created 12/08/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,23 +20,28 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+#pragma once
+
 #include <gtest/gtest.h>
 
-#include <cases/projecttranslatortestcases.h>
-#include <cases/relationmakertestcases.h>
-#include <cases/depthsearchtestcases.h>
-#include <cases/filemakertestcases.h>
-#include <cases/filejsontestcases.h>
-#include <cases/projectmakertestcases.h>
-#include <cases/projecttestcases.h>
-#include <cases/typemakertestcases.h>
-#include <cases/icomponentstestcases.h>
-#include <cases/entitiestestcases.h>
-#include <cases/componentsmakercases.h>
-#include <cases/signaturemakercases.h>
+#include <gui/signaturemaker.h>
 
-int main(int argc, char **argv)
+#include "TestComponentsBase.h"
+
+class SignatureMaker : public ComponentsBase, public ::testing::Test
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
+protected:
+    void SetUp() override
+    {
+        init();
+        m_Maker = std::make_unique<gui::SignatureMaker>(m_ApplicationModel, m_Project, m_Scope, m_Type);
+    }
+
+    void TearDown() override
+    {
+        m_ApplicationModel.reset();
+    }
+
+protected:
+    gui::UniqueSignatureMaker m_Maker;
+};

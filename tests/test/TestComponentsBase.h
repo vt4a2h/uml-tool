@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 13/07/2015.
+** Created 13/08/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,8 +22,6 @@
 *****************************************************************************/
 #pragma once
 
-#include <gtest/gtest.h>
-
 #include <project/project.h>
 #include <project/project_types.hpp>
 
@@ -33,17 +31,16 @@
 #include <models/applicationmodel.h>
 #include <models/models_types.hpp>
 
-#include <gui/componentsmaker.h>
 #include <gui/gui_types.hpp>
 
 const QString projectPath = "../test_data/new.qut";
 const QString globalDbPath = "../../";
 const QString globalDbName = "global";
 
-class ComponentsMaker : public ::testing::Test
+class ComponentsBase
 {
 protected:
-    virtual void SetUp() override
+    void init()
     {
         m_ApplicationModel = std::make_shared<models::ApplicationModel>();
 
@@ -52,12 +49,11 @@ protected:
         m_GlobalDatabase->setName(globalDbName);
         ErrorList errors;
         m_GlobalDatabase->load(errors);
-        ASSERT_TRUE(errors.isEmpty());
+        Q_ASSERT(errors.isEmpty());
 
         m_Project = std::make_shared<project::Project>();
         m_Project->load(projectPath);
-        ASSERT_FALSE(m_Project->hasErrors())
-                << m_Project->lastErrors().join("\n").toStdString();
+        Q_ASSERT(!m_Project->hasErrors());
         m_Project->setGloablDatabase(m_GlobalDatabase);
 
         m_ApplicationModel->addProject(m_Project);
@@ -65,28 +61,19 @@ protected:
         ASSERT_EQ(m_Project, m_ApplicationModel->currentProject());
 
         const entity::ScopesList &scopes = m_Project->database()->scopes();
-        ASSERT_FALSE(scopes.empty());
+        Q_ASSERT(!scopes.empty());
         m_Scope = scopes.first();
 
         const entity::TypesList &types = m_Scope->types();
-        ASSERT_FALSE(types.isEmpty());
+        Q_ASSERT(!types.isEmpty());
         m_Type = types.first();
-
-        m_Maker = std::make_unique<gui::ComponentsMaker>(m_ApplicationModel, m_Type, m_Scope);
-    }
-
-    virtual void TearDown() override
-    {
-        m_ApplicationModel.reset();
     }
 
 protected:
     project::SharedProject m_Project;
     db::SharedDatabase m_GlobalDatabase;
     models::SharedApplicationModel m_ApplicationModel;
-    gui::UniqueComponentsMaker m_Maker;
 
     entity::SharedScope m_Scope;
     entity::SharedType m_Type;
 };
-

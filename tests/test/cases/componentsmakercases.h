@@ -22,9 +22,11 @@
 *****************************************************************************/
 #pragma once
 
-#include "ComponentsMaker.h"
+#include "TestComponentsMaker.h"
 
 #include <entity/field.h>
+
+#include <utility/helpfunctions.h>
 
 #include "constants.h"
 
