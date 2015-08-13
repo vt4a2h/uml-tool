@@ -40,12 +40,60 @@ TEST_F(SignatureMaker, MakingFieldSignature)
     auto typeInt = findType(m_GlobalDatabase, "int");
     ASSERT_TRUE(!!typeInt);
 
+    // type and name
     entity::SharedField field = std::make_shared<entity::Field>();
     field->setName("a");
     field->setTypeId(typeInt->id());
 
     QString actual = m_Maker->signature( field );
     QString expect = "int a";
-//    ASSERT_EQ()
+    ASSERT_EQ(actual, expect);
+
+    // const type name
+    auto constInt = m_Scope->addType<entity::ExtendedType>();
+    constInt->setTypeId(typeInt->id());
+    constInt->setConstStatus(true);
+    field->setTypeId(constInt->id());
+
+    actual = m_Maker->signature(field);
+    expect = "const int a";
+    ASSERT_EQ(actual, expect);
+
+    // const ptr to const
+    constInt->addPointerStatus(true /*pointer to const*/);
+    actual = m_Maker->signature(field);
+    expect = "const int * const a";
+    ASSERT_EQ(actual, expect);
+
+    // mutable
+    field->setTypeId(typeInt->id());
+    field->addKeyword(entity::FieldKeyword::Mutable);
+    actual = m_Maker->signature(field);
+    expect = "mutable int a";
+    ASSERT_EQ(actual, expect);
+
+    // std
+    auto deque = findType(m_GlobalDatabase, "deque");
+    ASSERT_TRUE(!!deque);
+    field->setTypeId(deque->id());
+    field->removeKeyword(entity::FieldKeyword::Mutable);
+    actual = m_Maker->signature(field);
+    expect = "std::deque a";
+    ASSERT_EQ(actual, expect);
+
+    // with template parameters
+    auto unMap = findType(m_GlobalDatabase, "unordered_map");
+    ASSERT_TRUE(!!unMap);
+    auto str = findType(m_GlobalDatabase, "string");
+    ASSERT_TRUE(!!str);
+    auto extMap = m_Scope->addType<entity::ExtendedType>();
+    extMap->setTypeId(unMap->id());
+    extMap->addTemplateParameter(str->id());
+    extMap->addTemplateParameter(typeInt->id());
+    field->setTypeId(extMap->id());
+
+    actual = m_Maker->signature(field);
+    expect = "std::unordered_map<std::string, int> a";
+    ASSERT_EQ(actual, expect);
 }
 

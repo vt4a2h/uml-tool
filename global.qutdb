@@ -7160,6 +7160,12 @@
             ],
             "Types": [
                 {
+                    "ID": "-12",
+                    "Kind of type": "Type",
+                    "Name": "string",
+                    "Scope ID": "std"
+                },
+                {
                     "ID": "-10",
                     "Kind of type": "Type",
                     "Name": "unordered_set",

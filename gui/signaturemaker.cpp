@@ -238,9 +238,9 @@ namespace gui {
                         return "";
 
                     parameters.removeAll("");
-                    if (!parameters.isEmpty())
-                        result.append("<").append(parameters.join(", ")).append(">");
                 }
+                if (!parameters.isEmpty())
+                    result.append("<").append(parameters.join(", ")).append(">");
             }
 
             const auto& pl = type->pl();
