@@ -40,10 +40,11 @@ const QString globalDbName = "global";
 class ComponentsBase
 {
 protected:
+    ComponentsBase() { init(); }
+
     void init()
     {
         m_ApplicationModel = std::make_shared<models::ApplicationModel>();
-
         m_GlobalDatabase = m_ApplicationModel->globalDatabase();
         m_GlobalDatabase->setPath(globalDbPath);
         m_GlobalDatabase->setName(globalDbName);

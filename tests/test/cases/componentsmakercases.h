@@ -78,7 +78,7 @@ TEST_F(ComponentsMaker, MakingField)
     ASSERT_EQ(field->name(), "a");
 
     auto globalScope = m_GlobalDatabase->getScope(GLOBAL);
-    auto t = globalScope->getType(field->typeId());
+    auto t = globalScope->type(field->typeId());
     ASSERT_TRUE(!!t) << "Type with name int is not found in global database";
     ASSERT_EQ(t->name(), "int");
 
@@ -88,7 +88,7 @@ TEST_F(ComponentsMaker, MakingField)
             << "There are some message: " << result.errorMessage.toStdString().c_str();
 
     field = to_f(result.resultEntity.get());
-    t = globalScope->getType(field->typeId());
+    t = globalScope->type(field->typeId());
     ASSERT_FALSE(!!t) << "Type shouldn't be added to the global database.";
     t = m_Project->database()->depthTypeSearch(field->typeId());
     ASSERT_TRUE(!!t) << "Type should be added to the project database.";

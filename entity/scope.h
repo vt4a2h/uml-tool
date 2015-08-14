@@ -50,9 +50,8 @@ namespace entity {
 
         friend bool operator ==(const Scope &lhs, const Scope &rhs);
 
-        SharedType getType(const QString &typeId) const;
-        SharedType getType(const QString &typeId);
-        SharedType takeType(const QString &typeId);
+        SharedType type(const QString &typeId) const;
+        SharedType type(const QString &typeId);
 
         SharedType typeByName(const QString &name) const;
         SharedType typeByName(const QString &name) ;
@@ -65,7 +64,6 @@ namespace entity {
         TypesList types() const;
 
         SharedScope getChildScope(const QString &typeId);
-        SharedScope takeChildScope(const QString &typeId);
         SharedScope addChildScope(const QString &name = "");
         SharedScope chainScopeSearch(const QStringList& scopesNames) const;
         void addExistsChildScope(const SharedScope &scope);
@@ -92,6 +90,7 @@ namespace entity {
         QString m_ParentScopeId;
         Scopes m_Scopes;
         Types  m_Types;
+        Types  m_TypesByName;
     };
 
     template <class T>
@@ -101,7 +100,8 @@ namespace entity {
                                                      std::is_base_of<Type, T>::value,
                                                      T, Type>::type;
         auto value = std::make_shared<ResultType>(name, m_Id);
-        m_Types.insert(value->id(), value);
+        m_Types[value->id()] = value;
+        m_TypesByName[value->name()] = value;
         return value;
     }
 

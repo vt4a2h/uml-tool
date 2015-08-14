@@ -332,7 +332,7 @@ namespace db {
     void Database::getDepthType(const entity::SharedScope &scope, const QString &id, entity::SharedType &result) const
     {
         if (scope->containsType(id)) {
-            result = scope->getType(id);
+            result = scope->type(id);
             return;
         } else if (scope->hasChildScopes()){
             for (auto &&child_scope : scope->scopes()) {

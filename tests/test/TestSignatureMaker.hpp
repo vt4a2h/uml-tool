@@ -31,16 +31,7 @@
 class SignatureMaker : public ComponentsBase, public ::testing::Test
 {
 protected:
-    void SetUp() override
-    {
-        init();
-        m_Maker = std::make_unique<gui::SignatureMaker>(m_ApplicationModel, m_Project, m_Scope, m_Type);
-    }
-
-    void TearDown() override
-    {
-        m_ApplicationModel.reset();
-    }
+    SignatureMaker() : m_Maker( std::make_unique<gui::SignatureMaker>(m_ApplicationModel, m_Project, m_Scope, m_Type) ) {}
 
 protected:
     gui::UniqueSignatureMaker m_Maker;

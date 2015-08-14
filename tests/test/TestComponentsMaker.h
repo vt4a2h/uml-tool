@@ -23,6 +23,7 @@
 #pragma once
 
 #include <gtest/gtest.h>
+#include <QDebug>
 
 #include <gui/componentsmaker.h>
 
@@ -31,16 +32,7 @@
 class ComponentsMaker : public ComponentsBase, public ::testing::Test
 {
 protected:
-    void SetUp() override
-    {
-        init();
-        m_Maker = std::make_unique<gui::ComponentsMaker>(m_ApplicationModel, m_Type, m_Scope);
-    }
-
-    virtual void TearDown() override
-    {
-        m_ApplicationModel.reset();
-    }
+    ComponentsMaker() : m_Maker( std::make_unique<gui::ComponentsMaker>(m_ApplicationModel, m_Type, m_Scope) ) {}
 
 protected:
     gui::UniqueComponentsMaker m_Maker;

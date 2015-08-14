@@ -109,7 +109,8 @@ namespace entity {
                lhs.m_Id            == rhs.m_Id                         &&
                lhs.m_ParentScopeId == rhs.m_ParentScopeId              &&
                utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes) &&
-               utility::seqSharedPointerEq(lhs.m_Types, rhs.m_Types);
+               utility::seqSharedPointerEq(lhs.m_Types, rhs.m_Types)   &&
+               utility::seqSharedPointerEq(lhs.m_TypesByName, rhs.m_TypesByName);
     }
 
     /**
@@ -117,7 +118,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedType Scope::getType(const QString &typeId) const
+    SharedType Scope::type(const QString &typeId) const
     {
         return m_Types.value(typeId);
     }
@@ -127,26 +128,9 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedType Scope::getType(const QString &typeId)
+    SharedType Scope::type(const QString &typeId)
     {
         return m_Types.value(typeId);
-    }
-
-    /**
-     * @brief Scope::takeType
-     * @param typeId
-     * @return
-     */
-    SharedType Scope::takeType(const QString &typeId)
-    {
-        SharedType result(nullptr);
-
-        if (m_Types.contains(typeId)) {
-            result = m_Types[typeId];
-            m_Types.remove(typeId);
-        }
-
-        return result;
     }
 
     /**
@@ -156,8 +140,7 @@ namespace entity {
      */
     SharedType Scope::typeByName(const QString &name) const
     {
-        auto it = utility::find_if(m_Types, [&](auto &&type){ return name == type->name(); });
-        return it != m_Types.cend() ? *it : nullptr;
+        return m_TypesByName.value(name);
     }
 
     /**
@@ -179,7 +162,8 @@ namespace entity {
         SharedType newType(std::make_shared<Type>(*type));
         newType->setScopeId(m_Id);
         newType->setId(utility::genId());
-        m_Types.insert(newType->id(), newType);
+        m_Types[newType->id()] = newType;
+        m_TypesByName[newType->name()] = newType;
     }
 
     /**
@@ -189,6 +173,7 @@ namespace entity {
     SharedType Scope::addExistsType(const SharedType &type)
     {
         type->setScopeId(m_Id);
+        m_TypesByName[type->name()] = type;
         return *m_Types.insert(type->id(), type);
     }
 
@@ -208,6 +193,10 @@ namespace entity {
      */
     void Scope::removeType(const QString &typeId)
     {
+        auto type = m_Types.value(typeId);
+        if (type)
+            m_TypesByName.remove(type->name());
+
         m_Types.remove(typeId);
     }
 
@@ -227,24 +216,7 @@ namespace entity {
      */
     SharedScope Scope::getChildScope(const QString &typeId)
     {
-        return (m_Scopes.contains(typeId) ? m_Scopes[typeId] : nullptr);
-    }
-
-    /**
-     * @brief Scope::takeChildScope
-     * @param typeId
-     * @return
-     */
-    SharedScope Scope::takeChildScope(const QString &typeId)
-    {
-        SharedScope result(nullptr);
-
-        if (m_Scopes.contains(typeId)) {
-            result = m_Scopes[typeId];
-            m_Scopes.remove(typeId);
-        }
-
-        return result;
+        return m_Scopes.value(typeId);
     }
 
     /**
@@ -405,6 +377,7 @@ namespace entity {
         });
 
         m_Types.clear();
+        m_TypesByName.clear();
         utility::checkAndSet(src, "Types", errorList, [&src, &errorList, this](){
             if (src["Types"].isArray()) {
                 SharedType type;
@@ -414,7 +387,8 @@ namespace entity {
                     utility::checkAndSet(obj, "Kind of type", errorList, [&obj, &type, &errorList, this](){
                         type = utility::makeType(obj.value("Kind of type").toString());
                         type->fromJson(obj, errorList);
-                        m_Types.insert(type->id(), type);
+                        m_Types[type->id()] = type;
+                        m_TypesByName[type->name()] = type;
                     });
                 }
             } else {
@@ -435,6 +409,7 @@ namespace entity {
 
         utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &Scope::id);
         utility::deepCopySharedPointerHash(src.m_Types,  m_Types, &Type::id);
+        utility::deepCopySharedPointerHash(src.m_TypesByName,  m_TypesByName, &Type::name);
     }
 
     /**
@@ -447,8 +422,9 @@ namespace entity {
         m_Id   = std::move(src.m_Id);
         m_ParentScopeId = std::move(src.m_ParentScopeId);
 
-        m_Scopes = std::move(src.m_Scopes);
-        m_Types  = std::move(src.m_Types );
+        m_Scopes      = std::move(src.m_Scopes);
+        m_Types       = std::move(src.m_Types );
+        m_TypesByName = std::move(src.m_TypesByName);
     }
 
 } // namespace entity

@@ -129,7 +129,7 @@ namespace entity {
     SharedType Template::getLocalType(const QString &typeId) const
     {
         return m_LocalDatabase->anyScopes() ?
-                    m_LocalDatabase->scopes()[0]->getType(typeId) : nullptr;
+                    m_LocalDatabase->scopes()[0]->type(typeId) : nullptr;
     }
 
     /**
