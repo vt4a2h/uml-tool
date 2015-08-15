@@ -57,8 +57,9 @@ namespace entity {
      * @param src
      */
     Field::Field(Field &&src)
+        : BasicEntity(std::forward<Field>(src))
     {
-        moveFrom(src);
+        moveFrom(std::forward<Field>(src));
     }
 
     /**
@@ -93,8 +94,10 @@ namespace entity {
      */
     Field &Field::operator =(Field &&rhs)
     {
-        if (this != &rhs)
-            moveFrom(rhs);
+        if (this != &rhs) {
+            static_cast<BasicEntity*>(this)->operator =(std::forward<Field>(rhs));
+            moveFrom(std::forward<Field>(rhs));
+        }
 
         return *this;
     }
@@ -106,8 +109,10 @@ namespace entity {
      */
     Field &Field::operator =(const Field &rhs)
     {
-        if (this != &rhs)
+        if (this != &rhs) {
+            static_cast<BasicEntity*>(this)->operator =(rhs);
             copyFrom(rhs);
+        }
 
         return *this;
     }
@@ -120,9 +125,9 @@ namespace entity {
      */
     bool operator==(const Field &lhs, const Field &rhs)
     {
-        return lhs.m_TypeId   == rhs.m_TypeId   &&
+        return static_cast<const BasicEntity&>(lhs) == static_cast<const BasicEntity&>(rhs) &&
+               lhs.m_TypeId   == rhs.m_TypeId   &&
                lhs.m_Section  == rhs.m_Section  &&
-               lhs.m_Name     == rhs.m_Name     &&
                lhs.m_Prefix   == rhs.m_Prefix   &&
                lhs.m_Suffix   == rhs.m_Suffix   &&
                lhs.m_Keywords == rhs.m_Keywords &&
@@ -252,17 +257,17 @@ namespace entity {
      */
     QJsonObject Field::toJson() const
     {
-        QJsonObject result;
+        QJsonObject result = BasicEntity::toJson();
 
         result.insert("Type ID", m_TypeId);
         result.insert("Section", m_Section);
-        result.insert("Name", m_Name);
         result.insert("Prefix", m_Prefix);
         result.insert("Suffix", m_Suffix);
         result.insert("DefaultValue", m_DefaultValue);
 
         QJsonArray keywords;
-        for (auto keyword : m_Keywords) keywords.append(keyword);
+        for (auto &&keyword : m_Keywords)
+            keywords.append(keyword);
         result.insert("Keywords", keywords);
 
         return result;
@@ -275,14 +280,13 @@ namespace entity {
      */
     void Field::fromJson(const QJsonObject &src, QStringList &errorList)
     {
+        BasicEntity::fromJson(src, errorList);
+
         utility::checkAndSet(src, "Type ID", errorList, [&src, this](){
             m_TypeId = src["Type ID"].toString();
         });
         utility::checkAndSet(src, "Section", errorList, [&src, this](){
             m_Section = static_cast<Section>(src["Section"].toInt());
-        });
-        utility::checkAndSet(src, "Name",    errorList, [&src, this](){
-            m_Name = src["Name"].toString();
         });
         utility::checkAndSet(src, "Prefix",  errorList, [&src, this](){
             m_Prefix = src["Prefix"].toString();
@@ -329,7 +333,6 @@ namespace entity {
      */
     void Field::copyFrom(const Field &src)
     {
-        setName(src.name());
         m_TypeId = src.m_TypeId;
         m_Section = src.m_Section;
         m_Prefix = src.m_Prefix;
@@ -343,10 +346,8 @@ namespace entity {
      * @brief Field::moveFrom
      * @param src
      */
-    void Field::moveFrom(Field &src)
+    void Field::moveFrom(Field &&src)
     {
-        // TODO: refactore all operators
-        m_Name = std::move(src.m_Name);
         m_TypeId = std::move(src.m_TypeId);
         m_Section = std::move(src.m_Section);
         m_Prefix = std::move(src.m_Prefix);

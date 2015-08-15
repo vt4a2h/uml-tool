@@ -76,9 +76,20 @@ namespace entity {
     BasicEntity &BasicEntity::operator =(const BasicEntity &rhs)
     {
         if (this != &rhs)
-            m_Name = rhs.m_Name;
+            setName(rhs.name());
 
         return *this;
+    }
+
+    /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator ==(const BasicEntity &lhs, const BasicEntity &rhs)
+    {
+        return lhs.m_Name == rhs.m_Name;
     }
 
     /**
@@ -167,7 +178,10 @@ namespace entity {
      */
     QJsonObject BasicEntity::toJson() const
     {
-        return QJsonObject();
+        QJsonObject result;
+        result.insert("Name", m_Name);
+
+        return result;
     }
 
     /**
@@ -177,8 +191,9 @@ namespace entity {
      */
     void BasicEntity::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        Q_UNUSED(src);
-        Q_UNUSED(errorList);
+        utility::checkAndSet(src, "Name", errorList, [&src, this](){
+            m_Name = src["Name"].toString();
+        });
     }
 
     /**

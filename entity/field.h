@@ -86,7 +86,7 @@ namespace entity {
 
     private:
         void copyFrom(const Field &src);
-        void moveFrom(Field &src);
+        void moveFrom(Field &&src);
 
         QString m_TypeId;
         Section m_Section;

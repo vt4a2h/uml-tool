@@ -56,15 +56,18 @@ namespace entity {
     signals:
         void nameChanged(const QString &newName);
 
+    public:
+        BasicEntity &operator =(const BasicEntity &rhs);
+        BasicEntity &operator =(BasicEntity &&rhs);
+
+        friend bool operator ==(const BasicEntity &lhs, const BasicEntity &rhs);
+
     protected:
         BasicEntity() = default;
         explicit BasicEntity(const QString &name);
         BasicEntity(const BasicEntity &src);
         BasicEntity(BasicEntity &&src);
         BasicEntity(const QJsonObject &src, QStringList &errorList);
-
-        BasicEntity &operator =(const BasicEntity &rhs);
-        BasicEntity &operator =(BasicEntity &&rhs);
 
         QString m_Name;
     };
