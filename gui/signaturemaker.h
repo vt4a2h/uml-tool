@@ -63,6 +63,7 @@ namespace gui {
         QString makeTypeOrExtType(const entity::SharedType &type) const;
 
         QString makeField(const entity::SharedField &field) const;
+        QString makeMethod(const entity::SharedMethod &method) const;
 
         entity::SharedType findType(const QString &typeId) const;
         entity::SharedScope findScope(const QString &scopeId) const;

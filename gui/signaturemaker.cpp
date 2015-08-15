@@ -35,6 +35,7 @@
 #include <utility/helpfunctions.h>
 
 #include "constants.h"
+#include "enums.h"
 
 namespace gui {
 
@@ -92,9 +93,8 @@ namespace gui {
         if (hash == entity::Field::staticHashType())
             return makeField(std::static_pointer_cast<entity::Field>(component));
         else if (hash == entity::ClassMethod::staticHashType())
-            return m_Translator->translate(std::static_pointer_cast<entity::ClassMethod>(component)).toHeader;
+            return makeMethod(std::static_pointer_cast<entity::ClassMethod>(component));
         // TODO: handle variable case
-        // TODO: don't use translator. We need a separate methods.
 
         return tr("Wrong component");
     }
@@ -304,6 +304,62 @@ namespace gui {
                 kw << utility::fieldKeywordToString(keyword);
 
             result.prepend(QChar::Space).prepend(kw.join(QChar::Space));
+        }
+
+        return result;
+    }
+
+    /**
+     * @brief SignatureMaker::makeMethod
+     * @param method
+     * @return
+     */
+    QString SignatureMaker::makeMethod(const entity::SharedMethod &method) const
+    {
+        if (!method)
+            return "";
+
+        QString result;
+
+        // Add return type id
+        auto returnType = findType(method->returnTypeId());
+        if (!returnType)
+            return "";
+        result.append(makeTypeOrExtType(returnType));
+
+        // Add name
+        if (method->name().isEmpty())
+            return "";
+        result.append(QChar::Space).append(method->name());
+
+        // Add parameters
+        auto parameters = method->parameters();
+        QStringList parametersString;
+        parametersString.reserve(parameters.size());
+        for (auto &&p : parameters) {
+            const auto &s = makeField(p);
+            if (s.isEmpty())
+                return "";
+            parametersString << s;
+        }
+        result.append("(").append(parametersString.join(", ")).append(")");
+
+        // Add const
+        if (method->isConst())
+            result.append(QChar::Space).append("const");
+
+        // Add rhs, e.g. default
+        if (entity::RhsIdentificator::None != method->rhsIdentificator())
+            result.append(QChar::Space).append(utility::methodRhsIdToString(method->rhsIdentificator()));
+
+        // Add lhs, e.g. static
+        auto lhsIds = method->lhsIdentificators();
+        if (!lhsIds.isEmpty()) {
+            QStringList lhsStrings;
+            lhsStrings.reserve(lhsIds.count());
+            for (auto &&id : lhsIds)
+                lhsStrings << utility::methodLhsIdToString(id);
+            result.prepend(QChar::Space).prepend(lhsStrings.join(QChar::Space));
         }
 
         return result;

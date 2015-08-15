@@ -3413,7 +3413,7 @@
                     "Scope ID": "global"
                 },
                 {
-                    "ID": "1",
+                    "ID": "_void",
                     "Kind of type": "Type",
                     "Name": "void",
                     "Scope ID": "global"

@@ -42,6 +42,7 @@ namespace entity {
     // TODO: add QString m_Body, for generate body if it's possible
     // TODO: add dtor and ctor types
     // TODO: add documentation if user would like it
+    // TODO: how about template functions
 
     /**
      * @brief The ClassMethod class
