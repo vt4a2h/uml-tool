@@ -34,6 +34,12 @@ HEADERS += ../../enums.h \
     TestProjectTranslator.h \
     TestProjectMaker.h \
     TestProject.h \
+    TestSignatureMaker.hpp \
+    TestIComponents.h \
+    TestEntities.h \
+    TestComponentsMaker.h \
+    TestComponentsBase.h \
+    TestClassComponents.h \
     cases/projecttranslatortestcases.h \
     cases/relationmakertestcases.h \
     cases/depthsearchtestcases.h \
@@ -42,15 +48,11 @@ HEADERS += ../../enums.h \
     cases/projectmakertestcases.h \
     cases/projecttestcases.h \
     cases/typemakertestcases.h \
-    TestIComponents.h \
     cases/icomponentstestcases.h \
     cases/entitiestestcases.h \
-    TestEntities.h \
     cases/componentsmakercases.h \
-    TestSignatureMaker.hpp \
-    TestComponentsMaker.h \
-    TestComponentsBase.h \
-    cases/signaturemakercases.h
+    cases/signaturemakercases.h \
+    cases/classcomponentscases.h
 
 SOURCES += main.cpp \
            ../../entity/type.cpp \
@@ -91,4 +93,4 @@ SOURCES += main.cpp \
            ../../models/applicationmodel.cpp \
            ../../models/projecttreemodel.cpp \
            ../../models/basictreeitem.cpp \
-           ../../helpers/entityhelpres.cpp \
+           ../../helpers/entityhelpres.cpp

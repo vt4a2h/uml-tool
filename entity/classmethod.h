@@ -57,7 +57,7 @@ namespace entity {
         virtual ~ClassMethod();
 
         ClassMethod &operator =(ClassMethod &&rhs);
-        ClassMethod &operator =(ClassMethod rhs);
+        ClassMethod &operator =(const ClassMethod &rhs);
 
         friend bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs);
 
@@ -101,7 +101,7 @@ namespace entity {
         static size_t staticHashType();
 
     protected:
-        virtual void moveFrom(ClassMethod &src);
+        virtual void moveFrom(ClassMethod &&src);
         virtual void copyFrom(const ClassMethod &src);
 
         ClassMethodType m_Type;

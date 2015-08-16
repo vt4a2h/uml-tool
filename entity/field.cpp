@@ -221,7 +221,7 @@ namespace entity {
      */
     bool Field::hasKeywords() const
     {
-        return m_Keywords.isEmpty();
+        return !m_Keywords.isEmpty();
     }
 
     /**

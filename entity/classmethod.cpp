@@ -48,8 +48,9 @@ namespace entity {
      * @param src
      */
     ClassMethod::ClassMethod(ClassMethod &&src)
+        : BasicEntity(std::forward<ClassMethod>(src))
     {
-        moveFrom(src);
+        moveFrom(std::forward<ClassMethod>(src));
     }
 
     /**
@@ -91,8 +92,10 @@ namespace entity {
      */
     ClassMethod &ClassMethod::operator =(ClassMethod &&rhs)
     {
-        if (this != &rhs)
-            moveFrom(rhs);
+        if (this != &rhs) {
+            static_cast<BasicEntity*>(this)->operator =(std::forward<ClassMethod>(rhs));
+            moveFrom(std::forward<ClassMethod>(rhs));
+        }
 
         return *this;
     }
@@ -102,9 +105,12 @@ namespace entity {
      * @param rhs
      * @return
      */
-    ClassMethod &ClassMethod::operator =(ClassMethod rhs)
+    ClassMethod &ClassMethod::operator =(const ClassMethod &rhs)
     {
-        moveFrom(rhs);
+        if (this != &rhs) {
+            static_cast<BasicEntity*>(this)->operator =(rhs);
+            copyFrom(rhs);
+        }
 
         return *this;
     }
@@ -117,7 +123,7 @@ namespace entity {
      */
     bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs)
     {
-        return lhs.m_Name              == rhs.m_Name              &&
+        return static_cast<const BasicEntity&>(lhs) == static_cast<const BasicEntity&>(rhs) &&
                lhs.m_ScopeId           == rhs.m_ScopeId           &&
                lhs.m_Section           == rhs.m_Section           &&
                lhs.m_ConstStatus       == rhs.m_ConstStatus       &&
@@ -216,7 +222,7 @@ namespace entity {
      */
     bool ClassMethod::hasLhsIdentificators() const
     {
-        return m_LhsIdentificators.empty();
+        return !m_LhsIdentificators.isEmpty();
     }
 
     /**
@@ -248,7 +254,8 @@ namespace entity {
     SharedField ClassMethod::addParameter(const QString &name, const QString &typeId)
     {
         auto existField = getParameter(name);
-        if (existField.operator bool()) removeParameter(name);
+        if (existField)
+            removeParameter(name);
 
         auto f = std::make_shared<Field>(name, typeId);
         m_Parameters << f;
@@ -272,7 +279,7 @@ namespace entity {
      */
     bool ClassMethod::hasParameters() const
     {
-        return m_Parameters.empty();
+        return !m_Parameters.isEmpty();
     }
 
     /**
@@ -282,7 +289,8 @@ namespace entity {
     void ClassMethod::removeParameter(const QString &name)
     {
         auto parameter = getParameter(name);
-        if (parameter.operator bool()) m_Parameters.removeOne(parameter);
+        if (parameter)
+            m_Parameters.removeOne(parameter);
     }
 
     /**
@@ -418,11 +426,10 @@ namespace entity {
      * @brief ClassMethod::moveFrom
      * @param src
      */
-    void ClassMethod::moveFrom(ClassMethod &src)
+    void ClassMethod::moveFrom(ClassMethod &&src)
     {
         m_Type = std::move(src.m_Type);
 
-        m_Name = std::move(src.m_Name);
         m_ScopeId = std::move(src.m_ScopeId);
         m_Section = std::move(src.m_Section);
         m_ConstStatus = std::move(src.m_ConstStatus);
