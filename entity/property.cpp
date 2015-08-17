@@ -86,7 +86,7 @@ namespace entity {
      * @brief Property::Property
      */
     Property::Property()
-        : Property(DEFAULT_NAME, nullptr)
+        : Property(DEFAULT_NAME, STUB_ID)
     {
     }
 

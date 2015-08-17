@@ -22,12 +22,31 @@
 *****************************************************************************/
 #include "TestClassComponents.h"
 
+#include "constants.h"
+
 #define check_moving(type, name) \
     type name##1(*name);\
-    auto name##2(std::move(name##1));\
+    type name##2(std::move(name##1));\
     ASSERT_EQ(*name, name##2);\
-    auto name##3 = std::move(name##2);\
-    ASSERT_EQ(*name, name##3);\
+    type name##3 = std::move(name##2);\
+    ASSERT_EQ(*name, name##3);
+
+#define test_basic_prop(Name, name) \
+    ASSERT_TRUE(!!property->add##Name().name()); \
+    property->delete##Name(); \
+    ASSERT_FALSE(!!property->name());
+
+#define test_script_des(Name, name) \
+    ASSERT_TRUE(property->is##Name()); \
+    ASSERT_TRUE(property->is##Name##Default()); \
+    ASSERT_TRUE(!!property->add##Name##Getter().name##Getter()); \
+    property->delete##Name##Getter(); \
+    ASSERT_FALSE(!!property->name##Getter()); \
+    ASSERT_FALSE(property->set##Name(false).is##Name()); \
+
+#define check_additional(Name) \
+    ASSERT_TRUE(property->is##Name##Default()); \
+    ASSERT_FALSE(property->set##Name(false).is##Name());
 
 TEST_F(ClassComponents, Field)
 {
@@ -62,4 +81,38 @@ TEST_F(ClassComponents, Method)
 
     // Check moving
     check_moving(entity::ClassMethod, method)
+}
+
+TEST_F(ClassComponents, Property)
+{
+    // Check a several methods which are not covered in previous tests
+    auto property = std::make_shared<entity::Property>();
+    ASSERT_EQ(property->name(), DEFAULT_NAME);
+    ASSERT_TRUE(!!property->field());
+    ASSERT_EQ(property->name(), property->field()->name());
+
+    test_basic_prop(Getter, getter)
+    test_basic_prop(Setter, setter)
+    test_basic_prop(Resetter, resetter)
+    test_basic_prop(Notifier, notifier)
+
+    ASSERT_TRUE(property->isRevisionDefault());
+    ASSERT_EQ(10, property->setRevision(10).revision());
+
+    test_script_des(Scriptable, scriptable)
+    test_script_des(Designable, designable)
+
+    check_additional(Stored)
+    check_additional(User)
+    check_additional(Constant)
+    check_additional(Final)
+
+    ASSERT_EQ(property->hashType(), entity::Property::staticHashType());
+    ASSERT_EQ(property->marker(), entity::Property::staticMarker());
+
+    property->setId("foo");
+    ASSERT_EQ(property->id(), "foo");
+
+    // Check moving
+    check_moving(entity::Property, property)
 }
