@@ -110,6 +110,9 @@ namespace entity {
     class Element;
     using SharedElement = std::shared_ptr<Element>;
     using ElementsList = QList<SharedElement>;
+
+    struct Member;
+    using SharedMember = std::shared_ptr<Member>;
 }
 
 Q_DECLARE_METATYPE(entity::SharedField)

@@ -38,6 +38,7 @@ namespace {
 
     const int defaultRevision = 0;
 
+    const bool defaultMember     = false;
     const bool defaultDesignable = true ;
     const bool defaultScriptable = true ;
     const bool defaultStored     = true ;
@@ -60,6 +61,8 @@ namespace {
 
     const QString revisionMark = "revision";
 
+    const QString memberIsMark = "IsMember";
+    const QString memberMark   = "Member";
     const QString designableMark = "Designable";
     const QString scriptableMark = "Scriptable";
     const QString storedMark = "Stored";
@@ -81,6 +84,18 @@ namespace {
 }
 
 namespace entity {
+
+    struct Member
+    {
+        QString name;
+        QString suffix;
+        QString prefix;
+
+        friend bool operator== (const Member &rhs, const Member &lhs)
+        {
+            return rhs.name == lhs.name && rhs.suffix == lhs.suffix && rhs.prefix == lhs.prefix;
+        }
+    };
 
     /**
      * @brief Property::Property
@@ -119,6 +134,7 @@ namespace entity {
         : BasicEntity(name)
         , m_Id(utility::genId())
         , m_Field(std::make_shared<entity::Field>(name, typeId))
+        , m_MemberName(std::make_shared<Member>())
         , m_Revision(defaultRevision)
         , m_Designable(defaultDesignable)
         , m_Scriptable(defaultScriptable)
@@ -174,6 +190,7 @@ namespace entity {
                lhs.m_Id == rhs.m_Id &&
 
                sharedPtrEq(lhs.m_Field, rhs.m_Field) &&
+               sharedPtrEq(lhs.m_MemberName, rhs.m_MemberName) &&
 
                sharedPtrEq(lhs.m_Getter, rhs.m_Getter) &&
                sharedPtrEq(lhs.m_Setter, rhs.m_Setter) &&
@@ -185,6 +202,7 @@ namespace entity {
 
                lhs.m_Revision == rhs.m_Revision &&
 
+               lhs.m_Member     == rhs.m_Member &&
                lhs.m_Designable == rhs.m_Designable &&
                lhs.m_Scriptable == rhs.m_Scriptable &&
                lhs.m_Stored     == rhs.m_Stored &&
@@ -643,6 +661,7 @@ namespace entity {
         result.insert(idMark, m_Id);
         result.insert(fieldMark, m_Field->toJson());
 
+        // TODO implement for member
 
         result.insert(getterMark, m_Getter ? m_Getter->toJson() : QJsonValue(QString("")));
         result.insert(setterMark, m_Setter ? m_Setter->toJson() : QJsonValue(QString("")));
@@ -675,6 +694,8 @@ namespace entity {
 
         checkAndSet(src, nameMark, errorList, [&](){ m_Name = src[nameMark].toString(); });
         checkAndSet(src, idMark, errorList, [&](){ m_Id = src[idMark].toString(); });
+
+        // TODO implement for member
 
         checkAndSet(src, fieldMark, errorList, [&](){ m_Field->fromJson( src[fieldMark].toObject(), errorList ); });
 
@@ -763,6 +784,7 @@ namespace entity {
         m_Id = std::move(src.m_Id);
 
         m_Field = std::move(src.m_Field);
+        m_MemberName = std::move(src.m_MemberName);
 
         m_Getter = std::move(src.m_Getter);
         m_Setter = std::move(src.m_Setter);
@@ -774,6 +796,7 @@ namespace entity {
 
         m_Revision = std::move(src.m_Revision);
 
+        m_Member     = std::move(src.m_Member);
         m_Designable = std::move(src.m_Designable);
         m_Scriptable = std::move(src.m_Scriptable);
         m_Stored     = std::move(src.m_Stored);
@@ -787,6 +810,7 @@ namespace entity {
         m_Id = src.m_Id;
 
         m_Field = std::make_shared<Field>(*src.m_Field);
+        m_MemberName = std::make_shared<Member>(*src.m_MemberName);
 
         m_Getter   = src.m_Getter ? std::make_shared<ClassMethod>(*src.m_Getter) : nullptr;
         m_Setter   = src.m_Setter ? std::make_shared<ClassMethod>(*src.m_Setter) : nullptr;
@@ -798,6 +822,7 @@ namespace entity {
 
         m_Revision = src.m_Revision;
 
+        m_Member     = src.m_Member;
         m_Designable = src.m_Designable;
         m_Scriptable = src.m_Scriptable;
         m_Stored     = src.m_Stored;

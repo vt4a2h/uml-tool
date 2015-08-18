@@ -43,6 +43,9 @@ namespace entity {
 
         SharedField field() const;
 
+        bool isMember() const;
+
+
         Property &addGetter(const QString &customName = "");
         void deleteGetter();
         SharedMethod getter() const;
@@ -113,7 +116,8 @@ namespace entity {
     private:
         QString m_Id;
 
-        SharedField m_Field;
+        SharedField  m_Field;
+        SharedMember m_MemberName;
 
         SharedMethod m_Getter;
         SharedMethod m_Setter;
@@ -125,6 +129,7 @@ namespace entity {
 
         int m_Revision;
 
+        bool m_Member;
         bool m_Designable;
         bool m_Scriptable;
         bool m_Stored;

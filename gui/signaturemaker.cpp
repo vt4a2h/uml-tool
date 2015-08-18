@@ -366,6 +366,16 @@ namespace gui {
     }
 
     /**
+     * @brief SignatureMaker::makeProperty
+     * @param property
+     * @return
+     */
+    QString SignatureMaker::makeProperty(const entity::SharedProperty &property) const
+    {
+
+    }
+
+    /**
      * @brief SignatureMaker::findScope
      * @param scope
      * @return
