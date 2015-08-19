@@ -91,10 +91,11 @@ TEST_F(ClassComponents, Property)
     ASSERT_TRUE(!!property->field());
     ASSERT_EQ(property->name(), property->field()->name());
 
-    test_basic_prop(Getter, getter)
-    test_basic_prop(Setter, setter)
+    test_basic_prop(Getter,   getter)
+    test_basic_prop(Setter,   setter)
     test_basic_prop(Resetter, resetter)
     test_basic_prop(Notifier, notifier)
+    test_basic_prop(Member,   member)
 
     ASSERT_TRUE(property->isRevisionDefault());
     ASSERT_EQ(10, property->setRevision(10).revision());
@@ -106,6 +107,7 @@ TEST_F(ClassComponents, Property)
     check_additional(User)
     check_additional(Constant)
     check_additional(Final)
+    check_additional(Member)
 
     ASSERT_EQ(property->hashType(), entity::Property::staticHashType());
     ASSERT_EQ(property->marker(), entity::Property::staticMarker());

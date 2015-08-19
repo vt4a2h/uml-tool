@@ -70,11 +70,12 @@ namespace {
     const QString constantMark = "Constant";
     const QString finalMark = "Final";
 
-    void readOptionalMethod(const QJsonValue &val, entity::SharedMethod &dst, ErrorList &errors)
+    template<class Type>
+    void readOptional(const QJsonValue &val, std::shared_ptr<Type> &dst, ErrorList &errors)
     {
         if (val.isObject()) {
             if (!dst)
-                dst = std::make_shared<entity::ClassMethod>();
+                dst = std::make_shared<Type>();
 
             dst->fromJson(val.toObject(), errors);
         } else {
@@ -90,6 +91,27 @@ namespace entity {
         QString name;
         QString suffix;
         QString prefix;
+
+        bool isEmpty() const { return name.isEmpty() && suffix.isEmpty() && prefix.isEmpty(); }
+
+        QJsonObject toJson() const
+        {
+            QJsonObject result;
+            result["name"]   = name;
+            result["suffix"] = suffix;
+            result["prefix"] = prefix;
+
+            return result;
+        }
+
+        void fromJson(const QJsonObject &src, QStringList &errorList)
+        {
+            using namespace utility;
+
+            checkAndSet(src, "name"  , errorList, [&](){ name = src["name"].toString();   });
+            checkAndSet(src, "suffix", errorList, [&](){ name = src["suffix"].toString(); });
+            checkAndSet(src, "prefix", errorList, [&](){ name = src["prefix"].toString(); });
+        }
 
         friend bool operator== (const Member &rhs, const Member &lhs)
         {
@@ -134,8 +156,9 @@ namespace entity {
         : BasicEntity(name)
         , m_Id(utility::genId())
         , m_Field(std::make_shared<entity::Field>(name, typeId))
-        , m_MemberName(std::make_shared<Member>())
+        , m_MemberName(nullptr)
         , m_Revision(defaultRevision)
+        , m_Member(defaultMember)
         , m_Designable(defaultDesignable)
         , m_Scriptable(defaultScriptable)
         , m_Stored(defaultStored)
@@ -218,6 +241,35 @@ namespace entity {
     SharedField Property::field() const
     {
         return m_Field;
+    }
+
+    /**
+     * @brief Property::addMember
+     * @param customName
+     * @return
+     */
+    Property &Property::addMember(const QString &customName)
+    {
+        m_MemberName = std::make_shared<Member>();
+        m_MemberName->name = customName.isEmpty() ? m_Name : customName;
+        return *this;
+    }
+
+    /**
+     * @brief Property::deleteMember
+     */
+    void Property::deleteMember()
+    {
+        m_MemberName.reset();
+    }
+
+    /**
+     * @brief Property::member
+     * @return
+     */
+    SharedMember Property::member() const
+    {
+        return m_MemberName;
     }
 
     /**
@@ -650,6 +702,35 @@ namespace entity {
     }
 
     /**
+     * @brief Property::isMember
+     * @return
+     */
+    bool Property::isMember() const
+    {
+        return m_Member;
+    }
+
+    /**
+     * @brief Property::isMemberDefault
+     * @return
+     */
+    bool Property::isMemberDefault() const
+    {
+        return m_Member == defaultMember;
+    }
+
+    /**
+     * @brief Property::setMember
+     * @param member
+     * @return
+     */
+    Property &Property::setMember(bool member)
+    {
+        m_Member = member;
+        return *this;
+    }
+
+    /**
      * @brief Property::toJson
      * @return
      */
@@ -659,9 +740,9 @@ namespace entity {
 
         result.insert(nameMark, m_Name);
         result.insert(idMark, m_Id);
-        result.insert(fieldMark, m_Field->toJson());
 
-        // TODO implement for member
+        result.insert(fieldMark, m_Field->toJson());
+        result.insert(memberMark, m_MemberName ? m_MemberName->toJson() : QJsonValue(QString("")));
 
         result.insert(getterMark, m_Getter ? m_Getter->toJson() : QJsonValue(QString("")));
         result.insert(setterMark, m_Setter ? m_Setter->toJson() : QJsonValue(QString("")));
@@ -671,6 +752,7 @@ namespace entity {
         result.insert(designableGetterMark, m_DesignableGetter ? m_DesignableGetter->toJson() : QJsonValue(QString("")));
         result.insert(scriptableGetterMark, m_ScriptableGetter ? m_ScriptableGetter->toJson() : QJsonValue(QString("")));
 
+        result.insert(memberIsMark, m_Member);
         result.insert(revisionMark, m_Revision);
 
         result.insert(designableMark, m_Designable);
@@ -695,22 +777,27 @@ namespace entity {
         checkAndSet(src, nameMark, errorList, [&](){ m_Name = src[nameMark].toString(); });
         checkAndSet(src, idMark, errorList, [&](){ m_Id = src[idMark].toString(); });
 
-        // TODO implement for member
-
         checkAndSet(src, fieldMark, errorList, [&](){ m_Field->fromJson( src[fieldMark].toObject(), errorList ); });
+        checkAndSet(src, memberMark, errorList,
+                    [&](){ readOptional<Member>(src[memberMark], m_MemberName, errorList); });
 
-        checkAndSet(src, getterMark, errorList, [&](){ readOptionalMethod(src[getterMark], m_Getter, errorList); });
-        checkAndSet(src, setterMark, errorList, [&](){ readOptionalMethod(src[setterMark], m_Setter, errorList); });
-        checkAndSet(src, resetterMark, errorList, [&](){ readOptionalMethod(src[resetterMark], m_Resetter, errorList); });
-        checkAndSet(src, notifierMark, errorList, [&](){ readOptionalMethod(src[notifierMark], m_Notifier, errorList); });
+        checkAndSet(src, getterMark, errorList,
+                    [&](){ readOptional<entity::ClassMethod>(src[getterMark], m_Getter, errorList); });
+        checkAndSet(src, setterMark, errorList,
+                    [&](){ readOptional<entity::ClassMethod>(src[setterMark], m_Setter, errorList); });
+        checkAndSet(src, resetterMark, errorList,
+                    [&](){ readOptional<entity::ClassMethod>(src[resetterMark], m_Resetter, errorList); });
+        checkAndSet(src, notifierMark, errorList,
+                    [&](){ readOptional<entity::ClassMethod>(src[notifierMark], m_Notifier, errorList); });
 
         checkAndSet(src, designableGetterMark, errorList, [&](){
-            readOptionalMethod(src[designableGetterMark], m_DesignableGetter, errorList);
+            readOptional<entity::ClassMethod>(src[designableGetterMark], m_DesignableGetter, errorList);
         });
         checkAndSet(src, scriptableGetterMark, errorList, [&](){
-            readOptionalMethod(src[scriptableGetterMark], m_ScriptableGetter, errorList);
+            readOptional<entity::ClassMethod>(src[scriptableGetterMark], m_ScriptableGetter, errorList);
         });
 
+        checkAndSet(src, memberIsMark, errorList, [&](){ m_Member   = src[memberIsMark].toInt(); });
         checkAndSet(src, revisionMark, errorList, [&](){ m_Revision = src[revisionMark].toInt(); });
 
         checkAndSet(src, designableMark, errorList, [&](){ m_Designable = src[designableMark].toBool(); });
@@ -810,7 +897,7 @@ namespace entity {
         m_Id = src.m_Id;
 
         m_Field = std::make_shared<Field>(*src.m_Field);
-        m_MemberName = std::make_shared<Member>(*src.m_MemberName);
+        m_MemberName = src.m_MemberName ? std::make_shared<Member>(*src.m_MemberName) : nullptr;
 
         m_Getter   = src.m_Getter ? std::make_shared<ClassMethod>(*src.m_Getter) : nullptr;
         m_Setter   = src.m_Setter ? std::make_shared<ClassMethod>(*src.m_Setter) : nullptr;

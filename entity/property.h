@@ -43,8 +43,9 @@ namespace entity {
 
         SharedField field() const;
 
-        bool isMember() const;
-
+        Property &addMember(const QString &customName = "");
+        void deleteMember();
+        SharedMember member() const;
 
         Property &addGetter(const QString &customName = "");
         void deleteGetter();
@@ -95,6 +96,10 @@ namespace entity {
         bool isFinal() const;
         bool isFinalDefault() const;
         Property &setFinal(bool final);
+
+        bool isMember() const;
+        bool isMemberDefault() const;
+        Property &setMember(bool member);
 
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
