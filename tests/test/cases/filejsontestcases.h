@@ -159,7 +159,7 @@ TEST_F(FileJson, PropertyJson)
     entity::SharedProperty property(std::make_shared<entity::Property>("stub_property_name", STUB_ID));
 
     // Test with optional methods
-    property->addGetter().addSetter().addResetter().addNotifier();
+    property->addGetter().addSetter().addResetter().addNotifier().addMember();
     property->writeToFile(m_JsonFileName);
 
     auto actual(std::make_shared<entity::Property>());

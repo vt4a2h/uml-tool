@@ -28,6 +28,21 @@
 
 namespace entity {
 
+    /// The struct Member (lightweight version of field)
+    struct Member
+    {
+        QString name;
+        QString suffix;
+        QString prefix;
+
+        bool isEmpty() const;
+
+        QJsonObject toJson() const;
+        void fromJson(const QJsonObject &src, QStringList &errorList);
+
+        friend bool operator== (const Member &rhs, const Member &lhs);
+    };
+
     /// The class Property
     class Property : public BasicEntity
     {

@@ -86,39 +86,6 @@ namespace {
 
 namespace entity {
 
-    struct Member
-    {
-        QString name;
-        QString suffix;
-        QString prefix;
-
-        bool isEmpty() const { return name.isEmpty() && suffix.isEmpty() && prefix.isEmpty(); }
-
-        QJsonObject toJson() const
-        {
-            QJsonObject result;
-            result["name"]   = name;
-            result["suffix"] = suffix;
-            result["prefix"] = prefix;
-
-            return result;
-        }
-
-        void fromJson(const QJsonObject &src, QStringList &errorList)
-        {
-            using namespace utility;
-
-            checkAndSet(src, "name"  , errorList, [&](){ name = src["name"].toString();   });
-            checkAndSet(src, "suffix", errorList, [&](){ name = src["suffix"].toString(); });
-            checkAndSet(src, "prefix", errorList, [&](){ name = src["prefix"].toString(); });
-        }
-
-        friend bool operator== (const Member &rhs, const Member &lhs)
-        {
-            return rhs.name == lhs.name && rhs.suffix == lhs.suffix && rhs.prefix == lhs.prefix;
-        }
-    };
-
     /**
      * @brief Property::Property
      */
@@ -916,6 +883,54 @@ namespace entity {
         m_User       = src.m_User;
         m_Constant   = src.m_Constant;
         m_Final      = src.m_Final;
+    }
+
+    /**
+     * @brief Member::isEmpty
+     * @return
+     */
+    bool Member::isEmpty() const
+    {
+        return name.isEmpty() && suffix.isEmpty() && prefix.isEmpty();
+    }
+
+    /**
+     * @brief Member::toJson
+     * @return
+     */
+    QJsonObject Member::toJson() const
+    {
+        QJsonObject result;
+        result["name"]   = name;
+        result["suffix"] = suffix;
+        result["prefix"] = prefix;
+
+        return result;
+    }
+
+    /**
+     * @brief Member::fromJson
+     * @param src
+     * @param errorList
+     */
+    void Member::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        using namespace utility;
+
+        checkAndSet(src, "name"  , errorList, [&](){ name = src["name"].toString();   });
+        checkAndSet(src, "suffix", errorList, [&](){ suffix = src["suffix"].toString(); });
+        checkAndSet(src, "prefix", errorList, [&](){ prefix = src["prefix"].toString(); });
+    }
+
+    /**
+     * @brief operator ==
+     * @param rhs
+     * @param lhs
+     * @return
+     */
+    bool operator==(const Member &rhs, const Member &lhs)
+    {
+        return rhs.name == lhs.name && rhs.suffix == lhs.suffix && rhs.prefix == lhs.prefix;
     }
 
 } // namespace entity
