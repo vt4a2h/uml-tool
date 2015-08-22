@@ -129,14 +129,17 @@ namespace entity {
         QString id() const override;
         void setId(const QString &id) override;
 
+        QString typeId() const;
+        void setTypeId(const QString &typeId);
+
     protected:
         void moveFrom(Property &&src);
         void copyFrom(const Property &src);
 
     private:
-        QString m_Id;
+        QString m_Id; // TODO: move to the BasicEntity class
+        QString m_TypeId;
 
-        SharedField  m_Field;
         SharedMember m_MemberName;
 
         SharedMethod m_Getter;

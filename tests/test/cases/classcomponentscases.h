@@ -88,8 +88,10 @@ TEST_F(ClassComponents, Property)
     // Check a several methods which are not covered in previous tests
     auto property = std::make_shared<entity::Property>();
     ASSERT_EQ(property->name(), DEFAULT_NAME);
-    ASSERT_TRUE(!!property->field());
-    ASSERT_EQ(property->name(), property->field()->name());
+    ASSERT_EQ(property->typeId(), STUB_ID);
+
+    property->setTypeId("bar");
+    ASSERT_EQ(property->typeId(), "bar");
 
     test_basic_prop(Getter,   getter)
     test_basic_prop(Setter,   setter)
