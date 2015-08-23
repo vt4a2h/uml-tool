@@ -26,6 +26,7 @@
 #include <entity/classmethod.h>
 #include <entity/enum.h>
 #include <entity/extendedtype.h>
+#include <entity/property.h>
 
 #include <models/applicationmodel.h>
 
@@ -37,11 +38,37 @@
 #include "constants.h"
 #include "enums.h"
 
+#define add_common_member(name_, mark) \
+    if (const auto &name_ = property->name_()) \
+        result.append(QChar::Space + mark + QChar::Space + name_->name());
+
+#define add_ds(name_, Name_)\
+    if (!property->is##Name_##Default()) { \
+        result.append(QChar::Space + name_##Mark + QChar::Space); \
+        if (const auto &name_##Getter = property->name_##Getter()) \
+            result.append(name_##Getter->name()); \
+        else \
+            result.append(property->is##Name_() ? "true" : "false"); \
+    }
+
 namespace gui {
 
     namespace {
         const QString noSignature = SignatureMaker::tr("Not available.");
         const QSet<QString> globalIds = {GLOBAL_SCOPE_ID, PROJECT_GLOBAL_SCOPE_ID, GLOBAL, STUB_ID};
+
+        const QString memberMark      = "MEMBER";
+        const QString readMark        = "READ";
+        const QString writeMark       = "WRITE";
+        const QString resetMark       = "RESET";
+        const QString notifyMark      = "NOTIFY";
+        const QString revisionMark    = "REVISION";
+        const QString designableMark  = "DESIGNABLE";
+        const QString scriptableMark  = "SCRIPTABLE";
+        const QString storedMark      = "STORED";
+        const QString userMark        = "USER";
+        const QString finalMark       = "FINAL";
+        const QString constantMark    = "CONSTANT";
     }
 
     /**
@@ -281,6 +308,17 @@ namespace gui {
     }
 
     /**
+     * @brief SignatureMaker::typeSignatureById
+     * @param id
+     * @return
+     */
+    QString SignatureMaker::typeSignatureById(const QString &id) const
+    {
+        const auto &type = findType(id);
+        return type ? makeTypeOrExtType(type) : "";
+    }
+
+    /**
      * @brief SignatureMaker::makeField
      * @param field
      * @return
@@ -322,10 +360,10 @@ namespace gui {
         QString result;
 
         // Add return type id
-        auto returnType = findType(method->returnTypeId());
-        if (!returnType)
+        auto returnType = typeSignatureById(method->returnTypeId());
+        if (!returnType.isEmpty())
             return "";
-        result.append(makeTypeOrExtType(returnType));
+        result.append(returnType);
 
         // Add name
         if (method->name().isEmpty())
@@ -367,12 +405,75 @@ namespace gui {
 
     /**
      * @brief SignatureMaker::makeProperty
+     *
+     *        Q_PROPERTY(type name
+     *                   (READ getFunction [WRITE setFunction] |
+     *                   MEMBER memberName [(READ getFunction | WRITE setFunction)])
+     *                   [RESET resetFunction]
+     *                   [NOTIFY notifySignal]
+     *                   [REVISION int]
+     *                   [DESIGNABLE bool]
+     *                   [SCRIPTABLE bool]
+     *                   [STORED bool]
+     *                   [USER bool]
+     *                   [CONSTANT]
+     *                   [FINAL])
+     *
      * @param property
      * @return
      */
     QString SignatureMaker::makeProperty(const entity::SharedProperty &property) const
     {
+        if (!property)
+            return "";
 
+        // Add type
+        QString result = typeSignatureById(property->typeId());
+        if (result.isEmpty())
+            return "";
+
+        // Add name
+        const auto &name = property->name();
+        if (name.isEmpty() || name == DEFAULT_NAME)
+            return "";
+        result.append(QChar::Space).append(name);
+
+        // Add member
+        if (const auto &member = property->member())
+            result.append(QChar::Space + memberMark + QChar::Space + member->prefix + member->name + member->suffix);
+
+        add_common_member(getter, readMark);
+        add_common_member(setter, writeMark);
+        add_common_member(resetter, resetMark);
+        add_common_member(notifier, notifyMark);
+
+        // Add revision
+        if (!property->isRevisionDefault())
+            result.append(QChar::Space +  revisionMark + QChar::Space + property->revision());
+
+        // Add designible
+        add_ds(designable, Designable);
+
+        // Add scriptable
+        add_ds(scriptable, Scriptable);
+
+        // Add stored
+        if (!property->isStoredDefault())
+            result.append(QChar::Space + storedMark + QChar::Space + (property->isStored() ? "true" : "false"));
+
+        // Add user
+        if (!property->isUserDefault())
+            result.append(QChar::Space + userMark + QChar::Space + (property->isUser() ? "true" : "false"));
+
+        // Add const
+        if (property->isConstant())
+            result.append(QChar::Space + constantMark);
+
+        // Add final
+        if (property->isFinal())
+            result.append(QChar::Space + finalMark);
+
+        return result;
     }
 
     /**

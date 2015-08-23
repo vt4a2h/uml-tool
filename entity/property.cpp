@@ -210,6 +210,10 @@ namespace entity {
     {
         m_MemberName = std::make_shared<Member>();
         m_MemberName->name = customName.isEmpty() ? m_Name : customName;
+        m_MemberName->prefix = "m_";
+
+        m_Member = true;
+
         return *this;
     }
 
