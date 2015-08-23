@@ -38,19 +38,6 @@
 #include "constants.h"
 #include "enums.h"
 
-#define add_common_member(name_, mark) \
-    if (const auto &name_ = property->name_()) \
-        result.append(QChar::Space + mark + QChar::Space + name_->name());
-
-#define add_ds(name_, Name_)\
-    if (!property->is##Name_##Default()) { \
-        result.append(QChar::Space + name_##Mark + QChar::Space); \
-        if (const auto &name_##Getter = property->name_##Getter()) \
-            result.append(name_##Getter->name()); \
-        else \
-            result.append(property->is##Name_() ? "true" : "false"); \
-    }
-
 namespace gui {
 
     namespace {
@@ -69,6 +56,27 @@ namespace gui {
         const QString userMark        = "USER";
         const QString finalMark       = "FINAL";
         const QString constantMark    = "CONSTANT";
+
+        template<class Check, class CheckDefault, class Get>
+        void addAdditionalMember(const entity::SharedProperty &p, Check check, CheckDefault checkDefault, Get get,
+                                 const QString &mark, QString &out)
+        {
+            if ((p.get()->*checkDefault)()) {
+                out.append(QChar::Space + mark + QChar::Space);
+                if (const auto &func = (p.get()->*get)())
+                    out.append(func->name());
+                else
+                    out.append((p.get()->*check)() ? "true" : "false");
+            }
+        }
+
+        template<class F>
+        void addCommonMember(const entity::SharedProperty &p, F f, const QString &mark, QString &out)
+        {
+            Q_ASSERT(p);
+            if (const auto &name = (p.get()->*f)())
+                out.append(QChar::Space + mark + QChar::Space + name->name());
+        }
     }
 
     /**
@@ -442,20 +450,23 @@ namespace gui {
         if (const auto &member = property->member())
             result.append(QChar::Space + memberMark + QChar::Space + member->prefix + member->name + member->suffix);
 
-        add_common_member(getter, readMark);
-        add_common_member(setter, writeMark);
-        add_common_member(resetter, resetMark);
-        add_common_member(notifier, notifyMark);
+        // Add common members
+        addCommonMember(property, &entity::Property::getter,   readMark,   result);
+        addCommonMember(property, &entity::Property::setter,   writeMark,  result);
+        addCommonMember(property, &entity::Property::resetter, resetMark,  result);
+        addCommonMember(property, &entity::Property::notifier, notifyMark, result);
 
         // Add revision
         if (!property->isRevisionDefault())
             result.append(QChar::Space +  revisionMark + QChar::Space + property->revision());
 
         // Add designible
-        add_ds(designable, Designable);
+        addAdditionalMember(property, &entity::Property::isDesignable, &entity::Property::isDesignableDefault,
+                            &entity::Property::designableGetter, designableMark, result);
 
         // Add scriptable
-        add_ds(scriptable, Scriptable);
+        addAdditionalMember(property, &entity::Property::isScriptable, &entity::Property::isScriptableDefault,
+                            &entity::Property::scriptableGetter, scriptableMark, result);
 
         // Add stored
         if (!property->isStoredDefault())
