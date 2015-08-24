@@ -134,3 +134,15 @@ TEST_F(SignatureMaker, MakingMethodSignature)
     expect = "virtual int getInt(int parameter1, int parameter2) const = 0";
     ASSERT_EQ(actual, expect);
 }
+
+TEST_F(SignatureMaker, MakingPropertySignature)
+{
+    auto typeInt = findType(m_GlobalDatabase, "int");
+    ASSERT_TRUE(!!typeInt);
+
+    // Simple property
+    auto property = std::make_shared<entity::Property>("width", typeInt->id());
+    QString actual = m_Maker->signature(property);
+    QString expect = "int width";
+    ASSERT_EQ(actual, expect);
+}

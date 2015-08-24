@@ -759,7 +759,7 @@ namespace entity {
             readOptional<entity::ClassMethod>(src[scriptableGetterMark], m_ScriptableGetter, errorList);
         });
 
-        checkAndSet(src, memberIsMark, errorList, [&](){ m_Member   = src[memberIsMark].toInt(); });
+        checkAndSet(src, memberIsMark, errorList, [&](){ m_Member   = src[memberIsMark].toBool(); });
         checkAndSet(src, revisionMark, errorList, [&](){ m_Revision = src[revisionMark].toInt(); });
 
         checkAndSet(src, designableMark, errorList, [&](){ m_Designable = src[designableMark].toBool(); });

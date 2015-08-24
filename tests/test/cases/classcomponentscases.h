@@ -93,6 +93,12 @@ TEST_F(ClassComponents, Property)
     property->setTypeId("bar");
     ASSERT_EQ(property->typeId(), "bar");
 
+    check_additional(Stored)
+    check_additional(User)
+    check_additional(Constant)
+    check_additional(Final)
+    check_additional(Member)
+
     test_basic_prop(Getter,   getter)
     test_basic_prop(Setter,   setter)
     test_basic_prop(Resetter, resetter)
@@ -104,12 +110,6 @@ TEST_F(ClassComponents, Property)
 
     test_script_des(Scriptable, scriptable)
     test_script_des(Designable, designable)
-
-    check_additional(Stored)
-    check_additional(User)
-    check_additional(Constant)
-    check_additional(Final)
-    check_additional(Member)
 
     ASSERT_EQ(property->hashType(), entity::Property::staticHashType());
     ASSERT_EQ(property->marker(), entity::Property::staticMarker());

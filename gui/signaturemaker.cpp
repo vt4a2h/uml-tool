@@ -30,9 +30,6 @@
 
 #include <models/applicationmodel.h>
 
-#include <translator/projecttranslator.h>
-#include <translator/code.h>
-
 #include <utility/helpfunctions.h>
 
 #include "constants.h"
@@ -61,7 +58,9 @@ namespace gui {
         void addAdditionalMember(const entity::SharedProperty &p, Check check, CheckDefault checkDefault, Get get,
                                  const QString &mark, QString &out)
         {
-            if ((p.get()->*checkDefault)()) {
+            Q_ASSERT(p);
+
+            if (!(p.get()->*checkDefault)()) {
                 out.append(QChar::Space + mark + QChar::Space);
                 if (const auto &func = (p.get()->*get)())
                     out.append(func->name());
@@ -101,9 +100,18 @@ namespace gui {
         , m_Project(project)
         , m_ApplicationModel(model)
     {
-        if (m_Project && m_ApplicationModel)
-            m_Translator = std::make_unique<translator::ProjectTranslator>(m_ApplicationModel->globalDatabase(),
-                                                                           m_Project->database());
+        m_MakersMap[entity::Field::staticHashType()] =
+            [&](const entity::SharedBasicEntity &component) {
+                return makeField(std::static_pointer_cast<entity::Field>(component));
+            };
+        m_MakersMap[entity::ClassMethod::staticHashType()] =
+                [&](const entity::SharedBasicEntity &component) {
+            return makeMethod(std::static_pointer_cast<entity::ClassMethod>(component));
+        };
+        m_MakersMap[entity::Property::staticHashType()] =
+                [&](const entity::SharedBasicEntity &component) {
+            return makeProperty(std::static_pointer_cast<entity::Property>(component));
+        };
     }
 
     /**
@@ -120,18 +128,7 @@ namespace gui {
      */
     QString SignatureMaker::signature(const entity::SharedBasicEntity &component)
     {
-        if (!m_Translator)
-            m_Translator = std::make_unique<translator::ProjectTranslator>(m_ApplicationModel->globalDatabase(),
-                                                                           m_Project->database());
-
-        size_t hash = component->hashType();
-        if (hash == entity::Field::staticHashType())
-            return makeField(std::static_pointer_cast<entity::Field>(component));
-        else if (hash == entity::ClassMethod::staticHashType())
-            return makeMethod(std::static_pointer_cast<entity::ClassMethod>(component));
-        // TODO: handle variable case
-
-        return tr("Wrong component");
+        return m_MakersMap.value(component->hashType(), [](auto){ return tr("Wrong component"); })(component);
     }
 
     /**
@@ -369,7 +366,7 @@ namespace gui {
 
         // Add return type id
         auto returnType = typeSignatureById(method->returnTypeId());
-        if (!returnType.isEmpty())
+        if (returnType.isEmpty())
             return "";
         result.append(returnType);
 

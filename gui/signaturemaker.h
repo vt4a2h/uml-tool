@@ -23,11 +23,11 @@
 #pragma once
 
 #include <QCoreApplication>
+#include <QMap>
 
 #include <models/models_types.hpp>
 #include <entity/entity_types.hpp>
 #include <project/project_types.hpp>
-#include <translator/translator_types.hpp>
 
 namespace gui {
 
@@ -75,7 +75,9 @@ namespace gui {
         entity::SharedScope m_Scope;
         project::SharedProject m_Project;
         models::SharedApplicationModel m_ApplicationModel;
-        translator::UniqueTranslator m_Translator;
+
+        using MakerFunction = std::function<QString(const entity::SharedBasicEntity &)>;
+        QMap<size_t, MakerFunction> m_MakersMap;
     };
 
 } // namespace gui
