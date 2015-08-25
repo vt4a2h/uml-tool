@@ -58,7 +58,7 @@ namespace entity {
 
         SharedField field() const;
 
-        Property &addMember(const QString &customName = "");
+        Property &addMember(const QString &customName = "", const QString &prefix = "");
         void deleteMember();
         SharedMember member() const;
 

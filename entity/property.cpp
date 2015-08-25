@@ -206,11 +206,13 @@ namespace entity {
      * @param customName
      * @return
      */
-    Property &Property::addMember(const QString &customName)
+    Property &Property::addMember(const QString &customName, const QString &prefix)
     {
         m_MemberName = std::make_shared<Member>();
         m_MemberName->name = customName.isEmpty() ? m_Name : customName;
-        m_MemberName->prefix = "m_";
+
+        if (customName.isEmpty())
+            m_MemberName->prefix = prefix.isEmpty() ? "m_" : prefix;
 
         m_Member = true;
 

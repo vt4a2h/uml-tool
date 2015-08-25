@@ -60,13 +60,10 @@ namespace gui {
         {
             Q_ASSERT(p);
 
-            if (!(p.get()->*checkDefault)()) {
-                out.append(QChar::Space + mark + QChar::Space);
-                if (const auto &func = (p.get()->*get)())
-                    out.append(func->name());
-                else
-                    out.append((p.get()->*check)() ? "true" : "false");
-            }
+            if (const auto &func = (p.get()->*get)())
+                out.append(QChar::Space + mark + QChar::Space + func->name());
+            else if (!(p.get()->*checkDefault)())
+                out.append(QChar::Space + mark + QChar::Space + ((p.get()->*check)() ? "true" : "false"));
         }
 
         template<class F>
@@ -455,7 +452,7 @@ namespace gui {
 
         // Add revision
         if (!property->isRevisionDefault())
-            result.append(QChar::Space +  revisionMark + QChar::Space + property->revision());
+            result.append(QChar::Space +  revisionMark + QChar::Space + QString::number(property->revision()));
 
         // Add designible
         addAdditionalMember(property, &entity::Property::isDesignable, &entity::Property::isDesignableDefault,

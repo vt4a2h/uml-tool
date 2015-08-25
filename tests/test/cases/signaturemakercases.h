@@ -145,4 +145,49 @@ TEST_F(SignatureMaker, MakingPropertySignature)
     QString actual = m_Maker->signature(property);
     QString expect = "int width";
     ASSERT_EQ(actual, expect);
+
+    property->addMember("m_width");
+    actual = m_Maker->signature(property);
+    expect = "int width MEMBER m_width";
+    ASSERT_EQ(actual, expect);
+
+    property->addGetter("getWidth").addSetter("setWidth");
+    actual = m_Maker->signature(property);
+    expect = "int width MEMBER m_width READ getWidth WRITE setWidth";
+    ASSERT_EQ(actual, expect);
+
+    property->addResetter("clearWidth").addNotifier("widthChanged");
+    actual = m_Maker->signature(property);
+    expect = "int width MEMBER m_width READ getWidth WRITE setWidth"
+             " RESET clearWidth NOTIFY widthChanged";
+    ASSERT_EQ(actual, expect);
+
+    property->setRevision(10);
+    actual = m_Maker->signature(property);
+    expect = "int width MEMBER m_width READ getWidth WRITE setWidth"
+             " RESET clearWidth NOTIFY widthChanged REVISION 10";
+    ASSERT_EQ(actual, expect);
+
+    property->setDesignable(false).setScriptable(false).setStored(false).setUser(true);
+    actual = m_Maker->signature(property);
+    expect = "int width MEMBER m_width READ getWidth WRITE setWidth"
+             " RESET clearWidth NOTIFY widthChanged REVISION 10"
+             " DESIGNABLE false SCRIPTABLE false STORED false USER true";
+    ASSERT_EQ(actual, expect);
+
+    property->addDesignableGetter("isDesignable").addScriptableGetter("isScriptable");
+    actual = m_Maker->signature(property);
+    expect = "int width MEMBER m_width READ getWidth WRITE setWidth"
+             " RESET clearWidth NOTIFY widthChanged REVISION 10"
+             " DESIGNABLE isDesignable SCRIPTABLE isScriptable"
+             " STORED false USER true";
+    ASSERT_EQ(actual, expect);
+
+    property->setFinal(true).setConstant(true);
+    actual = m_Maker->signature(property);
+    expect = "int width MEMBER m_width READ getWidth WRITE setWidth"
+             " RESET clearWidth NOTIFY widthChanged REVISION 10"
+             " DESIGNABLE isDesignable SCRIPTABLE isScriptable"
+             " STORED false USER true CONSTANT FINAL";
+    ASSERT_EQ(actual, expect);
 }
