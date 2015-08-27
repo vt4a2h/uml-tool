@@ -98,42 +98,45 @@ namespace gui {
             {models::DisplayPart::Properties, int(PropGroupNames::GroupsCount)},
         };
 
-        // Capture index, keywords which MUST NOT contains in captured text {
-        using FieldKeywords = std::pair<FieldGroupNames, Keywords>;
-        using FieldsRules = QVector<FieldKeywords>;
-        FieldsRules fieldForbiddenWords = {
-            {FieldGroupNames::Namespaces, reservedKeywords|types},
-            {FieldGroupNames::Typename, reservedKeywords},
-            {FieldGroupNames::Name, reservedKeywords|types},
-            {FieldGroupNames::TemplateArgs, reservedKeywords}
-        };
+        // Capture index, keywords which MUST NOT contains in captured text
+        using NumberKeywords = std::pair<int, Keywords>;
+        using Forbidden = QVector<NumberKeywords>;
 
-        using PropertyKeywords = std::pair<PropGroupNames, Keywords>;
-        using PropsRules = QVector<PropertyKeywords>;
-        PropsRules propForbiddenWords = {
-            {PropGroupNames::Type, reservedKeywords},
-            {PropGroupNames::Name, reservedKeywords|types},
-            {PropGroupNames::Member, reservedKeywords|types},
-            {PropGroupNames::Getter, reservedKeywords|types},
-            {PropGroupNames::Setter, reservedKeywords|types},
-            {PropGroupNames::Resetter, reservedKeywords|types},
-            {PropGroupNames::Notifier, reservedKeywords|types},
-            {PropGroupNames::Designable, reservedKeywords|types},
-            {PropGroupNames::Scriptable, reservedKeywords|types}
+        QMap<models::DisplayPart, Forbidden> forbiddenMap = {
+            {models::DisplayPart::Fields,
+            {
+                {int(FieldGroupNames::Namespaces), reservedKeywords|types},
+                {int(FieldGroupNames::Typename), reservedKeywords},
+                {int(FieldGroupNames::Name), reservedKeywords|types},
+                {int(FieldGroupNames::TemplateArgs), reservedKeywords}
+            }
+            },
+            {models::DisplayPart::Properties,
+            {
+                {int(PropGroupNames::Type), reservedKeywords},
+                {int(PropGroupNames::Name), reservedKeywords|types},
+                {int(PropGroupNames::Member), reservedKeywords|types},
+                {int(PropGroupNames::Getter), reservedKeywords|types},
+                {int(PropGroupNames::Setter), reservedKeywords|types},
+                {int(PropGroupNames::Resetter), reservedKeywords|types},
+                {int(PropGroupNames::Notifier), reservedKeywords|types},
+                {int(PropGroupNames::Designable), reservedKeywords|types},
+                {int(PropGroupNames::Scriptable), reservedKeywords|types}
+            }
+            }
         };
-        // --- }
 
 
         using MakerFunction = std::function<OptionalEntity()>;
         QMap<models::DisplayPart, MakerFunction> componentMakerMap;
 
-        template <class Vector>
         bool notContainsInvalidKeyword(const QRegularExpressionMatch &match, models::DisplayPart display,
-                                       QVector<QString> &captured, const Vector &forbidden)
+                                       QVector<QString> &captured)
         {
             const int groupsCount = int(componentsGroupCount[display]);
             captured.resize(groupsCount);
 
+            const Forbidden &forbidden = forbiddenMap[display];
             for (int groupIndex = 1; groupIndex < groupsCount; ++groupIndex)
             {
                 QString cap = match.captured(groupIndex).trimmed();
@@ -194,7 +197,7 @@ namespace gui {
             m_LastCaptured.clear();
             m_LastSignature.clear();
 
-            const bool result = notContainsInvalidKeyword(match, display, m_LastCaptured, fieldForbiddenWords);
+            const bool result = notContainsInvalidKeyword(match, display, m_LastCaptured);
             if (result) {
                 m_LastSignature = signature;
                 return result;
