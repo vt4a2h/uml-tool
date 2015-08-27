@@ -57,6 +57,8 @@ namespace gui {
                                             "volatile", "while", "xor", "xor_eq" };
 
         enum class FieldGroupNames { LhsKeywords = 1, ConstStatus, Namespaces, Typename, TemplateArgs, PLC, Name, GroupsCount };
+        enum class PropGroupNames { Type = 1, Name, Member, Getter, Setter, Resetter, Notifier, Revision, Designable,
+                                    Scriptable, Stored, User, Constant, Final, GroupsCount };
 
         // TODO: Just simple patterns now, must be improved in future (prefer to use simple parser)
         // TODO: 6 section may contains wrong combination of "*&const" it must be fixed.
@@ -69,44 +71,76 @@ namespace gui {
                                      "\\s+([\\*\\s\\&const]*)"                                          // 6 -- &*const
                                      "\\s*(\\w+)$";                                                     // 7 -- field name
 
+        const QString propertyPattern = "^\\s*(\\w+)\\s+"                     // 1 -- type
+                                        "(\\w+)"                              // 2 -- name
+                                        "(?:\\s+(?:MEMBER)\\s+(\\w+))?"       // 3 -- member
+                                        "(?:\\s+(?:READ)\\s+(\\w+))?"         // 4 -- getter
+                                        "(?:\\s+(?:WRITE)\\s+(\\w+))?"        // 5 -- setter
+                                        "(?:\\s+(?:RESET)\\s+(\\w+))?"        // 6 -- resetter
+                                        "(?:\\s+(?:NOTIFY)\\s+(\\w+))?"       // 7 -- notifier
+                                        "(?:\\s+(?:REVISION)\\s+(\\d+))?"     // 8 -- revision
+                                        "(?:\\s+(?:DESIGNABLE)\\s+(\\w+))?"   // 9 -- designable
+                                        "(?:\\s+(?:SCRIPTABLE)\\s+(\\w+))?"   // 10 -- scriptable
+                                        "(?:\\s+(?:STORED)\\s+(true|false))?" // 11 -- stored
+                                        "(?:\\s+(?:USER)\\s+(true|false))?"   // 12 -- user
+                                        "(?:\\s+(CONSTANT))?"                 // 13 -- constant
+                                        "(?:\\s+(FINAL))?";                   // 14 -- final
+
         const QMap<models::DisplayPart, QString> componentPatternMap =
         {
             {models::DisplayPart::Fields, fieldPattern},
+            {models::DisplayPart::Properties, propertyPattern},
         };
 
         const QMap<models::DisplayPart, int> componentsGroupCount =
         {
             {models::DisplayPart::Fields, int(FieldGroupNames::GroupsCount)},
+            {models::DisplayPart::Properties, int(PropGroupNames::GroupsCount)},
         };
 
-        // Capture index, keywords which MUST NOT contains in captured text
-        using CapIndexKeywords = std::pair<FieldGroupNames, Keywords>;
-
-        const QMap<models::DisplayPart, QVector<CapIndexKeywords>> componentIndexesMap =
-        {
-            {models::DisplayPart::Fields, {{FieldGroupNames::Namespaces, reservedKeywords|types},
-                                           {FieldGroupNames::Typename, reservedKeywords},
-                                           {FieldGroupNames::Name, types},
-                                           {FieldGroupNames::TemplateArgs, reservedKeywords}}},
+        // Capture index, keywords which MUST NOT contains in captured text {
+        using FieldKeywords = std::pair<FieldGroupNames, Keywords>;
+        using FieldsRules = QVector<FieldKeywords>;
+        FieldsRules fieldForbiddenWords = {
+            {FieldGroupNames::Namespaces, reservedKeywords|types},
+            {FieldGroupNames::Typename, reservedKeywords},
+            {FieldGroupNames::Name, reservedKeywords|types},
+            {FieldGroupNames::TemplateArgs, reservedKeywords}
         };
+
+        using PropertyKeywords = std::pair<PropGroupNames, Keywords>;
+        using PropsRules = QVector<PropertyKeywords>;
+        PropsRules propForbiddenWords = {
+            {PropGroupNames::Type, reservedKeywords},
+            {PropGroupNames::Name, reservedKeywords|types},
+            {PropGroupNames::Member, reservedKeywords|types},
+            {PropGroupNames::Getter, reservedKeywords|types},
+            {PropGroupNames::Setter, reservedKeywords|types},
+            {PropGroupNames::Resetter, reservedKeywords|types},
+            {PropGroupNames::Notifier, reservedKeywords|types},
+            {PropGroupNames::Designable, reservedKeywords|types},
+            {PropGroupNames::Scriptable, reservedKeywords|types}
+        };
+        // --- }
+
 
         using MakerFunction = std::function<OptionalEntity()>;
         QMap<models::DisplayPart, MakerFunction> componentMakerMap;
 
+        template <class Vector>
         bool notContainsInvalidKeyword(const QRegularExpressionMatch &match, models::DisplayPart display,
-                                       QVector<QString> &captured)
+                                       QVector<QString> &captured, const Vector &forbidden)
         {
             const int groupsCount = int(componentsGroupCount[display]);
             captured.resize(groupsCount);
 
-            const QVector<CapIndexKeywords> &rules = componentIndexesMap[display];
             for (int groupIndex = 1; groupIndex < groupsCount; ++groupIndex)
             {
                 QString cap = match.captured(groupIndex).trimmed();
                 captured[groupIndex] = cap;
 
-                auto it = utility::find_if(rules, [&](const CapIndexKeywords &c){ return int(c.first) == groupIndex; });
-                if (it != cend(rules)) {
+                auto it = utility::find_if(forbidden, [&](const auto &c){ return int(c.first) == groupIndex; });
+                if (it != cend(forbidden)) {
                     const QStringList &tmpList = cap.remove(QChar::Space).split(QRegExp("::|,"), QString::SkipEmptyParts);
                     if (!(tmpList.toSet() & it->second).isEmpty()) {
                         captured.clear();
@@ -160,7 +194,7 @@ namespace gui {
             m_LastCaptured.clear();
             m_LastSignature.clear();
 
-            const bool result = notContainsInvalidKeyword(match, display, m_LastCaptured);
+            const bool result = notContainsInvalidKeyword(match, display, m_LastCaptured, fieldForbiddenWords);
             if (result) {
                 m_LastSignature = signature;
                 return result;
