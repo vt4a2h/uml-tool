@@ -31,7 +31,7 @@
 
 namespace gui {
 
-    //
+    /// The optional entity
     struct OptionalEntity
     {
         QString errorMessage;

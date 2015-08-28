@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "entity_types.hpp"
+#include <entity/entity_types.hpp>
 
 namespace entity {
 

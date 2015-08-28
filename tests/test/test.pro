@@ -56,7 +56,7 @@ HEADERS += ../../enums.h \
 
 SOURCES += main.cpp \
            ../../entity/type.cpp \
-           ../../entity/icomponents.cpp \
+           ../../entity/components/icomponents.cpp \
            ../../entity/basicentity.cpp \
            ../../entity/class.cpp \
            ../../entity/enum.cpp \

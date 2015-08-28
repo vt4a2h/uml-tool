@@ -25,7 +25,7 @@
 #include <QString>
 
 #include "basicentity.h"
-#include "icomponents.h"
+#include <entity/components/icomponents.h>
 
 class QJsonObject;
 
