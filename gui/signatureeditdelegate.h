@@ -25,8 +25,11 @@
 #include <QStyledItemDelegate>
 
 #include <models/componentsmodel.h>
+#include <entity/components/components_types.h>
 
 #include "gui_types.hpp"
+
+namespace components { class ComponentsMaker; }
 
 namespace gui {
 
@@ -38,8 +41,8 @@ namespace gui {
         SignatureEditDelegate(QObject *parent = nullptr);
         ~SignatureEditDelegate();
 
-        const ComponentsMaker &maker() const;
-        ComponentsMaker &maker();
+        const components::ComponentsMaker &maker() const;
+        components::ComponentsMaker &maker();
 
     public: // QAbstractItemDelegate implementation
         QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
@@ -50,7 +53,7 @@ namespace gui {
         void onTextEdited();
 
     private:
-        UniqueComponentsMaker m_ComponentsMaker;
+        components::UniqueComponentsMaker m_ComponentsMaker;
         mutable models::DisplayPart m_DisplayPart;
     };
 

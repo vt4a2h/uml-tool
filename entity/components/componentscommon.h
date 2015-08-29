@@ -22,21 +22,40 @@
 *****************************************************************************/
 #pragma once
 
-#include "components_types.h"
-
-namespace models { enum class DisplayPart : int; }
-
+/// Class components (methods, fields, properties)
 namespace components {
 
-    //// The ComponentSignatureParser class
-    class ComponentSignatureParser
+    /// Field groups names actual for parsing
+    enum class FieldGroupNames
     {
-    public:
-        bool parse(const QString &signature, models::DisplayPart display);
-        Tokens tokens() const;
+        LhsKeywords = 1,
+        ConstStatus,
+        Namespaces,
+        Typename,
+        TemplateArgs,
+        PLC,
+        Name,
+        GroupsCount
+    };
 
-    private:
-        Tokens m_Tokens;
+    /// Property groups names actual for parsing
+    enum class PropGroupNames
+    {
+        Type = 1,
+        Name,
+        Member,
+        Getter,
+        Setter,
+        Resetter,
+        Notifier,
+        Revision,
+        Designable,
+        Scriptable,
+        Stored,
+        User,
+        Constant,
+        Final,
+        GroupsCount
     };
 
 } // namespace components

@@ -35,8 +35,9 @@
 #include <utility/helpfunctions.h>
 
 #include "enums.h"
+#include "componentscommon.h"
 
-namespace gui {
+namespace components {
 
     namespace {
         using Keywords = QSet<QString>;
@@ -55,10 +56,6 @@ namespace gui {
                                             "switch", "template", "this", "thread_local", "throw", "true", "try",
                                             "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual",
                                             "volatile", "while", "xor", "xor_eq" };
-
-        enum class FieldGroupNames { LhsKeywords = 1, ConstStatus, Namespaces, Typename, TemplateArgs, PLC, Name, GroupsCount };
-        enum class PropGroupNames { Type = 1, Name, Member, Getter, Setter, Resetter, Notifier, Revision, Designable,
-                                    Scriptable, Stored, User, Constant, Final, GroupsCount };
 
         // TODO: Just simple patterns now, must be improved in future (prefer to use simple parser)
         // TODO: 6 section may contains wrong combination of "*&const" it must be fixed.
@@ -388,5 +385,5 @@ namespace gui {
         return {"", newField};
     }
 
-} // namespace gui
+} // namespace components
 

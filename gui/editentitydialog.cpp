@@ -33,6 +33,7 @@
 #include <entity/templateclass.h>
 #include <entity/extendedtype.h>
 #include <entity/classmethod.h> // TODO: remove
+#include <entity/components/componentsmaker.h>
 
 #include <models/applicationmodel.h>
 #include <models/componentsmodel.h>
@@ -48,10 +49,10 @@
 #include <commands/addcomponentscommands.h>
 #include <commands/removecomponentscommands.h>
 
+
 #include "componentseditdelegate.h"
 #include "signatureeditdelegate.h"
 #include "signaturemaker.h"
-#include "componentsmaker.h"
 #include "editmethoddialog.h"
 
 #include "enums.h"
@@ -250,7 +251,7 @@ namespace gui {
         m_Scope = m_Project->database()->getScope(type->scopeId());
         m_Type = type;
 
-        ComponentsMaker &maker = m_SignatureEditDelegate->maker();
+        components::ComponentsMaker &maker = m_SignatureEditDelegate->maker();
         maker.setModel(m_ApplicationModel);
         maker.setScope(m_Scope);
         maker.setEntity(m_Type);

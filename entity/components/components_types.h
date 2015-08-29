@@ -22,21 +22,19 @@
 *****************************************************************************/
 #pragma once
 
-#include "components_types.h"
+#include <memory>
 
-namespace models { enum class DisplayPart : int; }
+#include <QVector>
 
 namespace components {
 
-    //// The ComponentSignatureParser class
-    class ComponentSignatureParser
-    {
-    public:
-        bool parse(const QString &signature, models::DisplayPart display);
-        Tokens tokens() const;
+    using Tokens = QVector<QString>;
 
-    private:
-        Tokens m_Tokens;
-    };
+    class ComponentSignatureParser;
+    using SharedSignatureParser = std::shared_ptr<ComponentSignatureParser>;
 
+    class ComponentsMaker;
+    using UniqueComponentsMaker = std::unique_ptr<ComponentsMaker>;
 } // namespace components
+
+

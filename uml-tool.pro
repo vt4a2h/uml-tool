@@ -30,6 +30,7 @@ SOURCES += \
     entity/union.cpp \
     entity/components/componentsignatureparser.cpp \
     entity/components/icomponents.cpp \
+    entity/components/componentsmaker.cpp \
     entity/basicentity.cpp \
     entity/entitiesfactory.cpp \
     entity/property.cpp \
@@ -62,7 +63,6 @@ SOURCES += \
     gui/chooseglobaldatabasedialog.cpp \
     gui/componentseditdelegate.cpp \
     gui/signatureeditdelegate.cpp \
-    gui/componentsmaker.cpp \
     models/basictreeitem.cpp \
     models/projecttreemodel.cpp \
     models/applicationmodel.cpp \
@@ -95,6 +95,7 @@ HEADERS += \
     entity/union.h \
     entity/components/componentsignatureparser.h \
     entity/components/icomponents.h \
+    entity/components/componentsmaker.h \
     entity/basicentity.h \
     entity/entitiesfactory.h \
     entity/entity_types.hpp \
@@ -132,7 +133,6 @@ HEADERS += \
     gui/chooseglobaldatabasedialog.h \
     gui/componentseditdelegate.h \
     gui/signatureeditdelegate.h \
-    gui/componentsmaker.h \
     models/basictreeitem.h \
     models/projecttreemodel.h \
     models/applicationmodel.h \
@@ -150,7 +150,9 @@ HEADERS += \
     project/project_types.hpp \
     application/settings.h \
     constants.h \
-    helpers/entityhelpres.h
+    helpers/entityhelpres.h \
+    entity/components/componentscommon.h \
+    entity/components/components_types.h
 
 FORMS += \
     gui/mainwindow.ui \

@@ -27,7 +27,7 @@
 
 #include <models/componentsmodel.h>
 
-#include "componentsmaker.h"
+#include <entity/components/componentsmaker.h>
 
 namespace gui {
 
@@ -42,7 +42,7 @@ namespace gui {
      */
     SignatureEditDelegate::SignatureEditDelegate(QObject *parent)
         : QStyledItemDelegate(parent)
-        , m_ComponentsMaker(std::make_unique<ComponentsMaker>())
+        , m_ComponentsMaker(std::make_unique<components::ComponentsMaker>())
         , m_DisplayPart(models::DisplayPart::Invalid)
     {}
 
@@ -56,7 +56,7 @@ namespace gui {
      * @brief SignatureEditDelegate::maker
      * @return
      */
-    const ComponentsMaker &SignatureEditDelegate::maker() const
+    const components::ComponentsMaker &SignatureEditDelegate::maker() const
     {
         return *m_ComponentsMaker.get();
     }
@@ -65,7 +65,7 @@ namespace gui {
      * @brief SignatureEditDelegate::maker
      * @return
      */
-    ComponentsMaker &SignatureEditDelegate::maker()
+    components::ComponentsMaker &SignatureEditDelegate::maker()
     {
         return *m_ComponentsMaker.get();
     }

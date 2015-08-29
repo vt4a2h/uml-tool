@@ -29,6 +29,8 @@
 
 #include <utility/helpfunctions.h>
 
+#include "componentscommon.h"
+
 namespace components {
 
     namespace {
@@ -48,10 +50,6 @@ namespace components {
                                             "switch", "template", "this", "thread_local", "throw", "true", "try",
                                             "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual",
                                             "volatile", "while", "xor", "xor_eq" };
-
-        enum class FieldGroupNames { LhsKeywords = 1, ConstStatus, Namespaces, Typename, TemplateArgs, PLC, Name, GroupsCount };
-        enum class PropGroupNames { Type = 1, Name, Member, Getter, Setter, Resetter, Notifier, Revision, Designable,
-                                    Scriptable, Stored, User, Constant, Final, GroupsCount };
 
         // TODO: Just simple patterns now, must be improved in future (prefer to use simple parser)
         // TODO: 6 section may contains wrong combination of "*&const" it must be fixed.
@@ -120,7 +118,7 @@ namespace components {
         };
 
         bool notContainsInvalidKeyword(const QRegularExpressionMatch &match, models::DisplayPart display,
-                                       ComponentSignatureParser::Tokens &out)
+                                       Tokens &out)
         {
             const int groupsCount = int(componentsGroupCount[display]);
             out.clear();
@@ -160,7 +158,7 @@ namespace components {
         return false;
     }
 
-    ComponentSignatureParser::Tokens ComponentSignatureParser::tokens() const
+    Tokens ComponentSignatureParser::tokens() const
     {
         return m_Tokens;
     }

@@ -29,7 +29,7 @@
 #include <models/models_types.hpp>
 #include <models/componentsmodel.h>
 
-namespace gui {
+namespace components {
 
     /// The optional entity
     struct OptionalEntity
@@ -71,4 +71,4 @@ namespace gui {
         OptionalEntity makeField();
     };
 
-} // namespace gui
+} // namespace components
