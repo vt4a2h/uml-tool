@@ -121,7 +121,6 @@ namespace components {
                                        Tokens &out)
         {
             const int groupsCount = int(componentsGroupCount[display]);
-            out.clear();
             out.resize(groupsCount);
 
             const Forbidden &forbidden = forbiddenMap[display];
@@ -144,8 +143,16 @@ namespace components {
         }
     }
 
+    /**
+     * @brief ComponentSignatureParser::parse
+     * @param signature
+     * @param display
+     * @return
+     */
     bool ComponentSignatureParser::parse(const QString &signature, models::DisplayPart display)
     {
+        m_Tokens.clear();
+
         const auto &pattern = componentPatternMap[display];
         if (pattern.isEmpty())
             return false;
@@ -158,6 +165,10 @@ namespace components {
         return false;
     }
 
+    /**
+     * @brief ComponentSignatureParser::tokens
+     * @return
+     */
     Tokens ComponentSignatureParser::tokens() const
     {
         return m_Tokens;

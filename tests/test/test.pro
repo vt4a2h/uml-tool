@@ -52,7 +52,9 @@ HEADERS += ../../enums.h \
     cases/entitiestestcases.h \
     cases/componentsmakercases.h \
     cases/signaturemakercases.h \
-    cases/classcomponentscases.h
+    cases/classcomponentscases.h \
+    cases/signatureparsercases.h \
+    TestComponentSignatureParser.h
 
 SOURCES += main.cpp \
            ../../entity/type.cpp \
@@ -88,7 +90,8 @@ SOURCES += main.cpp \
            ../../generator/basiccppprojectgenerator.cpp \
            ../../project/project.cpp \
            ../../translator/code.cpp \
-           ../../gui/componentsmaker.cpp \
+           ../../entity/components/componentsmaker.cpp \
+           ../../entity/components/componentsignatureparser.cpp \
            ../../gui/signaturemaker.cpp \
            ../../models/applicationmodel.cpp \
            ../../models/projecttreemodel.cpp \

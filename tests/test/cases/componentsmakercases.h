@@ -31,46 +31,14 @@
 #include "constants.h"
 
 namespace {
-    const QVector<QPair<QString, bool>> fieldData =
-    {
-        {"int ",                                          false},
-        {"int a",                                         true },
-        {"const int",                                     false},
-        {"foo::bar::int a",                               true },
-        {"const foo::bar::int a",                         true },
-        {"constfoo::bar::int a",                          true },
-        {"scons foo::bar::int a",                         false},
-        {"constt foo::bar::int a",                        false},
-        {"static const foo::bar::int a",                  true },
-        {"staticconst foo::bar::int a",                   false},
-        {"static const std::foo::baz::int * const **& a", true },
-        {"int *consta",                                   true },
-        {"std::vector<int> vec",                          true },
-        {"std::vector<int, MyAlloc> vec",                 true },
-        {"std::vector<int,> vec",                         true },
-        {"std::vector<int><int> vec",                     false},
-        {"std::vector< vec",                              false},
-        {"std::vector> vec",                              false},
-        {"std::vector<class, const> vec",                 false},
-        {"std::vector<std::vector> vec",                  true },
-    };
-
     auto to_f(const entity::BasicEntity *e){ return static_cast<const entity::Field*>(e); }
     auto to_et(const entity::Type *e){ return static_cast<const entity::ExtendedType*>(e); }
-}
-
-TEST_F(ComponentsMaker, CheckSignature)
-{
-    // Test for field
-    for (auto &&testData: fieldData)
-        ASSERT_EQ(m_Maker->signatureValid(testData.first, models::DisplayPart::Fields), testData.second)
-            << "Signature: " << testData.first.toStdString().c_str();
 }
 
 TEST_F(ComponentsMaker, MakingField)
 {
     // type and name
-    auto result = m_Maker->makeComponent("int a", models::DisplayPart::Fields);
+    auto result = parseAndMake("int a", models::DisplayPart::Fields);
     ASSERT_TRUE(result.errorMessage.isEmpty())
             << "There are some message: " << result.errorMessage.toStdString().c_str();
 
@@ -83,7 +51,7 @@ TEST_F(ComponentsMaker, MakingField)
     ASSERT_EQ(t->name(), "int");
 
     // const and name
-    result = m_Maker->makeComponent("const int a", models::DisplayPart::Fields);
+    result = parseAndMake("const int a", models::DisplayPart::Fields);
     ASSERT_TRUE(result.errorMessage.isEmpty())
             << "There are some message: " << result.errorMessage.toStdString().c_str();
 
@@ -95,7 +63,7 @@ TEST_F(ComponentsMaker, MakingField)
     ASSERT_TRUE(to_et(t.get())->isConst()) << "Type should be const.";
 
     // const ptr to const
-    result = m_Maker->makeComponent("const int * const a", models::DisplayPart::Fields);
+    result = parseAndMake("const int * const a", models::DisplayPart::Fields);
     ASSERT_TRUE(result.errorMessage.isEmpty())
             << "There are some message: " << result.errorMessage.toStdString().c_str();
     field = to_f(result.resultEntity.get());
@@ -104,7 +72,7 @@ TEST_F(ComponentsMaker, MakingField)
     ASSERT_FALSE(pl.isEmpty()) << "* const should be caught.";
 
     // static
-    result = m_Maker->makeComponent("static int a", models::DisplayPart::Fields);
+    result = parseAndMake("static int a", models::DisplayPart::Fields);
     ASSERT_TRUE(result.errorMessage.isEmpty())
             << "There are some message: " << result.errorMessage.toStdString().c_str();
     field = to_f(result.resultEntity.get());
@@ -114,7 +82,7 @@ TEST_F(ComponentsMaker, MakingField)
     ASSERT_EQ(lst[0], entity::FieldKeyword::FieldStatic) << "Filed should be static.";
 
     // std
-    result = m_Maker->makeComponent("std::unordered_set a", models::DisplayPart::Fields);
+    result = parseAndMake("std::unordered_set a", models::DisplayPart::Fields);
     ASSERT_TRUE(result.errorMessage.isEmpty())
             << "There are some message: " << result.errorMessage.toStdString().c_str();
     field = to_f(result.resultEntity.get());
@@ -124,7 +92,7 @@ TEST_F(ComponentsMaker, MakingField)
     ASSERT_TRUE(!!t) << "std::unordered_set should be placed in global database.";
 
     // with templates parameters
-    result = m_Maker->makeComponent("std::vector<int> v", models::DisplayPart::Fields);
+    result = parseAndMake("std::vector<int> v", models::DisplayPart::Fields);
     ASSERT_TRUE(result.errorMessage.isEmpty()) << "There are some message: " << result.errorMessage.toStdString().c_str();
     field = to_f(result.resultEntity.get());
     auto vecOfInt = m_Project->database()->depthTypeSearch(field->typeId());

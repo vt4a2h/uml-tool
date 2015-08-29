@@ -28,6 +28,7 @@
 #include <models/componentsmodel.h>
 
 #include <entity/components/componentsmaker.h>
+#include <entity/components/componentsignatureparser.h>
 
 namespace gui {
 
@@ -43,6 +44,7 @@ namespace gui {
     SignatureEditDelegate::SignatureEditDelegate(QObject *parent)
         : QStyledItemDelegate(parent)
         , m_ComponentsMaker(std::make_unique<components::ComponentsMaker>())
+        , m_SignatureParser(std::make_unique<components::ComponentSignatureParser>())
         , m_DisplayPart(models::DisplayPart::Invalid)
     {}
 
@@ -116,8 +118,10 @@ namespace gui {
         auto le = static_cast<QLineEdit*>(editor);
         auto currentSignature = model->data(index, models::ComponentsModel::ShortSignature).toString();
         if (currentSignature != le->text()) {
-            auto e = static_cast<QLineEdit*>(editor);
-            auto optionalEntity = m_ComponentsMaker->makeComponent(e->text(), m_DisplayPart);
+            // Parse operation called each onTextEdited()
+            const auto &tokens = m_SignatureParser->tokens();
+            auto optionalEntity = m_ComponentsMaker->makeComponent(tokens, m_DisplayPart);
+
             if (optionalEntity.resultEntity){
                 model->setData(index, QVariant::fromValue(optionalEntity.resultEntity),
                                models::ComponentsModel::UpdateSignature);
@@ -132,7 +136,7 @@ namespace gui {
     void SignatureEditDelegate::onTextEdited()
     {
         auto editor = qobject_cast<QLineEdit*>(sender());
-        if (m_ComponentsMaker->signatureValid(editor->text(), m_DisplayPart))
+        if (m_SignatureParser->parse(editor->text(), m_DisplayPart))
             editor->setStyleSheet(validSignature);
         else
             editor->setStyleSheet(invalidSignature);

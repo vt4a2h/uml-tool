@@ -54,6 +54,7 @@ namespace gui {
 
     private:
         components::UniqueComponentsMaker m_ComponentsMaker;
+        components::UniqueSignatureParser m_SignatureParser;
         mutable models::DisplayPart m_DisplayPart;
     };
 

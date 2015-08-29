@@ -39,119 +39,8 @@
 
 namespace components {
 
-    namespace {
-        using Keywords = QSet<QString>;
-
-        const Keywords types = {"bool", "char16_t", "char32_t", "float", "int", "long", "short", "signed",
-                                "wchar_t", "double", "void" };
-        const Keywords reservedKeywords = { "alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor",
-                                            "break", "case", "catch", "char",  "class",
-                                            "compl", "const", "constexpr", "const_cast", "continue", "decltype",
-                                            "default", "delete", "do", "dynamic_cast", "else", "enum",
-                                            "explicit", "export", "extern", "false", "for", "friend", "goto",
-                                            "if", "inline",  "mutable", "namespace", "new", "noexcept",
-                                            "not", "not_eq", "nullptr", "operator", "or", "or_eq", "private",
-                                            "protected", "public", "register", "reinterpret_cast", "return",
-                                            "sizeof", "static", "static_assert", "static_cast", "struct",
-                                            "switch", "template", "this", "thread_local", "throw", "true", "try",
-                                            "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual",
-                                            "volatile", "while", "xor", "xor_eq" };
-
-        // TODO: Just simple patterns now, must be improved in future (prefer to use simple parser)
-        // TODO: 6 section may contains wrong combination of "*&const" it must be fixed.
-        // TODO: for 5 required recursive parsing to detect nested types with templates
-        const QString fieldPattern = "^((?:volatile|static|mutable)\\s)?"                               // 1 -- lhs keywords
-                                     "(const\\s)?"                                                      // 2 -- const
-                                     "((?:\\w*:{2,})*)"                                                 // 3 -- namespaces
-                                     "(\\w+)"                                                           // 4 -- typename
-                                     "(?:\\s*<\\s*((?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?"   // 5 -- template args
-                                     "\\s+([\\*\\s\\&const]*)"                                          // 6 -- &*const
-                                     "\\s*(\\w+)$";                                                     // 7 -- field name
-
-        const QString propertyPattern = "^\\s*(\\w+)\\s+"                     // 1 -- type
-                                        "(\\w+)"                              // 2 -- name
-                                        "(?:\\s+(?:MEMBER)\\s+(\\w+))?"       // 3 -- member
-                                        "(?:\\s+(?:READ)\\s+(\\w+))?"         // 4 -- getter
-                                        "(?:\\s+(?:WRITE)\\s+(\\w+))?"        // 5 -- setter
-                                        "(?:\\s+(?:RESET)\\s+(\\w+))?"        // 6 -- resetter
-                                        "(?:\\s+(?:NOTIFY)\\s+(\\w+))?"       // 7 -- notifier
-                                        "(?:\\s+(?:REVISION)\\s+(\\d+))?"     // 8 -- revision
-                                        "(?:\\s+(?:DESIGNABLE)\\s+(\\w+))?"   // 9 -- designable
-                                        "(?:\\s+(?:SCRIPTABLE)\\s+(\\w+))?"   // 10 -- scriptable
-                                        "(?:\\s+(?:STORED)\\s+(true|false))?" // 11 -- stored
-                                        "(?:\\s+(?:USER)\\s+(true|false))?"   // 12 -- user
-                                        "(?:\\s+(CONSTANT))?"                 // 13 -- constant
-                                        "(?:\\s+(FINAL))?";                   // 14 -- final
-
-        const QMap<models::DisplayPart, QString> componentPatternMap =
-        {
-            {models::DisplayPart::Fields, fieldPattern},
-            {models::DisplayPart::Properties, propertyPattern},
-        };
-
-        const QMap<models::DisplayPart, int> componentsGroupCount =
-        {
-            {models::DisplayPart::Fields, int(FieldGroupNames::GroupsCount)},
-            {models::DisplayPart::Properties, int(PropGroupNames::GroupsCount)},
-        };
-
-        // Capture index, keywords which MUST NOT contains in captured text
-        using NumberKeywords = std::pair<int, Keywords>;
-        using Forbidden = QVector<NumberKeywords>;
-
-        QMap<models::DisplayPart, Forbidden> forbiddenMap = {
-            {models::DisplayPart::Fields,
-            {
-                {int(FieldGroupNames::Namespaces), reservedKeywords|types},
-                {int(FieldGroupNames::Typename), reservedKeywords},
-                {int(FieldGroupNames::Name), reservedKeywords|types},
-                {int(FieldGroupNames::TemplateArgs), reservedKeywords}
-            }
-            },
-            {models::DisplayPart::Properties,
-            {
-                {int(PropGroupNames::Type), reservedKeywords},
-                {int(PropGroupNames::Name), reservedKeywords|types},
-                {int(PropGroupNames::Member), reservedKeywords|types},
-                {int(PropGroupNames::Getter), reservedKeywords|types},
-                {int(PropGroupNames::Setter), reservedKeywords|types},
-                {int(PropGroupNames::Resetter), reservedKeywords|types},
-                {int(PropGroupNames::Notifier), reservedKeywords|types},
-                {int(PropGroupNames::Designable), reservedKeywords|types},
-                {int(PropGroupNames::Scriptable), reservedKeywords|types}
-            }
-            }
-        };
-
-
-        using MakerFunction = std::function<OptionalEntity()>;
-        QMap<models::DisplayPart, MakerFunction> componentMakerMap;
-
-        bool notContainsInvalidKeyword(const QRegularExpressionMatch &match, models::DisplayPart display,
-                                       QVector<QString> &captured)
-        {
-            const int groupsCount = int(componentsGroupCount[display]);
-            captured.resize(groupsCount);
-
-            const Forbidden &forbidden = forbiddenMap[display];
-            for (int groupIndex = 1; groupIndex < groupsCount; ++groupIndex)
-            {
-                QString cap = match.captured(groupIndex).trimmed();
-                captured[groupIndex] = cap;
-
-                auto it = utility::find_if(forbidden, [&](const auto &c){ return int(c.first) == groupIndex; });
-                if (it != cend(forbidden)) {
-                    const QStringList &tmpList = cap.remove(QChar::Space).split(QRegExp("::|,"), QString::SkipEmptyParts);
-                    if (!(tmpList.toSet() & it->second).isEmpty()) {
-                        captured.clear();
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-    }
+    using MakerFunction = std::function<OptionalEntity(const components::Tokens &)>;
+    QMap<models::DisplayPart, MakerFunction> componentMakerMap;
 
     /**
      * @brief ComponentsMaker::ComponentsMaker
@@ -172,36 +61,8 @@ namespace components {
         : m_Model(model)
         , m_Entity(entity)
         , m_Scope(scope)
-        , m_LastSignature("")
     {
-        componentMakerMap[models::DisplayPart::Fields] = [&]{ return makeField(); };
-    }
-
-    /**
-     * @brief ComponentsMaker::signatureValid
-     * @param signature
-     * @return
-     */
-    bool ComponentsMaker::signatureValid(const QString &signature, models::DisplayPart display)
-    {
-        const QString &pattern = componentPatternMap[display];
-        if (pattern.isEmpty())
-            return false;
-
-        const QRegularExpression re(pattern);
-        const auto match =  re.match(signature.trimmed());
-        if (match.hasMatch()) {
-            m_LastCaptured.clear();
-            m_LastSignature.clear();
-
-            const bool result = notContainsInvalidKeyword(match, display, m_LastCaptured);
-            if (result) {
-                m_LastSignature = signature;
-                return result;
-            }
-        }
-
-        return false;
+        componentMakerMap[models::DisplayPart::Fields] = [&](auto tokens){ return this->makeField(tokens); };
     }
 
     /**
@@ -209,12 +70,10 @@ namespace components {
      * @param signature
      * @return
      */
-    OptionalEntity ComponentsMaker::makeComponent(const QString &signature, models::DisplayPart display)
+    OptionalEntity ComponentsMaker::makeComponent(const components::Tokens &tokens, models::DisplayPart display)
     {
-        if ((signature.isEmpty() && !m_LastSignature.isEmpty() && !m_LastCaptured.isEmpty()) ||
-            (signature == m_LastSignature && !m_LastCaptured.isEmpty()) ||
-            signatureValid(signature, display))
-            return componentMakerMap[display]();
+        if (!tokens.isEmpty())
+            return componentMakerMap[display](tokens);
 
         return {tr("Wrong signature"), entity::SharedBasicEntity()};
     }
@@ -277,29 +136,31 @@ namespace components {
      * @brief ComponentsMaker::makeField
      * @return
      */
-    OptionalEntity ComponentsMaker::makeField()
+    OptionalEntity ComponentsMaker::makeField(const Tokens &tokens)
     {
-        Q_ASSERT(!m_LastCaptured.isEmpty() && !m_LastCaptured[int(FieldGroupNames::Typename)].isEmpty() &&
-                 !m_LastCaptured[int(FieldGroupNames::Name)].isEmpty());
+        Q_ASSERT(!tokens.isEmpty() && !tokens[int(FieldGroupNames::Typename)].isEmpty() &&
+                 !tokens[int(FieldGroupNames::Name)].isEmpty());
 
         Q_ASSERT(m_Model);
         Q_ASSERT(m_Model->globalDatabase());
         Q_ASSERT(m_Model->currentProject());
         Q_ASSERT(m_Model->currentProject()->database());
 
+        auto tmpTokens = tokens;
+
         auto newField = std::make_shared<entity::Field>();
-        newField->setName(m_LastCaptured[int(FieldGroupNames::Name)]);
-        if (!m_LastCaptured[int(FieldGroupNames::LhsKeywords)].isEmpty()) {
-            auto keyword = utility::fieldKeywordFromString(m_LastCaptured[int(FieldGroupNames::LhsKeywords)]);
+        newField->setName(tmpTokens[int(FieldGroupNames::Name)]);
+        if (!tmpTokens[int(FieldGroupNames::LhsKeywords)].isEmpty()) {
+            auto keyword = utility::fieldKeywordFromString(tmpTokens[int(FieldGroupNames::LhsKeywords)]);
             Q_ASSERT(keyword != entity::FieldKeyword::Invalid);
             newField->addKeyword(keyword);
         }
 
-        const QString &typeName = m_LastCaptured[int(FieldGroupNames::Typename)];
+        const QString &typeName = tmpTokens[int(FieldGroupNames::Typename)];
         entity::SharedType type;
 
-        if (!m_LastCaptured[int(FieldGroupNames::Namespaces)].isEmpty()) {
-            auto names = m_LastCaptured[int(FieldGroupNames::Namespaces)].split("::", QString::SkipEmptyParts);
+        if (!tmpTokens[int(FieldGroupNames::Namespaces)].isEmpty()) {
+            auto names = tmpTokens[int(FieldGroupNames::Namespaces)].split("::", QString::SkipEmptyParts);
             auto scope = m_Model->globalDatabase()->chainScopeSearch(names);
             if (!scope)
                 scope = m_Model->currentProject()->database()->chainScopeSearch(names);
@@ -324,10 +185,10 @@ namespace components {
         entity::SharedExtendedType extendedType = std::make_shared<entity::ExtendedType>();
         extendedType->setTypeId(type->id());
         extendedType->setScopeId(m_Scope->id());
-        extendedType->setConstStatus(!m_LastCaptured[int(FieldGroupNames::ConstStatus)].isEmpty());
+        extendedType->setConstStatus(!tmpTokens[int(FieldGroupNames::ConstStatus)].isEmpty());
 
-        if (!m_LastCaptured[int(FieldGroupNames::PLC)].isEmpty()) {
-            QString plc = m_LastCaptured[int(FieldGroupNames::PLC)];
+        if (!tmpTokens[int(FieldGroupNames::PLC)].isEmpty()) {
+            QString plc = tmpTokens[int(FieldGroupNames::PLC)];
             plc.remove(QChar::Space);
 
             if (plc.startsWith("const")) {
@@ -351,8 +212,8 @@ namespace components {
             }
         }
 
-        if (!m_LastCaptured[int(FieldGroupNames::TemplateArgs)].isEmpty()) {
-            QStringList arguments = m_LastCaptured[int(FieldGroupNames::TemplateArgs)]
+        if (!tmpTokens[int(FieldGroupNames::TemplateArgs)].isEmpty()) {
+            QStringList arguments = tmpTokens[int(FieldGroupNames::TemplateArgs)]
                                     .remove(QChar::Space)
                                     .split(",", QString::SkipEmptyParts);
             entity::ScopesList scopes = m_Model->currentProject()->database()->scopes();

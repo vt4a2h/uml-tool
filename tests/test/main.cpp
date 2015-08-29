@@ -32,6 +32,7 @@
 #include <cases/typemakertestcases.h>
 #include <cases/icomponentstestcases.h>
 #include <cases/entitiestestcases.h>
+#include <cases/signatureparsercases.h>
 #include <cases/componentsmakercases.h>
 #include <cases/signaturemakercases.h>
 #include <cases/classcomponentscases.h>
