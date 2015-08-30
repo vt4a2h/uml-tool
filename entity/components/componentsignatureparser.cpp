@@ -42,14 +42,17 @@ namespace components {
                                             "break", "case", "catch", "char",  "class",
                                             "compl", "const", "constexpr", "const_cast", "continue", "decltype",
                                             "default", "delete", "do", "dynamic_cast", "else", "enum",
-                                            "explicit", "export", "extern", "false", "for", "friend", "goto",
+                                            "explicit", "export", "extern", "for", "friend", "goto",
                                             "if", "inline",  "mutable", "namespace", "new", "noexcept",
                                             "not", "not_eq", "nullptr", "operator", "or", "or_eq", "private",
                                             "protected", "public", "register", "reinterpret_cast", "return",
                                             "sizeof", "static", "static_assert", "static_cast", "struct",
-                                            "switch", "template", "this", "thread_local", "throw", "true", "try",
+                                            "switch", "template", "this", "thread_local", "throw", "try",
                                             "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual",
                                             "volatile", "while", "xor", "xor_eq" };
+        const Keywords boolKeywords = { "true", "false" };
+        const Keywords propKeywords = { "MEMBER", "READ", "WRITE", "RESET", "NOTIFY", "REVISION", "DESIGNABLE",
+                                        "SCRIPTABLE", "STORED", "USER", "CONSTANT", "FINAL" };
 
         // TODO: Just simple patterns now, must be improved in future (prefer to use simple parser)
         // TODO: 6 section may contains wrong combination of "*&const" it must be fixed.
@@ -62,7 +65,7 @@ namespace components {
                                      "\\s+([\\*\\s\\&const]*)"                                          // 6 -- &*const
                                      "\\s*(\\w+)$";                                                     // 7 -- field name
 
-        const QString propertyPattern = "^\\s*(\\w+)\\s+"                     // 1 -- type
+        const QString propertyPattern = "^(\\w+)\\s+"                         // 1 -- type
                                         "(\\w+)"                              // 2 -- name
                                         "(?:\\s+(?:MEMBER)\\s+(\\w+))?"       // 3 -- member
                                         "(?:\\s+(?:READ)\\s+(\\w+))?"         // 4 -- getter
@@ -75,7 +78,7 @@ namespace components {
                                         "(?:\\s+(?:STORED)\\s+(true|false))?" // 11 -- stored
                                         "(?:\\s+(?:USER)\\s+(true|false))?"   // 12 -- user
                                         "(?:\\s+(CONSTANT))?"                 // 13 -- constant
-                                        "(?:\\s+(FINAL))?";                   // 14 -- final
+                                        "(?:\\s+(FINAL))?$";                  // 14 -- final
 
         const QMap<models::DisplayPart, QString> componentPatternMap =
         {
@@ -96,23 +99,23 @@ namespace components {
         QMap<models::DisplayPart, Forbidden> forbiddenMap = {
             {models::DisplayPart::Fields,
             {
-                {int(FieldGroupNames::Namespaces), reservedKeywords|types},
-                {int(FieldGroupNames::Typename), reservedKeywords},
-                {int(FieldGroupNames::Name), reservedKeywords|types},
+                {int(FieldGroupNames::Namespaces), reservedKeywords|types|boolKeywords},
+                {int(FieldGroupNames::Typename), reservedKeywords|boolKeywords},
+                {int(FieldGroupNames::Name), reservedKeywords|types|boolKeywords},
                 {int(FieldGroupNames::TemplateArgs), reservedKeywords}
             }
             },
             {models::DisplayPart::Properties,
             {
-                {int(PropGroupNames::Type), reservedKeywords},
-                {int(PropGroupNames::Name), reservedKeywords|types},
-                {int(PropGroupNames::Member), reservedKeywords|types},
-                {int(PropGroupNames::Getter), reservedKeywords|types},
-                {int(PropGroupNames::Setter), reservedKeywords|types},
-                {int(PropGroupNames::Resetter), reservedKeywords|types},
-                {int(PropGroupNames::Notifier), reservedKeywords|types},
-                {int(PropGroupNames::Designable), reservedKeywords|types},
-                {int(PropGroupNames::Scriptable), reservedKeywords|types}
+                {int(PropGroupNames::Type), reservedKeywords|boolKeywords|propKeywords},
+                {int(PropGroupNames::Name), reservedKeywords|types|boolKeywords|propKeywords},
+                {int(PropGroupNames::Member), reservedKeywords|types|boolKeywords|propKeywords},
+                {int(PropGroupNames::Getter), reservedKeywords|types|boolKeywords|propKeywords},
+                {int(PropGroupNames::Setter), reservedKeywords|types|boolKeywords|propKeywords},
+                {int(PropGroupNames::Resetter), reservedKeywords|types|boolKeywords|propKeywords},
+                {int(PropGroupNames::Notifier), reservedKeywords|types|boolKeywords|propKeywords},
+                {int(PropGroupNames::Designable), reservedKeywords|types|propKeywords},
+                {int(PropGroupNames::Scriptable), reservedKeywords|types|propKeywords}
             }
             }
         };

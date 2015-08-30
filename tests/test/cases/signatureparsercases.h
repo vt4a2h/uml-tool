@@ -23,6 +23,7 @@
 #pragma once
 
 #include <QPair>
+#include <QDebug>
 
 #include <models/componentsmodel.h>
 
@@ -30,7 +31,9 @@
 
 namespace {
 
-    const QVector<QPair<QString, bool>> fieldData =
+    using TestData = const QVector<QPair<QString, bool>>;
+
+    TestData fieldData =
     {
         {"int ",                                          false},
         {"int a",                                         true },
@@ -54,12 +57,51 @@ namespace {
         {"std::vector<std::vector> vec",                  true },
     };
 
+    TestData propertyData =
+    {
+        {"int width",                                     true },
+        {"int width MEMBER m_width",                      true },
+        {"  int   width   MEMBER    m_width     ",        true },
+        {"true name",                                     false},
+        {"MEMBER m_width",                                false},
+        {"int width member m_width",                      false},
+        {"false width member m_width",                    false},
+        {"int width MEMBER m_width READ getWidth "
+         "WRITE setWidth",                                true },
+        {"int width MEMBER m_width READ getWidth "
+         "WRITE setWidth RESET clearWidth NOTIFY "
+         "widthChanged",                                  true },
+        {"int width MEMBER m_width READ getWidth "
+         "WRITE setWidth RESET clearWidth NOTIFY "
+         "widthChanged REVISION 10",                      true },
+        {"int width MEMBER m_width READ getWidth "
+         "WRITE setWidth RESET clearWidth NOTIFY "
+         "widthChanged REVISION 10 DESIGNABLE "
+         "false SCRIPTABLE false STORED false "
+         "USER true",                                     true },
+        {"int width MEMBER m_width READ getWidth "
+         "WRITE setWidth RESET clearWidth NOTIFY "
+         "widthChanged REVISION 10 DESIGNABLE "
+         "isDesignable SCRIPTABLE isScriptable"
+         " STORED false USER true",                       true },
+        {"int width MEMBER m_width READ getWidth "
+         "WRITE setWidth RESET clearWidth NOTIFY "
+         "widthChanged REVISION 10 DESIGNABLE "
+         "isDesignable SCRIPTABLE isScriptable"
+         " STORED false USER true CONSTANT FINAL",        true },
+    };
 }
 
 TEST_F(SignatureParser, ParsingFieldSignature)
 {
-    for (auto &&testData: fieldData) {
+    for (auto &&testData: fieldData)
         ASSERT_EQ(m_Parser->parse(testData.first, models::DisplayPart::Fields), testData.second)
-            << "Signature: " << testData.first.toStdString().c_str();
-    }
+            << "Signature: " << testData.first.toStdString();
+}
+
+TEST_F(SignatureParser, ParsingPropertySignature)
+{
+    for (auto &&testData: propertyData)
+        ASSERT_EQ(m_Parser->parse(testData.first, models::DisplayPart::Properties), testData.second)
+            << "Signature: " << testData.first.toStdString();
 }
