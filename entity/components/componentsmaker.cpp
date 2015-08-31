@@ -62,7 +62,8 @@ namespace components {
         , m_Entity(entity)
         , m_Scope(scope)
     {
-        componentMakerMap[models::DisplayPart::Fields] = [&](auto tokens){ return this->makeField(tokens); };
+        componentMakerMap[models::DisplayPart::Fields]     = [&](auto tokens){ return this->makeField(tokens);    };
+        componentMakerMap[models::DisplayPart::Properties] = [&](auto tokens){ return this->makeProperty(tokens); };
     }
 
     /**
@@ -244,6 +245,11 @@ namespace components {
          }
 
         return {"", newField};
+    }
+
+    OptionalEntity ComponentsMaker::makeProperty(const Tokens &tokens)
+    {
+
     }
 
 } // namespace components

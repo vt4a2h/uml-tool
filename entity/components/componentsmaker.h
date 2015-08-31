@@ -67,6 +67,7 @@ namespace components {
         entity::SharedScope m_Scope;
 
         OptionalEntity makeField(const components::Tokens &tokens);
+        OptionalEntity makeProperty(const components::Tokens &tokens);
     };
 
 } // namespace components
