@@ -62,9 +62,13 @@ namespace components {
         void setScope(const entity::SharedScope &scope);
 
     private:
+        using MakerFunction = std::function<OptionalEntity(const components::Tokens &)>;
+        using MakerMap = QMap<models::DisplayPart, MakerFunction>;
+
         models::SharedApplicationModel m_Model;
         entity::SharedType m_Entity;
         entity::SharedScope m_Scope;
+        MakerMap m_ComponentMakerMap;
 
         OptionalEntity makeField(const components::Tokens &tokens);
         OptionalEntity makeProperty(const components::Tokens &tokens);

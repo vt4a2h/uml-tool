@@ -22,13 +22,11 @@
 *****************************************************************************/
 #include "componentsmaker.h"
 
-#include <QRegularExpression>
-#include <QRegularExpressionMatch>
-
 #include <entity/field.h>
 #include <entity/scope.h>
 #include <entity/type.h>
 #include <entity/extendedtype.h>
+#include <entity/property.h>
 
 #include <models/applicationmodel.h>
 
@@ -36,11 +34,9 @@
 
 #include "enums.h"
 #include "componentscommon.h"
+#include "constants.h"
 
 namespace components {
-
-    using MakerFunction = std::function<OptionalEntity(const components::Tokens &)>;
-    QMap<models::DisplayPart, MakerFunction> componentMakerMap;
 
     /**
      * @brief ComponentsMaker::ComponentsMaker
@@ -62,8 +58,8 @@ namespace components {
         , m_Entity(entity)
         , m_Scope(scope)
     {
-        componentMakerMap[models::DisplayPart::Fields]     = [&](auto tokens){ return this->makeField(tokens);    };
-        componentMakerMap[models::DisplayPart::Properties] = [&](auto tokens){ return this->makeProperty(tokens); };
+        m_ComponentMakerMap[models::DisplayPart::Fields]     = [&](auto tokens){ return this->makeField(tokens);    };
+        m_ComponentMakerMap[models::DisplayPart::Properties] = [&](auto tokens){ return this->makeProperty(tokens); };
     }
 
     /**
@@ -74,7 +70,7 @@ namespace components {
     OptionalEntity ComponentsMaker::makeComponent(const components::Tokens &tokens, models::DisplayPart display)
     {
         if (!tokens.isEmpty())
-            return componentMakerMap[display](tokens);
+            return m_ComponentMakerMap[display](tokens);
 
         return {tr("Wrong signature"), entity::SharedBasicEntity()};
     }
@@ -249,7 +245,34 @@ namespace components {
 
     OptionalEntity ComponentsMaker::makeProperty(const Tokens &tokens)
     {
+        Q_ASSERT(!tokens.isEmpty() && !tokens[int(PropGroupNames::Type)].isEmpty() &&
+                 !tokens[int(PropGroupNames::Name)].isEmpty());
 
+        Q_ASSERT(m_Model);
+        Q_ASSERT(m_Model->globalDatabase());
+        Q_ASSERT(m_Model->currentProject());
+        Q_ASSERT(m_Model->currentProject()->database());
+
+        auto tmpTokens = tokens;
+        auto newProperty = std::make_shared<entity::Property>();
+
+        // Add name
+        newProperty->setName(tokens[int(PropGroupNames::Name)]);
+
+        // Add type
+        // Not support namespaces for now, so check only in global database.
+        // Work with namespaces and custom types int project will be hard due to Qt meta-stuff.
+        // And also required more detail work on current code generation functionality. TODO: implement!
+        const entity::SharedScope &globasScope = m_Model->globalDatabase()->getScope(GLOBAL_SCOPE_ID);
+        if (!globasScope)
+            return {tr("Cannot find global scope."), nullptr};
+
+        const auto &typeName = tmpTokens[int(FieldGroupNames::Typename)];
+        entity::SharedType type = globasScope->typeByName(typeName);
+        if (!type)
+            return {tr("Wrong type: %1.").arg(typeName), nullptr};
+
+        return {"", newProperty};
     }
 
 } // namespace components
