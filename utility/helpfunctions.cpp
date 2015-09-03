@@ -32,6 +32,8 @@
 #include <QString>
 #include <QJsonObject>
 #include <QStringList>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 
 #include <db/database.h>
 #include <entity/type.h>
@@ -240,6 +242,18 @@ namespace utility {
     entity::FieldKeyword fieldKeywordFromString(const QString &keyword)
     {
         return mapSearchHelper(kStrKey, keyword, entity::FieldKeyword::Invalid);
+    }
+
+    /**
+     * @brief toBool
+     * @param in
+     * @param ok
+     * @return
+     */
+    bool toBool(const QString &in, bool &ok)
+    {
+        auto match = QRegularExpression("^(true|false)$").match(in);
+        return (ok = match.hasMatch()) ? match.captured(1) == "true" ? true : false : ok;
     }
 
 }

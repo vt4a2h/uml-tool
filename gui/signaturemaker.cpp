@@ -55,11 +55,10 @@ namespace gui {
         const QString constantMark    = "CONSTANT";
 
         template<class Check, class CheckDefault, class Get>
-        void addAdditionalMember(const entity::SharedProperty &p, Check check, CheckDefault checkDefault, Get get,
+        inline void addAdditionalMember(const entity::SharedProperty &p, Check check, CheckDefault checkDefault, Get get,
                                  const QString &mark, QString &out)
         {
             Q_ASSERT(p);
-
             if (const auto &func = (p.get()->*get)())
                 out.append(QChar::Space + mark + QChar::Space + func->name());
             else if (!(p.get()->*checkDefault)())
@@ -67,7 +66,7 @@ namespace gui {
         }
 
         template<class F>
-        void addCommonMember(const entity::SharedProperty &p, F f, const QString &mark, QString &out)
+        inline void addCommonMember(const entity::SharedProperty &p, F f, const QString &mark, QString &out)
         {
             Q_ASSERT(p);
             if (const auto &name = (p.get()->*f)())

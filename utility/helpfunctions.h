@@ -237,6 +237,8 @@ namespace utility {
         return std::find_if(std::begin(seq), std::end(seq), pred);
     }
 
+    bool toBool(const QString &in, bool &ok);
+
     QString fieldKeywordToString(entity::FieldKeyword keyword);
     entity::FieldKeyword fieldKeywordFromString(const QString &keyword);
 

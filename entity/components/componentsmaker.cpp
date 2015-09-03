@@ -38,6 +38,31 @@
 
 namespace components {
 
+    namespace {
+
+        template <class Method>
+        inline void addCommon(const Tokens &tokens, PropGroupNames group, Method method, entity::SharedProperty &property)
+        {
+            const auto &name = tokens[int(group)];
+            if (!name.isEmpty())
+                (property.get()->*method)(name);
+        }
+
+        template <class AddMethod, class SetMethod>
+        inline void addDS(const Tokens &tokens, PropGroupNames group, AddMethod addMethod, SetMethod setMethod,
+                          entity::SharedProperty &property)
+        {
+            const QString &name = tokens[int(group)];
+            bool ok = false;
+            bool result = utility::toBool(name, ok);
+
+            if (ok)
+                (property.get()->*setMethod)(result);
+            else
+                (property.get()->*addMethod)(name);
+        }
+    }
+
     /**
      * @brief ComponentsMaker::ComponentsMaker
      */
@@ -253,24 +278,56 @@ namespace components {
         Q_ASSERT(m_Model->currentProject());
         Q_ASSERT(m_Model->currentProject()->database());
 
-        auto tmpTokens = tokens;
-        auto newProperty = std::make_shared<entity::Property>();
+        entity::SharedProperty newProperty = std::make_shared<entity::Property>();
 
         // Add name
         newProperty->setName(tokens[int(PropGroupNames::Name)]);
 
         // Add type
         // Not support namespaces for now, so check only in global database.
-        // Work with namespaces and custom types int project will be hard due to Qt meta-stuff.
+        // Work with namespaces and custom types in project will be hard due to Qt meta-stuff.
         // And also required more detail work on current code generation functionality. TODO: implement!
         const entity::SharedScope &globasScope = m_Model->globalDatabase()->getScope(GLOBAL_SCOPE_ID);
         if (!globasScope)
             return {tr("Cannot find global scope."), nullptr};
 
-        const auto &typeName = tmpTokens[int(FieldGroupNames::Typename)];
+        const auto &typeName = tokens[int(PropGroupNames::Type)];
         entity::SharedType type = globasScope->typeByName(typeName);
         if (!type)
             return {tr("Wrong type: %1.").arg(typeName), nullptr};
+
+        // Member (supports only "m_" prefix for now)
+        const auto &member = tokens[int(PropGroupNames::Member)];
+        if (!member.isEmpty()) {
+            const bool hasPrefix = member.startsWith("m_");
+            const auto name(hasPrefix ? QString(member).remove(0, 2) : member);
+            const auto prefix(hasPrefix ? "m_" : "");
+            newProperty->addMember(name, prefix);
+        }
+
+        // Common methods
+        addCommon(tokens, PropGroupNames::Getter,   &entity::Property::addGetter,   newProperty);
+        addCommon(tokens, PropGroupNames::Setter,   &entity::Property::addSetter,   newProperty);
+        addCommon(tokens, PropGroupNames::Resetter, &entity::Property::addResetter, newProperty);
+        addCommon(tokens, PropGroupNames::Notifier, &entity::Property::addNotifier, newProperty);
+
+        // Revision
+        const auto &revision = tokens[int(PropGroupNames::Revision)];
+        if (!revision.isEmpty()) {
+            bool ok = false;
+            int rev = revision.toInt(&ok);
+
+            if (ok)
+                newProperty->setRevision(rev);
+            else
+                return {tr("Wrong revision: %1.").arg(revision), nullptr};
+        }
+
+        // Add designable and scriptable
+        addDS(tokens, PropGroupNames::Designable, &entity::Property::addDesignableGetter,
+              &entity::Property::setDesignable, newProperty);
+        addDS(tokens, PropGroupNames::Scriptable, &entity::Property::addScriptableGetter,
+              &entity::Property::setScriptable, newProperty);
 
         return {"", newProperty};
     }
