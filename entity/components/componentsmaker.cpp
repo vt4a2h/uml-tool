@@ -52,7 +52,10 @@ namespace components {
         inline void addDS(const Tokens &tokens, PropGroupNames group, AddMethod addMethod, SetMethod setMethod,
                           entity::SharedProperty &property)
         {
-            const QString &name = tokens[int(group)];
+            const auto &name = tokens[int(group)];
+            if (name.isEmpty())
+                return;
+
             bool ok = false;
             bool result = utility::toBool(name, ok);
 
@@ -60,6 +63,21 @@ namespace components {
                 (property.get()->*setMethod)(result);
             else
                 (property.get()->*addMethod)(name);
+        }
+
+        template <class SetMethod>
+        inline void addExtra(const Tokens &tokens, PropGroupNames group, SetMethod setMethod,
+                             entity::SharedProperty &property)
+        {
+            const auto &name = tokens[int(group)];
+            if (name.isEmpty())
+                return;
+
+            bool ok = false;
+            bool result = utility::toBool(name, ok);
+
+            // set true or false if it bool (e.g. STORED bool), otherwise set just true (e.g. CONSTANT)
+            (property.get()->*setMethod)(ok ? result : true);
         }
     }
 
@@ -328,6 +346,12 @@ namespace components {
               &entity::Property::setDesignable, newProperty);
         addDS(tokens, PropGroupNames::Scriptable, &entity::Property::addScriptableGetter,
               &entity::Property::setScriptable, newProperty);
+
+        // Add stroed, user, const and final options
+        addExtra(tokens, PropGroupNames::Stored,   &entity::Property::setStored,   newProperty);
+        addExtra(tokens, PropGroupNames::User,     &entity::Property::setUser,     newProperty);
+        addExtra(tokens, PropGroupNames::Constant, &entity::Property::setConstant, newProperty);
+        addExtra(tokens, PropGroupNames::Final,    &entity::Property::setFinal,    newProperty);
 
         return {"", newProperty};
     }
