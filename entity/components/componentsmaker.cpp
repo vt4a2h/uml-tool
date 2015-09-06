@@ -305,14 +305,15 @@ namespace components {
         // Not support namespaces for now, so check only in global database.
         // Work with namespaces and custom types in project will be hard due to Qt meta-stuff.
         // And also required more detail work on current code generation functionality. TODO: implement!
-        const entity::SharedScope &globasScope = m_Model->globalDatabase()->getScope(GLOBAL_SCOPE_ID);
+        const entity::SharedScope &globasScope = m_Model->globalDatabase()->getScope(GLOBAL);
         if (!globasScope)
             return {tr("Cannot find global scope."), nullptr};
 
         const auto &typeName = tokens[int(PropGroupNames::Type)];
-        entity::SharedType type = globasScope->typeByName(typeName);
+        auto type = globasScope->typeByName(typeName);
         if (!type)
             return {tr("Wrong type: %1.").arg(typeName), nullptr};
+        newProperty->setTypeId(type->id());
 
         // Member (supports only "m_" prefix for now)
         const auto &member = tokens[int(PropGroupNames::Member)];

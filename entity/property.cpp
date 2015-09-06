@@ -211,7 +211,7 @@ namespace entity {
         m_MemberName = std::make_shared<Member>();
         m_MemberName->name = customName.isEmpty() ? m_Name : customName;
 
-        if (customName.isEmpty())
+        if (!customName.startsWith("m_"))
             m_MemberName->prefix = prefix.isEmpty() ? "m_" : prefix;
 
         m_Member = true;

@@ -25,13 +25,24 @@
 #include "TestComponentsMaker.h"
 
 #include <entity/field.h>
+#include <entity/property.h>
 
 #include <utility/helpfunctions.h>
 
 #include "constants.h"
 
+#define check_errors(r)\
+    ASSERT_TRUE(r.errorMessage.isEmpty())\
+        << "There are some message: " << r.errorMessage.toStdString();
+
+#define tst_common(name_, match) \
+    const auto &name_ = property->name_(); \
+    ASSERT_TRUE(!!name_); \
+    ASSERT_EQ(name_->name(), match);
+
 namespace {
     auto to_f(const entity::BasicEntity *e){ return static_cast<const entity::Field*>(e); }
+    auto to_p(const entity::SharedBasicEntity &e){ return std::static_pointer_cast<entity::Property>(e); }
     auto to_et(const entity::Type *e){ return static_cast<const entity::ExtendedType*>(e); }
 }
 
@@ -39,8 +50,7 @@ TEST_F(ComponentsMaker, MakingField)
 {
     // type and name
     auto result = parseAndMake("int a", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.errorMessage.isEmpty())
-            << "There are some message: " << result.errorMessage.toStdString().c_str();
+    check_errors(result)
 
     auto field = to_f(result.resultEntity.get());
     ASSERT_EQ(field->name(), "a");
@@ -52,8 +62,7 @@ TEST_F(ComponentsMaker, MakingField)
 
     // const and name
     result = parseAndMake("const int a", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.errorMessage.isEmpty())
-            << "There are some message: " << result.errorMessage.toStdString().c_str();
+    check_errors(result)
 
     field = to_f(result.resultEntity.get());
     t = globalScope->type(field->typeId());
@@ -64,8 +73,7 @@ TEST_F(ComponentsMaker, MakingField)
 
     // const ptr to const
     result = parseAndMake("const int * const a", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.errorMessage.isEmpty())
-            << "There are some message: " << result.errorMessage.toStdString().c_str();
+    check_errors(result)
     field = to_f(result.resultEntity.get());
     t = m_Project->database()->depthTypeSearch(field->typeId());
     const entity::ExtendedType::PlList& pl = to_et(t.get())->pl();
@@ -73,8 +81,7 @@ TEST_F(ComponentsMaker, MakingField)
 
     // static
     result = parseAndMake("static int a", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.errorMessage.isEmpty())
-            << "There are some message: " << result.errorMessage.toStdString().c_str();
+    check_errors(result)
     field = to_f(result.resultEntity.get());
     const entity::FieldKeywordsList& lst = field->keywords();
     ASSERT_FALSE(lst.isEmpty());
@@ -83,8 +90,7 @@ TEST_F(ComponentsMaker, MakingField)
 
     // std
     result = parseAndMake("std::unordered_set a", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.errorMessage.isEmpty())
-            << "There are some message: " << result.errorMessage.toStdString().c_str();
+    check_errors(result)
     field = to_f(result.resultEntity.get());
     auto scopeStd = m_GlobalDatabase->chainScopeSearch(QStringList() << "std");
     ASSERT_TRUE(!!scopeStd) << "Scope std should be found.";
@@ -93,8 +99,51 @@ TEST_F(ComponentsMaker, MakingField)
 
     // with templates parameters
     result = parseAndMake("std::vector<int> v", models::DisplayPart::Fields);
-    ASSERT_TRUE(result.errorMessage.isEmpty()) << "There are some message: " << result.errorMessage.toStdString().c_str();
+    check_errors(result)
     field = to_f(result.resultEntity.get());
     auto vecOfInt = m_Project->database()->depthTypeSearch(field->typeId());
     ASSERT_TRUE(!!vecOfInt) << "Vector of int must be created in project database.";
+}
+
+TEST_F(ComponentsMaker, MakingProperty)
+{
+    auto result = parseAndMake("int width", models::DisplayPart::Properties);
+    check_errors(result);
+    entity::SharedProperty property = to_p(result.resultEntity);
+
+    // Name
+    ASSERT_EQ(property->name(), "width");
+
+    // Type
+    auto globalScope = m_GlobalDatabase->getScope(GLOBAL);
+    auto t = globalScope->type(property->typeId());
+    ASSERT_TRUE(!!t) << "Type with name int is not found in global database";
+    ASSERT_EQ(t->name(), "int");
+
+    // Member
+    result = parseAndMake("int width MEMBER m_width", models::DisplayPart::Properties);
+    check_errors(result);
+    property = to_p(result.resultEntity);
+    ASSERT_TRUE(property->isMember());
+
+    const auto &member = property->member();
+    ASSERT_TRUE(!!member);
+    ASSERT_EQ(member->name, "width");
+    ASSERT_EQ(member->prefix, "m_");
+
+    // Get/set/reset/notify
+    result = parseAndMake("int width READ getWidth WRITE setWidth RESET clearWidth NOTIFY widthChanged",
+                          models::DisplayPart::Properties);
+    check_errors(result);
+    property = to_p(result.resultEntity);
+    tst_common(getter, "getWidth")
+    tst_common(setter, "setWidth")
+    tst_common(resetter, "clearWidth")
+    tst_common(notifier, "widthChanged")
+
+    // Revision
+    result = parseAndMake("int width REVISION 10", models::DisplayPart::Properties);
+    check_errors(result);
+    property = to_p(result.resultEntity);
+    ASSERT_EQ(property->revision(), 10);
 }
