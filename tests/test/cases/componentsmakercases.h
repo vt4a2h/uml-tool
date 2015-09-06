@@ -146,4 +146,30 @@ TEST_F(ComponentsMaker, MakingProperty)
     check_errors(result);
     property = to_p(result.resultEntity);
     ASSERT_EQ(property->revision(), 10);
+
+    // Designable/scriptable
+    result = parseAndMake("int width DESIGNABLE false SCRIPTABLE false", models::DisplayPart::Properties);
+    check_errors(result);
+    property = to_p(result.resultEntity);
+    ASSERT_FALSE(property->isDesignable());
+    ASSERT_FALSE(property->isScriptable());
+    ASSERT_FALSE(!!property->designableGetter());
+    ASSERT_FALSE(!!property->scriptableGetter());
+
+    result = parseAndMake("int width DESIGNABLE isDesignable SCRIPTABLE isScriptable", models::DisplayPart::Properties);
+    check_errors(result);
+    property = to_p(result.resultEntity);
+    ASSERT_TRUE(!!property->designableGetter());
+    ASSERT_TRUE(!!property->scriptableGetter());
+    ASSERT_EQ(property->designableGetter()->name(), "isDesignable");
+    ASSERT_EQ(property->scriptableGetter()->name(), "isScriptable");
+
+    // Stored/user/constant/final
+    result = parseAndMake("int width STORED false USER true CONSTANT FINAL", models::DisplayPart::Properties);
+    check_errors(result);
+    property = to_p(result.resultEntity);
+    ASSERT_FALSE(property->isStored());
+    ASSERT_TRUE(property->isUser());
+    ASSERT_TRUE(property->isConstant());
+    ASSERT_TRUE(property->isFinal());
 }
