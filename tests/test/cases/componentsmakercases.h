@@ -172,4 +172,6 @@ TEST_F(ComponentsMaker, MakingProperty)
     ASSERT_TRUE(property->isUser());
     ASSERT_TRUE(property->isConstant());
     ASSERT_TRUE(property->isFinal());
+
+    // TODO: add some tests with negative result (e.g. wrong revision or smth like that)
 }

@@ -57,13 +57,23 @@ namespace components {
         // TODO: Just simple patterns now, must be improved in future (prefer to use simple parser)
         // TODO: 6 section may contains wrong combination of "*&const" it must be fixed.
         // TODO: for 5 required recursive parsing to detect nested types with templates
-        const QString fieldPattern = "^((?:volatile|static|mutable)\\s)?"                               // 1 -- lhs keywords
-                                     "(const\\s)?"                                                      // 2 -- const
-                                     "((?:\\w*:{2,})*)"                                                 // 3 -- namespaces
-                                     "(\\w+)"                                                           // 4 -- typename
-                                     "(?:\\s*<\\s*((?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?"   // 5 -- template args
-                                     "\\s+([\\*\\s\\&const]*)"                                          // 6 -- &*const
-                                     "\\s*(\\w+)$";                                                     // 7 -- field name
+        const QString type = "(?:(const)\\s+)?"                                               // const
+                             "((?:\\w*:{2,})*)"                                               // namespaces
+                             "(\\w+)"                                                         // typename
+                             "(?:\\s*<\\s*((?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?" // template args
+                             "\\s+([\\*\\s\\&const]*)";                                       // &*const
+
+        const QString fieldPattern = "^(?:(volatile|static|mutable)\\s)?"  // 1 -- lhs keywords
+                                     + type +                              // { type:
+                                                                           //       2 -- const
+                                                                           //       3 -- namespaces
+                                                                           //       4 -- typename
+                                                                           //       5 -- template args
+                                                                           //       6 -- &*const
+                                                                           // }
+                                     "\\s*(\\w+)$";                        // 7 -- field name
+
+        const QString methodPattern = "";
 
         const QString propertyPattern = "^(\\w+)\\s+"                         // 1 -- type
                                         "(\\w+)"                              // 2 -- name
