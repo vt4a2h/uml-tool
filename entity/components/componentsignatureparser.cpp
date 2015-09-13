@@ -55,13 +55,20 @@ namespace components {
                                         "SCRIPTABLE", "STORED", "USER", "CONSTANT", "FINAL" };
 
         // TODO: Just simple patterns now, must be improved in future (prefer to use simple parser)
-        // TODO: 6 section may contains wrong combination of "*&const" it must be fixed.
-        // TODO: for 5 required recursive parsing to detect nested types with templates
+        // TODO: 6 (of type) section may contains wrong combination of "*&const" it must be fixed
+        // TODO: for 5 (of type) required recursive parsing to detect nested types with templates
+
         const QString type = "(?:(const)\\s+)?"                                               // const
                              "((?:\\w*:{2,})*)"                                               // namespaces
                              "(\\w+)"                                                         // typename
                              "(?:\\s*<\\s*((?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?" // template args
                              "\\s+([\\*\\s\\&const]*)";                                       // &*const
+        // se description of "type" regex
+        const QString highLvlType = "(?:const\\s+)?"
+                                    "(?:(?:\\w*:{2,})*)"
+                                    "(?:\\w+)"
+                                    "(?:\\s*<\\s*(?:(?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?"
+                                    "\\s+(?:[\\*\\s\\&const]*)";
 
         const QString fieldPattern = "^(?:(volatile|static|mutable)\\s)?"  // 1 -- lhs keywords
                                      + type +                              // { type:
@@ -73,7 +80,12 @@ namespace components {
                                                                            // }
                                      "\\s*(\\w+)$";                        // 7 -- field name
 
-        const QString methodPattern = "";
+        const QString methodPattern = "^(?:\\s*(static))?"                                            // 1 -- static
+                                      "(?:\\s+(" + highLvlType + ")"                                  // 2 -- return type
+                                      "(?:\\s+(\\w+))"                                                // 3 -- method name
+                                      "(?:\\s*(\\((?:\\s*"+ highLvlType +"\\s*,\\s*)*\\)))"           // 4-- method arguments
+                                      "(?:\\s+(const))?"                                              // 5 -- const
+                                      "(?:\\s+((?:final|override)|(?:=\\s+default|delete|0))\\s*)?$"; // 6 -- lhs
 
         const QString propertyPattern = "^(\\w+)\\s+"                         // 1 -- type
                                         "(\\w+)"                              // 2 -- name
