@@ -28,7 +28,9 @@
 
 namespace components {
 
-    using Tokens = QVector<QString>;
+    struct Token;
+    using SharedToken = std::shared_ptr<Token>;
+    using Tokens = QVector<SharedToken>;
 
     class ComponentSignatureParser;
     using UniqueSignatureParser = std::unique_ptr<ComponentSignatureParser>;

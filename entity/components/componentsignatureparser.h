@@ -28,6 +28,44 @@ namespace models { enum class DisplayPart : int; }
 
 namespace components {
 
+    /// The Token class
+    class Token
+    {
+    public:
+        Token();
+        Token(const QString &token);
+        Token(const QStringList &tokens);
+
+        bool isEmpty() const;
+        bool isSingle() const;
+        bool isMulti() const;
+
+        QStringList tokens() const;
+        QString token() const;
+
+        // Useful for testing
+        std::string toStdString() const;
+
+        // Useful for debuging
+        void dump() const;
+
+    private:
+        enum  {IsEmpty, IsSingle, IsMulti} m_Tag;
+
+        // Unfortunately we cannot use unnamed union with non-trivial types.
+        union Data {
+            QStringList m_Tokens;
+            QString m_Token;
+
+            Data() {}
+            Data(const QString &token) : m_Token(token) {}
+            Data(const QStringList &tokens) : m_Tokens(tokens) {}
+            ~Data() {}
+        };
+
+        Data m_Data;
+    };
+
     //// The ComponentSignatureParser class
     class ComponentSignatureParser
     {

@@ -27,6 +27,7 @@
 #include <entity/type.h>
 #include <entity/extendedtype.h>
 #include <entity/property.h>
+#include <entity/components/componentsignatureparser.h>
 
 #include <models/applicationmodel.h>
 
@@ -43,7 +44,8 @@ namespace components {
         template <class Method>
         inline void addCommon(const Tokens &tokens, PropGroupNames group, Method method, entity::SharedProperty &property)
         {
-            const auto &name = tokens[int(group)];
+            Q_ASSERT(tokens[int(group)]->isSingle());
+            const auto &name = tokens[int(group)]->token();
             if (!name.isEmpty())
                 (property.get()->*method)(name);
         }
@@ -52,7 +54,8 @@ namespace components {
         inline void addDS(const Tokens &tokens, PropGroupNames group, AddMethod addMethod, SetMethod setMethod,
                           entity::SharedProperty &property)
         {
-            const auto &name = tokens[int(group)];
+            Q_ASSERT(tokens[int(group)]->isSingle());
+            const auto &name = tokens[int(group)]->token();
             if (name.isEmpty())
                 return;
 
@@ -69,7 +72,8 @@ namespace components {
         inline void addExtra(const Tokens &tokens, PropGroupNames group, SetMethod setMethod,
                              entity::SharedProperty &property)
         {
-            const auto &name = tokens[int(group)];
+            Q_ASSERT(tokens[int(group)]->isSingle());
+            const auto &name = tokens[int(group)]->token();
             if (name.isEmpty())
                 return;
 
@@ -178,8 +182,10 @@ namespace components {
      */
     OptionalEntity ComponentsMaker::makeField(const Tokens &tokens)
     {
-        Q_ASSERT(!tokens.isEmpty() && !tokens[int(FieldGroupNames::Typename)].isEmpty() &&
-                 !tokens[int(FieldGroupNames::Name)].isEmpty());
+        Q_ASSERT(!tokens.isEmpty() && tokens[int(FieldGroupNames::Typename)]->isSingle() &&
+                 !tokens[int(FieldGroupNames::Typename)]->token().isEmpty() &&
+                 !tokens[int(FieldGroupNames::Name)]->isSingle() &&
+                 !tokens[int(FieldGroupNames::Name)]->token().isEmpty());
 
         Q_ASSERT(m_Model);
         Q_ASSERT(m_Model->globalDatabase());
@@ -189,18 +195,22 @@ namespace components {
         auto tmpTokens = tokens;
 
         auto newField = std::make_shared<entity::Field>();
-        newField->setName(tmpTokens[int(FieldGroupNames::Name)]);
-        if (!tmpTokens[int(FieldGroupNames::LhsKeywords)].isEmpty()) {
-            auto keyword = utility::fieldKeywordFromString(tmpTokens[int(FieldGroupNames::LhsKeywords)]);
+        newField->setName(tmpTokens[int(FieldGroupNames::Name)]->token());
+        if (!tmpTokens[int(FieldGroupNames::LhsKeywords)]->token().isEmpty()) {
+            auto keyword =
+                utility::fieldKeywordFromString(tmpTokens[int(FieldGroupNames::LhsKeywords)]->token());
             Q_ASSERT(keyword != entity::FieldKeyword::Invalid);
             newField->addKeyword(keyword);
         }
 
-        const QString &typeName = tmpTokens[int(FieldGroupNames::Typename)];
+        Q_ASSERT(tmpTokens[int(FieldGroupNames::Typename)]->isSingle());
+        const QString &typeName = tmpTokens[int(FieldGroupNames::Typename)]->token();
         entity::SharedType type;
 
-        if (!tmpTokens[int(FieldGroupNames::Namespaces)].isEmpty()) {
-            auto names = tmpTokens[int(FieldGroupNames::Namespaces)].split("::", QString::SkipEmptyParts);
+        if (!tmpTokens[int(FieldGroupNames::Namespaces)]->token().isEmpty()) {
+            Q_ASSERT(tmpTokens[int(FieldGroupNames::Namespaces)]->isSingle());
+            auto names = tmpTokens[int(FieldGroupNames::Namespaces)]->token()
+                         .split("::", QString::SkipEmptyParts);
             auto scope = m_Model->globalDatabase()->chainScopeSearch(names);
             if (!scope)
                 scope = m_Model->currentProject()->database()->chainScopeSearch(names);
@@ -225,10 +235,12 @@ namespace components {
         entity::SharedExtendedType extendedType = std::make_shared<entity::ExtendedType>();
         extendedType->setTypeId(type->id());
         extendedType->setScopeId(m_Scope->id());
-        extendedType->setConstStatus(!tmpTokens[int(FieldGroupNames::ConstStatus)].isEmpty());
+        Q_ASSERT(tmpTokens[int(FieldGroupNames::ConstStatus)]->isSingle());
+        extendedType->setConstStatus(!tmpTokens[int(FieldGroupNames::ConstStatus)]->token().isEmpty());
 
-        if (!tmpTokens[int(FieldGroupNames::PLC)].isEmpty()) {
-            QString plc = tmpTokens[int(FieldGroupNames::PLC)];
+        Q_ASSERT(tmpTokens[int(FieldGroupNames::PLC)]->isSingle());
+        if (!tmpTokens[int(FieldGroupNames::PLC)]->token().isEmpty()) {
+            QString plc = tmpTokens[int(FieldGroupNames::PLC)]->token();
             plc.remove(QChar::Space);
 
             if (plc.startsWith("const")) {
