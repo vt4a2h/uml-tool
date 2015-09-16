@@ -192,6 +192,15 @@ namespace components {
     }
 
     /**
+     * @brief ComponentSignatureParser::tokens
+     * @return
+     */
+    Tokens ComponentSignatureParser::tokens() const
+    {
+        return m_Tokens;
+    }
+
+    /**
      * @brief Tokens::isSingle
      * @return
      */

@@ -184,7 +184,7 @@ namespace components {
     {
         Q_ASSERT(!tokens.isEmpty() && tokens[int(FieldGroupNames::Typename)]->isSingle() &&
                  !tokens[int(FieldGroupNames::Typename)]->token().isEmpty() &&
-                 !tokens[int(FieldGroupNames::Name)]->isSingle() &&
+                 tokens[int(FieldGroupNames::Name)]->isSingle() &&
                  !tokens[int(FieldGroupNames::Name)]->token().isEmpty());
 
         Q_ASSERT(m_Model);
@@ -264,8 +264,9 @@ namespace components {
             }
         }
 
-        if (!tmpTokens[int(FieldGroupNames::TemplateArgs)].isEmpty()) {
-            QStringList arguments = tmpTokens[int(FieldGroupNames::TemplateArgs)]
+        Q_ASSERT(tmpTokens[int(FieldGroupNames::TemplateArgs)]->isSingle());
+        if (!tmpTokens[int(FieldGroupNames::TemplateArgs)]->token().isEmpty()) {
+            QStringList arguments = tmpTokens[int(FieldGroupNames::TemplateArgs)]->token()
                                     .remove(QChar::Space)
                                     .split(",", QString::SkipEmptyParts);
             entity::ScopesList scopes = m_Model->currentProject()->database()->scopes();
@@ -300,8 +301,10 @@ namespace components {
 
     OptionalEntity ComponentsMaker::makeProperty(const Tokens &tokens)
     {
-        Q_ASSERT(!tokens.isEmpty() && !tokens[int(PropGroupNames::Type)].isEmpty() &&
-                 !tokens[int(PropGroupNames::Name)].isEmpty());
+        Q_ASSERT(!tokens.isEmpty() && tokens[int(PropGroupNames::Type)]->isSingle() &&
+                 !tokens[int(PropGroupNames::Type)]->token().isEmpty() &&
+                 tokens[int(PropGroupNames::Name)]->isSingle() &&
+                 !tokens[int(PropGroupNames::Name)]->token().isEmpty());
 
         Q_ASSERT(m_Model);
         Q_ASSERT(m_Model->globalDatabase());
@@ -311,7 +314,7 @@ namespace components {
         entity::SharedProperty newProperty = std::make_shared<entity::Property>();
 
         // Add name
-        newProperty->setName(tokens[int(PropGroupNames::Name)]);
+        newProperty->setName(tokens[int(PropGroupNames::Name)]->token());
 
         // Add type
         // Not support namespaces for now, so check only in global database.
@@ -321,14 +324,14 @@ namespace components {
         if (!globasScope)
             return {tr("Cannot find global scope."), nullptr};
 
-        const auto &typeName = tokens[int(PropGroupNames::Type)];
+        const auto &typeName = tokens[int(PropGroupNames::Type)]->token();
         auto type = globasScope->typeByName(typeName);
         if (!type)
             return {tr("Wrong type: %1.").arg(typeName), nullptr};
         newProperty->setTypeId(type->id());
 
         // Member (supports only "m_" prefix for now)
-        const auto &member = tokens[int(PropGroupNames::Member)];
+        const auto &member = tokens[int(PropGroupNames::Member)]->token();
         if (!member.isEmpty()) {
             const bool hasPrefix = member.startsWith("m_");
             const auto name(hasPrefix ? QString(member).remove(0, 2) : member);
@@ -343,7 +346,8 @@ namespace components {
         addCommon(tokens, PropGroupNames::Notifier, &entity::Property::addNotifier, newProperty);
 
         // Revision
-        const auto &revision = tokens[int(PropGroupNames::Revision)];
+        Q_ASSERT(tokens[int(PropGroupNames::Revision)]->isSingle());
+        const auto &revision = tokens[int(PropGroupNames::Revision)]->token();
         if (!revision.isEmpty()) {
             bool ok = false;
             int rev = revision.toInt(&ok);
