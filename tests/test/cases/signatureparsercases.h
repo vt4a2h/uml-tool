@@ -92,6 +92,32 @@ namespace {
     };
 }
 
+TEST_F(SignatureParser, TestingTokenClass)
+{
+    components::SharedToken token = std::make_shared<components::Token>();
+    ASSERT_TRUE(token->isEmpty());
+    ASSERT_FALSE(token->isSingle());
+    ASSERT_FALSE(token->isMulti());
+    ASSERT_EQ(token->toStdString(), "");
+    token->dump();
+
+    token = std::make_shared<components::Token>("one_token");
+    ASSERT_FALSE(token->isEmpty());
+    ASSERT_TRUE(token->isSingle());
+    ASSERT_FALSE(token->isMulti());
+    ASSERT_EQ(token->token(), "one_token");
+    ASSERT_EQ(token->toStdString(), "one_token");
+    token->dump();
+
+    token = std::make_shared<components::Token>(QStringList({"1_token", "2_token", "3_token"}));
+    ASSERT_FALSE(token->isEmpty());
+    ASSERT_FALSE(token->isSingle());
+    ASSERT_TRUE(token->isMulti());
+    ASSERT_EQ(token->tokens(), QStringList({"1_token", "2_token", "3_token"}));
+    ASSERT_EQ(token->toStdString(), "1_token 2_token 3_token");
+    token->dump();
+}
+
 TEST_F(SignatureParser, ParsingFieldSignature)
 {
     for (auto &&testData: fieldData)

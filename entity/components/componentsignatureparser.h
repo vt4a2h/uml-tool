@@ -22,6 +22,8 @@
 *****************************************************************************/
 #pragma once
 
+#include <QStringList>
+
 #include "components_types.h"
 
 namespace models { enum class DisplayPart : int; }
