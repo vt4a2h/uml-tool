@@ -35,7 +35,19 @@ namespace components {
         TemplateArgs,
         PLC,
         Name,
-        GroupsCount
+        GroupsCount,
+    };
+
+    /// Methods groups names actual for parsing
+    enum class MethodsGroupsNames
+    {
+        Static = 1,
+        ReturnType,
+        Name,
+        Arguments,
+        Const,
+        RhsKeywords,
+        GroupsCount,
     };
 
     /// Property groups names actual for parsing
@@ -55,7 +67,7 @@ namespace components {
         User,
         Constant,
         Final,
-        GroupsCount
+        GroupsCount,
     };
 
 } // namespace components

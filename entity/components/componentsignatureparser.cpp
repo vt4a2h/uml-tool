@@ -37,23 +37,27 @@ namespace components {
     namespace {
         using Keywords = QSet<QString>;
 
-        const Keywords types = {"bool", "char16_t", "char32_t", "float", "int", "long", "short", "signed",
-                                "wchar_t", "double", "void" };
-        const Keywords reservedKeywords = { "alignas", "alignof", "and", "and_eq", "asm", "auto", "bitand", "bitor",
-                                            "break", "case", "catch", "char",  "class",
-                                            "compl", "const", "constexpr", "const_cast", "continue", "decltype",
-                                            "default", "delete", "do", "dynamic_cast", "else", "enum",
-                                            "explicit", "export", "extern", "for", "friend", "goto",
-                                            "if", "inline",  "mutable", "namespace", "new", "noexcept",
-                                            "not", "not_eq", "nullptr", "operator", "or", "or_eq", "private",
-                                            "protected", "public", "register", "reinterpret_cast", "return",
-                                            "sizeof", "static", "static_assert", "static_cast", "struct",
-                                            "switch", "template", "this", "thread_local", "throw", "try",
-                                            "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual",
-                                            "volatile", "while", "xor", "xor_eq" };
+        const Keywords types = {"bool", "char16_t", "char32_t", "float", "int", "long", "short",
+                                "signed", "wchar_t", "double", "void" };
+        const Keywords reservedKeywords = { "alignas", "alignof", "and", "and_eq", "asm", "auto",
+                                            "bitand", "bitor", "break", "case", "catch", "char",
+                                            "class", "compl", "const", "constexpr", "const_cast",
+                                            "continue", "decltype", "default", "delete", "do",
+                                            "dynamic_cast", "else", "enum", "explicit", "export",
+                                            "extern", "for", "friend", "goto", "if", "inline",
+                                            "mutable", "namespace", "new", "noexcept", "not",
+                                            "not_eq", "nullptr", "operator", "or", "or_eq",
+                                            "private", "protected", "public", "register",
+                                            "reinterpret_cast", "return", "sizeof", "static",
+                                            "static_assert", "static_cast", "struct", "switch",
+                                            "template", "this", "thread_local", "throw", "try",
+                                            "typedef", "typeid", "typename", "union", "unsigned",
+                                            "using", "virtual", "volatile", "while", "xor", "xor_eq"
+                                          };
         const Keywords boolKeywords = { "true", "false" };
-        const Keywords propKeywords = { "MEMBER", "READ", "WRITE", "RESET", "NOTIFY", "REVISION", "DESIGNABLE",
-                                        "SCRIPTABLE", "STORED", "USER", "CONSTANT", "FINAL" };
+        const Keywords propKeywords = { "MEMBER", "READ", "WRITE", "RESET", "NOTIFY", "REVISION",
+                                        "DESIGNABLE", "SCRIPTABLE", "STORED", "USER", "CONSTANT",
+                                        "FINAL" };
 
         // TODO: Just simple patterns now, must be improved in future (prefer to use simple parser)
         // TODO: 6 (of type) section may contains wrong combination of "*&const" it must be fixed
@@ -64,7 +68,7 @@ namespace components {
                              "(\\w+)"                                                         // typename
                              "(?:\\s*<\\s*((?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?" // template args
                              "\\s+([\\*\\s\\&const]*)";                                       // &*const
-        // se description of "type" regex
+        // see description of "type" regex
         const QString highLvlType = "(?:const\\s+)?"
                                     "(?:(?:\\w*:{2,})*)"
                                     "(?:\\w+)"
@@ -106,12 +110,14 @@ namespace components {
         const QMap<models::DisplayPart, QString> componentPatternMap =
         {
             {models::DisplayPart::Fields, fieldPattern},
+            {models::DisplayPart::Methods, methodPattern},
             {models::DisplayPart::Properties, propertyPattern},
         };
 
         const QMap<models::DisplayPart, int> componentsGroupCount =
         {
             {models::DisplayPart::Fields, int(FieldGroupNames::GroupsCount)},
+            {models::DisplayPart::Methods, int(MethodsGroupsNames::GroupsCount)},
             {models::DisplayPart::Properties, int(PropGroupNames::GroupsCount)},
         };
 
@@ -127,6 +133,13 @@ namespace components {
                 {int(FieldGroupNames::Name), reservedKeywords|types|boolKeywords},
                 {int(FieldGroupNames::TemplateArgs), reservedKeywords}
             }
+            },
+            {models::DisplayPart::Methods,
+             {
+                 {int(MethodsGroupsNames::ReturnType), reservedKeywords},
+                 {int(MethodsGroupsNames::Name), reservedKeywords|types|boolKeywords},
+                 {int(MethodsGroupsNames::Arguments), reservedKeywords|types|boolKeywords},
+             }
             },
             {models::DisplayPart::Properties,
             {
