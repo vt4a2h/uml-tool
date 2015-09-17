@@ -74,7 +74,8 @@ SOURCES += \
     commands/movetypetootherscope.cpp \
     commands/removecomponentscommands.cpp \
     commands/addcomponentscommands.cpp \
-    helpers/entityhelpres.cpp
+    helpers/entityhelpres.cpp \
+    entity/components/token.cpp
 
 HEADERS += \
     enums.h \
@@ -152,7 +153,8 @@ HEADERS += \
     constants.h \
     helpers/entityhelpres.h \
     entity/components/componentscommon.h \
-    entity/components/components_types.h
+    entity/components/components_types.h \
+    entity/components/token.h
 
 FORMS += \
     gui/mainwindow.ui \

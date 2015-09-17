@@ -33,6 +33,7 @@
 
 #include <utility/helpfunctions.h>
 
+#include "token.h"
 #include "enums.h"
 #include "componentscommon.h"
 #include "constants.h"

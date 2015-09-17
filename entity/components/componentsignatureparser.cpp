@@ -24,12 +24,12 @@
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
-#include <QDebug>
 
 #include <models/componentsmodel.h>
 
 #include <utility/helpfunctions.h>
 
+#include "token.h"
 #include "componentscommon.h"
 
 namespace components {
@@ -198,122 +198,6 @@ namespace components {
     Tokens ComponentSignatureParser::tokens() const
     {
         return m_Tokens;
-    }
-
-    /**
-     * @brief Tokens::isSingle
-     * @return
-     */
-    Token::Token()
-        : m_Tag(IsEmpty)
-    {}
-
-    /**
-     * @brief Tokens::Tokens
-     * @param token
-     */
-    Token::Token(const QString &token)
-        : m_Tag(IsSingle)
-        , m_Data(token)
-    {}
-
-    /**
-     * @brief Token::Token
-     * @param tokens
-     */
-    Token::Token(const QStringList &tokens)
-        : m_Tag(IsMulti)
-        , m_Data(tokens)
-    {}
-
-    /**
-     * @brief Token::isEmpty
-     * @return
-     */
-    bool Token::isEmpty() const
-    {
-        return m_Tag == IsEmpty;
-    }
-
-    /**
-     * @brief Token::isSingle
-     * @return
-     */
-    bool Token::isSingle() const
-    {
-        return m_Tag == IsSingle;
-    }
-
-    /**
-     * @brief Token::IsMulti
-     * @return
-     */
-    bool Token::isMulti() const
-    {
-        return m_Tag == IsMulti;
-    }
-
-    /**
-     * @brief Token::tokens
-     * @return
-     */
-    QStringList Token::tokens() const
-    {
-        Q_ASSERT(isMulti());
-        return m_Data.m_Tokens;
-    }
-
-    /**
-     * @brief Token::token
-     * @return
-     */
-    QString Token::token() const
-    {
-        Q_ASSERT(isSingle());
-        return m_Data.m_Token;
-    }
-
-    /**
-     * @brief Tokens::toStdString
-     * @return
-     */
-    std::string Token::toStdString() const
-    {
-        switch (m_Tag) {
-            case IsEmpty:
-                return "";
-
-            case IsSingle:
-                return m_Data.m_Token.toStdString();
-
-            case IsMulti:
-                return m_Data.m_Tokens.join(QChar::Space).toStdString();
-
-            default:
-                return "";
-        }
-    }
-
-    /**
-     * @brief Tokens::dump
-     */
-    void Token::dump() const
-    {
-        switch (m_Tag) {
-            case IsEmpty:
-                qDebug() << "No token(s) here.";
-                break;
-
-            case IsSingle:
-                qDebug() <<  "Token: " + m_Data.m_Token;
-                break;
-
-            case IsMulti:
-                qDebug() << "Tokens: " + m_Data.m_Tokens.join(QChar::Space);
-                break;
-
-            default: ;
-        }
     }
 
 } // namespace components

@@ -26,6 +26,7 @@
 #include <QDebug>
 
 #include <models/componentsmodel.h>
+#include <entity/components/token.h>
 
 #include "TestComponentSignatureParser.h"
 
@@ -55,6 +56,11 @@ namespace {
         {"std::vector> vec",                              false},
         {"std::vector<class, const> vec",                 false},
         {"std::vector<std::vector> vec",                  true },
+    };
+
+    TestData methodData =
+    {
+//        {"int get()", true},
     };
 
     TestData propertyData =
@@ -122,6 +128,13 @@ TEST_F(SignatureParser, ParsingFieldSignature)
 {
     for (auto &&testData: fieldData)
         ASSERT_EQ(m_Parser->parse(testData.first, models::DisplayPart::Fields), testData.second)
+            << "Signature: " << testData.first.toStdString();
+}
+
+TEST_F(SignatureParser, ParsingMethodSignature)
+{
+    for (auto &&testData: propertyData)
+        ASSERT_EQ(m_Parser->parse(testData.first, models::DisplayPart::Properties), testData.second)
             << "Signature: " << testData.first.toStdString();
 }
 
