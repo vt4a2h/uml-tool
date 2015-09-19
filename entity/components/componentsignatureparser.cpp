@@ -156,8 +156,21 @@ namespace components {
             }
         };
 
-        bool notContainsInvalidKeyword(const QRegularExpressionMatch &match, models::DisplayPart display,
-                                       Tokens &out)
+        using RulesFunc = std::function<bool(const QString &, const Keywords &, Tokens &)>;
+        using GroupRules = QPair<int, RulesFunc>;
+        using RulesMap = QMap<models::DisplayPart, GroupRules>;
+        RulesMap rulesMap =
+        {
+            {models::DisplayPart::Methods,
+                {int(MethodsGroupsNames::Arguments),
+                    [](auto s, auto k, auto out){
+                        return true;
+                    }
+                },
+            },
+        };
+
+        bool split(const QRegularExpressionMatch &match, models::DisplayPart display, Tokens &out)
         {
             const int groupsCount = int(componentsGroupCount[display]);
             out.resize(groupsCount);
@@ -168,9 +181,11 @@ namespace components {
                 QString cap = match.captured(groupIndex).trimmed();
                 out[groupIndex] = std::make_shared<Token>(cap);
 
-                auto it = utility::find_if(forbidden, [&](const auto &c){ return c.first == groupIndex; });
+                auto it = utility::find_if(forbidden, [&](auto &&c){ return c.first == groupIndex; });
                 if (it != cend(forbidden)) {
-                    const QStringList &tmpList = cap.remove(QChar::Space).split(QRegExp("::|,"), QString::SkipEmptyParts);
+                    const QStringList &tmpList =
+                        cap.remove(QChar::Space).split(QRegExp("::|,"), QString::SkipEmptyParts);
+
                     if (!(tmpList.toSet() & it->second).isEmpty()) {
                         out.clear();
                         return false;
@@ -199,7 +214,7 @@ namespace components {
         const QRegularExpression re(pattern);
         const auto &match = re.match(signature.trimmed());
         if (match.hasMatch())
-            return notContainsInvalidKeyword(match, display, m_Tokens);
+            return split(match, display, m_Tokens);
 
         return false;
     }
