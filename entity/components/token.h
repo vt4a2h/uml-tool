@@ -24,6 +24,8 @@
 
 #include <QStringList>
 
+#include "components_types.h"
+
 namespace components {
 
     /// The Token class
@@ -32,13 +34,13 @@ namespace components {
     public:
         Token();
         Token(const QString &token);
-        Token(const QStringList &tokens);
+        Token(const Tokens &tokens);
 
         bool isEmpty() const;
         bool isSingle() const;
         bool isMulti() const;
 
-        QStringList tokens() const;
+        Tokens tokens() const;
         QString token() const;
 
         // Useful for testing
@@ -52,12 +54,12 @@ namespace components {
 
         // Unfortunately we cannot use unnamed union with non-trivial types.
         union Data {
-            QStringList m_Tokens;
+            Tokens m_Tokens;
             QString m_Token;
 
             Data() {}
             Data(const QString &token) : m_Token(token) {}
-            Data(const QStringList &tokens) : m_Tokens(tokens) {}
+            Data(const Tokens &tokens) : m_Tokens(tokens) {}
             ~Data() {}
         };
 

@@ -47,7 +47,7 @@ namespace components {
      * @brief Token::Token
      * @param tokens
      */
-    Token::Token(const QStringList &tokens)
+    Token::Token(const Tokens &tokens)
         : m_Tag(IsMulti)
         , m_Data(tokens)
     {}
@@ -83,7 +83,7 @@ namespace components {
      * @brief Token::tokens
      * @return
      */
-    QStringList Token::tokens() const
+    Tokens Token::tokens() const
     {
         Q_ASSERT(isMulti());
         return m_Data.m_Tokens;
@@ -113,7 +113,12 @@ namespace components {
                 return m_Data.m_Token.toStdString();
 
             case IsMulti:
-                return m_Data.m_Tokens.join(QChar::Space).toStdString();
+            {
+                std::string out;
+                for (auto &&t : m_Data.m_Tokens)
+                    out.append(t->toStdString() + " ");
+                return out;
+            }
 
             default:
                 return "";
@@ -135,8 +140,13 @@ namespace components {
                 break;
 
             case IsMulti:
-                qDebug() << "Tokens: " + m_Data.m_Tokens.join(QChar::Space);
+            {
+                qDebug() << "Tokens:";
+                for (auto &&t: m_Data.m_Tokens)
+                    t->dump();
+
                 break;
+            }
 
             default: ;
         }
