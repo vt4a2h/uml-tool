@@ -156,14 +156,26 @@ namespace components {
             }
         };
 
-        using RulesFunc = std::function<bool(const QString &, const Keywords &, Tokens &)>;
+        using RulesFunc = std::function<bool(const QString &, const Keywords &, SharedToken &)>;
         using GroupRules = QPair<int, RulesFunc>;
         using RulesMap = QMap<models::DisplayPart, GroupRules>;
         RulesMap rulesMap =
         {
             {models::DisplayPart::Methods,
                 {int(MethodsGroupsNames::Arguments),
-                    [](auto s, auto k, auto out){
+                    [](const QString &s, const Keywords &/*k*/, SharedToken &/*out*/){
+                        const QStringList &types = s.split(",", QString::SkipEmptyParts);
+                        if (types.isEmpty())
+                            return true;
+
+                        const QRegularExpression re(type);
+                        for (auto &&t : types) {
+                            auto match = re.match(t.trimmed());
+                            if (!match.hasMatch()) // TODO: add checking keywords
+                                return false;
+                        }
+
+
                         return true;
                     }
                 },
