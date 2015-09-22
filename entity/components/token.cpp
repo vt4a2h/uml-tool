@@ -114,10 +114,10 @@ namespace components {
 
             case IsMulti:
             {
-                std::string out;
+                QString out;
                 for (auto &&t : m_Data.m_Tokens)
-                    out.append(t->toStdString() + " ");
-                return out;
+                    out.append(t->token()).append(QChar::Space);
+                return out.trimmed().toStdString();
             }
 
             default:

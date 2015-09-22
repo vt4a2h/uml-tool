@@ -115,11 +115,15 @@ TEST_F(SignatureParser, TestingTokenClass)
     ASSERT_EQ(token->toStdString(), "one_token");
     token->dump();
 
-    token = std::make_shared<components::Token>(QStringList({"1_token", "2_token", "3_token"}));
+    components::Tokens tokens;
+    tokens << std::make_shared<components::Token>("1_token") <<
+              std::make_shared<components::Token>("2_token") <<
+              std::make_shared<components::Token>("3_token");
+    token = std::make_shared<components::Token>(tokens);
     ASSERT_FALSE(token->isEmpty());
     ASSERT_FALSE(token->isSingle());
     ASSERT_TRUE(token->isMulti());
-    ASSERT_EQ(token->tokens(), QStringList({"1_token", "2_token", "3_token"}));
+    ASSERT_EQ(token->tokens(), tokens);
     ASSERT_EQ(token->toStdString(), "1_token 2_token 3_token");
     token->dump();
 }
