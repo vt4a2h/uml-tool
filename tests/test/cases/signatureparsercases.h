@@ -60,7 +60,20 @@ namespace {
 
     TestData methodData =
     {
-//        {"int get()", true},
+        {"int get()",               true },
+        {"get()",                   false},
+        {"get int()",               false},
+        {"int get() const",         true },
+        {"int get() final",         true },
+        {"int get() const final",   true },
+        {"int get() override",      true },
+        {"int get() bla-bla-bla",   false},
+        {"static int get()",        true },
+        {"int get() = 0",           true },
+        {"int get() const = 0",     true },
+        {"int get() = default",     true },
+        {"int get() = delete",      true },
+        {"int get() = bla-bla-bla", false},
     };
 
     TestData propertyData =

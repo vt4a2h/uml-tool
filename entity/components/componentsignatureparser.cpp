@@ -85,12 +85,13 @@ namespace components {
                                                                            // }
                                      "\\s*(\\w+)$";                        // 7 -- field name
 
-        const QString methodPattern = "^(?:\\s*(static))?"                                            // 1 -- static
-                                      "(?:\\s+(" + highLvlType + ")"                                  // 2 -- return type
-                                      "(?:\\s+(\\w+))"                                                // 3 -- method name
-                                      "(?:\\s*(\\((?:\\s*"+ highLvlType +"\\s*,\\s*)*\\)))"           // 4-- method arguments
-                                      "(?:\\s+(const))?"                                              // 5 -- const
-                                      "(?:\\s+((?:final|override)|(?:=\\s+default|delete|0))\\s*)?$"; // 6 -- lhs
+        const QString methodPattern =
+            "^(?:\\s*(static))?"                                                       // 1 -- static
+            "(?:\\s+(" + highLvlType + ")"                                             // 2 -- return type
+            "(?:\\s+(\\w+))"                                                           // 3 -- method name
+            "(?:\\s*(\\((?:\\s*"+ highLvlType +"(?:\\s*|(?:\\s+\\w+\\s*)),\\s*)*\\)))" // 4 -- method arguments
+            "(?:\\s+(const))?"                                                         // 5 -- const
+            "(?:\\s+((?:final|override)|(?:=\\s+default|delete|0))\\s*)?$";            // 6 -- lhs
 
         const QString propertyPattern = "^(\\w+)\\s+"                         // 1 -- type
                                         "(\\w+)"                              // 2 -- name
@@ -156,6 +157,8 @@ namespace components {
             }
         };
 
+        Forbidden forbiddenForTypes = {};
+
         using RulesFunc = std::function<bool(const QString &, const Keywords &, SharedToken &)>;
         using GroupRules = QPair<int, RulesFunc>;
         using RulesMap = QMap<models::DisplayPart, GroupRules>;
@@ -168,13 +171,16 @@ namespace components {
                         if (types.isEmpty())
                             return true;
 
+
                         const QRegularExpression re(type);
                         for (auto &&t : types) {
                             auto match = re.match(t.trimmed());
-                            if (!match.hasMatch()) // TODO: add checking keywords
+                            if (match.hasMatch()) {
+
+                            }
+                            else
                                 return false;
                         }
-
 
                         return true;
                     }
