@@ -36,6 +36,7 @@ namespace {
 
     TestData fieldData =
     {
+        {"",                                              false},
         {"int ",                                          false},
         {"int a",                                         true },
         {"const int",                                     false},
@@ -60,6 +61,7 @@ namespace {
 
     TestData methodData =
     {
+        {"",                        false},
         {"int get()",               true },
         {"get()",                   false},
         {"get int()",               false},
@@ -78,6 +80,7 @@ namespace {
 
     TestData propertyData =
     {
+        {"",                                              false},
         {"int width",                                     true },
         {"int width MEMBER m_width",                      true },
         {"  int   width   MEMBER    m_width     ",        true },
@@ -150,8 +153,8 @@ TEST_F(SignatureParser, ParsingFieldSignature)
 
 TEST_F(SignatureParser, ParsingMethodSignature)
 {
-    for (auto &&testData: propertyData)
-        ASSERT_EQ(m_Parser->parse(testData.first, models::DisplayPart::Properties), testData.second)
+    for (auto &&testData: methodData)
+        ASSERT_EQ(m_Parser->parse(testData.first, models::DisplayPart::Methods), testData.second)
             << "Signature: " << testData.first.toStdString();
 }
 

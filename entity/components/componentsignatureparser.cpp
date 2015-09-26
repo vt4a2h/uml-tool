@@ -24,6 +24,7 @@
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
+#include <QDebug>
 
 #include <models/componentsmodel.h>
 
@@ -86,12 +87,18 @@ namespace components {
                                      "\\s*(\\w+)$";                        // 7 -- field name
 
         const QString methodPattern =
-            "^(?:\\s*(static))?"                                                       // 1 -- static
-            "(?:\\s+(" + highLvlType + ")"                                             // 2 -- return type
-            "(?:\\s+(\\w+))"                                                           // 3 -- method name
-            "(?:\\s*(\\((?:\\s*"+ highLvlType +"(?:\\s*|(?:\\s+\\w+\\s*)),\\s*)*\\)))" // 4 -- method arguments
-            "(?:\\s+(const))?"                                                         // 5 -- const
-            "(?:\\s+((?:final|override)|(?:=\\s+default|delete|0))\\s*)?$";            // 6 -- lhs
+//            "^(?:\\s*(static)\\s+)?"                                                   // 1 -- static
+//            "(?:(" + highLvlType + ")\\s+)"                                            // 2 -- return type
+//            "(?:(\\w+))"                                                               // 3 -- method name
+//            "(?:\\s*(\\((?:\\s*"+ highLvlType +"(?:\\s*|(?:\\s+\\w+\\s*)),\\s*)*\\)))" // 4 -- method arguments
+//            "(?:\\s+(const))?"                                                         // 5 -- const
+//            "(?:\\s+((?:final|override)|(?:=\\s+default|delete|0))\\s*)?$";            // 6 -- lhs
+        "^(?:\\s*(static)\\s+)?"                                                   // 1 -- static
+        "(?:(\\w+)\\s+)"                                                           // 2 -- return type
+        "(?:(\\w+))"                                                               // 3 -- method name
+        "(?:\\s*(\\(\\w*\\)))"                                                     // 4 -- method arguments
+        "(?:\\s+(const))?"                                                         // 5 -- const
+        "(?:\\s+((?:final|override)|(?:=\\s+(?:default|delete|0)))\\s*)?$";        // 6 -- lhs
 
         const QString propertyPattern = "^(\\w+)\\s+"                         // 1 -- type
                                         "(\\w+)"                              // 2 -- name
@@ -230,9 +237,14 @@ namespace components {
             return false;
 
         const QRegularExpression re(pattern);
-        const auto &match = re.match(signature.trimmed());
-        if (match.hasMatch())
-            return split(match, display, m_Tokens);
+        if (re.isValid()) {
+            const auto &match = re.match(signature.trimmed());
+            if (match.hasMatch())
+                return split(match, display, m_Tokens);
+        } else {
+            qWarning() << "In:" << Q_FUNC_INFO << "-- regexp is not valid:" << re.errorString()
+                       << "at:" << re.patternErrorOffset();
+        }
 
         return false;
     }
