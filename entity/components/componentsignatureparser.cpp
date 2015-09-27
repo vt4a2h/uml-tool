@@ -68,13 +68,14 @@ namespace components {
                              "((?:\\w*:{2,})*)"                                               // namespaces
                              "(\\w+)"                                                         // typename
                              "(?:\\s*<\\s*((?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?" // template args
-                             "\\s+([\\*\\s\\&const]*)";                                       // &*const
-        // see description of "type" regex
+                             "(?:\\s+([\\*\\s\\&const]*))?";                                  // &*const
+
+        // unlike "type" regex, this one doesn't match anything
         const QString highLvlType = "(?:const\\s+)?"
                                     "(?:(?:\\w*:{2,})*)"
                                     "(?:\\w+)"
                                     "(?:\\s*<\\s*(?:(?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?"
-                                    "\\s+(?:[\\*\\s\\&const]*)";
+                                    "(?:\\s+(?:[\\*\\s\\&const]*))?";
 
         const QString fieldPattern = "^(?:(volatile|static|mutable)\\s)?"  // 1 -- lhs keywords
                                      + type +                              // { type:
@@ -87,18 +88,13 @@ namespace components {
                                      "\\s*(\\w+)$";                        // 7 -- field name
 
         const QString methodPattern =
-//            "^(?:\\s*(static)\\s+)?"                                                   // 1 -- static
-//            "(?:(" + highLvlType + ")\\s+)"                                            // 2 -- return type
-//            "(?:(\\w+))"                                                               // 3 -- method name
-//            "(?:\\s*(\\((?:\\s*"+ highLvlType +"(?:\\s*|(?:\\s+\\w+\\s*)),\\s*)*\\)))" // 4 -- method arguments
-//            "(?:\\s+(const))?"                                                         // 5 -- const
-//            "(?:\\s+((?:final|override)|(?:=\\s+default|delete|0))\\s*)?$";            // 6 -- lhs
-        "^(?:\\s*(static)\\s+)?"                                                   // 1 -- static
-        "(?:(\\w+)\\s+)"                                                           // 2 -- return type
-        "(?:(\\w+))"                                                               // 3 -- method name
-        "(?:\\s*(\\(\\w*\\)))"                                                     // 4 -- method arguments
-        "(?:\\s+(const))?"                                                         // 5 -- const
-        "(?:\\s+((?:final|override)|(?:=\\s+(?:default|delete|0)))\\s*)?$";        // 6 -- lhs
+            "^(?:\\s*(static)\\s+)?"                                            // 1 -- static
+            "(?:(" + highLvlType + ")\\s+)"                                     // 2 -- return type
+            "(?:(\\w+))"                                                        // 3 -- method name
+            "(?:\\s*\\(((?:[\\w\\s\\*\\&:,_<>])*)\\))"                          // 4 -- method arguments
+                                                                                //      raw matching
+            "(?:\\s+(const))?"                                                  // 5 -- const
+            "(?:\\s+((?:final|override)|(?:=\\s+(?:default|delete|0)))\\s*)?$"; // 6 -- lhs
 
         const QString propertyPattern = "^(\\w+)\\s+"                         // 1 -- type
                                         "(\\w+)"                              // 2 -- name
@@ -168,29 +164,26 @@ namespace components {
 
         using RulesFunc = std::function<bool(const QString &, const Keywords &, SharedToken &)>;
         using GroupRules = QPair<int, RulesFunc>;
-        using RulesMap = QMap<models::DisplayPart, GroupRules>;
+        using GroupRulesVector = QVector<GroupRules>;
+        using RulesMap = QMap<models::DisplayPart, GroupRulesVector>;
         RulesMap rulesMap =
         {
             {models::DisplayPart::Methods,
-                {int(MethodsGroupsNames::Arguments),
-                    [](const QString &s, const Keywords &/*k*/, SharedToken &/*out*/){
-                        const QStringList &types = s.split(",", QString::SkipEmptyParts);
-                        if (types.isEmpty())
-                            return true;
-
-
-                        const QRegularExpression re(type);
-                        for (auto &&t : types) {
-                            auto match = re.match(t.trimmed());
+                {
+                    {int(MethodsGroupsNames::ReturnType),
+                     [](const QString &s, const Keywords &k, SharedToken &out){
+                            const QRegularExpression re(type);
+                            auto match = re.match(s.trimmed());
                             if (match.hasMatch()) {
+                                qDebug() << "matched";
+                                return true;
+                             }
+                             else
+                               return false;
 
-                            }
-                            else
-                                return false;
+                           return true;
                         }
-
-                        return true;
-                    }
+                    },
                 },
             },
         };
@@ -200,18 +193,33 @@ namespace components {
             const int groupsCount = int(componentsGroupCount[display]);
             out.resize(groupsCount);
 
-            const Forbidden &forbidden = forbiddenMap[display];
             for (int groupIndex = 1; groupIndex < groupsCount; ++groupIndex)
             {
                 QString cap = match.captured(groupIndex).trimmed();
                 out[groupIndex] = std::make_shared<Token>(cap);
 
-                auto it = utility::find_if(forbidden, [&](auto &&c){ return c.first == groupIndex; });
-                if (it != cend(forbidden)) {
+                const Forbidden &forbidden = forbiddenMap[display];
+                auto fIt = utility::find_if(forbidden, [&](auto &&c){ return c.first == groupIndex; });
+
+                const GroupRulesVector &rules = rulesMap[display];
+                auto rIt = utility::find_if(rules, [&](auto &&r){ return r.first == groupIndex; });
+
+                // Check extra rules
+                if (rIt != cend(rules)) {
+                    bool result = rIt->second(cap, fIt != cend(forbidden) ? fIt->second : Keywords(),
+                                              out[groupIndex]);
+                    if (!result){
+                        out.clear();
+                        return false;
+                    }
+                }
+
+                // Check forbidden words. Do not check forbidden words if there are some custom rules.
+                if (fIt != cend(forbidden) && rIt == cend(rules)) {
                     const QStringList &tmpList =
                         cap.remove(QChar::Space).split(QRegExp("::|,"), QString::SkipEmptyParts);
 
-                    if (!(tmpList.toSet() & it->second).isEmpty()) {
+                    if (!(tmpList.toSet() & fIt->second).isEmpty()) {
                         out.clear();
                         return false;
                     }
