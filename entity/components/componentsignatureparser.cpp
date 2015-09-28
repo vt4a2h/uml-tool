@@ -85,7 +85,7 @@ namespace components {
                                                                            //       5 -- template args
                                                                            //       6 -- &*const
                                                                            // }
-                                     "\\s*(\\w+)$";                        // 7 -- field name
+                                     "(?:\\s+(\\w+))$";                    // 7 -- field name
 
         const QString methodPattern =
             "^(?:\\s*(static)\\s+)?"                                            // 1 -- static
@@ -140,7 +140,6 @@ namespace components {
             },
             {models::DisplayPart::Methods,
              {
-                 {int(MethodsGroupsNames::ReturnType), reservedKeywords},
                  {int(MethodsGroupsNames::Name), reservedKeywords|types|boolKeywords},
                  {int(MethodsGroupsNames::Arguments), reservedKeywords|types|boolKeywords},
              }
@@ -171,17 +170,37 @@ namespace components {
             {models::DisplayPart::Methods,
                 {
                     {int(MethodsGroupsNames::ReturnType),
-                     [](const QString &s, const Keywords &k, SharedToken &out){
+                     [](const QString &s, const Keywords &/*k*/, SharedToken &out){
                             const QRegularExpression re(type);
                             auto match = re.match(s.trimmed());
                             if (match.hasMatch()) {
-                                qDebug() << "matched";
+                                QStringList rawTokens = match.capturedTexts();
+                                Q_ASSERT(s.trimmed() == rawTokens[0]);
+                                rawTokens.removeAt(0); // remove parsed string, which is always first
+
+                                Tokens tokens;
+                                for (auto &&t : rawTokens)
+                                    tokens << std::make_shared<Token>(t);
+
+                                // Namespaces shouldn't contains any reserved keywords
+                                if (!(tokens[1]->token().split("::", QString::SkipEmptyParts).toSet() &
+                                    (types | boolKeywords | reservedKeywords)).isEmpty())
+                                    return false;
+
+                                // Typename shouldn't contains reserved and bool keywords
+                                if (!(Keywords({tokens[2]->token()}) &
+                                    (reservedKeywords | boolKeywords)).isEmpty())
+                                    return false;
+
+                                 // Template args shouldn't contains reserved keywords
+                                 if (!(Keywords({tokens[3]->token()}) & boolKeywords).isEmpty())
+                                    return false;
+
+                                out = std::make_shared<Token>(tokens);
                                 return true;
                              }
                              else
                                return false;
-
-                           return true;
                         }
                     },
                 },

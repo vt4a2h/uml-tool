@@ -48,7 +48,7 @@ namespace {
         {"static const foo::bar::int a",                  true },
         {"staticconst foo::bar::int a",                   false},
         {"static const std::foo::baz::int * const **& a", true },
-        {"int *consta",                                   true },
+        {"int *const a",                                  true },
         {"std::vector<int> vec",                          true },
         {"std::vector<int, MyAlloc> vec",                 true },
         {"std::vector<int,> vec",                         true },
@@ -62,6 +62,7 @@ namespace {
     TestData methodData =
     {
         {"",                               false},
+        {"const foo::bar * get()",         true },
         {"int get()",                      true },
         {"get()",                          false},
         {"get int()",                      false},
