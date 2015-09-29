@@ -159,9 +159,14 @@ namespace components {
             }
         };
 
-        Forbidden forbiddenForTypes = {};
+        const QMap<int, Keywords> forbiddenForTypes =
+        {
+            {int(TypeGroups::Namespaces), types|boolKeywords|reservedKeywords},
+            {int(TypeGroups::Typename), reservedKeywords|boolKeywords},
+            {int(TypeGroups::TemplateArgs), boolKeywords},
+        };
 
-        using RulesFunc = std::function<bool(const QString &, const Keywords &, SharedToken &)>;
+        using RulesFunc = std::function<bool(const QString &, SharedToken &)>;
         using GroupRules = QPair<int, RulesFunc>;
         using GroupRulesVector = QVector<GroupRules>;
         using RulesMap = QMap<models::DisplayPart, GroupRulesVector>;
@@ -170,7 +175,7 @@ namespace components {
             {models::DisplayPart::Methods,
                 {
                     {int(MethodsGroupsNames::ReturnType),
-                     [](const QString &s, const Keywords &/*k*/, SharedToken &out){
+                     [](const QString &s, SharedToken &out){
                             const QRegularExpression re(type);
                             auto match = re.match(s.trimmed());
                             if (match.hasMatch()) {
@@ -178,9 +183,19 @@ namespace components {
                                 Q_ASSERT(s.trimmed() == rawTokens[0]);
                                 rawTokens.removeAt(0); // remove parsed string, which is always first
 
-                                Tokens tokens;
-                                for (auto &&t : rawTokens)
-                                    tokens << std::make_shared<Token>(t);
+                                Tokens tokens(int(TypeGroups::GroupsCount));
+                                for (int i = 1; i < int(TypeGroups::GroupsCount); ++i)
+                                {
+                                    QString cap = match.captured(i).trimmed();
+                                    tokens[i] = std::make_shared<Token>(cap);
+
+                                    const Keywords &forbidden = forbiddenForTypes.value(i);
+                                    if (!forbidden.isEmpty()) {
+                                        // TODO: check
+                                    }
+                                }
+
+                                // TODO: add group names, use cap to matching
 
                                 // Namespaces shouldn't contains any reserved keywords
                                 if (!(tokens[1]->token().split("::", QString::SkipEmptyParts).toSet() &
@@ -225,8 +240,7 @@ namespace components {
 
                 // Check extra rules
                 if (rIt != cend(rules)) {
-                    bool result = rIt->second(cap, fIt != cend(forbidden) ? fIt->second : Keywords(),
-                                              out[groupIndex]);
+                    bool result = rIt->second(cap, out[groupIndex]);
                     if (!result){
                         out.clear();
                         return false;

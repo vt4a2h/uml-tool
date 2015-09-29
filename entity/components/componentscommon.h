@@ -70,4 +70,15 @@ namespace components {
         GroupsCount,
     };
 
+    /// Type groups names actual for parsing
+    enum class TypeGroups
+    {
+        ConstStatus = 1,
+        Namespaces,
+        Typename,
+        TemplateArgs,
+        PLC,
+        GroupsCount,
+    };
+
 } // namespace components
