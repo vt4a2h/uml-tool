@@ -63,6 +63,8 @@ namespace {
     {
         {"",                               false},
         {"const foo::bar * get()",         true },
+        {"const std::vector<int> & get()", true },
+        {"const std::<int> get() &",       false},
         {"int get()",                      true },
         {"get()",                          false},
         {"get int()",                      false},

@@ -176,13 +176,14 @@ namespace components {
                 {
                     {int(MethodsGroupsNames::ReturnType),
                      [](const QString &s, SharedToken &out){
+                            if (s.isEmpty()) {
+                                out = std::make_shared<Token>(s);
+                                return true;
+                            }
+
                             const QRegularExpression re(type);
                             auto match = re.match(s.trimmed());
                             if (match.hasMatch()) {
-                                QStringList rawTokens = match.capturedTexts();
-                                Q_ASSERT(s.trimmed() == rawTokens[0]);
-                                rawTokens.removeAt(0); // remove parsed string, which is always first
-
                                 Tokens tokens(int(TypeGroups::GroupsCount));
                                 for (int i = 1; i < int(TypeGroups::GroupsCount); ++i)
                                 {
@@ -190,26 +191,13 @@ namespace components {
                                     tokens[i] = std::make_shared<Token>(cap);
 
                                     const Keywords &forbidden = forbiddenForTypes.value(i);
-                                    if (!forbidden.isEmpty()) {
-                                        // TODO: check
-                                    }
+                                    if (!forbidden.isEmpty())
+                                        if (!(tokens[i]->token().split("::", QString::SkipEmptyParts)
+                                              .toSet() & forbidden).isEmpty()) {
+                                            out.reset();
+                                            return false;
+                                        }
                                 }
-
-                                // TODO: add group names, use cap to matching
-
-                                // Namespaces shouldn't contains any reserved keywords
-                                if (!(tokens[1]->token().split("::", QString::SkipEmptyParts).toSet() &
-                                    (types | boolKeywords | reservedKeywords)).isEmpty())
-                                    return false;
-
-                                // Typename shouldn't contains reserved and bool keywords
-                                if (!(Keywords({tokens[2]->token()}) &
-                                    (reservedKeywords | boolKeywords)).isEmpty())
-                                    return false;
-
-                                 // Template args shouldn't contains reserved keywords
-                                 if (!(Keywords({tokens[3]->token()}) & boolKeywords).isEmpty())
-                                    return false;
 
                                 out = std::make_shared<Token>(tokens);
                                 return true;
