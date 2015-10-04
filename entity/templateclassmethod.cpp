@@ -28,6 +28,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QStringList>
+#include <QHash>
 
 #include <utility/helpfunctions.h>
 

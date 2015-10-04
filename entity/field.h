@@ -24,6 +24,7 @@
 #pragma once
 
 #include <QString>
+#include <QSet>
 
 #include "basicentity.h"
 #include "entity_types.hpp"

@@ -20,8 +20,9 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
+
+#include <QHash>
 
 #include <entity/entity_types.hpp>
 #include <types.h>

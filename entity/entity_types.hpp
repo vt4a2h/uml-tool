@@ -24,9 +24,7 @@
 
 #include <memory>
 
-#include <QHash>
-#include <QSet>
-#include <QStringList>
+#include <QtContainerFwd>
 #include <QMetaType>
 
 namespace entity {

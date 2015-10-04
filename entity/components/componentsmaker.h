@@ -70,8 +70,11 @@ namespace components {
         entity::SharedScope m_Scope;
         MakerMap m_ComponentMakerMap;
 
+        bool checkCommonState() const;
+
         OptionalEntity makeField(const components::Tokens &tokens);
         OptionalEntity makeProperty(const components::Tokens &tokens);
+        OptionalEntity makeMethod(const components::Tokens &tokens);
     };
 
 } // namespace components

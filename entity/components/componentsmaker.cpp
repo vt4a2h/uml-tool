@@ -107,6 +107,7 @@ namespace components {
         , m_Scope(scope)
     {
         m_ComponentMakerMap[models::DisplayPart::Fields]     = [&](auto tokens){ return this->makeField(tokens);    };
+        m_ComponentMakerMap[models::DisplayPart::Methods]    = [&](auto tokens){ return this->makeMethod(tokens);   };
         m_ComponentMakerMap[models::DisplayPart::Properties] = [&](auto tokens){ return this->makeProperty(tokens); };
     }
 
@@ -178,6 +179,16 @@ namespace components {
     }
 
     /**
+     * @brief ComponentsMaker::checkCommonState
+     * @return
+     */
+    bool ComponentsMaker::checkCommonState() const
+    {
+        return m_Model && m_Model->globalDatabase() && m_Model->currentProject() &&
+               m_Model->currentProject()->database();
+    }
+
+    /**
      * @brief ComponentsMaker::makeField
      * @return
      */
@@ -188,10 +199,7 @@ namespace components {
                  tokens[int(FieldGroupNames::Name)]->isSingle() &&
                  !tokens[int(FieldGroupNames::Name)]->token().isEmpty());
 
-        Q_ASSERT(m_Model);
-        Q_ASSERT(m_Model->globalDatabase());
-        Q_ASSERT(m_Model->currentProject());
-        Q_ASSERT(m_Model->currentProject()->database());
+        Q_ASSERT(checkCommonState());
 
         auto tmpTokens = tokens;
 
@@ -307,10 +315,7 @@ namespace components {
                  tokens[int(PropGroupNames::Name)]->isSingle() &&
                  !tokens[int(PropGroupNames::Name)]->token().isEmpty());
 
-        Q_ASSERT(m_Model);
-        Q_ASSERT(m_Model->globalDatabase());
-        Q_ASSERT(m_Model->currentProject());
-        Q_ASSERT(m_Model->currentProject()->database());
+        Q_ASSERT(checkCommonState());
 
         entity::SharedProperty newProperty = std::make_shared<entity::Property>();
 
@@ -374,5 +379,26 @@ namespace components {
         return {"", newProperty};
     }
 
-} // namespace components
+    /**
+     * @brief ComponentsMaker::makeMethod
+     * @param tokens
+     * @return
+     */
+    OptionalEntity ComponentsMaker::makeMethod(const Tokens &tokens)
+    {
+        Q_ASSERT(tokens.isEmpty() && !tokens[int(MethodsGroupsNames::ReturnType)]->isEmpty() &&
+                tokens[int(MethodsGroupsNames::ReturnType)]->isSingle() &&
+                !tokens[int(MethodsGroupsNames::Name)]->isEmpty() &&
+                tokens[int(MethodsGroupsNames::Name)]->isSingle());
 
+        Q_ASSERT(checkCommonState());
+
+        entity::SharedMethod newMethod = std::make_shared<entity::ClassMethod>();
+
+        // Add name
+        newMethod->setName(tokens[int(MethodsGroupsNames::Name)]->token());
+
+        return {"", newMethod};
+    }
+
+} // namespace components

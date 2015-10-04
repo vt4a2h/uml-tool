@@ -26,6 +26,7 @@
 #include <type_traits>
 
 #include <QString>
+#include <QHash>
 
 #include <entity/entity_types.hpp>
 
