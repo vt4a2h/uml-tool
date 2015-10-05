@@ -72,9 +72,10 @@ namespace components {
 
         bool checkCommonState() const;
 
+        OptionalEntity makeType(const components::Tokens &tokens);
         OptionalEntity makeField(const components::Tokens &tokens);
-        OptionalEntity makeProperty(const components::Tokens &tokens);
         OptionalEntity makeMethod(const components::Tokens &tokens);
+        OptionalEntity makeProperty(const components::Tokens &tokens);
     };
 
 } // namespace components

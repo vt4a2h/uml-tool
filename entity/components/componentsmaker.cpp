@@ -185,40 +185,26 @@ namespace components {
     bool ComponentsMaker::checkCommonState() const
     {
         return m_Model && m_Model->globalDatabase() && m_Model->currentProject() &&
-               m_Model->currentProject()->database();
+                m_Model->currentProject()->database();
     }
 
     /**
-     * @brief ComponentsMaker::makeField
+     * @brief ComponentsMaker::makeType
+     * @param tokens
      * @return
      */
-    OptionalEntity ComponentsMaker::makeField(const Tokens &tokens)
+    OptionalEntity ComponentsMaker::makeType(const Tokens &tokens)
     {
-        Q_ASSERT(!tokens.isEmpty() && tokens[int(FieldGroupNames::Typename)]->isSingle() &&
-                 !tokens[int(FieldGroupNames::Typename)]->token().isEmpty() &&
-                 tokens[int(FieldGroupNames::Name)]->isSingle() &&
-                 !tokens[int(FieldGroupNames::Name)]->token().isEmpty());
+        Q_ASSERT(!tokens.isEmpty() && tokens[int(TypeGroups::Typename)]->isSingle() &&
+                 !tokens[int(TypeGroups::Typename)]->token().isEmpty());
 
-        Q_ASSERT(checkCommonState());
-
-        auto tmpTokens = tokens;
-
-        auto newField = std::make_shared<entity::Field>();
-        newField->setName(tmpTokens[int(FieldGroupNames::Name)]->token());
-        if (!tmpTokens[int(FieldGroupNames::LhsKeywords)]->token().isEmpty()) {
-            auto keyword =
-                utility::fieldKeywordFromString(tmpTokens[int(FieldGroupNames::LhsKeywords)]->token());
-            Q_ASSERT(keyword != entity::FieldKeyword::Invalid);
-            newField->addKeyword(keyword);
-        }
-
-        Q_ASSERT(tmpTokens[int(FieldGroupNames::Typename)]->isSingle());
-        const QString &typeName = tmpTokens[int(FieldGroupNames::Typename)]->token();
+        // Check common type
+        const QString &typeName = tokens[int(TypeGroups::Typename)]->token();
         entity::SharedType type;
-
-        if (!tmpTokens[int(FieldGroupNames::Namespaces)]->token().isEmpty()) {
-            Q_ASSERT(tmpTokens[int(FieldGroupNames::Namespaces)]->isSingle());
-            auto names = tmpTokens[int(FieldGroupNames::Namespaces)]->token()
+        if (!tokens[int(TypeGroups::Namespaces)]->token().isEmpty()) {
+            // TODO: should be already splitted i.e. is not single
+            Q_ASSERT(tokens[int(TypeGroups::Namespaces)]->isSingle());
+            auto names = tokens[int(TypeGroups::Namespaces)]->token()
                          .split("::", QString::SkipEmptyParts);
             auto scope = m_Model->globalDatabase()->chainScopeSearch(names);
             if (!scope)
@@ -241,19 +227,20 @@ namespace components {
         if (!type)
             return {tr("Wrong type: %1.").arg(typeName), nullptr};
 
-        entity::SharedExtendedType extendedType = std::make_shared<entity::ExtendedType>();
-        extendedType->setTypeId(type->id());
-        extendedType->setScopeId(m_Scope->id());
-        Q_ASSERT(tmpTokens[int(FieldGroupNames::ConstStatus)]->isSingle());
-        extendedType->setConstStatus(!tmpTokens[int(FieldGroupNames::ConstStatus)]->token().isEmpty());
+        // Check extra stuff
+        entity::SharedExtendedType extType = std::make_shared<entity::ExtendedType>();
+        extType->setTypeId(type->id());
+        extType->setScopeId(m_Scope->id());
+        Q_ASSERT(tokens[int(TypeGroups::ConstStatus)]->isSingle());
+        extType->setConstStatus(!tokens[int(TypeGroups::ConstStatus)]->token().isEmpty());
 
-        Q_ASSERT(tmpTokens[int(FieldGroupNames::PLC)]->isSingle());
-        if (!tmpTokens[int(FieldGroupNames::PLC)]->token().isEmpty()) {
-            QString plc = tmpTokens[int(FieldGroupNames::PLC)]->token();
+        Q_ASSERT(tokens[int(TypeGroups::PLC)]->isSingle());
+        if (!tokens[int(TypeGroups::PLC)]->token().isEmpty()) {
+            QString plc = tokens[int(TypeGroups::PLC)]->token();
             plc.remove(QChar::Space);
 
             if (plc.startsWith("const")) {
-                extendedType->setConstStatus(true);
+                extType->setConstStatus(true);
                 plc.remove(0, 4);
             }
 
@@ -261,21 +248,22 @@ namespace components {
                 if (plc.startsWith("const")) {
                     plc.remove(0, 5);
                 } else if (plc.startsWith("*const")) {
-                    extendedType->addPointerStatus(true);
+                    extType->addPointerStatus(true);
                     plc.remove(0, 6);
                 } else if (plc.startsWith("*")) {
-                    extendedType->addPointerStatus();
+                    extType->addPointerStatus();
                     plc.remove(0, 1);
                 } else if (plc.startsWith("&")) {
-                    extendedType->addLinkStatus();
+                    extType->addLinkStatus();
                     plc.remove(0, 1);
                 }
             }
         }
 
-        Q_ASSERT(tmpTokens[int(FieldGroupNames::TemplateArgs)]->isSingle());
-        if (!tmpTokens[int(FieldGroupNames::TemplateArgs)]->token().isEmpty()) {
-            QStringList arguments = tmpTokens[int(FieldGroupNames::TemplateArgs)]->token()
+        // TODO: should be already splitted too
+        Q_ASSERT(tokens[int(TypeGroups::TemplateArgs)]->isSingle());
+        if (!tokens[int(TypeGroups::TemplateArgs)]->token().isEmpty()) {
+            QStringList arguments = tokens[int(TypeGroups::TemplateArgs)]->token()
                                     .remove(QChar::Space)
                                     .split(",", QString::SkipEmptyParts);
             entity::ScopesList scopes = m_Model->currentProject()->database()->scopes();
@@ -286,24 +274,60 @@ namespace components {
                 entity::SharedType t;
                 utility::find_if(scopes, [&](auto &&sc){ t = sc->typeByName(name); return !!t; });
                 if (t)
-                    extendedType->addTemplateParameter(t->id());
+                    extType->addTemplateParameter(t->id());
                 else
                     return {tr("Template parameter \"%1\" not found.").arg(name), nullptr};
             }
         }
 
-        if (extendedType->isConst() || !extendedType->templateParameters().isEmpty() || !extendedType->pl().isEmpty()) {
+        if (extType->isConst() || !extType->templateParameters().isEmpty() || !extType->pl().isEmpty()) {
             const entity::TypesList &types = m_Scope->types();
             auto it = utility::find_if(types, [=](const entity::SharedType &type) {
-                                                  return extendedType->isEqual(*type, false);
+                                                  return extType->isEqual(*type, false);
                                               });
             if (it == cend(types))
-                m_Model->addExistsType(m_Model->currentProject()->id(), m_Scope->id(), extendedType);
+                m_Model->addExistsType(m_Model->currentProject()->id(), m_Scope->id(), extType);
 
-            newField->setTypeId(extendedType->id());
+            return {"", extType};
          } else {
-            newField->setTypeId(type->id());
+            return {"", type};
          }
+    }
+
+    /**
+     * @brief ComponentsMaker::makeField
+     * @return
+     */
+    OptionalEntity ComponentsMaker::makeField(const Tokens &tokens)
+    {
+        Q_ASSERT(!tokens.isEmpty() && tokens[int(FieldGroupNames::Typename)]->isSingle() &&
+                 !tokens[int(FieldGroupNames::Typename)]->token().isEmpty() &&
+                 tokens[int(FieldGroupNames::Name)]->isSingle() &&
+                 !tokens[int(FieldGroupNames::Name)]->token().isEmpty());
+
+        Q_ASSERT(checkCommonState());
+
+        // Make field with lhs keywords
+        auto newField = std::make_shared<entity::Field>();
+        newField->setName(tokens[int(FieldGroupNames::Name)]->token());
+        if (!tokens[int(FieldGroupNames::LhsKeywords)]->token().isEmpty()) {
+            auto keyword =
+                utility::fieldKeywordFromString(tokens[int(FieldGroupNames::LhsKeywords)]->token());
+            Q_ASSERT(keyword != entity::FieldKeyword::Invalid);
+            newField->addKeyword(keyword);
+        }
+
+        // Make type
+        Tokens typeTokens(int(TypeGroups::GroupsCount));
+        std::copy(begin(tokens) + int(FieldGroupNames::ConstStatus),
+                  begin(tokens) + int(FieldGroupNames::Name),        // do not include name
+                  begin(typeTokens) + int(TypeGroups::ConstStatus)); // add first group offset
+        auto optionalType = makeType(typeTokens);
+        if (!optionalType.errorMessage.isEmpty())
+            return {optionalType.errorMessage, nullptr};
+
+        Q_ASSERT(optionalType.resultEntity);
+        newField->setTypeId(optionalType.resultEntity->id());
 
         return {"", newField};
     }
@@ -387,7 +411,7 @@ namespace components {
     OptionalEntity ComponentsMaker::makeMethod(const Tokens &tokens)
     {
         Q_ASSERT(tokens.isEmpty() && !tokens[int(MethodsGroupsNames::ReturnType)]->isEmpty() &&
-                tokens[int(MethodsGroupsNames::ReturnType)]->isSingle() &&
+                !tokens[int(MethodsGroupsNames::ReturnType)]->isSingle() &&
                 !tokens[int(MethodsGroupsNames::Name)]->isEmpty() &&
                 tokens[int(MethodsGroupsNames::Name)]->isSingle());
 
@@ -397,6 +421,9 @@ namespace components {
 
         // Add name
         newMethod->setName(tokens[int(MethodsGroupsNames::Name)]->token());
+
+        // Add return type
+
 
         return {"", newMethod};
     }
