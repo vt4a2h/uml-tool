@@ -419,10 +419,19 @@ namespace components {
 
         entity::SharedMethod newMethod = std::make_shared<entity::ClassMethod>();
 
+        // Add return type
+        auto returnTypeToken = tokens[int(MethodsGroupsNames::ReturnType)];
+        Q_ASSERT(returnTypeToken->isMulti() && !returnTypeToken->isEmpty());
+        auto returnType = makeType(returnTypeToken->tokens());
+
+        if (!returnType.errorMessage.isEmpty())
+            return {returnType.errorMessage, nullptr};
+
+        newMethod->setReturnTypeId(returnType.resultEntity->id());
+
         // Add name
         newMethod->setName(tokens[int(MethodsGroupsNames::Name)]->token());
 
-        // Add return type
 
 
         return {"", newMethod};
