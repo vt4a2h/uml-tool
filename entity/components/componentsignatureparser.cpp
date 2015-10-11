@@ -77,6 +77,9 @@ namespace components {
                                     "(?:\\s*<\\s*(?:(?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?"
                                     "(?:\\s+(?:[\\*\\s\\&const]*))?";
 
+        const QString argumentPattern = "(?:(" + highLvlType + "))" // 1 -- type
+                                        "(?:\\s*(\\w*))";           // 2 -- name (is optional)
+
         const QString fieldPattern = "^(?:(volatile|static|mutable)\\s)?"  // 1 -- lhs keywords
                                      + type +                              // { type:
                                                                            //       2 -- const
@@ -166,6 +169,31 @@ namespace components {
             {int(TypeGroups::TemplateArgs), boolKeywords},
         };
 
+        bool parseType(const QString &s, Tokens &tokens)
+        {
+            const QRegularExpression re(type);
+            auto match = re.match(s.trimmed());
+            if (match.hasMatch()) {
+                tokens.resize(int(TypeGroups::GroupsCount));
+                for (int i = 1; i < int(TypeGroups::GroupsCount); ++i)
+                {
+                    const QString &cap = match.captured(i).trimmed();
+                    tokens[i] = std::make_shared<Token>(cap);
+
+                    const Keywords &forbidden = forbiddenForTypes.value(i);
+                    if (!forbidden.isEmpty()) {
+                        if (!(tokens[i]->token().split("::", QString::SkipEmptyParts)
+                              .toSet() & forbidden).isEmpty()) {
+                            tokens.clear();
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
         using RulesFunc = std::function<bool(const QString &, SharedToken &)>;
         using GroupRules = QPair<int, RulesFunc>;
         using GroupRulesVector = QVector<GroupRules>;
@@ -176,35 +204,64 @@ namespace components {
                 {
                     {int(MethodsGroupsNames::ReturnType),
                      [](const QString &s, SharedToken &out){
-                            if (s.isEmpty()) {
-                                out = std::make_shared<Token>(s);
-                                return true;
-                            }
+                         if (s.trimmed().isEmpty()) {
+                            out = std::make_shared<Token>();
+                            return true;
+                         }
 
-                            const QRegularExpression re(type);
-                            auto match = re.match(s.trimmed());
-                            if (match.hasMatch()) {
-                                Tokens tokens(int(TypeGroups::GroupsCount));
-                                for (int i = 1; i < int(TypeGroups::GroupsCount); ++i)
-                                {
-                                    QString cap = match.captured(i).trimmed();
-                                    tokens[i] = std::make_shared<Token>(cap);
+                         Tokens tokens;
+                         if (parseType(s, tokens)) {
+                            out = std::make_shared<Token>(tokens);
+                            return true;
+                         }
 
-                                    const Keywords &forbidden = forbiddenForTypes.value(i);
-                                    if (!forbidden.isEmpty())
-                                        if (!(tokens[i]->token().split("::", QString::SkipEmptyParts)
-                                              .toSet() & forbidden).isEmpty()) {
-                                            out.reset();
-                                            return false;
-                                        }
-                                }
+                         return false;
+                     }
+                    },
+                    {int(MethodsGroupsNames::Arguments),
+                     [](const QString &s, SharedToken &out) {
+                         QString trimmedIn = s.trimmed();
 
-                                out = std::make_shared<Token>(tokens);
-                                return true;
-                             }
-                             else
-                               return false;
+                        // It's OK if method has no arguments
+                        if (trimmedIn.isEmpty()) {
+                            out = std::make_shared<Token>();
+                            return true;
                         }
+
+                        QStringList arguments = s.split(",", QString::SkipEmptyParts);
+                        Tokens tmpOut;
+                        tmpOut.reserve(arguments.count());
+                        for (auto &&arg : arguments) {
+                            const QRegularExpression re(argumentPattern);
+                            auto match = re.match(arg.trimmed());
+
+                            if (match.hasMatch()) {
+                               Tokens argTokens(int(Argument::GroupsCount));
+
+                               Tokens type;
+                               int typeIndex = int(Argument::Type);
+                               if (parseType(match.captured(typeIndex), type))
+                                   argTokens[typeIndex] = std::make_shared<Token>(type);
+                               else {
+                                   out = std::make_shared<Token>();
+                                   return false;
+                               }
+
+                               int nameIndex = int(Argument::Name);
+                               QString name = match.captured(nameIndex).trimmed();
+                               argTokens[nameIndex] = name.isEmpty() ? std::make_shared<Token>()
+                                                                     : std::make_shared<Token>(name);
+
+                               tmpOut << std::make_shared<Token>(argTokens);
+                            } else {
+                               out = std::make_shared<Token>();
+                               return false;
+                            }
+                        }
+
+                        out = std::make_shared<Token>(tmpOut);
+                        return true;
+                     }
                     },
                 },
             },

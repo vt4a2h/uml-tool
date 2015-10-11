@@ -410,10 +410,9 @@ namespace components {
      */
     OptionalEntity ComponentsMaker::makeMethod(const Tokens &tokens)
     {
-        Q_ASSERT(tokens.isEmpty() && !tokens[int(MethodsGroupsNames::ReturnType)]->isEmpty() &&
-                !tokens[int(MethodsGroupsNames::ReturnType)]->isSingle() &&
-                !tokens[int(MethodsGroupsNames::Name)]->isEmpty() &&
-                tokens[int(MethodsGroupsNames::Name)]->isSingle());
+        Q_ASSERT(!tokens.isEmpty() &&
+                 tokens[int(MethodsGroupsNames::ReturnType)]->isMulti() &&
+                 tokens[int(MethodsGroupsNames::Name)]->isSingle());
 
         Q_ASSERT(checkCommonState());
 
@@ -432,7 +431,8 @@ namespace components {
         // Add name
         newMethod->setName(tokens[int(MethodsGroupsNames::Name)]->token());
 
-
+        // Add arguments
+        auto argumentsTokens = tokens[int(MethodsGroupsNames::Arguments)];
 
         return {"", newMethod};
     }

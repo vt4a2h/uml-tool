@@ -81,4 +81,12 @@ namespace components {
         GroupsCount,
     };
 
+    /// Method arguments
+    enum class Argument
+    {
+        Type = 1,
+        Name,
+        GroupsCount,
+    };
+
 } // namespace components

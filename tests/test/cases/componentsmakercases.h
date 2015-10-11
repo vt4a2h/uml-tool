@@ -43,6 +43,7 @@
 namespace {
     auto to_f(const entity::BasicEntity *e){ return static_cast<const entity::Field*>(e); }
     auto to_p(const entity::SharedBasicEntity &e){ return std::static_pointer_cast<entity::Property>(e); }
+    auto to_m(const entity::SharedBasicEntity &e){ return std::static_pointer_cast<entity::ClassMethod>(e); }
     auto to_et(const entity::Type *e){ return static_cast<const entity::ExtendedType*>(e); }
 }
 
@@ -103,6 +104,24 @@ TEST_F(ComponentsMaker, MakingField)
     field = to_f(result.resultEntity.get());
     auto vecOfInt = m_Project->database()->depthTypeSearch(field->typeId());
     ASSERT_TRUE(!!vecOfInt) << "Vector of int must be created in project database.";
+}
+
+TEST_F(ComponentsMaker, MakingMethod)
+{
+    // type and name
+    auto result = parseAndMake("int get()", models::DisplayPart::Methods);
+    check_errors(result);
+
+    auto method = to_m(result.resultEntity);
+    ASSERT_EQ(method->name(), "get");
+
+    auto globalScope = m_GlobalDatabase->getScope(GLOBAL);
+    auto t = globalScope->type(method->returnTypeId());
+    ASSERT_TRUE(!!t) << "Type with name int is not found in global database";
+    ASSERT_EQ(t->name(), "int");
+
+    // with arguments
+    result = parseAndMake("int get(int index, double time)", models::DisplayPart::Methods);
 }
 
 TEST_F(ComponentsMaker, MakingProperty)
