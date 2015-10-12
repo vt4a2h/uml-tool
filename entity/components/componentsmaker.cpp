@@ -256,6 +256,8 @@ namespace components {
                 } else if (plc.startsWith("&")) {
                     extType->addLinkStatus();
                     plc.remove(0, 1);
+                } else {
+                    break;
                 }
             }
         }
@@ -432,7 +434,31 @@ namespace components {
         newMethod->setName(tokens[int(MethodsGroupsNames::Name)]->token());
 
         // Add arguments
-        auto argumentsTokens = tokens[int(MethodsGroupsNames::Arguments)];
+        auto argumentsToken = tokens[int(MethodsGroupsNames::Arguments)];
+        Q_ASSERT(argumentsToken->isEmpty() || argumentsToken->isMulti());
+        if (argumentsToken->isMulti()) {
+            auto argumentsTokens = argumentsToken->tokens();
+            for (auto &&argumentToken : argumentsTokens) {
+                Q_ASSERT(argumentToken->isMulti());
+
+                auto argSubTokens = argumentToken->tokens();
+                Q_ASSERT(argSubTokens.size() == int(Argument::GroupsCount));
+
+                Q_ASSERT(argSubTokens[int(Argument::Name)]->isSingle());
+                auto name = argSubTokens[int(Argument::Name)]->token();
+
+                Q_ASSERT(argSubTokens[int(Argument::Type)]->isMulti());
+                auto type = makeType(argSubTokens[int(Argument::Type)]->tokens());
+                if (!type.errorMessage.isEmpty())
+                    return {tr("Wrong type of argument: %1. Error: %2.").arg(
+                                QString::number(argumentsTokens.indexOf(argumentToken)),
+                                type.errorMessage
+                            ), nullptr};
+
+                Q_ASSERT(type.resultEntity);
+                newMethod->addParameter(name, type.resultEntity->id());
+            }
+        }
 
         return {"", newMethod};
     }

@@ -241,7 +241,8 @@ namespace entity {
      */
     SharedField ClassMethod::getParameter(const QString &name) const
     {
-        auto it = utility::find_if(m_Parameters, [&name](const SharedField &f){ return f->name() == name; });
+        Q_ASSERT(!name.isEmpty());
+        auto it = utility::find_if(m_Parameters, [&name](auto &f){ return f->name() == name; });
         return it != m_Parameters.end() ? *it : SharedField();
     }
 
@@ -253,9 +254,11 @@ namespace entity {
      */
     SharedField ClassMethod::addParameter(const QString &name, const QString &typeId)
     {
-        auto existField = getParameter(name);
-        if (existField)
-            removeParameter(name);
+        if (!name.isEmpty()) {
+            auto existField = getParameter(name);
+            if (existField)
+                removeParameter(name);
+        }
 
         auto f = std::make_shared<Field>(name, typeId);
         m_Parameters << f;

@@ -108,7 +108,7 @@ TEST_F(ComponentsMaker, MakingField)
 
 TEST_F(ComponentsMaker, MakingMethod)
 {
-    // type and name
+    // Type and name
     auto result = parseAndMake("int get()", models::DisplayPart::Methods);
     check_errors(result);
 
@@ -120,8 +120,10 @@ TEST_F(ComponentsMaker, MakingMethod)
     ASSERT_TRUE(!!t) << "Type with name int is not found in global database";
     ASSERT_EQ(t->name(), "int");
 
-    // with arguments
+    // With arguments
     result = parseAndMake("int get(int index, double time)", models::DisplayPart::Methods);
+    check_errors(result);
+    // TODO: check parameters
 }
 
 TEST_F(ComponentsMaker, MakingProperty)

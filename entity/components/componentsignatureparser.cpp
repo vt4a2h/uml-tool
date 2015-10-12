@@ -68,14 +68,14 @@ namespace components {
                              "((?:\\w*:{2,})*)"                                               // namespaces
                              "(\\w+)"                                                         // typename
                              "(?:\\s*<\\s*((?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?" // template args
-                             "(?:\\s+([\\*\\s\\&const]*))?";                                  // &*const
+                             "(?:\\s+((?:[\\*\\s\\&]|const)*))?";                                  // &*const
 
         // unlike "type" regex, this one doesn't match anything
         const QString highLvlType = "(?:const\\s+)?"
                                     "(?:(?:\\w*:{2,})*)"
                                     "(?:\\w+)"
                                     "(?:\\s*<\\s*(?:(?:\\w+(?:\\w+:{2,})*(?:\\s*,\\s*)?)+)\\s*>\\s*)?"
-                                    "(?:\\s+(?:[\\*\\s\\&const]*))?";
+                                    "(?:\\s+(?:(?:[\\*\\s\\&]|const)*))?";
 
         const QString argumentPattern = "(?:(" + highLvlType + "))" // 1 -- type
                                         "(?:\\s*(\\w*))";           // 2 -- name (is optional)
