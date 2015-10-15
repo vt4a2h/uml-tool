@@ -123,7 +123,18 @@ TEST_F(ComponentsMaker, MakingMethod)
     // With arguments
     result = parseAndMake("int get(int index, double time)", models::DisplayPart::Methods);
     check_errors(result);
-    // TODO: check parameters
+
+    method = to_m(result.resultEntity);
+    ASSERT_TRUE(method->containsParameter("index"));
+    ASSERT_TRUE(method->containsParameter("time"));
+
+    auto parameters = method->parameters();
+    t = globalScope->type(parameters[0]->typeId());
+    ASSERT_EQ(t->name(), "int");
+    ASSERT_TRUE(!!t);
+    t = globalScope->type(parameters[1]->typeId());
+    ASSERT_TRUE(!!t);
+    ASSERT_EQ(t->name(), "double");
 }
 
 TEST_F(ComponentsMaker, MakingProperty)

@@ -169,7 +169,7 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
 
     futureResult = "explicit Foo(const QString &name)";
     method = std::make_shared<entity::ClassMethod>("Foo");
-    method->addLhsIdentificator(entity::Explicit);
+    method->addLhsIdentificator(entity::LhsIdentificator::Explicit);
     method->addParameter("name", qstrExt->id());
     code = _translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
@@ -177,14 +177,14 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     futureResult = "virtual ps::Foo *make() = 0";
     method = std::make_shared<entity::ClassMethod>("make");
     method->setReturnTypeId(fooExt->id());
-    method->setRhsIdentificator(entity::PureVirtual);
-    method->addLhsIdentificator(entity::Virtual);
+    method->setRhsIdentificator(entity::RhsIdentificator::PureVirtual);
+    method->addLhsIdentificator(entity::LhsIdentificator::Virtual);
     code = _translator->translate(method, translator::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "ps::Foo *make() override";
-    method->removeLhsIdentificator(entity::Virtual);
-    method->setRhsIdentificator(entity::Override);
+    method->removeLhsIdentificator(entity::LhsIdentificator::Virtual);
+    method->setRhsIdentificator(entity::RhsIdentificator::Override);
     code = _translator->translate(method, translator::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 }

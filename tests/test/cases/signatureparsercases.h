@@ -82,6 +82,12 @@ namespace {
         {"int get() = bla-bla-bla",                false},
         {"int get(int arg1, double arg2)",         true },
         {"int get(const int* arg1, double& arg2)", true },
+        {"explicit int get()",                     true },
+        {"inline int get()",                       true },
+        {"inline inline int get()",                false},
+        {"static int get()",                       true },
+        {"virtual int get()",                      true },
+        {"friend int get()",                       true },
     };
 
     TestData propertyData =

@@ -104,7 +104,7 @@ TEST_F(ProjectMaker, MakeTemplateClass)
 
     auto ctor = ptrClass->makeMethod("shared_pointer");
     ctor->setReturnTypeId(STUB_ID);
-    ctor->addLhsIdentificator(entity::Explicit);
+    ctor->addLhsIdentificator(entity::LhsIdentificator::Explicit);
     ctor->addParameter("value", pointerToT->id())->setDefaultValue("nullptr");
 
     ptrClass->makeMethod("~shared_pointer")->setReturnTypeId(STUB_ID);

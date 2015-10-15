@@ -80,7 +80,11 @@ namespace utility {
         using StringKeywords = const std::map<QString,     entity::FieldKeyword>;
 
         using LhsIdString    = const std::map<entity::LhsIdentificator, QString>;
+        using StringLhsId    = const std::map<QString, entity::LhsIdentificator>;
+
         using RhsIdString    = const std::map<entity::RhsIdentificator, QString>;
+        using StringRhsId    = const std::map<QString, entity::RhsIdentificator>;
+
         using SectionString  = const std::map<entity::Section,          QString>;
         using UserTypeString = const std::map<entity::UserType,         QString>;
 
@@ -91,14 +95,36 @@ namespace utility {
                                  {"static", entity::FieldStatic}
                                };
 
-        LhsIdString    kLhsId    { {entity::Explicit, "explicit"},   {entity::Inline, "inline"},
-                                   {entity::MethodStatic, "static"}, {entity::Virtual, "virtual"},
-                                   {entity::Friend, "friend"}
+        LhsIdString    kLhsId    { {entity::LhsIdentificator::Explicit, "explicit"},
+                                   {entity::LhsIdentificator::Inline, "inline"},
+                                   {entity::LhsIdentificator::MethodStatic, "static"},
+                                   {entity::LhsIdentificator::Virtual, "virtual"},
+                                   {entity::LhsIdentificator::Friend, "friend"},
+                                   {entity::LhsIdentificator::None, ""}
                                  };
 
-        RhsIdString    kRhsId    { {entity::None, ""}, {entity::Override, "override"}, {entity::Final, "final"},
-                                   {entity::Delete, "= delete"}, {entity::Default, "= default"},
-                                   {entity::PureVirtual, "= 0"}
+        StringLhsId   kSLhsId    { {"explicit", entity::LhsIdentificator::Explicit},
+                                   {"inline", entity::LhsIdentificator::Inline},
+                                   {"static", entity::LhsIdentificator::MethodStatic},
+                                   {"virtual", entity::LhsIdentificator::Virtual},
+                                   {"friend", entity::LhsIdentificator::Friend},
+                                   {"", entity::LhsIdentificator::None}
+                                 };
+
+        RhsIdString    kRhsId    { {entity::RhsIdentificator::None, ""},
+                                   {entity::RhsIdentificator::Override, "override"},
+                                   {entity::RhsIdentificator::Final, "final"},
+                                   {entity::RhsIdentificator::Delete, "= delete"},
+                                   {entity::RhsIdentificator::Default, "= default"},
+                                   {entity::RhsIdentificator::PureVirtual, "= 0"}
+                                 };
+
+        StringRhsId    kSRhsId   { {"", entity::RhsIdentificator::None},
+                                   {"override", entity::RhsIdentificator::Override},
+                                   {"final", entity::RhsIdentificator::Final},
+                                   {"delete", entity::RhsIdentificator::Delete},
+                                   {"default", entity::RhsIdentificator::Default},
+                                   {"0", entity::RhsIdentificator::PureVirtual}
                                  };
 
         SectionString  kSection  { {entity::Public, "public"}, {entity::Protected, "protected"},
@@ -254,6 +280,26 @@ namespace utility {
     {
         auto match = QRegularExpression("^(true|false)$").match(in);
         return (ok = match.hasMatch()) ? match.captured(1) == "true" ? true : false : ok;
+    }
+
+    /**
+     * @brief methodLhsIdFromString
+     * @param in
+     * @return
+     */
+    entity::LhsIdentificator methodLhsIdFromString(const QString &in)
+    {
+        return mapSearchHelper(kSLhsId, in, entity::LhsIdentificator::None);
+    }
+
+    /**
+     * @brief methodRhsIdFromString
+     * @param in
+     * @return
+     */
+    entity::RhsIdentificator methodRhsIdFromString(const QString &in)
+    {
+        return mapSearchHelper(kSRhsId, in, entity::RhsIdentificator::None);
     }
 
 }

@@ -55,8 +55,8 @@ namespace entity {
     class Scope;
 
     enum FieldKeyword : int;
-    enum LhsIdentificator : int;
-    enum RhsIdentificator : int;
+    enum class LhsIdentificator : int;
+    enum class RhsIdentificator : int;
     enum Section : int;
 }
 
@@ -243,7 +243,11 @@ namespace utility {
     entity::FieldKeyword fieldKeywordFromString(const QString &keyword);
 
     QString methodLhsIdToString(entity::LhsIdentificator id);
+    entity::LhsIdentificator methodLhsIdFromString(const QString &in);
+
     QString methodRhsIdToString(entity::RhsIdentificator id);
+    entity::RhsIdentificator methodRhsIdFromString(const QString &in);
+
     QString sectionToString(entity::Section section);
 }
 

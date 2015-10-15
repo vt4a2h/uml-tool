@@ -344,7 +344,7 @@ namespace translator {
         result.replace("%parameters%", parameters);
 
         QString rhsId(utility::methodRhsIdToString(method->rhsIdentificator()));
-        if (method->rhsIdentificator() != entity::None)
+        if (method->rhsIdentificator() != entity::RhsIdentificator::None)
             rhsId.prepend(" ");
         result.replace("%rhs_k%", rhsId);
 

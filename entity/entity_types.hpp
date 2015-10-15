@@ -48,7 +48,7 @@ namespace entity {
     class TemplateClassMethod;
     using SharedTemplateClassMethod = std::shared_ptr<TemplateClassMethod>;
 
-    enum  LhsIdentificator : int;
+    enum class LhsIdentificator : int;
     using LhsIdentificators     = QSet<LhsIdentificator>;
     using LhsIdentificatorsList = QList<LhsIdentificator>;
 

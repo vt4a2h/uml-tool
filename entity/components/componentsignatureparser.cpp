@@ -91,7 +91,7 @@ namespace components {
                                      "(?:\\s+(\\w+))$";                    // 7 -- field name
 
         const QString methodPattern =
-            "^(?:\\s*(static)\\s+)?"                                            // 1 -- static
+            "^(?:\\s*(explicit|inline|static|virtual|friend)\\s+)?"             // 1 -- rhs
             "(?:(" + highLvlType + ")\\s+)"                                     // 2 -- return type
             "(?:(\\w+))"                                                        // 3 -- method name
             "(?:\\s*\\(((?:[\\w\\s\\*\\&:,_<>])*)\\))"                          // 4 -- method arguments

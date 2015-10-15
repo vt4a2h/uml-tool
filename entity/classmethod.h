@@ -24,20 +24,21 @@
 #pragma once
 
 #include <QString>
-#include <QSet>
 
 #include "basicentity.h"
 #include "entity_types.hpp"
 
 class QJsonObject;
 
+uint qHash(const entity::LhsIdentificator& c);
+#include <QSet>
+
 namespace entity {
 
     class ExtendedType;
     class Field;
     enum Section          : int;
-    enum RhsIdentificator : int;
-    enum LhsIdentificator : int;
+    enum class RhsIdentificator : int;
     enum ClassMethodType  : int;
 
     // TODO: add QString m_Body, for generate body if it's possible

@@ -41,7 +41,7 @@ namespace entity {
     };
 
     /// The RhsIdentificator enum
-    enum RhsIdentificator : int {
+    enum class RhsIdentificator : int {
         None,       ///< None
         Override,   ///< Override
         Final,      ///< Final
@@ -51,7 +51,8 @@ namespace entity {
     };
 
     /// The LhsIdentificator enum
-    enum LhsIdentificator : int {
+    enum class LhsIdentificator : int {
+        None,         ///< None
         Explicit,     ///< Explicit
         Inline,       ///< Inline
         MethodStatic, ///< MethodStatic

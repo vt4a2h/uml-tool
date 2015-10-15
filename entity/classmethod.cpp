@@ -22,6 +22,7 @@
 *****************************************************************************/
 
 #include "classmethod.h"
+
 #include "extendedtype.h"
 #include "field.h"
 #include "enums.h"
@@ -32,6 +33,11 @@
 #include <QJsonArray>
 
 #include <utility/helpfunctions.h>
+
+uint qHash(const entity::LhsIdentificator& c)
+{
+    return ::qHash(uint(c));
+}
 
 namespace entity {
 
@@ -74,7 +80,7 @@ namespace entity {
         , m_Section(Public)
         , m_ConstStatus(false)
         , m_ReturnTypeId(VOID_ID)
-        , m_RhsIdentificator(None)
+        , m_RhsIdentificator(RhsIdentificator::None)
     {
     }
 
@@ -319,7 +325,7 @@ namespace entity {
         result.insert("Type", m_Type);
         result.insert("Const status", m_ConstStatus);
         result.insert("Return type id", m_ReturnTypeId);
-        result.insert("Rhs identificator", m_RhsIdentificator);
+        result.insert("Rhs identificator", int(m_RhsIdentificator));
 
         QJsonArray parameters;
         for (auto &&value : m_Parameters)
@@ -328,7 +334,7 @@ namespace entity {
 
         QJsonArray lhsIdentificators;
         for (auto &&id : m_LhsIdentificators)
-            lhsIdentificators.append(id);
+            lhsIdentificators.append(int(id));
         result.insert("Lhs identificators", lhsIdentificators);
 
         return result;

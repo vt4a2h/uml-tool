@@ -420,6 +420,9 @@ namespace components {
 
         entity::SharedMethod newMethod = std::make_shared<entity::ClassMethod>();
 
+        // Add Lhs
+
+
         // Add return type
         auto returnTypeToken = tokens[int(MethodsGroupsNames::ReturnType)];
         Q_ASSERT(returnTypeToken->isMulti() && !returnTypeToken->isEmpty());

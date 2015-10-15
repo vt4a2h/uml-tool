@@ -102,9 +102,9 @@ TEST_F(FileJson, ClassMethodJson)
     entity::SharedMethod method(std::make_shared<entity::ClassMethod>("stub_name"));
     method->setConstStatus(true);
     method->setReturnTypeId("stub_return_type_id");
-    method->setRhsIdentificator(entity::Final);
+    method->setRhsIdentificator(entity::RhsIdentificator::Final);
     method->setSection(entity::Private);
-    method->addLhsIdentificator(entity::Inline);
+    method->addLhsIdentificator(entity::LhsIdentificator::Inline);
     method->addParameter("stub_parameter", "stub_id");
     method->addParameter("stub_parameter_1", "stub_id_1");
     method->writeToFile(m_JsonFileName);

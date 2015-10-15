@@ -41,7 +41,7 @@ namespace components {
     /// Methods groups names actual for parsing
     enum class MethodsGroupsNames
     {
-        Static = 1,
+        LhsKeywords = 1,
         ReturnType,
         Name,
         Arguments,
