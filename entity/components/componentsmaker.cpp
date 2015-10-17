@@ -421,6 +421,13 @@ namespace components {
         entity::SharedMethod newMethod = std::make_shared<entity::ClassMethod>();
 
         // Add Lhs
+        auto lhsToken = tokens[int(MethodsGroupsNames::LhsKeywords)];
+        Q_ASSERT(!lhsToken->isEmpty() && lhsToken->isSingle());
+        for (auto &&w : lhsToken->token().split(QChar::Space, QString::SkipEmptyParts)) {
+            entity::LhsIdentificator id = utility::methodLhsIdFromString(w);
+            Q_ASSERT(id != entity::LhsIdentificator::None);
+            newMethod->addLhsIdentificator(id);
+        }
 
 
         // Add return type
@@ -461,6 +468,31 @@ namespace components {
                 Q_ASSERT(type.resultEntity);
                 newMethod->addParameter(name, type.resultEntity->id());
             }
+        }
+
+        // Const
+        auto constArgument = tokens[int(MethodsGroupsNames::Const)];
+        Q_ASSERT(!constArgument->isEmpty() && constArgument->isSingle());
+
+        const QString &token = constArgument->token();
+        if (!token.isEmpty()) {
+            if (token == "const")
+                newMethod->setConstStatus(true);
+            else
+                return {tr("Wrong const status token: %1.").arg(constArgument->token()), nullptr};
+        }
+
+        // Rhs
+        auto rhsArgument = tokens[int(MethodsGroupsNames::RhsKeywords)];
+        Q_ASSERT(!rhsArgument->isEmpty() && rhsArgument->isSingle());
+
+        const QString &rhsToken = rhsArgument->token();
+        if (!rhsToken.isEmpty()) {
+            entity::RhsIdentificator rhsId = utility::methodRhsIdFromString(rhsToken);
+            if (rhsId != entity::RhsIdentificator::None)
+                newMethod->setRhsIdentificator(rhsId);
+            else
+                return {tr("Wrong rhs keyword: %1").arg(rhsToken), nullptr};
         }
 
         return {"", newMethod};

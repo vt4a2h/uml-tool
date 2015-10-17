@@ -135,6 +135,27 @@ TEST_F(ComponentsMaker, MakingMethod)
     t = globalScope->type(parameters[1]->typeId());
     ASSERT_TRUE(!!t);
     ASSERT_EQ(t->name(), "double");
+
+    // Lhs
+    result = parseAndMake("friend int get()", models::DisplayPart::Methods);
+    check_errors(result);
+
+    method = to_m(result.resultEntity);
+    ASSERT_TRUE(method->containsLhsIdentficator(entity::LhsIdentificator::Friend));
+
+    // Const
+    result = parseAndMake("friend int get() const", models::DisplayPart::Methods);
+    check_errors(result);
+
+    method = to_m(result.resultEntity);
+    ASSERT_TRUE(method->isConst());
+
+    // Rhs
+    result = parseAndMake("virtual int get() const override", models::DisplayPart::Methods);
+    check_errors(result);
+
+    method = to_m(result.resultEntity);
+    ASSERT_EQ(method->rhsIdentificator(), entity::RhsIdentificator::Override);
 }
 
 TEST_F(ComponentsMaker, MakingProperty)
