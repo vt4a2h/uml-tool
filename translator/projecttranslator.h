@@ -23,12 +23,21 @@
 
 #pragma once
 
+#include <functional>
+
+#include <QHash>
+
 #include <db/db_types.hpp>
 #include <entity/entity_types.hpp>
 
 namespace translator {
 
     struct Code;
+
+    using TranslatorsMap = QHash<size_t, std::function<Code(const entity::SharedBasicEntity &,
+                                                            const TranslatorOptions &,
+                                                            const db::SharedDatabase &,
+                                                            const db::SharedDatabase &)>>;
 
     /**
      * @brief The ProjectTranslator class
@@ -59,37 +68,8 @@ namespace translator {
         db::SharedDatabase projectDatabase() const;
         void setProjectDatabase(const db::SharedDatabase &projectDatabase);
 
-        Code translate(const entity::SharedType &type,
+        Code translate(const entity::SharedBasicEntity &e,
                        const TranslatorOptions &options = WithNamespace,
-                       const db::SharedDatabase &localeDatabase = nullptr,
-                       const db::SharedDatabase &classDatabase = nullptr) const;
-
-        Code translate(const entity::SharedExtendedType &extType,
-                       const TranslatorOptions &options = WithNamespace,
-                       const db::SharedDatabase &localeDatabase = nullptr,
-                       const db::SharedDatabase &classDatabase = nullptr) const;
-        Code translate(const entity::SharedField &field,
-                       const TranslatorOptions &options = WithNamespace,
-                       const db::SharedDatabase &localeDatabase = nullptr,
-                       const db::SharedDatabase &classDatabase = nullptr) const;
-        Code translate(const entity::SharedEnum &_enum,
-                       const TranslatorOptions &options = NoOptions,
-                       const db::SharedDatabase &localeDatabase = nullptr,
-                       const db::SharedDatabase &classDatabase = nullptr) const;
-        Code translate(const entity::SharedMethod &method,
-                       const TranslatorOptions &options = NoOptions,
-                       const db::SharedDatabase &localeDatabase = nullptr,
-                       const db::SharedDatabase &classDatabase = nullptr) const;
-        Code translate(const entity::SharedUnion &_union,
-                       const TranslatorOptions &options = NoOptions,
-                       const db::SharedDatabase &localeDatabase = nullptr,
-                       const db::SharedDatabase &classDatabase = nullptr) const;
-        Code translate(const entity::SharedClass &_class,
-                       const TranslatorOptions &options = NoOptions,
-                       const db::SharedDatabase &localeDatabase = nullptr,
-                       const db::SharedDatabase &classDatabase = nullptr) const;
-        Code translate(const entity::SharedTemplateClass &_class,
-                       const TranslatorOptions &options = NoOptions,
                        const db::SharedDatabase &localeDatabase = nullptr,
                        const db::SharedDatabase &classDatabase = nullptr) const;
 
@@ -98,6 +78,40 @@ namespace translator {
         Code generateClassMethodsImpl(const entity::SharedTemplateClass &_class) const;
 
         void addNamespace(const entity::SharedType &type, Code &code, uint indentCount = 1);
+
+    private: // Translators
+        Code translateType(const entity::SharedType &type,
+                           const TranslatorOptions &options = WithNamespace,
+                           const db::SharedDatabase &localeDatabase = nullptr,
+                           const db::SharedDatabase &classDatabase = nullptr) const;
+        Code translateExtType(const entity::SharedExtendedType &extType,
+                              const TranslatorOptions &options = WithNamespace,
+                              const db::SharedDatabase &localeDatabase = nullptr,
+                              const db::SharedDatabase &classDatabase = nullptr) const;
+        Code translateField(const entity::SharedField &field,
+                            const TranslatorOptions &options = WithNamespace,
+                            const db::SharedDatabase &localeDatabase = nullptr,
+                            const db::SharedDatabase &classDatabase = nullptr) const;
+        Code translateEnum(const entity::SharedEnum &_enum,
+                           const TranslatorOptions &options = NoOptions,
+                           const db::SharedDatabase &localeDatabase = nullptr,
+                           const db::SharedDatabase &classDatabase = nullptr) const;
+        Code translateMethod(const entity::SharedMethod &method,
+                             const TranslatorOptions &options = NoOptions,
+                             const db::SharedDatabase &localeDatabase = nullptr,
+                             const db::SharedDatabase &classDatabase = nullptr) const;
+        Code translateUnion(const entity::SharedUnion &_union,
+                            const TranslatorOptions &options = NoOptions,
+                            const db::SharedDatabase &localeDatabase = nullptr,
+                            const db::SharedDatabase &classDatabase = nullptr) const;
+        Code translateClass(const entity::SharedClass &_class,
+                            const TranslatorOptions &options = NoOptions,
+                            const db::SharedDatabase &localeDatabase = nullptr,
+                            const db::SharedDatabase &classDatabase = nullptr) const;
+        Code translateTemplateClass(const entity::SharedTemplateClass &_class,
+                                    const TranslatorOptions &options = NoOptions,
+                                    const db::SharedDatabase &localeDatabase = nullptr,
+                                    const db::SharedDatabase &classDatabase = nullptr) const;
 
     private:
         void checkDb() const;
@@ -113,12 +127,15 @@ namespace translator {
                                       const QString &indent,
                                       entity::Section section,
                                       QString &out) const;
-        void generateTemplatePart(QString &result, const entity::SharedTemplate &t, bool withDefaultTypes = true) const;
+        void generateTemplatePart(QString &result, const entity::SharedTemplate &t,
+                                  bool withDefaultTypes = true) const;
         bool toHeader(const entity::SharedMethod &m,
                       const db::SharedDatabase &classDatabase = nullptr) const;
 
         db::SharedDatabase m_GlobalDatabase;
         db::SharedDatabase m_ProjectDatabase;
+
+        TranslatorsMap m_translators;
     };
 
     Q_DECLARE_OPERATORS_FOR_FLAGS(ProjectTranslator::TranslatorOptions)

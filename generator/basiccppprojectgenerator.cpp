@@ -41,56 +41,56 @@
 
 namespace {
 
-    template <class T>
-    translator::Code generateHelper(const entity::SharedType &type, const translator::ProjectTranslator &translator)
-    {
-        std::shared_ptr<T> t(std::static_pointer_cast<T>(type));
-        translator::Code code(translator.translate(t));
-        code.join(translator.generateClassMethodsImpl(t));
-        return code;
-    }
+//    template <class T>
+//    translator::Code generateHelper(const entity::SharedType &type, const translator::ProjectTranslator &translator)
+//    {
+//        std::shared_ptr<T> t(std::static_pointer_cast<T>(type));
+//        translator::Code code(translator.translate(t));
+//        code.join(translator.generateClassMethodsImpl(t));
+//        return code;
+//    }
 
-    using CodeMap = QMap<size_t,
-                         std::function<translator::Code(const entity::SharedType &, const translator::ProjectTranslator &)>>;
+//    using CodeMap = QMap<size_t,
+//                         std::function<translator::Code(const entity::SharedType &, const translator::ProjectTranslator &)>>;
 
-    const CodeMap codeMap
-        {{entity::Type::staticHashType(),
-          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
-                return translator.translate(type);
-          }
-         },
-         {entity::Enum::staticHashType(),
-          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
-                return translator.translate(std::static_pointer_cast<entity::Enum>(type));
-          }
-         },
-         {entity::ExtendedType::staticHashType(),
-          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
-                return translator.translate(std::static_pointer_cast<entity::ExtendedType>(type));
-          }
-         },
-         {entity::Union::staticHashType(),
-          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
-                return translator.translate(std::static_pointer_cast<entity::Union>(type));
-          }
-         },
-         {entity::TemplateClass::staticHashType(),
-          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
-                return generateHelper<entity::TemplateClass>(type, translator);
-          }
-         },
-         {entity::Class::staticHashType(),
-          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
-                return generateHelper<entity::Class>(type, translator);
-          }
-         }};
+//    const CodeMap codeMap
+//        {{entity::Type::staticHashType(),
+//          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+//                return translator.translate(type);
+//          }
+//         },
+//         {entity::Enum::staticHashType(),
+//          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+//                return translator.translate(std::static_pointer_cast<entity::Enum>(type));
+//          }
+//         },
+//         {entity::ExtendedType::staticHashType(),
+//          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+//                return translator.translate(std::static_pointer_cast<entity::ExtendedType>(type));
+//          }
+//         },
+//         {entity::Union::staticHashType(),
+//          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+//                return translator.translate(std::static_pointer_cast<entity::Union>(type));
+//          }
+//         },
+//         {entity::TemplateClass::staticHashType(),
+//          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+//                return generateHelper<entity::TemplateClass>(type, translator);
+//          }
+//         },
+//         {entity::Class::staticHashType(),
+//          [](const entity::SharedType &type, const translator::ProjectTranslator &translator) {
+//                return generateHelper<entity::Class>(type, translator);
+//          }
+//         }};
 
     translator::Code gen(const entity::SharedType &type, const translator::ProjectTranslator &translator)
     {
-        Q_ASSERT(type);
-        Q_ASSERT(codeMap.contains(type->hashType()));
+//        Q_ASSERT(type);
+//        Q_ASSERT(codeMap.contains(type->hashType()));
 
-        return codeMap[type->hashType()](type, translator);
+        return /*codeMap[type->hashType()](type, translator)*/translator::Code();
     }
 }
 

@@ -74,10 +74,15 @@ namespace translator {
      * @param globalDb
      * @param projectDb
      */
-    ProjectTranslator::ProjectTranslator(const db::SharedDatabase &globalDb, const db::SharedDatabase &projectDb)
+    ProjectTranslator::ProjectTranslator(const db::SharedDatabase &globalDb,
+                                         const db::SharedDatabase &projectDb)
         : m_GlobalDatabase(globalDb)
         , m_ProjectDatabase(projectDb)
     {
+        m_translators[entity::Type::staticHashType()] =
+             [this](const entity::SharedBasicEntity &t, const TranslatorOptions &o,
+                    const db::SharedDatabase &l, const db::SharedDatabase &c)
+             { return translateType(std::static_pointer_cast<entity::Type>(t), o, l, c); };
     }
 
     /**
@@ -237,10 +242,10 @@ namespace translator {
      * @param classDatabase
      * @return
      */
-    Code ProjectTranslator::translate(const entity::SharedEnum &_enum,
-                                      const TranslatorOptions  &options,
-                                      const db::SharedDatabase &localeDatabase,
-                                      const db::SharedDatabase &classDatabase) const
+    Code ProjectTranslator::translateEnum(const entity::SharedEnum &_enum,
+                                          const TranslatorOptions  &options,
+                                          const db::SharedDatabase &localeDatabase,
+                                          const db::SharedDatabase &classDatabase) const
     {
         // compatibility with API
         Q_UNUSED(localeDatabase)
@@ -284,10 +289,10 @@ namespace translator {
      * @param classDatabase
      * @return
      */
-    Code ProjectTranslator::translate(const entity::SharedMethod &method,
-                                      const TranslatorOptions  &options,
-                                      const db::SharedDatabase &localeDatabase,
-                                      const db::SharedDatabase &classDatabase) const
+    Code ProjectTranslator::translateMethod(const entity::SharedMethod &method,
+                                            const TranslatorOptions  &options,
+                                            const db::SharedDatabase &localeDatabase,
+                                            const db::SharedDatabase &classDatabase) const
     {
         // compatibility with API
         Q_UNUSED(classDatabase)
@@ -361,10 +366,10 @@ namespace translator {
      * @param classDatabase
      * @return
      */
-    Code ProjectTranslator::translate(const entity::SharedUnion &_union,
-                                      const TranslatorOptions &options,
-                                      const db::SharedDatabase &localeDatabase,
-                                      const db::SharedDatabase &classDatabase) const
+    Code ProjectTranslator::translateUnion(const entity::SharedUnion &_union,
+                                           const TranslatorOptions &options,
+                                           const db::SharedDatabase &localeDatabase,
+                                           const db::SharedDatabase &classDatabase) const
     {
         // compatibility with API
         Q_UNUSED(options)
@@ -400,10 +405,10 @@ namespace translator {
      * @param classDatabase
      * @return
      */
-    Code ProjectTranslator::translate(const entity::SharedClass &_class,
-                                      const TranslatorOptions &options,
-                                      const db::SharedDatabase &localeDatabase,
-                                      const db::SharedDatabase &classDatabase) const
+    Code ProjectTranslator::translateClass(const entity::SharedClass &_class,
+                                           const TranslatorOptions &options,
+                                           const db::SharedDatabase &localeDatabase,
+                                           const db::SharedDatabase &classDatabase) const
     {
         // compatibility with API
         Q_UNUSED(options)
@@ -474,10 +479,10 @@ namespace translator {
      * @param classDatabase
      * @return
      */
-    Code ProjectTranslator::translate(const entity::SharedTemplateClass &_class,
-                                      const TranslatorOptions &options,
-                                      const db::SharedDatabase &localeDatabase,
-                                      const db::SharedDatabase &classDatabase) const
+    Code ProjectTranslator::translateTemplateClass(const entity::SharedTemplateClass &_class,
+                                                   const TranslatorOptions &options,
+                                                   const db::SharedDatabase &localeDatabase,
+                                                   const db::SharedDatabase &classDatabase) const
     {
         return translate(std::static_pointer_cast<entity::Class>(_class), options, localeDatabase,
                          classDatabase);
@@ -585,13 +590,14 @@ namespace translator {
      * @param classDatabase
      * @return
      */
-    Code ProjectTranslator::translate(const entity::SharedExtendedType &extType,
-                                      const TranslatorOptions &options,
-                                      const db::SharedDatabase &localeDatabase,
-                                      const db::SharedDatabase &classDatabase) const
+    Code ProjectTranslator::translateExtType(const entity::SharedExtendedType &extType,
+                                             const TranslatorOptions &options,
+                                             const db::SharedDatabase &localeDatabase,
+                                             const db::SharedDatabase &classDatabase) const
     {
         if (!extType)
             return Code("\ninvalid extended type\n", "");
+
         checkDb();
         QString result(EXT_TYPE_TEMPLATE);
 
@@ -646,10 +652,10 @@ namespace translator {
      * @param classDatabase
      * @return
      */
-    Code ProjectTranslator::translate(const entity::SharedField &field,
-                                      const TranslatorOptions  &options,
-                                      const db::SharedDatabase &localeDatabase,
-                                      const db::SharedDatabase &classDatabase) const
+    Code ProjectTranslator::translateField(const entity::SharedField &field,
+                                           const TranslatorOptions  &options,
+                                           const db::SharedDatabase &localeDatabase,
+                                           const db::SharedDatabase &classDatabase) const
     {
         if (!field)
             return Code("\ninvalid field\n", "");
@@ -692,6 +698,14 @@ namespace translator {
         m_ProjectDatabase = projectDatabase;
     }
 
+    Code ProjectTranslator::translate(const entity::SharedBasicEntity &e,
+                                      const TranslatorOptions &options,
+                                      const db::SharedDatabase &localeDatabase,
+                                      const db::SharedDatabase &classDatabase) const
+    {
+
+    }
+
     /**
      * @brief ProjectTranslator::translate
      * @param type
@@ -700,8 +714,10 @@ namespace translator {
      * @param classDatabase
      * @return
      */
-    Code ProjectTranslator::translate(const entity::SharedType &type, const TranslatorOptions &options,
-                                      const db::SharedDatabase &localeDatabase, const db::SharedDatabase &classDatabase) const
+    Code ProjectTranslator::translateType(const entity::SharedType &type,
+                                          const TranslatorOptions &options,
+                                          const db::SharedDatabase &localeDatabase,
+                                          const db::SharedDatabase &classDatabase) const
     {
         QStringList scopesNames;
         QString id = type->scopeId();
