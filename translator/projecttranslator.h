@@ -34,11 +34,6 @@ namespace translator {
 
     struct Code;
 
-    using TranslatorsMap = QHash<size_t, std::function<Code(const entity::SharedBasicEntity &,
-                                                            const TranslatorOptions &,
-                                                            const db::SharedDatabase &,
-                                                            const db::SharedDatabase &)>>;
-
     /**
      * @brief The ProjectTranslator class
      */
@@ -134,6 +129,11 @@ namespace translator {
 
         db::SharedDatabase m_GlobalDatabase;
         db::SharedDatabase m_ProjectDatabase;
+
+        using TranslatorsMap = QHash<size_t, std::function<Code(const entity::SharedBasicEntity &,
+                                                                const ProjectTranslator::TranslatorOptions &,
+                                                                const db::SharedDatabase &,
+                                                                const db::SharedDatabase &)>>;
 
         TranslatorsMap m_translators;
     };

@@ -28,7 +28,6 @@
 #include "code.h"
 
 #include <QRegularExpression>
-
 #include <db/database.h>
 #include <db/projectdatabase.h>
 #include <entity/enum.h>
@@ -44,7 +43,8 @@
 
 namespace {
 
-    void addNamesapceHelper(QString &code, const QStringList &scopesNames, const QString &indent, QString scopeTemplate)
+    void addNamesapceHelper(QString &code, const QStringList &scopesNames, const QString &indent,
+                            QString scopeTemplate)
     {
         if (!code.isEmpty()) {
             if (!indent.isEmpty()) {
@@ -58,6 +58,15 @@ namespace {
         }
     }
 
+    template <class T>
+    void addTranslator(auto map, auto this_, auto f)
+    {
+        using namespace std::placeholders;
+        map[T::staticHashType()] =
+            std::bind(
+                f, this_, std::bind(std::static_pointer_cast<T,entity::BasicEntity>, _1), _2, _3, _4
+            );
+    }
 }
 
 namespace translator {
@@ -79,10 +88,14 @@ namespace translator {
         : m_GlobalDatabase(globalDb)
         , m_ProjectDatabase(projectDb)
     {
-        m_translators[entity::Type::staticHashType()] =
-             [this](const entity::SharedBasicEntity &t, const TranslatorOptions &o,
-                    const db::SharedDatabase &l, const db::SharedDatabase &c)
-             { return translateType(std::static_pointer_cast<entity::Type>(t), o, l, c); };
+        addTranslator<entity::Type>(m_translators, this, &ProjectTranslator::translateType);
+        addTranslator<entity::ExtendedType>(m_translators, this, &ProjectTranslator::translateExtType);
+        addTranslator<entity::Field>(m_translators, this, &ProjectTranslator::translateField);
+        addTranslator<entity::Enum>(m_translators, this, &ProjectTranslator::translateEnum);
+        addTranslator<entity::ClassMethod>(m_translators, this, &ProjectTranslator::translateMethod);
+        addTranslator<entity::Union>(m_translators, this, &ProjectTranslator::translateUnion);
+        addTranslator<entity::Class>(m_translators, this, &ProjectTranslator::translateClass);
+        addTranslator<entity::TemplateClass>(m_translators, this, &ProjectTranslator::translateTemplateClass);
     }
 
     /**
@@ -703,7 +716,17 @@ namespace translator {
                                       const db::SharedDatabase &localeDatabase,
                                       const db::SharedDatabase &classDatabase) const
     {
+        // TODO: implement guard pattern
+        Q_ASSERT(e);
+        if (!e)
+            return Code();
 
+        auto hash = e->hashType();
+        Q_ASSERT(m_translators.contains(hash));
+        if (!m_translators.contains(hash))
+            return Code();
+
+        return m_translators[hash](e, options, localeDatabase, classDatabase);
     }
 
     /**
