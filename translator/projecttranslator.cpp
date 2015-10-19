@@ -88,14 +88,15 @@ namespace translator {
         : m_GlobalDatabase(globalDb)
         , m_ProjectDatabase(projectDb)
     {
-        addTranslator<entity::Type>(m_translators, this, &ProjectTranslator::translateType);
-        addTranslator<entity::ExtendedType>(m_translators, this, &ProjectTranslator::translateExtType);
-        addTranslator<entity::Field>(m_translators, this, &ProjectTranslator::translateField);
-        addTranslator<entity::Enum>(m_translators, this, &ProjectTranslator::translateEnum);
-        addTranslator<entity::ClassMethod>(m_translators, this, &ProjectTranslator::translateMethod);
-        addTranslator<entity::Union>(m_translators, this, &ProjectTranslator::translateUnion);
-        addTranslator<entity::Class>(m_translators, this, &ProjectTranslator::translateClass);
-        addTranslator<entity::TemplateClass>(m_translators, this, &ProjectTranslator::translateTemplateClass);
+        auto &t = m_translators;
+        addTranslator<entity::Type>         (t, this, &ProjectTranslator::translateType         );
+        addTranslator<entity::ExtendedType> (t, this, &ProjectTranslator::translateExtType      );
+        addTranslator<entity::Field>        (t, this, &ProjectTranslator::translateField        );
+        addTranslator<entity::Enum>         (t, this, &ProjectTranslator::translateEnum         );
+        addTranslator<entity::ClassMethod>  (t, this, &ProjectTranslator::translateMethod       );
+        addTranslator<entity::Union>        (t, this, &ProjectTranslator::translateUnion        );
+        addTranslator<entity::Class>        (t, this, &ProjectTranslator::translateClass        );
+        addTranslator<entity::TemplateClass>(t, this, &ProjectTranslator::translateTemplateClass);
     }
 
     /**
