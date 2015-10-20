@@ -39,6 +39,21 @@ uint qHash(const entity::LhsIdentificator& c)
     return ::qHash(uint(c));
 }
 
+namespace
+{
+    const QString nameMark = "Name";
+    const QString scopedIDMark = "ScopeID";
+    const QString sectionMark  = "Section";
+    const QString typeMark  = "Type";
+    const QString csMark  = "Const status";
+    const QString slotMark  = "Slot";
+    const QString signalMark  = "Signal";
+    const QString rtMark  = "Return type id";
+    const QString rhsiMark  = "Rhs identificator";
+    const QString paramsMark  = "Parameters";
+    const QString lhsMark = "Lhs identificators";
+}
+
 namespace entity {
 
     /**
@@ -79,6 +94,8 @@ namespace entity {
         , m_ScopeId(STUB_ID)
         , m_Section(Public)
         , m_ConstStatus(false)
+        , m_SlotStatus(false)
+        , m_SignalStatus(false)
         , m_ReturnTypeId(VOID_ID)
         , m_RhsIdentificator(RhsIdentificator::None)
     {
@@ -133,6 +150,8 @@ namespace entity {
                lhs.m_ScopeId           == rhs.m_ScopeId           &&
                lhs.m_Section           == rhs.m_Section           &&
                lhs.m_ConstStatus       == rhs.m_ConstStatus       &&
+               lhs.m_SlotStatus        == rhs.m_SlotStatus        &&
+               lhs.m_SignalStatus      == rhs.m_SignalStatus      &&
                lhs.m_ReturnTypeId      == rhs.m_ReturnTypeId      &&
                lhs.m_RhsIdentificator  == rhs.m_RhsIdentificator  &&
                lhs.m_LhsIdentificators == rhs.m_LhsIdentificators &&
@@ -174,6 +193,46 @@ namespace entity {
     void ClassMethod::setConstStatus(bool newStatus)
     {
         m_ConstStatus = newStatus;
+    }
+
+    /**
+     * @brief ClassMethod::isSignal
+     * @return
+     */
+    bool ClassMethod::isSignal() const
+    {
+        return m_SignalStatus;
+    }
+
+    /**
+     * @brief ClassMethod::setIsSignal
+     * @param signalStatus
+     */
+    void ClassMethod::setIsSignal(bool signalStatus)
+    {
+        m_SignalStatus = signalStatus;
+        if (m_SignalStatus)
+            m_SlotStatus = false;
+    }
+
+    /**
+     * @brief ClassMethod::isSlot
+     * @return
+     */
+    bool ClassMethod::isSlot() const
+    {
+        return m_SlotStatus;
+    }
+
+    /**
+     * @brief ClassMethod::setIsSlot
+     * @param slotStatus
+     */
+    void ClassMethod::setIsSlot(bool slotStatus)
+    {
+        m_SlotStatus = slotStatus;
+        if (m_SlotStatus)
+            m_SignalStatus = false;
     }
 
     /**
@@ -319,23 +378,25 @@ namespace entity {
     {
         QJsonObject result;
 
-        result.insert("Name", m_Name);
-        result.insert("ScopeID", m_ScopeId);
-        result.insert("Section", m_Section);
-        result.insert("Type", m_Type);
-        result.insert("Const status", m_ConstStatus);
-        result.insert("Return type id", m_ReturnTypeId);
-        result.insert("Rhs identificator", int(m_RhsIdentificator));
+        result.insert(nameMark, m_Name);
+        result.insert(scopedIDMark, m_ScopeId);
+        result.insert(sectionMark, m_Section);
+        result.insert(typeMark, m_Type);
+        result.insert(csMark, m_ConstStatus);
+        result.insert(slotMark, m_SlotStatus);
+        result.insert(signalMark, m_SignalStatus);
+        result.insert(rtMark, m_ReturnTypeId);
+        result.insert(rhsiMark, int(m_RhsIdentificator));
 
         QJsonArray parameters;
         for (auto &&value : m_Parameters)
             parameters.append(value->toJson());
-        result.insert("Parameters", parameters);
+        result.insert(paramsMark, parameters);
 
         QJsonArray lhsIdentificators;
         for (auto &&id : m_LhsIdentificators)
             lhsIdentificators.append(int(id));
-        result.insert("Lhs identificators", lhsIdentificators);
+        result.insert(lhsMark, lhsIdentificators);
 
         return result;
     }
@@ -347,33 +408,39 @@ namespace entity {
      */
     void ClassMethod::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Name", errorList, [&src, this](){
-            m_Name = src["Name"].toString();
+        utility::checkAndSet(src, nameMark, errorList, [&src, this](){
+            m_Name = src[nameMark].toString();
         });
-        utility::checkAndSet(src, "ScopeID", errorList, [&src, this](){
-           m_ScopeId = src["ScopeID"].toString();
+        utility::checkAndSet(src, scopedIDMark, errorList, [&src, this](){
+           m_ScopeId = src[scopedIDMark].toString();
         });
-        utility::checkAndSet(src, "Section", errorList, [&src, this](){
-            m_Section = static_cast<Section>(src["Section"].toInt());
+        utility::checkAndSet(src, sectionMark, errorList, [&src, this](){
+            m_Section = static_cast<Section>(src[sectionMark].toInt());
         });
-        utility::checkAndSet(src, "Type", errorList, [&src, this](){
-            m_Type = static_cast<ClassMethodType>(src["Type"].toInt());
+        utility::checkAndSet(src, typeMark, errorList, [&src, this](){
+            m_Type = static_cast<ClassMethodType>(src[typeMark].toInt());
         });
-        utility::checkAndSet(src, "Const status", errorList, [&src, this](){
-            m_ConstStatus = src["Const status"].toBool();
+        utility::checkAndSet(src, csMark, errorList, [&src, this](){
+            m_ConstStatus = src[csMark].toBool();
         });
-        utility::checkAndSet(src, "Return type id", errorList, [&src, this](){
-            m_ReturnTypeId = src["Return type id"].toString();
+        utility::checkAndSet(src, signalMark, errorList, [&src, this](){
+            m_SignalStatus = src[signalMark].toBool();
         });
-        utility::checkAndSet(src, "Rhs identificator", errorList, [&src, this](){
-            m_RhsIdentificator = static_cast<RhsIdentificator>(src["Rhs identificator"].toInt());
+        utility::checkAndSet(src, slotMark, errorList, [&src, this](){
+            m_SlotStatus = src[slotMark].toBool();
+        });
+        utility::checkAndSet(src, rtMark, errorList, [&src, this](){
+            m_ReturnTypeId = src[rtMark].toString();
+        });
+        utility::checkAndSet(src, rhsiMark, errorList, [&src, this](){
+            m_RhsIdentificator = static_cast<RhsIdentificator>(src[rhsiMark].toInt());
         });
 
         m_Parameters.clear();
-        utility::checkAndSet(src, "Parameters", errorList, [&src, &errorList, this](){
-            if (src["Parameters"].isArray()) {
+        utility::checkAndSet(src, paramsMark, errorList, [&src, &errorList, this](){
+            if (src[paramsMark].isArray()) {
                 SharedField parameter;
-                for (auto &&value : src["Parameters"].toArray()) {
+                for (auto &&value : src[paramsMark].toArray()) {
                     parameter = std::make_shared<Field>();
                     parameter->fromJson(value.toObject(), errorList);
                     m_Parameters << parameter;
@@ -384,9 +451,9 @@ namespace entity {
         });
 
         m_LhsIdentificators.clear();
-        utility::checkAndSet(src, "Lhs identificators", errorList, [&src, &errorList, this](){
-            if (src["Lhs identificators"].isArray()) {
-                for (auto &&value : src["Lhs identificators"].toArray())
+        utility::checkAndSet(src, lhsMark, errorList, [&src, &errorList, this](){
+            if (src[lhsMark].isArray()) {
+                for (auto &&value : src[lhsMark].toArray())
                     m_LhsIdentificators.insert(static_cast<LhsIdentificator>(value.toInt()));
             } else {
                 errorList << "Error: \"Lhs identificators\" is not array";
@@ -442,6 +509,8 @@ namespace entity {
         m_ScopeId = std::move(src.m_ScopeId);
         m_Section = std::move(src.m_Section);
         m_ConstStatus = std::move(src.m_ConstStatus);
+        m_SlotStatus = std::move(src.m_SlotStatus);
+        m_SignalStatus = std::move(src.m_SignalStatus);
         m_ReturnTypeId = std::move(src.m_ReturnTypeId);
 
         m_Parameters = std::move(src.m_Parameters);
@@ -461,6 +530,8 @@ namespace entity {
         m_ScopeId = src.m_ScopeId;
         m_Section = src.m_Section;
         m_ConstStatus = src.m_ConstStatus;
+        m_SlotStatus = src.m_SlotStatus;
+        m_SignalStatus = src.m_SignalStatus;
         m_ReturnTypeId = src.m_ReturnTypeId;
 
         utility::deepCopySharedPointerList(src.m_Parameters, m_Parameters);
@@ -475,7 +546,7 @@ namespace entity {
      */
     QString ClassMethod::scopeId() const
     {
-       return m_ScopeId;
+        return m_ScopeId;
     }
 
     /**

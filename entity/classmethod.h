@@ -69,6 +69,12 @@ namespace entity {
         bool isConst() const;
         void setConstStatus(bool newStatus);
 
+        bool isSlot() const;
+        void setIsSlot(bool slotStatus);
+
+        bool isSignal() const;
+        void setIsSignal(bool signalStatus);
+
         RhsIdentificator rhsIdentificator() const;
         void setRhsIdentificator(RhsIdentificator identificator);
 
@@ -112,6 +118,8 @@ namespace entity {
         QString m_ScopeId;
         Section m_Section;
         bool    m_ConstStatus;
+        bool    m_SlotStatus;
+        bool    m_SignalStatus;
         QString m_ReturnTypeId;
 
         FieldsList m_Parameters;
