@@ -59,7 +59,7 @@ namespace {
     }
 
     template <class T>
-    void addTranslator(auto map, auto this_, auto f)
+    void addTranslator(auto&& map, auto&& this_, auto f)
     {
         using namespace std::placeholders;
         map[T::staticHashType()] =
@@ -89,14 +89,15 @@ namespace translator {
         , m_ProjectDatabase(projectDb)
     {
         auto &t = m_translators;
-        addTranslator<entity::Type>         (t, this, &ProjectTranslator::translateType         );
-        addTranslator<entity::ExtendedType> (t, this, &ProjectTranslator::translateExtType      );
-        addTranslator<entity::Field>        (t, this, &ProjectTranslator::translateField        );
-        addTranslator<entity::Enum>         (t, this, &ProjectTranslator::translateEnum         );
-        addTranslator<entity::ClassMethod>  (t, this, &ProjectTranslator::translateMethod       );
-        addTranslator<entity::Union>        (t, this, &ProjectTranslator::translateUnion        );
-        addTranslator<entity::Class>        (t, this, &ProjectTranslator::translateClass        );
-        addTranslator<entity::TemplateClass>(t, this, &ProjectTranslator::translateTemplateClass);
+        addTranslator<entity::Type>               (t, this, &ProjectTranslator::translateType    );
+        addTranslator<entity::ExtendedType>       (t, this, &ProjectTranslator::translateExtType );
+        addTranslator<entity::Field>              (t, this, &ProjectTranslator::translateField   );
+        addTranslator<entity::Enum>               (t, this, &ProjectTranslator::translateEnum    );
+        addTranslator<entity::ClassMethod>        (t, this, &ProjectTranslator::translateMethod  );
+        addTranslator<entity::TemplateClassMethod>(t, this, &ProjectTranslator::translateMethod  );
+        addTranslator<entity::Union>              (t, this, &ProjectTranslator::translateUnion   );
+        addTranslator<entity::Class>              (t, this, &ProjectTranslator::translateClass   );
+        addTranslator<entity::TemplateClass>      (t, this, &ProjectTranslator::translateClass   );
     }
 
     /**
@@ -204,7 +205,8 @@ namespace translator {
      * @param t
      * @param withDefaultTypes
      */
-    void ProjectTranslator::generateTemplatePart(QString &result, const entity::SharedTemplate &t, bool withDefaultTypes) const
+    void ProjectTranslator::generateTemplatePart(QString &result, const entity::SharedTemplate &t,
+                                                 bool withDefaultTypes) const
     {
         if (!t)
            return;
@@ -436,11 +438,8 @@ namespace translator {
         QString result(CLASS_TEMPLATE);
 
         entity::SharedTemplateClass tc(nullptr);
-        if (_class->hashType() == entity::TemplateClass::staticHashType()) {
-            tc = std::dynamic_pointer_cast<entity::TemplateClass>(_class);
-            if (tc)
-                generateTemplatePart(result, std::static_pointer_cast<entity::Template>(tc));
-        }
+        if (_class->hashType() == entity::TemplateClass::staticHashType())
+            generateTemplatePart(result, std::static_pointer_cast<entity::TemplateClass>(_class));
 
         result.replace("%kind%", _class->kind() == entity::ClassType ? "class " : "struct ");
 
@@ -456,13 +455,13 @@ namespace translator {
                                       tc ? tc->database() : nullptr,
                                       m_GlobalDatabase, m_ProjectDatabase);
                 pString.append(utility::sectionToString(p.second))
-                       .append(" ")
+                       .append(" ") // TODO: fix
                        .append(t ?
                                    translate(t,
                                              t->scopeId() == _class->scopeId() ? NoOptions : WithNamespace,
                                              tc ? tc->database() : nullptr).toHeader :
                                    "unknown type");
-                parentsList << pString;
+                parentsList << pString.remove(QRegExp("[{};]")).trimmed();
                 pString.clear();
             }
             parents.append(" : ")
@@ -483,23 +482,6 @@ namespace translator {
            result.replace(_class->name(), _class->name() + " ");
 
         return Code(result, "");
-    }
-
-    /**
-     * @brief ProjectTranslator::translate
-     * @param _class
-     * @param options
-     * @param localeDatabase
-     * @param classDatabase
-     * @return
-     */
-    Code ProjectTranslator::translateTemplateClass(const entity::SharedTemplateClass &_class,
-                                                   const TranslatorOptions &options,
-                                                   const db::SharedDatabase &localeDatabase,
-                                                   const db::SharedDatabase &classDatabase) const
-    {
-        return translate(std::static_pointer_cast<entity::Class>(_class), options, localeDatabase,
-                         classDatabase);
     }
 
     /**

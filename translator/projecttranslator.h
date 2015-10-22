@@ -103,10 +103,6 @@ namespace translator {
                             const TranslatorOptions &options = NoOptions,
                             const db::SharedDatabase &localeDatabase = nullptr,
                             const db::SharedDatabase &classDatabase = nullptr) const;
-        Code translateTemplateClass(const entity::SharedTemplateClass &_class,
-                                    const TranslatorOptions &options = NoOptions,
-                                    const db::SharedDatabase &localeDatabase = nullptr,
-                                    const db::SharedDatabase &classDatabase = nullptr) const;
 
     private:
         void checkDb() const;
