@@ -46,7 +46,7 @@ TEST_F(ProjectTranslatorTest, ExtendedType)
 
     QString futureResult("int");
     auto code(_translator->translate(type));
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "const int";
     type->setConstStatus(true);
@@ -105,7 +105,7 @@ TEST_F(ProjectTranslatorTest, Field)
 
     QString futureResult("int m_Number");
     auto code(_translator->translate(field));
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "static int number_";
     field->setName("number");
@@ -121,7 +121,7 @@ TEST_F(ProjectTranslatorTest, Field)
     type->setConstStatus(true);
     field->setTypeId(type->id());
     code = _translator->translate(field);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 }
 
 TEST_F(ProjectTranslatorTest, ClassMethod)
@@ -133,7 +133,7 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     auto voidType = _globalScope->addType("void");
     method->setReturnTypeId(voidType->id());
     auto code(_translator->translate(method));
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "double sum(double a, double b) const";
     auto doubleType = _globalScope->addType("double");
@@ -142,7 +142,7 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     method->addParameter("a", doubleType->id());
     method->addParameter("b", doubleType->id());
     code = _translator->translate(method);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "ps::Foo *getFoo(const QString &id) const";
     auto ps = _projectDb->addScope("ps");
@@ -165,7 +165,7 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     method->addParameter("id", qstrExt->id());
 
     code = _translator->translate(method, translator::ProjectTranslator::WithNamespace);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "explicit Foo(const QString &name)";
     method = std::make_shared<entity::ClassMethod>("Foo");
@@ -323,7 +323,7 @@ TEST_F(ProjectTranslatorTest, Class)
     bField->setSection(entity::Private);
     bField->setSuffix("_");
     code = _translator->translate(fooClass);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     fooClass->removeField("a");
     fooClass->removeField("b");
