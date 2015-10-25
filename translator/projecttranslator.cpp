@@ -316,10 +316,13 @@ namespace translator {
         QString result(METHOD_TEMPLATE);
 
         entity::SharedTemplateClassMethod m(nullptr);
+        db::SharedDatabase templateDb(nullptr);
         if (method->type() == entity::TemplateMethod) {
             m = std::dynamic_pointer_cast<entity::TemplateClassMethod>(method);
-            if (m)
+            if (m) {
+                templateDb = m->database();
                 generateTemplatePart(result, std::static_pointer_cast<entity::Template>(m));
+            }
         }
 
         QString lhsIds("");
@@ -332,18 +335,20 @@ namespace translator {
         }
         result.replace("%lhs_k%", lhsIds);
 
-        result.replace("%r_type%", generateCodeForExtTypeOrType(method->returnTypeId(),
-                                                                options,
-                                                                m ? m->database() : nullptr,
-                                                                localeDatabase)); //TODO: add space IF NOT ends with * or &
+        QString rType = generateCodeForExtTypeOrType(method->returnTypeId(), options, templateDb,
+                                                     localeDatabase);
+        if (!rType.isEmpty() && !rType.endsWith("*") && !rType.endsWith("&") &&
+            !rType.endsWith(QChar::Space))
+            rType.append(QChar::Space);
+        result.replace("%r_type%", rType);
 
         result.replace("%name%", method->name());
 
         QString parameters("");
         QStringList parametersList;
         for (auto &&p : method->parameters()) {
-            p->removePrefix();
-            p->removeSuffix();
+            p->removePrefix(); // TODO check why!
+            p->removeSuffix(); // TODO check why!
 
             TranslatorOptions newOptions((options & NoDefaultName) ? NoDefaultName : NoOptions);
             auto t = utility::findType(p->typeId(), localeDatabase,
@@ -351,8 +356,7 @@ namespace translator {
             if (!t || method->scopeId() != t->scopeId() || method->scopeId() == STUB_ID)
                newOptions |= WithNamespace;
 
-            parametersList << translate(p, newOptions, m ? m->database() : nullptr,
-                                        localeDatabase).toHeader;
+            parametersList << translate(p, newOptions, templateDb, localeDatabase).toHeader;
 
         }
         if (!parametersList.isEmpty())
@@ -664,10 +668,13 @@ namespace translator {
                 keywords << utility::fieldKeywordToString(keyword);
         result.replace("%keywords%", keywords.isEmpty() ? "" : keywords.join(" ").append(" "));
 
-        result.replace("%type%", generateCodeForExtTypeOrType(field->typeId(),
-                                                              options,
-                                                              localeDatabase,
-                                                              classDatabase).append(" "));
+        QString type = generateCodeForExtTypeOrType(field->typeId(), options,localeDatabase,
+                                                    classDatabase);
+        if (!type.isEmpty() && !type.endsWith("*") && !type.endsWith("&") &&
+            !type.endsWith(QChar::Space))
+            type.append(QChar::Space);
+        result.replace("%type%", type);
+
         result.replace("%name%", field->fullName());
 
         if (!field->defaultValue().isEmpty() && !(options & NoDefaultName))

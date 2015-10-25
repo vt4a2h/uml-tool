@@ -172,7 +172,7 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     method->addLhsIdentificator(entity::LhsIdentificator::Explicit);
     method->addParameter("name", qstrExt->id());
     code = _translator->translate(method);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "virtual ps::Foo *make() = 0";
     method = std::make_shared<entity::ClassMethod>("make");
