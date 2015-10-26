@@ -2,7 +2,7 @@
 
 namespace work
 {
-    
+
     Employee::Employee()
     {
     }

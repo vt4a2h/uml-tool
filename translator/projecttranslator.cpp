@@ -48,7 +48,8 @@ namespace {
     {
         if (!code.isEmpty()) {
             if (!indent.isEmpty()) {
-                code.prepend(indent);
+                if (!code.startsWith("\n"))
+                    code.prepend(indent);
                 code.replace(QRegularExpression("(\n)(.)"), "\\1" + indent + "\\2");
             }
 
@@ -434,18 +435,18 @@ namespace translator {
             return Code("\ninvalid class\n", "");
         checkDb();
 
-        QString result(CLASS_TEMPLATE);
+        QString toHeader(CLASS_TEMPLATE);
 
         db::SharedDatabase templateDb = nullptr;
         if (_class->hashType() == entity::TemplateClass::staticHashType()) {
             auto tc = std::static_pointer_cast<entity::TemplateClass>(_class);
             templateDb = tc->database();
-            generateTemplatePart(result, tc);
+            generateTemplatePart(toHeader, tc);
         }
 
-        result.replace("%kind%", _class->kind() == entity::ClassType ? "class " : "struct ");
+        toHeader.replace("%kind%", _class->kind() == entity::ClassType ? "class " : "struct ");
 
-        result.replace("%name%", _class->name());
+        toHeader.replace("%name%", _class->name());
 
         QString parents;
         if (_class->anyParents()) {
@@ -473,18 +474,21 @@ namespace translator {
         if (_class->kind() == entity::ClassType &&
             (_class->anyFields() || _class->anyMethods()))
             parents.append("\n");
-        result.replace("%parents%", parents);
+        toHeader.replace("%parents%", parents);
 
         QString section;
         generateClassSection(_class, templateDb, entity::Public, section);
         generateClassSection(_class, templateDb, entity::Protected, section);
         generateClassSection(_class, templateDb, entity::Private, section);
-        result.replace("%section%", section);
+        toHeader.replace("%section%", section);
 
         if (section.isEmpty() && parents.isEmpty())
-           result.replace(_class->name(), _class->name() + " ");
+           toHeader.replace(_class->name(), _class->name() + " ");
 
-        return Code(result, "");
+        // Add methods impl
+        Code impl = generateClassMethodsImpl(_class, templateDb);
+
+        return Code(toHeader, impl.toSource);
     }
 
     /**
@@ -537,6 +541,9 @@ namespace translator {
            methodsH.last().remove(methodsH.last().size() - 1, 1);
            methodsH.first().prepend("\n");
         }
+
+        if (!methodsCpp.isEmpty())
+            methodsCpp.first().prepend("\n");
 
         return Code(methodsH.join("\n"), methodsCpp.join("\n"));
     }
