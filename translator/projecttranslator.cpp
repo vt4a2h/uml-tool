@@ -488,6 +488,9 @@ namespace translator {
         // Add methods impl
         Code impl = generateClassMethodsImpl(_class, templateDb);
 
+        if (!impl.toHeader.isEmpty())
+            toHeader.append("\n").append(impl.toHeader);
+
         return Code(toHeader, impl.toSource);
     }
 
@@ -541,9 +544,6 @@ namespace translator {
            methodsH.last().remove(methodsH.last().size() - 1, 1);
            methodsH.first().prepend("\n");
         }
-
-        if (!methodsCpp.isEmpty())
-            methodsCpp.first().prepend("\n");
 
         return Code(methodsH.join("\n"), methodsCpp.join("\n"));
     }

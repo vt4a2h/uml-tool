@@ -414,7 +414,7 @@ TEST_F(ProjectTranslatorTest, ClassImplementation)
     translator::Code code(_translator->generateClassMethodsImpl(classFoo));
     ASSERT_TRUE(code.toHeader.isEmpty())
             << "Header should be empty!";
-    ASSERT_EQ(futureResult, code.toSource);
+    ASSERT_EQ(futureResult.toStdString(), code.toSource.toStdString());
 
     futureResult = "int Foo::getC() const\n"
                    "{\n"

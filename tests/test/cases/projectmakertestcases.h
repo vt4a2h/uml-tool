@@ -131,6 +131,6 @@ TEST_F(ProjectMaker, MakeTemplateClass)
 
     read_from(tstHeader, fTstHeader, testDataPath_ + ptrClass->name().toLower() + ".h")
     read_from(genHeader, fGenHeader, rootPath_ + sep_ + ptrClass->name().toLower() + ".h")
-    EXPECT_EQ(tstHeader, genHeader)
+    EXPECT_EQ(tstHeader.toStdString(), genHeader.toStdString())
             << "Generated data for header must be the same with test data";
 }

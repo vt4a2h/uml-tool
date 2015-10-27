@@ -64,6 +64,8 @@
                     "Methods": [
                         {
                             "Const status": false,
+                            "Slot": false,
+                            "Signal": false,
                             "Lhs identificators": [
                             ],
                             "Name": "foo",
@@ -77,6 +79,8 @@
                         },
                         {
                             "Const status": false,
+                            "Slot": false,
+                            "Signal": false,
                             "Lhs identificators": [
                             ],
                             "Name": "bar",
@@ -90,6 +94,8 @@
                         },
                         {
                             "Const status": false,
+                            "Slot": false,
+                            "Signal": false,
                             "Lhs identificators": [
                             ],
                             "Name": "baz",
