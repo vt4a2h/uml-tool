@@ -137,6 +137,9 @@ namespace entity {
         void copyFrom(const Property &src);
 
     private:
+        void init();
+
+    private:
         QString m_Id; // TODO: move to the BasicEntity class
         QString m_TypeId;
 

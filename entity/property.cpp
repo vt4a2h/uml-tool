@@ -111,6 +111,7 @@ namespace entity {
     Property::Property(const Property &src)
         : BasicEntity(src)
     {
+        init();
         copyFrom(src);
     }
 
@@ -121,18 +122,10 @@ namespace entity {
      */
     Property::Property(const QString &name, const QString &typeId, QObject *parent)
         : BasicEntity(name)
-        , m_Id(utility::genId())
-        , m_TypeId(typeId)
-        , m_MemberName(nullptr)
-        , m_Revision(defaultRevision)
-        , m_Member(defaultMember)
-        , m_Designable(defaultDesignable)
-        , m_Scriptable(defaultScriptable)
-        , m_Stored(defaultStored)
-        , m_User(defaultUser)
-        , m_Constant(defaultConstant)
-        , m_Final(defaultFinal)
     {
+        init();
+
+        setTypeId(typeId); // TODO: will be moved to the Basic entity
         setParent(parent);
     }
 
@@ -880,6 +873,24 @@ namespace entity {
         m_User       = src.m_User;
         m_Constant   = src.m_Constant;
         m_Final      = src.m_Final;
+    }
+
+    /**
+     * @brief Property::init
+     */
+    void Property::init()
+    {
+        m_Id = utility::genId();
+        m_TypeId = STUB_ID;
+        m_MemberName = nullptr;
+        m_Revision = defaultRevision;
+        m_Member = defaultMember;
+        m_Designable = defaultDesignable;
+        m_Scriptable = defaultScriptable;
+        m_Stored = defaultStored;
+        m_User = defaultUser;
+        m_Constant = defaultConstant;
+        m_Final = defaultFinal;
     }
 
     /**
