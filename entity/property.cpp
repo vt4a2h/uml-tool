@@ -284,6 +284,7 @@ namespace entity {
         }
 
         m_Setter = std::make_shared<ClassMethod>(newName);
+        m_Setter->setIsSlot(true);
 
         return *this;
     }
@@ -322,6 +323,7 @@ namespace entity {
         }
 
         m_Resetter = std::make_shared<ClassMethod>(newName);
+        m_Resetter->setIsSlot(true);
 
         return *this;
     }
@@ -360,6 +362,7 @@ namespace entity {
         }
 
         m_Notifier = std::make_shared<ClassMethod>(newName);
+        m_Notifier->setIsSignal(true);
 
         return *this;
     }

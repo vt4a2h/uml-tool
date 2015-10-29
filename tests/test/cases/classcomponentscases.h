@@ -79,6 +79,18 @@ TEST_F(ClassComponents, Method)
     ASSERT_TRUE(method->containsParameter(p1->name()));
     ASSERT_TRUE(method->containsLhsIdentficator(entity::LhsIdentificator::Inline));
 
+    // Slot/signal
+    ASSERT_FALSE(method->isSlot());
+    ASSERT_FALSE(method->isSignal());
+
+    method->setIsSlot(true);
+    ASSERT_TRUE(method->isSlot());
+    ASSERT_FALSE(method->isSignal());
+
+    method->setIsSignal(true);
+    ASSERT_TRUE(method->isSignal());
+    ASSERT_FALSE(method->isSlot());
+
     // Check moving
     check_moving(entity::ClassMethod, method)
 }
@@ -134,4 +146,15 @@ TEST_F(ClassComponents, Property)
     secondMember->fromJson(member->toJson(), errors);
     ASSERT_TRUE(errors.isEmpty());
     ASSERT_EQ(*member, *secondMember);
+
+    // Check slot signals
+    property->addMember("Foo").addSetter().addNotifier().addResetter();
+    ASSERT_TRUE(!!property->setter());
+    ASSERT_TRUE(property->setter()->isSlot());
+
+    ASSERT_TRUE(!!property->notifier());
+    ASSERT_TRUE(property->notifier()->isSignal());
+
+    ASSERT_TRUE(!!property->resetter());
+    ASSERT_TRUE(property->resetter()->isSlot());
 }
