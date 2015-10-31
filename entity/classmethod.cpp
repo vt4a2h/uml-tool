@@ -211,8 +211,11 @@ namespace entity {
     void ClassMethod::setIsSignal(bool signalStatus)
     {
         m_SignalStatus = signalStatus;
-        if (m_SignalStatus)
+        if (m_SignalStatus) {
+            m_Section = Section::None;
             m_SlotStatus = false;
+        } else
+            m_Section = Section::Public;
     }
 
     /**
@@ -233,6 +236,9 @@ namespace entity {
         m_SlotStatus = slotStatus;
         if (m_SlotStatus)
             m_SignalStatus = false;
+
+        if (m_Section == Section::None && !isSignal())
+            m_Section = Section::Public;
     }
 
     /**

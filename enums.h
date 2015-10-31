@@ -29,6 +29,7 @@ namespace entity {
 
     /// The Section enum
     enum Section  : int {
+        None,     ///< None (actual for signals which are always protected, but user doesn't see it)
         Public,   ///< Public
         Private,  ///< Private
         Protected ///< Protected

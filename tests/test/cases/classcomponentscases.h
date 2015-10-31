@@ -85,10 +85,12 @@ TEST_F(ClassComponents, Method)
 
     method->setIsSlot(true);
     ASSERT_TRUE(method->isSlot());
+    ASSERT_EQ(method->section(), entity::Section::Public);
     ASSERT_FALSE(method->isSignal());
 
     method->setIsSignal(true);
     ASSERT_TRUE(method->isSignal());
+    ASSERT_EQ(method->section(), entity::Section::None);
     ASSERT_FALSE(method->isSlot());
 
     // Check moving
