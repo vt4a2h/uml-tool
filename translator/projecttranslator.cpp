@@ -172,11 +172,21 @@ namespace translator {
                                                      QString &out) const
     {
         QStringList methodsList;
-        for (auto &&method : _class->methods(section))
-            methodsList << translate(method, WithNamespace, localeDatabase).toHeader.prepend(indent);
+        QStringList slotsList;
+        for (auto &&method : _class->methods(section)) {
+            if (method->isSlot())
+                slotsList << translate(method, WithNamespace, localeDatabase).toHeader.prepend(indent);
+            else if (!method->isSignal())
+                methodsList << translate(method, WithNamespace, localeDatabase).toHeader.prepend(indent);
+        }
+
+        // Add normal methods
         out.append(methodsList.join(";\n"));
         if (!methodsList.isEmpty())
            out.append(";\n");
+
+        // Add slots
+
 
         QStringList fieldsList;
         for (auto &&field : _class->fields(section)) {
@@ -243,7 +253,8 @@ namespace translator {
            return false;
 
         entity::FieldsList fields(m->parameters());
-        auto it = utility::find_if(fields, [&](auto &&f) { return classDatabase->depthTypeSearch(f->typeId()); });
+        auto it = utility::find_if(fields, [&](auto &&f) {
+                                               return classDatabase->depthTypeSearch(f->typeId()); });
         return it != fields.end() || classDatabase->depthTypeSearch(m->returnTypeId());
     }
 
@@ -426,6 +437,7 @@ namespace translator {
                                            const db::SharedDatabase &localeDatabase,
                                            const db::SharedDatabase &classDatabase) const
     {
+        // TODO: add qobject macro for classes with custom slot-signals
         // compatibility with API
         Q_UNUSED(options)
         Q_UNUSED(localeDatabase)
@@ -526,6 +538,10 @@ namespace translator {
         }
 
         for (auto &&m : _class->methods()) {
+            // Signals have no user visible implementation
+            if (m->isSignal())
+                continue;
+
             method = translate(m, NoLhs | WithNamespace | NoDefaultName, localeDatabase).toHeader;
             if (tc)
                 method.prepend(templatePart);
