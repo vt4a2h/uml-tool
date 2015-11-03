@@ -37,9 +37,9 @@
 #include <entity/templateclass.h>
 #include <entity/templateclassmethod.h>
 
-#include <translator/projecttranslator.h>
-#include <translator/translator_types.hpp>
-#include <translator/code.h>
+#include <translation/projecttranslator.h>
+#include <translation/translator_types.hpp>
+#include <translation/code.h>
 
 #include <enums.h>
 
@@ -51,7 +51,7 @@ protected:
         _globalDb  = std::make_shared<db::Database>("Global");
         _projectDb = std::make_shared<db::ProjectDatabase>("Project");
 
-        _translator = std::make_shared<translator::ProjectTranslator>(_globalDb, _projectDb);
+        _translator = std::make_shared<translation::ProjectTranslator>(_globalDb, _projectDb);
 
         _globalScope  = _globalDb->addScope();
         _projectScope = _projectDb->addScope("project_scope");
@@ -62,7 +62,7 @@ protected:
     db::SharedDatabase _globalDb;
     db::SharedDatabase _projectDb;
 
-    translator::SharedTranslator _translator;
+    translation::SharedTranslator _translator;
 
     entity::SharedScope _globalScope;
     entity::SharedScope _projectScope;

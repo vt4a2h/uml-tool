@@ -70,7 +70,7 @@ namespace {
     }
 }
 
-namespace translator {
+namespace translation {
 
     /**
      * @brief ProjectTranslator::ProjectTranslator
@@ -796,4 +796,4 @@ namespace translator {
         m_GlobalDatabase = globalDatabase;
     }
 
-} // namespace translator
+} // namespace translation

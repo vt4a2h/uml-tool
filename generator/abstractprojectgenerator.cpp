@@ -1,23 +1,23 @@
 /*****************************************************************************
-** 
+**
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
 ** Created 29/10/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
-** 
+**
 ** Q-UML is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** Q-UML is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU Lesser General Public License for more details.
 
 ** You should have received a copy of the GNU Lesser General Public License
-** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>. 
+** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
 
@@ -64,7 +64,7 @@ namespace generator {
      * @brief AbstractProjectGenerator::projectTranslator
      * @return
      */
-    translator::ProjectTranslator AbstractProjectGenerator::projectTranslator() const
+    translation::ProjectTranslator AbstractProjectGenerator::projectTranslator() const
     {
         return m_ProjectTranslator;
     }
@@ -73,16 +73,16 @@ namespace generator {
      * @brief AbstractProjectGenerator::projectTranslatorPtr
      * @return
      */
-    translator::ProjectTranslator *AbstractProjectGenerator::projectTranslatorPtr()
+    translation::ProjectTranslator *AbstractProjectGenerator::projectTranslatorPtr()
     {
-        return const_cast<translator::ProjectTranslator*>(projectTranslatorCPtr());
+        return const_cast<translation::ProjectTranslator*>(projectTranslatorCPtr());
     }
 
     /**
      * @brief AbstractProjectGenerator::projectTranslatorCPtr
      * @return
      */
-    const translator::ProjectTranslator *AbstractProjectGenerator::projectTranslatorCPtr() const
+    const translation::ProjectTranslator *AbstractProjectGenerator::projectTranslatorCPtr() const
     {
         return &m_ProjectTranslator;
     }
@@ -91,7 +91,7 @@ namespace generator {
      * @brief AbstractProjectGenerator::setProjectTranslator
      * @param translator
      */
-    void AbstractProjectGenerator::setProjectTranslator(const translator::ProjectTranslator &translator)
+    void AbstractProjectGenerator::setProjectTranslator(const translation::ProjectTranslator &translator)
     {
         m_ProjectTranslator = translator;
     }

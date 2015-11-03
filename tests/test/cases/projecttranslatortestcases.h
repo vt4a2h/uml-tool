@@ -83,8 +83,8 @@ TEST_F(ProjectTranslatorTest, ExtendedType)
 
     futureResult = "using Ints = vector<int>;";
     type->setName("Ints");
-    code = _translator->translate(type, translator::ProjectTranslator::WithAlias |
-                                        translator::ProjectTranslator::WithNamespace);
+    code = _translator->translate(type, translation::ProjectTranslator::WithAlias |
+                                        translation::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "std::set<int>";
@@ -164,7 +164,7 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     method->removeParameter("b");
     method->addParameter("id", qstrExt->id());
 
-    code = _translator->translate(method, translator::ProjectTranslator::WithNamespace);
+    code = _translator->translate(method, translation::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "explicit Foo(const QString &name)";
@@ -179,13 +179,13 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     method->setReturnTypeId(fooExt->id());
     method->setRhsIdentificator(entity::RhsIdentificator::PureVirtual);
     method->addLhsIdentificator(entity::LhsIdentificator::Virtual);
-    code = _translator->translate(method, translator::ProjectTranslator::WithNamespace);
+    code = _translator->translate(method, translation::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "ps::Foo *make() override";
     method->removeLhsIdentificator(entity::LhsIdentificator::Virtual);
     method->setRhsIdentificator(entity::RhsIdentificator::Override);
-    code = _translator->translate(method, translator::ProjectTranslator::WithNamespace);
+    code = _translator->translate(method, translation::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
@@ -233,7 +233,7 @@ TEST_F(ProjectTranslatorTest, TemplateClassMethod)
     sharedPointerToT->addTemplateParameter(t->id());
     method->setReturnTypeId(sharedPointerToT->id());
 
-    code = _translator->translate(method, translator::ProjectTranslator::WithNamespace);
+    code = _translator->translate(method, translation::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
@@ -262,7 +262,7 @@ TEST_F(ProjectTranslatorTest, Enum)
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "enum class Foo : int {bar = 0, baz = 1};";
-    code = _translator->translate(fooEnum, translator::ProjectTranslator::GenerateNumbers);
+    code = _translator->translate(fooEnum, translation::ProjectTranslator::GenerateNumbers);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
@@ -411,7 +411,7 @@ TEST_F(ProjectTranslatorTest, ClassImplementation)
     getterForC->setConstStatus(true);
     getterForC->setReturnTypeId(_int->id());
 
-    translator::Code code(_translator->generateClassMethodsImpl(classFoo));
+    translation::Code code(_translator->generateClassMethodsImpl(classFoo));
     ASSERT_TRUE(code.toHeader.isEmpty())
             << "Header should be empty!";
     ASSERT_EQ(futureResult.toStdString(), code.toSource.toStdString());
@@ -480,6 +480,6 @@ TEST_F(ProjectTranslatorTest, TemplateClassImplementation)
     valuePtr->addPointerStatus();
     resetMethod->addParameter("other", valuePtr->id());
 
-    translator::Code code(_translator->generateClassMethodsImpl(scopedPointer));
+    translation::Code code(_translator->generateClassMethodsImpl(scopedPointer));
     ASSERT_EQ(futureResult, code.toHeader);
 }

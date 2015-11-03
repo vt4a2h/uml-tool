@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 10/05/2015.
+** Created 29/10/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,12 +20,30 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+
 #pragma once
 
-#include <memory>
+#include <QString>
 
-namespace translator {
-    class ProjectTranslator;
-    using SharedTranslator = std::shared_ptr<ProjectTranslator>;
-    using UniqueTranslator = std::unique_ptr<ProjectTranslator>;
-}
+/**
+ * @brief translation
+ */
+namespace translation {
+
+    /**
+     * @brief The Code struct
+     */
+    struct Code {
+       Code();
+       Code(const QString &h, const QString &cpp);
+       Code(const Code &src);
+
+       void join(const Code &code, const QString &sep = "\n");
+
+       bool isEmpty() const;
+
+       QString toHeader;
+       QString toSource;
+    };
+
+} // namespace translation

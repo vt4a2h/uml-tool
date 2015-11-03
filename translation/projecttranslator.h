@@ -30,7 +30,7 @@
 #include <db/db_types.hpp>
 #include <entity/entity_types.hpp>
 
-namespace translator {
+namespace translation {
 
     struct Code;
 
@@ -136,4 +136,4 @@ namespace translator {
 
     Q_DECLARE_OPERATORS_FOR_FLAGS(ProjectTranslator::TranslatorOptions)
 
-} // namespace translator
+} // namespace translation

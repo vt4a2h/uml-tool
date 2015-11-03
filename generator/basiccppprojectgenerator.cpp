@@ -37,7 +37,7 @@
 #include <entity/union.h>
 #include <entity/templateclass.h>
 #include <entity/extendedtype.h>
-#include <translator/code.h>
+#include <translation/code.h>
 
 namespace generator {
 
@@ -101,7 +101,7 @@ namespace generator {
                                        directory->addDirectory(scope->name().toLower()) : directory);
 
         for (auto &&t : scope->types()) {
-            translator::Code code = m_ProjectTranslator.translate(t);
+            translation::Code code = m_ProjectTranslator.translate(t);
             m_ProjectTranslator.addNamespace(t, code);
 
             QString name(t->name().toLower());

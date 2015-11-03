@@ -46,8 +46,8 @@ SOURCES += \
     relationship/node.cpp \
     relationship/realization.cpp \
     relationship/relation.cpp \
-    translator/code.cpp \
-    translator/projecttranslator.cpp \
+    translation/code.cpp \
+    translation/projecttranslator.cpp \
     utility/helpfunctions.cpp \
     application/application.cpp \
     project/project.cpp \
@@ -115,9 +115,9 @@ HEADERS += \
     relationship/realization.h \
     relationship/relation.h \
     relationship/relationship_types.hpp \
-    translator/code.h \
-    translator/projecttranslator.h \
-    translator/translator_types.hpp \
+    translation/code.h \
+    translation/projecttranslator.h \
+    translation/translator_types.hpp \
     utility/helpfunctions.h \
     application/application.h \
     project/project.h \

@@ -81,7 +81,7 @@ SOURCES += main.cpp \
            ../../relationship/realization.cpp \
            ../../relationship/multiplyassociation.cpp \
            ../../entity/templateclassmethod.cpp \
-           ../../translator/projecttranslator.cpp \
+           ../../translation/projecttranslator.cpp \
            ../../templates.cpp \
            ../../entity/scope.cpp \
            ../../generator/virtualfile.cpp \
@@ -90,7 +90,7 @@ SOURCES += main.cpp \
            ../../generator/abstractprojectgenerator.cpp \
            ../../generator/basiccppprojectgenerator.cpp \
            ../../project/project.cpp \
-           ../../translator/code.cpp \
+           ../../translation/code.cpp \
            ../../entity/components/componentsmaker.cpp \
            ../../entity/components/componentsignatureparser.cpp \
            ../../gui/signaturemaker.cpp \

@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <translator/projecttranslator.h>
+#include <translation/projecttranslator.h>
 
 #include "types.h"
 
@@ -54,10 +54,10 @@ namespace generator {
                                 const QString &outputDirectory = "");
        virtual ~AbstractProjectGenerator();
 
-       translator::ProjectTranslator projectTranslator() const;
-       translator::ProjectTranslator *projectTranslatorPtr();
-       const translator::ProjectTranslator *projectTranslatorCPtr() const;
-       void setProjectTranslator(const translator::ProjectTranslator &translator);
+       translation::ProjectTranslator projectTranslator() const;
+       translation::ProjectTranslator *projectTranslatorPtr();
+       const translation::ProjectTranslator *projectTranslatorCPtr() const;
+       void setProjectTranslator(const translation::ProjectTranslator &translator);
 
        QString outputDirectory() const;
        void setOutputDirectory(const QString &outputDirectory);
@@ -79,7 +79,7 @@ namespace generator {
        virtual void doGenerate() = 0;
        virtual void doWrite() const = 0;
 
-       translator::ProjectTranslator m_ProjectTranslator;
+       translation::ProjectTranslator m_ProjectTranslator;
        GeneratorOptions m_Options;
        QString m_OutputDirectory;
        QString m_ProjectName;
