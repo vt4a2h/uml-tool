@@ -49,10 +49,10 @@
 #include <commands/addcomponentscommands.h>
 #include <commands/removecomponentscommands.h>
 
+#include <translation/signaturemaker.h>
 
 #include "componentseditdelegate.h"
 #include "signatureeditdelegate.h"
-#include "signaturemaker.h"
 #include "editmethoddialog.h"
 
 #include "enums.h"
@@ -276,7 +276,8 @@ namespace gui {
         }
         // }
 
-        auto signatureMaker(std::make_unique<SignatureMaker>(m_ApplicationModel, m_Project, m_Scope, m_Type));
+        auto signatureMaker =
+            std::make_unique<translation::SignatureMaker>(m_ApplicationModel, m_Project, m_Scope, m_Type);
         m_ComponentsModel->setSignatureMaker(std::move(signatureMaker));
         m_ComponentsModel->setComponents(m_Type);
 

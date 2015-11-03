@@ -26,13 +26,17 @@
 
 #include "TestComponentsBase.h"
 
-#include <gui/signaturemaker.h>
+#include <translation/signaturemaker.h>
+#include <translation/translator_types.hpp>
 
 class SignatureMaker : public ComponentsBase, public ::testing::Test
 {
 protected:
-    SignatureMaker() : m_Maker(std::make_unique<gui::SignatureMaker>(m_ApplicationModel, m_Project, m_Scope, m_Type)) {}
+    SignatureMaker()
+    : m_Maker(std::make_unique<translation::SignatureMaker>(m_ApplicationModel, m_Project, m_Scope,
+                                                            m_Type))
+    {}
 
 protected:
-    gui::UniqueSignatureMaker m_Maker;
+   translation::UniqueSignatureMaker m_Maker;
 };

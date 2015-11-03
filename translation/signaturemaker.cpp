@@ -35,7 +35,7 @@
 #include "constants.h"
 #include "enums.h"
 
-namespace gui {
+namespace translation {
 
     namespace {
         const QString noSignature = SignatureMaker::tr("Not available.");
@@ -500,5 +500,5 @@ namespace gui {
         return utility::findType(typeId, m_Project->database(), m_ApplicationModel->globalDatabase());
     }
 
-} // namespace gui
+} // namespace translation
 

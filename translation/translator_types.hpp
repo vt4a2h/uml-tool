@@ -28,4 +28,7 @@ namespace translation {
     class ProjectTranslator;
     using SharedTranslator = std::shared_ptr<ProjectTranslator>;
     using UniqueTranslator = std::unique_ptr<ProjectTranslator>;
+
+    class SignatureMaker;
+    using UniqueSignatureMaker = std::unique_ptr<SignatureMaker>;
 }

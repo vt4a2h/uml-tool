@@ -30,7 +30,7 @@
 #include <entity/field.h>
 #include <entity/property.h>
 
-#include <gui/signaturemaker.h>
+#include <translation/signaturemaker.h>
 
 namespace models {
 
@@ -74,7 +74,7 @@ namespace models {
      * @brief ClassComponentsModel::setSignatureMaker
      * @param maker
      */
-    void ComponentsModel::setSignatureMaker(gui::UniqueSignatureMaker &&maker)
+    void ComponentsModel::setSignatureMaker(translation::UniqueSignatureMaker &&maker)
     {
         m_SignatureMaker = std::move(maker);
     }

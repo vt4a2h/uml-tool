@@ -48,6 +48,7 @@ SOURCES += \
     relationship/relation.cpp \
     translation/code.cpp \
     translation/projecttranslator.cpp \
+    translation/signaturemaker.cpp \
     utility/helpfunctions.cpp \
     application/application.cpp \
     project/project.cpp \
@@ -58,7 +59,6 @@ SOURCES += \
     gui/graphics/entity.cpp \
     gui/editentitydialog.cpp \
     gui/scenefilter.cpp \
-    gui/signaturemaker.cpp \
     gui/editmethoddialog.cpp \
     gui/chooseglobaldatabasedialog.cpp \
     gui/componentseditdelegate.cpp \
@@ -118,6 +118,7 @@ HEADERS += \
     translation/code.h \
     translation/projecttranslator.h \
     translation/translator_types.hpp \
+    translation/signaturemaker.h \
     utility/helpfunctions.h \
     application/application.h \
     project/project.h \
@@ -129,7 +130,6 @@ HEADERS += \
     gui/editentitydialog.h \
     gui/gui_types.hpp \
     gui/scenefilter.h \
-    gui/signaturemaker.h \
     gui/editmethoddialog.h \
     gui/chooseglobaldatabasedialog.h \
     gui/componentseditdelegate.h \

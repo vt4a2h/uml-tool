@@ -93,7 +93,7 @@ SOURCES += main.cpp \
            ../../translation/code.cpp \
            ../../entity/components/componentsmaker.cpp \
            ../../entity/components/componentsignatureparser.cpp \
-           ../../gui/signaturemaker.cpp \
+           ../../translation/signaturemaker.cpp \
            ../../models/applicationmodel.cpp \
            ../../models/projecttreemodel.cpp \
            ../../models/basictreeitem.cpp \

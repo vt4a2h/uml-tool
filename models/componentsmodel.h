@@ -28,6 +28,7 @@
 
 #include <entity/entity_types.hpp>
 #include <gui/gui_types.hpp>
+#include <translation/translator_types.hpp>
 
 namespace models {
 
@@ -64,7 +65,7 @@ namespace models {
 
     public:
         ComponentsModel(const entity::SharedComponents &components, QObject *parent = nullptr);
-        void setSignatureMaker(gui::UniqueSignatureMaker &&maker);
+        void setSignatureMaker(translation::UniqueSignatureMaker &&maker);
         void clear();
 
         // TODO: try to use templates {
@@ -123,7 +124,7 @@ namespace models {
 
     private:
         entity::SharedComponents m_Components;
-        gui::UniqueSignatureMaker m_SignatureMaker;
+        translation::UniqueSignatureMaker m_SignatureMaker;
         DisplayPart m_display = DisplayPart::Invalid;
     };
 

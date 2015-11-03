@@ -29,7 +29,7 @@
 #include <entity/entity_types.hpp>
 #include <project/project_types.hpp>
 
-namespace gui {
+namespace translation {
 
     /// The SignatureMaker class
     class SignatureMaker
@@ -80,4 +80,4 @@ namespace gui {
         QMap<size_t, MakerFunction> m_MakersMap;
     };
 
-} // namespace gui
+} // namespace translation
