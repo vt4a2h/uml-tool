@@ -48,7 +48,6 @@ namespace entity {
      */
     TemplateClass::TemplateClass(const QString &name, const QString &scopeId)
         : Class (name, scopeId)
-        , Template()
     {
     }
 
