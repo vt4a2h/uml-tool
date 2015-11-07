@@ -39,7 +39,7 @@ script:
    
    # build and run tests
    - cd tests/test
-   - qmake test.pro -r -spec linux-g++ CONFIG+=release WITH_COV=TRUE
+   - qmake test.pro -r -spec linux-g++ CONFIG+=release WITH_COV=TRUE LIBS+=/usr/lib/gcc/x86_64-linux-gnu/5/libstdc++.so
    - make -j4
    - ./test
    - cd ../../
