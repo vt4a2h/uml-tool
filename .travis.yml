@@ -18,7 +18,6 @@ install:
    - gem install coveralls-lcov
    - sudo apt-get install qt5-default qt5-qmake qtbase5-dev-tools qtchooser qttools5-dev qtbase5-dev libgles2-mesa-dev libqt5gui5 libqt5serialport5-dev libqt5printsupport5 libqt5widgets5 libgles2-mesa libgl1-mesa-dev libgl1-mesa-glx libglapi-mesa libegl1-mesa-dev libpango-1.0-0
    - sudo apt-get install zlib1g-dev libudev-dev
-   - "wget https://googletest.googlecode.com/files/gtest-1.7.0.zip && unzip gtest-1.7.0.zip && cd gtest-1.7.0/ && ./configure CXX=g++-5 CXXFLAGS=-std=c++1y && make -j4 && sudo cp -a include/gtest /usr/include && sudo cp -a lib/.libs/* /usr/lib/"
    #- sudo apt-get install libgtest-dev
    #- "cd /usr/src/gtest && sudo cmake -DCMAKE_BUILD_TYPE=RELEASE . && sudo cmake --build . && sudo mv libg* /usr/local/lib/ ; cd -"
    
@@ -26,6 +25,17 @@ script:
    # build application
    - qmake uml-tool.pro -r -spec linux-g++ CONFIG+=release
    - make -j4
+   
+   # get and build gtest
+   - wget https://googletest.googlecode.com/files/gtest-1.7.0.zip
+   - unzip gtest-1.7.0.zip
+   - cd gtest-1.7.0/ 
+   - ./configure CXX=g++-5 CXXFLAGS=-std=c++1y 
+   - make -j4 
+   - sudo cp -a include/gtest /usr/include 
+   - sudo cp -a lib/.libs/* /usr/lib/
+   - cd ..
+   # TODO: make and run tests for gtest
    
    # build and run tests
    - cd tests/test
