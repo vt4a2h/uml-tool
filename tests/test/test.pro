@@ -10,6 +10,7 @@ LIBS += -lgtest -lpthread
 linux-g++ {
     message(********** Building with gcc 5 **********)
     QMAKE_CXX = g++-5
+    QMAKE_CXXFLAGS *= -std=c++1y
 
     equals(WITH_COV, "TRUE") {
         message(********** Collecting test coverage **********)

@@ -23,12 +23,12 @@ install:
    
 script:
    # build application
-   - qmake CONFIG+=release
+   - qmake uml-tool.pro -r -spec linux-g++ CONFIG+=release
    - make -j4
    
    # build and run tests
    - cd tests/test
-   - qmake CONFIG+=release WITH_COV=TRUE
+   - qmake test.pro -r -spec linux-g++ CONFIG+=release WITH_COV=TRUE
    - make -j4
    - ./test
    - cd ../../
