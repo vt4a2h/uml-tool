@@ -23,12 +23,12 @@ install:
    
 script:
    # build application
-   - qmake CONFIG+=debug
+   - qmake CONFIG+=release
    - make -j4
    
    # build and run tests
    - cd tests/test
-   - qmake CONFIG+=debug
+   - qmake CONFIG+=release WITH_COV=TRUE
    - make -j4
    - ./test
    - cd ../../

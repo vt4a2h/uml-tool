@@ -1,19 +1,24 @@
 TEMPLATE = app
 
-CONFIG += console qt
+CONFIG += console qt c++14
 CONFIG -= app_bundle
 
 QT += widgets
 
 LIBS += -lgtest -lpthread
 
-QMAKE_CXX = gcc-5
-QMAKE_LINK = gcc-5
-QMAKE_LFLAGS *= -lstdc++
-QMAKE_CXXFLAGS *= -std=c++1y
+linux-g++ {
+    message(********** Building with gcc 5 **********)
+    QMAKE_CXX = g++-5
 
-QMAKE_CXXFLAGS_DEBUG += --coverage
-QMAKE_LFLAGS_DEBUG += --coverage
+    equals(WITH_COV, "TRUE") {
+        message(********** Collecting test coverage **********)
+        QMAKE_CXX = gcc-5
+        QMAKE_LINK = gcc-5
+        QMAKE_LFLAGS *= -lstdc++ --coverage
+        QMAKE_CXXFLAGS *= -std=c++1y -g --coverage
+    }
+}
 
 INCLUDEPATH += ../../
 

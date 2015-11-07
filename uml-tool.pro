@@ -1,16 +1,13 @@
 TEMPLATE = app
 
-CONFIG += core gui
+CONFIG += core gui c++14
 
 QT += widgets
 
-QMAKE_CXX = gcc-5
-QMAKE_LINK = gcc-5
-QMAKE_LFLAGS *= -lstdc++
-QMAKE_CXXFLAGS *= -std=c++1y
-
-QMAKE_CXXFLAGS_DEBUG *= --coverage
-QMAKE_LFLAGS_DEBUG *= --coverage
+linux-g++ {
+    message(********** Building with gcc 5 **********)
+    QMAKE_CXX = g++-5
+}
 
 SOURCES += \
     main.cpp \
