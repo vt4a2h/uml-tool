@@ -28,6 +28,8 @@
 #include "code.h"
 
 #include <QRegularExpression>
+#include <QDebug>
+
 #include <db/database.h>
 #include <db/projectdatabase.h>
 #include <entity/enum.h>
@@ -141,59 +143,91 @@ namespace translation {
      * @param section
      * @param out
      */
-    void ProjectTranslator::generateClassSection(const entity::SharedClass &_class, const db::SharedDatabase &localeDatabase,
+    void ProjectTranslator::generateClassSection(const entity::SharedClass &_class,
+                                                 const db::SharedDatabase &localeDatabase,
                                                  entity::Section section, QString &out) const
     {
-        if (!_class->containsMethods(section) && !_class->containsFields(section)) return;
+        entity::MethodsList methods;
+        entity::MethodsList _slots;
+        for (auto const& m : _class->methods(section)) {
+            if (m->isSlot())
+                _slots << m;
+            else if (!m->isSignal())
+                methods << m;
+        }
+
+        entity::FieldsList fields = _class->fields(section);
+        if (methods.isEmpty() && _slots.isEmpty() && fields.isEmpty())
+            return;
 
         out.append("\n");
-        if (_class->kind() == entity::ClassType ||
-            (_class->kind() != entity::StructType && section != entity::Public)) {
-            out.append(INDENT)
-               .append(utility::sectionToString(section))
-               .append(":\n");
-            generateFieldsAndMethods(_class, localeDatabase, DOUBLE_INDENT, section, out);
-        } else {
-            generateFieldsAndMethods(_class, localeDatabase, INDENT, section, out);
+        bool needSection = _class->kind() == entity::ClassType ||
+                           (_class->kind() != entity::StructType && section != entity::Public);
+
+        if (!methods.isEmpty()) {
+            if (needSection)
+                out.append(INDENT + utility::sectionToString(section) + ":\n");
+
+            generateMethods(methods, localeDatabase, needSection ? DOUBLE_INDENT : INDENT, out);
+        }
+
+        if (!_slots.isEmpty()) {
+            if (needSection)
+                out.append(INDENT + utility::sectionToString(section) + " SLOTS:\n");
+
+            generateMethods(_slots, localeDatabase, needSection ? DOUBLE_INDENT : INDENT, out);
+        }
+
+        if (!fields.isEmpty()) {
+            if (needSection)
+                out.append(INDENT + utility::sectionToString(section) + ":\n");
+
+            generateFileds(fields, _class, localeDatabase, needSection ? DOUBLE_INDENT : INDENT, out);
         }
     }
 
     /**
      * @brief ProjectTranslator::generateFieldsAndMethods
+     * @param methods
+     * @param localeDatabase
+     * @param indent
+     * @param out
+     */
+    void ProjectTranslator::generateMethods(const entity::MethodsList &methods,
+                                            const db::SharedDatabase &localeDatabase,
+                                            const QString &indent,
+                                            QString &out) const
+    {
+        QStringList methodsList;
+        for(auto &&m : methods)
+            methodsList << translate(m, WithNamespace, localeDatabase).toHeader.prepend(indent);
+
+        out.append(methodsList.join(";\n"));
+        if (!methodsList.isEmpty())
+            out.append(";\n");
+    }
+
+    /**
+     * @brief ProjectTranslator::generateFileds
+     * @param fields
      * @param _class
      * @param localeDatabase
      * @param indent
-     * @param section
      * @param out
      */
-    void ProjectTranslator::generateFieldsAndMethods(const entity::SharedClass &_class,
-                                                     const db::SharedDatabase &localeDatabase,
-                                                     const QString &indent, entity::Section section,
-                                                     QString &out) const
+    void ProjectTranslator::generateFileds(const entity::FieldsList &fields,
+                                           const entity::SharedClass &_class,
+                                           const db::SharedDatabase &localeDatabase,
+                                           const QString &indent, QString &out) const
     {
-        QStringList methodsList;
-        QStringList slotsList;
-        for (auto &&method : _class->methods(section)) {
-            if (method->isSlot())
-                slotsList << translate(method, WithNamespace, localeDatabase).toHeader.prepend(indent);
-            else if (!method->isSignal())
-                methodsList << translate(method, WithNamespace, localeDatabase).toHeader.prepend(indent);
-        }
-
-        // Add normal methods
-        out.append(methodsList.join(";\n"));
-        if (!methodsList.isEmpty())
-           out.append(";\n");
-
-        // Add slots
-
-
         QStringList fieldsList;
-        for (auto &&field : _class->fields(section)) {
+        for (auto &&field : fields) {
             auto t = utility::findType(field->typeId(), localeDatabase,
                                        m_GlobalDatabase, m_ProjectDatabase);
-            if (!t)
-               break;
+            if (!t) {
+                qDebug() << "Failed to find field with type:" << field->typeId();
+                break;
+            }
 
             fieldsList << translate(field,
                                     t->scopeId() == _class->scopeId() ? NoOptions : WithNamespace,
@@ -203,7 +237,7 @@ namespace translation {
         out.append(fieldsList.join(";\n"));
 
         if (!fieldsList.isEmpty())
-           out.append(";\n");
+            out.append(";\n");
     }
 
     /**

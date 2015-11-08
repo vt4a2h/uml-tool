@@ -301,12 +301,11 @@ namespace entity {
      * @param section
      * @return
      */
-    MethodsList Class::methods(Section section) const
+    MethodsList Class::methods(Section s) const
     {
         MethodsList result;
-
-        for (auto &&method : m_Methods)
-            if (method->section() == section) result << method;
+        std::copy_if(cbegin(m_Methods), cend(m_Methods), std::back_inserter(result),
+                     [&](auto &&m){ return m->section() == s; });
 
         return result;
     }

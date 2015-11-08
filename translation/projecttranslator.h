@@ -113,11 +113,11 @@ namespace translation {
         void generateClassSection(const entity::SharedClass &_class,
                                   const db::SharedDatabase &localeDatabase,
                                   entity::Section section, QString &out) const;
-        void generateFieldsAndMethods(const entity::SharedClass &_class,
-                                      const db::SharedDatabase &localeDatabase,
-                                      const QString &indent,
-                                      entity::Section section,
-                                      QString &out) const;
+        void generateMethods(const entity::MethodsList &methods, const db::SharedDatabase &localeDatabase,
+                             const QString &indent, QString &out) const;
+        void generateFileds(const entity::FieldsList &fields, const entity::SharedClass &_class,
+                            const db::SharedDatabase &localeDatabase, const QString &indent,
+                            QString &out) const;
         void generateTemplatePart(QString &result, const entity::SharedTemplate &t,
                                   bool withDefaultTypes = true) const;
         bool toHeader(const entity::SharedMethod &m,
