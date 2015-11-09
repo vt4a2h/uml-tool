@@ -160,6 +160,16 @@ namespace entity {
     }
 
     /**
+     * @brief Property::field
+     * @return
+     */
+    SharedField Property::field() const
+    {
+        // TODO: add and investigate!
+        return SharedField();
+    }
+
+    /**
      * @brief operator ==
      * @param lhs
      * @param rhs
@@ -246,6 +256,8 @@ namespace entity {
 
         m_Getter = std::make_shared<ClassMethod>(newName);
 
+        emit methodAdded(m_Getter);
+
         return *this;
     }
 
@@ -255,6 +267,7 @@ namespace entity {
      */
     void Property::deleteGetter()
     {
+        emit methodRemoved(m_Getter);
         m_Getter.reset();
     }
 
@@ -286,6 +299,8 @@ namespace entity {
         m_Setter = std::make_shared<ClassMethod>(newName);
         m_Setter->setIsSlot(true);
 
+        emit methodAdded(m_Setter);
+
         return *this;
     }
 
@@ -294,6 +309,8 @@ namespace entity {
      */
     void Property::deleteSetter()
     {
+        emit methodRemoved(m_Setter);
+
         m_Setter.reset();
     }
 
@@ -325,6 +342,8 @@ namespace entity {
         m_Resetter = std::make_shared<ClassMethod>(newName);
         m_Resetter->setIsSlot(true);
 
+        emit methodAdded(m_Resetter);
+
         return *this;
     }
 
@@ -333,6 +352,7 @@ namespace entity {
      */
     void Property::deleteResetter()
     {
+        emit methodRemoved(m_Resetter);
         m_Resetter.reset();
     }
 
@@ -363,6 +383,7 @@ namespace entity {
 
         m_Notifier = std::make_shared<ClassMethod>(newName);
         m_Notifier->setIsSignal(true);
+        emit methodAdded(m_Notifier);
 
         return *this;
     }
@@ -372,6 +393,8 @@ namespace entity {
      */
     void Property::deleteNotifier()
     {
+        emit methodRemoved(m_Notifier);
+
         m_Notifier.reset();
     }
 
@@ -448,6 +471,9 @@ namespace entity {
         }
 
         m_DesignableGetter = std::make_shared<ClassMethod>(newName);
+
+        emit methodAdded(m_DesignableGetter);
+
         return *this;
     }
 
@@ -465,6 +491,8 @@ namespace entity {
      */
     void Property::deleteDesignableGetter()
     {
+        emit methodRemoved(m_DesignableGetter);
+
         m_DesignableGetter.reset();
     }
 
@@ -514,6 +542,9 @@ namespace entity {
         }
 
         m_ScriptableGetter = std::make_shared<ClassMethod>(newName);
+
+        emit methodAdded(m_ScriptableGetter);
+
         return *this;
     }
 
@@ -742,19 +773,35 @@ namespace entity {
                     [&](){ readOptional<Member>(src[memberMark], m_MemberName, errorList); });
 
         checkAndSet(src, getterMark, errorList,
-                    [&](){ readOptional<entity::ClassMethod>(src[getterMark], m_Getter, errorList); });
+                    [&](){ readOptional<entity::ClassMethod>(src[getterMark], m_Getter, errorList);
+                           if (m_Getter)
+                               emit methodAdded(m_Getter);
+                         });
         checkAndSet(src, setterMark, errorList,
-                    [&](){ readOptional<entity::ClassMethod>(src[setterMark], m_Setter, errorList); });
+                    [&](){ readOptional<entity::ClassMethod>(src[setterMark], m_Setter, errorList);
+                           if (m_Setter)
+                               emit methodAdded(m_Setter);
+                        });
         checkAndSet(src, resetterMark, errorList,
-                    [&](){ readOptional<entity::ClassMethod>(src[resetterMark], m_Resetter, errorList); });
+                    [&](){ readOptional<entity::ClassMethod>(src[resetterMark], m_Resetter, errorList);
+                           if (m_Resetter)
+                              emit methodAdded(m_Resetter);
+                         });
         checkAndSet(src, notifierMark, errorList,
-                    [&](){ readOptional<entity::ClassMethod>(src[notifierMark], m_Notifier, errorList); });
+                    [&](){ readOptional<entity::ClassMethod>(src[notifierMark], m_Notifier, errorList);
+                           if (m_Notifier)
+                              emit methodAdded(m_Notifier);
+                         });
 
         checkAndSet(src, designableGetterMark, errorList, [&](){
             readOptional<entity::ClassMethod>(src[designableGetterMark], m_DesignableGetter, errorList);
+            if (m_DesignableGetter)
+               emit methodAdded(m_DesignableGetter);
         });
         checkAndSet(src, scriptableGetterMark, errorList, [&](){
             readOptional<entity::ClassMethod>(src[scriptableGetterMark], m_ScriptableGetter, errorList);
+            if (m_ScriptableGetter)
+               emit methodAdded(m_ScriptableGetter);
         });
 
         checkAndSet(src, memberIsMark, errorList, [&](){ m_Member   = src[memberIsMark].toBool(); });

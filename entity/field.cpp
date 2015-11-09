@@ -85,6 +85,7 @@ namespace entity {
         , m_Section(section)
         , m_Prefix(prefix)
     {
+        static int r = qRegisterMetaType<entity::Field>("entity::Field"); Q_UNUSED(r);
     }
 
     /**

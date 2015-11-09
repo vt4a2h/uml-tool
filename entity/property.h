@@ -46,6 +46,8 @@ namespace entity {
     /// The class Property
     class Property : public BasicEntity
     {
+        Q_OBJECT
+
     public:
         Property();
         Property(Property &&src);
@@ -131,6 +133,13 @@ namespace entity {
 
         QString typeId() const;
         void setTypeId(const QString &typeId);
+
+    signals:
+        void methodAdded(const entity::SharedMethod &);
+        void methodRemoved(const entity::SharedMethod &);
+
+        void fieldAdded(const entity::SharedField &);
+        void fieldRemoved(const entity::SharedField &);
 
     protected:
         void moveFrom(Property &&src);

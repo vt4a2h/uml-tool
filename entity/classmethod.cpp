@@ -99,6 +99,7 @@ namespace entity {
         , m_ReturnTypeId(VOID_ID)
         , m_RhsIdentificator(RhsIdentificator::None)
     {
+        static int r = qRegisterMetaType<entity::ClassMethod>("entity::ClassMethod"); Q_UNUSED(r);
     }
 
     /**
