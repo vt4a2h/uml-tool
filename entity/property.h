@@ -148,6 +148,18 @@ namespace entity {
     private:
         void init();
 
+        template <class Method>
+        void assignMethod(SharedMethod &dst, Method src)
+        {
+            if (dst)
+                emit methodRemoved(dst);
+
+            dst = std::forward<Method>(src);
+
+            if (dst)
+                emit methodAdded(dst);
+        }
+
     private:
         QString m_Id; // TODO: move to the BasicEntity class
         QString m_TypeId;

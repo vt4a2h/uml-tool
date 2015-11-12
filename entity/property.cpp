@@ -70,16 +70,17 @@ namespace {
     const QString constantMark = "Constant";
     const QString finalMark = "Final";
 
-    template<class Type>
-    void readOptional(const QJsonValue &val, std::shared_ptr<Type> &dst, ErrorList &errors)
+    void readOptional(const QJsonValue &val, auto *object, auto make, auto get, auto del,
+                      ErrorList &errors, auto... args)
     {
         if (val.isObject()) {
-            if (!dst)
-                dst = std::make_shared<Type>();
+            (object->*make)(args...);
+            auto dst = (object->*get)();
+            Q_ASSERT(dst);
 
             dst->fromJson(val.toObject(), errors);
-        } else {
-            dst.reset();
+            if (!errors.isEmpty())
+                (object->*del)();
         }
     }
 }
@@ -211,6 +212,9 @@ namespace entity {
      */
     Property &Property::addMember(const QString &customName, const QString &prefix)
     {
+        if (m_MemberName)
+            deleteMember();
+
         m_MemberName = std::make_shared<Member>();
         m_MemberName->name = customName.isEmpty() ? m_Name : customName;
 
@@ -254,6 +258,9 @@ namespace entity {
             newName[0] = newName[0].toLower();
         }
 
+        if (m_Getter)
+            deleteGetter();
+
         m_Getter = std::make_shared<ClassMethod>(newName);
 
         emit methodAdded(m_Getter);
@@ -295,6 +302,9 @@ namespace entity {
             newName[0] = newName[0].toUpper();
             newName.prepend("set");
         }
+
+        if (m_Setter)
+            deleteSetter();
 
         m_Setter = std::make_shared<ClassMethod>(newName);
         m_Setter->setIsSlot(true);
@@ -339,6 +349,9 @@ namespace entity {
             newName.prepend("reset");
         }
 
+        if (m_Resetter)
+            deleteResetter();
+
         m_Resetter = std::make_shared<ClassMethod>(newName);
         m_Resetter->setIsSlot(true);
 
@@ -380,6 +393,9 @@ namespace entity {
             newName[0] = newName[0].toLower();
             newName.append("Changed");
         }
+
+        if (m_Notifier)
+            deleteNotifier();
 
         m_Notifier = std::make_shared<ClassMethod>(newName);
         m_Notifier->setIsSignal(true);
@@ -470,6 +486,9 @@ namespace entity {
             newName.append("Designable");
         }
 
+        if (m_DesignableGetter)
+            deleteDesignableGetter();
+
         m_DesignableGetter = std::make_shared<ClassMethod>(newName);
 
         emit methodAdded(m_DesignableGetter);
@@ -540,6 +559,9 @@ namespace entity {
             newName[0] = newName[0].toLower();
             newName.append("Scriptable");
         }
+
+        if (m_ScriptableGetter)
+            deleteScriptableGetter();
 
         m_ScriptableGetter = std::make_shared<ClassMethod>(newName);
 
@@ -770,38 +792,43 @@ namespace entity {
         checkAndSet(src, typeIdMark, errorList, [&](){ m_TypeId = src[typeIdMark].toString(); });
 
         checkAndSet(src, memberMark, errorList,
-                    [&](){ readOptional<Member>(src[memberMark], m_MemberName, errorList); });
+                    [&](){ readOptional(src[memberMark], this, &Property::addMember,
+                                        &Property::member, &Property::deleteMember, errorList,
+                                        "" /*custom name*/, "" /*prefix*/); });
 
         checkAndSet(src, getterMark, errorList,
-                    [&](){ readOptional<entity::ClassMethod>(src[getterMark], m_Getter, errorList);
-                           if (m_Getter)
-                               emit methodAdded(m_Getter);
+                    [&](){ readOptional(src[getterMark], this, &Property::addGetter, &Property::getter,
+                                        &Property::deleteGetter, errorList, "" /*name*/);
                          });
         checkAndSet(src, setterMark, errorList,
-                    [&](){ readOptional<entity::ClassMethod>(src[setterMark], m_Setter, errorList);
-                           if (m_Setter)
-                               emit methodAdded(m_Setter);
-                        });
+                    [&](){ readOptional(src[setterMark], this, &Property::addSetter, &Property::setter,
+                                        &Property::setter, errorList, "");
+                         });
         checkAndSet(src, resetterMark, errorList,
-                    [&](){ readOptional<entity::ClassMethod>(src[resetterMark], m_Resetter, errorList);
-                           if (m_Resetter)
-                              emit methodAdded(m_Resetter);
+                    [&](){ readOptional(src[resetterMark], this, &Property::addResetter,
+                                        &Property::resetter, &Property::deleteResetter, errorList,
+                                        "" /*name*/);
                          });
         checkAndSet(src, notifierMark, errorList,
-                    [&](){ readOptional<entity::ClassMethod>(src[notifierMark], m_Notifier, errorList);
-                           if (m_Notifier)
-                              emit methodAdded(m_Notifier);
+                    [&](){ readOptional(src[notifierMark], this, &Property::addNotifier,
+                                        &Property::notifier, &Property::deleteNotifier, errorList,
+                                        "" /*name*/);
                          });
 
-        checkAndSet(src, designableGetterMark, errorList, [&](){
-            readOptional<entity::ClassMethod>(src[designableGetterMark], m_DesignableGetter, errorList);
-            if (m_DesignableGetter)
-               emit methodAdded(m_DesignableGetter);
+        checkAndSet(src, notifierMark, errorList,
+                    [&](){ readOptional(src[notifierMark], this, &Property::addNotifier,
+                                        &Property::notifier, &Property::deleteNotifier, errorList,
+                                        "" /*name*/);
         });
-        checkAndSet(src, scriptableGetterMark, errorList, [&](){
-            readOptional<entity::ClassMethod>(src[scriptableGetterMark], m_ScriptableGetter, errorList);
-            if (m_ScriptableGetter)
-               emit methodAdded(m_ScriptableGetter);
+        checkAndSet(src, designableGetterMark, errorList,
+                    [&](){ readOptional(src[designableGetterMark], this, &Property::addDesignableGetter,
+                                        &Property::designableGetter, &Property::deleteDesignableGetter,
+                                        errorList, "" /*name*/);
+        });
+        checkAndSet(src, scriptableGetterMark, errorList,
+                    [&](){ readOptional(src[scriptableGetterMark], this, &Property::addScriptableGetter,
+                                        &Property::scriptableGetter, &Property::scriptableGetter,
+                                        errorList, "" /*name*/);
         });
 
         checkAndSet(src, memberIsMark, errorList, [&](){ m_Member   = src[memberIsMark].toBool(); });
@@ -880,13 +907,13 @@ namespace entity {
 
         m_MemberName = std::move(src.m_MemberName);
 
-        m_Getter = std::move(src.m_Getter);
-        m_Setter = std::move(src.m_Setter);
-        m_Resetter = std::move(src.m_Resetter);
-        m_Notifier = std::move(src.m_Notifier);
+        assignMethod(m_Getter, std::move(src.m_Getter));
+        assignMethod(m_Setter, std::move(src.m_Setter));
+        assignMethod(m_Resetter, std::move(src.m_Resetter));
+        assignMethod(m_Notifier, std::move(src.m_Notifier));
 
-        m_DesignableGetter = std::move(src.m_DesignableGetter);
-        m_ScriptableGetter = std::move(src.m_ScriptableGetter);
+        assignMethod(m_DesignableGetter, std::move(src.m_DesignableGetter));
+        assignMethod(m_ScriptableGetter, std::move(src.m_ScriptableGetter));
 
         m_Revision = std::move(src.m_Revision);
 
@@ -906,13 +933,13 @@ namespace entity {
 
         m_MemberName = src.m_MemberName ? std::make_shared<Member>(*src.m_MemberName) : nullptr;
 
-        m_Getter   = src.m_Getter ? std::make_shared<ClassMethod>(*src.m_Getter) : nullptr;
-        m_Setter   = src.m_Setter ? std::make_shared<ClassMethod>(*src.m_Setter) : nullptr;
-        m_Resetter = src.m_Resetter ? std::make_shared<ClassMethod>(*src.m_Resetter) : nullptr;
-        m_Notifier = src.m_Notifier ? std::make_shared<ClassMethod>(*src.m_Notifier) : nullptr;
+        assignMethod(m_Getter, src.m_Getter ? std::make_shared<ClassMethod>(*src.m_Getter) : nullptr);
+        assignMethod(m_Setter, src.m_Setter ? std::make_shared<ClassMethod>(*src.m_Setter) : nullptr);
+        assignMethod(m_Resetter, src.m_Resetter ? std::make_shared<ClassMethod>(*src.m_Resetter) : nullptr);
+        assignMethod(m_Notifier, src.m_Notifier ? std::make_shared<ClassMethod>(*src.m_Notifier) : nullptr);
 
-        m_DesignableGetter = src.m_DesignableGetter ? std::make_shared<ClassMethod>(*src.m_DesignableGetter) : nullptr;
-        m_ScriptableGetter = src.m_ScriptableGetter ? std::make_shared<ClassMethod>(*src.m_ScriptableGetter) : nullptr;
+        assignMethod(m_DesignableGetter, src.m_DesignableGetter ? std::make_shared<ClassMethod>(*src.m_DesignableGetter) : nullptr);
+        assignMethod(m_ScriptableGetter, src.m_ScriptableGetter ? std::make_shared<ClassMethod>(*src.m_ScriptableGetter) : nullptr);
 
         m_Revision = src.m_Revision;
 

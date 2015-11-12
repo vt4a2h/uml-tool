@@ -42,8 +42,10 @@ namespace entity {
 
     class ClassMethod;
     using SharedMethod = std::shared_ptr<ClassMethod>;
+    using WeakMethod   = std::weak_ptr<ClassMethod>;
     using Methods      = QMultiHash<QString, SharedMethod>;
     using MethodsList  = QList<SharedMethod>;
+    using WeakMethodsList = QList<WeakMethod>;
 
     class TemplateClassMethod;
     using SharedTemplateClassMethod = std::shared_ptr<TemplateClassMethod>;

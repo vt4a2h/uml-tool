@@ -396,7 +396,11 @@ namespace entity {
     int Class::removeProperty(const SharedProperty &property)
     {
         int pos = m_Properties.indexOf(property);
-        m_Properties.removeOne(property);
+        if (pos != -1) {
+            disconnect(property.get(), &Property::methodAdded, this, &Class::onWeakMethodAdded);
+            disconnect(property.get(), &Property::methodRemoved, this, &Class::onWeakMethodRemoved);
+            m_Properties.removeOne(property);
+        }
 
         return pos;
     }
@@ -428,6 +432,8 @@ namespace entity {
     SharedProperty Class::addProperty(const QString &name, const QString &typeId)
     {
         SharedProperty property(std::make_shared<Property>(name, typeId));
+        connect(property.get(), &Property::methodAdded, this, &Class::onWeakMethodAdded);
+        connect(property.get(), &Property::methodRemoved, this, &Class::onWeakMethodRemoved);
         m_Properties.append(property);
         return property;
     }
@@ -469,8 +475,11 @@ namespace entity {
      */
     void Class::removeProperty(const QString &name)
     {
-        if (auto prop = property(name))
+        if (auto prop = property(name)) {
+            disconnect(prop.get(), &Property::methodAdded, this, &Class::onWeakMethodAdded);
+            disconnect(prop.get(), &Property::methodRemoved, this, &Class::onWeakMethodRemoved);
             m_Properties.removeOne(prop);
+        }
     }
 
     /**
@@ -775,6 +784,28 @@ namespace entity {
         utility::deepCopySharedPointerList(src.m_Methods, m_Methods);
         utility::deepCopySharedPointerList(src.m_Fields,  m_Fields );
         utility::deepCopySharedPointerList(src.m_Properties, m_Properties);
+    }
+
+    /**
+     * @brief Class::onWeakMethodAdded
+     */
+    void Class::onWeakMethodAdded(const SharedMethod &m)
+    {
+        if (m) {
+            Q_ASSERT(m_WeakMethods.indexOf(m) == -1);
+            m_WeakMethods << m;
+        }
+    }
+
+    /**
+     * @brief Class::onWeakMethodRemoved
+     */
+    void Class::onWeakMethodRemoved(const SharedMethod &m)
+    {
+        if (m) {
+            Q_ASSERT(m_WeakMethods.indexOf(m) != -1);
+            m_WeakMethods.removeOne(m);
+        }
     }
 
 } // namespace entity

@@ -26,6 +26,7 @@ INCLUDEPATH += ../../
 HEADERS += ../../enums.h \
     ../../project/project.h \
     ../../entity/basicentity.h \
+    ../../entity/property.h \
     ../../constants.h \
     ../../models/applicationmodel.h \
     ../../models/projecttreemodel.h \

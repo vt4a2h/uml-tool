@@ -44,6 +44,8 @@ namespace entity {
      */
     class Class : public Type
     {
+        Q_OBJECT
+
     public:
         Class();
         Class(Class &&src);
@@ -126,12 +128,17 @@ namespace entity {
         void moveFrom(Class &src);
         void copyFrom(const Class &src);
 
+    private Q_SLOTS:
+        void onWeakMethodAdded(const entity::SharedMethod &);
+        void onWeakMethodRemoved(const SharedMethod &);
+
     private:
         Kind m_Kind;
         bool m_FinalStatus;
 
         ParentsList m_Parents;
         MethodsList m_Methods;
+        MethodsList m_WeakMethods; // TODO: should be weak!!!
         FieldsList  m_Fields;
         PropertiesList m_Properties;
     };
