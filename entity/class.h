@@ -138,7 +138,7 @@ namespace entity {
 
         ParentsList m_Parents;
         MethodsList m_Methods;
-        MethodsList m_WeakMethods; // TODO: should be weak!!!
+        WeakMethodsList m_WeakMethods;
         FieldsList  m_Fields;
         PropertiesList m_Properties;
     };
@@ -146,7 +146,10 @@ namespace entity {
     template <class T>
     std::shared_ptr<T> Class::makeMethod(const QString &name)
     {
-        typedef typename std::conditional<std::is_class<T>::value && std::is_base_of<ClassMethod, T>::value, T, ClassMethod>::type ResultType;
+        using ResultType =
+            typename std::conditional<std::is_class<T>::value && std::is_base_of<ClassMethod, T>::value,
+                                      T, ClassMethod>::type;
+
         auto value = std::make_shared<ResultType>(name);
         value->setScopeId(scopeId());
         m_Methods << value;

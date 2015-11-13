@@ -128,4 +128,9 @@ namespace entity {
         LhsIdentificators m_LhsIdentificators;
     };
 
+    inline bool operator==(const WeakMethod &lhs, const WeakMethod &rhs)
+    {
+        return lhs.lock() == rhs.lock();
+    }
+
 } // namespace entity
