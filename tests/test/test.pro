@@ -29,6 +29,7 @@ HEADERS += ../../enums.h \
     ../../entity/property.h \
     ../../entity/class.h \
     ../../constants.h \
+    ../../qthelpers.h \
     ../../models/applicationmodel.h \
     ../../models/projecttreemodel.h \
     ../../models/basictreeitem.h \

@@ -38,6 +38,8 @@
 #include "property.h"
 #include "constants.h"
 
+#include "qthelpers.h"
+
 namespace {
     const QString newMethodName = entity::Class::tr("newMethod");
     const QString newFieldName  = entity::Class::tr("newField");
@@ -397,8 +399,8 @@ namespace entity {
     {
         int pos = m_Properties.indexOf(property);
         if (pos != -1) {
-            disconnect(property.get(), &Property::methodAdded, this, &Class::onWeakMethodAdded);
-            disconnect(property.get(), &Property::methodRemoved, this, &Class::onWeakMethodRemoved);
+            disconnect(property.get(), &Property::methodAdded, this, &Class::onOptionalMethodAdded);
+            disconnect(property.get(), &Property::methodRemoved, this, &Class::onOptionalMethodRemoved);
             m_Properties.removeOne(property);
         }
 
@@ -432,9 +434,11 @@ namespace entity {
     SharedProperty Class::addProperty(const QString &name, const QString &typeId)
     {
         SharedProperty property(std::make_shared<Property>(name, typeId));
-        connect(property.get(), &Property::methodAdded, this, &Class::onWeakMethodAdded);
-        connect(property.get(), &Property::methodRemoved, this, &Class::onWeakMethodRemoved);
+        G_CONNECT(property.get(), &Property::methodAdded, this, &Class::onOptionalMethodAdded);
+        G_CONNECT(property.get(), &Property::methodRemoved, this, &Class::onOptionalMethodRemoved);
+
         m_Properties.append(property);
+
         return property;
     }
 
@@ -476,8 +480,8 @@ namespace entity {
     void Class::removeProperty(const QString &name)
     {
         if (auto prop = property(name)) {
-            disconnect(prop.get(), &Property::methodAdded, this, &Class::onWeakMethodAdded);
-            disconnect(prop.get(), &Property::methodRemoved, this, &Class::onWeakMethodRemoved);
+            G_DISCONNECT(prop.get(), &Property::methodAdded, this, &Class::onOptionalMethodAdded);
+            G_DISCONNECT(prop.get(), &Property::methodRemoved, this, &Class::onOptionalMethodRemoved);
             m_Properties.removeOne(prop);
         }
     }
@@ -498,7 +502,7 @@ namespace entity {
      */
     bool Class::containsFields(Section section) const
     {
-        return end(m_Fields) != utility::find_if(m_Fields, [&](auto &&f){ return f->section() == section; });
+        return cend(m_Fields) != utility::find_if(m_Fields, [&](auto &&f){ return f->section() == section; });
     }
 
     /**
@@ -789,22 +793,25 @@ namespace entity {
     /**
      * @brief Class::onWeakMethodAdded
      */
-    void Class::onWeakMethodAdded(const SharedMethod &m)
+    void Class::onOptionalMethodAdded(const SharedMethod &m)
     {
         if (m) {
-            Q_ASSERT(m_WeakMethods.indexOf(m) == -1);
-            m_WeakMethods << m;
+            Q_ASSERT(m_OptionalMethods.indexOf(m) == -1);
+            m_OptionalMethods << m;
         }
     }
 
     /**
      * @brief Class::onWeakMethodRemoved
      */
-    void Class::onWeakMethodRemoved(const SharedMethod &m)
+    void Class::onOptionalMethodRemoved(const SharedMethod &m)
     {
-        if (m) {
-            Q_ASSERT(m_WeakMethods.indexOf(m) != -1);
-            m_WeakMethods.removeOne(m);
+        if (G_ASSERT(m)) {
+            Q_ASSERT(m_OptionalMethods.indexOf(m) != -1);
+            m_OptionalMethods.removeOne(m);
+
+            // Also remove possible NULL pointers
+            utility::remove_erase_if(m_OptionalMethods, [](auto p){ return !p.lock(); });
         }
     }
 

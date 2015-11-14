@@ -129,8 +129,8 @@ namespace entity {
         void copyFrom(const Class &src);
 
     private Q_SLOTS:
-        void onWeakMethodAdded(const entity::SharedMethod &);
-        void onWeakMethodRemoved(const SharedMethod &);
+        void onOptionalMethodAdded(const entity::SharedMethod &);
+        void onOptionalMethodRemoved(const SharedMethod &);
 
     private:
         Kind m_Kind;
@@ -138,7 +138,7 @@ namespace entity {
 
         ParentsList m_Parents;
         MethodsList m_Methods;
-        WeakMethodsList m_WeakMethods;
+        WeakMethodsList m_OptionalMethods;
         FieldsList  m_Fields;
         PropertiesList m_Properties;
     };

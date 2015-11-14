@@ -152,7 +152,8 @@ HEADERS += \
     helpers/entityhelpres.h \
     entity/components/componentscommon.h \
     entity/components/components_types.h \
-    entity/components/token.h
+    entity/components/token.h \
+    qthelpers.h
 
 FORMS += \
     gui/mainwindow.ui \

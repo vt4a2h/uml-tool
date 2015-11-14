@@ -237,6 +237,13 @@ namespace utility {
         return std::find_if(std::begin(seq), std::end(seq), pred);
     }
 
+    template <class Sequence, class UnaryPredicate>
+    inline decltype(auto) remove_erase_if( Sequence& seq, UnaryPredicate pred)
+    {
+        // TODO: is not effective for containers like std::list
+        return seq.erase(std::remove_if(std::begin(seq), std::end(seq), pred), end(seq));
+    }
+
     bool toBool(const QString &in, bool &ok);
 
     QString fieldKeywordToString(entity::FieldKeyword keyword);
