@@ -21,7 +21,7 @@ linux-g++ {
     }
 }
 
-INCLUDEPATH += ../../ ../../libs/boost/range/include ../../libs/boost/config/include
+INCLUDEPATH += ../../
 
 HEADERS += ../../enums.h \
     ../../project/project.h \
