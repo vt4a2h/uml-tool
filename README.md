@@ -7,3 +7,8 @@
 
 UML tool for Qt.<br>
 License LGPL v3.
+
+Dependencies: 
+Qt  >= 5.5
+gcc >= 5
+boost >= 1.59
