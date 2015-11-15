@@ -25,6 +25,8 @@
 #include <QPixmap>
 #include <QDebug>
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <project/project.h>
 
 #include <entity/scope.h>
@@ -36,6 +38,8 @@
 #include <db/projectdatabase.h>
 
 #include <utility/helpfunctions.h>
+
+using namespace boost;
 
 namespace models {
 
@@ -382,7 +386,7 @@ namespace models {
      */
     const BasicTreeItem *ProjectTreeModel::find(const QString &id) const
     {
-        auto projectIt = utility::find_if(m_Items, [&](auto &&item){ return item.id() == id; });
+        auto projectIt = range::find_if(m_Items, [&](auto &&item){ return item.id() == id; });
         return projectIt != m_Items.cend() ? &*projectIt : nullptr;
     }
 

@@ -1,0 +1,3 @@
+[submodule "libs/boost/range"]
+	path = libs/boost/range
+	url = https://github.com/boostorg/range.git

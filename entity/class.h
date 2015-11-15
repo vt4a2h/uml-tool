@@ -73,6 +73,8 @@ namespace entity {
         bool containsMethods(Section section) const;
         MethodsList methods(Section s) const;
 
+        MethodsList optionalMethods(Section s) const;
+
         SharedField addField(const QString &name, const QString &typeId,
                              const QString &prefix = "", Section section = Public);
         SharedField getField(const QString &name) const;

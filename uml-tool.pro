@@ -166,3 +166,5 @@ FORMS += \
 
 RESOURCES += \
     gui/main.qrc
+
+INCLUDEPATH += ./libs/boost/range/include

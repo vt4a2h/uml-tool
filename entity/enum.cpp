@@ -22,8 +22,6 @@
 *****************************************************************************/
 
 #include "enum.h"
-#include "constants.h"
-#include "enums.h"
 
 #include <algorithm>
 #include <utility>
@@ -32,7 +30,14 @@
 #include <QStringList>
 #include <QJsonArray>
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <utility/helpfunctions.h>
+
+#include "constants.h"
+#include "enums.h"
+
+using namespace boost;
 
 namespace entity {
 
@@ -210,7 +215,7 @@ namespace entity {
      */
     SharedElement Enum::element(const QString &name) const
     {
-        auto it = utility::find_if(m_Elements, [&](auto &&e){ return e->name() == name; });
+        auto it = range::find_if(m_Elements, [&](auto &&e){ return e->name() == name; });
         return it != cend(m_Elements) ? *it : SharedElement();
     }
 
@@ -220,7 +225,7 @@ namespace entity {
      */
     void Enum::removeElement(const QString &name)
     {
-        auto it = utility::find_if(m_Elements, [&](auto &&v){ return v->name() == name; });
+        auto it = range::find_if(m_Elements, [&](auto &&v){ return v->name() == name; });
         if (it != m_Elements.end())
             m_Elements.erase(it);
     }
@@ -232,7 +237,8 @@ namespace entity {
      */
     bool Enum::containsElement(const QString &name) const
     {
-        return utility::find_if(m_Elements, [&](auto &&v){ return v->name() == name; }) != m_Elements.cend();
+        return range::find_if(m_Elements, [&](auto &&v){ return v->name() == name; })
+               != cend(m_Elements);
     }
 
     /**

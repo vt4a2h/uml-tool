@@ -20,15 +20,12 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #include "projecttranslator.h"
-#include "enums.h"
-#include "templates.cpp"
-#include "constants.h"
-#include "code.h"
 
 #include <QRegularExpression>
 #include <QDebug>
+
+#include <boost/range/algorithm/find_if.hpp>
 
 #include <db/database.h>
 #include <db/projectdatabase.h>
@@ -42,6 +39,13 @@
 #include <entity/templateclassmethod.h>
 #include <entity/templateclass.h>
 #include <utility/helpfunctions.h>
+
+#include "enums.h"
+#include "templates.cpp"
+#include "constants.h"
+#include "code.h"
+
+using namespace boost;
 
 namespace {
 
@@ -287,8 +291,8 @@ namespace translation {
            return false;
 
         entity::FieldsList fields(m->parameters());
-        auto it = utility::find_if(fields, [&](auto &&f) {
-                                               return classDatabase->depthTypeSearch(f->typeId()); });
+        auto it = range::find_if(fields,
+                                 [&](auto &&f) { return classDatabase->depthTypeSearch(f->typeId()); });
         return it != fields.end() || classDatabase->depthTypeSearch(m->returnTypeId());
     }
 

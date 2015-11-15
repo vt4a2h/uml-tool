@@ -22,14 +22,18 @@
 *****************************************************************************/
 #pragma once
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include "TestSignatureMaker.hpp"
+
+using namespace boost;
 
 namespace
 {
     auto findType(const db::SharedDatabase &d, const QString &name)
     {
         entity::SharedType type;
-        utility::find_if(d->scopes(), [&](auto &&scope){  type = scope->typeByName(name); return !!type; });
+        range::find_if(d->scopes(), [&](auto &&scope){  type = scope->typeByName(name); return !!type; });
 
         return type;
     }

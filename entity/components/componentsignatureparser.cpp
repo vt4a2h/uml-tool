@@ -26,12 +26,16 @@
 #include <QRegularExpressionMatch>
 #include <QDebug>
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <models/componentsmodel.h>
 
 #include <utility/helpfunctions.h>
 
 #include "token.h"
 #include "componentscommon.h"
+
+using namespace boost;
 
 namespace components {
 
@@ -278,10 +282,10 @@ namespace components {
                 out[groupIndex] = std::make_shared<Token>(cap);
 
                 const Forbidden &forbidden = forbiddenMap[display];
-                auto fIt = utility::find_if(forbidden, [&](auto &&c){ return c.first == groupIndex; });
+                auto fIt = range::find_if(forbidden, [&](auto &&c){ return c.first == groupIndex; });
 
                 const GroupRulesVector &rules = rulesMap[display];
-                auto rIt = utility::find_if(rules, [&](auto &&r){ return r.first == groupIndex; });
+                auto rIt = range::find_if(rules, [&](auto &&r){ return r.first == groupIndex; });
 
                 // Check extra rules
                 if (rIt != cend(rules)) {

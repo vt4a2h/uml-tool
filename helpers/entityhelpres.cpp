@@ -22,9 +22,11 @@
 *****************************************************************************/
 #include "entityhelpres.h"
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <entity/scope.h>
 
-#include <utility/helpfunctions.h>
+using namespace boost;
 
 namespace entity {
 
@@ -33,7 +35,7 @@ namespace entity {
         if (scopesNames.empty())
             return nullptr;
 
-        auto it = utility::find_if(scopes, [&](auto &&scope){ return scope->name() == scopesNames.first(); });
+        auto it = range::find_if(scopes, [&](auto &&scope){ return scope->name() == scopesNames.first(); });
         if (it != cend(scopes)) {
             if (scopesNames.count() == 1) {
                 return *it;

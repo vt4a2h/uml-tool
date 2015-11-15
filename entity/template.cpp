@@ -20,11 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #include "template.h"
-#include "extendedtype.h"
-#include "type.h"
-#include "constants.h"
 
 #include <algorithm>
 #include <utility>
@@ -33,7 +29,15 @@
 #include <QJsonArray>
 #include <QStringList>
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <utility/helpfunctions.h>
+
+#include "extendedtype.h"
+#include "type.h"
+#include "constants.h"
+
+using namespace boost;
 
 namespace entity {
 
@@ -65,7 +69,7 @@ namespace entity {
      */
     TemplateParameter Template::getTemplateParameter(const QString &typeId) const
     {
-        auto it = utility::find_if(m_TemplateParameters, [&typeId](auto &&p) { return p.first == typeId; });
+        auto it = range::find_if(m_TemplateParameters, [&typeId](auto &&p) { return p.first == typeId; });
         return it != m_TemplateParameters.cend() ? *it : TemplateParameter(STUB_ID, STUB_ID);
     }
 

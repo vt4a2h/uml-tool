@@ -23,16 +23,18 @@
 
 #include "classmethod.h"
 
-#include "extendedtype.h"
-#include "field.h"
-#include "enums.h"
-#include "constants.h"
-
 #include <QStringList>
 #include <QJsonObject>
 #include <QJsonArray>
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <utility/helpfunctions.h>
+
+#include "extendedtype.h"
+#include "field.h"
+#include "enums.h"
+#include "constants.h"
 
 uint qHash(const entity::LhsIdentificator& c)
 {
@@ -53,6 +55,8 @@ namespace
     const QString paramsMark  = "Parameters";
     const QString lhsMark = "Lhs identificators";
 }
+
+using namespace boost;
 
 namespace entity {
 
@@ -314,7 +318,7 @@ namespace entity {
     SharedField ClassMethod::getParameter(const QString &name) const
     {
         Q_ASSERT(!name.isEmpty());
-        auto it = utility::find_if(m_Parameters, [&name](auto &f){ return f->name() == name; });
+        auto it = range::find_if(m_Parameters, [&name](auto &f){ return f->name() == name; });
         return it != m_Parameters.end() ? *it : SharedField();
     }
 

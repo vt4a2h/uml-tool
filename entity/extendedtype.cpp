@@ -20,16 +20,20 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #include "extendedtype.h"
-#include "enums.h"
-#include "constants.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QStringList>
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <utility/helpfunctions.h>
+
+#include "enums.h"
+#include "constants.h"
+
+using namespace boost;
 
 namespace entity {
 
@@ -70,7 +74,7 @@ namespace entity {
      */
     bool ExtendedType::isLink() const
     {
-        return utility::find_if(m_PointersAndLinks, [](const Pl &pl){ return pl.first == "&"; }) != m_PointersAndLinks.end();
+        return range::find_if(m_PointersAndLinks, [](const Pl &pl){ return pl.first == "&"; }) != m_PointersAndLinks.end();
     }
 
     /**
@@ -97,7 +101,7 @@ namespace entity {
      */
     bool ExtendedType::isPointer() const
     {
-        return utility::find_if(m_PointersAndLinks, [](const Pl &pl){ return pl.first == "*"; }) != m_PointersAndLinks.end();
+        return range::find_if(m_PointersAndLinks, [](const Pl &pl){ return pl.first == "*"; }) != m_PointersAndLinks.end();
     }
 
     /**

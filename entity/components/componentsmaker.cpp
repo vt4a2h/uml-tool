@@ -22,6 +22,8 @@
 *****************************************************************************/
 #include "componentsmaker.h"
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <entity/field.h>
 #include <entity/scope.h>
 #include <entity/type.h>
@@ -37,6 +39,8 @@
 #include "enums.h"
 #include "componentscommon.h"
 #include "constants.h"
+
+using namespace boost;
 
 namespace components {
 
@@ -215,12 +219,12 @@ namespace components {
         } else {
             // First of all check in all scopes of global database
             const entity::ScopesList &scopes = m_Model->globalDatabase()->scopes();
-            utility::find_if(scopes, [&](auto scope){ type = scope->typeByName(typeName); return !!type; });
+            range::find_if(scopes, [&](auto scope){ type = scope->typeByName(typeName); return !!type; });
 
             // If not found, try to check project database
             if (!type) {
                 auto db = m_Model->currentProject()->database();
-                utility::find_if(db->scopes(), [&](auto scope){ type = scope->typeByName(typeName); return !!type; });
+                range::find_if(db->scopes(), [&](auto scope){ type = scope->typeByName(typeName); return !!type; });
             }
         }
 
@@ -274,7 +278,7 @@ namespace components {
             // TODO: add namespaces, * and const
             for (auto &&name : arguments) {
                 entity::SharedType t;
-                utility::find_if(scopes, [&](auto &&sc){ t = sc->typeByName(name); return !!t; });
+                range::find_if(scopes, [&](auto &&sc){ t = sc->typeByName(name); return !!t; });
                 if (t)
                     extType->addTemplateParameter(t->id());
                 else
@@ -284,7 +288,7 @@ namespace components {
 
         if (extType->isConst() || !extType->templateParameters().isEmpty() || !extType->pl().isEmpty()) {
             const entity::TypesList &types = m_Scope->types();
-            auto it = utility::find_if(types, [=](const entity::SharedType &type) {
+            auto it = range::find_if(types, [=](const entity::SharedType &type) {
                                                   return extType->isEqual(*type, false);
                                               });
             if (it == cend(types))
@@ -321,9 +325,9 @@ namespace components {
 
         // Make type
         Tokens typeTokens(int(TypeGroups::GroupsCount));
-        std::copy(begin(tokens) + int(FieldGroupNames::ConstStatus),
-                  begin(tokens) + int(FieldGroupNames::Name),        // do not include name
-                  begin(typeTokens) + int(TypeGroups::ConstStatus)); // add first group offset
+        std::copy(std::begin(tokens) + int(FieldGroupNames::ConstStatus),
+                  std::begin(tokens) + int(FieldGroupNames::Name),        // do not include name
+                  std::begin(typeTokens) + int(TypeGroups::ConstStatus)); // add first group offset
         auto optionalType = makeType(typeTokens);
         if (!optionalType.errorMessage.isEmpty())
             return {optionalType.errorMessage, nullptr};

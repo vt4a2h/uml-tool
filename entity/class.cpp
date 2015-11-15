@@ -27,6 +27,12 @@
 #include <QJsonArray>
 #include <QStringList>
 
+#include <boost/range/adaptor/filtered.hpp>
+#include <boost/range/adaptor/transformed.hpp>
+#include <boost/range/algorithm/copy.hpp>
+#include <boost/range/algorithm/find_if.hpp>
+#include <boost/range/algorithm_ext/erase.hpp>
+
 #include <utility/helpfunctions.h>
 
 #include "class.h"
@@ -39,6 +45,8 @@
 #include "constants.h"
 
 #include "qthelpers.h"
+
+using namespace boost;
 
 namespace {
     const QString newMethodName = entity::Class::tr("newMethod");
@@ -147,7 +155,7 @@ namespace entity {
      */
     Parent Class::parent(const QString &typeId) const
     {
-        auto it = utility::find_if(m_Parents, [&](auto &&parent){ return parent.first == typeId; });
+        auto it = range::find_if(m_Parents, [&](auto &&parent){ return parent.first == typeId; });
         return it != m_Parents.cend() ? *it : Parent();
     }
 
@@ -158,7 +166,7 @@ namespace entity {
      */
     bool Class::containsParent(const QString &typeId)
     {
-        return utility::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; }) != m_Parents.end();
+        return range::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; }) != m_Parents.end();
     }
 
     /**
@@ -167,7 +175,7 @@ namespace entity {
      */
     void Class::removeParent(const QString &typeId)
     {
-        auto it = utility::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; });
+        auto it = range::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; });
         if (it != m_Parents.end())
             m_Parents.erase(it);
     }
@@ -295,7 +303,7 @@ namespace entity {
      */
     bool Class::containsMethods(Section section) const
     {
-        return end(m_Methods) != utility::find_if(m_Methods, [&](auto &&method){ return method->section() == section; });
+        return cend(m_Methods) != range::find_if(m_Methods, [&](auto &&method){ return method->section() == section; });
     }
 
     /**
@@ -306,8 +314,26 @@ namespace entity {
     MethodsList Class::methods(Section s) const
     {
         MethodsList result;
-        std::copy_if(cbegin(m_Methods), cend(m_Methods), std::back_inserter(result),
-                     [&](auto &&m){ return m->section() == s; });
+        range::copy(m_Methods | adaptors::filtered([&](auto &&m){ return m->section() == s; }),
+                    std::back_inserter(result));
+
+        return result;
+    }
+
+    /**
+     * @brief Class::optionalMethods
+     * @param s
+     * @return
+     */
+    MethodsList Class::optionalMethods(Section s) const
+    {
+        using namespace adaptors;
+
+        MethodsList result;
+        range::copy(m_OptionalMethods
+                    | filtered([&](auto &&m){ return m.lock() && m.lock()->section() == s; })
+                    | transformed([](auto &&m){ return m.lock(); }),
+                    std::back_inserter(result));
 
         return result;
     }
@@ -335,7 +361,7 @@ namespace entity {
      */
     SharedField Class::getField(const QString &name) const
     {
-        auto it = utility::find_if(m_Fields, [&name](const SharedField &f){ return f->name() == name; });
+        auto it = range::find_if(m_Fields, [&name](const SharedField &f){ return f->name() == name; });
         return it != m_Fields.end() ? *it : SharedField();
     }
 
@@ -449,7 +475,7 @@ namespace entity {
      */
     ConstSharedProperty Class::property(const QString &name) const
     {
-        auto it = utility::find_if(m_Properties, [&](auto &&prop){ return prop->name() == name; });
+        auto it = range::find_if(m_Properties, [&](auto &&prop){ return prop->name() == name; });
         return it != m_Properties.end() ? *it : SharedProperty();
     }
 
@@ -502,7 +528,7 @@ namespace entity {
      */
     bool Class::containsFields(Section section) const
     {
-        return cend(m_Fields) != utility::find_if(m_Fields, [&](auto &&f){ return f->section() == section; });
+        return cend(m_Fields) != range::find_if(m_Fields, [&](auto &&f){ return f->section() == section; });
     }
 
     /**
@@ -811,7 +837,7 @@ namespace entity {
             m_OptionalMethods.removeOne(m);
 
             // Also remove possible NULL pointers
-            utility::remove_erase_if(m_OptionalMethods, [](auto p){ return !p.lock(); });
+            range::remove_erase_if(m_OptionalMethods, [](auto p){ return !p.lock(); });
         }
     }
 

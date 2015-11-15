@@ -188,6 +188,11 @@ TEST_F(Enteties, Class)
     test_copy_move(Class, _class)
 }
 
+TEST_F(Enteties, OptionalClassMethods)
+{
+
+}
+
 TEST_F(Enteties, Union)
 {
     auto field = _union->addField("some field", "some_id");

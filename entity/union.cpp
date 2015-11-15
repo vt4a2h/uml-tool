@@ -20,18 +20,22 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #include "union.h"
-#include "field.h"
-#include "extendedtype.h"
-#include "constants.h"
-#include "enums.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QStringList>
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <utility/helpfunctions.h>
+
+#include "field.h"
+#include "extendedtype.h"
+#include "constants.h"
+#include "enums.h"
+
+using namespace boost;
 
 namespace entity {
 
@@ -120,7 +124,7 @@ namespace entity {
      */
     SharedField Union::getField(const QString &name) const
     {
-        auto it = utility::find_if(m_Fields, [&](auto &&f) {return f->name() == name;});
+        auto it = range::find_if(m_Fields, [&](auto &&f) {return f->name() == name;});
 
         return it != m_Fields.cend() ? *it : SharedField();
     }

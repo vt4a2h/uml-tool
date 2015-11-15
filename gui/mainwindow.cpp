@@ -39,6 +39,8 @@
 #include <QPointer>
 #include <QDebug>
 
+#include <boost/range/algorithm/find_if.hpp>
+
 #include <application/settings.h>
 
 #include <models/applicationmodel.h>
@@ -59,6 +61,8 @@
 #include "addscope.h"
 #include "scenefilter.h"
 #include "constants.h"
+
+using namespace boost;
 
 namespace {
     const int treeViewIndent = 20;
@@ -462,7 +466,7 @@ namespace gui {
     {
         if (obj == m_MainView) {
             if (ev->type() == QEvent::MouseButtonPress)  {
-                auto it = utility::find_if(m_AddActions, [](auto &&am) { return am.first->isChecked(); });
+                auto it = range::find_if(m_AddActions, [](auto &&am) { return am.first->isChecked(); });
                 if (it != m_AddActions.end()) {
                     if (m_ApplicationModel && m_ApplicationModel->currentProject()) {
                         auto event = static_cast<QMouseEvent* >(ev);
