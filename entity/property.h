@@ -26,6 +26,8 @@
 
 #include "basicentity.h"
 
+#include <memory>
+
 namespace entity {
 
     /// The struct Member (lightweight version of field)
@@ -44,7 +46,7 @@ namespace entity {
     };
 
     /// The class Property
-    class Property : public BasicEntity
+    class Property : public BasicEntity, public std::enable_shared_from_this<Property>
     {
         Q_OBJECT
 
@@ -135,8 +137,8 @@ namespace entity {
         void setTypeId(const QString &typeId);
 
     signals:
-        void methodAdded(const entity::SharedMethod &);
-        void methodRemoved(const entity::SharedMethod &);
+        void methodAdded(const entity::SharedProperty &, const entity::SharedMethod &);
+        void methodRemoved(const entity::SharedProperty &, const entity::SharedMethod &);
 
         void fieldAdded(const entity::SharedField &);
         void fieldRemoved(const entity::SharedField &);
@@ -147,17 +149,18 @@ namespace entity {
 
     private:
         void init();
+        SharedProperty safeShared();
 
         template <class Method>
         void assignMethod(SharedMethod &dst, Method src)
         {
             if (dst)
-                emit methodRemoved(dst);
+                emit methodRemoved(safeShared(), dst);
 
             dst = std::forward<Method>(src);
 
             if (dst)
-                emit methodAdded(dst);
+                emit methodAdded(safeShared(), dst);
         }
 
     private:

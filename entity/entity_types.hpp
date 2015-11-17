@@ -40,12 +40,18 @@ namespace entity {
     using FieldKeywords     = QSet<FieldKeyword>;
     using FieldKeywordsList = QList<FieldKeyword>;
 
+    class Property;
+    using SharedProperty = std::shared_ptr<Property>;
+    using ConstSharedProperty = std::shared_ptr<const Property>;
+    using PropertiesList = QList<SharedProperty>;
+
     class ClassMethod;
     using SharedMethod = std::shared_ptr<ClassMethod>;
     using WeakMethod   = std::weak_ptr<ClassMethod>;
     using Methods      = QMultiHash<QString, SharedMethod>;
     using MethodsList  = QList<SharedMethod>;
     using WeakMethodsList = QList<WeakMethod>;
+    using WeakMethodsMap = QMap<SharedProperty, WeakMethodsList>;
 
     class TemplateClassMethod;
     using SharedTemplateClassMethod = std::shared_ptr<TemplateClassMethod>;
@@ -98,11 +104,6 @@ namespace entity {
     using SharedScope = std::shared_ptr<Scope>;
     using Scopes      = QHash<QString, SharedScope>;
     using ScopesList  = QList<SharedScope>;
-
-    class Property;
-    using SharedProperty = std::shared_ptr<Property>;
-    using ConstSharedProperty = std::shared_ptr<const Property>;
-    using PropertiesList = QList<SharedProperty>;
 
     class IComponents;
     using SharedComponents = std::shared_ptr<IComponents>;

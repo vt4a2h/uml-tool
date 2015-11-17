@@ -111,6 +111,7 @@ namespace entity {
      */
     Property::Property(const Property &src)
         : BasicEntity(src)
+        , enable_shared_from_this<Property>(src) // do nothing
     {
         init();
         copyFrom(src);
@@ -128,6 +129,7 @@ namespace entity {
 
         setTypeId(typeId); // TODO: will be moved to the Basic entity
         setParent(parent);
+        qRegisterMetaType<entity::SharedProperty>("entity::SharedProperty");
     }
 
     /**
@@ -263,7 +265,7 @@ namespace entity {
 
         m_Getter = std::make_shared<ClassMethod>(newName);
 
-        emit methodAdded(m_Getter);
+        emit methodAdded(safeShared(), m_Getter);
 
         return *this;
     }
@@ -274,7 +276,7 @@ namespace entity {
      */
     void Property::deleteGetter()
     {
-        emit methodRemoved(m_Getter);
+        emit methodRemoved(safeShared(), m_Getter);
         m_Getter.reset();
     }
 
@@ -309,7 +311,7 @@ namespace entity {
         m_Setter = std::make_shared<ClassMethod>(newName);
         m_Setter->setIsSlot(true);
 
-        emit methodAdded(m_Setter);
+        emit methodAdded(safeShared(), m_Setter);
 
         return *this;
     }
@@ -319,7 +321,7 @@ namespace entity {
      */
     void Property::deleteSetter()
     {
-        emit methodRemoved(m_Setter);
+        emit methodRemoved(safeShared(), m_Setter);
 
         m_Setter.reset();
     }
@@ -355,7 +357,7 @@ namespace entity {
         m_Resetter = std::make_shared<ClassMethod>(newName);
         m_Resetter->setIsSlot(true);
 
-        emit methodAdded(m_Resetter);
+        emit methodAdded(safeShared(), m_Resetter);
 
         return *this;
     }
@@ -365,7 +367,7 @@ namespace entity {
      */
     void Property::deleteResetter()
     {
-        emit methodRemoved(m_Resetter);
+        emit methodRemoved(safeShared(), m_Resetter);
         m_Resetter.reset();
     }
 
@@ -399,7 +401,7 @@ namespace entity {
 
         m_Notifier = std::make_shared<ClassMethod>(newName);
         m_Notifier->setIsSignal(true);
-        emit methodAdded(m_Notifier);
+        emit methodAdded(safeShared(), m_Notifier);
 
         return *this;
     }
@@ -409,7 +411,7 @@ namespace entity {
      */
     void Property::deleteNotifier()
     {
-        emit methodRemoved(m_Notifier);
+        emit methodRemoved(safeShared(), m_Notifier);
 
         m_Notifier.reset();
     }
@@ -491,7 +493,7 @@ namespace entity {
 
         m_DesignableGetter = std::make_shared<ClassMethod>(newName);
 
-        emit methodAdded(m_DesignableGetter);
+        emit methodAdded(safeShared(), m_DesignableGetter);
 
         return *this;
     }
@@ -510,7 +512,7 @@ namespace entity {
      */
     void Property::deleteDesignableGetter()
     {
-        emit methodRemoved(m_DesignableGetter);
+        emit methodRemoved(safeShared(), m_DesignableGetter);
 
         m_DesignableGetter.reset();
     }
@@ -565,7 +567,7 @@ namespace entity {
 
         m_ScriptableGetter = std::make_shared<ClassMethod>(newName);
 
-        emit methodAdded(m_ScriptableGetter);
+        emit methodAdded(safeShared(), m_ScriptableGetter);
 
         return *this;
     }
@@ -968,6 +970,18 @@ namespace entity {
         m_User = defaultUser;
         m_Constant = defaultConstant;
         m_Final = defaultFinal;
+    }
+
+    SharedProperty Property::safeShared()
+    {
+        try
+        {
+            return shared_from_this();
+        }
+        catch (...)
+        {
+            return SharedProperty();
+        }
     }
 
     /**

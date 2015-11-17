@@ -25,6 +25,8 @@
 #include "TestEntities.h"
 #include "constants.h"
 
+#include <entity/property.h>
+
 #define test_copy_move(entType, obj) \
     auto newCopyType(std::make_unique<entity::entType>(*obj)); \
     ASSERT_EQ(*obj, *newCopyType); \
@@ -190,7 +192,21 @@ TEST_F(Enteties, Class)
 
 TEST_F(Enteties, OptionalClassMethods)
 {
+    ASSERT_TRUE(_class->properties().isEmpty());
+    ASSERT_TRUE(_class->optionalMethods(entity::Public).isEmpty());
 
+    // Add some method
+    entity::SharedProperty p1 = _class->addProperty("p1", VOID_ID);
+    p1->addGetter("getSmth");
+    auto getter = p1->getter();
+    ASSERT_FALSE(_class->optionalMethods(entity::Public).isEmpty());
+    ASSERT_EQ(getter, _class->optionalMethods(entity::Public)[0]);
+
+    // Check weakness of relation
+    p1->deleteGetter();
+    ASSERT_TRUE(!!getter);
+    ASSERT_EQ(getter.use_count(), 1);
+    ASSERT_TRUE(_class->optionalMethods(entity::Public).isEmpty());
 }
 
 TEST_F(Enteties, Union)

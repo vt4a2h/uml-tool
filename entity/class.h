@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <QMap>
+
 #include "type.h"
 #include "types.h"
 #include "enums.h"
@@ -131,8 +133,8 @@ namespace entity {
         void copyFrom(const Class &src);
 
     private Q_SLOTS:
-        void onOptionalMethodAdded(const entity::SharedMethod &);
-        void onOptionalMethodRemoved(const SharedMethod &);
+        void onOptionalMethodAdded(const entity::SharedProperty &, const entity::SharedMethod &);
+        void onOptionalMethodRemoved(const entity::SharedProperty &, const entity::SharedMethod &);
 
     private:
         Kind m_Kind;
@@ -140,7 +142,7 @@ namespace entity {
 
         ParentsList m_Parents;
         MethodsList m_Methods;
-        WeakMethodsList m_OptionalMethods;
+        WeakMethodsMap m_OptionalMethods;
         FieldsList  m_Fields;
         PropertiesList m_Properties;
     };

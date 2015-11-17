@@ -330,10 +330,12 @@ namespace entity {
         using namespace adaptors;
 
         MethodsList result;
-        range::copy(m_OptionalMethods
-                    | filtered([&](auto &&m){ return m.lock() && m.lock()->section() == s; })
-                    | transformed([](auto &&m){ return m.lock(); }),
-                    std::back_inserter(result));
+
+        for (auto &&methods : m_OptionalMethods.values())
+            range::copy(methods
+                        | filtered([&](auto &&m){ return m.lock() && m.lock()->section() == s; })
+                        | transformed([](auto &&m){ return m.lock(); }),
+                        std::back_inserter(result));
 
         return result;
     }
@@ -509,6 +511,7 @@ namespace entity {
             G_DISCONNECT(prop.get(), &Property::methodAdded, this, &Class::onOptionalMethodAdded);
             G_DISCONNECT(prop.get(), &Property::methodRemoved, this, &Class::onOptionalMethodRemoved);
             m_Properties.removeOne(prop);
+            m_OptionalMethods.remove(prop);
         }
     }
 
@@ -819,25 +822,25 @@ namespace entity {
     /**
      * @brief Class::onWeakMethodAdded
      */
-    void Class::onOptionalMethodAdded(const SharedMethod &m)
+    void Class::onOptionalMethodAdded(const entity::SharedProperty &p, const SharedMethod &m)
     {
         if (m) {
-            Q_ASSERT(m_OptionalMethods.indexOf(m) == -1);
-            m_OptionalMethods << m;
+            Q_ASSERT(m_OptionalMethods[p].indexOf(m) == -1);
+            m_OptionalMethods[p] << m;
         }
     }
 
     /**
      * @brief Class::onWeakMethodRemoved
      */
-    void Class::onOptionalMethodRemoved(const SharedMethod &m)
+    void Class::onOptionalMethodRemoved(const SharedProperty &p, const SharedMethod &m)
     {
         if (G_ASSERT(m)) {
-            Q_ASSERT(m_OptionalMethods.indexOf(m) != -1);
-            m_OptionalMethods.removeOne(m);
+            Q_ASSERT(m_OptionalMethods[p].indexOf(m) != -1);
+            m_OptionalMethods[p].removeOne(m);
 
             // Also remove possible NULL pointers
-            range::remove_erase_if(m_OptionalMethods, [](auto p){ return !p.lock(); });
+            range::remove_erase_if(m_OptionalMethods[p], [](auto p){ return !p.lock(); });
         }
     }
 
