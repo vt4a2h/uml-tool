@@ -207,6 +207,17 @@ TEST_F(Enteties, OptionalClassMethods)
     ASSERT_TRUE(!!getter);
     ASSERT_EQ(getter.use_count(), 1);
     ASSERT_TRUE(_class->optionalMethods(entity::Public).isEmpty());
+
+    // Check disconnect and removing property
+    getter = p1->addGetter("getSmth").getter();
+    auto notifier = p1->addNotifier("smthChanged").notifier();
+    ASSERT_EQ(notifier, _class->optionalMethods(entity::None)[0]);
+    auto optionalMethods = _class->optionalMethods(entity::All);
+    ASSERT_EQ(optionalMethods.count(), 2);
+
+    _class->removeProperty(p1->name());
+    ASSERT_EQ(optionalMethods.count(), 2);
+    ASSERT_TRUE(_class->optionalMethods(entity::All).isEmpty());
 }
 
 TEST_F(Enteties, Union)

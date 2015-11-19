@@ -314,7 +314,7 @@ namespace entity {
     MethodsList Class::methods(Section s) const
     {
         MethodsList result;
-        range::copy(m_Methods | adaptors::filtered([&](auto &&m){ return m->section() == s; }),
+        range::copy(m_Methods | adaptors::filtered([&](auto &&m){ return m->section() == s || m->section() == All; }),
                     std::back_inserter(result));
 
         return result;
@@ -333,7 +333,7 @@ namespace entity {
 
         for (auto &&methods : m_OptionalMethods.values())
             range::copy(methods
-                        | filtered([&](auto &&m){ return m.lock() && m.lock()->section() == s; })
+                        | filtered([&](auto &&m){ return m.lock() && (m.lock()->section() == s || s == All); })
                         | transformed([](auto &&m){ return m.lock(); }),
                         std::back_inserter(result));
 
@@ -760,7 +760,8 @@ namespace entity {
                m_Parents     == r.m_Parents        &&
                utility::seqSharedPointerEq(m_Methods, r.m_Methods) &&
                utility::seqSharedPointerEq(m_Fields,  r.m_Fields)  &&
-               utility::seqSharedPointerEq(m_Properties, r.m_Properties);
+               utility::seqSharedPointerEq(m_Properties, r.m_Properties) &&
+               utility::seqSharedPointerEq(optionalMethods(None), r.optionalMethods(None));
     }
 
     /**
@@ -800,6 +801,8 @@ namespace entity {
         m_Methods = std::move(src.m_Methods);
         m_Fields  = std::move(src.m_Fields );
         m_Properties = std::move(src.m_Properties);
+
+        m_OptionalMethods = std::move(src.m_OptionalMethods);
     }
 
     /**
@@ -817,6 +820,7 @@ namespace entity {
         utility::deepCopySharedPointerList(src.m_Methods, m_Methods);
         utility::deepCopySharedPointerList(src.m_Fields,  m_Fields );
         utility::deepCopySharedPointerList(src.m_Properties, m_Properties);
+        m_OptionalMethods = src.m_OptionalMethods;
     }
 
     /**
