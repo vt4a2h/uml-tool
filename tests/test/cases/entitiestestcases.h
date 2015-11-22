@@ -23,9 +23,12 @@
 #pragma once
 
 #include "TestEntities.h"
-#include "constants.h"
+
+#include <boost/range/algorithm/equal.hpp>
 
 #include <entity/property.h>
+
+#include "constants.h"
 
 #define test_copy_move(entType, obj) \
     auto newCopyType(std::make_unique<entity::entType>(*obj)); \
@@ -218,6 +221,13 @@ TEST_F(Enteties, OptionalClassMethods)
     _class->removeProperty(p1->name());
     ASSERT_EQ(optionalMethods.count(), 2);
     ASSERT_TRUE(_class->optionalMethods(entity::All).isEmpty());
+
+    // Check all methods
+    entity::MethodsList tmpMethods;
+    tmpMethods << _class->addNewMethod();
+    tmpMethods << _class->addNewProperty()->addGetter().getter();
+    entity::MethodsList methods = _class->allMethods(entity::All);
+    ASSERT_TRUE(boost::range::equal(tmpMethods, methods));
 }
 
 TEST_F(Enteties, Union)

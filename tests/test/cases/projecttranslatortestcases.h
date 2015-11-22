@@ -374,6 +374,11 @@ TEST_F(ProjectTranslatorTest, Class)
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
+TEST_F(ProjectTranslatorTest, ClassWithProperties)
+{
+
+}
+
 TEST_F(ProjectTranslatorTest, TemplateClass)
 {
     QString futureResult = QString("template <class T>\n"

@@ -153,7 +153,7 @@ namespace translation {
     {
         entity::MethodsList methods;
         entity::MethodsList _slots;
-        for (auto const& m : _class->methods(section)) {
+        for (auto const& m : _class->allMethods(section)) {
             if (m->isSlot())
                 _slots << m;
             else if (!m->isSignal())
@@ -487,6 +487,10 @@ namespace translation {
 
         QString toHeader(CLASS_TEMPLATE);
 
+        // TODO: implement: stub!
+        toHeader.remove("%qobject%");
+        toHeader.remove("%property%");
+
         db::SharedDatabase templateDb = nullptr;
         if (_class->hashType() == entity::TemplateClass::staticHashType()) {
             auto tc = std::static_pointer_cast<entity::TemplateClass>(_class);
@@ -767,7 +771,6 @@ namespace translation {
                                       const db::SharedDatabase &localeDatabase,
                                       const db::SharedDatabase &classDatabase) const
     {
-        // TODO: implement guard pattern
         Q_ASSERT(e);
         if (!e)
             return Code();

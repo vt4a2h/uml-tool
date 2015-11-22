@@ -314,7 +314,7 @@ namespace entity {
     MethodsList Class::methods(Section s) const
     {
         MethodsList result;
-        range::copy(m_Methods | adaptors::filtered([&](auto &&m){ return m->section() == s || m->section() == All; }),
+        range::copy(m_Methods | adaptors::filtered([&](auto &&m){ return m->section() == s || s == All; }),
                     std::back_inserter(result));
 
         return result;
@@ -336,6 +336,19 @@ namespace entity {
                         | filtered([&](auto &&m){ return m.lock() && (m.lock()->section() == s || s == All); })
                         | transformed([](auto &&m){ return m.lock(); }),
                         std::back_inserter(result));
+
+        return result;
+    }
+
+    /**
+     * @brief Class::allMethods
+     * @param s
+     * @return
+     */
+    MethodsList Class::allMethods(Section s) const
+    {
+        MethodsList result;
+        result << methods(s) << optionalMethods(s);
 
         return result;
     }
