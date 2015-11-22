@@ -60,7 +60,7 @@ protected:
     }
 
     db::SharedDatabase _globalDb;
-    db::SharedDatabase _projectDb;
+    db::SharedProjectDatabase _projectDb;
 
     translation::SharedTranslator _translator;
 

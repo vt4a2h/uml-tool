@@ -51,7 +51,7 @@ protected:
     }
 
     db::SharedDatabase globalDb_  = std::make_shared<db::Database>("Global");
-    db::SharedDatabase projectDb_ = std::make_shared<db::ProjectDatabase>("Project");
+    db::SharedProjectDatabase projectDb_ = std::make_shared<db::ProjectDatabase>("Project");
 
     entity::SharedScope globalScope_   = globalDb_->addScope();
     entity::SharedScope standartScope_ = globalDb_->addScope("std");

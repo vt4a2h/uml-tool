@@ -50,7 +50,7 @@ namespace generator {
 
        AbstractProjectGenerator();
        AbstractProjectGenerator(const db::SharedDatabase &globalDb,
-                                const db::SharedDatabase &projectDb,
+                                const db::SharedProjectDatabase &projectDb,
                                 const QString &outputDirectory = "");
        virtual ~AbstractProjectGenerator();
 

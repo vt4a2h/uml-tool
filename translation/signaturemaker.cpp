@@ -89,12 +89,13 @@ namespace translation {
      * @param scope
      * @param type
      */
-    SignatureMaker::SignatureMaker(const models::SharedApplicationModel &model, const project::SharedProject &project,
+    SignatureMaker::SignatureMaker(const db::SharedDatabase &globalDb,
+                                   const db::SharedProjectDatabase &projectDb,
                                    const entity::SharedScope &scope, const entity::SharedType &type)
         : m_Type(type)
         , m_Scope(scope)
-        , m_Project(project)
-        , m_ApplicationModel(model)
+        , m_GlobalDatabase(globalDb)
+        , m_ProjectDatabase(projectDb)
     {
         m_MakersMap[entity::Field::staticHashType()] =
             [&](const entity::SharedBasicEntity &component) {
@@ -164,42 +165,6 @@ namespace translation {
     }
 
     /**
-     * @brief SignatureMaker::Project
-     * @return
-     */
-    project::SharedProject SignatureMaker::project() const
-    {
-        return m_Project;
-    }
-
-    /**
-     * @brief SignatureMaker::setProject
-     * @param project
-     */
-    void SignatureMaker::setProject(const project::SharedProject &project)
-    {
-        m_Project = project;
-    }
-
-    /**
-     * @brief SignatureMaker::ApplicationModel
-     * @return
-     */
-    models::SharedApplicationModel SignatureMaker::applicationModel() const
-    {
-        return m_ApplicationModel;
-    }
-
-    /**
-     * @brief SignatureMaker::setApplicationModel
-     * @param applicationModel
-     */
-    void SignatureMaker::setApplicationModel(const models::SharedApplicationModel &applicationModel)
-    {
-        m_ApplicationModel = applicationModel;
-    }
-
-    /**
      * @brief SignatureMaker::makeType
      * @param type
      * @return
@@ -215,7 +180,7 @@ namespace translation {
         auto scopeId = type->scopeId();
         while (!globalIds.contains(scopeId)) {
             if (auto scope = findScope(scopeId)) {
-                if (!scope->name().isEmpty() && scope->id() != m_Project->database()->defaultScopeID())
+                if (!scope->name().isEmpty() && scope->id() != m_ProjectDatabase->defaultScopeID())
                     scopes.prepend(scope->name());
                 scopeId = scope->parentScopeId();
             } else {
@@ -487,7 +452,7 @@ namespace translation {
      */
     entity::SharedScope SignatureMaker::findScope(const QString &scopeId) const
     {
-        return utility::findScope(scopeId, m_Project->database(), m_ApplicationModel->globalDatabase());
+        return utility::findScope(scopeId, m_ProjectDatabase, m_GlobalDatabase);
     }
 
     /**
@@ -497,7 +462,7 @@ namespace translation {
      */
     entity::SharedType SignatureMaker::findType(const QString &typeId) const
     {
-        return utility::findType(typeId, m_Project->database(), m_ApplicationModel->globalDatabase());
+        return utility::findType(typeId, m_ProjectDatabase, m_GlobalDatabase);
     }
 
 } // namespace translation

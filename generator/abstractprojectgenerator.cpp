@@ -44,7 +44,7 @@ namespace generator {
      * @param outputDirectory
      */
     AbstractProjectGenerator::AbstractProjectGenerator(const db::SharedDatabase &globalDb,
-                                                       const db::SharedDatabase &projectDb,
+                                                       const db::SharedProjectDatabase &projectDb,
                                                        const QString &outputDirectory)
         : m_ProjectTranslator(globalDb, projectDb)
         , m_OutputDirectory(outputDirectory)

@@ -38,12 +38,14 @@
 #include <entity/class.h>
 #include <entity/templateclassmethod.h>
 #include <entity/templateclass.h>
+#include <entity/property.h>
 #include <utility/helpfunctions.h>
 
 #include "enums.h"
 #include "templates.cpp"
 #include "constants.h"
 #include "code.h"
+#include "signaturemaker.h"
 
 using namespace boost;
 
@@ -91,7 +93,7 @@ namespace translation {
      * @param projectDb
      */
     ProjectTranslator::ProjectTranslator(const db::SharedDatabase &globalDb,
-                                         const db::SharedDatabase &projectDb)
+                                         const db::SharedProjectDatabase &projectDb)
         : m_GlobalDatabase(globalDb)
         , m_ProjectDatabase(projectDb)
     {
@@ -487,10 +489,27 @@ namespace translation {
 
         QString toHeader(CLASS_TEMPLATE);
 
-        // TODO: implement: stub!
-        toHeader.remove("%qobject%");
-        toHeader.remove("%property%");
+        // Add q_object
+        auto allMethods = _class->allMethods(entity::All);
+        bool addQObject = range::find_if(allMethods, [](auto m){ return m->isSlot() || m->isSignal(); })
+                          != boost::end(allMethods);
+        toHeader.replace("%qobject%", addQObject ? "Q_OBJECT\n" : "");
 
+        // Add properties
+        auto properties = _class->properties();
+        QStringList signatures;
+        if (!properties.isEmpty()) {
+            SignatureMaker maker(m_GlobalDatabase, m_ProjectDatabase,
+                                 m_ProjectDatabase->getScope(_class->scopeId()), _class);
+            for (auto &&p : properties)
+                signatures << maker.signature(p);
+        }
+        QString prop = signatures.isEmpty() ? "" : signatures.join(";\n");
+        if (addQObject && !prop.isEmpty())
+            prop.prepend("\n");
+        toHeader.replace("%property%", prop);
+
+        // Add template part if needed
         db::SharedDatabase templateDb = nullptr;
         if (_class->hashType() == entity::TemplateClass::staticHashType()) {
             auto tc = std::static_pointer_cast<entity::TemplateClass>(_class);
@@ -498,10 +517,13 @@ namespace translation {
             generateTemplatePart(toHeader, tc);
         }
 
+        // Add class type
         toHeader.replace("%kind%", _class->kind() == entity::ClassType ? "class " : "struct ");
 
+        // Add class name
         toHeader.replace("%name%", _class->name());
 
+        // Add parents
         QString parents;
         if (_class->anyParents()) {
             QStringList parentsList;
@@ -530,10 +552,13 @@ namespace translation {
             parents.append("\n");
         toHeader.replace("%parents%", parents);
 
+        // Add sections
         QString section;
         generateClassSection(_class, templateDb, entity::Public, section);
         generateClassSection(_class, templateDb, entity::Protected, section);
         generateClassSection(_class, templateDb, entity::Private, section);
+        if (!prop.isEmpty() && !section.isEmpty())
+            section.prepend("\n");
         toHeader.replace("%section%", section);
 
         if (section.isEmpty() && parents.isEmpty())
@@ -752,7 +777,7 @@ namespace translation {
      * @brief ProjectTranslator::projectDatabase
      * @return
      */
-    db::SharedDatabase ProjectTranslator::projectDatabase() const
+    db::SharedProjectDatabase ProjectTranslator::projectDatabase() const
     {
         return m_ProjectDatabase;
     }
@@ -761,7 +786,7 @@ namespace translation {
      * @brief ProjectTranslator::setProjectDatabase
      * @param projectDatabase
      */
-    void ProjectTranslator::setProjectDatabase(const db::SharedDatabase &projectDatabase)
+    void ProjectTranslator::setProjectDatabase(const db::SharedProjectDatabase &projectDatabase)
     {
         m_ProjectDatabase = projectDatabase;
     }

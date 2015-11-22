@@ -28,6 +28,7 @@
 #include <models/models_types.hpp>
 #include <entity/entity_types.hpp>
 #include <project/project_types.hpp>
+#include <db/db_types.hpp>
 
 namespace translation {
 
@@ -38,7 +39,7 @@ namespace translation {
 
     public:
         SignatureMaker();
-        SignatureMaker(const models::SharedApplicationModel &model, const project::SharedProject &project,
+        SignatureMaker(const db::SharedDatabase &globalDb, const db::SharedProjectDatabase &projectDb,
                        const entity::SharedScope &scope, const entity::SharedType &type);
 
         ~SignatureMaker();
@@ -50,12 +51,6 @@ namespace translation {
 
         entity::SharedScope scope() const;
         void setScope(const entity::SharedScope &scope);
-
-        project::SharedProject project() const;
-        void setProject(const project::SharedProject &project);
-
-        models::SharedApplicationModel applicationModel() const;
-        void setApplicationModel(const models::SharedApplicationModel &applicationModel);
 
     private:
         QString makeType(const entity::SharedType &type) const;
@@ -73,8 +68,9 @@ namespace translation {
 
         entity::SharedType  m_Type;
         entity::SharedScope m_Scope;
-        project::SharedProject m_Project;
-        models::SharedApplicationModel m_ApplicationModel;
+
+        db::SharedDatabase m_GlobalDatabase;
+        db::SharedProjectDatabase m_ProjectDatabase;
 
         using MakerFunction = std::function<QString(const entity::SharedBasicEntity &)>;
         QMap<size_t, MakerFunction> m_MakersMap;

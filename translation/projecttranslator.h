@@ -55,13 +55,13 @@ namespace translation {
 
         ProjectTranslator();
         ProjectTranslator(const db::SharedDatabase &globalDb,
-                          const db::SharedDatabase &projectDb);
+                          const db::SharedProjectDatabase &projectDb);
 
         db::SharedDatabase globalDatabase() const;
         void setGlobalDatabase(const db::SharedDatabase &globalDatabase);
 
-        db::SharedDatabase projectDatabase() const;
-        void setProjectDatabase(const db::SharedDatabase &projectDatabase);
+        db::SharedProjectDatabase projectDatabase() const;
+        void setProjectDatabase(const db::SharedProjectDatabase &projectDatabase);
 
         Code translate(const entity::SharedBasicEntity &e,
                        const TranslatorOptions &options = WithNamespace,
@@ -124,7 +124,7 @@ namespace translation {
                       const db::SharedDatabase &classDatabase = nullptr) const;
 
         db::SharedDatabase m_GlobalDatabase;
-        db::SharedDatabase m_ProjectDatabase;
+        db::SharedProjectDatabase m_ProjectDatabase;
 
         using TranslatorsMap = QHash<size_t, std::function<Code(const entity::SharedBasicEntity &,
                                                                 const ProjectTranslator::TranslatorOptions &,

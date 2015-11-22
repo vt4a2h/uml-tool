@@ -33,8 +33,8 @@ class SignatureMaker : public ComponentsBase, public ::testing::Test
 {
 protected:
     SignatureMaker()
-    : m_Maker(std::make_unique<translation::SignatureMaker>(m_ApplicationModel, m_Project, m_Scope,
-                                                            m_Type))
+    : m_Maker(std::make_unique<translation::SignatureMaker>(m_ApplicationModel->globalDatabase(),
+                                                            m_Project->database(), m_Scope, m_Type))
     {}
 
 protected:

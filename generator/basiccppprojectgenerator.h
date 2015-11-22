@@ -47,8 +47,8 @@ namespace generator {
     public:
         BasicCppProjectGenerator();
         BasicCppProjectGenerator(const db::SharedDatabase &globalDb,
-                                  const db::SharedDatabase &projectDb,
-                                  const QString &outputDirectory = "");
+                                 const db::SharedProjectDatabase &projectDb,
+                                 const QString &outputDirectory = "");
 
     private:
         void doWrite() const override;

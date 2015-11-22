@@ -276,8 +276,10 @@ namespace gui {
         }
         // }
 
-        auto signatureMaker =
-            std::make_unique<translation::SignatureMaker>(m_ApplicationModel, m_Project, m_Scope, m_Type);
+        auto signatureMaker = std::make_unique<translation::SignatureMaker>(
+                                  m_ApplicationModel->globalDatabase(), m_Project->database(),
+                                  m_Scope, m_Type
+                              );
         m_ComponentsModel->setSignatureMaker(std::move(signatureMaker));
         m_ComponentsModel->setComponents(m_Type);
 

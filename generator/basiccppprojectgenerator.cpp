@@ -30,6 +30,7 @@
 #include <QMap>
 
 #include <db/database.h>
+#include <db/projectdatabase.h>
 #include <entity/scope.h>
 #include <entity/type.h>
 #include <entity/class.h>
@@ -56,7 +57,7 @@ namespace generator {
      * @param outputDirectory
      */
     BasicCppProjectGenerator::BasicCppProjectGenerator(const db::SharedDatabase &globalDb,
-                                                       const db::SharedDatabase &projectDb,
+                                                       const db::SharedProjectDatabase &projectDb,
                                                        const QString &outputDirectory)
         : AbstractProjectGenerator(globalDb, projectDb, outputDirectory)
         , m_RootOutputDirectory(std::make_shared<VirtualDirectory>(outputDirectory))
