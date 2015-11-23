@@ -36,6 +36,7 @@
 #include <entity/class.h>
 #include <entity/templateclass.h>
 #include <entity/templateclassmethod.h>
+#include <entity/property.h>
 
 #include <translation/projecttranslator.h>
 #include <translation/translator_types.hpp>
@@ -53,7 +54,7 @@ protected:
 
         _translator = std::make_shared<translation::ProjectTranslator>(_globalDb, _projectDb);
 
-        _globalScope  = _globalDb->addScope();
+        _globalScope  = _globalDb->addScope(GLOBAL_SCOPE_ID);
         _projectScope = _projectDb->addScope("project_scope");
 
         _int = _globalScope->addType("int");

@@ -103,12 +103,12 @@ namespace translation {
             };
         m_MakersMap[entity::ClassMethod::staticHashType()] =
                 [&](const entity::SharedBasicEntity &component) {
-            return makeMethod(std::static_pointer_cast<entity::ClassMethod>(component));
-        };
+                    return makeMethod(std::static_pointer_cast<entity::ClassMethod>(component));
+                };
         m_MakersMap[entity::Property::staticHashType()] =
                 [&](const entity::SharedBasicEntity &component) {
-            return makeProperty(std::static_pointer_cast<entity::Property>(component));
-        };
+                    return makeProperty(std::static_pointer_cast<entity::Property>(component));
+                };
     }
 
     /**

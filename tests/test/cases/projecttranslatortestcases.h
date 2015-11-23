@@ -376,7 +376,14 @@ TEST_F(ProjectTranslatorTest, Class)
 
 TEST_F(ProjectTranslatorTest, ClassWithProperties)
 {
+    auto cl = _projectScope->addType<entity::Class>("Baz");
+    auto prop = cl->addProperty("a", _int->id());
+    prop->addGetter("getA").addSetter("setA").addNotifier("aChanged");
 
+    qDebug() << _translator->translate(cl).toHeader;
+    // TODO: add \n before Q_Object;
+    // remove namespace after property type (check to global scope id);
+    // add good signatures for methods
 }
 
 TEST_F(ProjectTranslatorTest, TemplateClass)
