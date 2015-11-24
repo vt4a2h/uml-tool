@@ -43,6 +43,7 @@
 #include <translation/code.h>
 
 #include <enums.h>
+#include <constants.h>
 
 class ProjectTranslatorTest : public ::testing::Test
 {
@@ -54,7 +55,12 @@ protected:
 
         _translator = std::make_shared<translation::ProjectTranslator>(_globalDb, _projectDb);
 
-        _globalScope  = _globalDb->addScope(GLOBAL_SCOPE_ID);
+        _globalScope  = _globalDb->addScope();
+        _globalDb->removeScope(_globalScope->id());
+        _globalScope->setId(GLOBAL_SCOPE_ID);
+        _globalDb->addExistsScope(_globalScope);
+        // TODO: implement auto changing in id db when scope id changed
+
         _projectScope = _projectDb->addScope("project_scope");
 
         _int = _globalScope->addType("int");

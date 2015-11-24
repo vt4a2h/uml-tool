@@ -95,7 +95,7 @@ TEST_F(ProjectTranslatorTest, ExtendedType)
     type->setTypeId(set->id());
     type->addTemplateParameter(_int->id());
     code = _translator->translate(type);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 }
 
 TEST_F(ProjectTranslatorTest, Field)
@@ -373,7 +373,7 @@ TEST_F(ProjectTranslatorTest, Class)
     code = _translator->translate(fooClass);
     ASSERT_EQ(futureResult, code.toHeader);
 }
-
+#include <QDebug>
 TEST_F(ProjectTranslatorTest, ClassWithProperties)
 {
     auto cl = _projectScope->addType<entity::Class>("Baz");
@@ -381,9 +381,7 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
     prop->addGetter("getA").addSetter("setA").addNotifier("aChanged");
 
     qDebug() << _translator->translate(cl).toHeader;
-    // TODO: add \n before Q_Object;
-    // remove namespace after property type (check to global scope id);
-    // add good signatures for methods
+    // TODO: add good signatures for methods
 }
 
 TEST_F(ProjectTranslatorTest, TemplateClass)

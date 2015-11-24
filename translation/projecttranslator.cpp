@@ -477,7 +477,6 @@ namespace translation {
                                            const db::SharedDatabase &localeDatabase,
                                            const db::SharedDatabase &classDatabase) const
     {
-        // TODO: add qobject macro for classes with custom slot-signals
         // compatibility with API
         Q_UNUSED(options)
         Q_UNUSED(localeDatabase)
@@ -493,7 +492,7 @@ namespace translation {
         auto allMethods = _class->allMethods(entity::All);
         bool addQObject = range::find_if(allMethods, [](auto m){ return m->isSlot() || m->isSignal(); })
                           != boost::end(allMethods);
-        toHeader.replace("%qobject%", addQObject ? "Q_OBJECT\n" : "");
+        toHeader.replace("%qobject%", addQObject ? "\nQ_OBJECT\n" : "");
 
         // Add properties
         auto properties = _class->properties();
@@ -825,16 +824,17 @@ namespace translation {
         QString id = type->scopeId();
         entity::SharedScope scope = utility::findScope(id, localeDatabase, classDatabase,
                                                        m_ProjectDatabase, m_GlobalDatabase);
-        while (id != GLOBAL_SCOPE_ID || id != LOCALE_TEMPLATE_SCOPE_ID) {
-            if (!scope)
+        do {
+            if (!scope || id == GLOBAL_SCOPE_ID || id == LOCALE_TEMPLATE_SCOPE_ID)
                 break;
 
             if (scope->name() != DEFAULT_NAME)
                 scopesNames.prepend(scope->name());
 
-            scope = utility::findScope(scope->parentScopeId(), localeDatabase, classDatabase,
+            id = scope->parentScopeId();
+            scope = utility::findScope(id, localeDatabase, classDatabase,
                                        m_ProjectDatabase, m_GlobalDatabase);
-        }
+        } while (true);
 
         if (!scopesNames.isEmpty() && (options & WithNamespace)) {
             scopesNames << type->name();

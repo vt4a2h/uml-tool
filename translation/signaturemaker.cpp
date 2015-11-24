@@ -178,9 +178,11 @@ namespace translation {
 
         QStringList scopes;
         auto scopeId = type->scopeId();
+        QSet<QString> forbidden = {m_ProjectDatabase->defaultScopeID(), GLOBAL_SCOPE_ID,
+                                   LOCALE_TEMPLATE_SCOPE_ID, PROJECT_GLOBAL_SCOPE_ID};
         while (!globalIds.contains(scopeId)) {
             if (auto scope = findScope(scopeId)) {
-                if (!scope->name().isEmpty() && scope->id() != m_ProjectDatabase->defaultScopeID())
+                if (!scope->name().isEmpty() && !forbidden.contains(scopeId))
                     scopes.prepend(scope->name());
                 scopeId = scope->parentScopeId();
             } else {
