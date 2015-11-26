@@ -380,8 +380,18 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
     auto prop = cl->addProperty("a", _int->id());
     prop->addGetter("getA").addSetter("setA").addNotifier("aChanged");
 
-    qDebug() << _translator->translate(cl).toHeader;
-    // TODO: add good signatures for methods
+    QString expect = QString("class Baz{\n"
+                             "Q_OBJECT"
+                             "\n\n"
+                             "int a READ getA WRITE setA NOTIFY aChanged"
+                             "\n\n"
+                             "%1public:\n"
+                             "%1%1getA() const;\n"
+                             "%1public SLOTS:\n"
+                             "%1%1setA(int a);\n"
+                             "};").arg(INDENT);
+    ASSERT_EQ(expect.toStdString(), _translator->translate(cl).toHeader.toStdString());
+    // TODO: improve output
 }
 
 TEST_F(ProjectTranslatorTest, TemplateClass)

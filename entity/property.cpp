@@ -264,6 +264,7 @@ namespace entity {
             deleteGetter();
 
         m_Getter = std::make_shared<ClassMethod>(newName);
+        m_Getter->setConstStatus(true);
 
         emit methodAdded(safeShared(), m_Getter);
 
@@ -310,6 +311,8 @@ namespace entity {
 
         m_Setter = std::make_shared<ClassMethod>(newName);
         m_Setter->setIsSlot(true);
+        m_Setter->addParameter(customName.isEmpty() ? m_Name.toLower() : m_Name.toLower(),
+                               typeId());
 
         emit methodAdded(safeShared(), m_Setter);
 
