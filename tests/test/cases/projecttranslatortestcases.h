@@ -391,7 +391,32 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
                              "%1%1setA(int a);\n"
                              "};").arg(INDENT);
     ASSERT_EQ(expect.toStdString(), _translator->translate(cl).toHeader.toStdString());
-    // TODO: improve output
+
+    // Add all fields
+    prop->addResetter("resetA")
+         .setRevision(1)
+         .addDesignableGetter("isDisignable")
+         .addScriptableGetter("isScriptable")
+         .setStored(false)
+         .setUser(true)
+         .setConstant(true)
+         .setFinal(true);
+
+    expect = QString("class Baz{\n"
+                     "Q_OBJECT\n\n"
+                     "int a READ getA WRITE setA RESET resetA NOTIFY aChanged REVISION 1 "
+                            "DESIGNABLE isDisignable SCRIPTABLE isScriptable STORED false "
+                            "USER true CONSTANT FINAL\n\n"
+                     "%1public:\n"
+                     "%1%1getA() const;\n"
+                     "%1%1isDisignable();\n"
+                     "%1%1isScriptable();\n"
+                     "%1public SLOTS:\n"
+                     "%1%1setA(int a);\n"
+                     "%1%1resetA();\n};").arg(INDENT);
+
+    // TODO:
+    // 1) return type for all methods!
 }
 
 TEST_F(ProjectTranslatorTest, TemplateClass)
