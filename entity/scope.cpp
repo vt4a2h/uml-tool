@@ -323,7 +323,16 @@ namespace entity {
      */
     void Scope::setParentScopeId(const QString &parentScopeId)
     {
-        m_ParentScopeId = parentScopeId;
+       m_ParentScopeId = parentScopeId;
+    }
+
+    /**
+     * @brief Scope::globalScopeID
+     * @return
+     */
+    QString Scope::globalScopeID()
+    {
+        return GLOBAL_SCOPE_ID;
     }
 
     /**

@@ -3419,6 +3419,12 @@
                     "Scope ID": "global"
                 },
                 {
+                    "ID": "_bool",
+                    "Kind of type": "Type",
+                    "Name": "bool",
+                    "Scope ID": "global"
+                },
+                {
                     "ID": "894",
                     "Kind of type": "Type",
                     "Name": "QShortcut",

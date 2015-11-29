@@ -230,7 +230,25 @@ namespace entity {
         return rhs.hashType() == this->hashType()       &&
                 m_Name        == rhs.m_Name             &&
                ( withTypeid ? m_Id == rhs.m_Id : true ) &&
-               m_ScopeId    == rhs.m_ScopeId;
+                m_ScopeId    == rhs.m_ScopeId;
+    }
+
+    /**
+     * @brief Type::voidID
+     * @return
+     */
+    QString Type::voidID()
+    {
+        return VOID_ID;
+    }
+
+    /**
+     * @brief Type::boolID
+     * @return
+     */
+    QString Type::boolID()
+    {
+        return BOOL_ID;
     }
 
     /**

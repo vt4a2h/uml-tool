@@ -31,6 +31,7 @@ namespace {
     static constexpr char* LOCALE_TEMPLATE_SCOPE_ID = (char*)"__template_scope";
     static constexpr char* STUB_ID = (char*)"_stub_type";
     static constexpr char* VOID_ID = (char*)"_void";
+    static constexpr char* BOOL_ID = (char*)"bool";
 
     static constexpr char* DEFAULT_NAME = (char*)"__noname";
     static constexpr char* DEFAULT_DESCRIPTION = (char*)"_nothing";

@@ -57,13 +57,19 @@ protected:
 
         _globalScope  = _globalDb->addScope();
         _globalDb->removeScope(_globalScope->id());
-        _globalScope->setId(GLOBAL_SCOPE_ID);
+        _globalScope->setId(entity::Scope::globalScopeID());
         _globalDb->addExistsScope(_globalScope);
         // TODO: implement auto changing in id db when scope id changed
 
         _projectScope = _projectDb->addScope("project_scope");
 
         _int = _globalScope->addType("int");
+        _globalScope->addExistsType(std::make_shared<entity::Type>("void",
+                                                                   entity::Scope::globalScopeID(),
+                                                                   entity::Type::voidID()));
+        _globalScope->addExistsType(std::make_shared<entity::Type>("bool",
+                                                                   entity::Scope::globalScopeID(),
+                                                                   entity::Type::boolID()));
     }
 
     db::SharedDatabase _globalDb;

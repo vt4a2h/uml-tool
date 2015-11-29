@@ -76,6 +76,8 @@ namespace entity {
         QString parentScopeId() const;
         void setParentScopeId(const QString &parentScopeId);
 
+        static QString globalScopeID();
+
     public: // BasicEntity implementation
         QString id() const override;
         void setId(const QString &id) override;
