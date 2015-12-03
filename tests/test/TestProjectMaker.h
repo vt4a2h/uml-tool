@@ -30,6 +30,7 @@
 #include <db/database.h>
 #include <generator/virtualdirectory.h>
 #include <generator/basiccppprojectgenerator.h>
+#include <helpers/entityhelpres.h>
 
 class ProjectMaker : public ::testing::Test
 {
@@ -43,6 +44,10 @@ protected:
                                                                            projectDb_,
                                                                            rootPath_);
         generator_->setProjectName("test_app");
+
+        globalDb_->removeScope(globalScope_->id());
+        globalScope_->setId(entity::Scope::globalScopeID());
+        globalDb_->addExistsScope(globalScope_);
     }
 
     virtual void TearDown() override
@@ -54,14 +59,19 @@ protected:
     db::SharedProjectDatabase projectDb_ = std::make_shared<db::ProjectDatabase>("Project");
 
     entity::SharedScope globalScope_   = globalDb_->addScope();
+
     entity::SharedScope standartScope_ = globalDb_->addScope("std");
 
     entity::SharedType int_     = globalScope_->addType("int");
-    entity::SharedType bool_    = globalScope_->addType("bool");
+    entity::SharedType bool_    = globalScope_->addExistsType(
+        std::make_shared<entity::Type>("bool", entity::Scope::globalScopeID(),
+                                       entity::basicTypeId("bool"))
+    );
     entity::SharedType double_  = globalScope_->addType("double");
     entity::SharedType uint_    = globalScope_->addType("uint");
     entity::SharedType void_    = globalScope_->addExistsType(
-        std::make_shared<entity::Type>("void", "", VOID_ID)
+        std::make_shared<entity::Type>("void", entity::Scope::globalScopeID(),
+                                       entity::basicTypeId("void"))
     );
     entity::SharedType nullptr_ = globalScope_->addType("nullptr");
     entity::SharedType string_  = standartScope_->addType("string");

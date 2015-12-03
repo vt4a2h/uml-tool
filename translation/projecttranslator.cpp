@@ -155,11 +155,14 @@ namespace translation {
     {
         entity::MethodsList methods;
         entity::MethodsList _slots;
+        entity::MethodsList _signals;
         for (auto const& m : _class->allMethods(section)) {
             if (m->isSlot())
                 _slots << m;
             else if (!m->isSignal())
                 methods << m;
+            else
+                _signals << m;
         }
 
         entity::FieldsList fields = _class->fields(section);
@@ -170,19 +173,9 @@ namespace translation {
         bool needSection = _class->kind() == entity::ClassType ||
                            (_class->kind() != entity::StructType && section != entity::Public);
 
-        if (!methods.isEmpty()) {
-            if (needSection)
-                out.append(INDENT + utility::sectionToString(section) + ":\n");
-
-            generateMethods(methods, localeDatabase, needSection ? DOUBLE_INDENT : INDENT, out);
-        }
-
-        if (!_slots.isEmpty()) {
-            if (needSection)
-                out.append(INDENT + utility::sectionToString(section) + " SLOTS:\n");
-
-            generateMethods(_slots, localeDatabase, needSection ? DOUBLE_INDENT : INDENT, out);
-        }
+        generateSectionMethods(methods, localeDatabase, needSection, section, ":\n"/*marker*/, out);
+        generateSectionMethods(_slots, localeDatabase, needSection, section, " SLOTS:\n", out);
+        generateSectionMethods(_signals, localeDatabase, needSection, section, "signals:\n", out);
 
         if (!fields.isEmpty()) {
             if (needSection)
@@ -296,6 +289,28 @@ namespace translation {
         auto it = range::find_if(fields,
                                  [&](auto &&f) { return classDatabase->depthTypeSearch(f->typeId()); });
         return it != fields.end() || classDatabase->depthTypeSearch(m->returnTypeId());
+    }
+
+    /**
+     * @brief ProjectTranslator::generateSectionMethods
+     * @param methods
+     * @param localeDatabase
+     * @param needSection
+     * @param section
+     */
+    void ProjectTranslator::generateSectionMethods(const entity::MethodsList &methods,
+                                                   const db::SharedDatabase &localeDatabase,
+                                                   bool needSection,
+                                                   entity::Section section,
+                                                   const QString& marker,
+                                                   QString &out) const
+    {
+        if (!methods.isEmpty()) {
+            if (needSection)
+                out.append(INDENT + utility::sectionToString(section) + marker);
+
+            generateMethods(methods, localeDatabase, needSection ? DOUBLE_INDENT : INDENT, out);
+        }
     }
 
     /**

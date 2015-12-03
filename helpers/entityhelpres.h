@@ -26,6 +26,10 @@
 
 namespace entity {
 
+    /// Get scope from chain
     SharedScope chainScopeSearch(const entity::Scopes& scopes, const QStringList &scopesNames);
+
+    /// Get ID of basic type by name
+    QString basicTypeId(const QString &typeName);
 
 } // namespace entity

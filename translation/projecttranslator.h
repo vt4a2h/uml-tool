@@ -122,6 +122,10 @@ namespace translation {
                                   bool withDefaultTypes = true) const;
         bool toHeader(const entity::SharedMethod &m,
                       const db::SharedDatabase &classDatabase = nullptr) const;
+        void generateSectionMethods(const entity::MethodsList &methods,
+                                    const db::SharedDatabase &localeDatabase,
+                                    bool needSection, entity::Section section,
+                                    const QString &marker, QString &out) const;
 
         db::SharedDatabase m_GlobalDatabase;
         db::SharedProjectDatabase m_ProjectDatabase;

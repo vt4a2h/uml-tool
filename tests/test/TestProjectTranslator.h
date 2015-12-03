@@ -41,6 +41,7 @@
 #include <translation/projecttranslator.h>
 #include <translation/translator_types.hpp>
 #include <translation/code.h>
+#include <helpers/entityhelpres.h>
 
 #include <enums.h>
 #include <constants.h>
@@ -66,10 +67,10 @@ protected:
         _int = _globalScope->addType("int");
         _globalScope->addExistsType(std::make_shared<entity::Type>("void",
                                                                    entity::Scope::globalScopeID(),
-                                                                   entity::Type::voidID()));
+                                                                   entity::basicTypeId("void")));
         _globalScope->addExistsType(std::make_shared<entity::Type>("bool",
                                                                    entity::Scope::globalScopeID(),
-                                                                   entity::Type::boolID()));
+                                                                   entity::basicTypeId("bool")));
     }
 
     db::SharedDatabase _globalDb;

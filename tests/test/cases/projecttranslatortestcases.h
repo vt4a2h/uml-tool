@@ -373,7 +373,7 @@ TEST_F(ProjectTranslatorTest, Class)
     code = _translator->translate(fooClass);
     ASSERT_EQ(futureResult, code.toHeader);
 }
-#include <QDebug>
+
 TEST_F(ProjectTranslatorTest, ClassWithProperties)
 {
     auto cl = _projectScope->addType<entity::Class>("Baz");
@@ -386,9 +386,9 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
                              "int a READ getA WRITE setA NOTIFY aChanged"
                              "\n\n"
                              "%1public:\n"
-                             "%1%1getA() const;\n"
+                             "%1%1int getA() const;\n"
                              "%1public SLOTS:\n"
-                             "%1%1setA(int a);\n"
+                             "%1%1void setA(int a);\n"
                              "};").arg(INDENT);
     ASSERT_EQ(expect.toStdString(), _translator->translate(cl).toHeader.toStdString());
 
@@ -408,15 +408,16 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
                             "DESIGNABLE isDisignable SCRIPTABLE isScriptable STORED false "
                             "USER true CONSTANT FINAL\n\n"
                      "%1public:\n"
-                     "%1%1getA() const;\n"
-                     "%1%1isDisignable();\n"
-                     "%1%1isScriptable();\n"
+                     "%1%1int getA() const;\n"
+                     "%1%1bool isDisignable();\n"
+                     "%1%1bool isScriptable();\n"
                      "%1public SLOTS:\n"
-                     "%1%1setA(int a);\n"
-                     "%1%1resetA();\n};").arg(INDENT);
+                     "%1%1void setA(int a);\n"
+                     "%1%1void resetA();\n};").arg(INDENT);
 
-    // TODO:
-    // 1) return type for all methods!
+    ASSERT_EQ(expect.toStdString(), _translator->translate(cl).toHeader.toStdString());
+
+    // TODO: investigate signals issues
 }
 
 TEST_F(ProjectTranslatorTest, TemplateClass)

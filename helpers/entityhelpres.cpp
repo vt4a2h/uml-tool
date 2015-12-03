@@ -28,6 +28,8 @@
 
 #include <entity/scope.h>
 
+#include "constants.h"
+
 using namespace boost;
 
 namespace entity {
@@ -49,6 +51,17 @@ namespace entity {
         } else {
             return nullptr;
         }
+    }
+
+    // Feel free to add required types
+    static const QHash<QString, QString> nameIDMap =
+    {
+        {"bool", BOOL_ID}, {"void", VOID_ID},
+    };
+
+    QString basicTypeId(const QString &typeName)
+    {
+        return nameIDMap.value(typeName, STUB_ID);
     }
 
 } // namespace entity

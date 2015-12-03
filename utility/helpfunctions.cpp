@@ -128,7 +128,7 @@ namespace utility {
                                  };
 
         SectionString  kSection  { {entity::Public, "public"}, {entity::Protected, "protected"},
-                                   {entity::Private, "private"}
+                                   {entity::Private, "private"}, {entity::None, ""}
                                  };
 
         using MakerT  = std::function<entity::SharedType()>;

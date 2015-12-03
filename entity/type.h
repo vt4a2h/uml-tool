@@ -53,10 +53,6 @@ namespace entity {
 
         virtual bool isEqual(const Type &rhs, bool withTypeid = true) const;
 
-    public: // Common ID's
-        static QString voidID();
-        static QString boolID();
-
     public: // BasicEntity implementation
         QString id() const override;
         void setId(const QString &id) override;

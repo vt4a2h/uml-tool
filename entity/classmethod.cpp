@@ -100,7 +100,7 @@ namespace entity {
         , m_ConstStatus(false)
         , m_SlotStatus(false)
         , m_SignalStatus(false)
-        , m_ReturnTypeId(VOID_ID)
+        , m_ReturnTypeId(STUB_ID)
         , m_RhsIdentificator(RhsIdentificator::None)
     {
         static int r = qRegisterMetaType<entity::ClassMethod>("entity::ClassMethod"); Q_UNUSED(r);

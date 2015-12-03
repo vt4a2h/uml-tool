@@ -50,12 +50,16 @@ TEST_F(ProjectMaker, MakeClass)
     auto firstNameGetter = empClass->makeMethod("firstName");
     firstNameGetter->setReturnTypeId(string_->id());
     firstNameGetter->setConstStatus(true);
-    empClass->makeMethod("setFirstName")->addParameter("firstName", constLinkToString->id());
+    auto firtsNameSetter = empClass->makeMethod("setFirstName");
+    firtsNameSetter->addParameter("firstName", constLinkToString->id());
+    firtsNameSetter->setReturnTypeId(void_->id());
 
     auto lastNameGetter = empClass->makeMethod("lastName");
     lastNameGetter->setReturnTypeId(string_->id());
     lastNameGetter->setConstStatus(true);
-    empClass->makeMethod("setLastName")->addParameter("lastName", constLinkToString->id());
+    auto lastNameSetter = empClass->makeMethod("setLastName");
+    lastNameSetter->addParameter("lastName", constLinkToString->id());
+    lastNameSetter->setReturnTypeId(void_->id());
 
     auto isHired = empClass->makeMethod("isHired");
     isHired->setReturnTypeId(bool_->id());
@@ -66,7 +70,9 @@ TEST_F(ProjectMaker, MakeClass)
     auto salaryGetter = empClass->makeMethod("salary");
     salaryGetter->setReturnTypeId(double_->id());
     salaryGetter->setConstStatus(true);
-    empClass->makeMethod("setSalary")->addParameter("salary", double_->id());
+    auto salarySetter = empClass->makeMethod("setSalary");
+    salarySetter->addParameter("salary", double_->id());
+    salarySetter->setReturnTypeId(void_->id());
 
     generator_->generate();
     generator_->writeToDisk();
@@ -111,6 +117,7 @@ TEST_F(ProjectMaker, MakeTemplateClass)
 
     auto resetMethod = ptrClass->makeMethod("reset");
     resetMethod->addParameter("other", pointerToT->id())->setDefaultValue("nullptr");
+    resetMethod->setReturnTypeId(void_->id());
 
     auto useCountMethod = ptrClass->makeMethod("use_count");
     useCountMethod->setReturnTypeId(uint_->id());
@@ -125,6 +132,7 @@ TEST_F(ProjectMaker, MakeTemplateClass)
     auto swapMethod = ptrClass->makeMethod("swap");
     swapMethod->addParameter("src", linkToPtr->id());
     swapMethod->setSection(entity::Private);
+    swapMethod->setReturnTypeId(void_->id());
 
     generator_->generate();
     generator_->writeToDisk();

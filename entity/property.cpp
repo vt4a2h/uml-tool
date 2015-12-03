@@ -27,6 +27,7 @@
 #include <QJsonObject>
 
 #include <utility/helpfunctions.h>
+#include <helpers/entityhelpres.h>
 
 #include "field.h"
 #include "classmethod.h"
@@ -265,6 +266,7 @@ namespace entity {
 
         m_Getter = std::make_shared<ClassMethod>(newName);
         m_Getter->setConstStatus(true);
+        m_Getter->setReturnTypeId(typeId());
 
         emit methodAdded(safeShared(), m_Getter);
 
@@ -313,6 +315,7 @@ namespace entity {
         m_Setter->setIsSlot(true);
         m_Setter->addParameter(customName.isEmpty() ? m_Name.toLower() : m_Name.toLower(),
                                typeId());
+        m_Setter->setReturnTypeId(basicTypeId("void"));
 
         emit methodAdded(safeShared(), m_Setter);
 
@@ -359,6 +362,7 @@ namespace entity {
 
         m_Resetter = std::make_shared<ClassMethod>(newName);
         m_Resetter->setIsSlot(true);
+        m_Resetter->setReturnTypeId(basicTypeId("void"));
 
         emit methodAdded(safeShared(), m_Resetter);
 
@@ -404,6 +408,8 @@ namespace entity {
 
         m_Notifier = std::make_shared<ClassMethod>(newName);
         m_Notifier->setIsSignal(true);
+        m_Notifier->setReturnTypeId(basicTypeId("void"));
+
         emit methodAdded(safeShared(), m_Notifier);
 
         return *this;
@@ -495,6 +501,7 @@ namespace entity {
             deleteDesignableGetter();
 
         m_DesignableGetter = std::make_shared<ClassMethod>(newName);
+        m_DesignableGetter->setReturnTypeId(basicTypeId("bool"));
 
         emit methodAdded(safeShared(), m_DesignableGetter);
 
@@ -569,6 +576,7 @@ namespace entity {
             deleteScriptableGetter();
 
         m_ScriptableGetter = std::make_shared<ClassMethod>(newName);
+        m_ScriptableGetter->setReturnTypeId(basicTypeId("bool"));
 
         emit methodAdded(safeShared(), m_ScriptableGetter);
 

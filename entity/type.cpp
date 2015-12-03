@@ -234,24 +234,6 @@ namespace entity {
     }
 
     /**
-     * @brief Type::voidID
-     * @return
-     */
-    QString Type::voidID()
-    {
-        return VOID_ID;
-    }
-
-    /**
-     * @brief Type::boolID
-     * @return
-     */
-    QString Type::boolID()
-    {
-        return BOOL_ID;
-    }
-
-    /**
      * @brief Type::moveFrom
      * @param src
      */
