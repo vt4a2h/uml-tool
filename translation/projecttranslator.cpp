@@ -166,7 +166,7 @@ namespace translation {
         }
 
         entity::FieldsList fields = _class->fields(section);
-        if (methods.isEmpty() && _slots.isEmpty() && fields.isEmpty())
+        if (methods.isEmpty() && _slots.isEmpty() && _signals.isEmpty() && fields.isEmpty())
             return;
 
         out.append("\n");
@@ -571,6 +571,7 @@ namespace translation {
         generateClassSection(_class, templateDb, entity::Public, section);
         generateClassSection(_class, templateDb, entity::Protected, section);
         generateClassSection(_class, templateDb, entity::Private, section);
+        generateClassSection(_class, templateDb, entity::None, section); // For signals
         if (!prop.isEmpty() && !section.isEmpty())
             section.prepend("\n");
         toHeader.replace("%section%", section);

@@ -388,7 +388,9 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
                              "%1public:\n"
                              "%1%1int getA() const;\n"
                              "%1public SLOTS:\n"
-                             "%1%1void setA(int a);\n"
+                             "%1%1void setA(int a);\n\n"
+                             "%1signals:\n"
+                             "%1%1void aChanged();\n"
                              "};").arg(INDENT);
     ASSERT_EQ(expect.toStdString(), _translator->translate(cl).toHeader.toStdString());
 
@@ -413,11 +415,14 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
                      "%1%1bool isScriptable();\n"
                      "%1public SLOTS:\n"
                      "%1%1void setA(int a);\n"
-                     "%1%1void resetA();\n};").arg(INDENT);
+                     "%1%1void resetA();\n\n"
+                     "%1signals:\n"
+                     "%1%1void aChanged();\n"
+                     "};").arg(INDENT);
 
     ASSERT_EQ(expect.toStdString(), _translator->translate(cl).toHeader.toStdString());
 
-    // TODO: investigate signals issues
+    // TODO: add fields generation
 }
 
 TEST_F(ProjectTranslatorTest, TemplateClass)
