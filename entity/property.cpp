@@ -33,6 +33,7 @@
 #include "classmethod.h"
 
 #include "constants.h"
+#include "qthelpers.h"
 
 namespace {
     const QString marker = "property";
@@ -49,8 +50,6 @@ namespace {
 
     const QString nameMark = "Name";
     const QString idMark = "ID";
-
-    const QString typeIdMark = "TypeID";
 
     const QString getterMark = "Getter";
     const QString setterMark = "Setter";
@@ -125,10 +124,10 @@ namespace entity {
      */
     Property::Property(const QString &name, const QString &typeId, QObject *parent)
         : BasicEntity(name)
+        , m_Field(std::make_shared<entity::Field>(name, typeId))
     {
         init();
 
-        setTypeId(typeId); // TODO: will be moved to the Basic entity
         setParent(parent);
         qRegisterMetaType<entity::SharedProperty>("entity::SharedProperty");
     }
@@ -164,13 +163,54 @@ namespace entity {
     }
 
     /**
+     * @brief Property::setName
+     * @param name
+     * @return
+     */
+    Property &Property::setName(const QString &name)
+    {
+        if (G_ASSERT(m_Field))
+            m_Field->setName(name);
+
+        return *this;
+    }
+
+    /**
+     * @brief Property::name
+     * @return
+     */
+    QString Property::name() const
+    {
+        return G_ASSERT(m_Field) ? m_Field->name() : "no name";
+    }
+
+    /**
      * @brief Property::field
      * @return
      */
     SharedField Property::field() const
     {
-        // TODO: add and investigate!
-        return SharedField();
+        return m_Field;
+    }
+
+    /**
+     * @brief Property::addField
+     * @param name
+     * @param typeId
+     * @return
+     */
+    SharedField Property::addField(const QString &name, const QString &typeId)
+    {
+        m_Field = std::make_shared<entity::Field>(name, typeId);
+        return m_Field;
+    }
+
+    /**
+     * @brief Property::deleteField
+     */
+    void Property::deleteField()
+    {
+       m_Field.reset();
     }
 
     /**
@@ -187,7 +227,7 @@ namespace entity {
                lhs.m_Id == rhs.m_Id &&
                lhs.m_TypeId == rhs.m_TypeId &&
 
-               sharedPtrEq(lhs.m_MemberName, rhs.m_MemberName) &&
+               sharedPtrEq(lhs.m_Field, rhs.m_Field) &&
 
                sharedPtrEq(lhs.m_Getter, rhs.m_Getter) &&
                sharedPtrEq(lhs.m_Setter, rhs.m_Setter) &&
@@ -208,43 +248,21 @@ namespace entity {
                lhs.m_Final      == rhs.m_Final;
     }
 
-    /**
-     * @brief Property::addMember
-     * @param customName
-     * @return
-     */
-    Property &Property::addMember(const QString &customName, const QString &prefix)
-    {
-        if (m_MemberName)
-            deleteMember();
+//    Property &Property::addMember(const QString &customName, const QString &prefix)
+//    {
+//        if (m_Field)
+//            deleteMember();
 
-        m_MemberName = std::make_shared<Member>();
-        m_MemberName->name = customName.isEmpty() ? m_Name : customName;
+//        m_Field = std::make_shared<Member>();
+//        m_Field->name = customName.isEmpty() ? m_Name : customName;
 
-        if (!customName.startsWith("m_"))
-            m_MemberName->prefix = prefix.isEmpty() ? "m_" : prefix;
+//        if (!customName.startsWith("m_"))
+//            m_Field->prefix = prefix.isEmpty() ? "m_" : prefix;
 
-        m_Member = true;
+//        m_Member = true;
 
-        return *this;
-    }
-
-    /**
-     * @brief Property::deleteMember
-     */
-    void Property::deleteMember()
-    {
-        m_MemberName.reset();
-    }
-
-    /**
-     * @brief Property::member
-     * @return
-     */
-    SharedMember Property::member() const
-    {
-        return m_MemberName;
-    }
+//        return *this;
+//    }
 
     /**
      * @brief Property::addGetter
@@ -766,9 +784,8 @@ namespace entity {
 
         result.insert(nameMark, m_Name);
         result.insert(idMark, m_Id);
-        result.insert(typeIdMark, m_TypeId);
 
-        result.insert(memberMark, m_MemberName ? m_MemberName->toJson() : QJsonValue(QString("")));
+        result.insert(memberMark, m_Field ? m_Field->toJson() : QJsonValue(QString("")));
 
         result.insert(getterMark, m_Getter ? m_Getter->toJson() : QJsonValue(QString("")));
         result.insert(setterMark, m_Setter ? m_Setter->toJson() : QJsonValue(QString("")));
@@ -805,9 +822,9 @@ namespace entity {
         checkAndSet(src, typeIdMark, errorList, [&](){ m_TypeId = src[typeIdMark].toString(); });
 
         checkAndSet(src, memberMark, errorList,
-                    [&](){ readOptional(src[memberMark], this, &Property::addMember,
-                                        &Property::member, &Property::deleteMember, errorList,
-                                        "" /*custom name*/, "" /*prefix*/); });
+                    [&](){ readOptional(src[memberMark], this, &Property::addField,
+                                        &Property::field, &Property::deleteField, errorList,
+                                        "" /*name*/, "" /*typeid*/); });
 
         checkAndSet(src, getterMark, errorList,
                     [&](){ readOptional(src[getterMark], this, &Property::addGetter, &Property::getter,
@@ -918,7 +935,7 @@ namespace entity {
         m_Id = std::move(src.m_Id);
         m_TypeId = std::move(src.m_TypeId);
 
-        m_MemberName = std::move(src.m_MemberName);
+        m_Field = std::move(src.m_Field);
 
         assignMethod(m_Getter, std::move(src.m_Getter));
         assignMethod(m_Setter, std::move(src.m_Setter));
@@ -944,7 +961,7 @@ namespace entity {
         m_Id = src.m_Id;
         m_TypeId = src.m_TypeId;
 
-        m_MemberName = src.m_MemberName ? std::make_shared<Member>(*src.m_MemberName) : nullptr;
+        m_Field = src.m_Field ? std::make_shared<Member>(*src.m_Field) : nullptr;
 
         assignMethod(m_Getter, src.m_Getter ? std::make_shared<ClassMethod>(*src.m_Getter) : nullptr);
         assignMethod(m_Setter, src.m_Setter ? std::make_shared<ClassMethod>(*src.m_Setter) : nullptr);
@@ -971,8 +988,6 @@ namespace entity {
     void Property::init()
     {
         m_Id = utility::genId();
-        m_TypeId = STUB_ID;
-        m_MemberName = nullptr;
         m_Revision = defaultRevision;
         m_Member = defaultMember;
         m_Designable = defaultDesignable;
@@ -991,6 +1006,7 @@ namespace entity {
         }
         catch (...)
         {
+            qDebug() << "Creating shared property failed.";
             return SharedProperty();
         }
     }
@@ -1001,7 +1017,7 @@ namespace entity {
      */
     QString Property::typeId() const
     {
-        return m_TypeId;
+        return G_ASSERT(m_Field) ? m_Field->typeId() : STUB_ID;
     }
 
     /**
@@ -1010,56 +1026,8 @@ namespace entity {
      */
     void Property::setTypeId(const QString &typeId)
     {
-        m_TypeId = typeId;
-    }
-
-
-    /**
-     * @brief Member::isEmpty
-     * @return
-     */
-    bool Member::isEmpty() const
-    {
-        return name.isEmpty() && suffix.isEmpty() && prefix.isEmpty();
-    }
-
-    /**
-     * @brief Member::toJson
-     * @return
-     */
-    QJsonObject Member::toJson() const
-    {
-        QJsonObject result;
-        result["name"]   = name;
-        result["suffix"] = suffix;
-        result["prefix"] = prefix;
-
-        return result;
-    }
-
-    /**
-     * @brief Member::fromJson
-     * @param src
-     * @param errorList
-     */
-    void Member::fromJson(const QJsonObject &src, QStringList &errorList)
-    {
-        using namespace utility;
-
-        checkAndSet(src, "name"  , errorList, [&](){ name = src["name"].toString();   });
-        checkAndSet(src, "suffix", errorList, [&](){ suffix = src["suffix"].toString(); });
-        checkAndSet(src, "prefix", errorList, [&](){ prefix = src["prefix"].toString(); });
-    }
-
-    /**
-     * @brief operator ==
-     * @param rhs
-     * @param lhs
-     * @return
-     */
-    bool operator==(const Member &rhs, const Member &lhs)
-    {
-        return rhs.name == lhs.name && rhs.suffix == lhs.suffix && rhs.prefix == lhs.prefix;
+        if (G_ASSERT(m_Field))
+            m_Field->setTypeId(typeId);
     }
 
 } // namespace entity

@@ -36,7 +36,7 @@ namespace entity {
         virtual QString parentID() const; // TODO: implement! it's usefull
         virtual void setId(const QString &id);
 
-        QString name() const;
+        virtual QString name() const;
         void setName(const QString &name);
 
         void writeToFile(const QString &fileName) const;
@@ -45,7 +45,7 @@ namespace entity {
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
-        static constexpr const char *topID = "top_item_id";
+        static constexpr const char *topID = "top_item_id"; // TODO: investigate and eliminate!
 
         virtual size_t hashType() const;
         static size_t staticHashType();

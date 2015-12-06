@@ -30,21 +30,6 @@
 
 namespace entity {
 
-    /// The struct Member (lightweight version of field)
-    struct Member
-    {
-        QString name;
-        QString suffix;
-        QString prefix;
-
-        bool isEmpty() const;
-
-        QJsonObject toJson() const;
-        void fromJson(const QJsonObject &src, QStringList &errorList);
-
-        friend bool operator== (const Member &rhs, const Member &lhs);
-    };
-
     /// The class Property
     class Property : public BasicEntity, public std::enable_shared_from_this<Property>
     {
@@ -60,11 +45,12 @@ namespace entity {
         Property &operator =(Property &&rhs);
         friend bool operator ==(const Property &lhs, const Property &rhs);
 
-        SharedField field() const;
+        Property &setName(const QString &name);
+        QString name() const override;
 
-        Property &addMember(const QString &customName = "", const QString &prefix = "");
-        void deleteMember();
-        SharedMember member() const;
+        SharedField field() const;
+        SharedField addField(const QString &name, const QString &typeId);
+        void deleteField();
 
         Property &addGetter(const QString &customName = "");
         void deleteGetter();
@@ -120,6 +106,9 @@ namespace entity {
         bool isMemberDefault() const;
         Property &setMember(bool member);
 
+        QString typeId() const;
+        void setTypeId(const QString &typeId);
+
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
@@ -133,15 +122,12 @@ namespace entity {
         QString id() const override;
         void setId(const QString &id) override;
 
-        QString typeId() const;
-        void setTypeId(const QString &typeId);
-
     signals:
         void methodAdded(const entity::SharedProperty &, const entity::SharedMethod &);
         void methodRemoved(const entity::SharedProperty &, const entity::SharedMethod &);
 
-        void fieldAdded(const entity::SharedField &);
-        void fieldRemoved(const entity::SharedField &);
+        void fieldAdded(const entity::SharedProperty &, const entity::SharedField &);
+        void fieldRemoved(const entity::SharedProperty &, const entity::SharedField &);
 
     protected:
         void moveFrom(Property &&src);
@@ -165,9 +151,8 @@ namespace entity {
 
     private:
         QString m_Id; // TODO: move to the BasicEntity class
-        QString m_TypeId;
 
-        SharedMember m_MemberName;
+        SharedField m_Field;
 
         SharedMethod m_Getter;
         SharedMethod m_Setter;
