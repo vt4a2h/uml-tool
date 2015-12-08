@@ -477,6 +477,10 @@ namespace entity {
         SharedProperty property(std::make_shared<Property>(name, typeId));
         G_CONNECT(property.get(), &Property::methodAdded, this, &Class::onOptionalMethodAdded);
         G_CONNECT(property.get(), &Property::methodRemoved, this, &Class::onOptionalMethodRemoved);
+        G_CONNECT(property.get(), &Property::fieldAdded, this, &Class::onOptionalFieldAdded);
+        G_CONNECT(property.get(), &Property::fieldRemoved, this, &Class::onOptionalFieldRemoved);
+
+        m_OptionalFields[property] << property->field();
 
         m_Properties.append(property);
 
@@ -523,8 +527,12 @@ namespace entity {
         if (auto prop = property(name)) {
             G_DISCONNECT(prop.get(), &Property::methodAdded, this, &Class::onOptionalMethodAdded);
             G_DISCONNECT(prop.get(), &Property::methodRemoved, this, &Class::onOptionalMethodRemoved);
+            G_DISCONNECT(prop.get(), &Property::fieldAdded, this, &Class::onOptionalFieldAdded);
+            G_DISCONNECT(prop.get(), &Property::fieldRemoved, this, &Class::onOptionalFieldRemoved);
+
             m_Properties.removeOne(prop);
             m_OptionalMethods.remove(prop);
+            m_OptionalFields.remove(prop);
         }
     }
 
@@ -544,7 +552,8 @@ namespace entity {
      */
     bool Class::containsFields(Section section) const
     {
-        return cend(m_Fields) != range::find_if(m_Fields, [&](auto &&f){ return f->section() == section; });
+        return range::find_if(m_Fields, [&](auto &&f){ return f->section() == section; }) !=
+               cend(m_Fields);
     }
 
     /**
@@ -816,6 +825,7 @@ namespace entity {
         m_Properties = std::move(src.m_Properties);
 
         m_OptionalMethods = std::move(src.m_OptionalMethods);
+        m_OptionalFields = std::move(src.m_OptionalFields);
     }
 
     /**
@@ -834,31 +844,71 @@ namespace entity {
         utility::deepCopySharedPointerList(src.m_Fields,  m_Fields );
         utility::deepCopySharedPointerList(src.m_Properties, m_Properties);
         m_OptionalMethods = src.m_OptionalMethods;
+        m_OptionalFields = src.m_OptionalFields;
+    }
+
+    namespace
+    {
+        template <class Container, class Entity>
+        inline void addOptionalEntity(Container &c, const entity::SharedProperty &p, const Entity &e)
+        {
+            if (e) {
+                Q_ASSERT(c[G_ASSERT(p)].indexOf(e) == -1);
+                c[p] << e;
+            }
+        }
+
+        template <class Container, class Entity>
+        inline void removeOptionalEntity(Container &c, const entity::SharedProperty &p, const Entity &e)
+        {
+            if (G_ASSERT(e)) {
+                Q_ASSERT(c[G_ASSERT(p)].indexOf(e) != -1);
+                c[p].removeOne(e);
+
+                // Also remove possible NULL pointers
+                range::remove_erase_if(c[p], [](auto p){ return !p.lock(); });
+            }
+        }
     }
 
     /**
-     * @brief Class::onWeakMethodAdded
+     * @brief Class::onOptionalMethodAdded
+     * @param p
+     * @param m
      */
     void Class::onOptionalMethodAdded(const entity::SharedProperty &p, const SharedMethod &m)
     {
-        if (m) {
-            Q_ASSERT(m_OptionalMethods[p].indexOf(m) == -1);
-            m_OptionalMethods[p] << m;
-        }
+        addOptionalEntity(m_OptionalMethods, p, m);
     }
 
     /**
-     * @brief Class::onWeakMethodRemoved
+     * @brief Class::onOptionalMethodRemoved
+     * @param p
+     * @param m
      */
     void Class::onOptionalMethodRemoved(const SharedProperty &p, const SharedMethod &m)
     {
-        if (G_ASSERT(m)) {
-            Q_ASSERT(m_OptionalMethods[p].indexOf(m) != -1);
-            m_OptionalMethods[p].removeOne(m);
+        removeOptionalEntity(m_OptionalMethods, p, m);
+    }
 
-            // Also remove possible NULL pointers
-            range::remove_erase_if(m_OptionalMethods[p], [](auto p){ return !p.lock(); });
-        }
+    /**
+     * @brief Class::onOptionalFieldAdded
+     * @param p
+     * @param f
+     */
+    void Class::onOptionalFieldAdded(const SharedProperty &p, const SharedField &f)
+    {
+        addOptionalEntity(m_OptionalFields, p, f);
+    }
+
+    /**
+     * @brief Class::onOptionalFieldRemoved
+     * @param p
+     * @param f
+     */
+    void Class::onOptionalFieldRemoved(const SharedProperty &p, const SharedField &f)
+    {
+        removeOptionalEntity(m_OptionalFields, p, f);
     }
 
 } // namespace entity

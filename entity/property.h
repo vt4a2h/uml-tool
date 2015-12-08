@@ -23,8 +23,8 @@
 #pragma once
 
 #include "classmethod.h"
-
 #include "basicentity.h"
+#include "constants.h"
 
 #include <memory>
 
@@ -49,7 +49,7 @@ namespace entity {
         QString name() const override;
 
         SharedField field() const;
-        SharedField addField(const QString &name, const QString &typeId);
+        SharedField addField(const QString &name, const QString &typeId = STUB_ID);
         void deleteField();
 
         Property &addGetter(const QString &customName = "");
@@ -137,6 +137,7 @@ namespace entity {
         void init();
         SharedProperty safeShared();
 
+        // TODO: add the same for field!
         template <class Method>
         void assignMethod(SharedMethod &dst, Method src)
         {

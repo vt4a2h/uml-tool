@@ -98,4 +98,9 @@ namespace entity {
         FieldKeywords m_Keywords;
     };
 
+    inline bool operator==(const WeakField &lhs, const WeakField &rhs)
+    {
+        return lhs.lock() == rhs.lock();
+    }
+
 } // namespace entity

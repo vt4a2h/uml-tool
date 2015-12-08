@@ -31,11 +31,6 @@ namespace entity {
     class BasicEntity;
     using SharedBasicEntity = std::shared_ptr<BasicEntity>;
 
-    class Field;
-    using SharedField = std::shared_ptr<Field>;
-    using Fields      = QHash<QString, SharedField>;
-    using FieldsList  = QList<SharedField>;
-
     enum FieldKeyword : int;
     using FieldKeywords     = QSet<FieldKeyword>;
     using FieldKeywordsList = QList<FieldKeyword>;
@@ -52,6 +47,14 @@ namespace entity {
     using MethodsList  = QList<SharedMethod>;
     using WeakMethodsList = QList<WeakMethod>;
     using WeakMethodsMap = QMap<SharedProperty, WeakMethodsList>;
+
+    class Field;
+    using SharedField = std::shared_ptr<Field>;
+    using Fields      = QHash<QString, SharedField>;
+    using FieldsList  = QList<SharedField>;
+    using WeakField   = std::weak_ptr<Field>;
+    using WeakFieldsList = QList<WeakField>;
+    using WeakFieldsMap = QMap<SharedProperty, WeakFieldsList>;
 
     class TemplateClassMethod;
     using SharedTemplateClassMethod = std::shared_ptr<TemplateClassMethod>;

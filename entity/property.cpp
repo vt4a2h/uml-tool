@@ -25,6 +25,7 @@
 #include <typeinfo>
 
 #include <QJsonObject>
+#include <QDebug>
 
 #include <utility/helpfunctions.h>
 #include <helpers/entityhelpres.h>
@@ -201,7 +202,13 @@ namespace entity {
      */
     SharedField Property::addField(const QString &name, const QString &typeId)
     {
-        m_Field = std::make_shared<entity::Field>(name, typeId);
+        auto oldField = m_Field;
+
+        m_Field = std::make_shared<entity::Field>(name,
+                                                  typeId == STUB_ID ? oldField->typeId() : typeId);
+        emit fieldAdded(safeShared(), m_Field);
+        emit fieldRemoved(safeShared(), oldField);
+
         return m_Field;
     }
 
@@ -210,7 +217,8 @@ namespace entity {
      */
     void Property::deleteField()
     {
-       m_Field.reset();
+        emit fieldRemoved(safeShared(), m_Field);
+        m_Field.reset();
     }
 
     /**
@@ -225,7 +233,6 @@ namespace entity {
 
         return lhs.m_Name == rhs.m_Name &&
                lhs.m_Id == rhs.m_Id &&
-               lhs.m_TypeId == rhs.m_TypeId &&
 
                sharedPtrEq(lhs.m_Field, rhs.m_Field) &&
 
@@ -247,22 +254,6 @@ namespace entity {
                lhs.m_Constant   == rhs.m_Constant &&
                lhs.m_Final      == rhs.m_Final;
     }
-
-//    Property &Property::addMember(const QString &customName, const QString &prefix)
-//    {
-//        if (m_Field)
-//            deleteMember();
-
-//        m_Field = std::make_shared<Member>();
-//        m_Field->name = customName.isEmpty() ? m_Name : customName;
-
-//        if (!customName.startsWith("m_"))
-//            m_Field->prefix = prefix.isEmpty() ? "m_" : prefix;
-
-//        m_Member = true;
-
-//        return *this;
-//    }
 
     /**
      * @brief Property::addGetter
@@ -819,7 +810,6 @@ namespace entity {
 
         checkAndSet(src, nameMark, errorList, [&](){ m_Name = src[nameMark].toString(); });
         checkAndSet(src, idMark, errorList, [&](){ m_Id = src[idMark].toString(); });
-        checkAndSet(src, typeIdMark, errorList, [&](){ m_TypeId = src[typeIdMark].toString(); });
 
         checkAndSet(src, memberMark, errorList,
                     [&](){ readOptional(src[memberMark], this, &Property::addField,
@@ -933,7 +923,6 @@ namespace entity {
     void Property::moveFrom(Property &&src)
     {
         m_Id = std::move(src.m_Id);
-        m_TypeId = std::move(src.m_TypeId);
 
         m_Field = std::move(src.m_Field);
 
@@ -959,9 +948,8 @@ namespace entity {
     void Property::copyFrom(const Property &src)
     {
         m_Id = src.m_Id;
-        m_TypeId = src.m_TypeId;
 
-        m_Field = src.m_Field ? std::make_shared<Member>(*src.m_Field) : nullptr;
+        m_Field = src.m_Field ? std::make_shared<Field>(*src.m_Field) : nullptr;
 
         assignMethod(m_Getter, src.m_Getter ? std::make_shared<ClassMethod>(*src.m_Getter) : nullptr);
         assignMethod(m_Setter, src.m_Setter ? std::make_shared<ClassMethod>(*src.m_Setter) : nullptr);

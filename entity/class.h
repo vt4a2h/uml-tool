@@ -138,6 +138,9 @@ namespace entity {
         void onOptionalMethodAdded(const entity::SharedProperty &, const entity::SharedMethod &);
         void onOptionalMethodRemoved(const entity::SharedProperty &, const entity::SharedMethod &);
 
+        void onOptionalFieldAdded(const entity::SharedProperty &, const entity::SharedField &);
+        void onOptionalFieldRemoved(const entity::SharedProperty &, const entity::SharedField &);
+
     private:
         Kind m_Kind;
         bool m_FinalStatus;
@@ -145,6 +148,7 @@ namespace entity {
         ParentsList m_Parents;
         MethodsList m_Methods;
         WeakMethodsMap m_OptionalMethods;
+        WeakFieldsMap m_OptionalFields;
         FieldsList  m_Fields;
         PropertiesList m_Properties;
     };

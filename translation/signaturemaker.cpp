@@ -407,8 +407,8 @@ namespace translation {
         result.append(QChar::Space).append(name);
 
         // Add member
-        if (const auto &member = property->member())
-            result.append(QChar::Space + memberMark + QChar::Space + member->prefix + member->name + member->suffix);
+        if (const auto &field = property->field())
+            result.append(QChar::Space + memberMark + QChar::Space + field->fullName());
 
         // Add common members
         addCommonMember(property, &entity::Property::getter,   readMark,   result);
