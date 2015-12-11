@@ -200,16 +200,19 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedField Property::addField(const QString &name, const QString &typeId)
+    Property &Property::addField(const QString &name, const QString &typeId)
     {
         auto oldField = m_Field;
+        auto newTypeId = typeId;
+        if (oldField && newTypeId == STUB_ID)
+            newTypeId = oldField->typeId();
 
-        m_Field = std::make_shared<entity::Field>(name,
-                                                  typeId == STUB_ID ? oldField->typeId() : typeId);
+        m_Field = std::make_shared<entity::Field>(name, newTypeId);
+
         emit fieldAdded(safeShared(), m_Field);
         emit fieldRemoved(safeShared(), oldField);
 
-        return m_Field;
+        return *this;
     }
 
     /**

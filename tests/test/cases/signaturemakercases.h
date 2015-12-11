@@ -150,7 +150,7 @@ TEST_F(SignatureMaker, MakingPropertySignature)
     QString expect = "int width";
     ASSERT_EQ(actual, expect);
 
-    property->addMember("m_width");
+    property->addField("m_width");
     actual = m_Maker->signature(property);
     expect = "int width MEMBER m_width";
     ASSERT_EQ(actual, expect);

@@ -179,10 +179,10 @@ TEST_F(ComponentsMaker, MakingProperty)
     property = to_p(result.resultEntity);
     ASSERT_TRUE(property->isMember());
 
-    const auto &member = property->member();
-    ASSERT_TRUE(!!member);
-    ASSERT_EQ(member->name, "width");
-    ASSERT_EQ(member->prefix, "m_");
+    const auto &field = property->field();
+    ASSERT_TRUE(!!field);
+    ASSERT_EQ(field->name(), "width");
+    ASSERT_EQ(field->prefix(), "m_");
 
     // Get/set/reset/notify
     result = parseAndMake("int width READ getWidth WRITE setWidth RESET clearWidth NOTIFY widthChanged",

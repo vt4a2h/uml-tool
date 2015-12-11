@@ -372,7 +372,7 @@ namespace components {
             const bool hasPrefix = member.startsWith("m_");
             const auto name(hasPrefix ? QString(member).remove(0, 2) : member);
             const auto prefix(hasPrefix ? "m_" : "");
-            newProperty->addField(name)->setPrefix(prefix);
+            newProperty->addField(name).field()->setPrefix(prefix);
         }
 
         // Common methods

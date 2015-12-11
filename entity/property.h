@@ -49,7 +49,7 @@ namespace entity {
         QString name() const override;
 
         SharedField field() const;
-        SharedField addField(const QString &name, const QString &typeId = STUB_ID);
+        Property& addField(const QString &name = "", const QString &typeId = STUB_ID);
         void deleteField();
 
         Property &addGetter(const QString &customName = "");

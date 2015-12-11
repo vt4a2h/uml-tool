@@ -117,7 +117,7 @@ TEST_F(ClassComponents, Property)
     test_basic_prop(Setter,   setter)
     test_basic_prop(Resetter, resetter)
     test_basic_prop(Notifier, notifier)
-    test_basic_prop(Member,   member)
+    test_basic_prop(Field,    field)
 
     ASSERT_TRUE(property->isRevisionDefault());
     ASSERT_EQ(10, property->setRevision(10).revision());
@@ -134,23 +134,9 @@ TEST_F(ClassComponents, Property)
     // Check moving
     check_moving(entity::Property, property)
 
-    // Test additional class
-    auto member = std::make_shared<entity::Member>();
-    ASSERT_TRUE(member->isEmpty());
-
-    member->name = "name";
-    member->prefix = "prefix";
-    member->suffix = "suffix";
-    ASSERT_FALSE(member->isEmpty());
-
-    auto secondMember = std::make_shared<entity::Member>();
-    QStringList errors;
-    secondMember->fromJson(member->toJson(), errors);
-    ASSERT_TRUE(errors.isEmpty());
-    ASSERT_EQ(*member, *secondMember);
-
     // Check slot signals
-    property->addMember("Foo").addSetter().addNotifier().addResetter();
+    property->addField("Foo");
+    property->addSetter().addNotifier().addResetter();
     ASSERT_TRUE(!!property->setter());
     ASSERT_TRUE(property->setter()->isSlot());
 
