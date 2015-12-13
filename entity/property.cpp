@@ -114,7 +114,6 @@ namespace entity {
         : BasicEntity(src)
         , enable_shared_from_this<Property>(src) // do nothing
     {
-        init();
         copyFrom(src);
     }
 
@@ -979,14 +978,16 @@ namespace entity {
     void Property::init()
     {
         m_Id = utility::genId();
-        m_Revision = defaultRevision;
         m_Member = defaultMember;
+        m_Revision = defaultRevision;
         m_Designable = defaultDesignable;
         m_Scriptable = defaultScriptable;
         m_Stored = defaultStored;
         m_User = defaultUser;
         m_Constant = defaultConstant;
         m_Final = defaultFinal;
+
+        G_ASSERT(m_Field)->setPrefix("m_");
     }
 
     SharedProperty Property::safeShared()

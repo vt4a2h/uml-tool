@@ -146,13 +146,9 @@ TEST_F(SignatureMaker, MakingPropertySignature)
 
     // Simple property
     auto property = std::make_shared<entity::Property>("width", typeInt->id());
+    property->field()->setPrefix("m_");
     QString actual = m_Maker->signature(property);
-    QString expect = "int width";
-    ASSERT_EQ(actual, expect);
-
-    property->addField("m_width");
-    actual = m_Maker->signature(property);
-    expect = "int width MEMBER m_width";
+    QString expect = "int width MEMBER m_width";
     ASSERT_EQ(actual, expect);
 
     property->addGetter("getWidth").addSetter("setWidth");

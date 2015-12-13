@@ -383,7 +383,7 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
     QString expect = QString("class Baz{\n"
                              "Q_OBJECT"
                              "\n\n"
-                             "int a READ getA WRITE setA NOTIFY aChanged"
+                             "int a MEMBER m_a READ getA WRITE setA NOTIFY aChanged"
                              "\n\n"
                              "%1public:\n"
                              "%1%1int getA() const;\n"
@@ -406,7 +406,7 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
 
     expect = QString("class Baz{\n"
                      "Q_OBJECT\n\n"
-                     "int a READ getA WRITE setA RESET resetA NOTIFY aChanged REVISION 1 "
+                     "int a MEMBER m_a READ getA WRITE setA RESET resetA NOTIFY aChanged REVISION 1 "
                             "DESIGNABLE isDisignable SCRIPTABLE isScriptable STORED false "
                             "USER true CONSTANT FINAL\n\n"
                      "%1public:\n"
