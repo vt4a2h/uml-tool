@@ -320,6 +320,25 @@ namespace entity {
         return result;
     }
 
+    namespace
+    {
+        template <class ContainerShared, class Container>
+        ContainerShared optionalEntites(const Container &c, Section s)
+        {
+            using namespace adaptors;
+
+            ContainerShared result;
+
+            for (auto &&entities : c)
+                range::copy(entities
+                            | filtered([&](auto &&e){ return e.lock() && (e.lock()->section() == s || s == All); })
+                            | transformed([](auto &&e){ return e.lock(); }),
+                            std::back_inserter(result));
+
+            return std::move(result);
+        }
+    }
+
     /**
      * @brief Class::optionalMethods
      * @param s
@@ -327,17 +346,17 @@ namespace entity {
      */
     MethodsList Class::optionalMethods(Section s) const
     {
-        using namespace adaptors;
+        return std::move(optionalEntites<MethodsList>(m_OptionalMethods.values(), s));
+    }
 
-        MethodsList result;
-
-        for (auto &&methods : m_OptionalMethods.values())
-            range::copy(methods
-                        | filtered([&](auto &&m){ return m.lock() && (m.lock()->section() == s || s == All); })
-                        | transformed([](auto &&m){ return m.lock(); }),
-                        std::back_inserter(result));
-
-        return result;
+    /**
+     * @brief Class::optionalFields
+     * @param s
+     * @return
+     */
+    FieldsList Class::optionalFields(Section s) const
+    {
+        return std::move(optionalEntites<FieldsList>(m_OptionalFields.values(), s));
     }
 
     /**
@@ -349,6 +368,19 @@ namespace entity {
     {
         MethodsList result;
         result << methods(s) << optionalMethods(s);
+
+        return result;
+    }
+
+    /**
+     * @brief Class::allFields
+     * @param s
+     * @return
+     */
+    FieldsList Class::allFields(Section s) const
+    {
+        FieldsList result;
+        result << fields(s) << optionalFields(s);
 
         return result;
     }

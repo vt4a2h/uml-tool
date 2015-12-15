@@ -35,6 +35,7 @@
 
 #include "constants.h"
 #include "qthelpers.h"
+#include "enums.h"
 
 namespace {
     const QString marker = "property";
@@ -988,6 +989,7 @@ namespace entity {
         m_Final = defaultFinal;
 
         G_ASSERT(m_Field)->setPrefix("m_");
+        m_Field->setSection(Private);
     }
 
     SharedProperty Property::safeShared()

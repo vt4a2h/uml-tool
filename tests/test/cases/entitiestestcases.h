@@ -230,6 +230,12 @@ TEST_F(Enteties, OptionalClassMethods)
     ASSERT_TRUE(boost::range::equal(tmpMethods, methods));
 }
 
+TEST_F(Enteties, OptionaClassFields)
+{
+    ASSERT_TRUE(_class->fields().isEmpty());
+    ASSERT_TRUE(_class->optionalFields(entity::Private).isEmpty());
+}
+
 TEST_F(Enteties, Union)
 {
     auto field = _union->addField("some field", "some_id");

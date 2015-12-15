@@ -107,6 +107,9 @@ TEST_F(ClassComponents, Property)
     property->setTypeId("bar");
     ASSERT_EQ(property->typeId(), "bar");
 
+    ASSERT_TRUE(!!property->field());
+    ASSERT_EQ(property->field()->section(), entity::Private);
+
     check_additional(Stored)
     check_additional(User)
     check_additional(Constant)

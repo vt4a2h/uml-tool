@@ -76,8 +76,10 @@ namespace entity {
         MethodsList methods(Section s) const;
 
         MethodsList optionalMethods(Section s) const;
+        FieldsList optionalFields(Section s) const;
 
         MethodsList allMethods(Section s) const;
+        FieldsList allFields(Section s) const;
 
         SharedField addField(const QString &name, const QString &typeId,
                              const QString &prefix = "", Section section = Public);
