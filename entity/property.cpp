@@ -208,6 +208,7 @@ namespace entity {
             newTypeId = oldField->typeId();
 
         m_Field = std::make_shared<entity::Field>(name, newTypeId);
+        m_Field->setSection(Private);
 
         emit fieldAdded(safeShared(), m_Field);
         emit fieldRemoved(safeShared(), oldField);
