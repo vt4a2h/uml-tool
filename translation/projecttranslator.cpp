@@ -153,6 +153,7 @@ namespace translation {
                                                  const db::SharedDatabase &localeDatabase,
                                                  entity::Section section, QString &out) const
     {
+        // Extract all kinds off methods (include optional methods)
         entity::MethodsList methods;
         entity::MethodsList _slots;
         entity::MethodsList _signals;
@@ -165,18 +166,27 @@ namespace translation {
                 _signals << m;
         }
 
+        // Extract all fields
         entity::FieldsList fields = _class->fields(section);
+        fields << _class->optionalFields(section);
+
+        // Check if section is not empty
         if (methods.isEmpty() && _slots.isEmpty() && _signals.isEmpty() && fields.isEmpty())
             return;
 
+        // Add empty string above section
         out.append("\n");
+
+        // Check if we need to add section name
         bool needSection = _class->kind() == entity::ClassType ||
                            (_class->kind() != entity::StructType && section != entity::Public);
 
+        // Generate methods
         generateSectionMethods(methods, localeDatabase, needSection, section, ":\n"/*marker*/, out);
         generateSectionMethods(_slots, localeDatabase, needSection, section, " SLOTS:\n", out);
         generateSectionMethods(_signals, localeDatabase, needSection, section, "signals:\n", out);
 
+        // Generate fields
         if (!fields.isEmpty()) {
             if (needSection)
                 out.append(INDENT + utility::sectionToString(section) + ":\n");
