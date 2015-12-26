@@ -247,8 +247,8 @@ TEST_F(Enteties, OptionaClassFields)
 
     // Check a few fields
     auto p1 = _class->addProperty("p1", VOID_ID);
-    ASSERT_EQ(entity::FieldsList({p1->field(), p->field()}),
-              _class->optionalFields(entity::Private));
+    ASSERT_EQ(entity::FieldsList({p1->field(), p->field()}).toSet(),
+              _class->optionalFields(entity::Private).toSet());
 }
 
 TEST_F(Enteties, Union)

@@ -24,10 +24,12 @@
 #pragma once
 
 #include <QString>
-#include <QSet>
 
 #include "basicentity.h"
 #include "entity_types.hpp"
+
+uint qHash(const entity::SharedField& f);
+#include <QSet>
 
 class QJsonObject;
 class QStringList;

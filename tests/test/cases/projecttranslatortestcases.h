@@ -380,7 +380,6 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
     auto prop = cl->addProperty("a", _int->id());
     prop->addGetter("getA").addSetter("setA").addNotifier("aChanged");
 
-    // TODO: investigate why field placed above signals
     QString expect = QString("class Baz{\n"
                              "Q_OBJECT"
                              "\n\n"
@@ -390,10 +389,10 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
                              "%1%1int getA() const;\n"
                              "%1public SLOTS:\n"
                              "%1%1void setA(int a);\n\n"
-                             "%1private:\n"
-                             "%1%1int m_a;\n\n"
                              "%1signals:\n"
-                             "%1%1void aChanged();\n"
+                             "%1%1void aChanged();\n\n"
+                             "%1private:\n"
+                             "%1%1int m_a;\n"
                              "};").arg(INDENT);
     ASSERT_EQ(expect.toStdString(), _translator->translate(cl).toHeader.toStdString());
 
@@ -419,15 +418,13 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
                      "%1public SLOTS:\n"
                      "%1%1void setA(int a);\n"
                      "%1%1void resetA();\n\n"
-                     "%1private:\n"
-                     "%1%1int m_a;\n\n"
                      "%1signals:\n"
-                     "%1%1void aChanged();\n"
+                     "%1%1void aChanged();\n\n"
+                     "%1private:\n"
+                     "%1%1int m_a;\n"
                      "};").arg(INDENT);
 
     ASSERT_EQ(expect.toStdString(), _translator->translate(cl).toHeader.toStdString());
-
-    // TODO: add fields generation
 }
 
 TEST_F(ProjectTranslatorTest, TemplateClass)

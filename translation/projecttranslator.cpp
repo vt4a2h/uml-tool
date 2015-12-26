@@ -579,9 +579,9 @@ namespace translation {
         // Add sections
         QString section;
         generateClassSection(_class, templateDb, entity::Public, section);
+        generateClassSection(_class, templateDb, entity::None, section); // For signals
         generateClassSection(_class, templateDb, entity::Protected, section);
         generateClassSection(_class, templateDb, entity::Private, section);
-        generateClassSection(_class, templateDb, entity::None, section); // For signals
         if (!prop.isEmpty() && !section.isEmpty())
             section.prepend("\n");
         toHeader.replace("%section%", section);

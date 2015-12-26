@@ -32,6 +32,11 @@
 
 #include <utility/helpfunctions.h>
 
+uint qHash(const entity::SharedField &f)
+{
+    return ::qHash(QJsonDocument(f->toJson()).toJson()); // Hackish way!
+}
+
 namespace entity {
 
     /**
