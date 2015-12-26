@@ -3,7 +3,7 @@ dist: trusty
 compiler: gcc
 
 before_install:
-#   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
 #   - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu trusty universe"
 #   - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu trusty main"
 #   - sudo apt-get install debian-keyring debian-archive-keyring
