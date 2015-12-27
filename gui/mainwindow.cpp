@@ -61,6 +61,7 @@
 #include "addscope.h"
 #include "scenefilter.h"
 #include "constants.h"
+#include "elements.h"
 
 using namespace boost;
 
@@ -117,6 +118,7 @@ namespace gui {
         , m_MainScene(new QGraphicsScene(this))
         , m_ConsoleOutput(new QTextEdit(this))
         , m_UndoView(new QUndoView(this))
+        , m_Elements(new Elements(this))
         , m_AboutWidget(new About(this))
         , m_NewProject(new NewProject(this))
         , m_AddScope(new AddScope(this))
@@ -140,7 +142,6 @@ namespace gui {
      */
     MainWindow::~MainWindow()
     {
-
     }
 
     /**
@@ -336,6 +337,9 @@ namespace gui {
         auto a = m_ProjectTreeMenu->addAction("Make active");
         connect(a, &QAction::triggered, this, &MainWindow::setCurrentProjectViaMenu);
 
+        // Add drag-and-drop entities
+        addDock(tr("Elements"), ui->actionElementsDockWidget, Qt::LeftDockWidgetArea, m_Elements);
+
         // Commands
         addDock(tr("Commands"), ui->actionCommandsDockWidget, Qt::LeftDockWidgetArea, m_UndoView);
 
@@ -444,7 +448,8 @@ namespace gui {
      * @param widget
      * @param visible
      */
-    void MainWindow::addDock(const QString &name, QAction * action, Qt::DockWidgetArea area, QWidget *widget, bool visible)
+    void MainWindow::addDock(const QString &name, QAction * action, Qt::DockWidgetArea area,
+                             QWidget *widget, bool visible)
     {
         QDockWidget * wgt = new QDockWidget(name, this);
         wgt->setWidget(widget);

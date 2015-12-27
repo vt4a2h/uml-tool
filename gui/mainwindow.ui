@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>20</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -82,6 +82,7 @@
     <addaction name="actionProjectsDockWidget"/>
     <addaction name="actionCommandsDockWidget"/>
     <addaction name="actionMessagesDockWidget"/>
+    <addaction name="actionElementsDockWidget"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuEdit"/>
@@ -333,6 +334,20 @@
    </property>
    <property name="text">
     <string>actionAddEnum</string>
+   </property>
+  </action>
+  <action name="actionElementsDockWidget">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Elements</string>
+   </property>
+   <property name="toolTip">
+    <string>Show/hide scheme elements</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+E</string>
    </property>
   </action>
  </widget>

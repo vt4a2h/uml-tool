@@ -50,6 +50,7 @@ namespace gui {
     class NewProject;
     class AddScope;
     class ChooseGlobalDatabaseDialog;
+    class Elements;
 
     namespace Ui {
         class MainWindow;
@@ -119,14 +120,15 @@ namespace gui {
         QMenu *m_ProjectTreeMenu;
 
         QTreeView      *m_ProjectTreeView;
-        QGraphicsView  *m_MainView       ;
-        QGraphicsScene *m_MainScene      ;
-        QTextEdit      *m_ConsoleOutput  ;
-        QUndoView      *m_UndoView       ;
+        QGraphicsView  *m_MainView;
+        QGraphicsScene *m_MainScene;
+        QTextEdit      *m_ConsoleOutput;
+        QUndoView      *m_UndoView;
+        Elements       *m_Elements;
 
         About      *m_AboutWidget;
-        NewProject *m_NewProject ;
-        AddScope   *m_AddScope   ;
+        NewProject *m_NewProject;
+        AddScope   *m_AddScope;
 
         using CommandFunction = std::function<std::unique_ptr<QUndoCommand>(
                                     const models::SharedApplicationModel &, const QString &, QGraphicsScene &,

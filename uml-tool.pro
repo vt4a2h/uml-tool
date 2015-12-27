@@ -73,7 +73,8 @@ SOURCES += \
     commands/removecomponentscommands.cpp \
     commands/addcomponentscommands.cpp \
     helpers/entityhelpres.cpp \
-    entity/components/token.cpp
+    entity/components/token.cpp \
+    gui/elements.cpp
 
 HEADERS += \
     enums.h \
@@ -153,7 +154,8 @@ HEADERS += \
     entity/components/componentscommon.h \
     entity/components/components_types.h \
     entity/components/token.h \
-    qthelpers.h
+    qthelpers.h \
+    gui/elements.h
 
 FORMS += \
     gui/mainwindow.ui \
