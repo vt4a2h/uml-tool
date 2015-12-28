@@ -37,6 +37,7 @@
 #include <QUndoStack>
 #include <QDockWidget>
 #include <QPointer>
+#include <QMimeData>
 #include <QDebug>
 
 #include <boost/range/algorithm/find_if.hpp>
@@ -62,6 +63,7 @@
 #include "scenefilter.h"
 #include "constants.h"
 #include "elements.h"
+#include "view.h"
 
 using namespace boost;
 
@@ -114,7 +116,7 @@ namespace gui {
         , ui(new Ui::MainWindow)
         , m_ProjectTreeMenu(new QMenu(this))
         , m_ProjectTreeView(new QTreeView(this))
-        , m_MainView(new QGraphicsView(this))
+        , m_MainView(new View(this))
         , m_MainScene(new QGraphicsScene(this))
         , m_ConsoleOutput(new QTextEdit(this))
         , m_UndoView(new QUndoView(this))
@@ -129,7 +131,6 @@ namespace gui {
         setUpWidgets();
         makeConnections();
 
-        m_MainView->installEventFilter(this);
         m_MainScene->installEventFilter(new SceneFilter(m_ApplicationModel, m_MainScene, this, this));
 
         configureAddActions();
@@ -341,11 +342,13 @@ namespace gui {
         addDock(tr("Elements"), ui->actionElementsDockWidget, Qt::LeftDockWidgetArea, m_Elements);
 
         // Commands
-        addDock(tr("Commands"), ui->actionCommandsDockWidget, Qt::LeftDockWidgetArea, m_UndoView);
+        addDock(tr("Commands"), ui->actionCommandsDockWidget, Qt::LeftDockWidgetArea, m_UndoView,
+                false /*visible*/);
 
         // Messages
         m_ConsoleOutput->setReadOnly(true);
-        addDock(tr("Messages"), ui->actionMessagesDockWidget, Qt::BottomDockWidgetArea, m_ConsoleOutput, false);
+        addDock(tr("Messages"), ui->actionMessagesDockWidget, Qt::BottomDockWidgetArea,
+                m_ConsoleOutput, false /*visible*/);
     }
 
     /**
@@ -467,51 +470,104 @@ namespace gui {
      * @param ev
      * @return
      */
-    bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
-    {
-        if (obj == m_MainView) {
-            if (ev->type() == QEvent::MouseButtonPress)  {
-                auto it = range::find_if(m_AddActions, [](auto &&am) { return am.first->isChecked(); });
-                if (it != m_AddActions.end()) {
-                    if (m_ApplicationModel && m_ApplicationModel->currentProject()) {
-                        auto event = static_cast<QMouseEvent* >(ev);
-                        auto pos = m_MainView->mapToScene(event->pos());
+//    bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
+//    {
+//        if (obj == m_MainView) {
+//            qDebug() << ev->type();
+//            if (ev->type() == QEvent::Drop) {
+//                qDebug() << "drop";
+//                QDropEvent *de = static_cast<QDropEvent*>(ev);
+//                if (de->mimeData()->hasFormat(Elements::mimeDataType())) {
+//                    QByteArray itemData = de->mimeData()->data(Elements::mimeDataType());
+//                    QDataStream in(&itemData, QIODevice::ReadOnly);
 
-                        const db::ProjectDatabase &projectDb =
-                            *m_ApplicationModel->currentProject()->database().get();
+//                    QString msg;
+//                    in >> msg;
 
-                        if (projectDb.anyScopes()) {
-                            entity::SharedScope scope = projectDb.defaultScope();
-                            if (!scope)
-                                scope = projectDb.scopes().first();
+//                    if (de->source() == this) {
+//                        de->setDropAction(Qt::MoveAction);
+//                        de->accept();
 
-                            if (auto stack = m_ApplicationModel->currentProject()->commandsStack()) {
-                                //
-                                auto create = it->second(m_ApplicationModel, scope->id(), *m_MainScene, pos, nullptr);
-                                //
-                                stack->push(create.release());
-                            }
-                        } else {
-                            QMessageBox::information(
-                                this,
-                                tr("Information"),
-                                tr("You have no abilities to add a new entity in "
-                                   "project without any namespaces."),
-                                QMessageBox::Ok );
-                        }
-                    }
+//                        QMessageBox::information(
+//                                    this,
+//                                    tr("Information"),
+//                                    msg,
+//                                    QMessageBox::Ok );
+//                    } else {
+//                        de->acceptProposedAction();
+//                    }
 
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else {
-            return QMainWindow::eventFilter(obj, ev);
-        }
-    }
+//                    return true;
+//                }
+//            } else if (ev->type() == QEvent::DragEnter) {
+//                qDebug() << "enter";
+//                QDragEnterEvent *de = static_cast<QDragEnterEvent*>(ev);
+//                if (de->mimeData()->hasFormat(Elements::mimeDataType())) {
+//                    if (de->source() == this) {
+//                        de->setDropAction(Qt::MoveAction);
+//                        de->accept();
+//                    } else {
+//                        de->acceptProposedAction();
+//                    }
+//                } else {
+//                    de->ignore();
+//                }
+//            } else if (ev->type() == QEvent::DragMove) {
+//                qDebug() << "move";
+//                QDragMoveEvent *de = static_cast<QDragMoveEvent*>(ev);
+//                if (de->mimeData()->hasFormat(Elements::mimeDataType())) {
+//                    if (de->source() == this) {
+//                        de->setDropAction(Qt::MoveAction);
+//                        de->accept();
+//                    } else {
+//                        de->acceptProposedAction();
+//                    }
+//                } else {
+//                    de->ignore();
+//                }
+//            }
+//            if (ev->type() == QEvent::MouseButtonPress)  {
+//                auto it = range::find_if(m_AddActions, [](auto &&am) { return am.first->isChecked(); });
+//                if (it != m_AddActions.end()) {
+//                    if (m_ApplicationModel && m_ApplicationModel->currentProject()) {
+//                        auto event = static_cast<QMouseEvent* >(ev);
+//                        auto pos = m_MainView->mapToScene(event->pos());
+
+//                        const db::ProjectDatabase &projectDb =
+//                            *m_ApplicationModel->currentProject()->database().get();
+
+//                        if (projectDb.anyScopes()) {
+//                            entity::SharedScope scope = projectDb.defaultScope();
+//                            if (!scope)
+//                                scope = projectDb.scopes().first();
+
+//                            if (auto stack = m_ApplicationModel->currentProject()->commandsStack()) {
+//                                //
+//                                auto create = it->second(m_ApplicationModel, scope->id(), *m_MainScene, pos, nullptr);
+//                                //
+//                                stack->push(create.release());
+//                            }
+//                        } else {
+//                            QMessageBox::information(
+//                                this,
+//                                tr("Information"),
+//                                tr("You have no abilities to add a new entity in "
+//                                   "project without any namespaces."),
+//                                QMessageBox::Ok );
+//                        }
+//                    }
+
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            } else {
+//                return false;
+//            }
+//        }
+
+//        return QMainWindow::eventFilter(obj, ev);
+//    }
 
     /**
      * @brief MainWindow::makeTitle

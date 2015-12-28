@@ -22,34 +22,19 @@
 *****************************************************************************/
 #pragma once
 
-#include <QtCore/QObject>
-#include <QtWidgets/QWidget>
+#include <QGraphicsView>
 
 namespace gui {
 
-    namespace Ui {
-        class Elements;
-    }
-
-    class Elements : public QWidget
+    class View : public QGraphicsView
     {
-        Q_OBJECT
-
     public:
-        Q_DISABLE_COPY(Elements)
+        View(QWidget *parent = 0);
 
-        explicit Elements(QWidget *parent = 0);
-        ~Elements();
-
-        void mousePressEvent(QMouseEvent *ev);
         void dropEvent(QDropEvent *de);
         void dragEnterEvent(QDragEnterEvent *de);
         void dragMoveEvent(QDragMoveEvent *de);
-
-        static QString mimeDataType();
-
-    private:
-        QScopedPointer<Ui::Elements> ui;
+        void dragLeaveEvent(QDragLeaveEvent *de);
     };
 
 } // namespace gui

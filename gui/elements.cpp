@@ -21,12 +21,17 @@
 **
 *****************************************************************************/
 #include "elements.h"
+#include "ui_elements.h"
 
 #include <QGridLayout>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QPainter>
 #include <QPixmap>
 #include <QRectF>
+#include <QMimeData>
+#include <QDrag>
+#include <QMouseEvent>
 
 namespace gui {
 
@@ -35,27 +40,70 @@ namespace gui {
 
     Elements::Elements(QWidget *parent)
         : QWidget(parent)
+        , ui(new Ui::Elements)
     {
-        // Add layout
-        QGridLayout * layout = new QGridLayout(this);
-        layout->setSpacing(margin);
-        setLayout(layout);
+        ui->setupUi(this);
 
         // Add items
         QLabel * lbl = new QLabel(this);
         QPixmap pic(elementSize);
         pic.fill(Qt::transparent);
         QPainter p;
-        p.setRenderHint(QPainter::Antialiasing);
         p.begin(&pic);
+        p.setRenderHint(QPainter::Antialiasing);
         p.fillRect(pic.rect(), QBrush(Qt::green));
-        p.drawRect(QRectF(0, 0, 99, 49));
+        p.drawRect(QRectF({0, 0}, elementSize));
         p.end();
         lbl->setPixmap(pic);
         lbl->resize(elementSize);
 
-        layout->addWidget(lbl, 0, 0);
-        layout->addWidget(new QLabel("Tst 2", this), 0, 1);
+        ui->gridLayout->addWidget(lbl, 0, 0);
+        ui->gridLayout->addWidget(new QLabel("Tst 2", this), 0, 1);
+    }
+
+    Elements::~Elements()
+    {
+    }
+
+    void Elements::mousePressEvent(QMouseEvent *ev)
+    {
+        QLabel *child = static_cast<QLabel*>(childAt(ev->pos()));
+        if (!child)
+            return;
+
+        QByteArray itemData;
+        QDataStream out(&itemData, QIODevice::WriteOnly);
+        out << QString("test");
+
+        QMimeData *mimeData = new QMimeData;
+        mimeData->setData(mimeDataType(), itemData);
+
+        QDrag *drag = new QDrag(this);
+        drag->setMimeData(mimeData);
+        drag->setPixmap(*child->pixmap());
+        drag->setHotSpot(ev->pos() - child->pos());
+
+        drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction);
+    }
+
+    void Elements::dropEvent(QDropEvent *de)
+    {
+        de->ignore();
+    }
+
+    void Elements::dragEnterEvent(QDragEnterEvent *de)
+    {
+        de->ignore();
+    }
+
+    void Elements::dragMoveEvent(QDragMoveEvent *de)
+    {
+        de->acceptProposedAction();
+    }
+
+    QString Elements::mimeDataType()
+    {
+        return "application/x-element_data";
     }
 
 } // namespace gui

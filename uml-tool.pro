@@ -74,7 +74,8 @@ SOURCES += \
     commands/addcomponentscommands.cpp \
     helpers/entityhelpres.cpp \
     entity/components/token.cpp \
-    gui/elements.cpp
+    gui/elements.cpp \
+    gui/view.cpp
 
 HEADERS += \
     enums.h \
@@ -155,7 +156,8 @@ HEADERS += \
     entity/components/components_types.h \
     entity/components/token.h \
     qthelpers.h \
-    gui/elements.h
+    gui/elements.h \
+    gui/view.h
 
 FORMS += \
     gui/mainwindow.ui \
@@ -164,7 +166,8 @@ FORMS += \
     gui/addscope.ui \
     gui/editentitydialog.ui \
     gui/editmethoddialog.ui \
-    gui/chooseglobaldatabasedialog.ui
+    gui/chooseglobaldatabasedialog.ui \
+    gui/elements.ui
 
 RESOURCES += \
     gui/main.qrc

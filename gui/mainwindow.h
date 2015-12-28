@@ -51,6 +51,7 @@ namespace gui {
     class AddScope;
     class ChooseGlobalDatabaseDialog;
     class Elements;
+    class View;
 
     namespace Ui {
         class MainWindow;
@@ -72,7 +73,7 @@ namespace gui {
 
         void update();
 
-        bool eventFilter(QObject *obj, QEvent *ev) override;
+//        bool eventFilter(QObject *obj, QEvent *ev) override;
 
     public slots:
         void onCreateScope();
