@@ -23,6 +23,7 @@
 #include "elements.h"
 #include "ui_elements.h"
 
+#include <QMap>
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -35,8 +36,60 @@
 
 namespace gui {
 
-    static const int margin = 2;
-    static const QSize elementSize(100, 50);
+    struct ElemntAttributes
+    {
+        QString name;
+        QColor color;
+    };
+
+    static const QSize elementSize(120, 50);
+    static const QMap<SchemeElements, ElemntAttributes> elAttributes =
+        { {SchemeElements::Class, {Elements::tr("Class"), {245, 224, 119}}},
+          {SchemeElements::Enum, {Elements::tr("Enumeration"), {83, 185, 86}}},
+          {SchemeElements::Union, {Elements::tr("Union"), {144, 199, 229}}},
+          {SchemeElements::TemplateClass, {Elements::tr("Template class"), {152, 131, 190}}},
+          {SchemeElements::Alias, {Elements::tr("Alias"), {249, 181, 194}}},
+        };
+
+    static void addElement(SchemeElements type, QWidget &parent, QGridLayout &layout,
+                           int row, int col)
+    {
+        QString name = elAttributes[type].name;
+        QColor color = elAttributes[type].color;
+
+        // Create widget
+        QLabel * lbl = new QLabel(&parent);
+        lbl->setProperty(Elements::elementTypePropertyName(), QVariant::fromValue(type));
+
+        // Add graphics element
+        QPixmap pic(elementSize);
+        pic.fill(Qt::transparent);
+
+        // Render element
+        QPainter p;
+        p.begin(&pic);
+        p.setRenderHint(QPainter::Antialiasing);
+
+        QLinearGradient gradient(elementSize.width() / 2, 0,
+                                 elementSize.width() / 2, elementSize.height());
+        gradient.setColorAt(0, color);
+        gradient.setColorAt(1, Qt::white);
+        p.fillRect(pic.rect(), QBrush(gradient));
+        p.setPen(QPen(color));
+        p.drawRect(QRectF({0, 0}, elementSize));
+
+        p.setPen(Qt::black);
+        p.drawText(elementSize.width() / 2 - p.fontMetrics().width(name) / 2,
+                   elementSize.height() / 2, name);
+        p.end();
+
+        // Set graphic element
+        lbl->setPixmap(pic);
+        lbl->resize(elementSize);
+
+        // Add widget
+        layout.addWidget(lbl, row, col);
+    }
 
     Elements::Elements(QWidget *parent)
         : QWidget(parent)
@@ -45,20 +98,11 @@ namespace gui {
         ui->setupUi(this);
 
         // Add items
-        QLabel * lbl = new QLabel(this);
-        QPixmap pic(elementSize);
-        pic.fill(Qt::transparent);
-        QPainter p;
-        p.begin(&pic);
-        p.setRenderHint(QPainter::Antialiasing);
-        p.fillRect(pic.rect(), QBrush(Qt::green));
-        p.drawRect(QRectF({0, 0}, elementSize));
-        p.end();
-        lbl->setPixmap(pic);
-        lbl->resize(elementSize);
-
-        ui->gridLayout->addWidget(lbl, 0, 0);
-        ui->gridLayout->addWidget(new QLabel("Tst 2", this), 0, 1);
+        addElement(SchemeElements::Class, *this, *ui->gridLayout, 0, 0);
+        addElement(SchemeElements::Enum, *this, *ui->gridLayout, 0, 1);
+        addElement(SchemeElements::Union, *this, *ui->gridLayout, 1, 0);
+        addElement(SchemeElements::TemplateClass, *this, *ui->gridLayout, 1, 1);
+        addElement(SchemeElements::Alias, *this, *ui->gridLayout, 2, 0);
     }
 
     Elements::~Elements()
@@ -104,6 +148,11 @@ namespace gui {
     QString Elements::mimeDataType()
     {
         return "application/x-element_data";
+    }
+
+    const char *Elements::elementTypePropertyName()
+    {
+        return "elementType";
     }
 
 } // namespace gui

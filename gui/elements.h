@@ -31,6 +31,18 @@ namespace gui {
         class Elements;
     }
 
+    /// The SchemeElements enum
+    enum class SchemeElements : int
+    {
+        Class,         ///< The class
+        Enum,          ///< The enum
+        Union,         ///< The union
+        TemplateClass, ///< The template class
+        Alias,         ///< The type alias
+        ElementsCount  ///< Elemnts count
+    };
+
+    /// The Elements class
     class Elements : public QWidget
     {
         Q_OBJECT
@@ -47,9 +59,12 @@ namespace gui {
         void dragMoveEvent(QDragMoveEvent *de);
 
         static QString mimeDataType();
+        static const char* elementTypePropertyName();
 
     private:
         QScopedPointer<Ui::Elements> ui;
     };
 
 } // namespace gui
+
+Q_DECLARE_METATYPE(gui::SchemeElements)
