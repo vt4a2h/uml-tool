@@ -44,11 +44,11 @@ namespace gui {
 
     static const QSize elementSize(120, 50);
     static const QMap<SchemeElements, ElemntAttributes> elAttributes =
-        { {SchemeElements::Class, {Elements::tr("Class"), {245, 224, 119}}},
-          {SchemeElements::Enum, {Elements::tr("Enumeration"), {83, 185, 86}}},
-          {SchemeElements::Union, {Elements::tr("Union"), {144, 199, 229}}},
-          {SchemeElements::TemplateClass, {Elements::tr("Template class"), {152, 131, 190}}},
-          {SchemeElements::Alias, {Elements::tr("Alias"), {249, 181, 194}}},
+        { {SchemeElements::Class,         {"Class",          {245, 224, 119}}},
+          {SchemeElements::Enum,          {"Enumeration",    {83 , 185, 86 }}},
+          {SchemeElements::Union,         {"Union",          {144, 199, 229}}},
+          {SchemeElements::TemplateClass, {"Template class", {152, 131, 190}}},
+          {SchemeElements::Alias,         {"Alias",          {249, 181, 194}}},
         };
 
     static void addElement(SchemeElements type, QWidget &parent, QGridLayout &layout,
@@ -59,7 +59,7 @@ namespace gui {
 
         // Create widget
         QLabel * lbl = new QLabel(&parent);
-        lbl->setProperty(Elements::elementTypePropertyName(), QVariant::fromValue(type));
+        lbl->setProperty(Elements::elementTypePropertyName(), uint(type));
 
         // Add graphics element
         QPixmap pic(elementSize);
@@ -91,6 +91,10 @@ namespace gui {
         layout.addWidget(lbl, row, col);
     }
 
+    /**
+     * @brief Elements::Elements
+     * @param parent
+     */
     Elements::Elements(QWidget *parent)
         : QWidget(parent)
         , ui(new Ui::Elements)
@@ -105,51 +109,82 @@ namespace gui {
         addElement(SchemeElements::Alias, *this, *ui->gridLayout, 2, 0);
     }
 
+    /**
+     * @brief Elements::~Elements
+     */
     Elements::~Elements()
     {
     }
 
+    /**
+     * @brief Elements::mousePressEvent
+     * @param ev
+     */
     void Elements::mousePressEvent(QMouseEvent *ev)
     {
-        QLabel *child = static_cast<QLabel*>(childAt(ev->pos()));
-        if (!child)
+        QLabel *lbl = static_cast<QLabel*>(childAt(ev->pos()));
+        if (!lbl)
             return;
 
+        // Preserve element type
         QByteArray itemData;
         QDataStream out(&itemData, QIODevice::WriteOnly);
-        out << QString("test");
+        QVariant type = lbl->property(Elements::elementTypePropertyName());
+        out << type.value<uint>();
 
+        // Set mime data
         QMimeData *mimeData = new QMimeData;
         mimeData->setData(mimeDataType(), itemData);
 
+        // Configure drag operation
         QDrag *drag = new QDrag(this);
         drag->setMimeData(mimeData);
-        drag->setPixmap(*child->pixmap());
-        drag->setHotSpot(ev->pos() - child->pos());
+        drag->setPixmap(*lbl->pixmap());
+        drag->setHotSpot(ev->pos() - lbl->pos());
 
         drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction);
     }
 
+    /**
+     * @brief Elements::dropEvent
+     * @param de
+     */
     void Elements::dropEvent(QDropEvent *de)
     {
         de->ignore();
     }
 
+    /**
+     * @brief Elements::dragEnterEvent
+     * @param de
+     */
     void Elements::dragEnterEvent(QDragEnterEvent *de)
     {
         de->ignore();
     }
 
+    /**
+     * @brief Elements::dragMoveEvent
+     * @param de
+     */
     void Elements::dragMoveEvent(QDragMoveEvent *de)
     {
         de->acceptProposedAction();
     }
 
+    /**
+     * @brief Elements::mimeDataType
+     * @return
+     */
     QString Elements::mimeDataType()
     {
         return "application/x-element_data";
     }
 
+    /**
+     * @brief Elements::elementTypePropertyName
+     * @return
+     */
     const char *Elements::elementTypePropertyName()
     {
         return "elementType";

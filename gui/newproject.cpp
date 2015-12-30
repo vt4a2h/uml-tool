@@ -33,7 +33,7 @@ namespace gui {
      * @brief NewProject::NewProject
      * @param parent
      */
-    NewProject::NewProject(QWidget *parent)
+    NewProjectDialog::NewProjectDialog(QWidget *parent)
         : QDialog(parent)
         , ui(new Ui::NewProject)
     {
@@ -43,14 +43,14 @@ namespace gui {
     /**
      * @brief NewProject::~NewProject
      */
-    NewProject::~NewProject()
+    NewProjectDialog::~NewProjectDialog()
     {
     }
 
     /**
      * @brief NewProject::on_btnCreateProject_clicked
      */
-    void NewProject::on_btnCreateProject_clicked()
+    void NewProjectDialog::on_btnCreateProject_clicked()
     {
         QString path = ui->editProjectPath->text();
         QString name = ui->editProjectName->text().simplified().replace( " ", "_" );
@@ -74,7 +74,7 @@ namespace gui {
     /**
      * @brief NewProject::on_btnChooseDirectory_clicked
      */
-    void NewProject::on_btnChooseDirectory_clicked()
+    void NewProjectDialog::on_btnChooseDirectory_clicked()
     {
         QString result = QFileDialog::getExistingDirectory(this, tr("Choose project directory"));
 
@@ -87,7 +87,7 @@ namespace gui {
     /**
      * @brief NewProject::clear
      */
-    void NewProject::clear()
+    void NewProjectDialog::clear()
     {
         ui->editProjectName->clear();
         ui->editProjectPath->clear();

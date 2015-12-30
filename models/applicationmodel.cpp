@@ -232,6 +232,8 @@ namespace models {
             return false;
 
         m_CurrentProject = m_Projects[id];
+        emit currentProjectChanged(m_CurrentProject);
+
         return true;
     }
 

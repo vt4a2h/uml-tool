@@ -71,6 +71,7 @@ namespace models {
 
     signals:
         void scopeAdded(const entity::SharedScope &scope);
+        void currentProjectChanged(const project::SharedProject &p);
 
     private:
         project::Projects m_Projects;

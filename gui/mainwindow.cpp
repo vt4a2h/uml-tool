@@ -64,6 +64,7 @@
 #include "constants.h"
 #include "elements.h"
 #include "view.h"
+#include "qthelpers.h"
 
 using namespace boost;
 
@@ -122,7 +123,7 @@ namespace gui {
         , m_UndoView(new QUndoView(this))
         , m_Elements(new Elements(this))
         , m_AboutWidget(new About(this))
-        , m_NewProject(new NewProject(this))
+        , m_NewProjectDialog(new NewProjectDialog(this))
         , m_AddScope(new AddScope(this))
         , m_ApplicationModel(applicationModel)
     {
@@ -176,7 +177,7 @@ namespace gui {
      */
     void MainWindow::onNewProject()
     {
-        m_NewProject->show();
+        m_NewProjectDialog->show();
     }
 
     /**
@@ -356,9 +357,12 @@ namespace gui {
      */
     void MainWindow::makeConnections()
     {
-        connect(m_ProjectTreeView, &QTreeView::customContextMenuRequested, this, &MainWindow::onProjectTreeMenu);
-
-        connect(m_NewProject, &NewProject::newProject, this, &MainWindow::createNewProject);
+        G_CONNECT(m_ProjectTreeView, &QTreeView::customContextMenuRequested,
+                  this, &MainWindow::onProjectTreeMenu);
+        G_CONNECT(m_NewProjectDialog, &NewProjectDialog::newProject,
+                  this, &MainWindow::createNewProject);
+        G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
+                  m_MainView, &View::onCurrentProjectChanged);
     }
 
     /**
@@ -611,35 +615,23 @@ namespace gui {
     {
         bool state = !!m_ApplicationModel->currentProject();
 
-        ui->actionAddAlias->setEnabled( state );
-        ui->actionAddClass->setEnabled( state );
-        ui->actionAddStruct->setEnabled( state );
-        ui->actionAddTemplate->setEnabled( state );
-        ui->actionAddUnion->setEnabled( state );
-        ui->actionAddEnum->setEnabled( state );
-        ui->actionCreateScope->setEnabled( state );
-        ui->actionMakeRelation->setEnabled( state );
+        ui->actionAddAlias->setEnabled(state);
+        ui->actionAddClass->setEnabled(state);
+        ui->actionAddStruct->setEnabled(state);
+        ui->actionAddTemplate->setEnabled(state);
+        ui->actionAddUnion->setEnabled(state);
+        ui->actionAddEnum->setEnabled(state);
+        ui->actionCreateScope->setEnabled(state);
+        ui->actionMakeRelation->setEnabled(state);
         ui->actionSaveProject->setEnabled(state && !m_ApplicationModel->currentProject()->isSaved() );
 
         project::Project const * pr = m_ApplicationModel->currentProject().get();
         ui->actionRedo->setEnabled(pr && pr->commandsStack()->canRedo());
         ui->actionUndo->setEnabled(pr && pr->commandsStack()->canUndo());
-    }
 
-    /**
-     * @brief MainWindow::updateScene
-     */
-    void MainWindow::updateScene()
-    {
-        m_MainScene->update();
-    }
-
-    /**
-     * @brief MainWindow::updateModel
-     */
-    void MainWindow::updateModelView()
-    {
-        // note: must be implemented via model::datachanged!
+        m_Elements->setEnabled(state);
+        m_ProjectTreeView->setEnabled(state);
+        m_MainView->setEnabled(state);
     }
 
     /**

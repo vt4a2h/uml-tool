@@ -66,5 +66,3 @@ namespace gui {
     };
 
 } // namespace gui
-
-Q_DECLARE_METATYPE(gui::SchemeElements)

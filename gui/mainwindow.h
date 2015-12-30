@@ -47,7 +47,7 @@ namespace models {
 namespace gui {
 
     class About;
-    class NewProject;
+    class NewProjectDialog;
     class AddScope;
     class ChooseGlobalDatabaseDialog;
     class Elements;
@@ -73,8 +73,6 @@ namespace gui {
 
         void update();
 
-//        bool eventFilter(QObject *obj, QEvent *ev) override;
-
     public slots:
         void onCreateScope();
 
@@ -95,8 +93,6 @@ namespace gui {
         void setCurrentProjectViaMenu();
 
         void updateWindowState();
-        void updateScene();
-        void updateModelView();
 
         void setCurrentProject(const QString &id);
 
@@ -121,15 +117,15 @@ namespace gui {
         QMenu *m_ProjectTreeMenu;
 
         QTreeView      *m_ProjectTreeView;
-        QGraphicsView  *m_MainView;
+        View           *m_MainView;
         QGraphicsScene *m_MainScene;
         QTextEdit      *m_ConsoleOutput;
         QUndoView      *m_UndoView;
         Elements       *m_Elements;
 
-        About      *m_AboutWidget;
-        NewProject *m_NewProject;
-        AddScope   *m_AddScope;
+        About            *m_AboutWidget;
+        NewProjectDialog *m_NewProjectDialog;
+        AddScope         *m_AddScope;
 
         using CommandFunction = std::function<std::unique_ptr<QUndoCommand>(
                                     const models::SharedApplicationModel &, const QString &, QGraphicsScene &,

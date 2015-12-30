@@ -28,69 +28,89 @@
 #include <QDebug>
 
 #include "elements.h"
+#include "qthelpers.h"
 
 namespace gui {
 
+    /**
+     * @brief View::View
+     * @param parent
+     */
     View::View(QWidget *parent)
         : QGraphicsView(parent)
     {
         setAcceptDrops(true);
     }
 
+    /**
+     * @brief View::dropEvent
+     * @param de
+     */
     void View::dropEvent(QDropEvent *de)
     {
-        qDebug() << "drop";
         if (de->mimeData()->hasFormat(Elements::mimeDataType())) {
             QByteArray itemData = de->mimeData()->data(Elements::mimeDataType());
             QDataStream in(&itemData, QIODevice::ReadOnly);
 
-            QString msg;
-            in >> msg;
+            uint tmpType = uint(SchemeElements::ElementsCount);
+            in >> tmpType;
+            Q_ASSERT(in.status() == QDataStream::Ok && tmpType != uint(SchemeElements::ElementsCount));
+            SchemeElements type = SchemeElements(tmpType);
+            Q_UNUSED(type);
 
-            qDebug() << msg;
-
-//            if (de->source() == this) {
-//                de->setDropAction(Qt::MoveAction);
-//                de->accept();
-//            } else {
-                de->acceptProposedAction();
-//            }
+            de->acceptProposedAction();
         }
     }
 
+    /**
+     * @brief View::dragEnterEvent
+     * @param de
+     */
     void View::dragEnterEvent(QDragEnterEvent *de)
     {
-        qDebug() << "drag enter";
-        if (de->mimeData()->hasFormat(Elements::mimeDataType())) {
-//            if (de->source() == this) {
-//                de->setDropAction(Qt::MoveAction);
-//                de->accept();
-//            } else {
-                de->acceptProposedAction();
-//            }
-        } else {
+        if (de->mimeData()->hasFormat(Elements::mimeDataType()))
+            de->acceptProposedAction();
+        else
             de->ignore();
-        }
     }
 
+    /**
+     * @brief View::dragMoveEvent
+     * @param de
+     */
     void View::dragMoveEvent(QDragMoveEvent *de)
     {
-        qDebug() << "drag move";
-        if (de->mimeData()->hasFormat(Elements::mimeDataType())) {
-//            if (de->source() == this) {
-//                de->setDropAction(Qt::MoveAction);
-//                de->accept();
-//            } else {
-                de->acceptProposedAction();
-//            }
-        } else {
+        if (de->mimeData()->hasFormat(Elements::mimeDataType()))
+            de->acceptProposedAction();
+        else
             de->ignore();
-        }
     }
 
+    /**
+     * @brief View::dragLeaveEvent
+     * @param de
+     */
     void View::dragLeaveEvent(QDragLeaveEvent *de)
     {
         de->ignore();
+    }
+
+    /**
+     * @brief View::onCurrentProjectChanged
+     * @param p
+     */
+    void View::onCurrentProjectChanged(const project::SharedProject &p)
+    {
+        m_Project = p;
+    }
+
+    /**
+     * @brief View::project
+     * @return
+     */
+    project::SharedProject View::project() const
+    {
+        return m_Project.lock();
     }
 
 } // namespace gui

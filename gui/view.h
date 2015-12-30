@@ -24,10 +24,15 @@
 
 #include <QGraphicsView>
 
+#include <project/project_types.hpp>
+
 namespace gui {
 
+    /// The class View
     class View : public QGraphicsView
     {
+        Q_OBJECT
+
     public:
         View(QWidget *parent = 0);
 
@@ -35,6 +40,14 @@ namespace gui {
         void dragEnterEvent(QDragEnterEvent *de);
         void dragMoveEvent(QDragMoveEvent *de);
         void dragLeaveEvent(QDragLeaveEvent *de);
+
+    public slots:
+        void onCurrentProjectChanged(const project::SharedProject &p);
+
+    private:
+        project::SharedProject project() const;
+
+        project::WeakProject m_Project;
     };
 
 } // namespace gui

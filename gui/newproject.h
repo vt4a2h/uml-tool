@@ -33,15 +33,15 @@ namespace gui {
     /**
      * @brief The NewProject class
      */
-    class NewProject : public QDialog
+    class NewProjectDialog : public QDialog
     {
         Q_OBJECT
 
     public:
-        Q_DISABLE_COPY(NewProject)
+        Q_DISABLE_COPY(NewProjectDialog)
 
-        explicit NewProject(QWidget *parent = 0);
-        ~NewProject();
+        explicit NewProjectDialog(QWidget *parent = 0);
+        ~NewProjectDialog();
 
     signals:
         void newProject(const QString &name, const QString &path);
