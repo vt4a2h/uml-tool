@@ -74,6 +74,7 @@
     </property>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
+    <addaction name="actionCreateScope"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -101,17 +102,6 @@
    </attribute>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
-   <addaction name="separator"/>
-   <addaction name="actionCreateScope"/>
-   <addaction name="separator"/>
-   <addaction name="actionAddAlias"/>
-   <addaction name="actionAddUnion"/>
-   <addaction name="actionAddStruct"/>
-   <addaction name="actionAddClass"/>
-   <addaction name="actionAddTemplate"/>
-   <addaction name="actionAddEnum"/>
-   <addaction name="separator"/>
-   <addaction name="actionMakeRelation"/>
   </widget>
   <action name="actionExit">
    <property name="text">
@@ -148,96 +138,6 @@
   <action name="actionAbout">
    <property name="text">
     <string>&amp;About</string>
-   </property>
-  </action>
-  <action name="actionAddClass">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="main.qrc">
-     <normaloff>:/icons/pic/icon_action_class.png</normaloff>:/icons/pic/icon_action_class.png</iconset>
-   </property>
-   <property name="text">
-    <string>Add&amp;Class</string>
-   </property>
-   <property name="toolTip">
-    <string>Add class to the project</string>
-   </property>
-  </action>
-  <action name="actionAddStruct">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="main.qrc">
-     <normaloff>:/icons/pic/icon_action_struct.png</normaloff>:/icons/pic/icon_action_struct.png</iconset>
-   </property>
-   <property name="text">
-    <string>Add&amp;Struct</string>
-   </property>
-   <property name="toolTip">
-    <string>Add structure (POD) to the project</string>
-   </property>
-  </action>
-  <action name="actionAddUnion">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="main.qrc">
-     <normaloff>:/icons/pic/icon_action_union.png</normaloff>:/icons/pic/icon_action_union.png</iconset>
-   </property>
-   <property name="text">
-    <string>Add&amp;Union</string>
-   </property>
-   <property name="toolTip">
-    <string>Add union to the project</string>
-   </property>
-  </action>
-  <action name="actionAddTemplate">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="main.qrc">
-     <normaloff>:/icons/pic/icon_action_template.png</normaloff>:/icons/pic/icon_action_template.png</iconset>
-   </property>
-   <property name="text">
-    <string>Add&amp;Template</string>
-   </property>
-   <property name="toolTip">
-    <string>Add template class to the project</string>
-   </property>
-  </action>
-  <action name="actionAddAlias">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="main.qrc">
-     <normaloff>:/icons/pic/icon_action_alias.png</normaloff>:/icons/pic/icon_action_alias.png</iconset>
-   </property>
-   <property name="text">
-    <string>Add&amp;Alias</string>
-   </property>
-   <property name="toolTip">
-    <string>Add alias (typedef or using) to the project</string>
-   </property>
-  </action>
-  <action name="actionMakeRelation">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="main.qrc">
-     <normaloff>:/icons/pic/icon_action_relation.png</normaloff>:/icons/pic/icon_action_relation.png</iconset>
-   </property>
-   <property name="text">
-    <string>MakeRelation</string>
-   </property>
-   <property name="toolTip">
-    <string>Make relation between two entities</string>
    </property>
   </action>
   <action name="actionCreateScope">
@@ -322,18 +222,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+M</string>
-   </property>
-  </action>
-  <action name="actionAddEnum">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="main.qrc">
-     <normaloff>:/icons/pic/icon_action_enum.png</normaloff>:/icons/pic/icon_action_enum.png</iconset>
-   </property>
-   <property name="text">
-    <string>actionAddEnum</string>
    </property>
   </action>
   <action name="actionElementsDockWidget">
@@ -440,22 +328,6 @@
    <signal>triggered()</signal>
    <receiver>gui::MainWindow</receiver>
    <slot>onCreateScope()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionMakeRelation</sender>
-   <signal>triggered()</signal>
-   <receiver>gui::MainWindow</receiver>
-   <slot>onMakeRelation()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>

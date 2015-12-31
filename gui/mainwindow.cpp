@@ -117,7 +117,7 @@ namespace gui {
         , ui(new Ui::MainWindow)
         , m_ProjectTreeMenu(new QMenu(this))
         , m_ProjectTreeView(new QTreeView(this))
-        , m_MainView(new View(this))
+        , m_MainView(new View(applicationModel, this))
         , m_MainScene(new QGraphicsScene(this))
         , m_ConsoleOutput(new QTextEdit(this))
         , m_UndoView(new QUndoView(this))
@@ -133,8 +133,6 @@ namespace gui {
         makeConnections();
 
         m_MainScene->installEventFilter(new SceneFilter(m_ApplicationModel, m_MainScene, this, this));
-
-        configureAddActions();
 
         update();
     }
@@ -361,8 +359,6 @@ namespace gui {
                   this, &MainWindow::onProjectTreeMenu);
         G_CONNECT(m_NewProjectDialog, &NewProjectDialog::newProject,
                   this, &MainWindow::createNewProject);
-        G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
-                  m_MainView, &View::onCurrentProjectChanged);
     }
 
     /**
@@ -393,62 +389,6 @@ namespace gui {
     }
 
     /**
-     * @brief MainWindow::configureAddActions
-     */
-    void MainWindow::configureAddActions()
-    {
-        m_AddActions = {
-            { ui->actionAddAlias,
-              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
-                  const QPointF &pos, QUndoCommand *parent) {
-                      return std::make_unique<commands::MakeAlias>(model, scopeID, scene, pos, parent);
-              } },
-            { ui->actionAddUnion,
-              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
-                  const QPointF &pos, QUndoCommand *parent) {
-                      return std::make_unique<commands::MakeUnion>(model, scopeID, scene, pos, parent);
-              } },
-            { ui->actionAddClass,
-              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
-                  const QPointF &pos, QUndoCommand *parent) {
-                      return std::make_unique<commands::MakeClass>(model, scopeID, scene, pos, parent);
-              } },
-            { ui->actionAddStruct,
-              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
-                  const QPointF &pos, QUndoCommand *parent) {
-                      auto cmd = std::make_unique<commands::MakeClass>(model, scopeID, scene, pos, parent);
-                      cmd->entity()->setKind(entity::Kind::StructType);
-                      return cmd;
-              } },
-            { ui->actionAddTemplate,
-              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
-                  const QPointF &pos, QUndoCommand *parent) {
-                      return std::make_unique<commands::MakeTemplate>(model, scopeID, scene, pos, parent);
-              } },
-            { ui->actionAddEnum,
-              [=](const models::SharedApplicationModel &model, const QString &scopeID, QGraphicsScene &scene,
-                  const QPointF &pos, QUndoCommand *parent) {
-                      return std::make_unique<commands::MakeEnum>(model, scopeID, scene, pos, parent);
-              } }
-            };
-
-        for (auto action : m_AddActions)
-            connect(action.first, &QAction::triggered, [=](){
-                if (action.first->isChecked()) {
-                    ui->actionMakeRelation->setChecked(false);
-                    for (auto a : m_AddActions)
-                        a.first->setChecked(a.first == action.first);
-                }
-            });
-
-        connect(ui->actionMakeRelation, &QAction::triggered, [=](){
-            if (ui->actionMakeRelation->isChecked())
-                for (auto action : m_AddActions)
-                    action.first->setChecked(false);
-        });
-    }
-
-    /**
      * @brief MainWindow::addDock
      * @param name
      * @param area
@@ -467,111 +407,6 @@ namespace gui {
 
         wgt->setVisible(visible);
     }
-
-    /**
-     * @brief MainWindow::eventFilter
-     * @param obj
-     * @param ev
-     * @return
-     */
-//    bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
-//    {
-//        if (obj == m_MainView) {
-//            qDebug() << ev->type();
-//            if (ev->type() == QEvent::Drop) {
-//                qDebug() << "drop";
-//                QDropEvent *de = static_cast<QDropEvent*>(ev);
-//                if (de->mimeData()->hasFormat(Elements::mimeDataType())) {
-//                    QByteArray itemData = de->mimeData()->data(Elements::mimeDataType());
-//                    QDataStream in(&itemData, QIODevice::ReadOnly);
-
-//                    QString msg;
-//                    in >> msg;
-
-//                    if (de->source() == this) {
-//                        de->setDropAction(Qt::MoveAction);
-//                        de->accept();
-
-//                        QMessageBox::information(
-//                                    this,
-//                                    tr("Information"),
-//                                    msg,
-//                                    QMessageBox::Ok );
-//                    } else {
-//                        de->acceptProposedAction();
-//                    }
-
-//                    return true;
-//                }
-//            } else if (ev->type() == QEvent::DragEnter) {
-//                qDebug() << "enter";
-//                QDragEnterEvent *de = static_cast<QDragEnterEvent*>(ev);
-//                if (de->mimeData()->hasFormat(Elements::mimeDataType())) {
-//                    if (de->source() == this) {
-//                        de->setDropAction(Qt::MoveAction);
-//                        de->accept();
-//                    } else {
-//                        de->acceptProposedAction();
-//                    }
-//                } else {
-//                    de->ignore();
-//                }
-//            } else if (ev->type() == QEvent::DragMove) {
-//                qDebug() << "move";
-//                QDragMoveEvent *de = static_cast<QDragMoveEvent*>(ev);
-//                if (de->mimeData()->hasFormat(Elements::mimeDataType())) {
-//                    if (de->source() == this) {
-//                        de->setDropAction(Qt::MoveAction);
-//                        de->accept();
-//                    } else {
-//                        de->acceptProposedAction();
-//                    }
-//                } else {
-//                    de->ignore();
-//                }
-//            }
-//            if (ev->type() == QEvent::MouseButtonPress)  {
-//                auto it = range::find_if(m_AddActions, [](auto &&am) { return am.first->isChecked(); });
-//                if (it != m_AddActions.end()) {
-//                    if (m_ApplicationModel && m_ApplicationModel->currentProject()) {
-//                        auto event = static_cast<QMouseEvent* >(ev);
-//                        auto pos = m_MainView->mapToScene(event->pos());
-
-//                        const db::ProjectDatabase &projectDb =
-//                            *m_ApplicationModel->currentProject()->database().get();
-
-//                        if (projectDb.anyScopes()) {
-//                            entity::SharedScope scope = projectDb.defaultScope();
-//                            if (!scope)
-//                                scope = projectDb.scopes().first();
-
-//                            if (auto stack = m_ApplicationModel->currentProject()->commandsStack()) {
-//                                //
-//                                auto create = it->second(m_ApplicationModel, scope->id(), *m_MainScene, pos, nullptr);
-//                                //
-//                                stack->push(create.release());
-//                            }
-//                        } else {
-//                            QMessageBox::information(
-//                                this,
-//                                tr("Information"),
-//                                tr("You have no abilities to add a new entity in "
-//                                   "project without any namespaces."),
-//                                QMessageBox::Ok );
-//                        }
-//                    }
-
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            } else {
-//                return false;
-//            }
-//        }
-
-//        return QMainWindow::eventFilter(obj, ev);
-//    }
 
     /**
      * @brief MainWindow::makeTitle
@@ -615,14 +450,7 @@ namespace gui {
     {
         bool state = !!m_ApplicationModel->currentProject();
 
-        ui->actionAddAlias->setEnabled(state);
-        ui->actionAddClass->setEnabled(state);
-        ui->actionAddStruct->setEnabled(state);
-        ui->actionAddTemplate->setEnabled(state);
-        ui->actionAddUnion->setEnabled(state);
-        ui->actionAddEnum->setEnabled(state);
         ui->actionCreateScope->setEnabled(state);
-        ui->actionMakeRelation->setEnabled(state);
         ui->actionSaveProject->setEnabled(state && !m_ApplicationModel->currentProject()->isSaved() );
 
         project::Project const * pr = m_ApplicationModel->currentProject().get();

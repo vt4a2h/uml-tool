@@ -8,13 +8,7 @@
         <file>pic/icon_field.png</file>
         <file>pic/icon_method.png</file>
         <file>pic/icon_relation.png</file>
-        <file>pic/icon_action_alias.png</file>
-        <file>pic/icon_action_class.png</file>
-        <file>pic/icon_action_relation.png</file>
         <file>pic/icon_action_scope.png</file>
-        <file>pic/icon_action_struct.png</file>
-        <file>pic/icon_action_template.png</file>
-        <file>pic/icon_action_union.png</file>
         <file>pic/icon_redo.png</file>
         <file>pic/icon_undo.png</file>
         <file>pic/icon_properties.png</file>
@@ -25,7 +19,6 @@
         <file>pic/icon_component_edit.png</file>
         <file>pic/icon_component_delete.png</file>
         <file>pic/icon_component_plus.png</file>
-        <file>pic/icon_action_enum.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>pic/main.png</file>

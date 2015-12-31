@@ -27,6 +27,11 @@
 #include <QMimeData>
 #include <QDebug>
 
+#include <project/project.h>
+#include <db/projectdatabase.h>
+#include <commands/createentity.h>
+#include <models/applicationmodel.h>
+
 #include "elements.h"
 #include "qthelpers.h"
 
@@ -36,10 +41,14 @@ namespace gui {
      * @brief View::View
      * @param parent
      */
-    View::View(QWidget *parent)
+    View::View(const models::SharedApplicationModel &model, QWidget *parent)
         : QGraphicsView(parent)
+        , m_ApplicationModel(model)
     {
         setAcceptDrops(true);
+
+        G_CONNECT(appModel().get(), &models::ApplicationModel::currentProjectChanged,
+                  this, &View::onCurrentProjectChanged);
     }
 
     /**
@@ -55,8 +64,7 @@ namespace gui {
             uint tmpType = uint(SchemeElements::ElementsCount);
             in >> tmpType;
             Q_ASSERT(in.status() == QDataStream::Ok && tmpType != uint(SchemeElements::ElementsCount));
-            SchemeElements type = SchemeElements(tmpType);
-            Q_UNUSED(type);
+            addElement(SchemeElements(tmpType), de->pos());
 
             de->acceptProposedAction();
         }
@@ -111,6 +119,64 @@ namespace gui {
     project::SharedProject View::project() const
     {
         return m_Project.lock();
+    }
+
+    /**
+     * @brief View::appModel
+     * @return
+     */
+    models::SharedApplicationModel View::appModel() const
+    {
+       return m_ApplicationModel.lock();
+    }
+
+    template <class ... Types>
+    std::unique_ptr<QUndoCommand> makeCmd(SchemeElements type, Types &&... args)
+    {
+        switch (type) {
+            case SchemeElements::Alias:
+                return std::make_unique<commands::MakeAlias>(std::forward<Types >(args)...);
+
+            case SchemeElements::Class:
+                return std::make_unique<commands::MakeClass>(std::forward<Types >(args)...);
+
+            case SchemeElements::Enum:
+                    return std::make_unique<commands::MakeEnum>(std::forward<Types >(args)...);
+
+            case SchemeElements::TemplateClass:
+                return std::make_unique<commands::MakeTemplate>(std::forward<Types >(args)...);
+
+            case SchemeElements::Union:
+                return std::make_unique<commands::MakeUnion>(std::forward<Types >(args)...);
+
+            default:
+                return nullptr;
+        }
+    }
+
+    /**
+     * @brief View::addElement
+     * @param type
+     * @param eventPos
+     */
+    void View::addElement(SchemeElements type, const QPoint &eventPos)
+    {
+        if (auto pr = project()) {
+            auto projectDb = G_ASSERT(pr->database());
+            if (projectDb->anyScopes()) {
+                auto scope = projectDb->defaultScope();
+                if (!scope)
+                    scope = projectDb->scopes().first();
+
+                if (auto stack = pr->commandsStack()) {
+                    auto pos = mapToScene(eventPos);
+                    if (auto cmd = makeCmd(type, appModel(), scope->id(), *scene(), pos, nullptr))
+                        stack->push(cmd.release());
+                }
+            }
+        } else {
+            qWarning() << Q_FUNC_INFO << ": there is no project.";
+        }
     }
 
 } // namespace gui

@@ -25,8 +25,13 @@
 #include <QGraphicsView>
 
 #include <project/project_types.hpp>
+#include <models/models_types.hpp>
+
+namespace models { class ApplicationModel; }
 
 namespace gui {
+
+    enum class SchemeElements : int;
 
     /// The class View
     class View : public QGraphicsView
@@ -34,7 +39,7 @@ namespace gui {
         Q_OBJECT
 
     public:
-        View(QWidget *parent = 0);
+        View(const models::SharedApplicationModel &model, QWidget *parent = 0);
 
         void dropEvent(QDropEvent *de);
         void dragEnterEvent(QDragEnterEvent *de);
@@ -46,8 +51,11 @@ namespace gui {
 
     private:
         project::SharedProject project() const;
+        models::SharedApplicationModel appModel() const;
+        void addElement(SchemeElements type, const QPoint &eventPos);
 
         project::WeakProject m_Project;
+        models::WeakApplicationModel m_ApplicationModel;
     };
 
 } // namespace gui

@@ -107,8 +107,6 @@ namespace gui {
         void readSettings();
         void writeSettings();
 
-        void configureAddActions();
-
         void addDock(const QString &name, QAction * action, Qt::DockWidgetArea area, QWidget * widget,
                      bool visible = true);
 

@@ -36,6 +36,7 @@ namespace models {
 
     class ApplicationModel;
     using SharedApplicationModel = std::shared_ptr<ApplicationModel>;
+    using WeakApplicationModel = std::weak_ptr<ApplicationModel>;
 
     class ComponentsModel;
     using UniqueClassComponentsModel = std::unique_ptr<ComponentsModel>;
