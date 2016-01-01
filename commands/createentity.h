@@ -100,7 +100,7 @@ namespace commands {
             m_Model->removeType(m_ProjectID, m_ScopeID, m_TypeItem->id());
         }
 
-        std::shared_ptr<Type> entity() { return m_TypeItem; }
+        std::shared_ptr<Type> entity() const { return m_TypeItem; }
 
     private:
         models::SharedApplicationModel m_Model;

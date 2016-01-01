@@ -166,7 +166,7 @@ namespace gui {
             if (projectDb->anyScopes()) {
                 auto scope = projectDb->defaultScope();
                 if (!scope)
-                    scope = projectDb->scopes().first();
+                    scope = G_ASSERT(projectDb->scopes().first());
 
                 if (auto stack = pr->commandsStack()) {
                     auto pos = mapToScene(eventPos);

@@ -34,6 +34,8 @@
 #include <QDrag>
 #include <QMouseEvent>
 
+#include "qthelpers.h"
+
 namespace gui {
 
     struct ElemntAttributes
