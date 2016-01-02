@@ -41,7 +41,7 @@ namespace entity {
      * @brief ExtendedType::ExtendedType
      */
     ExtendedType::ExtendedType()
-        : ExtendedType(DEFAULT_NAME, STUB_ID)
+        : ExtendedType(defaultName(), STUB_ID)
     {
     }
 
@@ -301,6 +301,24 @@ namespace entity {
     QString ExtendedType::staticMarker()
     {
         return "ExtendedType";
+    }
+
+    /**
+     * @brief ExtendedType::defaultName
+     * @return
+     */
+    QString ExtendedType::defaultName() const
+    {
+        return staticDefaultName();
+    }
+
+    /**
+     * @brief ExtendedType::staticDefaultName
+     * @return
+     */
+    QString ExtendedType::staticDefaultName()
+    {
+       return tr("Alias");
     }
 
     /**

@@ -47,9 +47,9 @@
 namespace graphics {
 
     namespace {
-        constexpr double margin    = 2.  ;
-        constexpr double tmpHeight = 100.;
-        constexpr double tmpWidth  = 100.;
+        constexpr double margin    = 2. ;
+        constexpr double tmpHeight = 20.;
+        constexpr double tmpWidth  = 120.;
         const QString stub = Entity::tr( "Stub" );
     }
 
@@ -97,9 +97,13 @@ namespace graphics {
     {
         Q_UNUSED(option);
         Q_UNUSED(widget);
-        painter->setBrush(application::settings::elementColor(G_ASSERT(m_Type)->marker()));
+
+        QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
+        painter->setBrush(color);
+        painter->setPen(color);
         painter->drawRect(QRectF(-tmpWidth / 2, -tmpHeight / 2, tmpWidth, tmpHeight));
-        painter->setPen(Qt::white);
+
+        painter->setPen(Qt::black);
         painter->drawText(boundingRect(), Qt::AlignCenter, G_ASSERT(m_Type)->name());
     }
 

@@ -60,7 +60,7 @@ namespace entity {
      * @brief Class::Class
      */
     Class::Class()
-        : Class(DEFAULT_NAME, GLOBAL_SCOPE_ID)
+        : Class(defaultName(), GLOBAL_SCOPE_ID)
     {
     }
 
@@ -796,6 +796,24 @@ namespace entity {
     QString Class::staticMarker()
     {
         return "Class";
+    }
+
+    /**
+     * @brief Class::defaultName
+     * @return
+     */
+    QString Class::defaultName() const
+    {
+        return staticDefaultName();
+    }
+
+    /**
+     * @brief Class::staticDefaultName
+     * @return
+     */
+    QString Class::staticDefaultName()
+    {
+       return tr("Class");
     }
 
     /**

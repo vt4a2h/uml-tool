@@ -47,6 +47,7 @@ namespace entity {
                                          const QPointF &pos) const
         {
             auto type = model->makeType<Type>(scopeID);
+            type->setName(type->defaultName());
 
             auto &&currentProject = model->currentProject();
             auto &&database = currentProject->database();

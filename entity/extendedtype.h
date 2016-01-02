@@ -80,6 +80,9 @@ namespace entity {
         QString marker() const override;
         static QString staticMarker();
 
+        QString defaultName() const override;
+        static QString staticDefaultName();
+
     protected:
         bool    m_ConstStatus;
         QString m_TypeId;

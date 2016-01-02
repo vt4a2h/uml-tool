@@ -221,6 +221,24 @@ namespace entity {
     }
 
     /**
+     * @brief Type::defaultName
+     * @return
+     */
+    QString Type::defaultName() const
+    {
+        return staticDefaultName();
+    }
+
+    /**
+     * @brief Type::staticDefaultName
+     * @return
+     */
+    QString Type::staticDefaultName()
+    {
+       return tr("Type");
+    }
+
+    /**
      * @brief Type::isEqual
      * @param rhs
      * @return

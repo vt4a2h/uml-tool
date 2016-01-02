@@ -69,6 +69,9 @@ namespace entity {
         QString marker() const override;
         static QString staticMarker();
 
+        QString defaultName() const override;
+        static QString staticDefaultName();
+
     private:
         void moveFrom(Union &src);
         void copyFrom(const Union &src);

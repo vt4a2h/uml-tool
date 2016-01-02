@@ -51,7 +51,7 @@ namespace entity {
      * @brief Element::Element
      */
     Element::Element()
-        : Element(DEFAULT_NAME, 0)
+        : Element("Enumeration", 0)
     {}
 
     /**
@@ -151,7 +151,7 @@ namespace entity {
      * @brief Enum::Enum
      */
     Enum::Enum()
-        : Enum(DEFAULT_NAME, GLOBAL_SCOPE_ID)
+        : Enum(defaultName(), GLOBAL_SCOPE_ID)
     {
     }
 
@@ -345,6 +345,24 @@ namespace entity {
     QString Enum::staticMarker()
     {
         return "Enum";
+    }
+
+    /**
+     * @brief Enum::defaultName
+     * @return
+     */
+    QString Enum::defaultName() const
+    {
+        return staticDefaultName();
+    }
+
+    /**
+     * @brief Enum::staticDefaultName
+     * @return
+     */
+    QString Enum::staticDefaultName()
+    {
+       return tr("Enumeration");
     }
 
     /**

@@ -66,6 +66,9 @@ namespace entity {
         QString marker() const override;
         static QString staticMarker();
 
+        QString defaultName() const override;
+        static QString staticDefaultName();
+
     protected:
         virtual void moveFrom(Type &src);
         virtual void copyFrom(const Type &src);

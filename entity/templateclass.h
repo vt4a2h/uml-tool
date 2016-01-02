@@ -50,6 +50,9 @@ namespace entity {
 
         QString marker() const override;
         static QString staticMarker();
+
+        QString defaultName() const override;
+        static QString staticDefaultName();
     };
 
 } // namespace entity

@@ -62,7 +62,7 @@ TEST_F(Enteties, SimpleType)
 
 TEST_F(Enteties, ExtendedType)
 {
-    ASSERT_STREQ(_extendedType->name().toStdString().c_str(), BASE_TYPE_NAME);
+    ASSERT_STREQ(_extendedType->name().toStdString().c_str(), "Alias");
     ASSERT_STREQ(_extendedType->typeId().toStdString().c_str(), STUB_ID);
     ASSERT_FALSE(_extendedType->isConst());
 

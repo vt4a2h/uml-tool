@@ -47,7 +47,7 @@ namespace entity {
      * @brief Union::Union
      */
     Union::Union()
-        : Union(DEFAULT_NAME, GLOBAL_SCOPE_ID)
+        : Union(defaultName(), GLOBAL_SCOPE_ID)
     {
     }
 
@@ -247,6 +247,24 @@ namespace entity {
     QString Union::staticMarker()
     {
         return "Union";
+    }
+
+    /**
+     * @brief Union::defaultName
+     * @return
+     */
+    QString Union::defaultName() const
+    {
+        return staticDefaultName();
+    }
+
+    /**
+     * @brief Union::staticDefaultName
+     * @return
+     */
+    QString Union::staticDefaultName()
+    {
+       return tr("Union");
     }
 
     /**

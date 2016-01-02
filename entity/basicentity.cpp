@@ -232,4 +232,22 @@ namespace entity {
         return "BasicEntity";
     }
 
+    /**
+     * @brief BasicEntity::defaultName
+     * @return
+     */
+    QString BasicEntity::defaultName() const
+    {
+       return staticDefaultName();
+    }
+
+    /**
+     * @brief BasicEntity::staticDefaultName
+     * @return
+     */
+    QString BasicEntity::staticDefaultName()
+    {
+        return tr("Basic entity");
+    }
+
 }

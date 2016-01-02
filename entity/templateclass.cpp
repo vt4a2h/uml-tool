@@ -37,7 +37,7 @@ namespace entity {
      * @brief TemplateClass::TemplateClass
      */
     TemplateClass::TemplateClass()
-        : TemplateClass(DEFAULT_NAME, GLOBAL_SCOPE_ID)
+        : TemplateClass("Template class", GLOBAL_SCOPE_ID)
     {
     }
 
@@ -122,6 +122,24 @@ namespace entity {
     QString TemplateClass::staticMarker()
     {
         return "TemplateClass";
+    }
+
+    /**
+     * @brief TemplateClass::defaultName
+     * @return
+     */
+    QString TemplateClass::defaultName() const
+    {
+        return staticDefaultName();
+    }
+
+    /**
+     * @brief TemplateClass::staticDefaultName
+     * @return
+     */
+    QString TemplateClass::staticDefaultName()
+    {
+       return tr("Template class");
     }
 
     /**

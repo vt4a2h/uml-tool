@@ -53,6 +53,9 @@ namespace entity {
         virtual QString marker() const;
         static QString staticMarker();
 
+        virtual QString defaultName() const;
+        static QString staticDefaultName();
+
     signals:
         void nameChanged(const QString &newName);
 
