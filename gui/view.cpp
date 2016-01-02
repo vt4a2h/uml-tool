@@ -61,10 +61,10 @@ namespace gui {
             QByteArray itemData = de->mimeData()->data(Elements::mimeDataType());
             QDataStream in(&itemData, QIODevice::ReadOnly);
 
-            uint tmpType = uint(SchemeElements::ElementsCount);
+            QString tmpType = entity::Type::staticMarker();
             in >> tmpType;
-            Q_ASSERT(in.status() == QDataStream::Ok && tmpType != uint(SchemeElements::ElementsCount));
-            addElement(SchemeElements(tmpType), de->pos());
+            Q_ASSERT(in.status() == QDataStream::Ok && tmpType != entity::Type::staticMarker());
+            addElement(tmpType, de->pos());
 
             de->acceptProposedAction();
         }
@@ -130,28 +130,22 @@ namespace gui {
        return m_ApplicationModel.lock();
     }
 
+    // NOTE: mapping isn't convenient here (and using hash instead of marker too)
     template <class ... Types>
-    std::unique_ptr<QUndoCommand> makeCmd(SchemeElements type, Types &&... args)
+    std::unique_ptr<QUndoCommand> makeCmd(const QString &marker, Types &&... args)
     {
-        switch (type) {
-            case SchemeElements::Alias:
-                return std::make_unique<commands::MakeAlias>(std::forward<Types >(args)...);
+        if (marker == entity::ExtendedType::staticMarker())
+            return std::make_unique<commands::MakeAlias>(std::forward<Types >(args)...);
+        else if (marker == entity::Class::staticMarker())
+            return std::make_unique<commands::MakeClass>(std::forward<Types >(args)...);
+        else if(marker == entity::Enum::staticMarker())
+            return std::make_unique<commands::MakeEnum>(std::forward<Types >(args)...);
+        else if (marker == entity::TemplateClass::staticMarker())
+            return std::make_unique<commands::MakeTemplate>(std::forward<Types >(args)...);
+        else if (marker == entity::Union::staticMarker())
+            return std::make_unique<commands::MakeUnion>(std::forward<Types >(args)...);
 
-            case SchemeElements::Class:
-                return std::make_unique<commands::MakeClass>(std::forward<Types >(args)...);
-
-            case SchemeElements::Enum:
-                    return std::make_unique<commands::MakeEnum>(std::forward<Types >(args)...);
-
-            case SchemeElements::TemplateClass:
-                return std::make_unique<commands::MakeTemplate>(std::forward<Types >(args)...);
-
-            case SchemeElements::Union:
-                return std::make_unique<commands::MakeUnion>(std::forward<Types >(args)...);
-
-            default:
-                return nullptr;
-        }
+        return nullptr;
     }
 
     /**
@@ -159,7 +153,7 @@ namespace gui {
      * @param type
      * @param eventPos
      */
-    void View::addElement(SchemeElements type, const QPoint &eventPos)
+    void View::addElement(const QString &marker, const QPoint &eventPos)
     {
         if (auto pr = project()) {
             auto projectDb = G_ASSERT(pr->database());
@@ -170,7 +164,7 @@ namespace gui {
 
                 if (auto stack = pr->commandsStack()) {
                     auto pos = mapToScene(eventPos);
-                    if (auto cmd = makeCmd(type, appModel(), scope->id(), *scene(), pos, nullptr))
+                    if (auto cmd = makeCmd(marker, appModel(), scope->id(), *scene(), pos, nullptr))
                         stack->push(cmd.release());
                 }
             }

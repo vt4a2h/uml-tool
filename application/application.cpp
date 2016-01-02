@@ -24,6 +24,7 @@
 
 #include <QMessageBox>
 #include <QApplication>
+#include <QFile>
 
 #include <gui/mainwindow.h>
 #include <gui/chooseglobaldatabasedialog.h>
@@ -31,6 +32,7 @@
 #include <models/applicationmodel.h>
 
 #include "settings.h"
+#include "qthelpers.h"
 
 namespace application {
 
@@ -41,13 +43,9 @@ namespace application {
     {
         m_MainWindow->show();
 
-        QSettings settings;
-        settings.beginGroup(path);
-
-        auto db = m_ApplicationModel->globalDatabase();
-        Q_ASSERT(db);
-        db->setPath(value<QString>(settings, pathGlobalDB));
-        db->setName(value<QString>(settings, nameGlobalDB));
+        auto db = G_ASSERT(m_ApplicationModel->globalDatabase());
+        db->setPath(settings::globalDbPath());
+        db->setName(settings::globalDbName());
 
         QStringList errors;
         db->load(errors);
@@ -83,16 +81,14 @@ namespace application {
                     }
                 }
 
-                settings.setValue(pathGlobalDB.name, db->path());
-                settings.setValue(nameGlobalDB.name, db->name());
+                settings::setGlobalDbPath(db->path());
+                settings::setGlobalDbName(db->name());
             } else {
                 QMessageBox::information(m_MainWindow.get(), tr("Ohh"), tr("You cannot run application without database!"),
                                          QMessageBox::Ok );
                 return false;
             }
         }
-
-        settings.endGroup();
 
         return true;
     }

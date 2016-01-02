@@ -366,15 +366,7 @@ namespace gui {
      */
     void MainWindow::readSettings()
     {
-        QSettings settings;
-        settings.beginGroup(application::groupMainWindow);
-
-        if (settings.contains(application::mwGeometry.name))
-            setGeometry(settings.value(application::mwGeometry.name).toRect());
-        else
-            setWindowState(windowState() | Qt::WindowMaximized);
-
-        settings.endGroup();
+        setGeometry(application::settings::mainWindowGeometry());
     }
 
     /**
@@ -382,10 +374,7 @@ namespace gui {
      */
     void MainWindow::writeSettings()
     {
-        QSettings settings;
-        settings.beginGroup(application::groupMainWindow);
-        settings.setValue(application::mwGeometry.name, geometry());
-        settings.endGroup();
+        application::settings::writeMainWindowGeometry(geometry());
     }
 
     /**

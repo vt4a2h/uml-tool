@@ -31,8 +31,6 @@ namespace models { class ApplicationModel; }
 
 namespace gui {
 
-    enum class SchemeElements : int;
-
     /// The class View
     class View : public QGraphicsView
     {
@@ -52,7 +50,7 @@ namespace gui {
     private:
         project::SharedProject project() const;
         models::SharedApplicationModel appModel() const;
-        void addElement(SchemeElements type, const QPoint &eventPos);
+        void addElement(const QString& marker, const QPoint &eventPos);
 
         project::WeakProject m_Project;
         models::WeakApplicationModel m_ApplicationModel;

@@ -75,7 +75,8 @@ SOURCES += \
     helpers/entityhelpres.cpp \
     entity/components/token.cpp \
     gui/elements.cpp \
-    gui/view.cpp
+    gui/view.cpp \
+    application/settings.cpp
 
 HEADERS += \
     enums.h \

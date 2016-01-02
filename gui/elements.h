@@ -31,17 +31,6 @@ namespace gui {
         class Elements;
     }
 
-    /// The SchemeElements enum
-    enum class SchemeElements : int
-    {
-        Class,         ///< The class
-        Enum,          ///< The enum
-        Union,         ///< The union
-        TemplateClass, ///< The template class
-        Alias,         ///< The type alias
-        ElementsCount  ///< Elemnts count
-    };
-
     /// The Elements class
     class Elements : public QWidget
     {

@@ -22,40 +22,58 @@
 *****************************************************************************/
 #pragma once
 
-#include <QVariant>
-#include <QDir>
-#include <QSettings>
+#include <QRect>
+#include <QColor>
 
 namespace application {
 
-    /// The struct settings
-    struct Setting {
-        QString name;
-        QVariant defaultValue;
-    };
+//    /// The struct settings
+//    struct Setting {
+//        QString name;
+//        QVariant defaultValue;
+//    };
 
-    /**
-     * @brief value
-     * @param settings
-     * @param s
-     * @return
-     */
-    template<class ValueType>
-    ValueType value(const QSettings &settings, const Setting &s)
-    {
-        if (settings.contains(s.name))
-            return settings.value(s.name).value<ValueType>();
-        else
-            return s.defaultValue.value<ValueType>();
+//    /**
+//     * @brief value
+//     * @param settings
+//     * @param s
+//     * @return
+//     */
+//    template<class ValueType>
+//    ValueType value(const QSettings &settings, const Setting &s)
+//    {
+//        if (settings.contains(s.name))
+//            return settings.value(s.name).value<ValueType>();
+//        else
+//            return s.defaultValue.value<ValueType>();
+//    }
+
+//    // Main window
+//    static const QString groupMainWindow = "mainWindow";
+//    static const Setting mwGeometry = { "size", QRect(0, 0, 640, 480) };
+
+//    // Path
+//    static const QString path = "path";
+//    static const Setting pathGlobalDB = { "fullPath", QDir::currentPath() };
+//    static const Setting nameGlobalDB = { "name"    , "global"            };
+
+    /// Namespace settings (for now it's the easiest way to store/restore settings)
+    namespace settings {
+
+        // Main window settings
+        QRect mainWindowGeometry();
+        void writeMainWindowGeometry(const QRect &rect);
+
+        // Database settings
+        QString globalDbPath();
+        void setGlobalDbPath(const QString &path);
+
+        QString globalDbName();
+        void setGlobalDbName(const QString &name);
+
+        // Elements
+        QColor elementColor(const QString &marker);
+        void setElementColor(const QString &marker, const QColor &color);
     }
-
-    // Main window
-    static const QString groupMainWindow = "mainWindow";
-    static const Setting mwGeometry = { "size", QRect(0, 0, 640, 480) };
-
-    // Path
-    static const QString path = "path";
-    static const Setting pathGlobalDB = { "fullPath", QDir::currentPath() };
-    static const Setting nameGlobalDB = { "name"    , "global"            };
 
 } // namespace application

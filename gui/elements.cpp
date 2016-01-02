@@ -34,34 +34,36 @@
 #include <QDrag>
 #include <QMouseEvent>
 
+#include <entity/class.h>
+#include <entity/enum.h>
+#include <entity/union.h>
+#include <entity/templateclass.h>
+#include <entity/extendedtype.h>
+
+#include <application/settings.h>
+
 #include "qthelpers.h"
 
 namespace gui {
 
-    struct ElemntAttributes
-    {
-        QString name;
-        QColor color;
-    };
-
     static const QSize elementSize(120, 50);
-    static const QMap<SchemeElements, ElemntAttributes> elAttributes =
-        { {SchemeElements::Class,         {"Class",          {245, 224, 119}}},
-          {SchemeElements::Enum,          {"Enumeration",    {83 , 185, 86 }}},
-          {SchemeElements::Union,         {"Union",          {144, 199, 229}}},
-          {SchemeElements::TemplateClass, {"Template class", {152, 131, 190}}},
-          {SchemeElements::Alias,         {"Alias",          {249, 181, 194}}},
+    static const QMap<QString, QString> elAttributes =
+        { {entity::Class::staticMarker(),         "Class"},
+          {entity::Enum::staticMarker(),          "Enumeration"},
+          {entity::Union::staticMarker(),         "Union"},
+          {entity::TemplateClass::staticMarker(), "Template class"},
+          {entity::ExtendedType::staticMarker(),  "Alias"},
         };
 
-    static void addElement(SchemeElements type, QWidget &parent, QGridLayout &layout,
+    static void addElement(const QString& marker, QWidget &parent, QGridLayout &layout,
                            int row, int col)
     {
-        QString name = elAttributes[type].name;
-        QColor color = elAttributes[type].color;
+        QString name = elAttributes[marker];
+        QColor color = application::settings::elementColor(marker);
 
         // Create widget
-        QLabel * lbl = new QLabel(&parent);
-        lbl->setProperty(Elements::elementTypePropertyName(), uint(type));
+        QLabel *lbl = new QLabel(&parent);
+        lbl->setProperty(Elements::elementTypePropertyName(), marker);
 
         // Add graphics element
         QPixmap pic(elementSize);
@@ -104,11 +106,11 @@ namespace gui {
         ui->setupUi(this);
 
         // Add items
-        addElement(SchemeElements::Class, *this, *ui->gridLayout, 0, 0);
-        addElement(SchemeElements::Enum, *this, *ui->gridLayout, 0, 1);
-        addElement(SchemeElements::Union, *this, *ui->gridLayout, 1, 0);
-        addElement(SchemeElements::TemplateClass, *this, *ui->gridLayout, 1, 1);
-        addElement(SchemeElements::Alias, *this, *ui->gridLayout, 2, 0);
+        addElement(entity::Class::staticMarker(), *this, *ui->gridLayout, 0, 0);
+        addElement(entity::Enum::staticMarker(), *this, *ui->gridLayout, 0, 1);
+        addElement(entity::Union::staticMarker(), *this, *ui->gridLayout, 1, 0);
+        addElement(entity::TemplateClass::staticMarker(), *this, *ui->gridLayout, 1, 1);
+        addElement(entity::ExtendedType::staticMarker(), *this, *ui->gridLayout, 2, 0);
     }
 
     /**
