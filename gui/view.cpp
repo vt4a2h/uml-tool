@@ -135,13 +135,13 @@ namespace gui {
     std::unique_ptr<QUndoCommand> makeCmd(const QString &marker, Types &&... args)
     {
         if (marker == entity::ExtendedType::staticMarker())
-            return std::make_unique<commands::MakeAlias>(std::forward<Types >(args)...);
+            return std::make_unique<commands::MakeAlias>(std::forward<Types>(args)...);
         else if (marker == entity::Class::staticMarker())
-            return std::make_unique<commands::MakeClass>(std::forward<Types >(args)...);
+            return std::make_unique<commands::MakeClass>(std::forward<Types>(args)...);
         else if(marker == entity::Enum::staticMarker())
-            return std::make_unique<commands::MakeEnum>(std::forward<Types >(args)...);
+            return std::make_unique<commands::MakeEnum>(std::forward<Types>(args)...);
         else if (marker == entity::TemplateClass::staticMarker())
-            return std::make_unique<commands::MakeTemplate>(std::forward<Types >(args)...);
+            return std::make_unique<commands::MakeTemplate>(std::forward<Types>(args)...);
         else if (marker == entity::Union::staticMarker())
             return std::make_unique<commands::MakeUnion>(std::forward<Types >(args)...);
 

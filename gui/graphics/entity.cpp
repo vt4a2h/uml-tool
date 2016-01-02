@@ -27,6 +27,9 @@
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsScene>
+#include<QDebug>
+
+#include <application/settings.h>
 
 #include <gui/editentitydialog.h>
 
@@ -38,7 +41,8 @@
 #include <entity/extendedtype.h>
 #include <entity/scope.h>
 
-#include <constants.h>
+#include "constants.h"
+#include "qthelpers.h"
 
 namespace graphics {
 
@@ -47,19 +51,6 @@ namespace graphics {
         constexpr double tmpHeight = 100.;
         constexpr double tmpWidth  = 100.;
         const QString stub = Entity::tr( "Stub" );
-
-        // NOTE: temporary, maybe will changed to smth else
-        const QMap<size_t, std::function<QColor(const entity::SharedType &)>> entitiesColor = {
-            { entity::Enum::staticHashType() , [](const entity::SharedType & ){ return Qt::green;  } },
-            { entity::Union::staticHashType(), [](const entity::SharedType & ){ return Qt::yellow; } },
-            { entity::Class::staticHashType(), [](const entity::SharedType &t){
-                auto c = std::static_pointer_cast<entity::Class>(t);
-                return c->kind() == entity::Kind::ClassType ? Qt::blue : Qt::darkBlue;
-            } },
-            { entity::Type::staticHashType() , [](const entity::SharedType &){ return Qt::red;    } },
-            { entity::TemplateClass::staticHashType(), [](const entity::SharedType &){ return Qt::gray; } },
-            { entity::ExtendedType::staticHashType() , [](const entity::SharedType &){ return Qt::darkCyan; } },
-        };
     }
 
     /**
@@ -106,10 +97,10 @@ namespace graphics {
     {
         Q_UNUSED(option);
         Q_UNUSED(widget);
-        painter->setBrush(entitiesColor[m_Type->hashType()](m_Type));
+        painter->setBrush(application::settings::elementColor(G_ASSERT(m_Type)->marker()));
         painter->drawRect(QRectF(-tmpWidth / 2, -tmpHeight / 2, tmpWidth, tmpHeight));
         painter->setPen(Qt::white);
-        painter->drawText(boundingRect(), Qt::AlignCenter, m_Type ? m_Type->name() : stub);
+        painter->drawText(boundingRect(), Qt::AlignCenter, G_ASSERT(m_Type)->name());
     }
 
     /**

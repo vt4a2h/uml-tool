@@ -134,7 +134,7 @@ namespace gui {
         QByteArray itemData;
         QDataStream out(&itemData, QIODevice::WriteOnly);
         QVariant type = lbl->property(Elements::elementTypePropertyName());
-        out << type.value<uint>();
+        out << type.value<QString>();
 
         // Set mime data
         QMimeData *mimeData = new QMimeData;
