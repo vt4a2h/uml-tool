@@ -320,8 +320,6 @@ namespace gui {
     void MainWindow::setUpWidgets()
     {
         // Canvas
-        m_MainView->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing |
-                                   QPainter::SmoothPixmapTransform);
         m_MainView->setScene(m_MainScene);
         ui->gridLayout->addWidget(m_MainView);
 

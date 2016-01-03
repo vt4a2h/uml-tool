@@ -47,10 +47,27 @@
 namespace graphics {
 
     namespace {
-        constexpr double margin    = 2. ;
-        constexpr double tmpHeight = 20.;
-        constexpr double tmpWidth  = 120.;
+        constexpr qreal margin    = 2. ;
+        constexpr qreal minimumHeight = 20.;
+        constexpr qreal minimumWidth  = 120.;
+        constexpr qreal paddingPercent = 0.1;
         const QString stub = Entity::tr( "Stub" );
+
+        /// Cuts too long text
+        QString cutText(const QString &text, const QFontMetrics &fm, qreal frameWidth)
+        {
+            QString result(text);
+            QSize textSize(fm.size(Qt::TextSingleLine, text));
+            int maxTextWidth = frameWidth * (1 - paddingPercent);
+            if (textSize.width() > maxTextWidth) {
+                int symbolsCount = maxTextWidth / (textSize.width() / result.count());
+                symbolsCount -= 3; // three dots
+                result.chop(result.count() - symbolsCount);
+                result.append("...");
+            }
+
+            return result;
+        }
     }
 
     /**
@@ -61,6 +78,10 @@ namespace graphics {
                    const project::SharedProject &project, QGraphicsItem *parent)
         : QGraphicsObject(parent)
         , m_Type(type)
+        , m_LastPos(0, 0)
+        , m_Width(minimumWidth)
+        , m_Height(minimumHeight)
+        , m_HeaderHeight(minimumHeight)
         , m_Scope(scope)
         , m_Project(project)
     {
@@ -83,8 +104,8 @@ namespace graphics {
      */
     QRectF Entity::boundingRect() const
     {
-        return QRectF(-tmpWidth / 2 - margin, -tmpHeight / 2 - margin,
-                      tmpWidth + margin, tmpHeight + margin);
+        return QRectF(-m_Width / 2 - margin, -m_Height / 2 - margin,
+                      m_Width + margin, m_Height + margin);
     }
 
     /**
@@ -98,13 +119,8 @@ namespace graphics {
         Q_UNUSED(option);
         Q_UNUSED(widget);
 
-        QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
-        painter->setBrush(color);
-        painter->setPen(color);
-        painter->drawRect(QRectF(-tmpWidth / 2, -tmpHeight / 2, tmpWidth, tmpHeight));
-
-        painter->setPen(Qt::black);
-        painter->drawText(boundingRect(), Qt::AlignCenter, G_ASSERT(m_Type)->name());
+        drawHeader(painter);
+        drawFrame(painter);
     }
 
     /**
@@ -187,6 +203,51 @@ namespace graphics {
         }
 
         return QGraphicsObject::sceneEvent(ev);
+    }
+
+    /**
+     * @brief Entity::drawHeader
+     * @param painter
+     */
+    void Entity::drawHeader(QPainter *painter)
+    {
+        painter->save();
+
+        QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
+
+        // Fill background
+        QLinearGradient gradient(0, -m_Height / 2, 0, m_HeaderHeight / 2);
+        gradient.setColorAt(0, color);
+        gradient.setColorAt(1, Qt::white);
+        QRectF headerRect(-m_Width / 2, -m_Height / 2, m_Width, m_HeaderHeight);
+        painter->fillRect(headerRect, QBrush(gradient));
+
+        // Draw frame
+        painter->setPen(color);
+        painter->drawRect(headerRect);
+
+        // Add element name
+        painter->setPen(Qt::black);
+        painter->setRenderHint(QPainter::TextAntialiasing);
+        QString name(cutText(G_ASSERT(m_Type)->name(), painter->fontMetrics(), m_Width));
+        painter->drawText(headerRect, Qt::AlignCenter, name);
+
+        painter->restore();
+    }
+
+    /**
+     * @brief Entity::drawFrame
+     * @param painter
+     */
+    void Entity::drawFrame(QPainter *painter)
+    {
+        painter->save();
+
+        QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
+        painter->setPen(color);
+        painter->drawRect(QRectF(-m_Width / 2, -m_Height / 2, m_Width, m_Height));
+
+        painter->restore();
     }
 
 } // grpahics

@@ -72,7 +72,7 @@ namespace gui {
         // Render element
         QPainter p;
         p.begin(&pic);
-        p.setRenderHint(QPainter::Antialiasing);
+        p.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
         QLinearGradient gradient(elementSize.width() / 2, 0,
                                  elementSize.width() / 2, elementSize.height());
@@ -83,8 +83,7 @@ namespace gui {
         p.drawRect(QRectF({0, 0}, elementSize));
 
         p.setPen(Qt::black);
-        p.drawText(elementSize.width() / 2 - p.fontMetrics().width(name) / 2,
-                   elementSize.height() / 2, name);
+        p.drawText(pic.rect(), Qt::AlignCenter, name);
         p.end();
 
         // Set graphic element

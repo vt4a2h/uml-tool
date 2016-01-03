@@ -68,8 +68,15 @@ namespace graphics {
     private:
         bool sceneEvent(QEvent *ev) override;
 
+        void drawHeader(QPainter * painter);
+        void drawFrame(QPainter * painter);
+
         entity::SharedType m_Type;
         QPointF m_LastPos;
+
+        qreal m_Width;
+        qreal m_Height;
+        qreal m_HeaderHeight;
 
         entity::SharedScope m_Scope;
         project::SharedProject m_Project;
