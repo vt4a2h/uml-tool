@@ -66,13 +66,21 @@ namespace graphics {
         void moved(const QPointF &from, const QPointF &to);
 
     private:
-        bool sceneEvent(QEvent *ev) override;
+        void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+        void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+        void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
+
+        QPolygonF resizeCorner() const;
+        QRectF resizeCornerRect() const;
 
         void drawHeader(QPainter * painter);
         void drawFrame(QPainter * painter);
+        void drawResizeCorner(QPainter * painter);
 
         entity::SharedType m_Type;
         QPointF m_LastPos;
+        bool m_ResizeMode;
 
         qreal m_Width;
         qreal m_Height;

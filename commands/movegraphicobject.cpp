@@ -48,7 +48,7 @@ namespace commands {
      */
     void MoveGraphicObject::redo()
     {
-        m_Object.setPos(m_To);
+        m_Object.setPos(m_To); // to avoid infinity reccursion, because object is already moved
     }
 
     /**

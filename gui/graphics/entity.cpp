@@ -27,7 +27,8 @@
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsScene>
-#include<QDebug>
+#include <QDebug>
+#include <QApplication>
 
 #include <application/settings.h>
 
@@ -51,7 +52,9 @@ namespace graphics {
         constexpr qreal minimumHeight = 20.;
         constexpr qreal minimumWidth  = 120.;
         constexpr qreal paddingPercent = 0.1;
+        const QSizeF resizeCornerSize(12, 12);
         const QString stub = Entity::tr( "Stub" );
+        const Qt::CursorShape defaultCursorShape = Qt::ArrowCursor;
 
         /// Cuts too long text
         QString cutText(const QString &text, const QFontMetrics &fm, qreal frameWidth)
@@ -79,6 +82,7 @@ namespace graphics {
         : QGraphicsObject(parent)
         , m_Type(type)
         , m_LastPos(0, 0)
+        , m_ResizeMode(false)
         , m_Width(minimumWidth)
         , m_Height(minimumHeight)
         , m_HeaderHeight(minimumHeight)
@@ -86,6 +90,9 @@ namespace graphics {
         , m_Project(project)
     {
         setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+
+        setAcceptHoverEvents(true);
+        setCursor(defaultCursorShape);
 
         Q_ASSERT(type);
         connect(type.get(), &entity::BasicEntity::nameChanged, [=]{ update(); });
@@ -121,6 +128,9 @@ namespace graphics {
 
         drawHeader(painter);
         drawFrame(painter);
+        drawResizeCorner(painter);
+
+        qDebug() << painter->renderHints().testFlag(QPainter::Antialiasing);
     }
 
     /**
@@ -178,31 +188,95 @@ namespace graphics {
     }
 
     /**
-     * @brief Entity::event
-     * @param ev
+     * @brief Entity::mousePressEvent
+     * @param event
+     */
+    void Entity::mousePressEvent(QGraphicsSceneMouseEvent *event)
+    {
+        m_LastPos = pos();
+
+        m_ResizeMode = resizeCorner().containsPoint(event->pos(), Qt::OddEvenFill);
+
+        QGraphicsItem::mousePressEvent(event);
+    }
+
+    /**
+     * @brief Entity::mouseReleaseEvent
+     * @param event
+     */
+    void Entity::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+    {
+        if (pos() != m_LastPos)
+            emit moved(m_LastPos, pos());
+
+        m_ResizeMode = false;
+
+        QGraphicsItem::mouseReleaseEvent(event);
+    }
+
+    /**
+     * @brief Entity::mouseMoveEvent
+     * @param event
+     */
+    void Entity::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+    {
+        if (m_ResizeMode) {
+            QPointF pos = event->pos();
+            QPointF lastPos = event->lastPos();
+
+            qreal yLen = (QPointF(lastPos.x(), pos.y()) - lastPos).manhattanLength();
+            int yFactor = pos.y() > lastPos.y() ? 2 : -2; // Why 2? See coordinate system.
+
+            qreal xLen = (event->pos() - QPointF(lastPos.x(), pos.y())).manhattanLength();
+            int xFactor = pos.x() > lastPos.x() ? 2 : -2; // Why 2? See coordinate system.
+
+            prepareGeometryChange();
+
+            auto tmpHeight = m_Height + yLen * yFactor;
+            if (tmpHeight >= minimumHeight)
+                m_Height = tmpHeight;
+
+            auto tmpWidth = m_Width + xLen * xFactor;
+            if (tmpWidth >= minimumWidth)
+                m_Width = tmpWidth;
+        }
+        else
+            QGraphicsItem::mouseMoveEvent(event);
+    }
+
+    /**
+     * @brief Entity::hoverMoveEvent
+     * @param event
+     */
+    void Entity::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+    {
+        if (resizeCorner().containsPoint(event->pos(), Qt::OddEvenFill))
+            setCursor(Qt::SizeFDiagCursor);
+        else
+            setCursor(defaultCursorShape);
+
+        QGraphicsItem::hoverMoveEvent(event);
+    }
+
+    /**
+     * @brief Entity::resizeCornerSize
      * @return
      */
-    bool Entity::sceneEvent(QEvent *ev)
+    QPolygonF Entity::resizeCorner() const
     {
-        switch (ev->type()) {
-            case QEvent::GraphicsSceneMousePress:
-            {
-                m_LastPos = pos();
-                break;
-            }
+        QRectF rect(resizeCornerRect());
+        return QPolygonF() << rect.topRight() << rect.bottomLeft() << rect.bottomRight();
+    }
 
-            case QEvent::GraphicsSceneMouseRelease:
-            {
-                if (pos() != m_LastPos)
-                    emit moved(m_LastPos, pos());
-
-                break;
-            }
-
-            default: ;
-        }
-
-        return QGraphicsObject::sceneEvent(ev);
+    /**
+     * @brief Entity::resizeCornerRect
+     * @return
+     */
+    QRectF Entity::resizeCornerRect() const
+    {
+        return QRectF(m_Width / 2  - resizeCornerSize.width(),
+                      m_Height / 2 - resizeCornerSize.height(),
+                      resizeCornerSize.width(), resizeCornerSize.height());
     }
 
     /**
@@ -216,7 +290,7 @@ namespace graphics {
         QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
 
         // Fill background
-        QLinearGradient gradient(0, -m_Height / 2, 0, m_HeaderHeight / 2);
+        QLinearGradient gradient(0, -m_Height / 2, 0, -m_Height / 2 + m_HeaderHeight);
         gradient.setColorAt(0, color);
         gradient.setColorAt(1, Qt::white);
         QRectF headerRect(-m_Width / 2, -m_Height / 2, m_Width, m_HeaderHeight);
@@ -246,6 +320,30 @@ namespace graphics {
         QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
         painter->setPen(color);
         painter->drawRect(QRectF(-m_Width / 2, -m_Height / 2, m_Width, m_Height));
+
+        painter->restore();
+    }
+
+    /**
+     * @brief Entity::drawResizeCorner
+     * @param painter
+     */
+    void Entity::drawResizeCorner(QPainter *painter)
+    {
+        painter->save();
+
+        painter->setRenderHint(QPainter::Antialiasing);
+
+        painter->setPen(application::settings::elementColor(G_ASSERT(m_Type)->marker()));
+        QRectF rect(resizeCornerRect());
+
+        QPointF bottomLeft(rect.bottomLeft());
+        QPointF topRight(rect.topRight());
+        painter->drawLine(bottomLeft, topRight);
+
+        bottomLeft.rx() += rect.width() / 2;
+        topRight.ry() += rect.height() / 2;
+        painter->drawLine(bottomLeft, topRight);
 
         painter->restore();
     }

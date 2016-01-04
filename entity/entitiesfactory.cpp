@@ -71,8 +71,8 @@ namespace entity {
         QObject::connect(entity, &graphics::Entity::yChanged, currentProject, &project::Project::touch);
         QObject::connect(entity, &graphics::Entity::moved,
                          [=](const QPointF &from, const QPointF &to) {
-                            auto &&cmd = std::make_unique<commands::MoveGraphicObject>(*entity, entity->typeObject()->name(),
-                                                                                       from, to);
+                            auto cmd = std::make_unique<commands::MoveGraphicObject>(*entity, entity->typeObject()->name(),
+                                                                                     from, to);
                             currentProject->commandsStack()->push(cmd.release());
                          });
     }
