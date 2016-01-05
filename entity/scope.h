@@ -42,6 +42,8 @@ namespace entity {
     class Scope : public BasicEntity
     {
     public:
+        Q_PROPERTY(typewww name READ name WRITE setName NOTIFY nameChanged)
+
         Scope(Scope &&src);
         Scope(const Scope &src);
         Scope(const QString &scopeName = "", const QString &parentScopeID = "");

@@ -27,8 +27,6 @@
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsScene>
-#include <QDebug>
-#include <QApplication>
 
 #include <application/settings.h>
 
@@ -53,7 +51,6 @@ namespace graphics {
         constexpr qreal minimumWidth  = 120.;
         constexpr qreal paddingPercent = 0.1;
         const QSizeF resizeCornerSize(12, 12);
-        const QString stub = Entity::tr( "Stub" );
         const Qt::CursorShape defaultCursorShape = Qt::ArrowCursor;
 
         /// Cuts too long text
@@ -70,6 +67,12 @@ namespace graphics {
             }
 
             return result;
+        }
+
+        template <class Container>
+        void renderSection(QPainter * p, const QString &sectionName, const Container elemnts)
+        {
+
         }
     }
 
@@ -126,11 +129,9 @@ namespace graphics {
         Q_UNUSED(option);
         Q_UNUSED(widget);
 
-        drawHeader(painter);
         drawFrame(painter);
+        drawHeader(painter);
         drawResizeCorner(painter);
-
-        qDebug() << painter->renderHints().testFlag(QPainter::Antialiasing);
     }
 
     /**
@@ -318,8 +319,10 @@ namespace graphics {
         painter->save();
 
         QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
+        QRectF rect(-m_Width / 2, -m_Height / 2, m_Width, m_Height);
+        painter->fillRect(rect, Qt::white);
         painter->setPen(color);
-        painter->drawRect(QRectF(-m_Width / 2, -m_Height / 2, m_Width, m_Height));
+        painter->drawRect(rect);
 
         painter->restore();
     }
