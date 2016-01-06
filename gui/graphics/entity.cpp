@@ -27,6 +27,7 @@
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsScene>
+#include <QDebug>
 
 #include <application/settings.h>
 
@@ -40,6 +41,8 @@
 #include <entity/extendedtype.h>
 #include <entity/scope.h>
 
+#include <entity/property.h>
+
 #include "constants.h"
 #include "qthelpers.h"
 
@@ -47,7 +50,8 @@ namespace graphics {
 
     namespace {
         constexpr qreal margin    = 2. ;
-        constexpr qreal minimumHeight = 20.;
+        constexpr qreal minimumHeight = 30.;
+        constexpr qreal lineHeight    = 20.;
         constexpr qreal minimumWidth  = 120.;
         constexpr qreal paddingPercent = 0.1;
         const QSizeF resizeCornerSize(12, 12);
@@ -70,9 +74,38 @@ namespace graphics {
         }
 
         template <class Container>
-        void renderSection(QPainter * p, const QString &sectionName, const Container elemnts)
+        QPointF drawSection(QPainter * painter, const QString &sectionName, const Container elements,
+                            const QPointF &topLeft, qreal availableHeight, qreal width,
+                            const QColor &frameColor)
         {
+            painter->save();
 
+            QPointF bottomLeft = topLeft;
+            bottomLeft.ry() += lineHeight;
+            painter->drawText(QRectF(topLeft + QPointF(2 * margin, 0), QSizeF(width, lineHeight)), Qt::AlignLeft | Qt::AlignVCenter, sectionName);
+
+            for (auto &&e : elements) {
+                qDebug() << "diff:" << (bottomLeft - topLeft).manhattanLength();
+                qDebug() << (bottomLeft - topLeft).manhattanLength() << ">" << availableHeight << "=" << ((bottomLeft - topLeft).manhattanLength() > availableHeight);
+                if ((bottomLeft - topLeft).manhattanLength() > availableHeight) {
+                    qDebug() << "broken";
+                    break;
+                }
+
+                // TODO: deal with it
+                painter->drawText(QRectF(bottomLeft + QPointF(2 * margin, 0), QSizeF(width, lineHeight)), Qt::AlignLeft | Qt::AlignVCenter, e->name());
+                bottomLeft.ry() += lineHeight;
+            }
+
+            qreal height = lineHeight * (elements.count() + 1 /*section name*/);
+            qDebug() << "height:" << height;
+            if (height < availableHeight ) {
+                QRectF rect(topLeft, QSizeF(width, height));
+                painter->setPen(frameColor);
+                painter->drawRect(rect);
+            }
+
+            painter->restore();
         }
     }
 
@@ -87,7 +120,7 @@ namespace graphics {
         , m_LastPos(0, 0)
         , m_ResizeMode(false)
         , m_Width(minimumWidth)
-        , m_Height(minimumHeight)
+        , m_Height(/*minimumHeight*/200)
         , m_HeaderHeight(minimumHeight)
         , m_Scope(scope)
         , m_Project(project)
@@ -97,8 +130,14 @@ namespace graphics {
         setAcceptHoverEvents(true);
         setCursor(defaultCursorShape);
 
-        Q_ASSERT(type);
-        connect(type.get(), &entity::BasicEntity::nameChanged, [=]{ update(); });
+        connect(G_ASSERT(type.get()), &entity::BasicEntity::nameChanged, [=]{ update(); });
+
+        // TODO: remove. Just for test
+        m_Type->addNewProperty()->setName("p1");
+        m_Type->addNewProperty()->setName("p2");
+        m_Type->addNewProperty()->setName("p3");
+        m_Type->addNewProperty()->setName("p4");
+        m_Type->addNewProperty()->setName("p5");
     }
 
     /**
@@ -132,6 +171,18 @@ namespace graphics {
         drawFrame(painter);
         drawHeader(painter);
         drawResizeCorner(painter);
+
+        // TODO: move to the separate method {
+        QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
+
+        auto topLeft = boundingRect().topLeft() + QPointF(margin, margin);
+        topLeft.ry() += m_HeaderHeight;
+        qreal len = m_Height - m_HeaderHeight;
+        qDebug() << "len:" << len
+                 << "topLeft:" << topLeft;
+        topLeft = drawSection(painter, tr("Properties"), m_Type->properties(), topLeft, len,
+                              m_Width, color);
+        // }
     }
 
     /**
