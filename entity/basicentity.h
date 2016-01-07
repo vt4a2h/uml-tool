@@ -26,6 +26,8 @@
 
 namespace entity {
 
+     enum Section : int;
+
     /// The BasicEntity class
     class BasicEntity : public QObject
     {
@@ -35,6 +37,8 @@ namespace entity {
         virtual QString id() const;
         virtual QString parentID() const; // TODO: implement! it's usefull
         virtual void setId(const QString &id);
+
+        virtual Section section() const;
 
         virtual QString name() const;
         void setName(const QString &name);

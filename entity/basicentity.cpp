@@ -24,6 +24,8 @@
 
 #include <utility/helpfunctions.h>
 
+#include "enums.h"
+
 namespace entity {
 
     namespace {
@@ -130,6 +132,15 @@ namespace entity {
     void BasicEntity::setId(const QString &id)
     {
         Q_UNUSED(id);
+    }
+
+    /**
+     * @brief BasicEntity::section
+     * @return
+     */
+    Section BasicEntity::section() const
+    {
+        return Section::Public;
     }
 
     /**

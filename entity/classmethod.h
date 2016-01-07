@@ -37,9 +37,9 @@ namespace entity {
 
     class ExtendedType;
     class Field;
-    enum Section          : int;
+    enum Section : int;
     enum class RhsIdentificator : int;
-    enum ClassMethodType  : int;
+    enum ClassMethodType : int;
 
     // TODO: add QString m_Body, for generate body if it's possible
     // TODO: add dtor and ctor types

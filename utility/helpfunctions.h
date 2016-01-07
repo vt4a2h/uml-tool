@@ -237,5 +237,6 @@ namespace utility {
     entity::RhsIdentificator methodRhsIdFromString(const QString &in);
 
     QString sectionToString(entity::Section section);
+    QString sectionToSymbol(entity::Section section);
 }
 

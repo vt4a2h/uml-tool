@@ -131,6 +131,10 @@ namespace utility {
                                    {entity::Private, "private"}, {entity::None, ""}
                                  };
 
+        SectionString  kSectionSymbol { {entity::Public, "+"}, {entity::Protected, "#"},
+                                        {entity::Private, "-"}, {entity::None, ""}
+                                      };
+
         using MakerT  = std::function<entity::SharedType()>;
         using MakersT = const std::map<QString, MakerT>;
         using MakerM  = std::function<entity::SharedMethod()>;
@@ -300,6 +304,16 @@ namespace utility {
     entity::RhsIdentificator methodRhsIdFromString(const QString &in)
     {
         return mapSearchHelper(kSRhsId, in, entity::RhsIdentificator::None);
+    }
+
+    /**
+     * @brief sectionToSymbol
+     * @param section
+     * @return
+     */
+    QString sectionToSymbol(entity::Section section)
+    {
+        return mapSearchHelper(kSectionSymbol, section, QString("unknown"));
     }
 
 }

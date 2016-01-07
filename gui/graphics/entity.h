@@ -77,6 +77,7 @@ namespace graphics {
         void drawHeader(QPainter * painter);
         void drawFrame(QPainter * painter);
         void drawResizeCorner(QPainter * painter);
+        void drawSections(QPainter * painter);
 
         entity::SharedType m_Type;
         QPointF m_LastPos;
