@@ -57,7 +57,7 @@ TEST_F(Enteties, SimpleType)
     _type->setId("some id");
     _type->setScopeId("global scope id");
 
-    test_copy_move(Type, _type);
+    test_copy_move(Type, _type)
 }
 
 TEST_F(Enteties, ExtendedType)
@@ -104,7 +104,7 @@ TEST_F(Enteties, ExtendedType)
     // Re-add one parameter to test copy and move
     _extendedType->addTemplateParameter(par1);
 
-    test_copy_move(ExtendedType, _extendedType);
+    test_copy_move(ExtendedType, _extendedType)
 }
 
 TEST_F(Enteties, Class)

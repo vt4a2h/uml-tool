@@ -70,7 +70,7 @@ namespace entity {
      */
     Class::Class(Class &&src)
     {
-        moveFrom(src);
+        moveFrom(std::move(src));
     }
 
     /**
@@ -103,7 +103,7 @@ namespace entity {
     Class &Class::operator =(Class &&rhs)
     {
         if (this != &rhs)
-            moveFrom(rhs);
+            moveFrom(std::move(rhs));
 
         return *this;
     }
@@ -862,9 +862,9 @@ namespace entity {
      * @brief Class::moveFrom
      * @param src
      */
-    void Class::moveFrom(Class &src)
+    void Class::moveFrom(Class &&src)
     {
-        Type::moveFrom(src);
+        Type::moveFrom(std::move(src));
 
         m_Kind = std::move(src.m_Kind);
         m_FinalStatus = std::move(src.m_FinalStatus);

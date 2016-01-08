@@ -105,6 +105,8 @@ namespace graphics {
 
             painter->save();
 
+            painter->setRenderHint(QPainter::TextAntialiasing);
+
             // Draw section name
             drawSectionText(painter, sectionName, width, Qt::AlignCenter, topLeft, availableHeight);
 

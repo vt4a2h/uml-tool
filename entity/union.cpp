@@ -321,7 +321,7 @@ namespace entity {
      */
     void Union::moveFrom(Union &src)
     {
-        Type::moveFrom(src);
+        Type::moveFrom(std::move(src));
         m_Fields = std::move(src.m_Fields);
     }
 

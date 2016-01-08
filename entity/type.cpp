@@ -49,7 +49,7 @@ namespace entity {
      */
     Type::Type(Type &&src)
     {
-       moveFrom(src);
+       moveFrom(std::move(src));
     }
 
     /**
@@ -84,10 +84,10 @@ namespace entity {
      */
     Type &Type::operator =(Type &&rhs)
     {
-       if (this != &rhs)
-           moveFrom(rhs);
+        if (this != &rhs)
+            moveFrom(std::move(rhs));
 
-       return *this;
+        return *this;
     }
 
     /**
@@ -255,7 +255,7 @@ namespace entity {
      * @brief Type::moveFrom
      * @param src
      */
-    void Type::moveFrom(Type &src)
+    void Type::moveFrom(Type &&src)
     {
         m_Name    = std::move(src.m_Name);
         m_Id      = std::move(src.m_Id);

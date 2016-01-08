@@ -70,7 +70,7 @@ namespace entity {
         static QString staticDefaultName();
 
     protected:
-        virtual void moveFrom(Type &src);
+        virtual void moveFrom(Type &&src);
         virtual void copyFrom(const Type &src);
 
     private:

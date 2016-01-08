@@ -136,7 +136,7 @@ namespace entity {
         static QString staticDefaultName();
 
     protected:
-        void moveFrom(Class &src);
+        void moveFrom(Class &&src);
         void copyFrom(const Class &src);
 
     private Q_SLOTS:
