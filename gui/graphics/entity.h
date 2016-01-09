@@ -30,7 +30,7 @@
 
 #include <project/project_types.hpp>
 
-class QMenu;
+#include "common.h"
 
 namespace gui
 {
@@ -53,6 +53,9 @@ namespace graphics {
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                    QWidget *widget = nullptr);
 
+        enum { Type = UserType + int(ElementType::Entity) };
+        int type() const override;
+
         entity::SharedType typeObject() const;
         void setTypeObject(const entity::SharedType &type);
 
@@ -61,6 +64,9 @@ namespace graphics {
 
         project::SharedProject project() const;
         void setProject(const project::SharedProject &project);
+
+        void setSelectedToConnect(bool status);
+        bool selectedToConnect() const;
 
     signals:
         void moved(const QPointF &from, const QPointF &to);
@@ -78,10 +84,12 @@ namespace graphics {
         void drawFrame(QPainter * painter);
         void drawResizeCorner(QPainter * painter);
         void drawSections(QPainter * painter);
+        void drawConnectFrame(QPainter * painter);
 
         entity::SharedType m_Type;
         QPointF m_LastPos;
         bool m_ResizeMode;
+        bool m_selectedToConnect;
 
         qreal m_Width;
         qreal m_Height;

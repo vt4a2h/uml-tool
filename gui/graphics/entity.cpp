@@ -139,6 +139,7 @@ namespace graphics {
         , m_Type(type)
         , m_LastPos(0, 0)
         , m_ResizeMode(false)
+        , m_selectedToConnect(false)
         , m_Width(minimumWidth)
         , m_Height(minimumHeight)
         , m_HeaderHeight(minimumHeight)
@@ -185,6 +186,18 @@ namespace graphics {
         drawHeader(painter);
         drawSections(painter);
         drawResizeCorner(painter);
+
+        if (selectedToConnect())
+            drawConnectFrame(painter);
+    }
+
+    /**
+     * @brief Entity::type
+     * @return
+     */
+    int Entity::type() const
+    {
+        return Type;
     }
 
     /**
@@ -239,6 +252,24 @@ namespace graphics {
     void Entity::setProject(const project::SharedProject &project)
     {
         m_Project = project;
+    }
+
+    /**
+     * @brief Entity::setSelectedToConnect
+     * @param status
+     */
+    void Entity::setSelectedToConnect(bool status)
+    {
+        m_selectedToConnect = status;
+    }
+
+    /**
+     * @brief Entity::selectedToConnect
+     * @return
+     */
+    bool Entity::selectedToConnect() const
+    {
+        return m_selectedToConnect;
     }
 
     /**
@@ -423,6 +454,21 @@ namespace graphics {
         drawSection(painter, tr("Methods"), m_Type->methods(), topLeft, len, m_Width, color);
         drawSection(painter, tr("Fields"), m_Type->fields(), topLeft, len, m_Width, color);
         drawSection(painter, tr("Elements"), m_Type->elements(), topLeft, len, m_Width, color);
+
+        painter->restore();
+    }
+
+    /**
+     * @brief Entity::drawConnectFrame
+     * @param painter
+     */
+    void Entity::drawConnectFrame(QPainter *painter)
+    {
+        painter->save();
+
+        painter->setRenderHint(QPainter::Antialiasing);
+        painter->setPen(QPen(Qt::red, 2));
+        painter->drawRect(QRectF(-m_Width / 2, -m_Height / 2, m_Width, m_Height));
 
         painter->restore();
     }

@@ -102,6 +102,8 @@
    </attribute>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionAddRelation"/>
   </widget>
   <action name="actionExit">
    <property name="text">
@@ -236,6 +238,17 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+E</string>
+   </property>
+  </action>
+  <action name="actionAddRelation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>AddRelation</string>
+   </property>
+   <property name="toolTip">
+    <string>Test button to add realtion</string>
    </property>
   </action>
  </widget>

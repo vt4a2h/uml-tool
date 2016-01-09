@@ -43,6 +43,8 @@ namespace gui {
     class EditEntityDialog;
     class MainWindow;
 
+    // TODO: move functionality to the scene class (or eliminate)
+
     /// The SceneFilter class
     class SceneFilter : public QObject
     {

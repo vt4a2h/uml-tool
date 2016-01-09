@@ -50,6 +50,7 @@
 #include <project/project.h>
 
 #include <gui/graphics/entity.h>
+#include <gui/graphics/scene.h>
 
 #include <entity/entitiesfactory.h>
 #include <entity/type.h>
@@ -92,11 +93,12 @@ namespace {
         db->setItemsPos(positions);
     }
 
-    void addGraphicsItems(QGraphicsScene *scene, const project::SharedProject &project)
+    void addGraphicsItems(graphics::Scene *scene, const project::SharedProject &project)
     {
         Q_ASSERT(scene);
 
         scene->clear();
+        scene->initTrackLine();
 
         db::ProjectDatabase * database = project->database().get();
         for (auto &&item : database->itemsPos())
@@ -115,10 +117,10 @@ namespace gui {
     MainWindow::MainWindow(const models::SharedApplicationModel &applicationModel, QWidget *parent)
         : QMainWindow(parent)
         , ui(new Ui::MainWindow)
+        , m_MainScene(std::make_unique<graphics::Scene>())
         , m_ProjectTreeMenu(new QMenu(this))
         , m_ProjectTreeView(new QTreeView(this))
         , m_MainView(new View(applicationModel, this))
-        , m_MainScene(new QGraphicsScene(this))
         , m_ConsoleOutput(new QTextEdit(this))
         , m_UndoView(new QUndoView(this))
         , m_Elements(new Elements(this))
@@ -132,7 +134,8 @@ namespace gui {
         setUpWidgets();
         makeConnections();
 
-        m_MainScene->installEventFilter(new SceneFilter(m_ApplicationModel, m_MainScene, this, this));
+        m_MainScene->installEventFilter(new SceneFilter(m_ApplicationModel, m_MainScene.get(),
+                                                        this, this));
 
         update();
     }
@@ -225,7 +228,7 @@ namespace gui {
     {
         if (auto currentPtoject = m_ApplicationModel->currentProject()) {
             if (!currentPtoject->isSaved()) {
-                storeItemsPosition(m_MainScene, currentPtoject->database().get());
+                storeItemsPosition(m_MainScene.get(), currentPtoject->database().get());
                 currentPtoject->save();
             }
         } else {
@@ -320,7 +323,7 @@ namespace gui {
     void MainWindow::setUpWidgets()
     {
         // Canvas
-        m_MainView->setScene(m_MainScene);
+        m_MainView->setScene(m_MainScene.get());
         ui->gridLayout->addWidget(m_MainView);
 
         // Project
@@ -357,6 +360,8 @@ namespace gui {
                   this, &MainWindow::onProjectTreeMenu);
         G_CONNECT(m_NewProjectDialog, &NewProjectDialog::newProject,
                   this, &MainWindow::createNewProject);
+        G_CONNECT(ui->actionAddRelation, &QAction::toggled,
+                  m_MainScene.get(), &graphics::Scene::setShowRelationTrack);
     }
 
     /**
@@ -478,7 +483,7 @@ namespace gui {
             connect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &QUndoStack::redo);
             connect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &QUndoStack::undo);
 
-            addGraphicsItems(m_MainScene, m_ApplicationModel->currentProject());
+            addGraphicsItems(m_MainScene.get(), m_ApplicationModel->currentProject());
         } else {
             qWarning() << QString("Current project with id %1 is not found.").arg(id);
         }

@@ -41,6 +41,8 @@ namespace models {
     class ApplicationModel;
 }
 
+namespace graphics { class Scene; }
+
 /**
  * @brief namespace gui
  */
@@ -111,12 +113,12 @@ namespace gui {
                      bool visible = true);
 
         QScopedPointer<Ui::MainWindow> ui;
+        std::unique_ptr<graphics::Scene> m_MainScene;
 
         QMenu *m_ProjectTreeMenu;
 
         QTreeView      *m_ProjectTreeView;
         View           *m_MainView;
-        QGraphicsScene *m_MainScene;
         QTextEdit      *m_ConsoleOutput;
         QUndoView      *m_UndoView;
         Elements       *m_Elements;

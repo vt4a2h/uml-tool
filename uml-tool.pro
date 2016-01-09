@@ -76,7 +76,8 @@ SOURCES += \
     entity/components/token.cpp \
     gui/elements.cpp \
     gui/view.cpp \
-    application/settings.cpp
+    application/settings.cpp \
+    gui/graphics/scene.cpp
 
 HEADERS += \
     enums.h \
@@ -158,7 +159,9 @@ HEADERS += \
     entity/components/token.h \
     qthelpers.h \
     gui/elements.h \
-    gui/view.h
+    gui/view.h \
+    gui/graphics/scene.h \
+    gui/graphics/common.h
 
 FORMS += \
     gui/mainwindow.ui \

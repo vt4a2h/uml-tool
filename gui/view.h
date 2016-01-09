@@ -39,10 +39,11 @@ namespace gui {
     public:
         View(const models::SharedApplicationModel &model, QWidget *parent = 0);
 
-        void dropEvent(QDropEvent *de);
-        void dragEnterEvent(QDragEnterEvent *de);
-        void dragMoveEvent(QDragMoveEvent *de);
-        void dragLeaveEvent(QDragLeaveEvent *de);
+    public: // QGraphicsView overrides
+        void dropEvent(QDropEvent *de) override;
+        void dragEnterEvent(QDragEnterEvent *de) override;
+        void dragMoveEvent(QDragMoveEvent *de) override;
+        void dragLeaveEvent(QDragLeaveEvent *de) override;
 
     public slots:
         void onCurrentProjectChanged(const project::SharedProject &p);
