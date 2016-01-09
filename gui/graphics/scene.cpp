@@ -35,7 +35,7 @@ namespace graphics {
     namespace
     {
 
-        /// Line with antialiasing
+        /// Dash line with antialiasing
         class Line : public QGraphicsLineItem
         {
         public:
@@ -43,6 +43,8 @@ namespace graphics {
                        QWidget *widget = nullptr)
             {
                 painter->setRenderHint(QPainter::Antialiasing);
+                setPen(Qt::DashLine);
+
                 QGraphicsLineItem::paint(painter, option, widget);
             }
 
