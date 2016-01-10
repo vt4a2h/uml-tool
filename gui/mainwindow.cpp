@@ -104,7 +104,7 @@ namespace {
         for (auto &&item : database->itemsPos())
             if (const entity::SharedType &type = database->depthTypeSearch(item.first))
                 if (auto &&scope = database->depthScopeSearch(type->scopeId()))
-                    entity::EntitiesFactory::get().addEntity(*scene, project, scope, type, item.second /*pos*/);
+                    entity::EntitiesFactory::get().addEntity(*scene, project, type, item.second /*pos*/);
     }
 }
 

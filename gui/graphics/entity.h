@@ -45,8 +45,7 @@ namespace graphics {
     {
         Q_OBJECT
     public:
-        Entity(const entity::SharedType &type, const entity::SharedScope &scope,
-               const project::SharedProject &project, QGraphicsItem *parent = nullptr);
+        Entity(const entity::SharedType &type, QGraphicsItem *parent = nullptr);
         ~Entity();
 
         QRectF boundingRect() const override;
@@ -58,12 +57,6 @@ namespace graphics {
 
         entity::SharedType typeObject() const;
         void setTypeObject(const entity::SharedType &type);
-
-        entity::SharedScope scope() const;
-        void setScope(const entity::SharedScope &scope);
-
-        project::SharedProject project() const;
-        void setProject(const project::SharedProject &project);
 
         void setSelectedToConnect(bool status);
         bool selectedToConnect() const;
@@ -94,9 +87,6 @@ namespace graphics {
         qreal m_Width;
         qreal m_Height;
         qreal m_HeaderHeight;
-
-        entity::SharedScope m_Scope;
-        project::SharedProject m_Project;
     };
 
 } // grpahics

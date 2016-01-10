@@ -133,8 +133,7 @@ namespace graphics {
      * @brief Entity::Entity
      * @param parent
      */
-    Entity::Entity(const entity::SharedType &type, const entity::SharedScope &scope,
-                   const project::SharedProject &project, QGraphicsItem *parent)
+    Entity::Entity(const entity::SharedType &type, QGraphicsItem *parent)
         : QGraphicsObject(parent)
         , m_Type(type)
         , m_LastPos(0, 0)
@@ -143,8 +142,6 @@ namespace graphics {
         , m_Width(minimumWidth)
         , m_Height(minimumHeight)
         , m_HeaderHeight(minimumHeight)
-        , m_Scope(scope)
-        , m_Project(project)
     {
         setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
 
@@ -216,42 +213,6 @@ namespace graphics {
     void Entity::setTypeObject(const entity::SharedType &type)
     {
         m_Type = type;
-    }
-
-    /**
-     * @brief Entity::scope
-     * @return
-     */
-    entity::SharedScope Entity::scope() const
-    {
-        return m_Scope;
-    }
-
-    /**
-     * @brief Entity::setScope
-     * @param scope
-     */
-    void Entity::setScope(const entity::SharedScope &scope)
-    {
-        m_Scope = scope;
-    }
-
-    /**
-     * @brief Entity::project
-     * @return
-     */
-    project::SharedProject Entity::project() const
-    {
-        return m_Project;
-    }
-
-    /**
-     * @brief Entity::setProject
-     * @param project
-     */
-    void Entity::setProject(const project::SharedProject &project)
-    {
-        m_Project = project;
     }
 
     /**
@@ -335,7 +296,7 @@ namespace graphics {
      */
     void Entity::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
     {
-        if (resizeCorner().containsPoint(event->pos(), Qt::OddEvenFill))
+        if (resizeCorner().containsPoint(event->pos(), Qt::OddEvenFill) && !selectedToConnect())
             setCursor(Qt::SizeFDiagCursor);
         else
             setCursor(defaultCursorShape);

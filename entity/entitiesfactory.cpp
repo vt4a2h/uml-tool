@@ -47,10 +47,9 @@ namespace entity {
      * @param pos
      */
     graphics::Entity *EntitiesFactory::addEntity(QGraphicsScene &scene, const project::SharedProject &project,
-                                                 const entity::SharedScope &scope, const SharedType &type,
-                                                 const QPointF &pos) const
+                                                 const SharedType &type, const QPointF &pos) const
     {
-        graphics::Entity * entity = newEntity(scene, pos, type, scope, project);
+        graphics::Entity * entity = newEntity(scene, pos, type);
         connectEntity(entity, project.get());
         return entity;
     }
@@ -78,11 +77,9 @@ namespace entity {
     }
 
     graphics::Entity *EntitiesFactory::newEntity(QGraphicsScene &scene, const QPointF &pos,
-                                const entity::SharedType &type,
-                                const entity::SharedScope &scope,
-                                const project::SharedProject &project) const
+                                                 const entity::SharedType &type) const
     {
-        graphics::Entity * entity = new graphics::Entity(type, scope, project);
+        graphics::Entity * entity = new graphics::Entity(type);
         entity->setPos(pos);
         scene.addItem(entity);
 
