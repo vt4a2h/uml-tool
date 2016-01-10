@@ -444,8 +444,9 @@ namespace models {
         int componentsCount = count(m_Components, m_display);
         QModelIndexList out;
         out.reserve(componentsCount);
-        for (int i = 0; i < componentsCount; ++i)
+        for (int i = 0; i < componentsCount; ++i) {
             out << index(i, 1);
+        }
 
        emit showButtons(out);
     }

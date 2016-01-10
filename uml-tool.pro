@@ -5,9 +5,9 @@ CONFIG += core gui c++14
 QT += widgets
 
 linux-g++ {
-    message(********** Building with gcc 5 **********)
-    QMAKE_CXX = g++-5
-    QMAKE_CXXFLAGS *= -std=c++1y
+    message(********** Building with gcc 6 **********)
+    QMAKE_CXX = g++-6
+    QMAKE_CXXFLAGS *= -std=c++1z
 }
 
 SOURCES += \
@@ -77,7 +77,8 @@ SOURCES += \
     gui/elements.cpp \
     gui/view.cpp \
     application/settings.cpp \
-    gui/graphics/scene.cpp
+    gui/graphics/scene.cpp \
+    gui/graphics/graphicsrelation.cpp
 
 HEADERS += \
     enums.h \
@@ -161,7 +162,8 @@ HEADERS += \
     gui/elements.h \
     gui/view.h \
     gui/graphics/scene.h \
-    gui/graphics/common.h
+    gui/graphics/common.h \
+    gui/graphics/graphicsrelation.h
 
 FORMS += \
     gui/mainwindow.ui \

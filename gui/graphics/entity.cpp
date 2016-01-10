@@ -112,6 +112,7 @@ namespace graphics {
 
             // Draw section elemnts
             for (auto &&e : elements) {
+                // TODO: full signature should be displayed, not just name like now
                 QString name(cutText(e->name(), painter->fontMetrics(), width));
                 name.prepend(utility::sectionToSymbol(e->section()) + QChar::Space);
                 if (!drawSectionText(painter, name, width, Qt::AlignLeft | Qt::AlignVCenter,
