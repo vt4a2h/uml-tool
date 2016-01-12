@@ -77,7 +77,8 @@ SOURCES += \
     gui/elements.cpp \
     gui/view.cpp \
     application/settings.cpp \
-    gui/graphics/scene.cpp
+    gui/graphics/scene.cpp \
+    gui/graphics/graphicsrelation.cpp
 
 HEADERS += \
     enums.h \
@@ -161,7 +162,8 @@ HEADERS += \
     gui/elements.h \
     gui/view.h \
     gui/graphics/scene.h \
-    gui/graphics/common.h
+    gui/graphics/common.h \
+    gui/graphics/graphicsrelation.h
 
 FORMS += \
     gui/mainwindow.ui \

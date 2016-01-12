@@ -97,8 +97,8 @@ namespace graphics {
 
         template <class Container>
         void drawSection(QPainter * painter, const QString &sectionName, const Container elements,
-                            QPointF &topLeft, qreal &availableHeight, qreal width,
-                            const QColor &frameColor)
+                         QPointF &topLeft, qreal &availableHeight, qreal width,
+                         const QColor &frameColor)
         {
             if (qFuzzyCompare(availableHeight, 0.) || elements.isEmpty())
                 return;
@@ -144,7 +144,7 @@ namespace graphics {
         , m_Height(minimumHeight)
         , m_HeaderHeight(minimumHeight)
     {
-        setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+        setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
 
         setAcceptHoverEvents(true);
         setCursor(defaultCursorShape);
@@ -187,6 +187,14 @@ namespace graphics {
 
         if (selectedToConnect())
             drawConnectFrame(painter);
+    }
+
+    QVariant Entity::itemChange(GraphicsItemChange change, const QVariant &value)
+    {
+        if (change == ItemPositionChange && scene() )
+            emit positionChanged(pos(), value.toPointF());
+
+        return QGraphicsItem::itemChange(change, value);
     }
 
     /**
@@ -384,12 +392,15 @@ namespace graphics {
         painter->setRenderHint(QPainter::Antialiasing);
 
         painter->setPen(application::settings::elementColor(G_ASSERT(m_Type)->marker()));
-        QRectF rect(resizeCornerRect());
 
+        QRectF rect(resizeCornerRect());
         QPointF bottomLeft(rect.bottomLeft());
         QPointF topRight(rect.topRight());
+
+        // Draw hypotenuse
         painter->drawLine(bottomLeft, topRight);
 
+        // Draw middle line
         bottomLeft.rx() += rect.width() / 2;
         topRight.ry() += rect.height() / 2;
         painter->drawLine(bottomLeft, topRight);

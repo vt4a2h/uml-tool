@@ -28,14 +28,34 @@
 
 namespace graphics {
 
+    class Entity;
+
     /// Graphics represenation of relation
-    class Relation : public QGraphicsLineItem
+    class Relation : public QObject, public QGraphicsLineItem
     {
+        Q_OBJECT
+
     public:
-        Relation(const relationship::SharedRelation &relation, QGraphicsItem *parent = nullptr);
+        Relation(const relationship::SharedRelation &relation, Entity *from, Entity *to,
+                 QGraphicsItem *parent = nullptr);
+
+        Entity *from() const;
+        void setFrom(Entity *from);
+
+        Entity *to() const;
+        void setTo(Entity *to);
+
+    public slots:
+        void onFromChanged(const QPointF &oldPos, const QPointF &newPos);
+        void onToChanged(const QPointF &oldPos, const QPointF &newPos);
 
     private:
+        void initFrom();
+        void initTo();
+
         relationship::SharedRelation m_Relation;
+        Entity * m_From;
+        Entity * m_To;
     };
 
 } // namespace graphics

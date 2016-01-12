@@ -51,6 +51,7 @@ namespace graphics {
         QRectF boundingRect() const override;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                    QWidget *widget = nullptr);
+        QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
         enum { Type = UserType + int(ElementType::Entity) };
         int type() const override;
@@ -63,6 +64,7 @@ namespace graphics {
 
     signals:
         void moved(const QPointF &from, const QPointF &to);
+        void positionChanged(const QPointF &from, const QPointF &to);
 
     private:
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

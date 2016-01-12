@@ -27,7 +27,10 @@
 #include <QPainter>
 #include <QDebug>
 
+#include <relationship/relation.h>
+
 #include "entity.h"
+#include "graphicsrelation.h"
 #include "qthelpers.h"
 
 namespace graphics {
@@ -189,6 +192,13 @@ namespace graphics {
             // Hide tracking line and switch off tracking mode
             m_RelationTrackLine->hide();
             m_TrackRelationIsActive = false;
+
+            // Add relation (do it via command, now just for test)
+            if (!m_TrackFrom.isNull() && !m_TrackTo.isNull()) {
+                Relation * relation = new Relation(std::make_shared<relationship::Relation>(),
+                                                   m_TrackFrom.data(), m_TrackTo.data());
+                addItem(relation);
+            }
 
             // Cleanup
             setTrackedItemStatus(m_TrackFrom, false);
