@@ -44,6 +44,7 @@ namespace graphics {
     class Entity : public QGraphicsObject
     {
         Q_OBJECT
+
     public:
         Entity(const entity::SharedType &type, QGraphicsItem *parent = nullptr);
         ~Entity();
@@ -61,6 +62,8 @@ namespace graphics {
 
         void setSelectedToConnect(bool status);
         bool selectedToConnect() const;
+
+        static qreal rectMargin();
 
     signals:
         void moved(const QPointF &from, const QPointF &to);

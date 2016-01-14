@@ -243,6 +243,15 @@ namespace graphics {
     }
 
     /**
+     * @brief Entity::rectMargin
+     * @return
+     */
+    qreal Entity::rectMargin()
+    {
+       return margin;
+    }
+
+    /**
      * @brief Entity::mousePressEvent
      * @param event
      */

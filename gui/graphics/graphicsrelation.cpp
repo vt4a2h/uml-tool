@@ -22,12 +22,38 @@
 *****************************************************************************/
 #include "graphicsrelation.h"
 
+#include <boost/range/algorithm/find_if.hpp>
+
+#include <QDebug>
+
 #include <relationship/relation.h>
 
 #include "entity.h"
 #include "qthelpers.h"
 
 namespace graphics {
+
+    namespace  {
+
+        inline QVector<QLineF> rectToLines(const QRectF &r)
+        {
+            return QVector<QLineF>() << QLineF(r.topLeft(), r.topRight())
+                                     << QLineF(r.topRight(), r.bottomRight())
+                                     << QLineF(r.bottomRight(), r.bottomLeft())
+                                     << QLineF(r.bottomLeft(), r.topLeft());
+        }
+
+        QPointF intersection(const QRectF &r, const QLineF &l)
+        {
+            QPointF result;
+            boost::range::find_if(rectToLines(r), [&](auto &&_l) {
+                return l.intersect(_l, &result) == QLineF::BoundedIntersection;
+            });
+
+            return result;
+        }
+
+    }
 
     /**
      * @brief Relation::Relation
@@ -98,6 +124,7 @@ namespace graphics {
      */
     void Relation::onFromChanged(const QPointF &, const QPointF &newPos)
     {
+        // TODO: implement coordinates mapping ant intersection
         setLine(QLineF(newPos, line().p2()));
     }
 
