@@ -45,9 +45,14 @@ namespace graphics {
         Entity *to() const;
         void setTo(Entity *to);
 
-    public slots:
-        void onFromChanged(const QPointF &oldPos, const QPointF &newPos);
-        void onToChanged(const QPointF &oldPos, const QPointF &newPos);
+        void setP1(const QPointF &p);
+        void setP2(const QPointF &p);
+
+    public: // QGraphicsLineItem overrides
+        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+    private slots:
+        void recalculateLine();
 
     private:
         void initFrom();

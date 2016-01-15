@@ -22,9 +22,7 @@
 *****************************************************************************/
 #include "graphicsrelation.h"
 
-#include <boost/range/algorithm/find_if.hpp>
-
-#include <QDebug>
+#include <QPainter>
 
 #include <relationship/relation.h>
 
@@ -35,20 +33,15 @@ namespace graphics {
 
     namespace  {
 
-        inline QVector<QLineF> rectToLines(const QRectF &r)
+        /// Find first intersection point of polyline segment and line
+        inline QPointF intersection(const QPolygonF &p, const QLineF &l)
         {
-            return QVector<QLineF>() << QLineF(r.topLeft(), r.topRight())
-                                     << QLineF(r.topRight(), r.bottomRight())
-                                     << QLineF(r.bottomRight(), r.bottomLeft())
-                                     << QLineF(r.bottomLeft(), r.topLeft());
-        }
+            Q_ASSERT(p.count() == 4);
 
-        QPointF intersection(const QRectF &r, const QLineF &l)
-        {
             QPointF result;
-            boost::range::find_if(rectToLines(r), [&](auto &&_l) {
-                return l.intersect(_l, &result) == QLineF::BoundedIntersection;
-            });
+            for (int i = 0, j = 1, c = p.count(); j < c; ++i, ++j)
+                if (QLineF(p[i], p[j]).intersect(l, &result) == QLineF::BoundedIntersection)
+                    break;
 
             return result;
         }
@@ -89,7 +82,7 @@ namespace graphics {
     void Relation::setFrom(Entity *from)
     {
         if (m_From)
-            G_DISCONNECT(m_From, &Entity::positionChanged, this, &Relation::onFromChanged);
+            G_DISCONNECT(m_From, &Entity::positionChanged, this, &Relation::recalculateLine);
 
         m_From = from;
         initFrom();
@@ -111,26 +104,40 @@ namespace graphics {
     void Relation::setTo(Entity *to)
     {
         if (m_To)
-            G_DISCONNECT(m_To, &Entity::positionChanged, this, &Relation::onToChanged);
+            G_DISCONNECT(m_To, &Entity::positionChanged, this, &Relation::recalculateLine);
 
         m_To = to;
         initTo();
     }
 
     /**
-     * @brief Relation::onFromChanged
-     * @param oldPos
-     * @param newPos
+     * @brief Relation::setP1
+     * @param p
      */
-    void Relation::onFromChanged(const QPointF &, const QPointF &newPos)
+    void Relation::setP1(const QPointF &p)
     {
-        // TODO: implement coordinates mapping ant intersection
-        setLine(QLineF(newPos, line().p2()));
+        setLine(QLineF(p, line().p2()));
     }
 
-    void Relation::onToChanged(const QPointF &, const QPointF &newPos)
+    /**
+     * @brief Relation::setP2
+     * @param p
+     */
+    void Relation::setP2(const QPointF &p)
     {
-        setLine(QLineF(line().p1(), newPos));
+        setLine(QLineF(line().p1(), p));
+    }
+
+    /**
+     * @brief Relation::paint
+     * @param painter
+     * @param option
+     * @param widget
+     */
+    void Relation::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+    {
+        painter->setRenderHint(QPainter::Antialiasing);
+        QGraphicsLineItem::paint(painter, option, widget);
     }
 
     /**
@@ -138,9 +145,9 @@ namespace graphics {
      */
     void Relation::initFrom()
     {
-        if (m_To) {
-            setLine(QLineF(m_From->pos(), line().p2()));
-            G_CONNECT(m_From, &Entity::positionChanged, this, &Relation::onFromChanged);
+        if (m_From) {
+            recalculateLine();
+            G_CONNECT(m_From, &Entity::positionChanged, this, &Relation::recalculateLine);
         }
     }
 
@@ -150,9 +157,19 @@ namespace graphics {
     void Relation::initTo()
     {
         if (m_To) {
-            setLine(QLineF(line().p1(), m_To->pos()));
-            G_CONNECT(m_To, &Entity::positionChanged, this, &Relation::onToChanged);
+            recalculateLine();
+            G_CONNECT(m_To, &Entity::positionChanged, this, &Relation::recalculateLine);
         }
+    }
+
+    /**
+     * @brief Relation::recalculateLine
+     */
+    void Relation::recalculateLine()
+    {
+        // TODO: add null checkings for intersection point
+        setP1(intersection(m_From->mapToScene(m_From->frameRect()), QLineF(m_From->pos(), line().p2())));
+        setP2(intersection(m_To->mapToScene(m_To->frameRect()), QLineF(line().p1(), m_To->pos())));
     }
 
 } // namespace graphics

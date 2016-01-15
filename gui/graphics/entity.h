@@ -64,6 +64,7 @@ namespace graphics {
         bool selectedToConnect() const;
 
         static qreal rectMargin();
+        QRectF frameRect() const;
 
     signals:
         void moved(const QPointF &from, const QPointF &to);

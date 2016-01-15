@@ -248,7 +248,16 @@ namespace graphics {
      */
     qreal Entity::rectMargin()
     {
-       return margin;
+        return margin;
+    }
+
+    /**
+     * @brief Entity::frameRect
+     * @return
+     */
+    QRectF Entity::frameRect() const
+    {
+        return QRectF(-m_Width / 2, -m_Height / 2, m_Width, m_Height);
     }
 
     /**
@@ -382,7 +391,7 @@ namespace graphics {
         painter->save();
 
         QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
-        QRectF rect(-m_Width / 2, -m_Height / 2, m_Width, m_Height);
+        QRectF rect(frameRect());
         painter->fillRect(rect, Qt::white);
         painter->setPen(color);
         painter->drawRect(rect);
@@ -450,7 +459,7 @@ namespace graphics {
 
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(QPen(Qt::red, 2));
-        painter->drawRect(QRectF(-m_Width / 2, -m_Height / 2, m_Width, m_Height));
+        painter->drawRect(frameRect());
 
         painter->restore();
     }
