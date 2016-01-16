@@ -58,8 +58,8 @@ namespace graphics {
      * @param to
      * @param parent
      */
-    Relation::Relation(const relationship::SharedRelation &relation, Entity *from, Entity *to,
-                       QGraphicsItem *parent)
+    Relation::Relation(const relationship::SharedRelation &relation, const EntityPtr &from,
+                       const EntityPtr &to, QGraphicsItem *parent)
         : QGraphicsLineItem(parent)
         , m_Relation(relation)
         , m_From(from)
@@ -67,42 +67,6 @@ namespace graphics {
     {
         initEntity(m_From);
         initEntity(m_To);
-    }
-
-    /**
-     * @brief Relation::from
-     * @return
-     */
-    Entity *Relation::from() const
-    {
-        return m_From;
-    }
-
-    /**
-     * @brief Relation::setFrom
-     * @param from
-     */
-    void Relation::setFrom(Entity *from)
-    {
-        setEntity(m_From, from);
-    }
-
-    /**
-     * @brief Relation::to
-     * @return
-     */
-    Entity *Relation::to() const
-    {
-        return m_To;
-    }
-
-    /**
-     * @brief Relation::setTo
-     * @param to
-     */
-    void Relation::setTo(Entity *to)
-    {
-        setEntity(m_To, to);
     }
 
     /**
@@ -139,24 +103,60 @@ namespace graphics {
      * @brief Relation::initEntity
      * @param e
      */
-    void Relation::initEntity(Entity *e)
+    void Relation::initEntity(const EntityPtr &e)
     {
         if (e) {
             recalculateLine();
-            G_CONNECT(e, &Entity::positionChanged, this, &Relation::recalculateLine);
-            G_CONNECT(e, &Entity::sizeChanged, this, &Relation::recalculateLine);
+            G_CONNECT(e.data(), &Entity::positionChanged, this, &Relation::recalculateLine);
+            G_CONNECT(e.data(), &Entity::sizeChanged, this, &Relation::recalculateLine);
         }
     }
 
-    void Relation::setEntity(Entity *e, Entity *newEntity)
+    void Relation::setEntity(EntityPtr &e, const EntityPtr &newEntity)
     {
         if (e) {
-            G_DISCONNECT(e, &Entity::positionChanged, this, &Relation::recalculateLine);
-            G_DISCONNECT(e, &Entity::sizeChanged, this, &Relation::recalculateLine);
+            G_DISCONNECT(e.data(), &Entity::positionChanged, this, &Relation::recalculateLine);
+            G_DISCONNECT(e.data(), &Entity::sizeChanged, this, &Relation::recalculateLine);
         }
 
         e = newEntity;
         initEntity(e);
+    }
+
+    /**
+     * @brief Relation::to
+     * @return
+     */
+    EntityPtr Relation::to() const
+    {
+        return m_To;
+    }
+
+    /**
+     * @brief Relation::setTo
+     * @param to
+     */
+    void Relation::setTo(const EntityPtr &to)
+    {
+        setEntity(m_To, to);
+    }
+
+    /**
+     * @brief Relation::setFrom
+     * @param from
+     */
+    void Relation::setFrom(const EntityPtr &from)
+    {
+        setEntity(m_From, from);
+    }
+
+    /**
+     * @brief Relation::From
+     * @return
+     */
+    EntityPtr Relation::from() const
+    {
+        return m_From;
     }
 
     /**

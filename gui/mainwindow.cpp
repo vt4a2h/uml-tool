@@ -362,6 +362,8 @@ namespace gui {
                   this, &MainWindow::createNewProject);
         G_CONNECT(ui->actionAddRelation, &QAction::toggled,
                   m_MainScene.get(), &graphics::Scene::setShowRelationTrack);
+        G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
+                  m_MainScene.get(), &graphics::Scene::onProjectChanged);
     }
 
     /**

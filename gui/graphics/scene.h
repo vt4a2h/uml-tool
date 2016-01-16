@@ -25,6 +25,8 @@
 #include <QGraphicsScene>
 #include <QPointer>
 
+#include <project/project_types.hpp>
+
 namespace graphics {
 
     class Entity;
@@ -52,17 +54,22 @@ namespace graphics {
 
     public slots:
         void setShowRelationTrack(bool showRelationTrack);
+        void onProjectChanged(const project::SharedProject &p);
 
     signals:
         void showRelationTrackChanged(bool showRelationTrack);
 
     private:
+        project::SharedProject pr() const;
+
         bool m_ShowRelationTrack;
         bool m_TrackRelationIsActive;
         QPointer<Entity> m_TrackFrom;
         QPointer<Entity> m_TrackTo;
 
         QGraphicsLineItem * m_RelationTrackLine;
+
+        project::WeakProject m_Project;
     };
 
 } // namespace grphics

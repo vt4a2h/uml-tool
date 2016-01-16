@@ -26,6 +26,8 @@
 
 #include <relationship/relationship_types.hpp>
 
+#include "graphics_types.h"
+
 namespace graphics {
 
     class Entity;
@@ -36,14 +38,9 @@ namespace graphics {
         Q_OBJECT
 
     public:
-        Relation(const relationship::SharedRelation &relation, Entity *from, Entity *to,
-                 QGraphicsItem *parent = nullptr);
+        Relation(const relationship::SharedRelation &relation, const EntityPtr &from,
+                 const EntityPtr &to, QGraphicsItem *parent = nullptr);
 
-        Entity *from() const;
-        void setFrom(Entity *from);
-
-        Entity *to() const;
-        void setTo(Entity *to);
 
         void setP1(const QPointF &p);
         void setP2(const QPointF &p);
@@ -51,16 +48,22 @@ namespace graphics {
     public: // QGraphicsLineItem overrides
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
+        EntityPtr from() const;
+        void setFrom(const EntityPtr &from);
+
+        EntityPtr to() const;
+        void setTo(const EntityPtr &to);
+
     private slots:
         void recalculateLine();
 
     private:
-        void initEntity(Entity * e);
-        void setEntity(Entity * e, Entity * newEntity);
+        void initEntity(const EntityPtr &e);
+        void setEntity(EntityPtr &e, const EntityPtr &newEntity);
 
         relationship::SharedRelation m_Relation;
-        Entity * m_From;
-        Entity * m_To;
+        EntityPtr m_From;
+        EntityPtr m_To;
     };
 
 } // namespace graphics

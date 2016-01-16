@@ -25,12 +25,13 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
+#include <QUndoStack>
 #include <QDebug>
 
-#include <relationship/relation.h>
+#include <commands/addrelation.h>
+#include <project/project.h>
 
 #include "entity.h"
-#include "graphicsrelation.h"
 #include "qthelpers.h"
 
 namespace graphics {
@@ -195,9 +196,11 @@ namespace graphics {
 
             // Add relation (do it via command, now just for test)
             if (!m_TrackFrom.isNull() && !m_TrackTo.isNull()) {
-                Relation * relation = new Relation(std::make_shared<relationship::Relation>(),
-                                                   m_TrackFrom.data(), m_TrackTo.data());
-                addItem(relation);
+                auto cmd = std::make_unique<commands::AddRelation>(m_TrackFrom, m_TrackTo);
+                auto currentProject = G_ASSERT(pr());
+                currentProject->commandsStack()->push(cmd.release());
+                // TODO: handle situation when user moved item and then clicked undo
+                // relation is not updated in this case
             }
 
             // Cleanup
@@ -227,6 +230,24 @@ namespace graphics {
             m_RelationTrackLine->hide();
 
         emit showRelationTrackChanged(showRelationTrack);
+    }
+
+    /**
+     * @brief Scene::onProjectChanged
+     * @param p
+     */
+    void Scene::onProjectChanged(const project::SharedProject &p)
+    {
+       m_Project = p;
+    }
+
+    /**
+     * @brief Scene::pr
+     * @return
+     */
+    project::SharedProject Scene::pr() const
+    {
+        return m_Project.lock();
     }
 
 } // namespace graphics

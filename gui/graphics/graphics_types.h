@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 28/03/2015.
+** Created 17/01/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,36 +20,17 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "basecommand.h"
+#pragma once
 
-namespace commands {
+#include <QPointer>
 
-    /**
-     * @brief BaseCommand::BaseCommand
-     * @param parent
-     */
-    BaseCommand::BaseCommand(BaseCommand::QUndoCommand *parent)
-        : BaseCommand(tr("no specified name"), parent)
-    {
-    }
+namespace graphics {
 
-    /**
-     * @brief BaseCommand::BaseCommand
-     * @param text
-     * @param parent
-     */
-    BaseCommand::BaseCommand(const QString &text, BaseCommand::QUndoCommand *parent)
-        : QUndoCommand(text, parent)
-        , m_Done(false)
-    {
-    }
+    class Entity;
+    using EntityPtr = QPointer<Entity>;
 
-    /**
-     * @brief BaseCommand::~BaseCommand
-     */
-    BaseCommand::~BaseCommand()
-    {
-        cleanup();
-    }
+    class Relation;
+    using RelationPtr = QPointer<Relation>;
 
-} // namespace commands
+} // namespace graphics
+

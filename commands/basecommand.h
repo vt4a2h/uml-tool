@@ -36,7 +36,11 @@ namespace commands {
         explicit BaseCommand(QUndoCommand *parent = nullptr);
         explicit BaseCommand(const QString &text, QUndoCommand *parent = nullptr);
 
+        ~BaseCommand() override;
+
     protected:
+        virtual void cleanup() {}
+
         bool m_Done; // do first time -- false, redo -- true
     };
 

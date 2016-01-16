@@ -42,9 +42,9 @@ namespace entity {
         static const EntitiesFactory &get();
 
         template<class Type>
-        std::shared_ptr<Type> makeEntity(const models::SharedApplicationModel &model,
-                                         const QString &scopeID, QGraphicsScene &scene,
-                                         const QPointF &pos) const
+        std::pair<std::shared_ptr<Type>, graphics::Entity*>
+        makeEntity(const models::SharedApplicationModel &model, const QString &scopeID,
+                   QGraphicsScene &scene, const QPointF &pos) const
         {
             auto type = model->makeType<Type>(scopeID);
             type->setName(type->defaultName());
@@ -56,7 +56,7 @@ namespace entity {
 
             currentProject->touch();
 
-            return type;
+            return {type, entity};
         }
 
 

@@ -78,7 +78,8 @@ SOURCES += \
     gui/view.cpp \
     application/settings.cpp \
     gui/graphics/scene.cpp \
-    gui/graphics/graphicsrelation.cpp
+    gui/graphics/graphicsrelation.cpp \
+    commands/addrelation.cpp
 
 HEADERS += \
     enums.h \
@@ -163,7 +164,9 @@ HEADERS += \
     gui/view.h \
     gui/graphics/scene.h \
     gui/graphics/common.h \
-    gui/graphics/graphicsrelation.h
+    gui/graphics/graphicsrelation.h \
+    commands/addrelation.h \
+    gui/graphics/graphics_types.h
 
 FORMS += \
     gui/mainwindow.ui \

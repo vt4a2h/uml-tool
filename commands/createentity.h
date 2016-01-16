@@ -44,6 +44,7 @@
 #include "constants.h"
 #include "enums.h"
 #include "basecommand.h"
+#include "qthelpers.h"
 
 class QGraphicsItem;
 class QGraphicsScene;
@@ -71,11 +72,8 @@ namespace commands {
             , m_ProjectID(model && model->currentProject() ? model->currentProject()->id() : STUB_ID)
             , m_ScopeID(scopeID)
             , m_Pos(pos)
-            , m_Item(nullptr)
             , m_Scene(scene)
-            , m_TypeItem(entity::EntitiesFactory::get().makeEntity<Type>(m_Model, m_ScopeID, m_Scene, m_Pos))
         {
-            Q_ASSERT(m_TypeItem);
         }
 
         void redo() override
@@ -86,9 +84,16 @@ namespace commands {
                 m_Scene.addItem(m_Item);
                 static_cast<graphics::Entity *>(m_Item)->setTypeObject(m_TypeItem);
             } else {
-                m_Item = m_Scene.itemAt(m_Pos, QTransform());
+                auto const& factory = entity::EntitiesFactory::get();
+                auto entity = factory.makeEntity<Type>(m_Model, m_ScopeID, m_Scene, m_Pos);
+
+                m_TypeItem = G_ASSERT(entity.first);
+                m_Item = G_ASSERT(entity.second);
+
                 m_Done = true;
             }
+
+            m_CleaningRequired = false;
         }
 
         void undo() override
@@ -98,18 +103,27 @@ namespace commands {
 
             m_Scene.removeItem(m_Item);
             m_Model->removeType(m_ProjectID, m_ScopeID, m_TypeItem->id());
+            m_CleaningRequired = true;
         }
 
         std::shared_ptr<Type> entity() const { return m_TypeItem; }
 
+    protected:
+        void cleanup() override
+        {
+            if (m_CleaningRequired && m_Item)
+                delete m_Item;
+        }
+
     private:
+        bool m_CleaningRequired = false;
         models::SharedApplicationModel m_Model;
         QString m_ProjectID;
         QString m_ScopeID;
         QPointF m_Pos;
-        QGraphicsItem  * m_Item;
+        QGraphicsItem  * m_Item = nullptr;
         QGraphicsScene & m_Scene;
-        std::shared_ptr<Type> m_TypeItem;
+        std::shared_ptr<Type> m_TypeItem = nullptr;
     };
 
     using MakeClass = CreateEntity<entity::Class>;

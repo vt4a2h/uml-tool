@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 28/03/2015.
+** Created 16/01/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,36 +20,37 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+#pragma once
+
+#include <gui/graphics/graphics_types.h>
+
 #include "basecommand.h"
+
+namespace graphics {
+    class Entity;
+    class Relation;
+}
 
 namespace commands {
 
-    /**
-     * @brief BaseCommand::BaseCommand
-     * @param parent
-     */
-    BaseCommand::BaseCommand(BaseCommand::QUndoCommand *parent)
-        : BaseCommand(tr("no specified name"), parent)
+    /// Add relation command
+    class AddRelation : public BaseCommand
     {
-    }
+    public:
+        AddRelation(const graphics::EntityPtr &from, const graphics::EntityPtr &to);
 
-    /**
-     * @brief BaseCommand::BaseCommand
-     * @param text
-     * @param parent
-     */
-    BaseCommand::BaseCommand(const QString &text, BaseCommand::QUndoCommand *parent)
-        : QUndoCommand(text, parent)
-        , m_Done(false)
-    {
-    }
+    public: // QUndoCommand overrides
+        void redo() override;
+        void undo() override;
 
-    /**
-     * @brief BaseCommand::~BaseCommand
-     */
-    BaseCommand::~BaseCommand()
-    {
-        cleanup();
-    }
+    protected: // Base commands overrides
+        void cleanup() override;
+
+    private:
+        bool m_CleaningRequired = false;
+        graphics::EntityPtr m_From;
+        graphics::EntityPtr m_To;
+        graphics::RelationPtr m_Relation;
+    };
 
 } // namespace commands
