@@ -69,6 +69,7 @@ namespace graphics {
     signals:
         void moved(const QPointF &from, const QPointF &to);
         void positionChanged(const QPointF &from, const QPointF &to);
+        void sizeChanged();
 
     private:
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

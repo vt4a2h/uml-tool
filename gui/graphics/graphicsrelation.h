@@ -55,8 +55,8 @@ namespace graphics {
         void recalculateLine();
 
     private:
-        void initFrom();
-        void initTo();
+        void initEntity(Entity * e);
+        void setEntity(Entity * e, Entity * newEntity);
 
         relationship::SharedRelation m_Relation;
         Entity * m_From;

@@ -33,16 +33,19 @@ namespace graphics {
 
     namespace  {
 
+        const QPointF defaultPoint(std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max());
+
         /// Find first intersection point of polyline segment and line
         inline QPointF intersection(const QPolygonF &p, const QLineF &l)
         {
             Q_ASSERT(p.count() == 4);
 
-            QPointF result;
+            QPointF result(defaultPoint);
             for (int i = 0, j = 1, c = p.count(); j < c; ++i, ++j)
                 if (QLineF(p[i], p[j]).intersect(l, &result) == QLineF::BoundedIntersection)
                     break;
 
+            Q_ASSERT(result != defaultPoint);
             return result;
         }
 
@@ -62,8 +65,8 @@ namespace graphics {
         , m_From(from)
         , m_To(to)
     {
-        initFrom();
-        initTo();
+        initEntity(m_From);
+        initEntity(m_To);
     }
 
     /**
@@ -81,11 +84,7 @@ namespace graphics {
      */
     void Relation::setFrom(Entity *from)
     {
-        if (m_From)
-            G_DISCONNECT(m_From, &Entity::positionChanged, this, &Relation::recalculateLine);
-
-        m_From = from;
-        initFrom();
+        setEntity(m_From, from);
     }
 
     /**
@@ -103,11 +102,7 @@ namespace graphics {
      */
     void Relation::setTo(Entity *to)
     {
-        if (m_To)
-            G_DISCONNECT(m_To, &Entity::positionChanged, this, &Relation::recalculateLine);
-
-        m_To = to;
-        initTo();
+        setEntity(m_To, to);
     }
 
     /**
@@ -141,25 +136,27 @@ namespace graphics {
     }
 
     /**
-     * @brief Relation::initFrom
+     * @brief Relation::initEntity
+     * @param e
      */
-    void Relation::initFrom()
+    void Relation::initEntity(Entity *e)
     {
-        if (m_From) {
+        if (e) {
             recalculateLine();
-            G_CONNECT(m_From, &Entity::positionChanged, this, &Relation::recalculateLine);
+            G_CONNECT(e, &Entity::positionChanged, this, &Relation::recalculateLine);
+            G_CONNECT(e, &Entity::sizeChanged, this, &Relation::recalculateLine);
         }
     }
 
-    /**
-     * @brief Relation::initTo
-     */
-    void Relation::initTo()
+    void Relation::setEntity(Entity *e, Entity *newEntity)
     {
-        if (m_To) {
-            recalculateLine();
-            G_CONNECT(m_To, &Entity::positionChanged, this, &Relation::recalculateLine);
+        if (e) {
+            G_DISCONNECT(e, &Entity::positionChanged, this, &Relation::recalculateLine);
+            G_DISCONNECT(e, &Entity::sizeChanged, this, &Relation::recalculateLine);
         }
+
+        e = newEntity;
+        initEntity(e);
     }
 
     /**
@@ -167,9 +164,14 @@ namespace graphics {
      */
     void Relation::recalculateLine()
     {
-        // TODO: add null checkings for intersection point
-        setP1(intersection(m_From->mapToScene(m_From->frameRect()), QLineF(m_From->pos(), line().p2())));
-        setP2(intersection(m_To->mapToScene(m_To->frameRect()), QLineF(line().p1(), m_To->pos())));
+        QPolygonF fromRect(m_From->mapToScene(m_From->frameRect()));
+        QPolygonF toRect(m_To->mapToScene(m_To->frameRect()));
+        setVisible(fromRect.intersected(toRect).isEmpty());
+
+        if (isVisible()) {
+            setP1(intersection(fromRect, QLineF(m_From->pos(), line().p2())));
+            setP2(intersection(toRect, QLineF(line().p1(), m_To->pos())));
+        }
     }
 
 } // namespace graphics

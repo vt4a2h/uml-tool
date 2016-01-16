@@ -312,6 +312,8 @@ namespace graphics {
             auto tmpWidth = m_Width + xLen * xFactor;
             if (tmpWidth >= minimumWidth)
                 m_Width = tmpWidth;
+
+            emit sizeChanged();
         }
         else
             QGraphicsItem::mouseMoveEvent(event);
@@ -393,6 +395,7 @@ namespace graphics {
         QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
         QRectF rect(frameRect());
         painter->fillRect(rect, Qt::white);
+
         painter->setPen(color);
         painter->drawRect(rect);
 
