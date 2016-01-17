@@ -31,6 +31,8 @@
 
 #include <models/applicationmodel.h>
 
+#include <helpers/generatorid.h>
+
 #include "settings.h"
 #include "qthelpers.h"
 
@@ -101,6 +103,8 @@ namespace application {
         , m_ApplicationModel(std::make_shared<models::ApplicationModel>())
         , m_MainWindow(std::make_unique<gui::MainWindow>(m_ApplicationModel))
     {
+        G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
+                  &entity::GeneratorID::instance(), &entity::GeneratorID::onCurrentProjectChanged);
     }
 
     /**

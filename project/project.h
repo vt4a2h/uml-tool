@@ -77,6 +77,8 @@ namespace project {
         QUndoStack * commandsStack();
         const QUndoStack * commandsStack() const;
 
+        long genID();
+
     public slots:
         void setSaveStatus(bool newStatus);
         void setName(const QString &name);
@@ -102,6 +104,8 @@ namespace project {
         QString m_Name;
         QString m_Path;
         QString m_ID;
+
+        long m_nextUniqueID; // TODO: add saving/loading code
 
         bool m_SaveStatus;
 

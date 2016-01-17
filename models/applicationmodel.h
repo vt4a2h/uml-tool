@@ -45,6 +45,7 @@ namespace models {
         explicit ApplicationModel(QObject *parent = 0);
         ~ApplicationModel();
 
+        // TODO: move to some database class
         project::SharedProject makeProject();
         project::SharedProject makeProject(const QString &name, const QString &path);
         bool addProject(const project::SharedProject &pr);
@@ -52,7 +53,9 @@ namespace models {
         project::ProjectsList projects() const;
         bool removeProject(const QString &id);
         bool containsProject(const QString &id);
+        // }
 
+        // TODO: remove from this class (breaks SRP) {
         entity::SharedScope makeScope(const QString &name);
         void addExistsScope(const entity::SharedScope &scope);
         void removeScope(const QString &id);
@@ -61,6 +64,7 @@ namespace models {
         std::shared_ptr<T> makeType(const QString &scopeID, const QString &name = "");
         void addExistsType(const QString &projectID, const QString &scopeID, const entity::SharedType &type);
         void removeType(const QString &projectID, const QString &scopeID, const QString &typeID);
+        // }
 
         project::SharedProject currentProject() const;
         bool setCurrentProject(const QString &id);

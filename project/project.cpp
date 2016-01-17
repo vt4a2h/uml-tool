@@ -58,6 +58,7 @@ namespace project {
         , m_Name(name)
         , m_Path(path)
         , m_ID(utility::genId())
+        , m_nextUniqueID(0)
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
         , m_CommandsStack(std::make_unique<QUndoStack>())
@@ -71,7 +72,7 @@ namespace project {
         : QObject(nullptr)
         , m_Name(src.name())
         , m_Path(src.path())
-        , m_ID(utility::genId()) // new UUID
+        , m_ID(utility::genId()) // new UUID, TODO: clarify why?
         , m_SaveStatus(false)    // not saved
          // deep copy of project database and shallow copy of global database
         , m_Database(std::make_shared<db::ProjectDatabase>(*src.m_Database))
@@ -280,6 +281,15 @@ namespace project {
     const QUndoStack *Project::commandsStack() const
     {
         return m_CommandsStack.get();
+    }
+
+    /**
+     * @brief Project::genID
+     * @return
+     */
+    long Project::genID()
+    {
+        return m_nextUniqueID++;
     }
 
     /**
