@@ -44,7 +44,6 @@ namespace project {
         Q_OBJECT
         Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
         Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
-        Q_PROPERTY(QString id   READ id)
 
     public:
         explicit Project(QObject *parent = 0);
@@ -56,7 +55,10 @@ namespace project {
 
         QString name() const;
         QString path() const;
+
         QString id() const;
+        /// ID should be created by separate class after project loaded or created
+        void setID(const QString& newID);
 
         void load(const QString &path); // don't forget install global database after load
 

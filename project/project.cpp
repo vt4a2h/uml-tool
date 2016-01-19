@@ -336,6 +336,15 @@ namespace project {
     }
 
     /**
+     * @brief Project::setID
+     * @param newID
+     */
+    void Project::setID(const QString &newID)
+    {
+       m_ID = newID;
+    }
+
+    /**
      * @brief Project::setName
      * @param name
      */

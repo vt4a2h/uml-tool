@@ -78,8 +78,11 @@ namespace models {
         void currentProjectChanged(const project::SharedProject &p);
 
     private:
+        long genProjectID();
+
         project::Projects m_Projects;
         project::SharedProject m_CurrentProject;
+        long m_ProjectsIDsCounter;
 
         db::SharedDatabase m_GlobalDatabase;
 
