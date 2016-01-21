@@ -46,19 +46,20 @@ namespace project {
         Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
 
     public:
-        explicit Project(QObject *parent = 0);
-        Project(const QString &name, const QString &path, QObject *parent = 0);
-        Project(const Project &src);
+        Q_DISABLE_COPY(Project)
+
+        explicit Project();
+        Project(const QString &name, const QString &path);
+        Project(Project &&src);
         ~Project();
 
+        Project& operator =(Project &&lhs);
         friend bool operator ==(const Project &lhs, const Project &rhs);
 
         QString name() const;
         QString path() const;
 
         QString id() const;
-        /// ID should be created by separate class after project loaded or created
-        void setID(const QString& newID);
 
         void load(const QString &path); // don't forget install global database after load
 
@@ -107,7 +108,7 @@ namespace project {
         QString m_Path;
         QString m_ID;
 
-        long m_nextUniqueID; // TODO: add saving/loading code
+        qlonglong m_nextUniqueID;
 
         bool m_SaveStatus;
 
@@ -119,5 +120,3 @@ namespace project {
     };
 
 } // namespace project
-
-Q_DECLARE_METATYPE(project::Project)

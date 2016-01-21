@@ -36,7 +36,6 @@ namespace models {
      */
     ApplicationModel::ApplicationModel(QObject *parent)
         : QObject(parent)
-        , m_ProjectsIDsCounter(0)
         , m_GlobalDatabase(std::make_shared<db::Database>())
         , m_TreeModel(std::make_shared<ProjectTreeModel>())
     {
@@ -56,7 +55,6 @@ namespace models {
     project::SharedProject ApplicationModel::makeProject()
     {
         auto project = makeProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH);
-        project->setID(QString::number(genProjectID()));
         return project;
     }
 
@@ -70,7 +68,6 @@ namespace models {
     {
         auto newProject(std::make_shared<project::Project>(name, path));
         newProject->setGloablDatabase(globalDatabase());
-        newProject->setID(QString::number(genProjectID()));
         m_TreeModel->addProject(newProject);
         return *m_Projects.insert(newProject->id(), newProject);
     }
@@ -85,20 +82,6 @@ namespace models {
         if (!m_Projects.contains(pr->id())) {
             m_Projects[pr->id()] = pr;
             m_TreeModel->addProject(pr);
-
-            bool ok = false;
-            long prID = pr->id().toLong(&ok);
-            if (ok) {
-                if (prID >= m_ProjectsIDsCounter)
-                    m_ProjectsIDsCounter = prID + 1;
-                else if (prID <= m_ProjectsIDsCounter) {
-                    prID = genProjectID();
-                    m_Projects.remove(pr->id());
-                    pr->setID(QString::number(prID));
-                    m_Projects[QString::number(prID)] = pr;
-                }
-            }
-
             return true;
         }
 
@@ -271,15 +254,6 @@ namespace models {
     SharedTreeModel ApplicationModel::treeModel() const
     {
         return m_TreeModel;
-    }
-
-    /**
-     * @brief ApplicationModel::genProjectID
-     * @return
-     */
-    long ApplicationModel::genProjectID()
-    {
-        return m_ProjectsIDsCounter++;
     }
 
 } // namespace models

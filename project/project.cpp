@@ -44,8 +44,8 @@ namespace project {
     /**
      * @brief Project::Project
      */
-    Project::Project(QObject *parent)
-        : Project(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH, parent)
+    Project::Project()
+        : Project(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH)
     {}
 
     /**
@@ -53,9 +53,8 @@ namespace project {
      * @param name
      * @param path
      */
-    Project::Project(const QString &name, const QString &path, QObject *parent)
-        : QObject(parent)
-        , m_Name(name)
+    Project::Project(const QString &name, const QString &path)
+        : m_Name(name)
         , m_Path(path)
         , m_ID(utility::genId())
         , m_nextUniqueID(0)
@@ -68,22 +67,42 @@ namespace project {
      * @brief Project::Project
      * @param src
      */
-    Project::Project(const Project &src)
-        : QObject(nullptr)
-        , m_Name(src.name())
-        , m_Path(src.path())
-        , m_ID(utility::genId()) // new UUID, TODO: clarify why?
-        , m_SaveStatus(false)    // not saved
-         // deep copy of project database and shallow copy of global database
-        , m_Database(std::make_shared<db::ProjectDatabase>(*src.m_Database))
-        , m_CommandsStack(std::make_unique<QUndoStack>())
-    {}
+    Project::Project(Project &&src)
+        : m_Name(std::move(src.m_Name))
+        , m_Path(std::move(src.m_Path))
+        , m_ID(std::move(src.m_ID))
+        , m_nextUniqueID(std::move(src.m_nextUniqueID))
+        , m_SaveStatus(std::move(src.m_SaveStatus))
+        , m_Database(std::move(src.m_Database))
+        , m_CommandsStack(std::move(src.m_CommandsStack))
+    {
+    }
 
     /**
      * @brief Project::~Project
      */
     Project::~Project()
     {}
+
+    /**
+     * @brief Project::operator =
+     * @param lhs
+     * @return
+     */
+    Project &Project::operator =(Project &&lhs)
+    {
+        if (this != &lhs) {
+            m_Name = std::move(lhs.m_Name);
+            m_Path = std::move(lhs.m_Path);
+            m_ID = std::move(lhs.m_ID);
+            m_nextUniqueID = std::move(lhs.m_nextUniqueID);
+            m_SaveStatus = std::move(lhs.m_SaveStatus);
+            m_Database = std::move(lhs.m_Database);
+            m_CommandsStack = std::move(lhs.m_CommandsStack);
+        }
+
+        return *this;
+    }
 
     /**
      * @brief operator ==
@@ -99,7 +118,10 @@ namespace project {
         return lhs.m_Name == rhs.m_Name &&
                lhs.m_Path == rhs.m_Path &&
                lhs.m_ID   == rhs.m_ID   &&
-               *lhs.m_Database == *rhs.m_Database;
+               lhs.m_nextUniqueID == rhs.m_nextUniqueID &&
+               lhs.m_SaveStatus   == rhs.m_SaveStatus   &&
+               lhs.m_Errors       == rhs.m_Errors       &&
+               *lhs.m_Database    == *rhs.m_Database;
     }
 
     /**
@@ -220,6 +242,9 @@ namespace project {
         result.insert("Name", m_Name);
         result.insert("ID"  , m_ID  );
 
+        // Workaround for correct saving
+        result.insert("NextID", QString::number(m_nextUniqueID));
+
         return result;
     }
 
@@ -235,6 +260,9 @@ namespace project {
         });
         utility::checkAndSet(src, "ID", errorList, [&src, this](){
             m_ID = src["ID"].toString();
+        });
+        utility::checkAndSet(src, "NextID", errorList, [&src, this](){
+            m_nextUniqueID = src["NextID"].toString().toLongLong();
         });
     }
 
@@ -333,15 +361,6 @@ namespace project {
     QString Project::id() const
     {
         return m_ID;
-    }
-
-    /**
-     * @brief Project::setID
-     * @param newID
-     */
-    void Project::setID(const QString &newID)
-    {
-       m_ID = newID;
     }
 
     /**
