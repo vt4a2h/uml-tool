@@ -50,9 +50,6 @@ namespace {
     const bool defaultConstant   = false;
     const bool defaultFinal      = false;
 
-    const QString nameMark = "Name";
-    const QString idMark = "ID";
-
     const QString getterMark = "Getter";
     const QString setterMark = "Setter";
     const QString resetterMark = "Resetter";
@@ -775,10 +772,7 @@ namespace entity {
      */
     QJsonObject Property::toJson() const
     {
-        QJsonObject result;
-
-        result.insert(nameMark, m_Name);
-        result.insert(idMark, m_Id);
+        QJsonObject result = BasicEntity::toJson();
 
         result.insert(memberMark, m_Field ? m_Field->toJson() : QJsonValue(QString("")));
 
@@ -812,8 +806,7 @@ namespace entity {
     {
         using namespace utility;
 
-        checkAndSet(src, nameMark, errorList, [&](){ m_Name = src[nameMark].toString(); });
-        checkAndSet(src, idMark, errorList, [&](){ m_Id = src[idMark].toString(); });
+        BasicEntity::fromJson(src, errorList);
 
         checkAndSet(src, memberMark, errorList,
                     [&](){ readOptional(src[memberMark], this, &Property::addField,
@@ -903,30 +896,12 @@ namespace entity {
     }
 
     /**
-     * @brief Property::id
-     * @return
-     */
-    QString Property::id() const
-    {
-        return m_Id;
-    }
-
-    /**
-     * @brief Property::setId
-     * @param id
-     */
-    void Property::setId(const QString &id)
-    {
-        m_Id = id;
-    }
-
-    /**
      * @brief Property::moveFrom
      * @param src
      */
     void Property::moveFrom(Property &&src)
     {
-        m_Id = std::move(src.m_Id);
+        static_cast<BasicEntity&>(*this) = static_cast<BasicEntity&&>(src);
 
         m_Field = std::move(src.m_Field);
 
@@ -951,7 +926,7 @@ namespace entity {
 
     void Property::copyFrom(const Property &src)
     {
-        m_Id = src.m_Id;
+        static_cast<BasicEntity&>(*this) = static_cast<const BasicEntity &>(src);
 
         m_Field = src.m_Field ? std::make_shared<Field>(*src.m_Field) : nullptr;
 
@@ -979,7 +954,6 @@ namespace entity {
      */
     void Property::init()
     {
-        m_Id = utility::genId();
         m_Member = defaultMember;
         m_Revision = defaultRevision;
         m_Designable = defaultDesignable;

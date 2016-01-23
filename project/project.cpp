@@ -37,6 +37,8 @@
 
 #include <utility/helpfunctions.h>
 
+#include <helpers/generatorid.h>
+
 #include "constants.h"
 
 namespace project {
@@ -57,7 +59,7 @@ namespace project {
         : m_Name(name)
         , m_Path(path)
         , m_ID(utility::genId())
-        , m_nextUniqueID(0)
+        , m_nextUniqueID(entity::GeneratorID::firstFreeID())
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
         , m_CommandsStack(std::make_unique<QUndoStack>())
@@ -262,7 +264,7 @@ namespace project {
             m_ID = src["ID"].toString();
         });
         utility::checkAndSet(src, "NextID", errorList, [&src, this](){
-            m_nextUniqueID = src["NextID"].toString().toLongLong();
+            m_nextUniqueID = src["NextID"].toString().toULongLong();
         });
     }
 
@@ -315,7 +317,7 @@ namespace project {
      * @brief Project::genID
      * @return
      */
-    long Project::genID()
+    entity::EntityID Project::genID()
     {
         return m_nextUniqueID++;
     }

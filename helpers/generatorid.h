@@ -25,6 +25,7 @@
 #include <QtCore/QObject>
 
 #include <project/project_types.hpp>
+#include <entity/entity_types.hpp>
 
 namespace entity {
 
@@ -41,9 +42,10 @@ namespace entity {
 
         static const GeneratorID &instance();
 
-        long genID();
+        entity::EntityID genID();
 
-        long defaultID() const;
+        static entity::EntityID nullID();
+        static entity::EntityID firstFreeID();
 
     public slots:
         void onCurrentProjectChanged(const project::SharedProject &p);

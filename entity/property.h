@@ -119,9 +119,6 @@ namespace entity {
         QString marker() const override;
         static QString staticMarker();
 
-        QString id() const override;
-        void setId(const QString &id) override;
-
     signals:
         void methodAdded(const entity::SharedProperty &, const entity::SharedMethod &);
         void methodRemoved(const entity::SharedProperty &, const entity::SharedMethod &);
@@ -151,8 +148,6 @@ namespace entity {
         }
 
     private:
-        QString m_Id; // TODO: move to the BasicEntity class
-
         SharedField m_Field;
 
         SharedMethod m_Getter;

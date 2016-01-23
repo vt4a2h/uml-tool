@@ -29,7 +29,8 @@
 namespace entity {
 
     namespace {
-        const QString stubID = "no_id_for_this_elemnt";
+        const QString nameMark = "Name";
+        const QString idMark = "ID";
     }
 
     /**
@@ -38,6 +39,7 @@ namespace entity {
      */
     BasicEntity::BasicEntity(const QString &name)
         : m_Name(name)
+        , m_Id()
     {
     }
 
@@ -48,6 +50,7 @@ namespace entity {
     BasicEntity::BasicEntity(const BasicEntity &src)
         : QObject()
         , m_Name(src.m_Name)
+        , m_Id(src.m_Id)
     {
     }
 
@@ -58,6 +61,7 @@ namespace entity {
     BasicEntity::BasicEntity(BasicEntity &&src)
     {
         m_Name = std::move(src.m_Name);
+        m_Id = std::move(src.m_Id);
     }
 
     /**
@@ -77,10 +81,21 @@ namespace entity {
      */
     BasicEntity &BasicEntity::operator =(const BasicEntity &rhs)
     {
-        if (this != &rhs)
+        if (this != &rhs) {
             setName(rhs.name());
+            m_Id = rhs.m_Id;
+        }
 
         return *this;
+    }
+
+    /**
+     * @brief BasicEntity::BasicEntity
+     */
+    BasicEntity::BasicEntity()
+        : m_Name("")
+        , m_Id("") // TODO: NULL ID from generator here
+    {
     }
 
     /**
@@ -91,7 +106,7 @@ namespace entity {
      */
     bool operator ==(const BasicEntity &lhs, const BasicEntity &rhs)
     {
-        return lhs.m_Name == rhs.m_Name;
+        return lhs.m_Name == rhs.m_Name && lhs.m_Id == rhs.m_Id;
     }
 
     /**
@@ -101,8 +116,10 @@ namespace entity {
      */
     BasicEntity &BasicEntity::operator =(BasicEntity &&rhs)
     {
-        if (this != &rhs)
+        if (this != &rhs) {
             m_Name = std::move(rhs.m_Name);
+            m_Id = std::move(rhs.m_Id);
+        }
 
         return *this;
     }
@@ -113,16 +130,7 @@ namespace entity {
      */
     QString BasicEntity::id() const
     {
-        return stubID;
-    }
-
-    /**
-     * @brief BasicEntity::parentID
-     * @return
-     */
-    QString BasicEntity::parentID() const
-    {
-        return topID;
+        return m_Id;
     }
 
     /**
@@ -131,7 +139,7 @@ namespace entity {
      */
     void BasicEntity::setId(const QString &id)
     {
-        Q_UNUSED(id);
+        m_Id = id;
     }
 
     /**
@@ -190,7 +198,9 @@ namespace entity {
     QJsonObject BasicEntity::toJson() const
     {
         QJsonObject result;
-        result.insert("Name", m_Name);
+
+        result.insert(nameMark, m_Name);
+        result.insert(idMark, m_Id);
 
         return result;
     }
@@ -202,9 +212,10 @@ namespace entity {
      */
     void BasicEntity::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Name", errorList, [&src, this](){
-            m_Name = src["Name"].toString();
-        });
+        using namespace utility;
+
+        checkAndSet(src, nameMark, errorList, [&](){ m_Name = src[nameMark].toString(); });
+        checkAndSet(src, idMark, errorList, [&](){ m_Id = src[idMark].toString(); });
     }
 
     /**

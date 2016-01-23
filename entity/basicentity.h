@@ -35,7 +35,6 @@ namespace entity {
 
     public:
         virtual QString id() const;
-        virtual QString parentID() const; // TODO: implement! it's usefull
         virtual void setId(const QString &id);
 
         virtual Section section() const;
@@ -48,8 +47,6 @@ namespace entity {
 
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
-
-        static constexpr const char *topID = "top_item_id"; // TODO: investigate and eliminate!
 
         virtual size_t hashType() const;
         static size_t staticHashType();
@@ -70,13 +67,14 @@ namespace entity {
         friend bool operator ==(const BasicEntity &lhs, const BasicEntity &rhs);
 
     protected:
-        BasicEntity() = default;
+        BasicEntity();
         explicit BasicEntity(const QString &name);
         BasicEntity(const BasicEntity &src);
         BasicEntity(BasicEntity &&src);
         BasicEntity(const QJsonObject &src, QStringList &errorList);
 
         QString m_Name;
+        QString m_Id;
     };
 
 } // namespace entity

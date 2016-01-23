@@ -43,12 +43,6 @@ namespace {
     static constexpr char* APPLICATION_DATABASE_FULL_NAME = (char*)"qumldb.qutdb";
     static constexpr char* DEFAULT_DATABASE_EXTENSION = (char*)"qutdb";
 
-    static constexpr char* QTYPE_HASH_ID      = (char*)"_q_hash";
-    static constexpr char* QTYPE_MULTIHASH_ID = (char*)"_q_multihash";
-    static constexpr char* QTYPE_LIST_ID      = (char*)"_q_list";
-    static constexpr char* QTYPE_SET_ID       = (char*)"_q_set";
-    static constexpr char* QTYPE_MULTISET_ID  = (char*)"_q_multiset";
-
     static constexpr char* CFG_FILE_NAME = (char*)"config.umtconfig";
     static constexpr char* DEFAULT_PROJECT_NAME = (char*)"empty_project";
     static constexpr char* DEFAULT_PROJECT_PATH = (char*)"empty_path";
