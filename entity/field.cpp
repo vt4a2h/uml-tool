@@ -52,7 +52,7 @@ namespace entity {
      * @param src
      */
     Field::Field(const Field &src)
-        : BasicEntity( src )
+        : BasicEntity(src)
     {
         copyFrom(src);
     }
@@ -62,9 +62,9 @@ namespace entity {
      * @param src
      */
     Field::Field(Field &&src)
-        : BasicEntity(std::forward<Field>(src))
+        : BasicEntity(std::move(src))
     {
-        moveFrom(std::forward<Field>(src));
+        moveFrom(std::move(src));
     }
 
     /**

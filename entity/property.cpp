@@ -99,9 +99,9 @@ namespace entity {
      * @param src
      */
     Property::Property(Property &&src)
-        : BasicEntity(std::forward<Property>(src))
+        : BasicEntity(std::move(src))
     {
-        moveFrom(std::forward<Property>(src));
+        moveFrom(std::move(src));
     }
 
     /**
@@ -232,8 +232,7 @@ namespace entity {
     {
         using namespace utility;
 
-        return lhs.m_Name == rhs.m_Name &&
-               lhs.m_Id == rhs.m_Id &&
+        return static_cast<BasicEntity const&>(lhs) == static_cast<BasicEntity const&>(rhs) &&
 
                sharedPtrEq(lhs.m_Field, rhs.m_Field) &&
 
@@ -901,8 +900,6 @@ namespace entity {
      */
     void Property::moveFrom(Property &&src)
     {
-        static_cast<BasicEntity&>(*this) = static_cast<BasicEntity&&>(src);
-
         m_Field = std::move(src.m_Field);
 
         assignMethod(m_Getter, std::move(src.m_Getter));
@@ -926,8 +923,6 @@ namespace entity {
 
     void Property::copyFrom(const Property &src)
     {
-        static_cast<BasicEntity&>(*this) = static_cast<const BasicEntity &>(src);
-
         m_Field = src.m_Field ? std::make_shared<Field>(*src.m_Field) : nullptr;
 
         assignMethod(m_Getter, src.m_Getter ? std::make_shared<ClassMethod>(*src.m_Getter) : nullptr);

@@ -73,9 +73,9 @@ namespace entity {
      * @param src
      */
     ClassMethod::ClassMethod(ClassMethod &&src)
-        : BasicEntity(std::forward<ClassMethod>(src))
+        : BasicEntity(std::move(src))
     {
-        moveFrom(std::forward<ClassMethod>(src));
+        moveFrom(std::move(src));
     }
 
     /**
@@ -387,9 +387,8 @@ namespace entity {
      */
     QJsonObject ClassMethod::toJson() const
     {
-        QJsonObject result;
+        QJsonObject result = BasicEntity::toJson();
 
-        result.insert(nameMark, m_Name);
         result.insert(scopedIDMark, m_ScopeId);
         result.insert(sectionMark, m_Section);
         result.insert(typeMark, m_Type);
@@ -419,9 +418,8 @@ namespace entity {
      */
     void ClassMethod::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, nameMark, errorList, [&src, this](){
-            m_Name = src[nameMark].toString();
-        });
+        BasicEntity::fromJson(src, errorList);
+
         utility::checkAndSet(src, scopedIDMark, errorList, [&src, this](){
            m_ScopeId = src[scopedIDMark].toString();
         });

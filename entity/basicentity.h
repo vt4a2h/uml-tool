@@ -69,6 +69,7 @@ namespace entity {
     protected:
         BasicEntity();
         explicit BasicEntity(const QString &name);
+        BasicEntity(const QString &name, const QString &id);
         BasicEntity(const BasicEntity &src);
         BasicEntity(BasicEntity &&src);
         BasicEntity(const QJsonObject &src, QStringList &errorList);

@@ -43,6 +43,12 @@ namespace entity {
     {
     }
 
+    BasicEntity::BasicEntity(const QString &name, const QString &id)
+        : m_Name(name)
+        , m_Id(id)
+    {
+    }
+
     /**
      * @brief BasicEntity::BasicEntity
      * @param src

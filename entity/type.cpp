@@ -48,6 +48,7 @@ namespace entity {
      * @param src
      */
     Type::Type(Type &&src)
+        : BasicEntity(std::move(src))
     {
        moveFrom(std::move(src));
     }
@@ -69,8 +70,7 @@ namespace entity {
      * @param typeId
      */
     Type::Type(const QString &name, const QString &scopeId, const QString &typeId)
-        : BasicEntity(name)
-        , m_Id(typeId.isEmpty() ? utility::genId() : typeId)
+        : BasicEntity(name, typeId.isEmpty() ? utility::genId() : typeId)
         , m_ScopeId(scopeId)
     {
         if (m_Name.isEmpty() || m_Name == DEFAULT_NAME)
@@ -156,11 +156,9 @@ namespace entity {
      */
     QJsonObject Type::toJson() const
     {
-        QJsonObject result;
+        QJsonObject result = BasicEntity::toJson();
 
-        result.insert("Name", m_Name);
         result.insert("Scope ID", m_ScopeId);
-        result.insert("ID", m_Id);
         result.insert("Kind of type", marker());
 
         return result;
@@ -173,14 +171,9 @@ namespace entity {
      */
     void Type::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Name", errorList, [&src, this](){
-            m_Name = src["Name"].toString();
-        });
+        BasicEntity::fromJson(src, errorList);
         utility::checkAndSet(src, "Scope ID", errorList, [&src, this](){
             m_ScopeId = src["Scope ID"].toString();
-        });
-        utility::checkAndSet(src, "ID", errorList, [&src, this](){
-            m_Id = src["ID"].toString();
         });
     }
 
@@ -257,8 +250,6 @@ namespace entity {
      */
     void Type::moveFrom(Type &&src)
     {
-        m_Name    = std::move(src.m_Name);
-        m_Id      = std::move(src.m_Id);
         m_ScopeId = std::move(src.m_ScopeId);
     }
 
@@ -268,8 +259,6 @@ namespace entity {
      */
     void Type::copyFrom(const Type &src)
     {
-        m_Name = src.m_Name;
-        m_Id = src.m_Id;
         m_ScopeId = src.m_ScopeId;
     }
 

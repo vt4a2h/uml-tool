@@ -83,7 +83,7 @@ namespace entity {
      */
     bool operator ==(const Element &lhs, const Element &rhs)
     {
-        return lhs.m_Name  == rhs.m_Name &&
+        return static_cast<BasicEntity const&>(lhs) == static_cast<BasicEntity const&>(rhs) &&
                lhs.m_Value == rhs.m_Value;
     }
 
@@ -93,8 +93,7 @@ namespace entity {
      */
     QJsonObject Element::toJson() const
     {
-        QJsonObject result;
-        result.insert(nameMark, m_Name);
+        QJsonObject result = BasicEntity::toJson();
         result.insert(numberMark, m_Value);
 
         return result;
@@ -107,7 +106,7 @@ namespace entity {
      */
     void Element::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, nameMark,   errorList, [&src, this](){ m_Name  = src[nameMark].toString(); });
+        BasicEntity::fromJson(src, errorList);
         utility::checkAndSet(src, numberMark, errorList, [&src, this](){ m_Value = src[numberMark].toInt();  });
     }
 

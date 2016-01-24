@@ -57,6 +57,7 @@ TEST_F(Enteties, SimpleType)
     _type->setId("some id");
     _type->setScopeId("global scope id");
 
+    // TODO: investigate
     test_copy_move(Type, _type)
 }
 

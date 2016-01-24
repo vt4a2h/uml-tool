@@ -76,7 +76,6 @@ namespace entity {
     private:
         void baseTypeName();
 
-        QString m_Id;
         QString m_ScopeId;
 
         // position
