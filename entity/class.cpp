@@ -69,6 +69,7 @@ namespace entity {
      * @param src
      */
     Class::Class(Class &&src)
+        : Type(std::move(src))
     {
         moveFrom(std::move(src));
     }
@@ -102,8 +103,10 @@ namespace entity {
      */
     Class &Class::operator =(Class &&rhs)
     {
-        if (this != &rhs)
+        if (this != &rhs) {
+            Type::operator =(std::move(rhs));
             moveFrom(std::move(rhs));
+        }
 
         return *this;
     }
@@ -115,8 +118,10 @@ namespace entity {
      */
     Class &Class::operator =(const Class &rhs)
     {
-        if (this != &rhs)
+        if (this != &rhs) {
+            Type::operator =(rhs);
             copyFrom(rhs);
+        }
 
         return *this;
     }
@@ -864,8 +869,6 @@ namespace entity {
      */
     void Class::moveFrom(Class &&src)
     {
-        Type::moveFrom(std::move(src));
-
         m_Kind = std::move(src.m_Kind);
         m_FinalStatus = std::move(src.m_FinalStatus);
 
@@ -884,8 +887,6 @@ namespace entity {
      */
     void Class::copyFrom(const Class &src)
     {
-        Type::copyFrom(src);
-
         m_Kind = src.m_Kind;
         m_FinalStatus = src.m_FinalStatus;
         m_Parents = src.m_Parents;

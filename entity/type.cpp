@@ -84,8 +84,10 @@ namespace entity {
      */
     Type &Type::operator =(Type &&rhs)
     {
-        if (this != &rhs)
+        if (this != &rhs) {
+            BasicEntity::operator =(std::move(rhs));
             moveFrom(std::move(rhs));
+        }
 
         return *this;
     }
@@ -108,8 +110,10 @@ namespace entity {
      */
     Type &Type::operator =(const Type &rhs)
     {
-        if (this != &rhs)
+        if (this != &rhs) {
+            BasicEntity::operator =(rhs);
             copyFrom(rhs);
+        }
 
         return *this;
     }

@@ -66,6 +66,7 @@ namespace entity {
      * @param src
      */
     Union::Union(Union &&src)
+        : Type(std::move(src))
     {
         moveFrom(src);
     }
@@ -87,8 +88,10 @@ namespace entity {
      */
     Union &Union::operator=(const Union &rhs)
     {
-        if (this != &rhs)
+        if (this != &rhs) {
+            Type::operator =(rhs);
             copyFrom(rhs);
+        }
 
         return *this;
     }
@@ -100,8 +103,10 @@ namespace entity {
      */
     Union &Union::operator=(Union &&rhs)
     {
-        if (this != &rhs)
+        if (this != &rhs) {
+            Type::operator =(std::move(rhs));
             moveFrom(rhs);
+        }
 
         return *this;
     }
@@ -321,7 +326,6 @@ namespace entity {
      */
     void Union::moveFrom(Union &src)
     {
-        Type::moveFrom(std::move(src));
         m_Fields = std::move(src.m_Fields);
     }
 
@@ -331,7 +335,6 @@ namespace entity {
      */
     void Union::copyFrom(const Union &src)
     {
-        Type::copyFrom(src);
         utility::deepCopySharedPointerList(src.m_Fields, m_Fields);
     }
 
