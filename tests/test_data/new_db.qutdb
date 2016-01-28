@@ -37,6 +37,7 @@
                 {
                     "Fields": [
                         {
+                            "ID": "efefv5",
                             "DefaultValue": "",
                             "Keywords": [
                             ],
@@ -47,6 +48,7 @@
                             "Type ID": "stub"
                         },
                         {
+                            "ID": "efefv6",
                             "DefaultValue": "",
                             "Keywords": [
                             ],
@@ -63,6 +65,7 @@
                     "Kind of type": "Class",
                     "Methods": [
                         {
+                            "ID": "efefv",
                             "Const status": false,
                             "Slot": false,
                             "Signal": false,
@@ -78,6 +81,7 @@
                             "Type": 0
                         },
                         {
+                            "ID": "efefv1",
                             "Const status": false,
                             "Slot": false,
                             "Signal": false,
@@ -93,6 +97,7 @@
                             "Type": 0
                         },
                         {
+                            "ID": "efefv2",
                             "Const status": false,
                             "Slot": false,
                             "Signal": false,
