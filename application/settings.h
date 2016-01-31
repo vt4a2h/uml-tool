@@ -24,6 +24,8 @@
 
 #include <QRect>
 #include <QColor>
+#include <QPair>
+#include <QMetaType>
 
 namespace application {
 
@@ -74,6 +76,12 @@ namespace application {
         // Elements
         QColor elementColor(const QString &marker);
         void setElementColor(const QString &marker, const QColor &color);
+
+        typedef QPair<int, int> TstType;
+        TstType get(const QString &marker);
+        void set(const QString &marker, const TstType &color);
     }
 
 } // namespace application
+
+Q_DECLARE_METATYPE(application::settings::TstType)

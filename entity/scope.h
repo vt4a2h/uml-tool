@@ -44,9 +44,9 @@ namespace entity {
     public:
         Scope(Scope &&src);
         Scope(const Scope &src);
-        Scope(const QString &scopeName = "", const QString &parentScopeID = "");
+        Scope(const QString &scopeName = "", const EntityID &parentScopeID = 0);
 
-        Scope &operator =(Scope rhs);
+        Scope &operator =(const Scope &rhs);
         Scope &operator =(Scope &&rhs);
 
         friend bool operator ==(const Scope &lhs, const Scope &rhs);
@@ -73,24 +73,18 @@ namespace entity {
         void removeChildScope(const QString &typeId);
         ScopesList scopes() const;
 
-        QString parentScopeId() const;
-        void setParentScopeId(const QString &parentScopeId);
-
-        static QString globalScopeID();
+        EntityID parentScopeId() const;
+        void setParentScopeId(const EntityID &parentScopeId);
 
     public: // BasicEntity implementation
-        QString id() const override;
-        void setId(const QString &id) override;
-
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
     private:
         void copyFrom(const Scope &src);
-        void moveFrom(Scope &src);
+        void moveFrom(Scope &&src);
 
-        QString m_Id;
-        QString m_ParentScopeId;
+        EntityID m_ParentScopeId;
         Scopes m_Scopes;
         Types  m_Types;
         Types  m_TypesByName;

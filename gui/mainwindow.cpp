@@ -372,6 +372,9 @@ namespace gui {
     void MainWindow::readSettings()
     {
         setGeometry(application::settings::mainWindowGeometry());
+
+        application::settings::TstType t = application::settings::get("tst");
+        int a = 3;
     }
 
     /**
@@ -380,6 +383,7 @@ namespace gui {
     void MainWindow::writeSettings()
     {
         application::settings::writeMainWindowGeometry(geometry());
+        application::settings::set("tst", application::settings::TstType(100, 200));
     }
 
     /**

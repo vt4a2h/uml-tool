@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 17/01/2016.
+** Created 31/01/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,37 +22,41 @@
 *****************************************************************************/
 #pragma once
 
-#include <QtCore/QObject>
+#include <QtGlobal>
 
-#include <project/project_types.hpp>
+namespace entity
+{
 
-#include <entity/entityid.h>
-
-namespace entity {
-
-    /// Generator ID for current project items (entities, relations, bases etc.)
-    class GeneratorID : public QObject
+    // TODO: add tests
+    /// ID for all entities
+    class EntityID
     {
-        Q_OBJECT
-
     public:
-        GeneratorID(const GeneratorID &) = delete;
-        GeneratorID(GeneratorID &&) = delete;
-        GeneratorID& operator =(const GeneratorID&) = delete;
-        GeneratorID& operator =(GeneratorID&&) = delete;
+        EntityID();
+        EntityID(quint64 value);
+        EntityID(EntityID const&) = default;
+        EntityID(EntityID &&) = default;
 
-        static const GeneratorID &instance();
+        EntityID &operator =(EntityID const&) = default;
+        EntityID &operator =(EntityID &&) = default;
 
-        entity::EntityID genID();
+        friend bool operator ==(const EntityID &lhs, const EntityID &rhs);
 
-    public slots:
-        void onCurrentProjectChanged(const project::SharedProject &p);
+        bool isValid() const;
+
+    public: // Constants
+        static entity::EntityID nullID();
+
+        static entity::EntityID firstFreeID();
+        static entity::EntityID firstNonConstID();
+
+        // Keep order please, add new item to the end. Next item value =
+        // previous item value + 1, e.g. stdScopeID = globalScopeID + 1
+        static entity::EntityID globalScopeID();
+        static entity::EntityID stdScopeID();
 
     private:
-        explicit GeneratorID(QObject *parent = 0);
-        project::SharedProject project() const;
-
-        project::WeakProject m_CurrentProject;
+        quint64 m_value;
     };
 
-} // entity
+}

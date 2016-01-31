@@ -38,7 +38,9 @@
 #include <QStringList>
 
 #include <utility/helpfunctions.h>
+
 #include <helpers/entityhelpres.h>
+#include <helpers/generatorid.h>
 
 namespace entity {
 
@@ -47,8 +49,9 @@ namespace entity {
      * @param src
      */
     Scope::Scope(Scope &&src)
+        : BasicEntity(std::move(src))
     {
-        moveFrom(src);
+        moveFrom(std::move(src));
     }
 
     /**
@@ -66,11 +69,10 @@ namespace entity {
      * @param scopeName
      * @param scopeId
      */
-    Scope::Scope(const QString &scopeName, const QString &parentScopeID)
-        : m_Id(utility::genId())
-        , m_ParentScopeId(!parentScopeID.isEmpty() ? parentScopeID : GLOBAL_SCOPE_ID)
+    Scope::Scope(const QString &scopeName, const EntityID &parentScopeID)
+        : BasicEntity(m_Name = !scopeName.isEmpty() ? scopeName : DEFAULT_NAME)
+        , m_ParentScopeId(parentScopeID == GeneratorID::nullID() ? parentScopeID : GeneratorID::globalScopeID())
     {
-        m_Name = !scopeName.isEmpty() ? scopeName : DEFAULT_NAME;
     }
 
     /**
@@ -78,9 +80,13 @@ namespace entity {
      * @param rhs
      * @return
      */
-    Scope &Scope::operator =(Scope rhs)
+    Scope &Scope::operator =(const Scope &rhs)
     {
-        moveFrom(rhs);
+        if (this != &rhs) {
+            BasicEntity::operator =(rhs);
+            copyFrom(rhs);
+        }
+
         return *this;
     }
 
@@ -91,8 +97,10 @@ namespace entity {
      */
     Scope &Scope::operator =(Scope &&rhs)
     {
-        if (this != &rhs)
-            moveFrom(rhs);
+        if (this != &rhs) {
+            BasicEntity::operator =(std::move(rhs));
+            moveFrom(std::move(rhs));
+        }
 
         return *this;
     }
@@ -105,8 +113,7 @@ namespace entity {
      */
     bool operator ==(const Scope &lhs, const Scope &rhs)
     {
-        return lhs.m_Name          == rhs.m_Name                       &&
-               lhs.m_Id            == rhs.m_Id                         &&
+        return static_cast<BasicEntity const&>(lhs) == static_cast<BasicEntity const&>(rhs) &&
                lhs.m_ParentScopeId == rhs.m_ParentScopeId              &&
                utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes) &&
                utility::seqSharedPointerEq(lhs.m_Types, rhs.m_Types)   &&
@@ -312,7 +319,7 @@ namespace entity {
      * @brief Scope::parentScopeId
      * @return
      */
-    QString Scope::parentScopeId() const
+    EntityID Scope::parentScopeId() const
     {
         return m_ParentScopeId;
     }
@@ -321,18 +328,9 @@ namespace entity {
      * @brief Scope::setParentScopeId
      * @param parentScopeId
      */
-    void Scope::setParentScopeId(const QString &parentScopeId)
+    void Scope::setParentScopeId(const EntityID &parentScopeId)
     {
        m_ParentScopeId = parentScopeId;
-    }
-
-    /**
-     * @brief Scope::globalScopeID
-     * @return
-     */
-    QString Scope::globalScopeID()
-    {
-        return GLOBAL_SCOPE_ID;
     }
 
     /**
@@ -341,11 +339,9 @@ namespace entity {
      */
     QJsonObject Scope::toJson() const
     {
-        QJsonObject result;
+        QJsonObject result = BasicEntity::toJson();
 
-        result.insert("Name", m_Name);
-        result.insert("ID", m_Id);
-        result.insert("Parent ID", m_ParentScopeId);
+        result.insert("Parent ID", QString::number(m_ParentScopeId));
 
         QJsonArray scopes;
         for (auto &&scope : m_Scopes.values())
@@ -367,9 +363,10 @@ namespace entity {
      */
     void Scope::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Name", errorList, [&src, this](){ m_Name = src["Name"].toString(); });
-        utility::checkAndSet(src, "ID", errorList, [&src, this](){ m_Id = src["ID"].toString(); });
-        utility::checkAndSet(src, "Parent ID", errorList, [&src, this](){ m_ParentScopeId = src["Parent ID"].toString(); });
+        BasicEntity::fromJson(src, errorList);
+
+        utility::checkAndSet(src, "Parent ID", errorList, [&src, this](){
+                                  m_ParentScopeId = src["Parent ID"].toString().toULongLong(); });
 
         m_Scopes.clear();
         utility::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
@@ -412,8 +409,6 @@ namespace entity {
      */
     void Scope::copyFrom(const Scope &src)
     {
-        m_Name = src.m_Name;
-        m_Id   = src.m_Id;
         m_ParentScopeId = src.m_ParentScopeId;
 
         utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &Scope::id);
@@ -425,12 +420,9 @@ namespace entity {
      * @brief Scope::moveFrom
      * @param src
      */
-    void Scope::moveFrom(Scope &src)
+    void Scope::moveFrom(Scope &&src)
     {
-        m_Name = std::move(src.m_Name);
-        m_Id   = std::move(src.m_Id);
         m_ParentScopeId = std::move(src.m_ParentScopeId);
-
         m_Scopes      = std::move(src.m_Scopes);
         m_Types       = std::move(src.m_Types );
         m_TypesByName = std::move(src.m_TypesByName);

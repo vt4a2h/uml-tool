@@ -24,6 +24,8 @@
 
 #include <utility/helpfunctions.h>
 
+#include <helpers/generatorid.h>
+
 #include "enums.h"
 
 namespace entity {
@@ -39,11 +41,11 @@ namespace entity {
      */
     BasicEntity::BasicEntity(const QString &name)
         : m_Name(name)
-        , m_Id()
+        , m_Id(GeneratorID::instance().genID())
     {
     }
 
-    BasicEntity::BasicEntity(const QString &name, const QString &id)
+    BasicEntity::BasicEntity(const QString &name, const EntityID &id)
         : m_Name(name)
         , m_Id(id)
     {
@@ -100,7 +102,7 @@ namespace entity {
      */
     BasicEntity::BasicEntity()
         : m_Name("")
-        , m_Id("") // TODO: NULL ID from generator here
+        , m_Id(GeneratorID::instance().genID())
     {
     }
 
@@ -134,7 +136,7 @@ namespace entity {
      * @brief BasicEntity::id
      * @return
      */
-    QString BasicEntity::id() const
+    EntityID BasicEntity::id() const
     {
         return m_Id;
     }
@@ -143,7 +145,7 @@ namespace entity {
      * @brief BasicEntity::setId
      * @param id
      */
-    void BasicEntity::setId(const QString &id)
+    void BasicEntity::setId(const EntityID &id)
     {
         m_Id = id;
     }
@@ -206,7 +208,9 @@ namespace entity {
         QJsonObject result;
 
         result.insert(nameMark, m_Name);
-        result.insert(idMark, m_Id);
+
+        // Workaround for correct saving
+        result.insert(idMark, QString::number(m_Id));
 
         return result;
     }
@@ -221,7 +225,7 @@ namespace entity {
         using namespace utility;
 
         checkAndSet(src, nameMark, errorList, [&](){ m_Name = src[nameMark].toString(); });
-        checkAndSet(src, idMark, errorList, [&](){ m_Id = src[idMark].toString(); });
+        checkAndSet(src, idMark, errorList, [&](){ m_Id = src[idMark].toString().toULongLong(); });
     }
 
     /**

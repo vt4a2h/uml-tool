@@ -33,7 +33,9 @@
 #include <utility/helpfunctions.h>
 #include <helpers/entityhelpres.h>
 
-#include "entity/scope.h"
+#include <entity/scope.h>
+#include <entity/entityid.h>
+
 #include "constants.h"
 
 namespace db {
@@ -181,7 +183,7 @@ namespace db {
         entity::SharedScope scope(nullptr);
 
         if (parentScopeId.isEmpty()) {
-            scope = std::make_shared<entity::Scope>(name, GLOBAL_SCOPE_ID);
+            scope = std::make_shared<entity::Scope>(name, entity::EntityID::globalScopeID());
             m_Scopes.insert(scope->id(), scope);
         } else {
             auto searchResults = std::move(makeDepthIdList(parentScopeId));

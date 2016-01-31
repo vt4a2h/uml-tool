@@ -28,8 +28,6 @@
 #include <QMetaType>
 
 namespace entity {
-    using EntityID = quint64;
-
     class BasicEntity;
     using SharedBasicEntity = std::shared_ptr<BasicEntity>;
 

@@ -80,7 +80,8 @@ SOURCES += \
     gui/graphics/scene.cpp \
     gui/graphics/graphicsrelation.cpp \
     commands/addrelation.cpp \
-    helpers/generatorid.cpp
+    helpers/generatorid.cpp \
+    entity/entityid.cpp
 
 HEADERS += \
     enums.h \
@@ -168,7 +169,8 @@ HEADERS += \
     gui/graphics/graphicsrelation.h \
     commands/addrelation.h \
     gui/graphics/graphics_types.h \
-    helpers/generatorid.h
+    helpers/generatorid.h \
+    entity/entityid.h
 
 FORMS += \
     gui/mainwindow.ui \

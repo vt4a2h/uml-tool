@@ -105,6 +105,7 @@ namespace application {
     {
         G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
                   &entity::GeneratorID::instance(), &entity::GeneratorID::onCurrentProjectChanged);
+        qRegisterMetaTypeStreamOperators<application::settings::TstType>("application::settings::TstType");
     }
 
     /**

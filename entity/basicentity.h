@@ -24,6 +24,8 @@
 
 #include <QObject>
 
+#include "entityid.h"
+
 namespace entity {
 
      enum Section : int;
@@ -34,8 +36,8 @@ namespace entity {
         Q_OBJECT
 
     public:
-        virtual QString id() const;
-        virtual void setId(const QString &id);
+        virtual EntityID id() const;
+        virtual void setId(const EntityID &id);
 
         virtual Section section() const;
 
@@ -69,13 +71,13 @@ namespace entity {
     protected:
         BasicEntity();
         explicit BasicEntity(const QString &name);
-        BasicEntity(const QString &name, const QString &id);
+        BasicEntity(const QString &name, const EntityID &id);
         BasicEntity(const BasicEntity &src);
         BasicEntity(BasicEntity &&src);
         BasicEntity(const QJsonObject &src, QStringList &errorList);
 
         QString m_Name;
-        QString m_Id;
+        EntityID m_Id;
     };
 
 } // namespace entity

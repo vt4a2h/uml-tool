@@ -43,26 +43,7 @@ namespace entity {
     EntityID GeneratorID::genID()
     {
         auto pr = project();
-        return pr ? pr->genID() : nullID();
-    }
-
-    /**
-     * @brief GeneratorID::defaultID
-     * @return
-     */
-    entity::EntityID GeneratorID::nullID()
-    {
-        return 0;
-    }
-
-    /**
-     * @brief Returns first free IF for for project items. ID's from 0 to 4096 are reserved
-     *        for Qt and C++ types. Can be used to init project id counter or for sanity check.
-     * @return first free ID.
-     */
-    EntityID GeneratorID::firstFreeID()
-    {
-        return 4097;
+        return pr ? pr->genID() : EntityID::nullID();
     }
 
     /**

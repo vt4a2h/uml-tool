@@ -79,7 +79,7 @@ namespace application {
             if (s.contains(key))
                 result = s.value(key).value<ValueType>();
             else
-                s.setValue(key, defaultValue);
+                s.setValue(key, QVariant::fromValue(defaultValue));
 
             s.endGroup();
             return result;
@@ -174,6 +174,16 @@ namespace application {
             Q_ASSERT(boost::range::find_if(elColors, [&](auto&& s) { return s.name == marker; })
                      != elColors.end());
             write(elGroup, marker, color);
+        }
+
+        TstType get(const QString &marker)
+        {
+            return read("tst", marker, TstType(-1, -1));
+        }
+
+        void set(const QString &marker, const TstType &color)
+        {
+            write("tst", marker, QVariant::fromValue(color));
         }
 
     } // namespace settings

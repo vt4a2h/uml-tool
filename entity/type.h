@@ -54,9 +54,6 @@ namespace entity {
         virtual bool isEqual(const Type &rhs, bool withTypeid = true) const;
 
     public: // BasicEntity implementation
-        QString id() const override;
-        void setId(const QString &id) override;
-
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 

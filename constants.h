@@ -24,8 +24,6 @@
 #pragma once
 
 namespace {
-    static constexpr char* GLOBAL_SCOPE_ID = (char*)"_global_scope";
-    static constexpr char* STD = (char*)"std";
     static constexpr char* GLOBAL = (char*)"global";
     static constexpr char* PROJECT_GLOBAL_SCOPE_ID = (char*)"__project_global_scope";
     static constexpr char* LOCALE_TEMPLATE_SCOPE_ID = (char*)"__template_scope";

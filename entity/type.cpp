@@ -119,24 +119,6 @@ namespace entity {
     }
 
     /**
-     * @brief Type::id
-     * @return
-     */
-    QString Type::id() const
-    {
-        return m_Id;
-    }
-
-    /**
-     * @brief Type::setId
-     * @param id
-     */
-    void Type::setId(const QString &id)
-    {
-        m_Id = id;
-    }
-
-    /**
      * @brief Type::scopeId
      * @return
      */
