@@ -39,6 +39,9 @@ namespace entity {
         virtual EntityID id() const;
         virtual void setId(const EntityID &id);
 
+        virtual EntityID scopeId() const;
+        virtual void setScopeId(const EntityID &id);
+
         virtual Section section() const;
 
         virtual QString name() const;
@@ -71,13 +74,14 @@ namespace entity {
     protected:
         BasicEntity();
         explicit BasicEntity(const QString &name);
-        BasicEntity(const QString &name, const EntityID &id);
+        BasicEntity(const QString &name, const EntityID &scopeId, const EntityID &id);
         BasicEntity(const BasicEntity &src);
         BasicEntity(BasicEntity &&src);
         BasicEntity(const QJsonObject &src, QStringList &errorList);
 
         QString m_Name;
         EntityID m_Id;
+        EntityID m_ScopeId;
     };
 
 } // namespace entity

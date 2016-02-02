@@ -33,6 +33,7 @@ namespace entity {
     namespace {
         const QString nameMark = "Name";
         const QString idMark = "ID";
+        const QString scopeIdMark = "Scope ID";
     }
 
     /**
@@ -45,9 +46,10 @@ namespace entity {
     {
     }
 
-    BasicEntity::BasicEntity(const QString &name, const EntityID &id)
+    BasicEntity::BasicEntity(const QString &name, const EntityID &scopeId, const EntityID &id)
         : m_Name(name)
         , m_Id(id)
+        , m_ScopeId(scopeId)
     {
     }
 
@@ -59,6 +61,7 @@ namespace entity {
         : QObject()
         , m_Name(src.m_Name)
         , m_Id(src.m_Id)
+        , m_ScopeId(src.m_ScopeId)
     {
     }
 
@@ -67,9 +70,10 @@ namespace entity {
      * @param src
      */
     BasicEntity::BasicEntity(BasicEntity &&src)
+        : m_Name(std::move(src.m_Name))
+        , m_Id(std::move(src.m_Id))
+        , m_ScopeId(std::move(src.m_ScopeId))
     {
-        m_Name = std::move(src.m_Name);
-        m_Id = std::move(src.m_Id);
     }
 
     /**
@@ -92,6 +96,7 @@ namespace entity {
         if (this != &rhs) {
             setName(rhs.name());
             m_Id = rhs.m_Id;
+            m_ScopeId = rhs.m_ScopeId;
         }
 
         return *this;
@@ -114,7 +119,7 @@ namespace entity {
      */
     bool operator ==(const BasicEntity &lhs, const BasicEntity &rhs)
     {
-        return lhs.m_Name == rhs.m_Name && lhs.m_Id == rhs.m_Id;
+        return lhs.m_Name == rhs.m_Name && lhs.m_Id == rhs.m_Id && lhs.m_ScopeId == rhs.m_ScopeId;
     }
 
     /**
@@ -127,6 +132,7 @@ namespace entity {
         if (this != &rhs) {
             m_Name = std::move(rhs.m_Name);
             m_Id = std::move(rhs.m_Id);
+            m_ScopeId = std::move(rhs.m_ScopeId);
         }
 
         return *this;
@@ -148,6 +154,24 @@ namespace entity {
     void BasicEntity::setId(const EntityID &id)
     {
         m_Id = id;
+    }
+
+    /**
+     * @brief BasicEntity::scopeId
+     * @return
+     */
+    EntityID BasicEntity::setScopeId() const
+    {
+        return m_ScopeId;
+    }
+
+    /**
+     * @brief BasicEntity::setEntityId
+     * @param id
+     */
+    void BasicEntity::setEntityId(const EntityID &id)
+    {
+        m_ScopeId = id;
     }
 
     /**
@@ -211,6 +235,7 @@ namespace entity {
 
         // Workaround for correct saving
         result.insert(idMark, QString::number(m_Id));
+        result.insert(scopeIdMark, QString::number(m_ScopeId));
 
         return result;
     }
@@ -226,6 +251,7 @@ namespace entity {
 
         checkAndSet(src, nameMark, errorList, [&](){ m_Name = src[nameMark].toString(); });
         checkAndSet(src, idMark, errorList, [&](){ m_Id = src[idMark].toString().toULongLong(); });
+        checkAndSet(src, scopeIdMark, errorList, [&](){ m_ScopeId = src[scopeIdMark].toString().toULongLong(); });
     }
 
     /**

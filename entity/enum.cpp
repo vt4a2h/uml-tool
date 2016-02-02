@@ -36,6 +36,7 @@
 
 #include "constants.h"
 #include "enums.h"
+#include "entityid.h"
 
 using namespace boost;
 
@@ -150,7 +151,7 @@ namespace entity {
      * @brief Enum::Enum
      */
     Enum::Enum()
-        : Enum(defaultName(), GLOBAL_SCOPE_ID)
+        : Enum(defaultName(), EntityID::globalScopeID())
     {
     }
 
@@ -159,7 +160,7 @@ namespace entity {
      * @param name
      * @param scopeId
      */
-    Enum::Enum(const QString &name, const QString &scopeId)
+    Enum::Enum(const QString &name, const EntityID &scopeId)
         : Type(name, scopeId)
         , m_EnumTypeId(STUB_ID)
         , m_StrongStatus(false)

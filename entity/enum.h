@@ -29,6 +29,8 @@
 
 namespace entity {
 
+    class EntityID;
+
     /// The Variable class
     class Element : public BasicEntity
     {
@@ -58,7 +60,7 @@ namespace entity {
     {
     public:
         Enum();
-        Enum(const QString &name, const QString &scopeId);
+        Enum(const QString &name, const EntityID &scopeId);
 
         friend bool operator== (const Enum &lhs, const Enum &rhs);
 

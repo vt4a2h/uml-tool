@@ -108,4 +108,13 @@ namespace entity
         return globalScopeID() + 1;
     }
 
+    /**
+     * @brief EntityID::globalDatabaseID
+     * @return
+     */
+    EntityID EntityID::globalDatabaseID()
+    {
+        return stdScopeID() + 1;
+    }
+
 } // namespace entity

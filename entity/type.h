@@ -42,14 +42,11 @@ namespace entity {
         Type();
         Type(Type &&src);
         Type(const Type &src);
-        Type(const QString &name, const QString &scopeId, const QString &typeId = "");
+        Type(const QString &name, const EntityID &scopeId, const EntityID &typeId = EntityID::nullID());
 
         Type &operator =(const Type &rhs);
         Type &operator =(Type &&rhs);
         friend bool operator ==(const Type &lhs, const Type &rhs);
-
-        QString scopeId() const;
-        void setScopeId(const QString &scopeId); // TODO: perhaps store it as weak pointer
 
         virtual bool isEqual(const Type &rhs, bool withTypeid = true) const;
 
@@ -72,8 +69,6 @@ namespace entity {
 
     private:
         void baseTypeName();
-
-        QString m_ScopeId;
 
         // position
         QString m_X;

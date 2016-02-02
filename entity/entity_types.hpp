@@ -28,6 +28,8 @@
 #include <QMetaType>
 
 namespace entity {
+    class EntityID;
+
     class BasicEntity;
     using SharedBasicEntity = std::shared_ptr<BasicEntity>;
 
@@ -65,7 +67,7 @@ namespace entity {
 
     class Type;
     using SharedType = std::shared_ptr<Type>;
-    using Types      = QHash<QString, SharedType>;
+    using Types      = QHash<EntityID, SharedType>;
     using TypesList  = QList<SharedType>;
 
     class Class;
@@ -105,7 +107,7 @@ namespace entity {
 
     class Scope;
     using SharedScope = std::shared_ptr<Scope>;
-    using Scopes      = QHash<QString, SharedScope>;
+    using Scopes      = QHash<EntityID, SharedScope>;
     using ScopesList  = QList<SharedScope>;
 
     class IComponents;

@@ -69,9 +69,8 @@ namespace entity {
      * @param scopeId
      * @param typeId
      */
-    Type::Type(const QString &name, const QString &scopeId, const QString &typeId)
-        : BasicEntity(name, typeId.isEmpty() ? utility::genId() : typeId)
-        , m_ScopeId(scopeId)
+    Type::Type(const QString &name, const EntityID &scopeId, const EntityID &typeId)
+        : BasicEntity(name, scopeId, typeId.isEmpty() ? utility::genId() : typeId)
     {
         if (m_Name.isEmpty() || m_Name == DEFAULT_NAME)
             baseTypeName();
@@ -119,24 +118,6 @@ namespace entity {
     }
 
     /**
-     * @brief Type::scopeId
-     * @return
-     */
-    QString Type::scopeId() const
-    {
-        return m_ScopeId;
-    }
-
-    /**
-     * @brief Type::setScopeId
-     * @param scopeId
-     */
-    void Type::setScopeId(const QString &scopeId)
-    {
-        m_ScopeId = scopeId;
-    }
-
-    /**
      * @brief Type::toJson
      * @return
      */
@@ -144,7 +125,6 @@ namespace entity {
     {
         QJsonObject result = BasicEntity::toJson();
 
-        result.insert("Scope ID", m_ScopeId);
         result.insert("Kind of type", marker());
 
         return result;
@@ -158,9 +138,7 @@ namespace entity {
     void Type::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         BasicEntity::fromJson(src, errorList);
-        utility::checkAndSet(src, "Scope ID", errorList, [&src, this](){
-            m_ScopeId = src["Scope ID"].toString();
-        });
+        // TODO: read Kind of type here!
     }
 
     /**
@@ -226,8 +204,7 @@ namespace entity {
     {
         return rhs.hashType() == this->hashType()       &&
                 m_Name        == rhs.m_Name             &&
-               ( withTypeid ? m_Id == rhs.m_Id : true ) &&
-                m_ScopeId    == rhs.m_ScopeId;
+               ( withTypeid ? m_Id == rhs.m_Id : true );
     }
 
     /**
@@ -236,7 +213,6 @@ namespace entity {
      */
     void Type::moveFrom(Type &&src)
     {
-        m_ScopeId = std::move(src.m_ScopeId);
     }
 
     /**
@@ -245,7 +221,6 @@ namespace entity {
      */
     void Type::copyFrom(const Type &src)
     {
-        m_ScopeId = src.m_ScopeId;
     }
 
     /**

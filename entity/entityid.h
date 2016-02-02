@@ -45,15 +45,16 @@ namespace entity
         bool isValid() const;
 
     public: // Constants
-        static entity::EntityID nullID();
+        static EntityID nullID();
 
-        static entity::EntityID firstFreeID();
-        static entity::EntityID firstNonConstID();
+        static EntityID firstFreeID();
+        static EntityID firstNonConstID();
 
         // Keep order please, add new item to the end. Next item value =
         // previous item value + 1, e.g. stdScopeID = globalScopeID + 1
-        static entity::EntityID globalScopeID();
-        static entity::EntityID stdScopeID();
+        static EntityID globalScopeID();
+        static EntityID stdScopeID();
+        static EntityID globalDatabaseID();
 
     private:
         quint64 m_value;
