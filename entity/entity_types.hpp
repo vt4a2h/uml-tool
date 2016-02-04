@@ -66,9 +66,10 @@ namespace entity {
     using LhsIdentificatorsList = QList<LhsIdentificator>;
 
     class Type;
-    using SharedType = std::shared_ptr<Type>;
-    using Types      = QHash<EntityID, SharedType>;
-    using TypesList  = QList<SharedType>;
+    using SharedType  = std::shared_ptr<Type>;
+    using Types       = QHash<EntityID, SharedType>;
+    using TypesByName = QHash<QString, SharedType>;
+    using TypesList   = QList<SharedType>;
 
     class Class;
     using SharedClass = std::shared_ptr<Class>;
@@ -92,7 +93,7 @@ namespace entity {
     using EnumsList  = QList<SharedEnum>;
 
     enum Section : int;
-    using Parent      = std::pair<QString, Section>;
+    using Parent      = std::pair<EntityID, Section>;
     using Parents     = QHash<QString, Parent>; // id : {id, section}
     using ParentsList = QList<Parent>;
 

@@ -22,9 +22,6 @@
 *****************************************************************************/
 
 #include "type.h"
-#include "scope.h"
-#include "enums.h"
-#include "constants.h"
 
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -32,6 +29,12 @@
 #include <QTextStream>
 
 #include <utility/helpfunctions.h>
+#include <helpers/generatorid.h>
+
+#include "scope.h"
+#include "enums.h"
+#include "constants.h"
+#include "entityid.h"
 
 namespace entity {
 
@@ -39,7 +42,7 @@ namespace entity {
      * @brief Type::Type
      */
     Type::Type()
-        : Type(DEFAULT_NAME, GLOBAL_SCOPE_ID)
+        : Type(DEFAULT_NAME, EntityID::globalScopeID())
     {
     }
 
@@ -70,7 +73,7 @@ namespace entity {
      * @param typeId
      */
     Type::Type(const QString &name, const EntityID &scopeId, const EntityID &typeId)
-        : BasicEntity(name, scopeId, typeId.isEmpty() ? utility::genId() : typeId)
+        : BasicEntity(name, scopeId, typeId.isValid() ? GeneratorID::instance().genID() : typeId)
     {
         if (m_Name.isEmpty() || m_Name == DEFAULT_NAME)
             baseTypeName();
@@ -213,6 +216,7 @@ namespace entity {
      */
     void Type::moveFrom(Type &&src)
     {
+        Q_UNUSED(src);
     }
 
     /**
@@ -221,6 +225,7 @@ namespace entity {
      */
     void Type::copyFrom(const Type &src)
     {
+        Q_UNUSED(src);
     }
 
     /**

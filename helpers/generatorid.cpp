@@ -40,7 +40,7 @@ namespace entity {
      * @brief GeneratorID::genID
      * @return
      */
-    EntityID GeneratorID::genID()
+    EntityID GeneratorID::genID() const
     {
         auto pr = project();
         return pr ? pr->genID() : EntityID::nullID();

@@ -91,9 +91,9 @@ namespace relationship {
         virtual void copyFrom(const Relation &src);
 
         void check();
-        void addHeadClass(const QString &id);
-        void addTailClass(const QString &id);
-        entity::SharedType tryToFindType(const QString &typeId) const;
+        void addHeadClass(const entity::EntityID &id);
+        void addTailClass(const entity::EntityID &id);
+        entity::SharedType tryToFindType(const entity::EntityID &typeId) const;
 
         SharedNode m_TailNode;
         SharedNode m_HeadNode;

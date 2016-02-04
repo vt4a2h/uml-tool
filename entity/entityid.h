@@ -44,6 +44,11 @@ namespace entity
 
         bool isValid() const;
 
+        quint64 value() const;
+        void setValue(const quint64 &value);
+
+        // TODO: implement to/from JSON functions
+
     public: // Constants
         static EntityID nullID();
 
@@ -60,4 +65,5 @@ namespace entity
         quint64 m_value;
     };
 
+    uint qHash(const entity::EntityID &e);
 }

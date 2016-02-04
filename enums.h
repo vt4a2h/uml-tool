@@ -24,6 +24,7 @@
 #pragma once
 
 #include <QMetaType>
+#include <QHash>
 
 namespace entity {
 
@@ -75,6 +76,11 @@ namespace entity {
         SimpleMethod,   ///< SimpleMethod
         TemplateMethod  ///< TemplateMethod
     };
+
+    uint qHash(const entity::LhsIdentificator& c)
+    {
+        return ::qHash(uint(c));
+    }
 }
 
 namespace relationship {

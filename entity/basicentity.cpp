@@ -160,16 +160,16 @@ namespace entity {
      * @brief BasicEntity::scopeId
      * @return
      */
-    EntityID BasicEntity::setScopeId() const
+    EntityID BasicEntity::scopeId() const
     {
         return m_ScopeId;
     }
 
     /**
-     * @brief BasicEntity::setEntityId
+     * @brief BasicEntity::setScopeId
      * @param id
      */
-    void BasicEntity::setEntityId(const EntityID &id)
+    void BasicEntity::setScopeId(const EntityID &id)
     {
         m_ScopeId = id;
     }
@@ -234,8 +234,8 @@ namespace entity {
         result.insert(nameMark, m_Name);
 
         // Workaround for correct saving
-        result.insert(idMark, QString::number(m_Id));
-        result.insert(scopeIdMark, QString::number(m_ScopeId));
+        result.insert(idMark, QString::number(m_Id.value()));
+        result.insert(scopeIdMark, QString::number(m_ScopeId.value()));
 
         return result;
     }

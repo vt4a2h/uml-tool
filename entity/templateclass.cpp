@@ -22,8 +22,6 @@
 *****************************************************************************/
 
 #include "templateclass.h"
-#include "constants.h"
-#include "enums.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -31,13 +29,17 @@
 
 #include <utility/helpfunctions.h>
 
+#include "constants.h"
+#include "enums.h"
+#include "entityid.h"
+
 namespace entity {
 
     /**
      * @brief TemplateClass::TemplateClass
      */
     TemplateClass::TemplateClass()
-        : TemplateClass("Template class", GLOBAL_SCOPE_ID)
+        : TemplateClass("Template class", EntityID::globalScopeID())
     {
     }
 
@@ -46,7 +48,7 @@ namespace entity {
      * @param name
      * @param scopeId
      */
-    TemplateClass::TemplateClass(const QString &name, const QString &scopeId)
+    TemplateClass::TemplateClass(const QString &name, const EntityID &scopeId)
         : Class (name, scopeId)
     {
     }

@@ -50,10 +50,10 @@ namespace entity {
         TemplateParametersList templateParameters() const;
 
         const db::SharedDatabase database() const;
-        SharedType getLocalType(const QString &typeId) const;
+        SharedType getLocalType(const EntityID &typeId) const;
         template <class T = Type> std::shared_ptr<T> addLocalType(const QString &name = "");
-        bool containsLocalType(const QString &typeId) const;
-        void removeLocalType(const QString &typeId);
+        bool containsLocalType(const EntityID &typeId) const;
+        void removeLocalType(const EntityID &typeId);
         TypesList localTypes() const;
 
         QJsonObject templateToJson() const;

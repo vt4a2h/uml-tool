@@ -43,7 +43,7 @@ namespace entity {
 
         static const GeneratorID &instance();
 
-        entity::EntityID genID();
+        entity::EntityID genID() const;
 
     public slots:
         void onCurrentProjectChanged(const project::SharedProject &p);

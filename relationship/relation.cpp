@@ -389,7 +389,7 @@ namespace relationship {
      * @brief Relation::addHeadClass
      * @param id
      */
-    void Relation::addHeadClass(const QString &id)
+    void Relation::addHeadClass(const entity::EntityID &id)
     {
         auto tmpHead = tryToFindType(id);
 
@@ -404,7 +404,7 @@ namespace relationship {
      * @brief Relation::addTailClass
      * @param id
      */
-    void Relation::addTailClass(const QString &id)
+    void Relation::addTailClass(const entity::EntityID &id)
     {
         auto tmpTailClass = std::dynamic_pointer_cast<entity::Class>(tryToFindType(id));
 
@@ -420,7 +420,7 @@ namespace relationship {
      * @param typeId
      * @return
      */
-    entity::SharedType Relation::tryToFindType(const QString &typeId) const
+    entity::SharedType Relation::tryToFindType(const entity::EntityID &typeId) const
     {
         entity::SharedType result = m_ProjectDatabase->depthTypeSearch(typeId);
         return (result ? result : m_GlobalDatabase->depthTypeSearch(typeId));

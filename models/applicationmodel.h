@@ -61,7 +61,7 @@ namespace models {
         void removeScope(const QString &id);
 
         template <class T = entity::Type>
-        std::shared_ptr<T> makeType(const QString &scopeID, const QString &name = "");
+        std::shared_ptr<T> makeType(const entity::EntityID &scopeID, const QString &name = "");
         void addExistsType(const QString &projectID, const QString &scopeID, const entity::SharedType &type);
         void removeType(const QString &projectID, const QString &scopeID, const QString &typeID);
         // }
@@ -87,7 +87,7 @@ namespace models {
     };
 
     template <class T>
-    std::shared_ptr<T> ApplicationModel::makeType(const QString &scopeID, const QString &name)
+    std::shared_ptr<T> ApplicationModel::makeType(const entity::EntityID &scopeID, const QString &name)
     {
         if (currentProject() && currentProject()->database()) {
             if (auto scope = currentProject()->database()->getScope(scopeID)) {

@@ -25,7 +25,6 @@
 
 namespace {
     static constexpr char* GLOBAL = (char*)"global";
-    static constexpr char* PROJECT_GLOBAL_SCOPE_ID = (char*)"__project_global_scope";
     static constexpr char* LOCALE_TEMPLATE_SCOPE_ID = (char*)"__template_scope";
     static constexpr char* STUB_ID = (char*)"_stub_type";
     static constexpr char* VOID_ID = (char*)"_void";

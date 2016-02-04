@@ -28,6 +28,7 @@
 #include <db/db_types.hpp>
 
 #include <entity/entity_types.hpp>
+#include <entity/entityid.h>
 
 #include "types.h"
 

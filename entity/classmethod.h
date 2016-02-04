@@ -24,14 +24,12 @@
 #pragma once
 
 #include <QString>
+#include <QSet>
 
 #include "basicentity.h"
 #include "entity_types.hpp"
 
 class QJsonObject;
-
-uint qHash(const entity::LhsIdentificator& c);
-#include <QSet>
 
 namespace entity {
 
@@ -94,9 +92,6 @@ namespace entity {
         void removeParameter(const QString &name);
         FieldsList parameters() const;
 
-        QString scopeId() const;
-        void setScopeId(const QString &scopeId);
-
         ClassMethodType type() const;
 
         virtual bool isEqual(const ClassMethod &rhs) const;
@@ -115,7 +110,6 @@ namespace entity {
         ClassMethodType m_Type;
 
     private:
-        QString m_ScopeId;
         Section m_Section;
         bool    m_ConstStatus;
         bool    m_SlotStatus;

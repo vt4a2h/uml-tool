@@ -60,7 +60,7 @@ namespace entity {
      * @brief Class::Class
      */
     Class::Class()
-        : Class(defaultName(), GLOBAL_SCOPE_ID)
+        : Class(defaultName(), EntityID::nullID())
     {
     }
 
@@ -89,7 +89,7 @@ namespace entity {
      * @param name
      * @param scopeId
      */
-    Class::Class(const QString &name, const QString &scopeId)
+    Class::Class(const QString &name, const EntityID &scopeId)
         : Type(name, scopeId)
         , m_Kind(Kind::ClassType)
         , m_FinalStatus(false)
@@ -143,7 +143,7 @@ namespace entity {
      * @param section
      * @return
      */
-    Parent Class::addParent(const QString &typeId, Section section)
+    Parent Class::addParent(const EntityID &typeId, Section section)
     {
         auto parent = Parent(typeId, section);
         if (containsParent(typeId))
@@ -158,7 +158,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    Parent Class::parent(const QString &typeId) const
+    Parent Class::parent(const EntityID &typeId) const
     {
         auto it = range::find_if(m_Parents, [&](auto &&parent){ return parent.first == typeId; });
         return it != m_Parents.cend() ? *it : Parent();
@@ -169,7 +169,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Class::containsParent(const QString &typeId)
+    bool Class::containsParent(const EntityID &typeId)
     {
         return range::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; }) != m_Parents.end();
     }
@@ -178,7 +178,7 @@ namespace entity {
      * @brief Class::removeParent
      * @param typeId
      */
-    void Class::removeParent(const QString &typeId)
+    void Class::removeParent(const EntityID &typeId)
     {
         auto it = range::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; });
         if (it != m_Parents.end())
@@ -659,7 +659,7 @@ namespace entity {
         QJsonArray parents;
         QJsonObject parent;
         for (auto &&p: m_Parents) {
-            parent.insert("Id", p.first);
+            parent.insert("Id", QString::number(p.first.value()));
             parent.insert("Section", p.second);
             parents.append(parent);
         }
@@ -707,7 +707,7 @@ namespace entity {
                 for (auto &&value : src["Parents"].toArray()) {
                     o = value.toObject();
                     utility::checkAndSet(o, "Id", errorList, [&o, &p, this](){
-                        p.first = o["Id"].toString();
+                        p.first = o["Id"].toString().toULongLong();
                     });
                     utility::checkAndSet(o, "Section", errorList, [&o, &p, this](){
                         p.second = static_cast<Section>(o["Section"].toInt());

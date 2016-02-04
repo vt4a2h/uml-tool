@@ -36,15 +36,9 @@
 #include "enums.h"
 #include "constants.h"
 
-uint qHash(const entity::LhsIdentificator& c)
-{
-    return ::qHash(uint(c));
-}
-
 namespace
 {
     const QString nameMark = "Name";
-    const QString scopedIDMark = "ScopeID";
     const QString sectionMark  = "Section";
     const QString typeMark  = "Type";
     const QString csMark  = "Const status";
@@ -95,7 +89,6 @@ namespace entity {
     ClassMethod::ClassMethod(const QString &name)
         : BasicEntity(name)
         , m_Type(SimpleMethod)
-        , m_ScopeId(STUB_ID)
         , m_Section(Public)
         , m_ConstStatus(false)
         , m_SlotStatus(false)
@@ -152,7 +145,6 @@ namespace entity {
     bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs)
     {
         return static_cast<const BasicEntity&>(lhs) == static_cast<const BasicEntity&>(rhs) &&
-               lhs.m_ScopeId           == rhs.m_ScopeId           &&
                lhs.m_Section           == rhs.m_Section           &&
                lhs.m_ConstStatus       == rhs.m_ConstStatus       &&
                lhs.m_SlotStatus        == rhs.m_SlotStatus        &&
@@ -389,7 +381,6 @@ namespace entity {
     {
         QJsonObject result = BasicEntity::toJson();
 
-        result.insert(scopedIDMark, m_ScopeId);
         result.insert(sectionMark, m_Section);
         result.insert(typeMark, m_Type);
         result.insert(csMark, m_ConstStatus);
@@ -420,9 +411,6 @@ namespace entity {
     {
         BasicEntity::fromJson(src, errorList);
 
-        utility::checkAndSet(src, scopedIDMark, errorList, [&src, this](){
-           m_ScopeId = src[scopedIDMark].toString();
-        });
         utility::checkAndSet(src, sectionMark, errorList, [&src, this](){
             m_Section = static_cast<Section>(src[sectionMark].toInt());
         });
@@ -515,7 +503,6 @@ namespace entity {
     {
         m_Type = std::move(src.m_Type);
 
-        m_ScopeId = std::move(src.m_ScopeId);
         m_Section = std::move(src.m_Section);
         m_ConstStatus = std::move(src.m_ConstStatus);
         m_SlotStatus = std::move(src.m_SlotStatus);
@@ -536,7 +523,6 @@ namespace entity {
     {
         m_Type = src.m_Type;
 
-        m_ScopeId = src.m_ScopeId;
         m_Section = src.m_Section;
         m_ConstStatus = src.m_ConstStatus;
         m_SlotStatus = src.m_SlotStatus;
@@ -547,24 +533,6 @@ namespace entity {
 
         m_RhsIdentificator  = src.m_RhsIdentificator;
         m_LhsIdentificators = src.m_LhsIdentificators;
-    }
-
-    /**
-     * @brief ClassMethod::scopeId
-     * @return
-     */
-    QString ClassMethod::scopeId() const
-    {
-        return m_ScopeId;
-    }
-
-    /**
-     * @brief ClassMethod::setScopeId
-     * @param scopeId
-     */
-    void ClassMethod::setScopeId(const QString &scopeId)
-    {
-       m_ScopeId = scopeId;
     }
 
     /**

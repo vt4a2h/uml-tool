@@ -41,7 +41,7 @@ namespace entity {
      * @brief ExtendedType::ExtendedType
      */
     ExtendedType::ExtendedType()
-        : ExtendedType(defaultName(), STUB_ID)
+        : ExtendedType(defaultName(), EntityID::nullID())
     {
     }
 
@@ -50,10 +50,9 @@ namespace entity {
      * @param name
      * @param scopeId
      */
-    ExtendedType::ExtendedType(const QString &name, const QString &scopeId)
+    ExtendedType::ExtendedType(const QString &name, const EntityID &scopeId)
         : Type(name, scopeId)
         , m_ConstStatus(false)
-        , m_TypeId(STUB_ID)
     {
     }
 

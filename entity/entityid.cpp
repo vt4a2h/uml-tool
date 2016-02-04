@@ -117,4 +117,20 @@ namespace entity
         return stdScopeID() + 1;
     }
 
+    quint64 EntityID::value() const
+    {
+        return m_value;
+    }
+
+    void EntityID::setValue(const quint64 &value)
+    {
+        m_value = value;
+    }
+
+    uint qHash(const entity::EntityID &e)
+    {
+        return ::qHash(e.value());
+    }
+
 } // namespace entity
+

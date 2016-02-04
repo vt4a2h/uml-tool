@@ -51,8 +51,8 @@ namespace entity {
 
         friend bool operator ==(const Scope &lhs, const Scope &rhs);
 
-        SharedType type(const QString &typeId) const;
-        SharedType type(const QString &typeId);
+        SharedType type(const EntityID &typeId) const;
+        SharedType type(const EntityID &typeId);
 
         SharedType typeByName(const QString &name) const;
         SharedType typeByName(const QString &name) ;
@@ -60,17 +60,17 @@ namespace entity {
         template <class T = Type> std::shared_ptr<T> addType(const QString &name = "");
         void addClonedType(const SharedType &type);
         SharedType addExistsType(const SharedType &type);
-        bool containsType(const QString &typeId) const;
-        void removeType(const QString &typeId);
+        bool containsType(const EntityID &typeId) const;
+        void removeType(const EntityID &typeId);
         TypesList types() const;
 
-        SharedScope getChildScope(const QString &typeId);
+        SharedScope getChildScope(const EntityID &typeId);
         SharedScope addChildScope(const QString &name = "");
         SharedScope chainScopeSearch(const QStringList& scopesNames) const;
         void addExistsChildScope(const SharedScope &scope);
-        bool containsChildScope(const QString &typeId) const;
+        bool containsChildScope(const EntityID &typeId) const;
         bool hasChildScopes() const;
-        void removeChildScope(const QString &typeId);
+        void removeChildScope(const EntityID &typeId);
         ScopesList scopes() const;
 
     public: // BasicEntity implementation
@@ -81,10 +81,9 @@ namespace entity {
         void copyFrom(const Scope &src);
         void moveFrom(Scope &&src);
 
-        EntityID m_ParentScopeId;
         Scopes m_Scopes;
         Types  m_Types;
-        Types  m_TypesByName;
+        TypesByName  m_TypesByName;
     };
 
     template <class T>

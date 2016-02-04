@@ -130,10 +130,10 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedType Template::getLocalType(const QString &typeId) const
+    SharedType Template::getLocalType(const EntityID &typeId) const
     {
         return m_LocalDatabase->anyScopes() ?
-                    m_LocalDatabase->scopes()[0]->type(typeId) : nullptr;
+               m_LocalDatabase->scopes()[0]->type(typeId) : nullptr;
     }
 
     /**
@@ -141,7 +141,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Template::containsLocalType(const QString &typeId) const
+    bool Template::containsLocalType(const EntityID &typeId) const
     {
         return m_LocalDatabase->anyScopes() ?
                     m_LocalDatabase->scopes()[0]->containsType(typeId) : false;
@@ -151,7 +151,7 @@ namespace entity {
      * @brief Template::removeLocaleType
      * @param typeId
      */
-    void Template::removeLocalType(const QString &typeId)
+    void Template::removeLocalType(const EntityID &typeId)
     {
         if (m_LocalDatabase->anyScopes())
             m_LocalDatabase->scopes()[0]->removeType(typeId);

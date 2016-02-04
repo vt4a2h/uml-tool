@@ -52,17 +52,17 @@ namespace entity {
         Class();
         Class(Class &&src);
         Class(const Class &src);
-        Class(const QString &name, const QString &scopeId);
+        Class(const QString &name, const EntityID &scopeId);
 
         Class &operator =(Class &&rhs);
         Class &operator =(const Class &rhs);
 
         friend bool operator ==(const Class &lhs, const Class &rhs);
 
-        Parent addParent(const QString &typeId, Section section);
-        Parent parent(const QString &typeId) const;
-        bool containsParent(const QString &typeId);
-        void removeParent(const QString &typeId);
+        Parent addParent(const EntityID &typeId, Section section);
+        Parent parent(const EntityID &typeId) const;
+        bool containsParent(const EntityID &typeId);
+        void removeParent(const EntityID &typeId);
         bool anyParents() const;
         ParentsList parents() const;
 

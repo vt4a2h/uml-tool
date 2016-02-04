@@ -43,7 +43,7 @@ namespace entity {
         using PlList = QList<Pl>;
 
         ExtendedType();
-        ExtendedType(const QString &name, const QString &scopeId);
+        ExtendedType(const QString &name, const EntityID &scopeId);
 
         friend bool operator ==(const ExtendedType &lhs, const ExtendedType &rhs);
 

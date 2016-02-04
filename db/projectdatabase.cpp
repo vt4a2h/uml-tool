@@ -33,21 +33,6 @@
 
 #include "constants.h"
 
-namespace {
-
-    entity::SharedScope addGlobalScopeToProject(db::ProjectDatabase &projectDb,
-                                                entity::Scopes &scopes)
-    {
-        QString globalScopeID = projectDb.defaultScopeID();
-
-        scopes[globalScopeID] = std::make_shared<entity::Scope>("::");
-        scopes[globalScopeID]->setId(globalScopeID);
-
-        return scopes[globalScopeID];
-    }
-
-}
-
 namespace db {
 
     /**
@@ -77,7 +62,6 @@ namespace db {
     ProjectDatabase::ProjectDatabase(const QString &name, const QString &path)
         : Database(name, path)
     {
-        addGlobalScopeToProject(*this, m_Scopes);
     }
 
     /**
@@ -267,24 +251,6 @@ namespace db {
     ItemsPos ProjectDatabase::itemsPos() const
     {
         return m_ItemsPos;
-    }
-
-    /**
-     * @brief ProjectDatabase::defaultScopeID
-     * @return
-     */
-    QString ProjectDatabase::defaultScopeID() const
-    {
-        return m_ID + PROJECT_GLOBAL_SCOPE_ID;
-    }
-
-    /**
-     * @brief ProjectDatabase::defaultScope
-     * @return
-     */
-    entity::SharedScope ProjectDatabase::defaultScope() const
-    {
-        return m_Scopes[m_ID + PROJECT_GLOBAL_SCOPE_ID];
     }
 
     /**

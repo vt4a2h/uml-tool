@@ -25,7 +25,9 @@
 #include <QHash>
 
 #include <entity/entity_types.hpp>
-#include <types.h>
+#include <entity/entityid.h>
+
+#include "types.h"
 
 /**
  *  @brief namespace db
@@ -56,17 +58,18 @@ namespace db {
 
         QString fullPath() const;
 
-        entity::SharedScope getScope(const QString &id) const;
-        entity::SharedScope addScope(const QString &name = "", const QString &parentScopeId = "");
+        entity::SharedScope getScope(const entity::EntityID &id) const;
+        entity::SharedScope addScope(const QString &name = "",
+                                     const entity::EntityID &parentScopeId = entity::EntityID::nullID());
         void addExistsScope(const entity::SharedScope &scope);
         entity::SharedScope chainScopeSearch(const QStringList& scopesNames) const;
-        bool containsScope(const QString &id) const;
+        bool containsScope(const entity::EntityID &id) const;
         bool anyScopes() const;
-        void removeScope(const QString &id);
+        void removeScope(const entity::EntityID &id);
         entity::ScopesList scopes() const;
 
-        entity::SharedScope depthScopeSearch(const QString &scopeId) const;
-        entity::SharedType  depthTypeSearch(const QString &typeId)   const;
+        entity::SharedScope depthScopeSearch(const entity::EntityID &scopeId) const;
+        entity::SharedType  depthTypeSearch(const entity::EntityID &typeId)   const;
 
         void load(ErrorList &errorList);
         bool save() const;
@@ -92,11 +95,12 @@ namespace db {
         entity::Scopes m_Scopes;
 
     private:
-        QStringList makeDepthIdList(const QString &id) const;
-        entity::SharedScope getScopeWithDepthList(const QStringList &ids) const;
-        void getDepthType(const entity::SharedScope &scope, const QString &id, entity::SharedType &result) const;
+        using EntityIDList = QList<entity::EntityID>;
+        EntityIDList makeDepthIdList(const entity::EntityID &id) const;
+        entity::SharedScope getScopeWithDepthList(const EntityIDList &ids) const;
+        void getDepthType(const entity::SharedScope &scope, const entity::EntityID &id, entity::SharedType &result) const;
         QString makeFullPath() const;
-        void recursiveFind(entity::SharedScope scope, const QString &id, QStringList &ids) const;
+        void recursiveFind(entity::SharedScope scope, const entity::EntityID &id, EntityIDList &ids) const;
     };
 
 } // namespace db

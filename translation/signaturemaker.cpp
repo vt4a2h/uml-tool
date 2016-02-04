@@ -178,7 +178,8 @@ namespace translation {
 
         QStringList scopes;
         auto scopeId = type->scopeId();
-        QSet<QString> forbidden = {m_ProjectDatabase->defaultScopeID(), GLOBAL_SCOPE_ID,
+        // FIXME: project must know about his global scope ID, not database!
+        QSet<QString> forbidden = {/*m_ProjectDatabase->defaultScopeID(),*/ GLOBAL_SCOPE_ID,
                                    LOCALE_TEMPLATE_SCOPE_ID, PROJECT_GLOBAL_SCOPE_ID};
         while (!globalIds.contains(scopeId)) {
             if (auto scope = findScope(scopeId)) {
