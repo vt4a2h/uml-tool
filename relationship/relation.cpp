@@ -39,7 +39,7 @@ namespace relationship {
      * @brief Relation::Relation
      */
     Relation::Relation()
-        : Relation(STUB_ID, STUB_ID, nullptr, nullptr)
+        : Relation(entity::EntityID::nullID(), entity::EntityID::nullID(), nullptr, nullptr)
     {
     }
 
@@ -68,7 +68,7 @@ namespace relationship {
      * @param globalDatabase
      * @param projectDatabase
      */
-    Relation::Relation(const QString &tailTypeId, const QString &headTypeId,
+    Relation::Relation(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
                        db::Database *globalDatabase, db::Database *projectDatabase)
         : m_TailNode(std::make_shared<Node>(tailTypeId))
         , m_HeadNode(std::make_shared<Node>(headTypeId))
@@ -77,9 +77,9 @@ namespace relationship {
         , m_GlobalDatabase(globalDatabase)
         , m_ProjectDatabase(projectDatabase)
     {
-        if (headTypeId != STUB_ID)
+        if (headTypeId != entity::EntityID::nullID())
             addHeadClass(headTypeId);
-        if (tailTypeId != STUB_ID)
+        if (tailTypeId != entity::EntityID::nullID())
             addTailClass(tailTypeId);
     }
 
@@ -406,6 +406,7 @@ namespace relationship {
      */
     void Relation::addTailClass(const entity::EntityID &id)
     {
+        // TODO: investigate and fix
         auto tmpTailClass = std::dynamic_pointer_cast<entity::Class>(tryToFindType(id));
 
         Q_ASSERT_X(tmpTailClass,

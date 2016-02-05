@@ -47,7 +47,7 @@ namespace entity {
      * @brief Union::Union
      */
     Union::Union()
-        : Union(defaultName(), GLOBAL_SCOPE_ID)
+        : Union(defaultName(), EntityID::globalScopeID())
     {
     }
 
@@ -76,7 +76,7 @@ namespace entity {
      * @param name
      * @param scopeId
      */
-    Union::Union(const QString &name, const QString &scopeId)
+    Union::Union(const QString &name, const EntityID &scopeId)
         : Type(name, scopeId)
     {
     }
@@ -140,7 +140,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedField Union::addField(const QString &name, const QString &typeId)
+    SharedField Union::addField(const QString &name, const EntityID &typeId)
     {
         auto field = std::make_shared<Field>(name, typeId);
 
@@ -292,7 +292,7 @@ namespace entity {
      */
     SharedField Union::addNewField()
     {
-        return addField(newFiledName, STUB_ID);
+        return addField(newFiledName, EntityID::nullID());
     }
 
     /**

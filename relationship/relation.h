@@ -48,7 +48,7 @@ namespace relationship {
         Relation();
         Relation(Relation &&src);
         Relation(const Relation &src);
-        Relation(const QString &tailTypeId, const QString &headTypeId,
+        Relation(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
                  db::Database *globalDatabase, db::Database *projectDatabase);
         virtual ~Relation();
 

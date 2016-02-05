@@ -117,16 +117,67 @@ namespace entity
         return stdScopeID() + 1;
     }
 
+    /**
+     * @brief EntityID::voidID
+     * @return
+     */
+    EntityID EntityID::voidID()
+    {
+        return globalDatabaseID() + 1;
+    }
+
+    /**
+     * @brief EntityID::value
+     * @return
+     */
     quint64 EntityID::value() const
     {
         return m_value;
     }
 
+    /**
+     * @brief EntityID::setValue
+     * @param value
+     */
     void EntityID::setValue(const quint64 &value)
     {
         m_value = value;
     }
 
+    /**
+     * @brief EntityID::toJson
+     * @return
+     */
+    QJsonValue EntityID::toJson() const
+    {
+        // Workaround for correct saving
+        return QJsonValue(QString::number(m_value));
+    }
+
+    /**
+     * @brief EntityID::fromJson
+     * @param in
+     * @param errors
+     */
+    void EntityID::fromJson(const QJsonValue &in, ErrorList &errors)
+    {
+        QString result = in.toString();
+        if (result.isEmpty()) {
+            errors << "Wrong entity ID";
+            return;
+        }
+
+        bool ok = false;
+        m_value = result.toULongLong(&ok);
+        if (!ok)
+            errors << "Cannot convert value to the appropriate type.";
+    }
+
+    /**
+     * @brief qHash
+     * @param e
+     * @return
+     */
     uint qHash(const entity::EntityID &e)
     {
         return ::qHash(e.value());

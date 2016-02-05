@@ -23,15 +23,22 @@
 #pragma once
 
 #include <QtGlobal>
+#include <QJsonValue>
+
+#include <boost/operators.hpp>
+
+#include "types.h"
 
 namespace entity
 {
 
     // TODO: add tests
     /// ID for all entities
-    class EntityID
+    class EntityID : public boost::equality_comparable<EntityID>
     {
     public:
+        using ValueType = quint64;
+
         EntityID();
         EntityID(quint64 value);
         EntityID(EntityID const&) = default;
@@ -47,7 +54,8 @@ namespace entity
         quint64 value() const;
         void setValue(const quint64 &value);
 
-        // TODO: implement to/from JSON functions
+        QJsonValue toJson() const;
+        void fromJson(const QJsonValue &in, ErrorList & errors);
 
     public: // Constants
         static EntityID nullID();
@@ -60,9 +68,10 @@ namespace entity
         static EntityID globalScopeID();
         static EntityID stdScopeID();
         static EntityID globalDatabaseID();
+        static EntityID voidID();
 
     private:
-        quint64 m_value;
+        ValueType m_value;
     };
 
     uint qHash(const entity::EntityID &e);

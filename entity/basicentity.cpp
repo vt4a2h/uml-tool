@@ -233,9 +233,8 @@ namespace entity {
 
         result.insert(nameMark, m_Name);
 
-        // Workaround for correct saving
-        result.insert(idMark, QString::number(m_Id.value()));
-        result.insert(scopeIdMark, QString::number(m_ScopeId.value()));
+        result.insert(idMark, m_Id.toJson());
+        result.insert(scopeIdMark, m_ScopeId.toJson());
 
         return result;
     }
@@ -250,8 +249,8 @@ namespace entity {
         using namespace utility;
 
         checkAndSet(src, nameMark, errorList, [&](){ m_Name = src[nameMark].toString(); });
-        checkAndSet(src, idMark, errorList, [&](){ m_Id = src[idMark].toString().toULongLong(); });
-        checkAndSet(src, scopeIdMark, errorList, [&](){ m_ScopeId = src[scopeIdMark].toString().toULongLong(); });
+        checkAndSet(src, idMark, errorList, [&](){ m_Id.fromJson(src[idMark], errorList); });
+        checkAndSet(src, scopeIdMark, errorList, [&](){ m_ScopeId.fromJson(src[scopeIdMark], errorList); });
     }
 
     /**

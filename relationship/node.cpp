@@ -1,23 +1,23 @@
 /*****************************************************************************
-** 
+**
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
 ** Created 29/10/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
-** 
+**
 ** Q-UML is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** Q-UML is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU Lesser General Public License for more details.
 
 ** You should have received a copy of the GNU Lesser General Public License
-** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>. 
+** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
 
@@ -35,7 +35,7 @@ namespace relationship {
      * @brief Node::Node
      */
     Node::Node()
-        :Node(STUB_ID)
+        :Node(entity::EntityID::nullID())
     {
     }
 
@@ -44,7 +44,7 @@ namespace relationship {
      * @param typeId
      * @param multiplicity
      */
-    Node::Node(const QString &typeId, Multiplicity multiplicity)
+    Node::Node(const entity::EntityID &typeId, Multiplicity multiplicity)
         : m_TypeId(typeId)
         , m_Description(DEFAULT_DESCRIPTION)
         , m_Multiplicity(multiplicity)
@@ -68,7 +68,7 @@ namespace relationship {
      * @brief Node::typeId
      * @return
      */
-    QString Node::typeId() const
+    entity::EntityID Node::typeId() const
     {
         return m_TypeId;
     }
@@ -77,7 +77,7 @@ namespace relationship {
      * @brief Node::setTypeId
      * @param typeId
      */
-    void Node::setTypeId(const QString &typeId)
+    void Node::setTypeId(const entity::EntityID &typeId)
     {
         m_TypeId = typeId;
     }
@@ -90,7 +90,7 @@ namespace relationship {
     {
         QJsonObject result;
 
-        result.insert("Type ID", m_TypeId);
+        result.insert("Type ID", m_TypeId.toJson());
         result.insert("Description", m_Description);
         result.insert("Multiplicity", m_Multiplicity);
 
@@ -104,8 +104,8 @@ namespace relationship {
      */
     void Node::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Type ID", errorList, [&src, this](){
-            m_TypeId = src["Type ID"].toString();
+        utility::checkAndSet(src, "Type ID", errorList, [&src, &errorList, this](){
+            m_TypeId.fromJson(src["Type ID"], errorList);
         });
         utility::checkAndSet(src, "Description", errorList, [&src, this](){
             m_Description = src["Description"].toString();

@@ -38,7 +38,7 @@ namespace relationship {
      * @brief Realization::Realization
      */
     Realization::Realization()
-        : Realization(STUB_ID, STUB_ID, nullptr, nullptr)
+        : Realization(entity::EntityID::nullID(), entity::EntityID::nullID(), nullptr, nullptr)
     {
     }
 
@@ -49,7 +49,8 @@ namespace relationship {
      * @param globalDatabase
      * @param projectDatabase
      */
-    Realization::Realization(const QString &tailTypeId, const QString &headTypeId, db::Database *globalDatabase, db::Database *projectDatabase)
+    Realization::Realization(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
+                             db::Database *globalDatabase, db::Database *projectDatabase)
         : Generalization(tailTypeId, headTypeId, globalDatabase, projectDatabase)
     {
         m_RelationType = RealizationRelation;

@@ -1,23 +1,23 @@
 /*****************************************************************************
-** 
+**
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
 ** Created 29/10/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
-** 
+**
 ** Q-UML is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** Q-UML is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU Lesser General Public License for more details.
 
 ** You should have received a copy of the GNU Lesser General Public License
-** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>. 
+** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
 
@@ -39,7 +39,7 @@ namespace relationship {
      * @brief Association::Association
      */
     Association::Association()
-        : Association(STUB_ID, STUB_ID, nullptr, nullptr)
+        : Association(entity::EntityID::nullID(), entity::EntityID::nullID(), nullptr, nullptr)
     {
     }
 
@@ -50,7 +50,8 @@ namespace relationship {
      * @param globalDatabase
      * @param projectDatabase
      */
-    Association::Association(const QString &tailTypeId, const QString &headTypeId, db::Database *globalDatabase, db::Database *projectDatabase)
+    Association::Association(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
+                             db::Database *globalDatabase, db::Database *projectDatabase)
         : Relation(tailTypeId, headTypeId, globalDatabase, projectDatabase)
         , m_GetSetTypeId(headTypeId)
     {
@@ -131,21 +132,39 @@ namespace relationship {
     }
 
     /**
-     * @brief Association::fieldtypeId
+     * @brief Association::FieldTypeId
      * @return
      */
-    QString Association::fieldtypeId() const
+    entity::EntityID Association::FieldTypeId() const
     {
         return m_FieldTypeId;
     }
 
     /**
-     * @brief Association::setFieldtypeId
-     * @param fieldtypeId
+     * @brief Association::setFieldTypeId
+     * @param FieldTypeId
      */
-    void Association::setFieldtypeId(const QString &fieldtypeId)
+    void Association::setFieldTypeId(const entity::EntityID &FieldTypeId)
     {
-        m_FieldTypeId = fieldtypeId;
+        m_FieldTypeId = FieldTypeId;
+    }
+
+    /**
+     * @brief Association::GetSetTypeId
+     * @return
+     */
+    entity::EntityID Association::GetSetTypeId() const
+    {
+        return m_GetSetTypeId;
+    }
+
+    /**
+     * @brief Association::setGetSetTypeId
+     * @param GetSetTypeId
+     */
+    void Association::setGetSetTypeId(const entity::EntityID &GetSetTypeId)
+    {
+        m_GetSetTypeId = GetSetTypeId;
     }
 
     /**
@@ -156,8 +175,8 @@ namespace relationship {
     {
         auto result = Relation::toJson();
 
-        result.insert("Get and set type ID", m_GetSetTypeId);
-        result.insert("Field type ID", m_FieldTypeId);
+        result.insert("Get and set type ID", m_GetSetTypeId.toJson());
+        result.insert("Field type ID", m_FieldTypeId.toJson());
 
         return result;
     }
@@ -171,11 +190,11 @@ namespace relationship {
     {
         Relation::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Get and set type ID", errorList, [&src, this](){
-            m_GetSetTypeId = src["Get and set type ID"].toString();
+        utility::checkAndSet(src, "Get and set type ID", errorList, [&src, &errorList, this](){
+            m_GetSetTypeId.fromJson(src["Get and set type ID"], errorList);
         });
-        utility::checkAndSet(src, "Field type ID", errorList, [&src, this](){
-            m_FieldTypeId = src["Field type ID"].toString();
+        utility::checkAndSet(src, "Field type ID", errorList, [&src, &errorList, this](){
+            m_FieldTypeId.fromJson(src["Field type ID"], errorList);
         });
     }
 
@@ -203,24 +222,6 @@ namespace relationship {
     void Association::removeField()
     {
         m_TailClass->removeField(m_HeadClass->name());
-    }
-
-    /**
-     * @brief Association::getGetSetTypeId
-     * @return
-     */
-    QString Association::getGetSetTypeId() const
-    {
-        return m_GetSetTypeId;
-    }
-
-    /**
-     * @brief Association::setGetSetTypeId
-     * @param getSetTypeId
-     */
-    void Association::setGetSetTypeId(const QString &getSetTypeId)
-    {
-        m_GetSetTypeId = getSetTypeId;
     }
 
 } // namespace relationship

@@ -43,7 +43,7 @@ namespace entity {
      * @brief Field::Field
      */
     Field::Field()
-        : Field(DEFAULT_NAME, STUB_ID)
+        : Field(DEFAULT_NAME, EntityID::nullID())
     {
     }
 
@@ -72,7 +72,7 @@ namespace entity {
      * @param name
      * @param typeId
      */
-    Field::Field(const QString &name, const QString &typeId)
+    Field::Field(const QString &name, const EntityID &typeId)
         : Field(name, typeId, "", Public)
     {
     }
@@ -84,7 +84,7 @@ namespace entity {
      * @param prefix
      * @param section
      */
-    Field::Field(const QString &name, const QString &typeId, const QString &prefix, Section section)
+    Field::Field(const QString &name, const EntityID &typeId, const QString &prefix, Section section)
         : BasicEntity(name)
         , m_TypeId(typeId)
         , m_Section(section)
@@ -243,7 +243,7 @@ namespace entity {
      * @brief Field::typeId
      * @return
      */
-    QString Field::typeId() const
+    EntityID Field::typeId() const
     {
         return m_TypeId;
     }
@@ -252,7 +252,7 @@ namespace entity {
      * @brief Field::setTypeId
      * @param typeId
      */
-    void Field::setTypeId(const QString &typeId)
+    void Field::setTypeId(const EntityID &typeId)
     {
         m_TypeId = typeId;
     }
@@ -265,7 +265,7 @@ namespace entity {
     {
         QJsonObject result = BasicEntity::toJson();
 
-        result.insert("Type ID", m_TypeId);
+        result.insert("Type ID", m_TypeId.toJson());
         result.insert("Section", m_Section);
         result.insert("Prefix", m_Prefix);
         result.insert("Suffix", m_Suffix);
@@ -288,8 +288,8 @@ namespace entity {
     {
         BasicEntity::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Type ID", errorList, [&src, this](){
-            m_TypeId = src["Type ID"].toString();
+        utility::checkAndSet(src, "Type ID", errorList, [&src, &errorList, this](){
+            m_TypeId.fromJson(src["Type ID"], errorList);
         });
         utility::checkAndSet(src, "Section", errorList, [&src, this](){
             m_Section = static_cast<Section>(src["Section"].toInt());

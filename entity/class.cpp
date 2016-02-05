@@ -264,7 +264,7 @@ namespace entity {
      */
     SharedField Class::addNewField()
     {
-        return addField(newFieldName, STUB_ID);
+        return addField(newFieldName, EntityID::nullID());
     }
 
     /**
@@ -398,7 +398,8 @@ namespace entity {
      * @param section
      * @return
      */
-    SharedField Class::addField(const QString &name, const QString &typeId, const QString &prefix, Section section)
+    SharedField Class::addField(const QString &name, const EntityID &typeId, const QString &prefix,
+                                Section section)
     {
         auto field = std::make_shared<Field>(name, typeId, prefix, section);
         m_Fields.append(field);

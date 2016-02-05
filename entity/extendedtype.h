@@ -60,13 +60,13 @@ namespace entity {
         bool isConst() const;
         void setConstStatus(bool status);
 
-        void addTemplateParameter(const QString &typeId);
-        bool containsTemplateParameter(const QString &typeId) const;
-        void removeTemplateParameters(const QString &typeId);
+        void addTemplateParameter(const EntityID &typeId);
+        bool containsTemplateParameter(const EntityID &typeId) const;
+        void removeTemplateParameters(const EntityID &typeId);
         ExtendedTypesIdList templateParameters() const;
 
-        QString typeId() const;
-        void setTypeId(const QString &typeId);
+        EntityID typeId() const;
+        void setTypeId(const EntityID &typeId);
 
         bool isEqual(const Type &rhs, bool withTypeid = true) const override;
 
@@ -85,7 +85,7 @@ namespace entity {
 
     protected:
         bool    m_ConstStatus;
-        QString m_TypeId;
+        EntityID m_TypeId;
         PlList  m_PointersAndLinks;
 
         ExtendedTypesIdList m_TemplateParameters;

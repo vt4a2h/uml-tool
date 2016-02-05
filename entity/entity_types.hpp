@@ -104,7 +104,7 @@ namespace entity {
     using SharedExtendedType     = std::shared_ptr<ExtendedType>;
     using ExtendedTypes          = QHash<QString, SharedExtendedType>;
     using ExtendedTypesList      = QList<SharedExtendedType>;
-    using ExtendedTypesIdList    = QStringList;
+    using ExtendedTypesIdList    = QList<EntityID>;
 
     class Scope;
     using SharedScope = std::shared_ptr<Scope>;

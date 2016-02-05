@@ -111,7 +111,7 @@ namespace project {
         QString m_Path;
         QString m_ID;
 
-        entity::EntityID m_nextUniqueID;
+        entity::EntityID::ValueType m_nextUniqueID;
 
         bool m_SaveStatus;
 

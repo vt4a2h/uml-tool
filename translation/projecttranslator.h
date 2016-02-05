@@ -107,7 +107,7 @@ namespace translation {
     private:
         void checkDb() const;
         void makeCallbacks();
-        QString generateCodeForExtTypeOrType(const QString &id, const TranslatorOptions &options,
+        QString generateCodeForExtTypeOrType(const entity::EntityID &id, const TranslatorOptions &options,
                                              const db::SharedDatabase &localeDatabase = nullptr,
                                              const db::SharedDatabase &classDatabase = nullptr) const;
         void generateClassSection(const entity::SharedClass &_class,

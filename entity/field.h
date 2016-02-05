@@ -48,8 +48,8 @@ namespace entity {
         Field();
         Field(const Field &src);
         Field(Field &&src);
-        Field(const QString &name, const QString &typeId);
-        Field(const QString &name, const QString &typeId, const QString &prefix, Section section);
+        Field(const QString &name, const EntityID &typeId);
+        Field(const QString &name, const EntityID &typeId, const QString &prefix, Section section);
 
         Field &operator =(Field &&rhs);
         Field &operator =(const Field &rhs);
@@ -70,8 +70,8 @@ namespace entity {
         bool hasKeywords() const;
         void removeKeyword(FieldKeyword keyword);
 
-        QString typeId() const;
-        void setTypeId(const QString &typeId);
+        EntityID typeId() const;
+        void setTypeId(const EntityID &typeId);
 
         QString suffix() const;
         void removeSuffix();
@@ -91,7 +91,7 @@ namespace entity {
         void copyFrom(const Field &src);
         void moveFrom(Field &&src);
 
-        QString m_TypeId;
+        EntityID m_TypeId;
         Section m_Section;
         QString m_Prefix;
         QString m_Suffix;

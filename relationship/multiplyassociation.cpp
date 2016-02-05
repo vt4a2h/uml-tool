@@ -1,23 +1,23 @@
 /*****************************************************************************
-** 
+**
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
 ** Created 29/10/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
-** 
+**
 ** Q-UML is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** Q-UML is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU Lesser General Public License for more details.
 
 ** You should have received a copy of the GNU Lesser General Public License
-** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>. 
+** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
 
@@ -39,7 +39,7 @@ namespace relationship {
      * @brief MultiplyAssociation::MultiplyAssociation
      */
     MultiplyAssociation::MultiplyAssociation()
-        : MultiplyAssociation(STUB_ID, STUB_ID, nullptr, nullptr)
+        : MultiplyAssociation(entity::EntityID::nullID(), entity::EntityID::nullID(), nullptr, nullptr)
     {
     }
 
@@ -50,7 +50,10 @@ namespace relationship {
      * @param globalDatabase
      * @param projectDatabase
      */
-    MultiplyAssociation::MultiplyAssociation(const QString &tailTypeId, const QString &headTypeId, db::Database *globalDatabase, db::Database *projectDatabase)
+    MultiplyAssociation::MultiplyAssociation(const entity::EntityID &tailTypeId,
+                                             const entity::EntityID &headTypeId,
+                                             db::Database *globalDatabase,
+                                             db::Database *projectDatabase)
         : Association(tailTypeId, headTypeId, globalDatabase, projectDatabase)
         , m_ContainerClass(nullptr)
     {
@@ -95,7 +98,7 @@ namespace relationship {
      * @brief MultiplyAssociation::containerTypeId
      * @return
      */
-    QString MultiplyAssociation::containerTypeId() const
+    entity::EntityID MultiplyAssociation::containerTypeId() const
     {
         return m_ContainerTypeId;
     }
@@ -104,7 +107,7 @@ namespace relationship {
      * @brief MultiplyAssociation::setContainerTypeId
      * @param containerTypeId
      */
-    void MultiplyAssociation::setContainerTypeId(const QString &containerTypeId)
+    void MultiplyAssociation::setContainerTypeId(const entity::EntityID &containerTypeId)
     {
         m_ContainerClass = tryToFindType(containerTypeId);
         Q_ASSERT_X(m_ContainerClass,
@@ -223,7 +226,7 @@ namespace relationship {
      * @brief MultiplyAssociation::keyTypeId
      * @return
      */
-    QString MultiplyAssociation::keyTypeId() const
+    entity::EntityID MultiplyAssociation::keyTypeId() const
     {
         return m_KeyTypeId;
     }
@@ -232,7 +235,7 @@ namespace relationship {
      * @brief MultiplyAssociation::setKeyTypeId
      * @param indexTypeId
      */
-    void MultiplyAssociation::setKeyTypeId(const QString &indexTypeId)
+    void MultiplyAssociation::setKeyTypeId(const entity::EntityID &indexTypeId)
     {
         m_KeyTypeId = indexTypeId;
     }
@@ -245,8 +248,8 @@ namespace relationship {
     {
         QJsonObject result = Association::toJson();
 
-        result.insert("Conatiner ID", m_ContainerTypeId);
-        result.insert("Key ID", m_KeyTypeId);
+        result.insert("Conatiner ID", m_ContainerTypeId.toJson());
+        result.insert("Key ID", m_KeyTypeId.toJson());
 
         return result;
     }
@@ -258,16 +261,16 @@ namespace relationship {
      */
     void MultiplyAssociation::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Conatiner ID", errorList, [&src, this](){
-            m_ContainerTypeId = src["Conatiner ID"].toString();
+        utility::checkAndSet(src, "Conatiner ID", errorList, [&src, &errorList, this](){
+            m_ContainerTypeId.fromJson(src["Conatiner ID"], errorList);
             m_ContainerClass = tryToFindType(m_ContainerTypeId);
             Q_ASSERT_X(m_ContainerClass,
                        "MultiplyAssociation::fromJson",
                        "container class is not found");
         });
 
-        utility::checkAndSet(src, "Key ID", errorList, [&src, this](){
-            m_KeyTypeId = src["Key ID"].toString();
+        utility::checkAndSet(src, "Key ID", errorList, [&src, &errorList, this](){
+            m_KeyTypeId.fromJson(src["Key ID"], errorList);
         });
     }
 

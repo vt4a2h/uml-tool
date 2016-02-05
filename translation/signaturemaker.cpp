@@ -39,7 +39,7 @@ namespace translation {
 
     namespace {
         const QString noSignature = SignatureMaker::tr("Not available.");
-        const QSet<QString> globalIds = {GLOBAL_SCOPE_ID, PROJECT_GLOBAL_SCOPE_ID, GLOBAL, STUB_ID};
+//        const QSet<QString> globalIds = {GLOBAL_SCOPE_ID, PROJECT_GLOBAL_SCOPE_ID, GLOBAL, STUB_ID};
 
         const QString memberMark      = "MEMBER";
         const QString readMark        = "READ";
@@ -179,17 +179,17 @@ namespace translation {
         QStringList scopes;
         auto scopeId = type->scopeId();
         // FIXME: project must know about his global scope ID, not database!
-        QSet<QString> forbidden = {/*m_ProjectDatabase->defaultScopeID(),*/ GLOBAL_SCOPE_ID,
-                                   LOCALE_TEMPLATE_SCOPE_ID, PROJECT_GLOBAL_SCOPE_ID};
-        while (!globalIds.contains(scopeId)) {
-            if (auto scope = findScope(scopeId)) {
-                if (!scope->name().isEmpty() && !forbidden.contains(scopeId))
-                    scopes.prepend(scope->name());
-                scopeId = scope->parentScopeId();
-            } else {
-                return "";
-            }
-        }
+        QSet<QString> forbidden = {}/*{m_ProjectDatabase->defaultScopeID(), GLOBAL_SCOPE_ID,
+                                   LOCALE_TEMPLATE_SCOPE_ID, PROJECT_GLOBAL_SCOPE_ID}*/;
+//        while (!globalIds.contains(scopeId)) {
+//            if (auto scope = findScope(scopeId)) {
+//                if (!scope->name().isEmpty() && !forbidden.contains(scopeId))
+//                    scopes.prepend(scope->name());
+//                scopeId = scope->parentScopeId();
+//            } else {
+//                return "";
+//            }
+//        }
 
         scopes.removeAll("");
         if (!scopes.isEmpty())
@@ -281,7 +281,7 @@ namespace translation {
      * @param id
      * @return
      */
-    QString SignatureMaker::typeSignatureById(const QString &id) const
+    QString SignatureMaker::typeSignatureById(const entity::EntityID &id) const
     {
         const auto &type = findType(id);
         return type ? makeTypeOrExtType(type) : "";
@@ -453,7 +453,7 @@ namespace translation {
      * @param scope
      * @return
      */
-    entity::SharedScope SignatureMaker::findScope(const QString &scopeId) const
+    entity::SharedScope SignatureMaker::findScope(const entity::EntityID &scopeId) const
     {
         return utility::findScope(scopeId, m_ProjectDatabase, m_GlobalDatabase);
     }
@@ -463,7 +463,7 @@ namespace translation {
      * @param typeId
      * @return
      */
-    entity::SharedType SignatureMaker::findType(const QString &typeId) const
+    entity::SharedType SignatureMaker::findType(const entity::EntityID &typeId) const
     {
         return utility::findType(typeId, m_ProjectDatabase, m_GlobalDatabase);
     }

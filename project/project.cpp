@@ -59,7 +59,7 @@ namespace project {
         : m_Name(name)
         , m_Path(path)
         , m_ID(utility::genId())
-        , m_nextUniqueID(entity::GeneratorID::firstFreeID())
+        , m_nextUniqueID(entity::EntityID::firstFreeID().value())
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
         , m_CommandsStack(std::make_unique<QUndoStack>())

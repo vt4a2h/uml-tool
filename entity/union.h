@@ -39,7 +39,7 @@ namespace entity {
         Union();
         Union(Union &&src);
         Union(const Union &src);
-        Union(const QString &name, const QString &scopeId);
+        Union(const QString &name, const EntityID &scopeId);
 
         Union &operator= (const Union &rhs);
         Union &operator= (Union &&rhs);
@@ -47,7 +47,7 @@ namespace entity {
 
         // TODO: extract this functionality for class and union to the separate class
         SharedField getField(const QString &name) const;
-        SharedField addField(const QString &name, const QString &typeId);
+        SharedField addField(const QString &name, const EntityID &typeId);
         void removeField(const QString &name);
         bool containsField(const QString &name);
 

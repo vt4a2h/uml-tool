@@ -90,7 +90,7 @@ namespace entity {
      * @brief Property::Property
      */
     Property::Property()
-        : Property(DEFAULT_NAME, STUB_ID)
+        : Property(DEFAULT_NAME, EntityID::nullID())
     {
     }
 
@@ -120,7 +120,7 @@ namespace entity {
      * @param name
      * @param parent
      */
-    Property::Property(const QString &name, const QString &typeId, QObject *parent)
+    Property::Property(const QString &name, const EntityID &typeId, QObject *parent)
         : BasicEntity(name)
         , m_Field(std::make_shared<entity::Field>(name, typeId))
     {
@@ -197,11 +197,11 @@ namespace entity {
      * @param typeId
      * @return
      */
-    Property &Property::addField(const QString &name, const QString &typeId)
+    Property &Property::addField(const QString &name, const EntityID &typeId)
     {
         auto oldField = m_Field;
         auto newTypeId = typeId;
-        if (oldField && newTypeId == STUB_ID)
+        if (oldField && !newTypeId.isValid())
             newTypeId = oldField->typeId();
 
         m_Field = std::make_shared<entity::Field>(name, newTypeId);
@@ -324,7 +324,7 @@ namespace entity {
         m_Setter->setIsSlot(true);
         m_Setter->addParameter(customName.isEmpty() ? m_Name.toLower() : m_Name.toLower(),
                                typeId());
-        m_Setter->setReturnTypeId(basicTypeId("void"));
+        m_Setter->setReturnTypeId(EntityID::voidID());
 
         emit methodAdded(safeShared(), m_Setter);
 
@@ -371,7 +371,7 @@ namespace entity {
 
         m_Resetter = std::make_shared<ClassMethod>(newName);
         m_Resetter->setIsSlot(true);
-        m_Resetter->setReturnTypeId(basicTypeId("void"));
+        m_Resetter->setReturnTypeId(EntityID::voidID());
 
         emit methodAdded(safeShared(), m_Resetter);
 
@@ -417,7 +417,7 @@ namespace entity {
 
         m_Notifier = std::make_shared<ClassMethod>(newName);
         m_Notifier->setIsSignal(true);
-        m_Notifier->setReturnTypeId(basicTypeId("void"));
+        m_Notifier->setReturnTypeId(EntityID::nullID());
 
         emit methodAdded(safeShared(), m_Notifier);
 
@@ -510,7 +510,7 @@ namespace entity {
             deleteDesignableGetter();
 
         m_DesignableGetter = std::make_shared<ClassMethod>(newName);
-        m_DesignableGetter->setReturnTypeId(basicTypeId("bool"));
+        m_DesignableGetter->setReturnTypeId(EntityID::voidID());
 
         emit methodAdded(safeShared(), m_DesignableGetter);
 
@@ -585,7 +585,7 @@ namespace entity {
             deleteScriptableGetter();
 
         m_ScriptableGetter = std::make_shared<ClassMethod>(newName);
-        m_ScriptableGetter->setReturnTypeId(basicTypeId("bool"));
+        m_ScriptableGetter->setReturnTypeId(EntityID::voidID());
 
         emit methodAdded(safeShared(), m_ScriptableGetter);
 
@@ -810,7 +810,7 @@ namespace entity {
         checkAndSet(src, memberMark, errorList,
                     [&](){ readOptional(src[memberMark], this, &Property::addField,
                                         &Property::field, &Property::deleteField, errorList,
-                                        "" /*name*/, "" /*typeid*/); });
+                                        "" /*name*/, EntityID::nullID()); });
 
         checkAndSet(src, getterMark, errorList,
                     [&](){ readOptional(src[getterMark], this, &Property::addGetter, &Property::getter,
@@ -979,16 +979,16 @@ namespace entity {
      * @brief Property::getTypeId
      * @return
      */
-    QString Property::typeId() const
+    EntityID Property::typeId() const
     {
-        return G_ASSERT(m_Field) ? m_Field->typeId() : STUB_ID;
+        return G_ASSERT(m_Field) ? m_Field->typeId() : EntityID::nullID();
     }
 
     /**
      * @brief Property::setTypeId
      * @param typeId
      */
-    void Property::setTypeId(const QString &typeId)
+    void Property::setTypeId(const EntityID &typeId)
     {
         if (G_ASSERT(m_Field))
             m_Field->setTypeId(typeId);

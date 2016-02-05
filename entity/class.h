@@ -81,7 +81,7 @@ namespace entity {
         MethodsList allMethods(Section s) const;
         FieldsList allFields(Section s) const;
 
-        SharedField addField(const QString &name, const QString &typeId,
+        SharedField addField(const QString &name, const EntityID &typeId,
                              const QString &prefix = "", Section section = Public);
         SharedField getField(const QString &name) const;
         bool containsField(const QString &name) const;

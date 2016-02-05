@@ -151,7 +151,7 @@ namespace entity {
      * @brief ExtendedType::addTemplateParameter
      * @param typeId
      */
-    void ExtendedType::addTemplateParameter(const QString &typeId)
+    void ExtendedType::addTemplateParameter(const EntityID &typeId)
     {
         m_TemplateParameters << typeId;
     }
@@ -161,7 +161,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool ExtendedType::containsTemplateParameter(const QString &typeId) const
+    bool ExtendedType::containsTemplateParameter(const EntityID &typeId) const
     {
         return m_TemplateParameters.contains(typeId);
     }
@@ -170,7 +170,7 @@ namespace entity {
      * @brief ExtendedType::removeTemplateParameters
      * @param typeId
      */
-    void ExtendedType::removeTemplateParameters(const QString &typeId)
+    void ExtendedType::removeTemplateParameters(const EntityID &typeId)
     {
         m_TemplateParameters.removeAll(typeId);
     }
@@ -188,7 +188,7 @@ namespace entity {
      * @brief ExtendedType::typeId
      * @return
      */
-    QString ExtendedType::typeId() const
+    EntityID ExtendedType::typeId() const
     {
         return m_TypeId;
     }
@@ -197,7 +197,7 @@ namespace entity {
      * @brief ExtendedType::setTypeId
      * @param typeId
      */
-    void ExtendedType::setTypeId(const QString &typeId)
+    void ExtendedType::setTypeId(const EntityID &typeId)
     {
         m_TypeId = typeId;
     }
@@ -211,7 +211,7 @@ namespace entity {
         QJsonObject result(Type::toJson());
 
         result.insert("Const status", m_ConstStatus);
-        result.insert("Type id", m_TypeId);
+        result.insert("Type id", m_TypeId.toJson());
 
         QJsonArray pointersAndLinks;
         QJsonObject obj;
@@ -223,7 +223,8 @@ namespace entity {
         result.insert("Pointers and links", pointersAndLinks);
 
         QJsonArray templateParameters;
-        for (auto &&parameterId : m_TemplateParameters) templateParameters.append(parameterId);
+        for (auto &&parameterId : m_TemplateParameters)
+            templateParameters.append(parameterId.toJson());
         result.insert("Template parameters", templateParameters);
 
         return result;
@@ -238,7 +239,7 @@ namespace entity {
     {
        Type::fromJson(src, errorList);
        utility::checkAndSet(src, "Const status", errorList, [&src, this](){ m_ConstStatus = src["Const status"].toBool(); });
-       utility::checkAndSet(src, "Type id", errorList, [&src, this](){ m_TypeId = src["Type id"].toString(); });
+       utility::checkAndSet(src, "Type id", errorList, [&src, &errorList, this](){ m_TypeId.fromJson(src["Type id"], errorList); });
 
        m_PointersAndLinks.clear();
        utility::checkAndSet(src, "Pointers and links", errorList, [&src, &errorList, this](){
@@ -259,7 +260,11 @@ namespace entity {
        m_TemplateParameters.clear();
        utility::checkAndSet(src, "Template parameters", errorList, [&src, &errorList, this](){
            if (src["Template parameters"].isArray()) {
-               for (auto &&value : src["Template parameters"].toArray()) m_TemplateParameters << value.toString();
+               for (auto &&value : src["Template parameters"].toArray()) {
+                   EntityID tmp;
+                   tmp.fromJson(value, errorList);
+                   m_TemplateParameters << tmp;
+               }
            } else {
                errorList << "Error: \"Template parameters\" is not array";
            }

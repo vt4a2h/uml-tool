@@ -93,7 +93,7 @@ namespace entity {
         , m_ConstStatus(false)
         , m_SlotStatus(false)
         , m_SignalStatus(false)
-        , m_ReturnTypeId(STUB_ID)
+        , m_ReturnTypeId(EntityID::nullID())
         , m_RhsIdentificator(RhsIdentificator::None)
     {
         static int r = qRegisterMetaType<entity::ClassMethod>("entity::ClassMethod"); Q_UNUSED(r);
@@ -320,7 +320,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedField ClassMethod::addParameter(const QString &name, const QString &typeId)
+    SharedField ClassMethod::addParameter(const QString &name, const EntityID &typeId)
     {
         if (!name.isEmpty()) {
             auto existField = getParameter(name);
@@ -386,7 +386,7 @@ namespace entity {
         result.insert(csMark, m_ConstStatus);
         result.insert(slotMark, m_SlotStatus);
         result.insert(signalMark, m_SignalStatus);
-        result.insert(rtMark, m_ReturnTypeId);
+        result.insert(rtMark, m_ReturnTypeId.toJson());
         result.insert(rhsiMark, int(m_RhsIdentificator));
 
         QJsonArray parameters;
@@ -426,8 +426,8 @@ namespace entity {
         utility::checkAndSet(src, slotMark, errorList, [&src, this](){
             m_SlotStatus = src[slotMark].toBool();
         });
-        utility::checkAndSet(src, rtMark, errorList, [&src, this](){
-            m_ReturnTypeId = src[rtMark].toString();
+        utility::checkAndSet(src, rtMark, errorList, [&src, &errorList, this](){
+            m_ReturnTypeId.fromJson(src[rtMark], errorList);
         });
         utility::checkAndSet(src, rhsiMark, errorList, [&src, this](){
             m_RhsIdentificator = static_cast<RhsIdentificator>(src[rhsiMark].toInt());
@@ -539,7 +539,7 @@ namespace entity {
      * @brief ClassMethod::returnTypeId
      * @return
      */
-    QString ClassMethod::returnTypeId() const
+    EntityID ClassMethod::returnTypeId() const
     {
        return m_ReturnTypeId;
     }
@@ -548,7 +548,7 @@ namespace entity {
      * @brief ClassMethod::setReturnTypeId
      * @param returnTypeId
      */
-    void ClassMethod::setReturnTypeId(const QString &returnTypeId)
+    void ClassMethod::setReturnTypeId(const EntityID &returnTypeId)
     {
         m_ReturnTypeId = returnTypeId;
     }

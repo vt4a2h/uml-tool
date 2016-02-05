@@ -126,7 +126,7 @@ namespace translation {
      * @param classDatabase
      * @return
      */
-    QString ProjectTranslator::generateCodeForExtTypeOrType(const QString &id,
+    QString ProjectTranslator::generateCodeForExtTypeOrType(const entity::EntityID &id,
                                                             const TranslatorOptions &options,
                                                             const db::SharedDatabase &localeDatabase,
                                                             const db::SharedDatabase &classDatabase) const
@@ -234,7 +234,7 @@ namespace translation {
             auto t = utility::findType(field->typeId(), localeDatabase,
                                        m_GlobalDatabase, m_ProjectDatabase);
             if (!t) {
-                qDebug() << "Failed to find field with type:" << field->typeId();
+                qDebug() << "Failed to find field with type:" << QString::number(field->typeId().value());
                 break;
             }
 

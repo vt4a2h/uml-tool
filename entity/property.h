@@ -39,7 +39,7 @@ namespace entity {
         Property();
         Property(Property &&src);
         Property(const Property &src);
-        Property(const QString &name, const QString &typeId, QObject *parent = nullptr);
+        Property(const QString &name, const EntityID &typeId, QObject *parent = nullptr);
 
         Property &operator =(const Property &rhs);
         Property &operator =(Property &&rhs);
@@ -49,7 +49,7 @@ namespace entity {
         QString name() const override;
 
         SharedField field() const;
-        Property& addField(const QString &name = "", const QString &typeId = STUB_ID);
+        Property &addField(const QString &name = "", const EntityID &typeId = EntityID::nullID());
         void deleteField();
 
         Property &addGetter(const QString &customName = "");
@@ -106,8 +106,8 @@ namespace entity {
         bool isMemberDefault() const;
         Property &setMember(bool member);
 
-        QString typeId() const;
-        void setTypeId(const QString &typeId);
+        entity::EntityID typeId() const;
+        void setTypeId(const entity::EntityID &typeId);
 
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
