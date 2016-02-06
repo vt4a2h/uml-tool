@@ -22,6 +22,8 @@
 *****************************************************************************/
 #include "entityid.h"
 
+#include <QHash>
+
 namespace entity
 {
 
@@ -96,7 +98,7 @@ namespace entity
      */
     EntityID EntityID::globalScopeID()
     {
-        return nullID() + 1;
+        return nullID().value() + 1;
     }
 
     /**
@@ -105,7 +107,7 @@ namespace entity
      */
     EntityID EntityID::stdScopeID()
     {
-        return globalScopeID() + 1;
+        return globalScopeID().value() + 1;
     }
 
     /**
@@ -114,7 +116,16 @@ namespace entity
      */
     EntityID EntityID::globalDatabaseID()
     {
-        return stdScopeID() + 1;
+        return stdScopeID().value() + 1;
+    }
+
+    /**
+     * @brief EntityID::localTemplateScopeID
+     * @return
+     */
+    EntityID EntityID::localTemplateScopeID()
+    {
+        return globalDatabaseID().value() + 1;
     }
 
     /**
@@ -123,7 +134,7 @@ namespace entity
      */
     EntityID EntityID::voidID()
     {
-        return globalDatabaseID() + 1;
+        return localTemplateScopeID().value() + 1;
     }
 
     /**

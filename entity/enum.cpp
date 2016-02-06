@@ -162,7 +162,7 @@ namespace entity {
      */
     Enum::Enum(const QString &name, const EntityID &scopeId)
         : Type(name, scopeId)
-        , m_EnumTypeId(STUB_ID)
+        , m_EnumTypeId(EntityID::nullID())
         , m_StrongStatus(false)
     {
     }
@@ -254,7 +254,7 @@ namespace entity {
      * @brief Enum::enumTypeId
      * @return
      */
-    QString Enum::enumTypeId() const
+    EntityID Enum::enumTypeId() const
     {
         return m_EnumTypeId;
     }
@@ -263,7 +263,7 @@ namespace entity {
      * @brief Enum::setEnumTypeId
      * @param enumTypeId
      */
-    void Enum::setEnumTypeId(const QString &enumTypeId)
+    void Enum::setEnumTypeId(const EntityID &enumTypeId)
     {
         m_EnumTypeId = enumTypeId;
     }
@@ -276,7 +276,7 @@ namespace entity {
     {
         QJsonObject result(Type::toJson());
 
-        result.insert("Enum type id", m_EnumTypeId);
+        result.insert("Enum type id", m_EnumTypeId.toJson());
         result.insert("Strong status", m_StrongStatus);
 
         QJsonArray elements;
@@ -297,7 +297,7 @@ namespace entity {
     {
         Type::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Enum type id",  errorList, [&src, this](){ m_EnumTypeId   = src["Enum type id"].toString(); });
+        utility::checkAndSet(src, "Enum type id",  errorList, [&, this](){ m_EnumTypeId.fromJson(src["Enum type id"], errorList); });
         utility::checkAndSet(src, "Strong status", errorList, [&src, this](){ m_StrongStatus = src["Strong status"].toBool();  });
 
         m_Elements.clear();

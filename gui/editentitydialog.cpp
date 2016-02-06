@@ -51,6 +51,8 @@
 
 #include <translation/signaturemaker.h>
 
+#include <helpers/generatorid.h>
+
 #include "componentseditdelegate.h"
 #include "signatureeditdelegate.h"
 #include "editmethoddialog.h"
@@ -270,8 +272,8 @@ namespace gui {
             }
 
             if (cl->fields().isEmpty()) {
-                cl->addField("f1", "stub");
-                cl->addField("f2", "stub");
+                cl->addField("f1", entity::GeneratorID::instance().genID());
+                cl->addField("f2", entity::GeneratorID::instance().genID());
             }
         }
         // }

@@ -24,6 +24,7 @@
 
 #include <QtGlobal>
 #include <QJsonValue>
+#include <QMetaType>
 
 #include <boost/operators.hpp>
 
@@ -68,6 +69,7 @@ namespace entity
         static EntityID globalScopeID();
         static EntityID stdScopeID();
         static EntityID globalDatabaseID();
+        static EntityID localTemplateScopeID();
         static EntityID voidID();
 
     private:
@@ -76,3 +78,5 @@ namespace entity
 
     uint qHash(const entity::EntityID &e);
 }
+
+Q_DECLARE_METATYPE(entity::EntityID)

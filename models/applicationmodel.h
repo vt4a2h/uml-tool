@@ -58,12 +58,12 @@ namespace models {
         // TODO: remove from this class (breaks SRP) {
         entity::SharedScope makeScope(const QString &name);
         void addExistsScope(const entity::SharedScope &scope);
-        void removeScope(const QString &id);
+        void removeScope(const entity::EntityID &id);
 
         template <class T = entity::Type>
         std::shared_ptr<T> makeType(const entity::EntityID &scopeID, const QString &name = "");
-        void addExistsType(const QString &projectID, const QString &scopeID, const entity::SharedType &type);
-        void removeType(const QString &projectID, const QString &scopeID, const QString &typeID);
+        void addExistsType(const QString &projectID, const entity::EntityID &scopeID, const entity::SharedType &type);
+        void removeType(const QString &projectID, const entity::EntityID &scopeID, const entity::EntityID &typeID);
         // }
 
         project::SharedProject currentProject() const;

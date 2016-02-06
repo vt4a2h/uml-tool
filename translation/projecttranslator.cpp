@@ -269,7 +269,7 @@ namespace translation {
                                                        t->database())
                           .prepend("class ")
                           .trimmed();
-            if (!parameter.second.isEmpty() && parameter.second != STUB_ID && withDefaultTypes) {
+            if (parameter.second.isValid() && parameter.second != entity::EntityID::nullID() && withDefaultTypes) {
                 parameters.last()
                           .append(" = ")
                           .append(generateCodeForExtTypeOrType(parameter.second,
@@ -350,8 +350,8 @@ namespace translation {
         result.replace("%name%",  _enum->name());
 
         QString typeName("");
-        QString typeId(_enum->enumTypeId());
-        if (typeId != STUB_ID) {
+        auto typeId(_enum->enumTypeId());
+        if (typeId.isValid()) {
             auto t = utility::findType(typeId, m_GlobalDatabase, m_ProjectDatabase);
             if (t)  typeName.append(" : ").append(t->name());
         }
@@ -430,7 +430,7 @@ namespace translation {
             TranslatorOptions newOptions((options & NoDefaultName) ? NoDefaultName : NoOptions);
             auto t = utility::findType(p->typeId(), localeDatabase,
                                        m_GlobalDatabase, m_ProjectDatabase);
-            if (!t || method->scopeId() != t->scopeId() || method->scopeId() == STUB_ID)
+            if (!t || method->scopeId() != t->scopeId() || !method->scopeId().isValid())
                newOptions |= WithNamespace;
 
             parametersList << translate(p, newOptions, templateDb, localeDatabase).toHeader;
@@ -717,7 +717,7 @@ namespace translation {
 
         result.replace("%const%", extType->isConst() ? "const " : "");
 
-        if (extType->typeId() != STUB_ID) {
+        if (extType->typeId().isValid()) {
             auto t = utility::findType(extType->typeId(), localeDatabase, classDatabase,
                                        m_ProjectDatabase,
                                        m_GlobalDatabase);
@@ -847,17 +847,18 @@ namespace translation {
                                           const db::SharedDatabase &classDatabase) const
     {
         QStringList scopesNames;
-        QString id = type->scopeId();
+        auto id = type->scopeId();
         entity::SharedScope scope = utility::findScope(id, localeDatabase, classDatabase,
                                                        m_ProjectDatabase, m_GlobalDatabase);
         do {
-            if (!scope || id == GLOBAL_SCOPE_ID || id == LOCALE_TEMPLATE_SCOPE_ID)
+            if (!scope || id == entity::EntityID::globalScopeID() ||
+                id == entity::EntityID::localTemplateScopeID())
                 break;
 
             if (scope->name() != DEFAULT_NAME)
                 scopesNames.prepend(scope->name());
 
-            id = scope->parentScopeId();
+            id = scope->scopeId();
             scope = utility::findScope(id, localeDatabase, classDatabase,
                                        m_ProjectDatabase, m_GlobalDatabase);
         } while (true);

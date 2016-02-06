@@ -67,10 +67,10 @@ namespace entity {
      * @param typeId
      * @return
      */
-    TemplateParameter Template::getTemplateParameter(const QString &typeId) const
+    TemplateParameter Template::getTemplateParameter(const EntityID &typeId) const
     {
         auto it = range::find_if(m_TemplateParameters, [&typeId](auto &&p) { return p.first == typeId; });
-        return it != m_TemplateParameters.cend() ? *it : TemplateParameter(STUB_ID, STUB_ID);
+        return it != m_TemplateParameters.cend() ? *it : TemplateParameter(EntityID::nullID(), EntityID::nullID());
     }
 
     /**
@@ -78,12 +78,12 @@ namespace entity {
      * @param typeId
      * @param defaultTypeId
      */
-    TemplateParameter Template::addTemplateParameter(const QString &typeId, const QString &defaultTypeId)
+    TemplateParameter Template::addTemplateParameter(const EntityID &typeId, const EntityID &defaultTypeId)
     {
         if (contains(typeId))
             removeParameter(typeId);
 
-        m_TemplateParameters.append({typeId, defaultTypeId.isEmpty() ? STUB_ID : defaultTypeId});
+        m_TemplateParameters.append({typeId, defaultTypeId});
         return m_TemplateParameters.last();
     }
 
@@ -92,9 +92,9 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Template::contains(const QString &typeId) const
+    bool Template::contains(const EntityID &typeId) const
     {
-        return getTemplateParameter(typeId).first != STUB_ID;
+        return getTemplateParameter(typeId).first != EntityID::nullID();
     }
 
     /**
@@ -102,7 +102,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Template::removeParameter(const QString &typeId)
+    bool Template::removeParameter(const EntityID &typeId)
     {
         return m_TemplateParameters.removeOne(getTemplateParameter(typeId));
     }
@@ -178,8 +178,8 @@ namespace entity {
         QJsonArray parameters;
         QJsonObject templateParameter;
         for (auto &&value : m_TemplateParameters) {
-            templateParameter.insert("Type ID", value.first);
-            templateParameter.insert("Default type ID", value.second);
+            templateParameter.insert("Type ID", value.first.toJson());
+            templateParameter.insert("Default type ID", value.second.toJson());
             parameters.append(templateParameter);
         }
         result.insert("Template parameters", parameters);
@@ -204,11 +204,11 @@ namespace entity {
             if (src["Template parameters"].isArray()) {
                 for (auto &&value : src["Template parameters"].toArray()) {
                     obj = value.toObject();
-                    utility::checkAndSet(obj, "Type ID", errorList, [&obj, &parameter, this](){
-                        parameter.first = obj["Type ID"].toString();
+                    utility::checkAndSet(obj, "Type ID", errorList, [&obj, &parameter, &errorList, this](){
+                        parameter.first.fromJson(obj["Type ID"], errorList);
                     });
-                    utility::checkAndSet(obj, "Default type ID", errorList, [&obj, &parameter, this](){
-                        parameter.second = obj["Default type ID"].toString();
+                    utility::checkAndSet(obj, "Default type ID", errorList, [&obj, &parameter, &errorList, this](){
+                        parameter.second.fromJson(obj["Default type ID"], errorList);
                     });
                     m_TemplateParameters.append(parameter);
                 }

@@ -43,10 +43,11 @@ namespace entity {
 
         friend bool operator ==(const Template &lhs, const Template &rhs);
 
-        TemplateParameter getTemplateParameter(const QString &typeId) const;
-        TemplateParameter addTemplateParameter(const QString &typeId, const QString &defaultTypeId= QString(""));
-        bool contains(const QString &typeId) const;
-        bool removeParameter(const QString &typeId);
+        TemplateParameter getTemplateParameter(const EntityID &typeId) const;
+        TemplateParameter addTemplateParameter(const EntityID &typeId,
+                                               const EntityID &defaultTypeId= EntityID::nullID());
+        bool contains(const EntityID &typeId) const;
+        bool removeParameter(const EntityID &typeId);
         TemplateParametersList templateParameters() const;
 
         const db::SharedDatabase database() const;

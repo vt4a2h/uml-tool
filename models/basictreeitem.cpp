@@ -180,7 +180,7 @@ namespace models {
      * @param id
      * @return
      */
-    BasicTreeItem *BasicTreeItem::itemById(const QString &id) const
+    BasicTreeItem *BasicTreeItem::itemById(const entity::EntityID &id) const
     {
         for(auto &&item : m_Children)
             if (item->id() == id)
@@ -285,12 +285,12 @@ namespace models {
      * @brief BasicTreeItem::id
      * @return
      */
-    QString BasicTreeItem::id() const
+    entity::EntityID BasicTreeItem::id() const
     {
         if (m_Type == TreeItemType::StubItem)
-            return tr("No id");
+            return entity::EntityID::nullID();
 
-        return idGetters[m_Type](m_Entity).toString();
+        return idGetters[m_Type](m_Entity).value<entity::EntityID::ValueType>();
     }
 
     /**

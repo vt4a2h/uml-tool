@@ -30,13 +30,15 @@
 #include <QString>
 #include <QMetaType>
 
+#include <entity/entityid.h>
+
 namespace db {
     class Database;
     class ProjectDatabase;
     using SharedDatabase = std::shared_ptr<Database>;
     using SharedProjectDatabase = std::shared_ptr<ProjectDatabase>;
 
-    using IDPos = QPair<QString, QPointF>;
+    using IDPos = QPair<entity::EntityID, QPointF>;
     using ItemsPos = QVector<IDPos>;
 }
 

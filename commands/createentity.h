@@ -65,7 +65,7 @@ namespace commands {
     class CreateEntity : public BaseCommand
     {
     public:
-        CreateEntity(const models::SharedApplicationModel &model, const QString &scopeID,
+        CreateEntity(const models::SharedApplicationModel &model, const entity::EntityID &scopeID,
                      QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent = nullptr)
             : BaseCommand(tr("Add %1").arg(hashName[typeid(Type).hash_code()]), parent)
             , m_Model(model)
@@ -119,7 +119,7 @@ namespace commands {
         bool m_CleaningRequired = false;
         models::SharedApplicationModel m_Model;
         QString m_ProjectID;
-        QString m_ScopeID;
+        entity::EntityID m_ScopeID;
         QPointF m_Pos;
         QGraphicsItem  * m_Item = nullptr;
         QGraphicsScene & m_Scene;

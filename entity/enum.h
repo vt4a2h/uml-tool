@@ -72,8 +72,8 @@ namespace entity {
         void removeElement(const QString &name);
         bool containsElement(const QString &name) const;
 
-        QString enumTypeId() const;
-        void setEnumTypeId(const QString &enumTypeId);
+        EntityID enumTypeId() const;
+        void setEnumTypeId(const EntityID &enumTypeId);
 
         bool isEqual(const Type &rhs, bool withTypeid = true) const override;
 
@@ -97,7 +97,7 @@ namespace entity {
         static QString staticDefaultName();
 
     private:
-        QString m_EnumTypeId;
+        EntityID m_EnumTypeId;
         bool m_StrongStatus;
         ElementsList m_Elements;
     };

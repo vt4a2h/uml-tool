@@ -453,7 +453,7 @@ namespace entity {
      */
     SharedProperty Class::addNewProperty()
     {
-        return addProperty(newPropertyName, STUB_ID);
+        return addProperty(newPropertyName, EntityID::nullID());
     }
 
     /**
@@ -510,7 +510,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedProperty Class::addProperty(const QString &name, const QString &typeId)
+    SharedProperty Class::addProperty(const QString &name, const EntityID &typeId)
     {
         SharedProperty property(std::make_shared<Property>(name, typeId));
         G_CONNECT(property.get(), &Property::methodAdded, this, &Class::onOptionalMethodAdded);

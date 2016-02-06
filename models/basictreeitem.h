@@ -30,6 +30,8 @@
 #include <QVariant>
 #include <QCoreApplication>
 
+#include <entity/entityid.h>
+
 #include "models_types.hpp"
 
 /// Namespace models
@@ -65,7 +67,7 @@ namespace models {
         void appendChild(BasicTreeItem *child);
         BasicTreeItem *makeChild(const QVariant &entity, const TreeItemType &type);
         BasicTreeItem *child(int row) const;
-        BasicTreeItem *itemById(const QString &id) const;
+        BasicTreeItem *itemById(const entity::EntityID &id) const;
         bool removeChild(BasicTreeItem * child);
         int rowForItem(BasicTreeItem * item) const;
         ChildItems childrenItems() const;
@@ -78,7 +80,7 @@ namespace models {
 
         QVariant entity() const;
 
-        QString id() const;
+        entity::EntityID id() const;
 
         int row() const;
 

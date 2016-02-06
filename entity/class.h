@@ -88,7 +88,7 @@ namespace entity {
         void removeField(const QString &name);
         bool anyFields() const;
 
-        SharedProperty addProperty(const QString &name, const QString &typeId);
+        SharedProperty addProperty(const QString &name, const EntityID &typeId);
         ConstSharedProperty property(const QString &name) const;
         SharedProperty property(const QString &name);
         bool containsProperty(const QString &name) const;

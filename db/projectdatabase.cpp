@@ -27,6 +27,7 @@
 #include <QJsonArray>
 
 #include <entity/scope.h>
+#include <entity/entityid.h>
 
 #include <relationship/relation.h>
 #include <utility/helpfunctions.h>
@@ -173,7 +174,7 @@ namespace db {
         QJsonArray positions;
         for (auto &&val : m_ItemsPos) {
             QJsonObject obj;
-            obj["id"] = val.first;
+            obj["id"] = val.first.toJson();
             obj["x"]  = val.second.x();
             obj["y"]  = val.second.y();
             positions.append(obj);
@@ -217,7 +218,9 @@ namespace db {
                 QJsonObject obj;
                 for (auto &&val : src["Positions"].toArray()) {
                     obj = val.toObject();
-                    m_ItemsPos.append({obj["id"].toString(), {obj["x"].toDouble(), obj["y"].toDouble()}});
+                    entity::EntityID id;
+                    id.fromJson(obj["id"], errorList);
+                    m_ItemsPos.append({id, {obj["x"].toDouble(), obj["y"].toDouble()}});
                 }
             } else {
                 errorList << "Error: \"Positions\" is not array";

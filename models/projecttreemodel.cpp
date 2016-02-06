@@ -255,7 +255,7 @@ namespace models {
      * @param scopeId
      * @param projectId
      */
-    void ProjectTreeModel::removeScope(const QString &scopeId, const QString &projectId)
+    void ProjectTreeModel::removeScope(const entity::EntityID &scopeId, const QString &projectId)
     {
         if (auto &&pr = find(projectId)) {
             auto &&projectIndex = index(indexOf(pr), 0);
@@ -276,7 +276,7 @@ namespace models {
      * @param scopeId
      * @param projectId
      */
-    void ProjectTreeModel::addType(const entity::SharedType &type, const QString &scopeId,
+    void ProjectTreeModel::addType(const entity::SharedType &type, const entity::EntityID &scopeId,
                                    const QString &projectId)
     {
         if (auto &&pr = find(projectId)) {
@@ -303,7 +303,8 @@ namespace models {
      * @param scopeID
      * @param typeID
      */
-    void ProjectTreeModel::removeType(const QString &projectID, const QString &scopeID, const QString &typeID)
+    void ProjectTreeModel::removeType(const QString &projectID, const entity::EntityID &scopeID,
+                                      const entity::EntityID &typeID)
     {
         // TODO: make universal remove function
         if (auto &&pr = find(projectID)) {
@@ -374,7 +375,7 @@ namespace models {
      * @param id
      * @return
      */
-    BasicTreeItem *ProjectTreeModel::find(const QString &id)
+    BasicTreeItem *ProjectTreeModel::find(const entity::EntityID &id)
     {
         return const_cast<BasicTreeItem*>(const_cast<const ProjectTreeModel*>(this)->find(id));
     }
@@ -384,7 +385,7 @@ namespace models {
      * @param id
      * @return
      */
-    const BasicTreeItem *ProjectTreeModel::find(const QString &id) const
+    const BasicTreeItem *ProjectTreeModel::find(const entity::EntityID &id) const
     {
         auto projectIt = range::find_if(m_Items, [&](auto &&item){ return item.id() == id; });
         return projectIt != m_Items.cend() ? &*projectIt : nullptr;
