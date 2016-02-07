@@ -77,7 +77,7 @@ namespace entity {
         TemplateMethod  ///< TemplateMethod
     };
 
-    uint qHash(const entity::LhsIdentificator& c)
+    inline uint qHash(const entity::LhsIdentificator& c)
     {
         return ::qHash(uint(c));
     }

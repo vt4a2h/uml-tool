@@ -158,7 +158,7 @@ namespace gui {
         if (auto pr = project()) {
             auto projectDb = G_ASSERT(pr->database());
             if (projectDb->anyScopes()) {
-                auto scope = projectDb->defaultScope();
+                auto scope = projectDb->getScope(entity::EntityID::projectScopeID());
                 if (!scope)
                     scope = G_ASSERT(projectDb->scopes().first());
 

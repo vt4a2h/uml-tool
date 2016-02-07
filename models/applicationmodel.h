@@ -49,10 +49,10 @@ namespace models {
         project::SharedProject makeProject();
         project::SharedProject makeProject(const QString &name, const QString &path);
         bool addProject(const project::SharedProject &pr);
-        project::SharedProject project(const QString &id) const;
+        project::SharedProject project(const entity::EntityID &id) const;
         project::ProjectsList projects() const;
-        bool removeProject(const QString &id);
-        bool containsProject(const QString &id);
+        bool removeProject(const entity::EntityID &id);
+        bool containsProject(const entity::EntityID &id);
         // }
 
         // TODO: remove from this class (breaks SRP) {
@@ -62,12 +62,12 @@ namespace models {
 
         template <class T = entity::Type>
         std::shared_ptr<T> makeType(const entity::EntityID &scopeID, const QString &name = "");
-        void addExistsType(const QString &projectID, const entity::EntityID &scopeID, const entity::SharedType &type);
-        void removeType(const QString &projectID, const entity::EntityID &scopeID, const entity::EntityID &typeID);
+        void addExistsType(const entity::EntityID &projectID, const entity::EntityID &scopeID, const entity::SharedType &type);
+        void removeType(const entity::EntityID &projectID, const entity::EntityID &scopeID, const entity::EntityID &typeID);
         // }
 
         project::SharedProject currentProject() const;
-        bool setCurrentProject(const QString &id);
+        bool setCurrentProject(const entity::EntityID &id);
 
         db::SharedDatabase globalDatabase() const;
 

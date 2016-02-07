@@ -93,7 +93,7 @@ namespace models {
      * @param id
      * @return
      */
-    project::SharedProject ApplicationModel::project(const QString &id) const
+    project::SharedProject ApplicationModel::project(const entity::EntityID &id) const
     {
         return m_Projects[id];
     }
@@ -111,7 +111,7 @@ namespace models {
      * @brief ApplicationModal::removeProject
      * @param id
      */
-    bool ApplicationModel::removeProject(const QString &id)
+    bool ApplicationModel::removeProject(const entity::EntityID &id)
     {
         return !!m_Projects.remove(id);
     }
@@ -121,7 +121,7 @@ namespace models {
      * @param id
      * @return
      */
-    bool ApplicationModel::containsProject(const QString &id)
+    bool ApplicationModel::containsProject(const entity::EntityID &id)
     {
         return m_Projects.contains(id);
     }
@@ -181,7 +181,7 @@ namespace models {
      * @brief ApplicationModel::addExistsType
      * @param type
      */
-    void ApplicationModel::addExistsType(const QString &projectID, const entity::EntityID &scopeID,
+    void ApplicationModel::addExistsType(const entity::EntityID &projectID, const entity::EntityID &scopeID,
                                          const entity::SharedType &type)
     {
         if (auto &&pr = project(projectID))
@@ -202,7 +202,7 @@ namespace models {
      * @param scopeID
      * @param typeID
      */
-    void ApplicationModel::removeType(const QString &projectID, const entity::EntityID &scopeID,
+    void ApplicationModel::removeType(const entity::EntityID &projectID, const entity::EntityID &scopeID,
                                       const entity::EntityID &typeID)
     {
         if (auto &&pr = project(projectID))
@@ -227,7 +227,7 @@ namespace models {
      * @param id
      * @return
      */
-    bool ApplicationModel::setCurrentProject(const QString &id)
+    bool ApplicationModel::setCurrentProject(const entity::EntityID &id)
     {
         if (!m_Projects.contains(id))
             return false;

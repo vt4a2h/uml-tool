@@ -69,7 +69,8 @@ namespace commands {
                      QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent = nullptr)
             : BaseCommand(tr("Add %1").arg(hashName[typeid(Type).hash_code()]), parent)
             , m_Model(model)
-            , m_ProjectID(model && model->currentProject() ? model->currentProject()->id() : STUB_ID)
+            , m_ProjectID(model && model->currentProject() ? model->currentProject()->id()
+                                                           : entity::EntityID::nullID())
             , m_ScopeID(scopeID)
             , m_Pos(pos)
             , m_Scene(scene)
@@ -118,7 +119,7 @@ namespace commands {
     private:
         bool m_CleaningRequired = false;
         models::SharedApplicationModel m_Model;
-        QString m_ProjectID;
+        entity::EntityID m_ProjectID;
         entity::EntityID m_ScopeID;
         QPointF m_Pos;
         QGraphicsItem  * m_Item = nullptr;

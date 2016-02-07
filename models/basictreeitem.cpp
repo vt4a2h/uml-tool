@@ -45,17 +45,17 @@
 #define declare_methods_map(map_name, method_name)\
     QMap<TreeItemType, std::function<QVariant(const QVariant&)>> map_name = {\
           {TreeItemType::ProjectItem,\
-           [](const QVariant &item){ return item.value<project::SharedProject>()->method_name(); }},\
+           [](const QVariant &item){ return QVariant::fromValue(item.value<project::SharedProject>()->method_name()); }},\
           {TreeItemType::ScopeItem,\
-           [](const QVariant &item){ return item.value<entity::SharedScope>()->method_name(); }},\
+           [](const QVariant &item){ return QVariant::fromValue(item.value<entity::SharedScope>()->method_name()); }},\
           {TreeItemType::TypeItem,\
-           [](const QVariant &item){ return item.value<entity::SharedType>()->method_name(); }},\
+           [](const QVariant &item){ return QVariant::fromValue(item.value<entity::SharedType>()->method_name()); }},\
           {TreeItemType::FieldItem,\
-           [](const QVariant &item){ return item.value<entity::SharedField>()->method_name(); }},\
+           [](const QVariant &item){ return QVariant::fromValue(item.value<entity::SharedField>()->method_name()); }},\
           {TreeItemType::MethodItem,\
-           [](const QVariant &item){ return item.value<entity::SharedMethod>()->method_name(); }},\
+           [](const QVariant &item){ return QVariant::fromValue(item.value<entity::SharedMethod>()->method_name()); }},\
           {TreeItemType::RelationItem,\
-           [](const QVariant &item){ return item.value<relationship::SharedRelation>()->method_name(); }}\
+           [](const QVariant &item){ return QVariant::fromValue(item.value<relationship::SharedRelation>()->method_name()); }}\
     };
 
 namespace models {

@@ -372,9 +372,6 @@ namespace gui {
     void MainWindow::readSettings()
     {
         setGeometry(application::settings::mainWindowGeometry());
-
-        application::settings::TstType t = application::settings::get("tst");
-        int a = 3;
     }
 
     /**
@@ -436,7 +433,7 @@ namespace gui {
         QModelIndex index = m_ProjectTreeView->selectionModel()->currentIndex();
         QVariant data = index.data(models::ProjectTreeModel::SharedData);
         if (index.isValid() && data.canConvert<project::SharedProject>()) {
-           setCurrentProject(index.data(models::ProjectTreeModel::ID).toString());
+           setCurrentProject(index.data(models::ProjectTreeModel::ID).value<entity::EntityID>());
            update();
         }
     }
@@ -464,7 +461,7 @@ namespace gui {
      * @brief MainWindow::setCurrentProject
      * @param id
      */
-    void MainWindow::setCurrentProject(const QString &id)
+    void MainWindow::setCurrentProject(const entity::EntityID &id)
     {
         if (auto &&pr = m_ApplicationModel->currentProject().get())
         {
@@ -491,7 +488,7 @@ namespace gui {
 
             addGraphicsItems(m_MainScene.get(), m_ApplicationModel->currentProject());
         } else {
-            qWarning() << QString("Current project with id %1 is not found.").arg(id);
+            qWarning() << QString("Current project with id %1 is not found.").arg(id.toString());
         }
     }
 

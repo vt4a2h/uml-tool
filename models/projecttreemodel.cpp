@@ -235,7 +235,7 @@ namespace models {
      * @param scope
      * @param parent
      */
-    void ProjectTreeModel::addScope(const entity::SharedScope &scope, const QString &projectId)
+    void ProjectTreeModel::addScope(const entity::SharedScope &scope, const entity::EntityID &projectId)
     {
         if (auto &&pr = find(projectId)) {
             auto &&projectIndex = index(indexOf(pr), 0);
@@ -255,7 +255,7 @@ namespace models {
      * @param scopeId
      * @param projectId
      */
-    void ProjectTreeModel::removeScope(const entity::EntityID &scopeId, const QString &projectId)
+    void ProjectTreeModel::removeScope(const entity::EntityID &scopeId, const entity::EntityID &projectId)
     {
         if (auto &&pr = find(projectId)) {
             auto &&projectIndex = index(indexOf(pr), 0);
@@ -277,7 +277,7 @@ namespace models {
      * @param projectId
      */
     void ProjectTreeModel::addType(const entity::SharedType &type, const entity::EntityID &scopeId,
-                                   const QString &projectId)
+                                   const entity::EntityID &projectId)
     {
         if (auto &&pr = find(projectId)) {
             auto &&projectIndex = index(indexOf(pr), 0);
@@ -303,7 +303,7 @@ namespace models {
      * @param scopeID
      * @param typeID
      */
-    void ProjectTreeModel::removeType(const QString &projectID, const entity::EntityID &scopeID,
+    void ProjectTreeModel::removeType(const entity::EntityID &projectID, const entity::EntityID &scopeID,
                                       const entity::EntityID &typeID)
     {
         // TODO: make universal remove function

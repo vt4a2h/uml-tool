@@ -58,7 +58,7 @@ namespace project {
     Project::Project(const QString &name, const QString &path)
         : m_Name(name)
         , m_Path(path)
-        , m_ID(utility::genId())
+        , m_ID(0) // NOTE: temporary
         , m_nextUniqueID(entity::EntityID::firstFreeID().value())
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
@@ -242,9 +242,7 @@ namespace project {
         QJsonObject result;
 
         result.insert("Name", m_Name);
-        result.insert("ID"  , m_ID  );
-
-        // Workaround for correct saving
+        result.insert("ID"  , m_ID.toJson());
         result.insert("NextID", QString::number(m_nextUniqueID));
 
         return result;
@@ -260,8 +258,8 @@ namespace project {
         utility::checkAndSet(src, "Name", errorList, [&src, this](){
             m_Name = src["Name"].toString();
         });
-        utility::checkAndSet(src, "ID", errorList, [&src, this](){
-            m_ID = src["ID"].toString();
+        utility::checkAndSet(src, "ID", errorList, [&, this](){
+            m_ID.fromJson(src["ID"], errorList);
         });
         utility::checkAndSet(src, "NextID", errorList, [&src, this](){
             m_nextUniqueID = src["NextID"].toString().toULongLong();
@@ -360,7 +358,7 @@ namespace project {
      * @brief Project::id
      * @return
      */
-    QString Project::id() const
+    entity::EntityID Project::id() const
     {
         return m_ID;
     }

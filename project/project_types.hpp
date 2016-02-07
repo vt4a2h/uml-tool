@@ -27,11 +27,13 @@
 #include <QHash>
 #include <QMetaType>
 
+#include <entity/entityid.h>
+
 namespace project {
     class Project;
     using SharedProject = std::shared_ptr<Project>;
     using WeakProject = std::weak_ptr<Project>;
-    using Projects = QHash<QString, SharedProject>;
+    using Projects = QHash<entity::EntityID, SharedProject>;
     using ProjectsList = QList<SharedProject>;
 }
 

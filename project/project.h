@@ -62,7 +62,7 @@ namespace project {
         QString name() const;
         QString path() const;
 
-        QString id() const;
+        entity::EntityID id() const;
 
         void load(const QString &path); // don't forget install global database after load
 
@@ -109,7 +109,7 @@ namespace project {
 
         QString m_Name;
         QString m_Path;
-        QString m_ID;
+        entity::EntityID m_ID; // TODO: remove and match projects by name
 
         entity::EntityID::ValueType m_nextUniqueID;
 

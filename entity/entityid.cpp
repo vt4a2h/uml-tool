@@ -61,7 +61,28 @@ namespace entity
      */
     bool EntityID::isValid() const
     {
-       return m_value != nullID();
+        return m_value != nullID();
+    }
+
+    /**
+     * @brief EntityID::toString
+     * @return
+     */
+    QString EntityID::toString() const
+    {
+        return QString::number(m_value);
+    }
+
+    /**
+     * @brief EntityID::fromString
+     * @param in
+     * @return
+     */
+    bool EntityID::fromString(const QString &in)
+    {
+        bool result = false;
+        m_value = in.toULongLong(&result);
+        return result;
     }
 
     /**
@@ -129,12 +150,21 @@ namespace entity
     }
 
     /**
+     * @brief EntityID::projectScopeID
+     * @return
+     */
+    EntityID EntityID::projectScopeID()
+    {
+        return localTemplateScopeID().value() + 1;
+    }
+
+    /**
      * @brief EntityID::voidID
      * @return
      */
     EntityID EntityID::voidID()
     {
-        return localTemplateScopeID().value() + 1;
+        return projectScopeID().value() + 1;
     }
 
     /**

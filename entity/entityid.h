@@ -52,6 +52,9 @@ namespace entity
 
         bool isValid() const;
 
+        QString toString() const;
+        bool fromString(const QString &in);
+
         quint64 value() const;
         void setValue(const quint64 &value);
 
@@ -70,6 +73,7 @@ namespace entity
         static EntityID stdScopeID();
         static EntityID globalDatabaseID();
         static EntityID localTemplateScopeID();
+        static EntityID projectScopeID();
         static EntityID voidID();
 
     private:

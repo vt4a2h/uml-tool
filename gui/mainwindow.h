@@ -42,7 +42,7 @@ namespace models {
 }
 
 namespace graphics { class Scene; }
-
+namespace entity { class EntityID; }
 /**
  * @brief namespace gui
  */
@@ -96,7 +96,7 @@ namespace gui {
 
         void updateWindowState();
 
-        void setCurrentProject(const QString &id);
+        void setCurrentProject(const entity::EntityID &id);
 
     private:
         bool maybeExit();
