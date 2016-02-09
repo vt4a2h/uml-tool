@@ -49,10 +49,10 @@ namespace models {
         project::SharedProject makeProject();
         project::SharedProject makeProject(const QString &name, const QString &path);
         bool addProject(const project::SharedProject &pr);
-        project::SharedProject project(const entity::EntityID &id) const;
+        project::SharedProject project(const QString &name) const;
         project::ProjectsList projects() const;
-        bool removeProject(const entity::EntityID &id);
-        bool containsProject(const entity::EntityID &id);
+        bool removeProject(const QString &name);
+        bool containsProject(const QString& name);
         // }
 
         // TODO: remove from this class (breaks SRP) {
@@ -62,12 +62,12 @@ namespace models {
 
         template <class T = entity::Type>
         std::shared_ptr<T> makeType(const entity::EntityID &scopeID, const QString &name = "");
-        void addExistsType(const entity::EntityID &projectID, const entity::EntityID &scopeID, const entity::SharedType &type);
-        void removeType(const entity::EntityID &projectID, const entity::EntityID &scopeID, const entity::EntityID &typeID);
+        void addExistsType(const QString &projectName, const entity::EntityID &scopeID, const entity::SharedType &type);
+        void removeType(const QString &projectName, const entity::EntityID &scopeID, const entity::EntityID &typeID);
         // }
 
         project::SharedProject currentProject() const;
-        bool setCurrentProject(const entity::EntityID &id);
+        bool setCurrentProject(const QString &name);
 
         db::SharedDatabase globalDatabase() const;
 
@@ -92,7 +92,7 @@ namespace models {
         if (currentProject() && currentProject()->database()) {
             if (auto scope = currentProject()->database()->getScope(scopeID)) {
                 if (auto type = scope->addType<T>(name)) {
-                    m_TreeModel->addType(type, scope->id(), currentProject()->id());
+                    m_TreeModel->addType(type, scope->id(), currentProject()->name());
                     connect(type.get(), &entity::BasicEntity::nameChanged,
                             m_CurrentProject.get(), &project::Project::touch);
                     // todo: connect scope id change to project touch

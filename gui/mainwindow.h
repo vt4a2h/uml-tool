@@ -96,7 +96,7 @@ namespace gui {
 
         void updateWindowState();
 
-        void setCurrentProject(const entity::EntityID &id);
+        void setCurrentProject(const QString &name);
 
     private:
         bool maybeExit();

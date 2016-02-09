@@ -235,9 +235,9 @@ namespace models {
      * @param scope
      * @param parent
      */
-    void ProjectTreeModel::addScope(const entity::SharedScope &scope, const entity::EntityID &projectId)
+    void ProjectTreeModel::addScope(const entity::SharedScope &scope, const QString &projectName)
     {
-        if (auto &&pr = find(projectId)) {
+        if (auto &&pr = find(projectName)) {
             auto &&projectIndex = index(indexOf(pr), 0);
             Q_ASSERT(projectIndex.isValid());
 
@@ -255,14 +255,14 @@ namespace models {
      * @param scopeId
      * @param projectId
      */
-    void ProjectTreeModel::removeScope(const entity::EntityID &scopeId, const entity::EntityID &projectId)
+    void ProjectTreeModel::removeScope(const entity::EntityID &scopeId, const QString &projectName)
     {
-        if (auto &&pr = find(projectId)) {
+        if (auto &&pr = find(projectName)) {
             auto &&projectIndex = index(indexOf(pr), 0);
             Q_ASSERT(projectIndex.isValid());
 
-            if (auto &&scope = pr->itemById(scopeId)) {
-                auto &&scopeIndex = projectIndex.child(pr->rowForItem( scope ), 0);
+            if (auto &&scope = pr->itemById(QVariant::fromValue(scopeId))) {
+                auto &&scopeIndex = projectIndex.child(pr->rowForItem(scope), 0);
                 Q_ASSERT(scopeIndex.isValid());
 
                 removeRows(scopeIndex.row(), 0, projectIndex);
@@ -277,13 +277,13 @@ namespace models {
      * @param projectId
      */
     void ProjectTreeModel::addType(const entity::SharedType &type, const entity::EntityID &scopeId,
-                                   const entity::EntityID &projectId)
+                                   const QString &projectName)
     {
-        if (auto &&pr = find(projectId)) {
+        if (auto &&pr = find(projectName)) {
             auto &&projectIndex = index(indexOf(pr), 0);
             Q_ASSERT(projectIndex.isValid());
 
-            if (auto &&scope = pr->itemById(scopeId)) {
+            if (auto &&scope = pr->itemById(QVariant::fromValue(scopeId))) {
                 auto &&scopeIndex = projectIndex.child(pr->rowForItem(scope), 0);
                 Q_ASSERT(scopeIndex.isValid());
 
@@ -303,19 +303,19 @@ namespace models {
      * @param scopeID
      * @param typeID
      */
-    void ProjectTreeModel::removeType(const entity::EntityID &projectID, const entity::EntityID &scopeID,
+    void ProjectTreeModel::removeType(const QString &projectName, const entity::EntityID &scopeID,
                                       const entity::EntityID &typeID)
     {
         // TODO: make universal remove function
-        if (auto &&pr = find(projectID)) {
+        if (auto &&pr = find(projectName)) {
             auto &&projectIndex = index(indexOf(pr), 0);
             Q_ASSERT(projectIndex.isValid());
 
-            if (auto &&scope = pr->itemById(scopeID)) {
+            if (auto &&scope = pr->itemById(QVariant::fromValue(scopeID))) {
                 auto &&scopeIndex = projectIndex.child(pr->rowForItem(scope), 0);
                 Q_ASSERT(scopeIndex.isValid());
 
-                if (auto &&type = scope->itemById(typeID)) {
+                if (auto &&type = scope->itemById(QVariant::fromValue(typeID))) {
                     auto &&typeIndex = scopeIndex.child(scope->rowForItem(type), 0);
                     Q_ASSERT(typeIndex.isValid());
 
@@ -375,7 +375,7 @@ namespace models {
      * @param id
      * @return
      */
-    BasicTreeItem *ProjectTreeModel::find(const entity::EntityID &id)
+    BasicTreeItem *ProjectTreeModel::find(const QVariant &id)
     {
         return const_cast<BasicTreeItem*>(const_cast<const ProjectTreeModel*>(this)->find(id));
     }
@@ -385,7 +385,7 @@ namespace models {
      * @param id
      * @return
      */
-    const BasicTreeItem *ProjectTreeModel::find(const entity::EntityID &id) const
+    const BasicTreeItem *ProjectTreeModel::find(const QVariant &id) const
     {
         auto projectIt = range::find_if(m_Items, [&](auto &&item){ return item.id() == id; });
         return projectIt != m_Items.cend() ? &*projectIt : nullptr;

@@ -36,6 +36,7 @@ namespace entity
     // TODO: add tests
     /// ID for all entities
     class EntityID : public boost::equality_comparable<EntityID>
+                   , public boost::less_than_comparable<EntityID>
     {
     public:
         using ValueType = quint64;
@@ -49,6 +50,7 @@ namespace entity
         EntityID &operator =(EntityID &&) = default;
 
         friend bool operator ==(const EntityID &lhs, const EntityID &rhs);
+        friend bool operator < (const EntityID &lhs, const EntityID &rhs);
 
         bool isValid() const;
 

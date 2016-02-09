@@ -58,7 +58,6 @@ namespace project {
     Project::Project(const QString &name, const QString &path)
         : m_Name(name)
         , m_Path(path)
-        , m_ID(0) // NOTE: temporary
         , m_nextUniqueID(entity::EntityID::firstFreeID().value())
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
@@ -72,7 +71,6 @@ namespace project {
     Project::Project(Project &&src)
         : m_Name(std::move(src.m_Name))
         , m_Path(std::move(src.m_Path))
-        , m_ID(std::move(src.m_ID))
         , m_nextUniqueID(std::move(src.m_nextUniqueID))
         , m_SaveStatus(std::move(src.m_SaveStatus))
         , m_Database(std::move(src.m_Database))
@@ -96,7 +94,6 @@ namespace project {
         if (this != &lhs) {
             m_Name = std::move(lhs.m_Name);
             m_Path = std::move(lhs.m_Path);
-            m_ID = std::move(lhs.m_ID);
             m_nextUniqueID = std::move(lhs.m_nextUniqueID);
             m_SaveStatus = std::move(lhs.m_SaveStatus);
             m_Database = std::move(lhs.m_Database);
@@ -114,12 +111,8 @@ namespace project {
      */
     bool operator ==(const Project &lhs, const Project &rhs)
     {
-        Q_ASSERT(!!lhs.m_Database);
-        Q_ASSERT(!!rhs.m_Database);
-
         return lhs.m_Name == rhs.m_Name &&
                lhs.m_Path == rhs.m_Path &&
-               lhs.m_ID   == rhs.m_ID   &&
                lhs.m_nextUniqueID == rhs.m_nextUniqueID &&
                lhs.m_SaveStatus   == rhs.m_SaveStatus   &&
                lhs.m_Errors       == rhs.m_Errors       &&
@@ -242,7 +235,6 @@ namespace project {
         QJsonObject result;
 
         result.insert("Name", m_Name);
-        result.insert("ID"  , m_ID.toJson());
         result.insert("NextID", QString::number(m_nextUniqueID));
 
         return result;
@@ -257,9 +249,6 @@ namespace project {
     {
         utility::checkAndSet(src, "Name", errorList, [&src, this](){
             m_Name = src["Name"].toString();
-        });
-        utility::checkAndSet(src, "ID", errorList, [&, this](){
-            m_ID.fromJson(src["ID"], errorList);
         });
         utility::checkAndSet(src, "NextID", errorList, [&src, this](){
             m_nextUniqueID = src["NextID"].toString().toULongLong();
@@ -352,15 +341,6 @@ namespace project {
     QString Project::path() const
     {
         return m_Path;
-    }
-
-    /**
-     * @brief Project::id
-     * @return
-     */
-    entity::EntityID Project::id() const
-    {
-        return m_ID;
     }
 
     /**

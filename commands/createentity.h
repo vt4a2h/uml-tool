@@ -69,8 +69,8 @@ namespace commands {
                      QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent = nullptr)
             : BaseCommand(tr("Add %1").arg(hashName[typeid(Type).hash_code()]), parent)
             , m_Model(model)
-            , m_ProjectID(model && model->currentProject() ? model->currentProject()->id()
-                                                           : entity::EntityID::nullID())
+            , m_ProjectName(model && model->currentProject() ? model->currentProject()->name()
+                                                             : "")
             , m_ScopeID(scopeID)
             , m_Pos(pos)
             , m_Scene(scene)
@@ -80,7 +80,7 @@ namespace commands {
         void redo() override
         {
             if (m_Done) {
-                m_Model->addExistsType(m_ProjectID, m_ScopeID, m_TypeItem);
+                m_Model->addExistsType(m_ProjectName, m_ScopeID, m_TypeItem);
 
                 m_Scene.addItem(m_Item);
                 static_cast<graphics::Entity *>(m_Item)->setTypeObject(m_TypeItem);
@@ -103,7 +103,7 @@ namespace commands {
             Q_ASSERT(m_TypeItem);
 
             m_Scene.removeItem(m_Item);
-            m_Model->removeType(m_ProjectID, m_ScopeID, m_TypeItem->id());
+            m_Model->removeType(m_ProjectName, m_ScopeID, m_TypeItem->id());
             m_CleaningRequired = true;
         }
 
@@ -119,7 +119,7 @@ namespace commands {
     private:
         bool m_CleaningRequired = false;
         models::SharedApplicationModel m_Model;
-        entity::EntityID m_ProjectID;
+        QString m_ProjectName;
         entity::EntityID m_ScopeID;
         QPointF m_Pos;
         QGraphicsItem  * m_Item = nullptr;

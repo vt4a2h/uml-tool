@@ -207,7 +207,7 @@ namespace gui {
         } else {
             if (m_ApplicationModel->addProject(newProject))
             {
-                setCurrentProject(newProject->id());
+                setCurrentProject(newProject->name());
                 newProject->save();
                 update();
             } else {
@@ -302,7 +302,7 @@ namespace gui {
         }
 
         auto newProject = m_ApplicationModel->makeProject( name, path );
-        setCurrentProject(newProject->id());
+        setCurrentProject(newProject->name());
         newProject->save();
     }
 
@@ -433,7 +433,7 @@ namespace gui {
         QModelIndex index = m_ProjectTreeView->selectionModel()->currentIndex();
         QVariant data = index.data(models::ProjectTreeModel::SharedData);
         if (index.isValid() && data.canConvert<project::SharedProject>()) {
-           setCurrentProject(index.data(models::ProjectTreeModel::ID).value<entity::EntityID>());
+           setCurrentProject(index.data(models::ProjectTreeModel::ID).toString());
            update();
         }
     }
@@ -461,7 +461,7 @@ namespace gui {
      * @brief MainWindow::setCurrentProject
      * @param id
      */
-    void MainWindow::setCurrentProject(const entity::EntityID &id)
+    void MainWindow::setCurrentProject(const QString &name)
     {
         if (auto &&pr = m_ApplicationModel->currentProject().get())
         {
@@ -474,7 +474,7 @@ namespace gui {
             disconnect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &QUndoStack::undo);
         }
 
-        if (m_ApplicationModel->setCurrentProject(id)) {
+        if (m_ApplicationModel->setCurrentProject(name)) {
             auto &&pr = m_ApplicationModel->currentProject().get();
 
             connect(pr, &project::Project::saved, this, &MainWindow::update);
@@ -488,7 +488,7 @@ namespace gui {
 
             addGraphicsItems(m_MainScene.get(), m_ApplicationModel->currentProject());
         } else {
-            qWarning() << QString("Current project with id %1 is not found.").arg(id.toString());
+            qWarning() << QString("Current project with id %1 is not found.").arg(name);
         }
     }
 

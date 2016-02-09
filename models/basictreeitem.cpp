@@ -42,10 +42,11 @@
 
 #include <utility/helpfunctions.h>
 
+// NOTE: project name must be unique. It's used as ID.
 #define declare_methods_map(map_name, method_name)\
     QMap<TreeItemType, std::function<QVariant(const QVariant&)>> map_name = {\
           {TreeItemType::ProjectItem,\
-           [](const QVariant &item){ return QVariant::fromValue(item.value<project::SharedProject>()->method_name()); }},\
+           [](const QVariant &item){ return QVariant::fromValue(item.value<project::SharedProject>()->name()); }},\
           {TreeItemType::ScopeItem,\
            [](const QVariant &item){ return QVariant::fromValue(item.value<entity::SharedScope>()->method_name()); }},\
           {TreeItemType::TypeItem,\
@@ -180,7 +181,7 @@ namespace models {
      * @param id
      * @return
      */
-    BasicTreeItem *BasicTreeItem::itemById(const entity::EntityID &id) const
+    BasicTreeItem *BasicTreeItem::itemById(const QVariant &id) const
     {
         for(auto &&item : m_Children)
             if (item->id() == id)
@@ -285,12 +286,9 @@ namespace models {
      * @brief BasicTreeItem::id
      * @return
      */
-    entity::EntityID BasicTreeItem::id() const
+    QVariant BasicTreeItem::id() const
     {
-        if (m_Type == TreeItemType::StubItem)
-            return entity::EntityID::nullID();
-
-        return idGetters[m_Type](m_Entity).value<entity::EntityID::ValueType>();
+        return m_Type != TreeItemType::StubItem ? idGetters[m_Type](m_Entity) : QVariant();
     }
 
     /**

@@ -23,6 +23,7 @@
 #include "entityid.h"
 
 #include <QHash>
+#include <QMetaType>
 
 namespace entity
 {
@@ -42,6 +43,21 @@ namespace entity
     EntityID::EntityID(quint64 value)
         : m_value(value)
     {
+        static int type = qRegisterMetaType<entity::EntityID>("entity::EntityID");
+        static bool comparators = QMetaType::registerComparators<entity::EntityID>();
+        Q_UNUSED(type);
+        Q_UNUSED(comparators);
+    }
+
+    /**
+     * @brief operator <
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator <(const EntityID &lhs, const EntityID &rhs)
+    {
+        return lhs.m_value < rhs.m_value;
     }
 
     /**

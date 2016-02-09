@@ -69,7 +69,7 @@ namespace models {
         auto newProject(std::make_shared<project::Project>(name, path));
         newProject->setGloablDatabase(globalDatabase());
         m_TreeModel->addProject(newProject);
-        return *m_Projects.insert(newProject->id(), newProject);
+        return *m_Projects.insert(newProject->name(), newProject);
     }
 
     /**
@@ -79,8 +79,8 @@ namespace models {
      */
     bool ApplicationModel::addProject(const project::SharedProject &pr)
     {
-        if (!m_Projects.contains(pr->id())) {
-            m_Projects[pr->id()] = pr;
+        if (!m_Projects.contains(pr->name())) {
+            m_Projects[pr->name()] = pr;
             m_TreeModel->addProject(pr);
             return true;
         }
@@ -93,9 +93,9 @@ namespace models {
      * @param id
      * @return
      */
-    project::SharedProject ApplicationModel::project(const entity::EntityID &id) const
+    project::SharedProject ApplicationModel::project(const QString &name) const
     {
-        return m_Projects[id];
+        return m_Projects[name];
     }
 
     /**
@@ -111,9 +111,9 @@ namespace models {
      * @brief ApplicationModal::removeProject
      * @param id
      */
-    bool ApplicationModel::removeProject(const entity::EntityID &id)
+    bool ApplicationModel::removeProject(const QString &name)
     {
-        return !!m_Projects.remove(id);
+        return !!m_Projects.remove(name);
     }
 
     /**
@@ -121,9 +121,9 @@ namespace models {
      * @param id
      * @return
      */
-    bool ApplicationModel::containsProject(const entity::EntityID &id)
+    bool ApplicationModel::containsProject(const QString &name)
     {
-        return m_Projects.contains(id);
+        return m_Projects.contains(name);
     }
 
     /**
@@ -139,7 +139,7 @@ namespace models {
             auto projectDB = m_CurrentProject->database();
             Q_ASSERT(projectDB);
             result = projectDB->addScope(name);
-            m_TreeModel->addScope(result, m_CurrentProject->id());
+            m_TreeModel->addScope(result, m_CurrentProject->name());
             // TODO: add scope with parent scope
 
             currentProject()->touch();
@@ -159,7 +159,7 @@ namespace models {
             auto projectDB = m_CurrentProject->database();
             Q_ASSERT(projectDB);
             projectDB->addExistsScope(scope);
-            m_TreeModel->addScope(scope, m_CurrentProject->id());
+            m_TreeModel->addScope(scope, m_CurrentProject->name());
             emit scopeAdded(scope);
         }
     }
@@ -172,7 +172,7 @@ namespace models {
     {
         if (m_CurrentProject) {
             m_CurrentProject->database()->removeScope(id);
-            m_TreeModel->removeScope(id, m_CurrentProject->id());
+            m_TreeModel->removeScope(id, m_CurrentProject->name());
             m_CurrentProject->touch();
         }
     }
@@ -181,10 +181,10 @@ namespace models {
      * @brief ApplicationModel::addExistsType
      * @param type
      */
-    void ApplicationModel::addExistsType(const entity::EntityID &projectID, const entity::EntityID &scopeID,
+    void ApplicationModel::addExistsType(const QString &projectName, const entity::EntityID &scopeID,
                                          const entity::SharedType &type)
     {
-        if (auto &&pr = project(projectID))
+        if (auto &&pr = project(projectName))
             if (auto &&db = pr->database())
                 if (auto &&scope = db->getScope(scopeID)) {
                     scope->addExistsType(type);
@@ -193,7 +193,7 @@ namespace models {
                     // todo: connect scope id change to project touch
                 }
 
-        m_TreeModel->addType(type, scopeID, projectID);
+        m_TreeModel->addType(type, scopeID, projectName);
     }
 
     /**
@@ -202,15 +202,15 @@ namespace models {
      * @param scopeID
      * @param typeID
      */
-    void ApplicationModel::removeType(const entity::EntityID &projectID, const entity::EntityID &scopeID,
+    void ApplicationModel::removeType(const QString &projectName, const entity::EntityID &scopeID,
                                       const entity::EntityID &typeID)
     {
-        if (auto &&pr = project(projectID))
+        if (auto &&pr = project(projectName))
             if (auto &&db = pr->database())
                 if (auto &&scope = db->getScope(scopeID))
                     scope->removeType(typeID);
 
-        m_TreeModel->removeType(projectID, scopeID, typeID);
+        m_TreeModel->removeType(projectName, scopeID, typeID);
     }
 
     /**
@@ -227,12 +227,12 @@ namespace models {
      * @param id
      * @return
      */
-    bool ApplicationModel::setCurrentProject(const entity::EntityID &id)
+    bool ApplicationModel::setCurrentProject(const QString &name)
     {
-        if (!m_Projects.contains(id))
+        if (!m_Projects.contains(name))
             return false;
 
-        m_CurrentProject = m_Projects[id];
+        m_CurrentProject = m_Projects[name];
         emit currentProjectChanged(m_CurrentProject);
 
         return true;

@@ -67,7 +67,7 @@ namespace models {
         void appendChild(BasicTreeItem *child);
         BasicTreeItem *makeChild(const QVariant &entity, const TreeItemType &type);
         BasicTreeItem *child(int row) const;
-        BasicTreeItem *itemById(const entity::EntityID &id) const;
+        BasicTreeItem *itemById(const QVariant &id) const;
         bool removeChild(BasicTreeItem * child);
         int rowForItem(BasicTreeItem * item) const;
         ChildItems childrenItems() const;
@@ -80,7 +80,7 @@ namespace models {
 
         QVariant entity() const;
 
-        entity::EntityID id() const;
+        QVariant id() const;
 
         int row() const;
 

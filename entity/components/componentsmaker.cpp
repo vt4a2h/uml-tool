@@ -292,7 +292,7 @@ namespace components {
                                                   return extType->isEqual(*type, false);
                                               });
             if (it == cend(types))
-                m_Model->addExistsType(m_Model->currentProject()->id(), m_Scope->id(), extType);
+                m_Model->addExistsType(m_Model->currentProject()->name(), m_Scope->id(), extType);
 
             return {"", extType};
          } else {

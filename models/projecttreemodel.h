@@ -55,17 +55,17 @@ namespace models {
 
         void addProject(const project::SharedProject &pr);
 
-        void addScope(const entity::SharedScope &scope, const entity::EntityID &projectId);
-        void removeScope(const entity::EntityID &scopeId, const entity::EntityID &projectId);
+        void addScope(const entity::SharedScope &scope, const QString &projectName);
+        void removeScope(const entity::EntityID &scopeId, const QString &projectName);
 
-        void addType(const entity::SharedType &type, const entity::EntityID &scopeId, const entity::EntityID &projectId);
-        void removeType(const entity::EntityID &projectID, const entity::EntityID &scopeID, const entity::EntityID &typeID);
+        void addType(const entity::SharedType &type, const entity::EntityID &scopeId, const QString &projectName);
+        void removeType(const QString &projectName, const entity::EntityID &scopeID, const entity::EntityID &typeID);
 
     private:
         void addProjectItem(const project::SharedProject &pr);
         int indexOf(const BasicTreeItem *parent);
-        BasicTreeItem *find(const entity::EntityID &id);
-        const BasicTreeItem *find(const entity::EntityID &id) const;
+        BasicTreeItem *find(const QVariant &id);
+        const BasicTreeItem *find(const QVariant &id) const;
         void update(BasicTreeItem *item);
         void observeItemChanging(entity::BasicEntity * entity, BasicTreeItem *item);
 

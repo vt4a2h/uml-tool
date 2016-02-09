@@ -33,7 +33,7 @@ namespace project {
     class Project;
     using SharedProject = std::shared_ptr<Project>;
     using WeakProject = std::weak_ptr<Project>;
-    using Projects = QHash<entity::EntityID, SharedProject>;
+    using Projects = QHash<QString, SharedProject>;
     using ProjectsList = QList<SharedProject>;
 }
 
