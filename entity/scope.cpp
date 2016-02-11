@@ -70,7 +70,7 @@ namespace entity {
      * @param scopeId
      */
     Scope::Scope(const QString &scopeName, const EntityID &parentScopeID)
-        : BasicEntity(m_Name = !scopeName.isEmpty() ? scopeName : DEFAULT_NAME,
+        : BasicEntity(!scopeName.isEmpty() ? scopeName : DEFAULT_NAME,
                       parentScopeID.isValid() ? parentScopeID : EntityID::globalScopeID(),
                       GeneratorID::instance().genID())
     {
@@ -360,6 +360,8 @@ namespace entity {
                 errorList << "Error: \"Types\" is not array";
             }
         });
+
+        Q_ASSERT(m_Types.count() == m_TypesByName.count());
     }
 
     /**

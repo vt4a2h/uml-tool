@@ -66,7 +66,7 @@ namespace db {
     Database::Database(const QString &name, const QString &path)
         : m_Name(name.isEmpty() ? DEFAULT_DATABASE_NAME : name)
         , m_Path(path.isEmpty() ? DEFAULT_DATABASE_PATH : QDir::currentPath())
-        , m_ID(utility::genId())
+        , m_ID(entity::EntityID::nullID())
         , m_Valid(false)
 
     {
@@ -410,7 +410,7 @@ namespace db {
 
         QJsonObject result;
         result.insert("Name", m_Name);
-        result.insert("ID",   m_ID);
+        result.insert("ID",   m_ID.toJson());
         result.insert("Scopes", scopes);
 
         return result;
@@ -428,8 +428,8 @@ namespace db {
         utility::checkAndSet(src, "Name", errorList, [&src, this](){
             m_Name = src["Name"].toString();
         });
-        utility::checkAndSet(src, "ID", errorList, [&src, this](){
-            m_ID = src["ID"].toString();
+        utility::checkAndSet(src, "ID", errorList, [&, this](){
+            m_ID.fromJson(src["ID"], errorList);
         });
 
         utility::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
@@ -460,9 +460,18 @@ namespace db {
      * @brief Database::id
      * @return
      */
-    QString Database::id() const
+    entity::EntityID Database::id() const
     {
         return m_ID;
+    }
+
+    /**
+     * @brief Database::setId
+     * @param entotyID
+     */
+    void Database::setId(const entity::EntityID &entityID)
+    {
+        m_ID = entityID;
     }
 
     /**

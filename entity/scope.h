@@ -77,7 +77,7 @@ namespace entity {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
-    private:
+//    private:
         void copyFrom(const Scope &src);
         void moveFrom(Scope &&src);
 

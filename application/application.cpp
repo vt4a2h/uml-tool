@@ -33,6 +33,8 @@
 
 #include <helpers/generatorid.h>
 
+#include <entity/type.h>
+
 #include "settings.h"
 #include "qthelpers.h"
 

@@ -39,7 +39,10 @@ namespace translation {
 
     namespace {
         const QString noSignature = SignatureMaker::tr("Not available.");
-//        const QSet<QString> globalIds = {GLOBAL_SCOPE_ID, PROJECT_GLOBAL_SCOPE_ID, GLOBAL, STUB_ID};
+        const QSet<entity::EntityID> globalIds = {entity::EntityID::globalScopeID(),
+                                                  entity::EntityID::projectScopeID(),
+                                                  entity::EntityID::globalDatabaseID(),
+                                                  entity::EntityID::voidID()};
 
         const QString memberMark      = "MEMBER";
         const QString readMark        = "READ";
@@ -178,18 +181,18 @@ namespace translation {
 
         QStringList scopes;
         auto scopeId = type->scopeId();
-        // FIXME: project must know about his global scope ID, not database!
-        QSet<QString> forbidden = {}/*{m_ProjectDatabase->defaultScopeID(), GLOBAL_SCOPE_ID,
-                                   LOCALE_TEMPLATE_SCOPE_ID, PROJECT_GLOBAL_SCOPE_ID}*/;
-//        while (!globalIds.contains(scopeId)) {
-//            if (auto scope = findScope(scopeId)) {
-//                if (!scope->name().isEmpty() && !forbidden.contains(scopeId))
-//                    scopes.prepend(scope->name());
-//                scopeId = scope->parentScopeId();
-//            } else {
-//                return "";
-//            }
-//        }
+        QSet<entity::EntityID> forbidden = {entity::EntityID::projectScopeID(),
+                                            entity::EntityID::globalScopeID(),
+                                            entity::EntityID::localTemplateScopeID()};
+        while (!globalIds.contains(scopeId)) {
+            if (auto scope = findScope(scopeId)) {
+                if (!scope->name().isEmpty() && !forbidden.contains(scopeId))
+                    scopes.prepend(scope->name());
+                scopeId = scope->scopeId();
+            } else {
+                return "";
+            }
+        }
 
         scopes.removeAll("");
         if (!scopes.isEmpty())
