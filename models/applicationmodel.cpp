@@ -81,6 +81,7 @@ namespace models {
     {
         if (!m_Projects.contains(pr->name())) {
             m_Projects[pr->name()] = pr;
+            pr->setGloablDatabase(globalDatabase());
             m_TreeModel->addProject(pr);
             return true;
         }

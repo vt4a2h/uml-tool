@@ -43,6 +43,17 @@
 
 namespace project {
 
+    namespace {
+
+        entity::SharedScope makeProjectScope()
+        {
+            auto scope(std::make_shared<entity::Scope>());
+            scope->setId(entity::EntityID::projectScopeID());
+            return scope;
+        }
+
+    }
+
     /**
      * @brief Project::Project
      */
@@ -62,7 +73,9 @@ namespace project {
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
         , m_CommandsStack(std::make_unique<QUndoStack>())
-    {}
+    {
+        m_Database->addExistsScope(makeProjectScope());
+    }
 
     /**
      * @brief Project::Project
@@ -144,6 +157,10 @@ namespace project {
         for (auto &&scope : m_Database->scopes())
             for (auto &&entity : scope->types())
                 connect(entity.get(), &entity::BasicEntity::nameChanged, this, &Project::touch);
+
+        // Fixup if needed
+        if (!m_Database->getScope(entity::EntityID::projectScopeID()))
+            m_Database->addExistsScope(makeProjectScope());
 
         if (!m_Errors.isEmpty())
             errors(tr("Project load error%1").arg(m_Errors.count() <= 1 ? "" : "s"), m_Errors);
