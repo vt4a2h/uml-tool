@@ -40,10 +40,10 @@ TEST_F(ProjectMaker, MakeClass)
     constLinkToString->setConstStatus(true);
     constLinkToString->addLinkStatus();
 
-    empClass->makeMethod("Employee")->setReturnTypeId(STUB_ID);
+    empClass->makeMethod("Employee")->setReturnTypeId(entity::EntityID::nullID());
 
     auto parCtor = empClass->makeMethod("Employee");
-    parCtor->setReturnTypeId(STUB_ID);
+    parCtor->setReturnTypeId(entity::EntityID::nullID());
     parCtor->addParameter("firstName", constLinkToString->id());
     parCtor->addParameter("lastName", constLinkToString->id());
 
@@ -109,11 +109,11 @@ TEST_F(ProjectMaker, MakeTemplateClass)
     cPointerToT->setConstStatus(true);
 
     auto ctor = ptrClass->makeMethod("shared_pointer");
-    ctor->setReturnTypeId(STUB_ID);
+    ctor->setReturnTypeId(entity::EntityID::nullID());
     ctor->addLhsIdentificator(entity::LhsIdentificator::Explicit);
     ctor->addParameter("value", pointerToT->id())->setDefaultValue("nullptr");
 
-    ptrClass->makeMethod("~shared_pointer")->setReturnTypeId(STUB_ID);
+    ptrClass->makeMethod("~shared_pointer")->setReturnTypeId(entity::EntityID::nullID());
 
     auto resetMethod = ptrClass->makeMethod("reset");
     resetMethod->addParameter("other", pointerToT->id())->setDefaultValue("nullptr");

@@ -48,7 +48,7 @@ TEST_F(RelationMaker, MultiplyAssociation)
     containerType->addTemplateParameter(stringClass->id());
     containerType->addTemplateParameter(valueType->id());
 
-    multAssociation->setFieldtypeId(valueType->id());
+    multAssociation->setFieldTypeId(valueType->id());
     multAssociation->setGetSetTypeId(valueType->id());
     multAssociation->setContainerTypeId(containerType->id());
     multAssociation->setKeyTypeId(stringClass->id());
@@ -122,7 +122,7 @@ TEST_F(RelationMaker, Association)
     type->setTypeId(_secondClass->id());
     type->addPointerStatus();
 
-    association->setFieldtypeId(type->id());
+    association->setFieldTypeId(type->id());
     association->setGetSetTypeId(type->id());
 
     association->makeRelation();
@@ -178,7 +178,7 @@ TEST_F(RelationMaker, Dependency)
 
     auto depMethod = std::make_shared<entity::ClassMethod>("useSecond");
     depMethod->setConstStatus(true);
-    depMethod->setReturnTypeId(VOID_ID);
+    depMethod->setReturnTypeId(entity::EntityID::voidID());
     depMethod->addParameter("second", ext->id());
 
     auto dependency = std::make_shared<relationship::Dependency>(_firstClass->id(),

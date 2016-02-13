@@ -58,18 +58,20 @@ protected:
 
         _globalScope  = _globalDb->addScope();
         _globalDb->removeScope(_globalScope->id());
-        _globalScope->setId(entity::Scope::globalScopeID());
+        _globalScope->setId(entity::EntityID::globalScopeID());
         _globalDb->addExistsScope(_globalScope);
         // TODO: implement auto changing in id db when scope id changed
 
         _projectScope = _projectDb->addScope("project_scope");
 
         _int = _globalScope->addType("int");
+
+        // FIXME: don't use entity::basicTypeId("bool"), load and use global database instead
         _globalScope->addExistsType(std::make_shared<entity::Type>("void",
-                                                                   entity::Scope::globalScopeID(),
+                                                                   entity::EntityID::globalScopeID(),
                                                                    entity::basicTypeId("void")));
         _globalScope->addExistsType(std::make_shared<entity::Type>("bool",
-                                                                   entity::Scope::globalScopeID(),
+                                                                   entity::EntityID::globalScopeID(),
                                                                    entity::basicTypeId("bool")));
     }
 

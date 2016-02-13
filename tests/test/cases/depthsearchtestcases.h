@@ -30,7 +30,7 @@ TEST_F(DepthSearch, ScopeSearchWorks)
     entity::SharedScope p(nullptr);
 
     search_circle(_scopes, depthScopeSearch, scope)
-    invalid_case(depthScopeSearch, "foobarid")
+    invalid_case(depthScopeSearch, -1)
 }
 
 TEST_F(DepthSearch, TypeSearchWorks)
@@ -38,7 +38,7 @@ TEST_F(DepthSearch, TypeSearchWorks)
     entity::SharedType p(nullptr);
 
     search_circle(_types, depthTypeSearch, type)
-    invalid_case(depthTypeSearch, "foobarbaz")
+    invalid_case(depthTypeSearch, -2)
 }
 
 TEST_F(DepthSearch, ChainScopeSearch)

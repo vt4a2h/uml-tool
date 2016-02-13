@@ -51,11 +51,11 @@
 TEST_F(Enteties, SimpleType)
 {
     ASSERT_STREQ(_type->name().toStdString().c_str(), BASE_TYPE_NAME);
-    ASSERT_STREQ(_type->scopeId().toStdString().c_str(), GLOBAL_SCOPE_ID);
+    ASSERT_EQ(_type->scopeId(), entity::EntityID::globalScopeID());
 
     _type->setName("some name");
-    _type->setId("some id");
-    _type->setScopeId("global scope id");
+    _type->setId(entity::EntityID::firstFreeID().value() + 1);
+    _type->setScopeId(entity::EntityID::globalScopeID());
 
     test_copy_move(Type, _type)
 }
@@ -63,7 +63,7 @@ TEST_F(Enteties, SimpleType)
 TEST_F(Enteties, ExtendedType)
 {
     ASSERT_STREQ(_extendedType->name().toStdString().c_str(), "Alias");
-    ASSERT_STREQ(_extendedType->typeId().toStdString().c_str(), STUB_ID);
+    ASSERT_EQ(_extendedType->typeId(), entity::EntityID::globalScopeID());
     ASSERT_FALSE(_extendedType->isConst());
 
     ASSERT_FALSE(_extendedType->isLink());
@@ -88,8 +88,8 @@ TEST_F(Enteties, ExtendedType)
     _extendedType->setConstStatus(false);
     ASSERT_FALSE(_extendedType->isConst());
 
-    const QString par1 = "par1";
-    const QString par2 = "par2";
+    const entity::EntityID par1 = entity::EntityID::firstFreeID().value() + 1;
+    const entity::EntityID par2 = par1.value() + 1;
 
     _extendedType->addTemplateParameter(par1);
     ASSERT_TRUE(_extendedType->containsTemplateParameter(par1));
@@ -113,7 +113,7 @@ TEST_F(Enteties, Class)
     ASSERT_EQ(_class->kind(), entity::ClassType);
 
     // Parents test
-    const QString parentID = "stub_id";
+    const entity::EntityID parentID = entity::EntityID::firstFreeID().value() + 1;
     auto parent = _class->addParent(parentID, entity::Private);
     auto parents = _class->parents();
 
@@ -128,7 +128,7 @@ TEST_F(Enteties, Class)
     ASSERT_TRUE(_class->parents().isEmpty());
 
     _class->addParent(parentID, entity::Private);
-    _class->addParent(parentID + "42", entity::Private);
+    _class->addParent(parentID.value() + 42, entity::Private);
     ASSERT_EQ(_class->parents().count(), 2);
 
     // Methods test (some parts covered in IComponents tests)
@@ -162,7 +162,7 @@ TEST_F(Enteties, Class)
 
     // Fields
     ASSERT_FALSE(_class->anyFields());
-    auto field = _class->addField("Some field", "some_id");
+    auto field = _class->addField("Some field", entity::EntityID::nullID());
     ASSERT_TRUE(_class->anyFields());
     ASSERT_TRUE(_class->containsField(field->name()));
     ASSERT_EQ(_class->getField(field->name()), field);
@@ -181,7 +181,7 @@ TEST_F(Enteties, Class)
 
     // Properties
     ASSERT_FALSE(_class->anyProperties());
-    auto property = _class->addProperty("some name", "some_id");
+    auto property = _class->addProperty("some name", entity::EntityID::nullID());
     ASSERT_TRUE(_class->anyProperties());
     ASSERT_EQ(property, _class->property(property->name()));
     ASSERT_TRUE(_class->containsProperty(property->name()));
@@ -199,7 +199,7 @@ TEST_F(Enteties, OptionalClassMethods)
     ASSERT_TRUE(_class->optionalMethods(entity::Public).isEmpty());
 
     // Add some method
-    entity::SharedProperty p1 = _class->addProperty("p1", VOID_ID);
+    entity::SharedProperty p1 = _class->addProperty("p1", entity::EntityID::voidID());
     p1->addGetter("getSmth");
     auto getter = p1->getter();
     ASSERT_FALSE(_class->optionalMethods(entity::Public).isEmpty());
@@ -235,7 +235,7 @@ TEST_F(Enteties, OptionaClassFields)
     ASSERT_TRUE(_class->fields().isEmpty());
     ASSERT_TRUE(_class->optionalFields(entity::Private).isEmpty());
 
-    entity::SharedProperty p = _class->addProperty("p0", VOID_ID);
+    entity::SharedProperty p = _class->addProperty("p0", entity::EntityID::voidID());
     ASSERT_FALSE(_class->optionalFields(entity::Private).isEmpty());
     ASSERT_EQ(_class->optionalFields(entity::Private)[0], p->field());
 
@@ -246,14 +246,14 @@ TEST_F(Enteties, OptionaClassFields)
     ASSERT_EQ(_class->optionalFields(entity::Private)[0], p->field());
 
     // Check a few fields
-    auto p1 = _class->addProperty("p1", VOID_ID);
+    auto p1 = _class->addProperty("p1", entity::EntityID::voidID());
     ASSERT_EQ(entity::FieldsList({p1->field(), p->field()}).toSet(),
               _class->optionalFields(entity::Private).toSet());
 }
 
 TEST_F(Enteties, Union)
 {
-    auto field = _union->addField("some field", "some_id");
+    auto field = _union->addField("some field", entity::EntityID::nullID());
     ASSERT_EQ(field, _union->getField(field->name()));
     ASSERT_TRUE(_union->containsField(field->name()));
     _union->removeField(field->name());
@@ -266,10 +266,10 @@ TEST_F(Enteties, Union)
 
 TEST_F(Enteties, Enum)
 {
-    ASSERT_STREQ(STUB_ID, _enum->enumTypeId().toStdString().c_str());
-    const QString newId("stub");
+    ASSERT_EQ(entity::EntityID::nullID(), _enum->enumTypeId());
+    const entity::EntityID newId(entity::EntityID::firstFreeID().value() + 1);
     _enum->setEnumTypeId(newId);
-    ASSERT_STREQ(newId.toStdString().c_str(), _enum->enumTypeId().toStdString().c_str());
+    ASSERT_EQ(newId, _enum->enumTypeId());
 
     auto element = _enum->addElement("new element");
     ASSERT_EQ(*element, *_enum->element(element->name()));
@@ -285,8 +285,8 @@ TEST_F(Enteties, Enum)
 TEST_F(Enteties, TemplateClass)
 {
     ASSERT_TRUE(_templateClass->templateParameters().empty());
-    auto p = _templateClass->addTemplateParameter("stub_id");
-    auto p1 = _templateClass->addTemplateParameter("stub_id1");
+    auto p = _templateClass->addTemplateParameter(entity::EntityID::firstFreeID().value() + 1);
+    auto p1 = _templateClass->addTemplateParameter(entity::EntityID::firstFreeID().value() + 2);
     ASSERT_EQ(_templateClass->getTemplateParameter(p.first), p);
     ASSERT_FALSE(_templateClass->templateParameters().empty());
     ASSERT_TRUE(_templateClass->contains(p.first));

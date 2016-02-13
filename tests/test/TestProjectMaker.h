@@ -46,7 +46,7 @@ protected:
         generator_->setProjectName("test_app");
 
         globalDb_->removeScope(globalScope_->id());
-        globalScope_->setId(entity::Scope::globalScopeID());
+        globalScope_->setId(entity::EntityID::globalScopeID());
         globalDb_->addExistsScope(globalScope_);
     }
 
@@ -64,13 +64,13 @@ protected:
 
     entity::SharedType int_     = globalScope_->addType("int");
     entity::SharedType bool_    = globalScope_->addExistsType(
-        std::make_shared<entity::Type>("bool", entity::Scope::globalScopeID(),
+        std::make_shared<entity::Type>("bool", entity::EntityID::globalScopeID(),
                                        entity::basicTypeId("bool"))
     );
     entity::SharedType double_  = globalScope_->addType("double");
     entity::SharedType uint_    = globalScope_->addType("uint");
     entity::SharedType void_    = globalScope_->addExistsType(
-        std::make_shared<entity::Type>("void", entity::Scope::globalScopeID(),
+        std::make_shared<entity::Type>("void", entity::EntityID::globalScopeID(),
                                        entity::basicTypeId("void"))
     );
     entity::SharedType nullptr_ = globalScope_->addType("nullptr");

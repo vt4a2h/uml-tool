@@ -38,10 +38,10 @@ TEST_F(FileJson, ExtendedTypeJson)
     entity::SharedExtendedType type(std::make_shared<entity::ExtendedType>("stub_name", "stub_scope_id"));
     type->addLinkStatus();
     type->addPointerStatus(true);
-    type->addTemplateParameter("id1");
-    type->addTemplateParameter("id2");
+    type->addTemplateParameter(entity::EntityID::firstFreeID());
+    type->addTemplateParameter(entity::EntityID::firstFreeID().value() + 1);
     type->setConstStatus(true);
-    type->setId("id3");
+    type->setId(entity::EntityID::firstFreeID().value() + 2);
     type->writeToFile(m_JsonFileName);
 
     auto type_comp(std::make_shared<entity::ExtendedType>());
@@ -51,7 +51,7 @@ TEST_F(FileJson, ExtendedTypeJson)
 TEST_F(FileJson, UnionJson)
 {
     entity::SharedUnion union_(std::make_shared<entity::Union>("stub_name", "stub_scope_id"));
-    union_->addField("stub_name", "stub_id");
+    union_->addField("stub_name", entity::EntityID::nullID());
     union_->writeToFile(m_JsonFileName);
 
     auto union_comp(std::make_shared<entity::Union>());
@@ -60,7 +60,7 @@ TEST_F(FileJson, UnionJson)
 
 TEST_F(FileJson, EnumJson)
 {
-    entity::SharedEnum enum_(std::make_shared<entity::Enum>("stub_name", "stub_scope_id"));
+    entity::SharedEnum enum_(std::make_shared<entity::Enum>("stub_name", entity::EntityID::nullID()));
     enum_->setStrongStatus(true);
     enum_->addElement("a");
     enum_->addElement("b");
@@ -72,10 +72,10 @@ TEST_F(FileJson, EnumJson)
 
 TEST_F(FileJson, ClassJson)
 {
-    entity::SharedClass class_(std::make_shared<entity::Class>("stub_name", "stub_scope_id"));
-    class_->addParent("stub_parent_id", entity::Protected);
-    class_->addField("stub_field_name", "stub_type_id");
-    class_->addField("stub_field_name_1", "stub_type_id_1");
+    entity::SharedClass class_(std::make_shared<entity::Class>("stub_name", entity::EntityID::nullID()));
+    class_->addParent(entity::EntityID::nullID(), entity::Protected);
+    class_->addField("stub_field_name", entity::EntityID::nullID());
+    class_->addField("stub_field_name_1", entity::EntityID::nullID());
     class_->makeMethod("stub_method_name");
     class_->makeMethod("stub_method_name_1");
     class_->writeToFile(m_JsonFileName);
@@ -101,12 +101,12 @@ TEST_F(FileJson, ClassMethodJson)
 {
     entity::SharedMethod method(std::make_shared<entity::ClassMethod>("stub_name"));
     method->setConstStatus(true);
-    method->setReturnTypeId("stub_return_type_id");
+    method->setReturnTypeId(entity::EntityID::nullID());
     method->setRhsIdentificator(entity::RhsIdentificator::Final);
     method->setSection(entity::Private);
     method->addLhsIdentificator(entity::LhsIdentificator::Inline);
-    method->addParameter("stub_parameter", "stub_id");
-    method->addParameter("stub_parameter_1", "stub_id_1");
+    method->addParameter("stub_parameter", entity::EntityID::nullID());
+    method->addParameter("stub_parameter_1", entity::EntityID::nullID());
     method->writeToFile(m_JsonFileName);
 
     auto method_comp(std::make_shared<entity::ClassMethod>());
@@ -115,9 +115,9 @@ TEST_F(FileJson, ClassMethodJson)
 
 TEST_F(FileJson, TemplateClassJson)
 {
-    entity::SharedTemplateClass class_(std::make_shared<entity::TemplateClass>("stub_name", "stub_scope_id"));
-    class_->addTemplateParameter("stub_type_id", "stub_default_id");
-    class_->addTemplateParameter("stub_type_id_1", "stub_default_id_1");
+    entity::SharedTemplateClass class_(std::make_shared<entity::TemplateClass>("stub_name", entity::EntityID::nullID()));
+    class_->addTemplateParameter(entity::EntityID::nullID(), entity::EntityID::nullID());
+    class_->addTemplateParameter(entity::EntityID::nullID(), entity::EntityID::nullID());
     EXPECT_TRUE(!!class_->addLocalType("type"))
             << "Locale type must be added.";
     EXPECT_TRUE(!!class_->addLocalType("type_1"))
@@ -191,8 +191,8 @@ TEST_F(FileJson, BasicRelationJson)
 TEST_F(FileJson, AssociationRelationJson)
 {
     test_relation(Association, [&](){
-        relation->setGetSetTypeId("get_set_type_id");
-        relation->setFieldtypeId("field_type_id");
+        relation->setGetSetTypeId(entity::EntityID::nullID());
+        relation->setFieldTypeId(entity::EntityID::nullID());
     })
 }
 

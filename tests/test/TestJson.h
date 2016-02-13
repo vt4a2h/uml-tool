@@ -55,7 +55,7 @@ struct RelationTestParameters
     db::SharedDatabase globalDb_  = std::make_shared<db::Database>("Global");
     db::SharedDatabase projectDb_ = std::make_shared<db::ProjectDatabase>("Project");
 
-    entity::SharedScope globalScope_  = globalDb_->addScope(GLOBAL_SCOPE_ID, "");
+    entity::SharedScope globalScope_;
     entity::SharedScope projectScope_ = projectDb_->addScope("Project scope");
 
     entity::SharedClass firstClass_  = projectScope_->addType<entity::Class>("First");
@@ -71,6 +71,10 @@ protected:
         m_Sep = QDir(m_RootPath).separator();
         m_RootPath.append(m_Sep).append("tmp");
         QDir().mkpath(m_RootPath);
+
+        m_Parameters.globalScope_ = std::make_shared<entity::Scope>();
+        m_Parameters.globalScope_->setId(entity::EntityID::globalScopeID());
+        m_Parameters.projectDb_->addExistsScope(m_Parameters.globalScope_);
 
         EXPECT_TRUE(QFileInfo(m_RootPath).isDir() && QFileInfo(m_RootPath).isWritable())
                 << "We need a writable directory";

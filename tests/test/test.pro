@@ -28,6 +28,7 @@ HEADERS += ../../enums.h \
     ../../entity/basicentity.h \
     ../../entity/property.h \
     ../../entity/class.h \
+    ../../entity/entityid.h \
     ../../constants.h \
     ../../qthelpers.h \
     ../../models/applicationmodel.h \
@@ -80,6 +81,7 @@ SOURCES += main.cpp \
            ../../entity/extendedtype.cpp\
            ../../entity/template.cpp \
            ../../entity/property.cpp \
+           ../../entity/entityid.cpp \
            ../../utility/helpfunctions.cpp \
            ../../db/database.cpp \
            ../../db/projectdatabase.cpp \
