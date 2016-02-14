@@ -58,7 +58,7 @@ protected:
         m_Project->setGloablDatabase(m_GlobalDatabase);
 
         m_ApplicationModel->addProject(m_Project);
-        m_ApplicationModel->setCurrentProject(m_Project->id());
+        m_ApplicationModel->setCurrentProject(m_Project->name());
         ASSERT_EQ(m_Project, m_ApplicationModel->currentProject());
 
         const entity::ScopesList &scopes = m_Project->database()->scopes();

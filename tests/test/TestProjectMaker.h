@@ -65,13 +65,13 @@ protected:
     entity::SharedType int_     = globalScope_->addType("int");
     entity::SharedType bool_    = globalScope_->addExistsType(
         std::make_shared<entity::Type>("bool", entity::EntityID::globalScopeID(),
-                                       entity::basicTypeId("bool"))
+                                       entity::EntityID::firstFreeID().value() + 1)
     );
     entity::SharedType double_  = globalScope_->addType("double");
     entity::SharedType uint_    = globalScope_->addType("uint");
     entity::SharedType void_    = globalScope_->addExistsType(
         std::make_shared<entity::Type>("void", entity::EntityID::globalScopeID(),
-                                       entity::basicTypeId("void"))
+                                       entity::EntityID::firstFreeID().value() + 2)
     );
     entity::SharedType nullptr_ = globalScope_->addType("nullptr");
     entity::SharedType string_  = standartScope_->addType("string");

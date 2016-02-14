@@ -59,9 +59,4 @@ namespace entity {
         {"bool", BOOL_ID}, {"void", VOID_ID},
     };
 
-    QString basicTypeId(const QString &typeName)
-    {
-        return nameIDMap.value(typeName, STUB_ID);
-    }
-
 } // namespace entity

@@ -66,13 +66,14 @@ protected:
 
         _int = _globalScope->addType("int");
 
-        // FIXME: don't use entity::basicTypeId("bool"), load and use global database instead
+        // FIXME: don't use entity::basicTypeId("bool"), load and use global database instead;
+        // void, ditto
         _globalScope->addExistsType(std::make_shared<entity::Type>("void",
                                                                    entity::EntityID::globalScopeID(),
-                                                                   entity::basicTypeId("void")));
+                                                                   entity::EntityID::firstFreeID().value() + 1));
         _globalScope->addExistsType(std::make_shared<entity::Type>("bool",
                                                                    entity::EntityID::globalScopeID(),
-                                                                   entity::basicTypeId("bool")));
+                                                                   entity::EntityID::firstFreeID().value() + 2));
     }
 
     db::SharedDatabase _globalDb;

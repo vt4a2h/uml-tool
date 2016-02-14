@@ -26,7 +26,7 @@
 
 TEST_F(FileJson, TypeJson)
 {
-    entity::SharedType type(std::make_shared<entity::Type>("stub_name", "stub_scope_id"));
+    entity::SharedType type(std::make_shared<entity::Type>("stub_name", entity::EntityID::nullID()));
     type->writeToFile(m_JsonFileName);
 
     auto type_comp(std::make_shared<entity::Type>());
@@ -35,7 +35,8 @@ TEST_F(FileJson, TypeJson)
 
 TEST_F(FileJson, ExtendedTypeJson)
 {
-    entity::SharedExtendedType type(std::make_shared<entity::ExtendedType>("stub_name", "stub_scope_id"));
+    entity::SharedExtendedType type =
+        std::make_shared<entity::ExtendedType>("stub_name", entity::EntityID::nullID());
     type->addLinkStatus();
     type->addPointerStatus(true);
     type->addTemplateParameter(entity::EntityID::firstFreeID());
@@ -50,7 +51,8 @@ TEST_F(FileJson, ExtendedTypeJson)
 
 TEST_F(FileJson, UnionJson)
 {
-    entity::SharedUnion union_(std::make_shared<entity::Union>("stub_name", "stub_scope_id"));
+    entity::SharedUnion union_ =
+        std::make_shared<entity::Union>("stub_name", entity::EntityID::nullID());
     union_->addField("stub_name", entity::EntityID::nullID());
     union_->writeToFile(m_JsonFileName);
 
@@ -86,7 +88,7 @@ TEST_F(FileJson, ClassJson)
 
 TEST_F(FileJson, FieldJson)
 {
-    entity::SharedField field(std::make_shared<entity::Field>("stub_name", "stub_id"));
+    entity::SharedField field(std::make_shared<entity::Field>("stub_name", entity::EntityID::nullID()));
     field->addKeyword(entity::Mutable);
     field->setPrefix("m_");
     field->setSection(entity::Private);
@@ -143,7 +145,8 @@ TEST_F(FileJson, TemplateClassMethodJson)
 
 TEST_F(FileJson, ScopeJson)
 {
-    entity::SharedScope scope(std::make_shared<entity::Scope>("stub_scope_name", "stub_scope_id"));
+    entity::SharedScope scope =
+        std::make_shared<entity::Scope>("stub_scope_name", entity::EntityID::nullID());
     scope->addType("type");
     scope->addType("type_1");
     scope->addChildScope("scope");
@@ -156,7 +159,8 @@ TEST_F(FileJson, ScopeJson)
 
 TEST_F(FileJson, PropertyJson)
 {
-    entity::SharedProperty property(std::make_shared<entity::Property>("stub_property_name", STUB_ID));
+    entity::SharedProperty property =
+        std::make_shared<entity::Property>("stub_property_name", entity::EntityID::nullID());
 
     // Test with optional methods
     property->addGetter().addSetter().addResetter().addNotifier();
@@ -175,7 +179,8 @@ TEST_F(FileJson, PropertyJson)
 
 TEST_F(FileJson, NodeJson)
 {
-    relationship::SharedNode node(std::make_shared<relationship::Node>("stub_id", relationship::ZeroOrInf));
+    relationship::SharedNode node =
+        std::make_shared<relationship::Node>(entity::EntityID::nullID(), relationship::ZeroOrInf);
     node->setDescription("stub_description");
     node->writeToFile(m_JsonFileName);
 

@@ -74,7 +74,7 @@ TEST_F(ClassComponents, Method)
     ASSERT_FALSE(method->hasParameters());
     ASSERT_FALSE(method->hasLhsIdentificators());
 
-    auto p1 = method->addParameter("p1", "stubID");
+    auto p1 = method->addParameter("p1", entity::EntityID::nullID());
     method->addLhsIdentificator(entity::LhsIdentificator::Inline);
     ASSERT_TRUE(method->containsParameter(p1->name()));
     ASSERT_TRUE(method->containsLhsIdentficator(entity::LhsIdentificator::Inline));
@@ -102,10 +102,10 @@ TEST_F(ClassComponents, Property)
     // Check a several methods which are not covered in previous tests
     auto property = std::make_shared<entity::Property>();
     ASSERT_EQ(property->name(), DEFAULT_NAME);
-    ASSERT_EQ(property->typeId(), STUB_ID);
+    ASSERT_EQ(property->typeId(), entity::EntityID::nullID());
 
-    property->setTypeId("bar");
-    ASSERT_EQ(property->typeId(), "bar");
+    property->setTypeId(entity::EntityID::firstFreeID().value() + 1);
+    ASSERT_EQ(property->typeId(), entity::EntityID::firstFreeID().value() + 1);
 
     ASSERT_TRUE(!!property->field());
     ASSERT_EQ(property->field()->section(), entity::Private);
@@ -131,8 +131,8 @@ TEST_F(ClassComponents, Property)
     ASSERT_EQ(property->hashType(), entity::Property::staticHashType());
     ASSERT_EQ(property->marker(), entity::Property::staticMarker());
 
-    property->setId("foo");
-    ASSERT_EQ(property->id(), "foo");
+    property->setId(entity::EntityID::firstFreeID().value() + 2);
+    ASSERT_EQ(property->id(), entity::EntityID::firstFreeID().value() + 2);
 
     // Check moving
     check_moving(entity::Property, property)
