@@ -33,15 +33,19 @@ TEST_F(ProjectTranslatorTest, Type)
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "project_scope::foo_scope::Foo";
-    auto scopeFoo = _projectScope->addChildScope("foo_scope");
-    auto foo = scopeFoo->addType("Foo");
+    auto childScope = std::make_shared<entity::Scope>("foo_scope");
+    childScope->setId(entity::EntityID::firstFreeID().value() + 1);
+    _projectScope->addExistsChildScope(childScope);
+    auto foo = childScope->addType("Foo");
     code = _translator->translate(foo);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 }
 
 TEST_F(ProjectTranslatorTest, ExtendedType)
 {
-    entity::SharedExtendedType type = _projectScope->addType<entity::ExtendedType>();
+    auto type = std::make_shared<entity::ExtendedType>();
+    type->setId(entity::EntityID::firstFreeID().value() + 6);
+    _projectScope->addExistsType(type);
     type->setTypeId(_int->id());
 
     QString futureResult("int");
@@ -75,7 +79,9 @@ TEST_F(ProjectTranslatorTest, ExtendedType)
     type->setConstStatus(false);
 
     futureResult = "vector<int>";
-    auto vector = _globalScope->addType("vector");
+    auto vector = std::make_shared<entity::Type>("vector", _globalScope->id(),
+                                                 entity::EntityID::firstFreeID().value() + 7);
+    _globalScope->addExistsType(vector);
     type->setTypeId(vector->id());
     type->addTemplateParameter(_int->id());
     code = _translator->translate(type);
@@ -89,9 +95,17 @@ TEST_F(ProjectTranslatorTest, ExtendedType)
 
     futureResult = "std::set<int>";
     _projectScope->removeType(type->id());
-    type = _projectScope->addType<entity::ExtendedType>();
-    auto stdScope = _globalScope->addChildScope("std");
-    auto set = stdScope->addType("set");
+    type = std::make_shared<entity::ExtendedType>();
+    type->setId(entity::EntityID::firstFreeID().value() + 8);
+    _projectScope->addExistsType(type);
+
+    auto stdScope = std::make_shared<entity::Scope>("std");
+    stdScope->setId(entity::EntityID::stdScopeID());
+    _globalScope->addExistsChildScope(stdScope);
+
+    auto set = std::make_shared<entity::Type>("set", stdScope->id(),
+                                              entity::EntityID::firstFreeID().value() + 9);
+    stdScope->addExistsType(set);
     type->setTypeId(set->id());
     type->addTemplateParameter(_int->id());
     code = _translator->translate(type);

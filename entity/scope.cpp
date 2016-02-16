@@ -256,6 +256,7 @@ namespace entity {
     {
         if (scope) {
             Q_ASSERT(!m_Scopes.contains(scope->id()));
+            scope->setScopeId(m_Id);
             m_Scopes[scope->id()] = scope;
         }
     }

@@ -73,7 +73,7 @@ namespace entity {
      * @param typeId
      */
     Type::Type(const QString &name, const EntityID &scopeId, const EntityID &typeId)
-        : BasicEntity(name, scopeId, typeId.isValid() ? GeneratorID::instance().genID() : typeId)
+        : BasicEntity(name, scopeId, typeId.isValid() ? typeId : GeneratorID::instance().genID() )
     {
         if (m_Name.isEmpty() || m_Name == DEFAULT_NAME)
             baseTypeName();

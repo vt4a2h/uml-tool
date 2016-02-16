@@ -56,15 +56,17 @@ protected:
 
         _translator = std::make_shared<translation::ProjectTranslator>(_globalDb, _projectDb);
 
-        _globalScope  = _globalDb->addScope();
-        _globalDb->removeScope(_globalScope->id());
+        _globalScope = std::make_shared<entity::Scope>();
         _globalScope->setId(entity::EntityID::globalScopeID());
         _globalDb->addExistsScope(_globalScope);
-        // TODO: implement auto changing in id db when scope id changed
 
-        _projectScope = _projectDb->addScope("project_scope");
+        _projectScope = std::make_shared<entity::Scope>("project_scope");
+        _projectScope->setId(entity::EntityID::projectScopeID());
+        _projectDb->addExistsScope(_projectScope);
 
-        _int = _globalScope->addType("int");
+        _int = std::make_shared<entity::Type>("int", _globalScope->id(),
+                                              entity::EntityID::firstFreeID().value() + 3);
+        _globalScope->addExistsType(_int);
 
         // FIXME: don't use entity::basicTypeId("bool"), load and use global database instead;
         // void, ditto
