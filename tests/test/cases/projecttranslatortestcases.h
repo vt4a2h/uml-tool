@@ -32,10 +32,8 @@ TEST_F(ProjectTranslatorTest, Type)
     auto code(_translator->translate(_int));
     ASSERT_EQ(futureResult, code.toHeader);
 
-    futureResult = "project_scope::foo_scope::Foo";
-    auto childScope = std::make_shared<entity::Scope>("foo_scope");
-    childScope->setId(entity::EntityID::firstFreeID().value() + 1);
-    _projectScope->addExistsChildScope(childScope);
+    futureResult = "foo_scope::Foo";
+    auto childScope = _projectScope->addChildScope("foo_scope");
     auto foo = childScope->addType("Foo");
     code = _translator->translate(foo);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
@@ -144,13 +142,14 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     method->setConstStatus(true);
 
     QString futureResult("void calc() const");
-    auto voidType = _globalScope->addType("void");
-    method->setReturnTypeId(voidType->id());
+    method->setReturnTypeId(_void->id());
     auto code(_translator->translate(method));
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "double sum(double a, double b) const";
-    auto doubleType = _globalScope->addType("double");
+    auto doubleType = _globalScope->addExistsType(
+                          std::make_shared<entity::Type>("double", entity::EntityID::globalScopeID(),
+                                                         entity::EntityID::firstFreeID().value() + 3));
     method->setName("sum");
     method->setReturnTypeId(doubleType->id());
     method->addParameter("a", doubleType->id());
@@ -159,15 +158,27 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "ps::Foo *getFoo(const QString &id) const";
-    auto ps = _projectDb->addScope("ps");
+    auto ps = std::make_shared<entity::Scope>("ps");
+    ps->setId(entity::EntityID::firstFreeID().value() + 4);
+    _projectDb->addExistsScope(ps);
 
-    auto foo = ps->addType("Foo");
-    auto fooExt = ps->addType<entity::ExtendedType>();
+    auto foo = ps->addExistsType(
+                   std::make_shared<entity::Type>(
+                       "Foo", entity::EntityID::globalScopeID(),
+                       entity::EntityID::firstFreeID().value() + 4));
+    auto fooExt = std::make_shared<entity::ExtendedType>();
+    fooExt->setId(entity::EntityID::firstFreeID().value() + 5);
+    ps->addExistsType(fooExt);
     fooExt->addPointerStatus();
     fooExt->setTypeId(foo->id());
 
-    auto qstr = _globalScope->addType("QString");
-    auto qstrExt = _globalScope->addType<entity::ExtendedType>();
+    auto qstr = _globalScope->addExistsType(
+                    std::make_shared<entity::Type>(
+                        "QString", entity::EntityID::globalScopeID(),
+                        entity::EntityID::firstFreeID().value() + 6));
+    auto qstrExt = std::make_shared<entity::ExtendedType>();
+    qstrExt->setId(entity::EntityID::firstFreeID().value() + 7);
+    _globalScope->addExistsType(qstrExt);
     qstrExt->addLinkStatus();
     qstrExt->setTypeId(qstr->id());
     qstrExt->setConstStatus(true);
@@ -226,7 +237,7 @@ TEST_F(ProjectTranslatorTest, TemplateClassMethod)
     code = _translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 
-    futureResult = "template <class T = project_scope::Foo>\n"
+    futureResult = "template <class T = some_scope::Foo>\n"
                    "std::shared_ptr<T> make(const QString &name)";
     method = std::make_shared<entity::TemplateClassMethod>("make");
     auto qstring = _globalScope->addType("QString");
@@ -236,7 +247,8 @@ TEST_F(ProjectTranslatorTest, TemplateClassMethod)
     constLinkToQstr->setConstStatus(true);
     method->addParameter("name", constLinkToQstr->id());
 
-    auto foo = _projectScope->addType("Foo");
+    auto some_scope = _projectScope->addChildScope("some_scope");
+    auto foo = some_scope->addType("Foo");
     t = method->addLocalType("T");
     method->addTemplateParameter(t->id(), foo->id());
 

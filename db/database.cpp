@@ -201,12 +201,14 @@ namespace db {
      * @brief Database::addExistsScope
      * @param scope
      */
-    void Database::addExistsScope(const entity::SharedScope &scope)
+    entity::SharedScope Database::addExistsScope(const entity::SharedScope &scope)
     {
-        if (scope) {
-            Q_ASSERT(!m_Scopes.contains(scope->id()));
-            m_Scopes[scope->id()] = scope;
-        }
+        if (!scope)
+            return nullptr;
+
+        Q_ASSERT(!m_Scopes.contains(scope->id()));
+        m_Scopes[scope->id()] = scope;
+        return scope;
     }
 
     /**

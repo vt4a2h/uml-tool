@@ -55,7 +55,7 @@ protected:
         m_Project = std::make_shared<project::Project>();
         m_Project->load(projectPath);
         Q_ASSERT(!m_Project->hasErrors());
-        m_Project->setGloablDatabase(m_GlobalDatabase);
+        m_Project->setGlobalDatabase(m_GlobalDatabase);
 
         m_ApplicationModel->addProject(m_Project);
         m_ApplicationModel->setCurrentProject(m_Project->name());

@@ -233,7 +233,7 @@ namespace project {
      * @param database
      * @return
      */
-    bool Project::setGloablDatabase(const db::SharedDatabase &database)
+    bool Project::setGlobalDatabase(const db::SharedDatabase &database)
     {
         bool result(false);
 

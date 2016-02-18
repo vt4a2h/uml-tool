@@ -43,6 +43,11 @@
 #include <translation/code.h>
 #include <helpers/entityhelpres.h>
 
+#include <project/project.h>
+#include <project/project_types.hpp>
+
+#include <helpers/generatorid.h>
+
 #include <enums.h>
 #include <constants.h>
 
@@ -51,8 +56,13 @@ class ProjectTranslatorTest : public ::testing::Test
 protected:
     virtual void SetUp() override
     {
-        _globalDb  = std::make_shared<db::Database>("Global");
-        _projectDb = std::make_shared<db::ProjectDatabase>("Project");
+        _p = std::make_shared<project::Project>();
+        // Usually special slot is used for that
+        const_cast<entity::GeneratorID&>(entity::GeneratorID::instance()).onCurrentProjectChanged(_p);
+        _projectDb = _p->database();
+
+        _globalDb = std::make_shared<db::Database>("Global");
+        _p->setGlobalDatabase(_globalDb);
 
         _translator = std::make_shared<translation::ProjectTranslator>(_globalDb, _projectDb);
 
@@ -60,23 +70,18 @@ protected:
         _globalScope->setId(entity::EntityID::globalScopeID());
         _globalDb->addExistsScope(_globalScope);
 
-        _projectScope = std::make_shared<entity::Scope>("project_scope");
-        _projectScope->setId(entity::EntityID::projectScopeID());
-        _projectDb->addExistsScope(_projectScope);
+        _projectScope = _projectDb->getScope(entity::EntityID::projectScopeID());
 
-        _int = std::make_shared<entity::Type>("int", _globalScope->id(),
-                                              entity::EntityID::firstFreeID().value() + 3);
+        _int = std::make_shared<entity::Type>("int", _globalScope->id());
         _globalScope->addExistsType(_int);
 
-        // FIXME: don't use entity::basicTypeId("bool"), load and use global database instead;
-        // void, ditto
-        _globalScope->addExistsType(std::make_shared<entity::Type>("void",
-                                                                   entity::EntityID::globalScopeID(),
-                                                                   entity::EntityID::firstFreeID().value() + 1));
-        _globalScope->addExistsType(std::make_shared<entity::Type>("bool",
-                                                                   entity::EntityID::globalScopeID(),
-                                                                   entity::EntityID::firstFreeID().value() + 2));
+        // TODO: load and use global database instead
+        _void = _globalScope->addExistsType(
+                    std::make_shared<entity::Type>(
+                        "void", entity::EntityID::globalScopeID(), entity::EntityID::voidID()));
     }
+
+    project::SharedProject _p;
 
     db::SharedDatabase _globalDb;
     db::SharedProjectDatabase _projectDb;
@@ -87,4 +92,5 @@ protected:
     entity::SharedScope _projectScope;
 
     entity::SharedType _int;
+    entity::SharedType _void;
 };

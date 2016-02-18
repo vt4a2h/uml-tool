@@ -68,7 +68,7 @@ namespace project {
         void setDatabase(const db::SharedProjectDatabase &database);
 
         db::SharedDatabase globalDatabase() const;
-        bool setGloablDatabase(const db::SharedDatabase &database);
+        bool setGlobalDatabase(const db::SharedDatabase &database);
 
         QJsonObject toJson() const;
         void fromJson(const QJsonObject &src, QStringList &errorList);

@@ -67,7 +67,7 @@ namespace models {
     project::SharedProject ApplicationModel::makeProject(const QString &name, const QString &path)
     {
         auto newProject(std::make_shared<project::Project>(name, path));
-        newProject->setGloablDatabase(globalDatabase());
+        newProject->setGlobalDatabase(globalDatabase());
         m_TreeModel->addProject(newProject);
         return *m_Projects.insert(newProject->name(), newProject);
     }
@@ -81,7 +81,7 @@ namespace models {
     {
         if (!m_Projects.contains(pr->name())) {
             m_Projects[pr->name()] = pr;
-            pr->setGloablDatabase(globalDatabase());
+            pr->setGlobalDatabase(globalDatabase());
             m_TreeModel->addProject(pr);
             return true;
         }
