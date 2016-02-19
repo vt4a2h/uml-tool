@@ -76,7 +76,6 @@ namespace entity
         static EntityID globalDatabaseID();
         static EntityID localTemplateScopeID();
         static EntityID projectScopeID();
-        static EntityID voidID(); // FIXME: don't use it, use global db instead!
 
     private:
         ValueType m_value;

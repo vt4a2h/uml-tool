@@ -37,8 +37,8 @@ TEST_F(DepthSearch, TypeSearchWorks)
 {
     entity::SharedType p(nullptr);
 
-    search_circle(_types, depthTypeSearch, type)
-    invalid_case(depthTypeSearch, -2)
+    search_circle(_types, typeByID, type)
+    invalid_case(typeByID, -2)
 }
 
 TEST_F(DepthSearch, ChainScopeSearch)

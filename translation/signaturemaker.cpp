@@ -41,8 +41,7 @@ namespace translation {
         const QString noSignature = SignatureMaker::tr("Not available.");
         const QSet<entity::EntityID> globalIds = {entity::EntityID::globalScopeID(),
                                                   entity::EntityID::projectScopeID(),
-                                                  entity::EntityID::globalDatabaseID(),
-                                                  entity::EntityID::voidID()};
+                                                  entity::EntityID::globalDatabaseID()};
 
         const QString memberMark      = "MEMBER";
         const QString readMark        = "READ";

@@ -170,7 +170,8 @@ HEADERS += \
     commands/addrelation.h \
     gui/graphics/graphics_types.h \
     helpers/generatorid.h \
-    entity/entityid.h
+    entity/entityid.h \
+    db/itypesearcher.h
 
 FORMS += \
     gui/mainwindow.ui \

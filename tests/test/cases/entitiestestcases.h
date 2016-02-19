@@ -199,7 +199,8 @@ TEST_F(Enteties, OptionalClassMethods)
     ASSERT_TRUE(_class->optionalMethods(entity::Public).isEmpty());
 
     // Add some method
-    entity::SharedProperty p1 = _class->addProperty("p1", entity::EntityID::voidID());
+    // FIXME: set appropriate type
+    entity::SharedProperty p1 = _class->addProperty("p1", -1);
     p1->addGetter("getSmth");
     auto getter = p1->getter();
     ASSERT_FALSE(_class->optionalMethods(entity::Public).isEmpty());
@@ -235,7 +236,8 @@ TEST_F(Enteties, OptionaClassFields)
     ASSERT_TRUE(_class->fields().isEmpty());
     ASSERT_TRUE(_class->optionalFields(entity::Private).isEmpty());
 
-    entity::SharedProperty p = _class->addProperty("p0", entity::EntityID::voidID());
+    // FIXME: set appropriate type
+    entity::SharedProperty p = _class->addProperty("p0", -1);
     ASSERT_FALSE(_class->optionalFields(entity::Private).isEmpty());
     ASSERT_EQ(_class->optionalFields(entity::Private)[0], p->field());
 
@@ -246,7 +248,8 @@ TEST_F(Enteties, OptionaClassFields)
     ASSERT_EQ(_class->optionalFields(entity::Private)[0], p->field());
 
     // Check a few fields
-    auto p1 = _class->addProperty("p1", entity::EntityID::voidID());
+    // FIXME: set appropriate type
+    auto p1 = _class->addProperty("p1", -1);
     ASSERT_EQ(entity::FieldsList({p1->field(), p->field()}).toSet(),
               _class->optionalFields(entity::Private).toSet());
 }

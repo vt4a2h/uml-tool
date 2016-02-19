@@ -54,13 +54,14 @@ namespace entity {
         SharedType type(const EntityID &typeId) const;
         SharedType type(const EntityID &typeId);
 
-        SharedType typeByName(const QString &name) const;
-        SharedType typeByName(const QString &name) ;
+        SharedType type(const QString &name) const;
+        SharedType type(const QString &name) ;
 
         template <class T = Type> std::shared_ptr<T> addType(const QString &name = "");
         void addClonedType(const SharedType &type);
         SharedType addExistsType(const SharedType &type);
         bool containsType(const EntityID &typeId) const;
+        bool containsType(const QString &name) const;
         void removeType(const EntityID &typeId);
         TypesList types() const;
 
@@ -77,7 +78,7 @@ namespace entity {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
-//    private:
+    private:
         void copyFrom(const Scope &src);
         void moveFrom(Scope &&src);
 

@@ -33,7 +33,7 @@ namespace
     auto findType(const db::SharedDatabase &d, const QString &name)
     {
         entity::SharedType type;
-        range::find_if(d->scopes(), [&](auto &&scope){  type = scope->typeByName(name); return !!type; });
+        range::find_if(d->scopes(), [&](auto &&scope){  type = scope->type(name); return !!type; });
 
         return type;
     }

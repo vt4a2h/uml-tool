@@ -178,7 +178,9 @@ TEST_F(RelationMaker, Dependency)
 
     auto depMethod = std::make_shared<entity::ClassMethod>("useSecond");
     depMethod->setConstStatus(true);
-    depMethod->setReturnTypeId(entity::EntityID::voidID());
+    auto v = _globalDb->typeByName("void");
+    ASSERT_TRUE(!!v);
+    depMethod->setReturnTypeId(v->id());
     depMethod->addParameter("second", ext->id());
 
     auto dependency = std::make_shared<relationship::Dependency>(_firstClass->id(),

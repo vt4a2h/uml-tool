@@ -36,8 +36,8 @@ namespace qthelpers
     namespace detail
     {
         template <class Condition>
-        inline const Condition& g_assert(const Condition &c, const char *where,
-                                          const char *what, const char *file, int line)
+        inline decltype(auto) g_assert(Condition &&c, const char *where,
+                                       const char *what, const char *file, int line)
         {
         #ifdef QT_DEBUG
             if (!c)
@@ -46,21 +46,8 @@ namespace qthelpers
             Q_UNUSED(where); Q_UNUSED(what); Q_UNUSED(file); Q_UNUSED(line);
         #endif
 
-            return c;
+            return std::forward<Condition>(c);
         }
 
-        template <class Condition>
-        inline Condition& g_assert(Condition &c, const char *where,
-                                    const char *what, const char *file, int line)
-        {
-#ifdef QT_DEBUG
-            if (!c)
-                qt_assert_x(where, what, file, line);
-#else
-            Q_UNUSED(where); Q_UNUSED(what); Q_UNUSED(file); Q_UNUSED(line);
-#endif
-
-            return c;
-        }
     } // namespace detail
 } // namespace qthelpers

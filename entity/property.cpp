@@ -29,7 +29,9 @@
 
 #include <utility/helpfunctions.h>
 #include <helpers/entityhelpres.h>
+#include <db/database.h>
 
+#include "type.h"
 #include "field.h"
 #include "classmethod.h"
 
@@ -324,7 +326,9 @@ namespace entity {
         m_Setter->setIsSlot(true);
         m_Setter->addParameter(customName.isEmpty() ? m_Name.toLower() : m_Name.toLower(),
                                typeId());
-        m_Setter->setReturnTypeId(EntityID::voidID());
+
+        auto ts = G_ASSERT(typeSearcher());
+        m_Setter->setReturnTypeId(G_ASSERT(ts->typeByName("void"))->id());
 
         emit methodAdded(safeShared(), m_Setter);
 
@@ -371,7 +375,9 @@ namespace entity {
 
         m_Resetter = std::make_shared<ClassMethod>(newName);
         m_Resetter->setIsSlot(true);
-        m_Resetter->setReturnTypeId(EntityID::voidID());
+
+        auto ts = G_ASSERT(typeSearcher());
+        m_Resetter->setReturnTypeId(G_ASSERT(ts->typeByName("void"))->id());
 
         emit methodAdded(safeShared(), m_Resetter);
 
@@ -417,7 +423,9 @@ namespace entity {
 
         m_Notifier = std::make_shared<ClassMethod>(newName);
         m_Notifier->setIsSignal(true);
-        m_Notifier->setReturnTypeId(EntityID::nullID());
+
+        auto ts = G_ASSERT(typeSearcher());
+        m_Notifier->setReturnTypeId(G_ASSERT(ts->typeByName("bool"))->id());
 
         emit methodAdded(safeShared(), m_Notifier);
 
@@ -510,7 +518,9 @@ namespace entity {
             deleteDesignableGetter();
 
         m_DesignableGetter = std::make_shared<ClassMethod>(newName);
-        m_DesignableGetter->setReturnTypeId(EntityID::voidID());
+
+        auto ts = G_ASSERT(typeSearcher());
+        m_DesignableGetter->setReturnTypeId(G_ASSERT(ts->typeByName("void"))->id());
 
         emit methodAdded(safeShared(), m_DesignableGetter);
 
@@ -585,7 +595,9 @@ namespace entity {
             deleteScriptableGetter();
 
         m_ScriptableGetter = std::make_shared<ClassMethod>(newName);
-        m_ScriptableGetter->setReturnTypeId(EntityID::voidID());
+
+        auto ts = G_ASSERT(typeSearcher());
+        m_ScriptableGetter->setReturnTypeId(G_ASSERT(ts->typeByName("void"))->id());
 
         emit methodAdded(safeShared(), m_ScriptableGetter);
 
@@ -900,6 +912,8 @@ namespace entity {
      */
     void Property::moveFrom(Property &&src)
     {
+        m_typeSearcher = std::move(src.typeSearcher());
+
         m_Field = std::move(src.m_Field);
 
         assignMethod(m_Getter, std::move(src.m_Getter));
@@ -923,6 +937,8 @@ namespace entity {
 
     void Property::copyFrom(const Property &src)
     {
+        m_typeSearcher = src.typeSearcher();
+
         m_Field = src.m_Field ? std::make_shared<Field>(*src.m_Field) : nullptr;
 
         assignMethod(m_Getter, src.m_Getter ? std::make_shared<ClassMethod>(*src.m_Getter) : nullptr);
@@ -973,6 +989,24 @@ namespace entity {
             qDebug() << "Creating shared property failed.";
             return SharedProperty();
         }
+    }
+
+    /**
+     * @brief Property::typeSearcher
+     * @return
+     */
+    db::SharedTypeSearcher Property::typeSearcher() const
+    {
+        return m_typeSearcher.lock();
+    }
+
+    /**
+     * @brief Property::setTypeSearcher
+     * @param typeSearcher
+     */
+    void Property::setTypeSearcher(const db::SharedTypeSearcher &typeSearcher)
+    {
+        m_typeSearcher = typeSearcher;
     }
 
     /**

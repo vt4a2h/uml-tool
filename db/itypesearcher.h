@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 10/05/2015.
+** Created 19/02/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,28 +22,16 @@
 *****************************************************************************/
 #pragma once
 
-#include <memory>
-
-#include <QPair>
-#include <QVector>
-#include <QPointF>
-#include <QString>
-#include <QMetaType>
-
-#include <entity/entityid.h>
+#include <entity/entity_types.hpp>
 
 namespace db {
-    class Database;
-    class ProjectDatabase;
-    using SharedDatabase = std::shared_ptr<Database>;
-    using SharedProjectDatabase = std::shared_ptr<ProjectDatabase>;
 
-    using IDPos = QPair<entity::EntityID, QPointF>;
-    using ItemsPos = QVector<IDPos>;
+    /// The type searcher class. Provides weak dependency for class Property.
+    class ITypeSearcher
+    {
+    public:
+        virtual entity::SharedType typeByID(const entity::EntityID &typeId) const = 0;
+        virtual entity::SharedType typeByName(const QString &name) const = 0;
+    };
 
-    class ITypeSearcher;
-    using SharedTypeSearcher = std::shared_ptr<ITypeSearcher>;
-    using WeakTypeSearcher = std::weak_ptr<ITypeSearcher>;
-}
-
-Q_DECLARE_METATYPE(db::IDPos)
+} // namespace db

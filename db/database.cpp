@@ -268,22 +268,57 @@ namespace db {
         return getScopeWithDepthList(makeDepthIdList(scopeId));
     }
 
+    namespace
+    {
+        template <class IDType>
+        void getDepthType(const entity::SharedScope &scope, const IDType &id,
+                          entity::SharedType &result)
+        {
+            if (scope->containsType(id)) {
+                result = scope->type(id);
+                return;
+            } else if (scope->hasChildScopes()){
+                for (auto &&child_scope : scope->scopes()) {
+                    if (result)
+                        break;
+                    getDepthType(child_scope, id, result);
+                }
+            }
+        }
+
+        template <class IDType>
+        entity::SharedType typeSearchImpl(const IDType &typeId, const entity::Scopes &scopes)
+        {
+            entity::SharedType result;
+
+            for (auto &&scope : scopes.values()) {
+                getDepthType(scope, typeId, result);
+                if (result)
+                    break;
+            }
+
+            return result;
+        }
+    }
+
     /**
      * @brief Database::depthTypeSearch
      * @param typeId
      * @return
      */
-    entity::SharedType Database::depthTypeSearch(const entity::EntityID &typeId) const
+    entity::SharedType Database::typeByID(const entity::EntityID &typeId) const
     {
-        entity::SharedType result;
+        return typeSearchImpl(typeId, m_Scopes);
+    }
 
-        for (auto &&scope : m_Scopes.values()) {
-            getDepthType(scope, typeId, result);
-            if (result)
-                break;
-        }
-
-        return result;
+    /**
+     * @brief Database::typeByName
+     * @param typeId
+     * @return
+     */
+    entity::SharedType Database::typeByName(const QString &name) const
+    {
+        return typeSearchImpl(name, m_Scopes);
     }
 
     /**
@@ -325,28 +360,6 @@ namespace db {
         }
 
         return result;
-    }
-
-    /**
-     * @brief Database::getDepthType
-     * @param scope
-     * @param id
-     * @param result
-     */
-    void Database::getDepthType(const entity::SharedScope &scope, const entity::EntityID &id,
-                                entity::SharedType &result) const
-    {
-        if (scope->containsType(id)) {
-            result = scope->type(id);
-            return;
-        } else if (scope->hasChildScopes()){
-            for (auto &&child_scope : scope->scopes()) {
-                if (result)
-                    break;
-                getDepthType(child_scope, id, result);
-            }
-        }
-
     }
 
     /**

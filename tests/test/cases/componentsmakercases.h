@@ -68,7 +68,7 @@ TEST_F(ComponentsMaker, MakingField)
     field = to_f(result.resultEntity.get());
     t = globalScope->type(field->typeId());
     ASSERT_FALSE(!!t) << "Type shouldn't be added to the global database.";
-    t = m_Project->database()->depthTypeSearch(field->typeId());
+    t = m_Project->database()->typeByID(field->typeId());
     ASSERT_TRUE(!!t) << "Type should be added to the project database.";
     ASSERT_TRUE(to_et(t.get())->isConst()) << "Type should be const.";
 
@@ -76,7 +76,7 @@ TEST_F(ComponentsMaker, MakingField)
     result = parseAndMake("const int * const a", models::DisplayPart::Fields);
     check_errors(result)
     field = to_f(result.resultEntity.get());
-    t = m_Project->database()->depthTypeSearch(field->typeId());
+    t = m_Project->database()->typeByID(field->typeId());
     const entity::ExtendedType::PlList& pl = to_et(t.get())->pl();
     ASSERT_FALSE(pl.isEmpty()) << "* const should be caught.";
 
@@ -95,14 +95,14 @@ TEST_F(ComponentsMaker, MakingField)
     field = to_f(result.resultEntity.get());
     auto scopeStd = m_GlobalDatabase->chainScopeSearch(QStringList() << "std");
     ASSERT_TRUE(!!scopeStd) << "Scope std should be found.";
-    t = m_GlobalDatabase->depthTypeSearch(field->typeId());
+    t = m_GlobalDatabase->typeByID(field->typeId());
     ASSERT_TRUE(!!t) << "std::unordered_set should be placed in global database.";
 
     // with templates parameters
     result = parseAndMake("std::vector<int> v", models::DisplayPart::Fields);
     check_errors(result)
     field = to_f(result.resultEntity.get());
-    auto vecOfInt = m_Project->database()->depthTypeSearch(field->typeId());
+    auto vecOfInt = m_Project->database()->typeByID(field->typeId());
     ASSERT_TRUE(!!vecOfInt) << "Vector of int must be created in project database.";
 }
 

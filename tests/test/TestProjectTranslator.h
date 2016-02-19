@@ -77,8 +77,7 @@ protected:
 
         // TODO: load and use global database instead
         _void = _globalScope->addExistsType(
-                    std::make_shared<entity::Type>(
-                        "void", entity::EntityID::globalScopeID(), entity::EntityID::voidID()));
+                    std::make_shared<entity::Type>("void", entity::EntityID::globalScopeID()));
     }
 
     project::SharedProject _p;

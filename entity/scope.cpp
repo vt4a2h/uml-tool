@@ -145,7 +145,7 @@ namespace entity {
      * @param name
      * @return
      */
-    SharedType Scope::typeByName(const QString &name) const
+    SharedType Scope::type(const QString &name) const
     {
         return m_TypesByName.value(name);
     }
@@ -155,9 +155,9 @@ namespace entity {
      * @param name
      * @return
      */
-    SharedType Scope::typeByName(const QString &name)
+    SharedType Scope::type(const QString &name)
     {
-        return const_cast<const Scope*>(this)->typeByName(name);
+        return const_cast<const Scope*>(this)->type(name);
     }
 
     /**
@@ -192,6 +192,16 @@ namespace entity {
     bool Scope::containsType(const EntityID &typeId) const
     {
         return m_Types.contains(typeId);
+    }
+
+    /**
+     * @brief Scope::containsType
+     * @param name
+     * @return
+     */
+    bool Scope::containsType(const QString &name) const
+    {
+        return m_TypesByName.contains(name);
     }
 
     /**

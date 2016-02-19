@@ -102,7 +102,7 @@ namespace {
 
         db::ProjectDatabase * database = project->database().get();
         for (auto &&item : database->itemsPos())
-            if (const entity::SharedType &type = database->depthTypeSearch(item.first))
+            if (const entity::SharedType &type = database->typeByID(item.first))
                 if (auto &&scope = database->depthScopeSearch(type->scopeId()))
                     entity::EntitiesFactory::get().addEntity(*scene, project, type, item.second /*pos*/);
     }

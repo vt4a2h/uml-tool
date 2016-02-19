@@ -297,8 +297,8 @@ namespace translation {
 
         entity::FieldsList fields(m->parameters());
         auto it = range::find_if(fields,
-                                 [&](auto &&f) { return classDatabase->depthTypeSearch(f->typeId()); });
-        return it != fields.end() || classDatabase->depthTypeSearch(m->returnTypeId());
+                                 [&](auto &&f) { return classDatabase->typeByID(f->typeId()); });
+        return it != fields.end() || classDatabase->typeByID(m->returnTypeId());
     }
 
     /**

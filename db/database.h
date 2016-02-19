@@ -27,6 +27,7 @@
 #include <entity/entity_types.hpp>
 #include <entity/entityid.h>
 
+#include "itypesearcher.h"
 #include "types.h"
 
 /**
@@ -37,7 +38,7 @@ namespace db {
     /**
      * @brief The Database class
      */
-    class Database
+    class Database : ITypeSearcher
     {
     public:
         Database(Database &&src);
@@ -69,7 +70,9 @@ namespace db {
         entity::ScopesList scopes() const;
 
         entity::SharedScope depthScopeSearch(const entity::EntityID &scopeId) const;
-        entity::SharedType  depthTypeSearch(const entity::EntityID &typeId)   const;
+
+        entity::SharedType typeByID(const entity::EntityID &typeId) const override;
+        entity::SharedType typeByName(const QString &name) const override;
 
         void load(ErrorList &errorList);
         bool save() const;
@@ -100,7 +103,6 @@ namespace db {
         using EntityIDList = QList<entity::EntityID>;
         EntityIDList makeDepthIdList(const entity::EntityID &id) const;
         entity::SharedScope getScopeWithDepthList(const EntityIDList &ids) const;
-        void getDepthType(const entity::SharedScope &scope, const entity::EntityID &id, entity::SharedType &result) const;
         QString makeFullPath() const;
         void recursiveFind(entity::SharedScope scope, const entity::EntityID &id, EntityIDList &ids) const;
     };

@@ -423,8 +423,8 @@ namespace relationship {
      */
     entity::SharedType Relation::tryToFindType(const entity::EntityID &typeId) const
     {
-        entity::SharedType result = m_ProjectDatabase->depthTypeSearch(typeId);
-        return (result ? result : m_GlobalDatabase->depthTypeSearch(typeId));
+        entity::SharedType result = m_ProjectDatabase->typeByID(typeId);
+        return (result ? result : m_GlobalDatabase->typeByID(typeId));
     }
 
 } // namespace relationship

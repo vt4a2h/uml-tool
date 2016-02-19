@@ -175,15 +175,6 @@ namespace entity
     }
 
     /**
-     * @brief EntityID::voidID
-     * @return
-     */
-    EntityID EntityID::voidID()
-    {
-        return projectScopeID().value() + 1;
-    }
-
-    /**
      * @brief EntityID::value
      * @return
      */

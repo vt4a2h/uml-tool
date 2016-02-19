@@ -215,16 +215,16 @@ namespace components {
                 scope = m_Model->currentProject()->database()->chainScopeSearch(names);
 
             if (scope)
-                type = scope->typeByName(typeName);
+                type = scope->type(typeName);
         } else {
             // First of all check in all scopes of global database
             const entity::ScopesList &scopes = m_Model->globalDatabase()->scopes();
-            range::find_if(scopes, [&](auto scope){ type = scope->typeByName(typeName); return !!type; });
+            range::find_if(scopes, [&](auto scope){ type = scope->type(typeName); return !!type; });
 
             // If not found, try to check project database
             if (!type) {
                 auto db = m_Model->currentProject()->database();
-                range::find_if(db->scopes(), [&](auto scope){ type = scope->typeByName(typeName); return !!type; });
+                range::find_if(db->scopes(), [&](auto scope){ type = scope->type(typeName); return !!type; });
             }
         }
 
@@ -278,7 +278,7 @@ namespace components {
             // TODO: add namespaces, * and const
             for (auto &&name : arguments) {
                 entity::SharedType t;
-                range::find_if(scopes, [&](auto &&sc){ t = sc->typeByName(name); return !!t; });
+                range::find_if(scopes, [&](auto &&sc){ t = sc->type(name); return !!t; });
                 if (t)
                     extType->addTemplateParameter(t->id());
                 else
@@ -361,7 +361,7 @@ namespace components {
             return {tr("Cannot find global scope."), nullptr};
 
         const auto &typeName = tokens[int(PropGroupNames::Type)]->token();
-        auto type = globasScope->typeByName(typeName);
+        auto type = globasScope->type(typeName);
         if (!type)
             return {tr("Wrong type: %1.").arg(typeName), nullptr};
         newProperty->setTypeId(type->id());

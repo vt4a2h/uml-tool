@@ -22,11 +22,13 @@
 *****************************************************************************/
 #pragma once
 
+#include <memory>
+
+#include <db/db_types.hpp>
+
 #include "classmethod.h"
 #include "basicentity.h"
 #include "constants.h"
-
-#include <memory>
 
 namespace entity {
 
@@ -119,6 +121,10 @@ namespace entity {
         QString marker() const override;
         static QString staticMarker();
 
+    // TODO: connect!
+    public slots:
+        void setTypeSearcher(const db::SharedTypeSearcher &typeSearcher);
+
     signals:
         void methodAdded(const entity::SharedProperty &, const entity::SharedMethod &);
         void methodRemoved(const entity::SharedProperty &, const entity::SharedMethod &);
@@ -148,6 +154,10 @@ namespace entity {
         }
 
     private:
+        db::SharedTypeSearcher typeSearcher() const;
+
+        db::WeakTypeSearcher m_typeSearcher;
+
         SharedField m_Field;
 
         SharedMethod m_Getter;
