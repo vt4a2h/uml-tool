@@ -120,6 +120,9 @@ namespace entity {
 
     struct Member;
     using SharedMember = std::shared_ptr<Member>;
+
+    class ITypeUser;
+    using SharedTypeUser = std::shared_ptr<ITypeUser>;
 }
 
 Q_DECLARE_METATYPE(entity::SharedField)

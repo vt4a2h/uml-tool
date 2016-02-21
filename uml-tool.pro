@@ -171,7 +171,8 @@ HEADERS += \
     gui/graphics/graphics_types.h \
     helpers/generatorid.h \
     entity/entityid.h \
-    db/itypesearcher.h
+    db/itypesearcher.h \
+    entity/itypeuser.h
 
 FORMS += \
     gui/mainwindow.ui \

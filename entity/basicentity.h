@@ -72,8 +72,7 @@ namespace entity {
         friend bool operator ==(const BasicEntity &lhs, const BasicEntity &rhs);
 
     protected:
-        BasicEntity();
-        explicit BasicEntity(const QString &name);
+        explicit BasicEntity(const QString &name = "", const EntityID &id = EntityID::nullID());
         BasicEntity(const QString &name, const EntityID &scopeId, const EntityID &id);
         BasicEntity(const BasicEntity &src);
         BasicEntity(BasicEntity &&src);

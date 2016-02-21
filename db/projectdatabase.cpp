@@ -28,6 +28,7 @@
 
 #include <entity/scope.h>
 #include <entity/entityid.h>
+#include <entity/property.h>
 
 #include <relationship/relation.h>
 #include <utility/helpfunctions.h>
@@ -50,7 +51,8 @@ namespace db {
      * @param src
      */
     ProjectDatabase::ProjectDatabase(const ProjectDatabase &src)
-        : Database(src)
+        : QObject(nullptr)
+        , Database(src)
     {
         copyFrom(src);
     }
@@ -61,7 +63,8 @@ namespace db {
      * @param path
      */
     ProjectDatabase::ProjectDatabase(const QString &name, const QString &path)
-        : Database(name, path)
+        : QObject(nullptr)
+        , Database(name, path)
     {
     }
 
@@ -257,6 +260,46 @@ namespace db {
     }
 
     /**
+     * @brief ProjectDatabase::onTypeUserAdded
+     * @param tu
+     */
+    void ProjectDatabase::onTypeUserAdded(const entity::SharedTypeUser &tu)
+    {
+        if (G_ASSERT(tu))
+            tu->setTypeSearcher(globalDatabase());
+    }
+
+    /**
+     * @brief ProjectDatabase::addScope
+     * @param name
+     * @param parentScopeId
+     * @return
+     */
+    entity::SharedScope ProjectDatabase::addScope(const QString &name,
+                                                  const entity::EntityID &parentScopeId)
+    {
+        auto result = Database::addScope(name, parentScopeId);
+        G_CONNECT(result.get(), &entity::Scope::typeSearcherRequired,
+                  this, &ProjectDatabase::onTypeUserAdded);
+
+        return result;
+    }
+
+    /**
+     * @brief ProjectDatabase::addExistsScope
+     * @param scope
+     * @return
+     */
+    entity::SharedScope ProjectDatabase::addExistsScope(const entity::SharedScope &scope)
+    {
+        Database::addExistsScope(scope);
+        G_CONNECT(scope.get(), &entity::Scope::typeSearcherRequired,
+                  this, &ProjectDatabase::onTypeUserAdded);
+
+        return scope;
+    }
+
+    /**
      * @brief ProjectDatabase::copyFrom
      * @param src
      */
@@ -278,6 +321,18 @@ namespace db {
     }
 
     /**
+     * @brief ProjectDatabase::installTypeSearchers
+     */
+    void ProjectDatabase::installTypeSearchers()
+    {
+        for (auto &&s : m_Scopes)
+            for (auto &&c : s->types())
+                if (c->hashType() == entity::Class::staticHashType())
+                    for (auto &&p : c->properties())
+                        p->setTypeSearcher(globalDatabase());
+    }
+
+    /**
      * @brief ProjectDatabase::globalDatabase
      * @return
      */
@@ -293,6 +348,9 @@ namespace db {
     void ProjectDatabase::setGlobalDatabase(const db::SharedDatabase &globalDatabase)
     {
         m_GlobalDatabase = globalDatabase;
+
+        if (m_GlobalDatabase)
+            installTypeSearchers();
     }
 
 

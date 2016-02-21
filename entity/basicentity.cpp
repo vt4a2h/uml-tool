@@ -27,6 +27,7 @@
 #include <helpers/generatorid.h>
 
 #include "enums.h"
+#include "itypeuser.h"
 
 namespace entity {
 
@@ -34,16 +35,6 @@ namespace entity {
         const QString nameMark = "Name";
         const QString idMark = "ID";
         const QString scopeIdMark = "Scope ID";
-    }
-
-    /**
-     * @brief BasicEntity::BasicEntity
-     * @param name
-     */
-    BasicEntity::BasicEntity(const QString &name)
-        : m_Name(name)
-        , m_Id(GeneratorID::instance().genID())
-    {
     }
 
     BasicEntity::BasicEntity(const QString &name, const EntityID &scopeId, const EntityID &id)
@@ -105,9 +96,8 @@ namespace entity {
     /**
      * @brief BasicEntity::BasicEntity
      */
-    BasicEntity::BasicEntity()
-        : m_Name("")
-        , m_Id(GeneratorID::instance().genID())
+    BasicEntity::BasicEntity(const QString &name, const EntityID &id)
+        : BasicEntity(name, EntityID::nullID(), id)
     {
     }
 

@@ -135,6 +135,9 @@ namespace entity {
         QString defaultName() const override;
         static QString staticDefaultName();
 
+    signals:
+        void typeUserAdded(const SharedTypeUser& tu);
+
     protected:
         void moveFrom(Class &&src);
         void copyFrom(const Class &src);

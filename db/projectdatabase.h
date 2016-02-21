@@ -20,8 +20,9 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
+
+#include <QObject>
 
 #include "database.h"
 #include "db_types.hpp"
@@ -33,8 +34,10 @@ namespace db {
     /**
      * @brief The ProjectDatabase class
      */
-    class ProjectDatabase : public Database
+    class ProjectDatabase : public QObject, public Database
     {
+        Q_OBJECT
+
     public:
         ProjectDatabase(ProjectDatabase &&src);
         ProjectDatabase(const ProjectDatabase &src);
@@ -64,11 +67,23 @@ namespace db {
         void setItemsPos(const ItemsPos &positions);
         ItemsPos itemsPos() const;
 
+    public slots:
+        void onTypeUserAdded(const entity::SharedTypeUser &tu);
+
+    public: // Database overrides
+        entity::SharedScope addScope
+                               ( const QString &name
+                               , const entity::EntityID &parentScopeId = entity::EntityID::nullID()
+                               ) override;
+        entity::SharedScope addExistsScope(const entity::SharedScope &scope) override;
+
     protected:
         virtual void copyFrom(const ProjectDatabase &src);
         virtual void moveFrom(ProjectDatabase &src);
 
     private:
+        void installTypeSearchers();
+
         relationship::Relations m_Relations;
         db::SharedDatabase m_GlobalDatabase;
 

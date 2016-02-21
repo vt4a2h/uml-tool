@@ -30,7 +30,10 @@
 
 #include <entity/entity_types.hpp>
 
+#include "qthelpers.h"
 #include "basicentity.h"
+#include "class.h"
+#include "itypeuser.h"
 
 namespace entity {
 
@@ -41,6 +44,8 @@ namespace entity {
      */
     class Scope : public BasicEntity
     {
+        Q_OBJECT
+
     public:
         Scope(Scope &&src);
         Scope(const Scope &src);
@@ -74,6 +79,9 @@ namespace entity {
         void removeChildScope(const EntityID &typeId);
         ScopesList scopes() const;
 
+    signals:
+        void typeSearcherRequired(const SharedTypeUser &);
+
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
@@ -96,6 +104,13 @@ namespace entity {
         auto value = std::make_shared<ResultType>(name, m_Id);
         m_Types[value->id()] = value;
         m_TypesByName[value->name()] = value;
+
+        // Keep old connection form to make code more generic without extracting connection
+        // to the separate function and using enable_if for
+        if (value->hashType() == Class::staticHashType())
+            G_CONNECT(value.get(), SIGNAL(typeUserAdded(SharedTypeUser)),
+                      this, SIGNAL(typeSearcherRequired(SharedTypeUser)));
+
         return value;
     }
 

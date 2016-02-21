@@ -522,6 +522,8 @@ namespace entity {
 
         m_Properties.append(property);
 
+        emit typeUserAdded(property);
+
         return property;
     }
 
@@ -758,9 +760,8 @@ namespace entity {
             if (src["Properties"].isArray()) {
                 SharedProperty property;
                 for (auto &&value : src["Properties"].toArray()) {
-                    property = std::make_shared<Property>();
+                    property = addProperty("", EntityID::nullID());
                     property->fromJson(value.toObject(), errorList);
-                    m_Properties << property;
                 }
             } else {
                 errorList << "Error: \"Properties\" is not array";

@@ -363,8 +363,7 @@ namespace entity {
                     utility::checkAndSet(obj, "Kind of type", errorList, [&obj, &type, &errorList, this](){
                         type = utility::makeType(obj.value("Kind of type").toString());
                         type->fromJson(obj, errorList);
-                        m_Types[type->id()] = type;
-                        m_TypesByName[type->name()] = type;
+                        addExistsType(type);
                     });
                 }
             } else {

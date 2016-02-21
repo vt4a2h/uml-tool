@@ -127,9 +127,10 @@ namespace entity {
         , m_Field(std::make_shared<entity::Field>(name, typeId))
     {
         init();
-
         setParent(parent);
-        qRegisterMetaType<entity::SharedProperty>("entity::SharedProperty");
+
+        static int r = qRegisterMetaType<entity::SharedProperty>("entity::SharedProperty");
+        Q_UNUSED(r);
     }
 
     /**

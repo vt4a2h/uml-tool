@@ -453,7 +453,7 @@ namespace db {
                 for (auto &&val : src["Scopes"].toArray()) {
                     scope = std::make_shared<entity::Scope>();
                     scope->fromJson(val.toObject(), errorList);
-                    m_Scopes.insert(scope->id(), scope);
+                    addExistsScope(scope);
                 }
             } else {
                 errorList << "Error: \"Scopes\" is not array";

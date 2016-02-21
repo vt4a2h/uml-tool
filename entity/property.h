@@ -29,11 +29,15 @@
 #include "classmethod.h"
 #include "basicentity.h"
 #include "constants.h"
+#include "itypeuser.h"
 
 namespace entity {
 
     /// The class Property
-    class Property : public BasicEntity, public std::enable_shared_from_this<Property>
+    class Property
+        : public BasicEntity
+        , public ITypeUser
+        , public std::enable_shared_from_this<Property>
     {
         Q_OBJECT
 
@@ -121,9 +125,8 @@ namespace entity {
         QString marker() const override;
         static QString staticMarker();
 
-    // TODO: connect!
     public slots:
-        void setTypeSearcher(const db::SharedTypeSearcher &typeSearcher);
+        void setTypeSearcher(const db::SharedTypeSearcher &typeSearcher) override;
 
     signals:
         void methodAdded(const entity::SharedProperty &, const entity::SharedMethod &);
@@ -136,7 +139,7 @@ namespace entity {
         void moveFrom(Property &&src);
         void copyFrom(const Property &src);
 
-    private:
+    private: // Methods
         void init();
         SharedProperty safeShared();
 
@@ -153,9 +156,9 @@ namespace entity {
                 emit methodAdded(safeShared(), dst);
         }
 
-    private:
-        db::SharedTypeSearcher typeSearcher() const;
+        db::SharedTypeSearcher typeSearcher() const override;
 
+    private: // Data
         db::WeakTypeSearcher m_typeSearcher;
 
         SharedField m_Field;
