@@ -24,11 +24,14 @@ linux-g++ {
 INCLUDEPATH += ../../
 
 HEADERS += ../../enums.h \
+    ../../db/database.h \
+    ../../db/projectdatabase.h \
     ../../project/project.h \
     ../../entity/basicentity.h \
     ../../entity/property.h \
     ../../entity/class.h \
     ../../entity/entityid.h \
+    ../../entity/scope.h \
     ../../constants.h \
     ../../qthelpers.h \
     ../../models/applicationmodel.h \

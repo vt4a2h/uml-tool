@@ -426,7 +426,7 @@ namespace entity {
         m_Notifier->setIsSignal(true);
 
         auto ts = G_ASSERT(typeSearcher());
-        m_Notifier->setReturnTypeId(G_ASSERT(ts->typeByName("bool"))->id());
+        m_Notifier->setReturnTypeId(G_ASSERT(ts->typeByName("void"))->id());
 
         emit methodAdded(safeShared(), m_Notifier);
 
@@ -521,7 +521,7 @@ namespace entity {
         m_DesignableGetter = std::make_shared<ClassMethod>(newName);
 
         auto ts = G_ASSERT(typeSearcher());
-        m_DesignableGetter->setReturnTypeId(G_ASSERT(ts->typeByName("void"))->id());
+        m_DesignableGetter->setReturnTypeId(G_ASSERT(ts->typeByName("bool"))->id());
 
         emit methodAdded(safeShared(), m_DesignableGetter);
 
@@ -598,7 +598,7 @@ namespace entity {
         m_ScriptableGetter = std::make_shared<ClassMethod>(newName);
 
         auto ts = G_ASSERT(typeSearcher());
-        m_ScriptableGetter->setReturnTypeId(G_ASSERT(ts->typeByName("void"))->id());
+        m_ScriptableGetter->setReturnTypeId(G_ASSERT(ts->typeByName("bool"))->id());
 
         emit methodAdded(safeShared(), m_ScriptableGetter);
 

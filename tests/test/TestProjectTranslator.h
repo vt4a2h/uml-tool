@@ -60,24 +60,25 @@ protected:
         // Usually special slot is used for that
         const_cast<entity::GeneratorID&>(entity::GeneratorID::instance()).onCurrentProjectChanged(_p);
         _projectDb = _p->database();
+        _projectScope = _projectDb->getScope(entity::EntityID::projectScopeID());
+        ASSERT_TRUE(!!_projectScope);
 
-        _globalDb = std::make_shared<db::Database>("Global");
+        _globalDb = std::make_shared<db::Database>("global", "../../");
+        ErrorList errors;
+        _globalDb->load(errors);
+        ASSERT_TRUE(errors.isEmpty());
+        _globalScope = _globalDb->getScope(entity::EntityID::globalScopeID());
+        ASSERT_TRUE(!!_globalScope);
+
         _p->setGlobalDatabase(_globalDb);
 
         _translator = std::make_shared<translation::ProjectTranslator>(_globalDb, _projectDb);
 
-        _globalScope = std::make_shared<entity::Scope>();
-        _globalScope->setId(entity::EntityID::globalScopeID());
-        _globalDb->addExistsScope(_globalScope);
+        _int = _globalDb->typeByName("int");
+        ASSERT_TRUE(!!_int);
 
-        _projectScope = _projectDb->getScope(entity::EntityID::projectScopeID());
-
-        _int = std::make_shared<entity::Type>("int", _globalScope->id());
-        _globalScope->addExistsType(_int);
-
-        // TODO: load and use global database instead
-        _void = _globalScope->addExistsType(
-                    std::make_shared<entity::Type>("void", entity::EntityID::globalScopeID()));
+        _void = _globalDb->typeByName("void");
+        ASSERT_TRUE(!!_void);
     }
 
     project::SharedProject _p;

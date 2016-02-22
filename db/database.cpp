@@ -65,10 +65,9 @@ namespace db {
      */
     Database::Database(const QString &name, const QString &path)
         : m_Name(name.isEmpty() ? DEFAULT_DATABASE_NAME : name)
-        , m_Path(path.isEmpty() ? DEFAULT_DATABASE_PATH : QDir::currentPath())
+        , m_Path(path)
         , m_ID(entity::EntityID::nullID())
         , m_Valid(false)
-
     {
     }
 
