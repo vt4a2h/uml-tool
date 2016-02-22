@@ -55,7 +55,7 @@ TEST_F(DepthSearch, ChainScopeSearch)
     ASSERT_EQ(sc3, _scopes["sc3"])
             << "Scope sc3 should be exists: sc1::sc2::sc3.";
 
-    sc3 = _d->chainScopeSearch({"sc1", "sc2", "sc3"});
+    sc3 = m_ProjectDb->chainScopeSearch({"sc1", "sc2", "sc3"});
     ASSERT_EQ(sc3, _scopes["sc3"])
             << "Scopes sc1 should be found in database: sc1::sc2::sc3.";
 }

@@ -35,18 +35,18 @@
 #include <db/database.h>
 #include <entity/scope.h>
 
-class DepthSearch : public ::testing::Test
+#include "TestProjectBase.h"
+
+class DepthSearch : public ProjectBase
 {
 protected:
     virtual void SetUp() override
     {
-        _d = new db::Database();
-
-        _scopes["sc1"] = _d->addScope("sc1"); // sc1::sc2::sc3
+        _scopes["sc1"] = m_ProjectDb->addScope("sc1"); // sc1::sc2::sc3
         _scopes["sc2"] = _scopes["sc1"]->addChildScope("sc2");
         _scopes["sc3"] = _scopes["sc2"]->addChildScope("sc3");
 
-        _scopes["sc4"] = _d->addScope("sc4");
+        _scopes["sc4"] = m_ProjectDb->addScope("sc4");
         _scopes["sc5"] = _scopes["sc4"]->addChildScope("sc5");
 
         _types["Foo"] = _scopes["sc1"]->addType("Foo");
@@ -55,12 +55,6 @@ protected:
         _types["FooBar"] = _scopes["sc4"]->addType<entity::Union>("FooBar");
     }
 
-    virtual void TearDown() override
-    {
-        delete _d;
-    }
-
-    db::Database *_d;
     QHash<QString, entity::SharedScope> _scopes;
     QHash<QString, entity::SharedType> _types;
 };

@@ -25,7 +25,7 @@
 
 #define search_circle(table_name, method_name, type)   \
 for (auto key : table_name.keys()) {\
-    p = _d->method_name(table_name[key]->id());\
+    p = m_ProjectDb->method_name(table_name[key]->id());\
     \
     EXPECT_TRUE(p.operator bool())\
             << QString(#method_name "() should return valid ptr for " #type " \"%1\"")\
@@ -36,7 +36,7 @@ for (auto key : table_name.keys()) {\
 }
 
 #define invalid_case(method_name, invalid_id) \
-p = _d->method_name(invalid_id);\
+p = m_ProjectDb->method_name(invalid_id);\
 EXPECT_EQ(p, nullptr) << #method_name "() should return nullptr for invalid id";
 
 #define json_eq(basic_obj, comp_obj, name)\
