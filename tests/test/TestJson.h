@@ -50,19 +50,9 @@
 
 #include <constants.h>
 
-struct RelationTestParameters
-{
-    db::SharedDatabase globalDb_  = std::make_shared<db::Database>("Global");
-    db::SharedDatabase projectDb_ = std::make_shared<db::ProjectDatabase>("Project");
+#include "TestProjectBase.h"
 
-    entity::SharedScope globalScope_;
-    entity::SharedScope projectScope_ = projectDb_->addScope("Project scope");
-
-    entity::SharedClass firstClass_  = projectScope_->addType<entity::Class>("First");
-    entity::SharedClass secondClass_ = projectScope_->addType<entity::Class>("Second");
-};
-
-class FileJson : public ::testing::Test
+class FileJson : public ProjectBase
 {
 protected:
     virtual void SetUp() override
@@ -72,14 +62,13 @@ protected:
         m_RootPath.append(m_Sep).append("tmp");
         QDir().mkpath(m_RootPath);
 
-        m_Parameters.globalScope_ = std::make_shared<entity::Scope>();
-        m_Parameters.globalScope_->setId(entity::EntityID::globalScopeID());
-        m_Parameters.projectDb_->addExistsScope(m_Parameters.globalScope_);
-
         EXPECT_TRUE(QFileInfo(m_RootPath).isDir() && QFileInfo(m_RootPath).isWritable())
                 << "We need a writable directory";
 
         m_JsonFileName = m_RootPath + m_Sep + "out.json";
+
+        m_FirstClass  = m_ProjectScope->addType<entity::Class>("First");
+        m_SecondClass = m_ProjectScope->addType<entity::Class>("Second");
     }
 
     virtual void TearDown() override
@@ -92,22 +81,6 @@ protected:
     SharedErrorList m_Errors = std::make_shared<ErrorList>();
     QChar m_Sep;
 
-    RelationTestParameters m_Parameters; // For test relation json
+    entity::SharedClass m_FirstClass;
+    entity::SharedClass m_SecondClass;
 };
-
-template <class RelationType, class Parameters>
-void setDb(const std::shared_ptr<RelationType> &rel, const Parameters &p)
-{
-    // always it set in Scope::fromJson
-    rel->setGlobalDatabase(p.globalDb_.get());
-    rel->setProjectDatabase(p.projectDb_.get());
-}
-
-template <class RelationType, class Parameters>
-std::shared_ptr<RelationType> makeRelation(const Parameters &p)
-{
-    return std::make_shared<RelationType>(p.firstClass_->id(),
-                                          p.secondClass_->id(),
-                                          p.globalDb_.get(),
-                                          p.projectDb_.get());
-}

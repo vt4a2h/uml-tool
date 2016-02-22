@@ -105,6 +105,7 @@ namespace relationship {
         QString m_Name;
         RelationType m_RelationType;
 
+        // TODO: should be weak pointers
         db::Database *m_GlobalDatabase;
         db::Database *m_ProjectDatabase;
     };

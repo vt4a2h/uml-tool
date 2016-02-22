@@ -127,7 +127,9 @@ TEST_F(FileJson, TemplateClassJson)
     class_->writeToFile(m_JsonFileName);
 
     auto class_comp(std::make_shared<entity::TemplateClass>());
-    json_eq(class_, class_comp, "TemplateClass")
+//    json_eq(class_, class_comp, "TemplateClass")
+    ASSERT_TRUE(class_comp->readFromFile(m_JsonFileName));
+    EXPECT_EQ(*class_, *class_comp);
 }
 
 TEST_F(FileJson, TemplateClassMethodJson)
@@ -161,12 +163,14 @@ TEST_F(FileJson, PropertyJson)
 {
     entity::SharedProperty property =
         std::make_shared<entity::Property>("stub_property_name", entity::EntityID::nullID());
+    property->setTypeSearcher(m_GlobalDb);
 
     // Test with optional methods
     property->addGetter().addSetter().addResetter().addNotifier();
     property->writeToFile(m_JsonFileName);
 
     auto actual(std::make_shared<entity::Property>());
+    actual->setTypeSearcher(m_GlobalDb);
     json_eq(property, actual, "Property");
 
     // Test without optional methods
@@ -174,6 +178,7 @@ TEST_F(FileJson, PropertyJson)
     property->writeToFile(m_JsonFileName);
 
     actual = std::make_shared<entity::Property>();
+    actual->setTypeSearcher(m_GlobalDb);
     json_eq(property, actual, "Property");
 }
 
@@ -218,8 +223,8 @@ TEST_F(FileJson, GeneralizationRelation)
 TEST_F(FileJson, MultiplyAssociationRelation)
 {
     test_relation(MultiplyAssociation, [&](){
-        auto key(m_Parameters.globalScope_->addType("key_stub"));
-        auto container(m_Parameters.projectScope_->addType("container_stub"));
+        auto key(m_GlobalScope->addType("key_stub"));
+        auto container(m_ProjectScope->addType("container_stub"));
 
         relation->setContainerTypeId(container->id());
         relation->setKeyTypeId(key->id());
@@ -230,8 +235,8 @@ TEST_F(FileJson, RealizationRelation)
 {
     test_relation(Realization, [&](){
         entity::MethodsList methods;
-        methods << m_Parameters.firstClass_->makeMethod("first_method")
-                << m_Parameters.firstClass_->makeMethod("second_method");
+        methods << m_FirstClass->makeMethod("first_method")
+                << m_SecondClass->makeMethod("second_method");
 
         relation->addMethods(methods);
     })

@@ -47,7 +47,9 @@ namespace entity {
     Template::Template()
         : m_LocalDatabase(std::make_shared<db::Database>())
     {
-        m_LocalDatabase->addScope();
+        auto scope = std::make_shared<entity::Scope>();
+        scope->setId(entity::EntityID::localTemplateScopeID());
+        m_LocalDatabase->addExistsScope(scope);
     }
 
     /**
@@ -59,7 +61,7 @@ namespace entity {
     bool operator ==(const Template &lhs, const Template &rhs)
     {
         return lhs.m_TemplateParameters == rhs.m_TemplateParameters &&
-               (lhs.m_LocalDatabase == rhs.m_LocalDatabase || *lhs.m_LocalDatabase == *rhs.m_LocalDatabase);
+               *lhs.m_LocalDatabase == *rhs.m_LocalDatabase;
     }
 
     /**

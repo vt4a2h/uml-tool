@@ -46,14 +46,16 @@ EXPECT_EQ(p, nullptr) << #method_name "() should return nullptr for invalid id";
             << "Read/write for " #name " should work correctly"; \
 
 #define test_relation(type, actions)\
-    auto relation(makeRelation<relationship::type>(m_Parameters));\
+    auto relation(std::make_shared<relationship::type>(m_FirstClass->id(), m_SecondClass->id(), \
+                                                       m_GlobalDb.get(), m_ProjectDb.get()));\
     \
     actions();\
     \
     relation->writeToFile(m_JsonFileName);\
     \
     auto relation_comp(std::make_shared<relationship::Relation>());\
-    setDb(relation_comp, m_Parameters);\
+    relation_comp->setGlobalDatabase(m_GlobalDb.get());\
+    relation_comp->setProjectDatabase(m_ProjectDb.get());\
     json_eq(relation, relation_comp, #type);
 
 #define read_from(var_name, file_name, file_path)\
