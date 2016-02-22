@@ -44,32 +44,22 @@
 
 #include <constants.h>
 
-class RelationMaker : public ::testing::Test
+#include "TestProjectBase.h"
+
+class RelationMaker : public ProjectBase
 {
 protected:
     virtual void SetUp() override
     {
-        _globalDb  = std::make_shared<db::Database>("Global");
-        _projectDb = std::make_shared<db::ProjectDatabase>("Project");
+        m_FirstProjectScope  = m_ProjectDb->addScope("First scope");
+        m_SecondProjectScope = m_ProjectDb->addScope("Second scope");
 
-        _globalScope = std::make_shared<entity::Scope>();
-        _globalScope->setId(entity::EntityID::globalScopeID());
-        _globalDb->addExistsScope(_globalScope);
-
-        _firstProjectScope  = _projectDb->addScope("First scope");
-        _secondProjectScope = _projectDb->addScope("Second scope");
-
-        _firstClass  = _firstProjectScope->addType<entity::Class>("First");
-        _secondClass = _secondProjectScope->addType<entity::Class>("Second");
+        m_FirstClass  = m_FirstProjectScope->addType<entity::Class>("First");
+        m_SecondClass = m_SecondProjectScope->addType<entity::Class>("Second");
     }
 
-    db::SharedDatabase _globalDb;
-    db::SharedDatabase _projectDb;
-
-    entity::SharedScope _globalScope;
-
-    entity::SharedScope _firstProjectScope;
-    entity::SharedScope _secondProjectScope;
-    entity::SharedClass _firstClass;
-    entity::SharedClass _secondClass;
+    entity::SharedScope m_FirstProjectScope;
+    entity::SharedScope m_SecondProjectScope;
+    entity::SharedClass m_FirstClass;
+    entity::SharedClass m_SecondClass;
 };

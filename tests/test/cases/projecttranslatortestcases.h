@@ -29,13 +29,13 @@
 TEST_F(ProjectTranslatorTest, Type)
 {
     QString futureResult("int");
-    auto code(_translator->translate(_int));
+    auto code(m_Translator->translate(m_int));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "foo_scope::Foo";
-    auto childScope = _projectScope->addChildScope("foo_scope");
+    auto childScope = m_ProjectScope->addChildScope("foo_scope");
     auto foo = childScope->addType("Foo");
-    code = _translator->translate(foo);
+    code = m_Translator->translate(foo);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 }
 
@@ -43,26 +43,26 @@ TEST_F(ProjectTranslatorTest, ExtendedType)
 {
     auto type = std::make_shared<entity::ExtendedType>();
     type->setId(entity::EntityID::firstFreeID().value() + 6);
-    _projectScope->addExistsType(type);
-    type->setTypeId(_int->id());
+    m_ProjectScope->addExistsType(type);
+    type->setTypeId(m_int->id());
 
     QString futureResult("int");
-    auto code(_translator->translate(type));
+    auto code(m_Translator->translate(type));
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "const int";
     type->setConstStatus(true);
-    code = _translator->translate(type);
+    code = m_Translator->translate(type);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "const int &";
     type->addLinkStatus();
-    code = _translator->translate(type);
+    code = m_Translator->translate(type);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "const int &&";
     type->addLinkStatus();
-    code = _translator->translate(type);
+    code = m_Translator->translate(type);
     ASSERT_EQ(futureResult, code.toHeader);
 
     type->removeLinkStatus();
@@ -70,53 +70,53 @@ TEST_F(ProjectTranslatorTest, ExtendedType)
 
     futureResult = "const int * const";
     type->addPointerStatus(true);
-    code = _translator->translate(type);
+    code = m_Translator->translate(type);
     ASSERT_EQ(futureResult, code.toHeader);
 
     type->removePointerStatus();
     type->setConstStatus(false);
 
     futureResult = "vector<int>";
-    auto vector = std::make_shared<entity::Type>("vector", _globalScope->id(),
+    auto vector = std::make_shared<entity::Type>("vector", m_GlobalScope->id(),
                                                  entity::EntityID::firstFreeID().value() + 7);
-    _globalScope->addExistsType(vector);
+    m_GlobalScope->addExistsType(vector);
     type->setTypeId(vector->id());
-    type->addTemplateParameter(_int->id());
-    code = _translator->translate(type);
+    type->addTemplateParameter(m_int->id());
+    code = m_Translator->translate(type);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "using Ints = vector<int>;";
     type->setName("Ints");
-    code = _translator->translate(type, translation::ProjectTranslator::WithAlias |
+    code = m_Translator->translate(type, translation::ProjectTranslator::WithAlias |
                                         translation::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "std::set<int>";
-    _projectScope->removeType(type->id());
+    m_ProjectScope->removeType(type->id());
     type = std::make_shared<entity::ExtendedType>();
     type->setId(entity::EntityID::firstFreeID().value() + 8);
-    _projectScope->addExistsType(type);
+    m_ProjectScope->addExistsType(type);
 
     auto stdScope = std::make_shared<entity::Scope>("std");
     stdScope->setId(entity::EntityID::stdScopeID());
-    _globalScope->addExistsChildScope(stdScope);
+    m_GlobalScope->addExistsChildScope(stdScope);
 
     auto set = std::make_shared<entity::Type>("set", stdScope->id(),
                                               entity::EntityID::firstFreeID().value() + 9);
     stdScope->addExistsType(set);
     type->setTypeId(set->id());
-    type->addTemplateParameter(_int->id());
-    code = _translator->translate(type);
+    type->addTemplateParameter(m_int->id());
+    code = m_Translator->translate(type);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 }
 
 TEST_F(ProjectTranslatorTest, Field)
 {
-    auto field = std::make_shared<entity::Field>("Number", _int->id());
+    auto field = std::make_shared<entity::Field>("Number", m_int->id());
     field->setPrefix("m_");
 
     QString futureResult("int m_Number");
-    auto code(_translator->translate(field));
+    auto code(m_Translator->translate(field));
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "static int number_";
@@ -124,15 +124,15 @@ TEST_F(ProjectTranslatorTest, Field)
     field->removePrefix();
     field->setSuffix("_");
     field->addKeyword(entity::FieldStatic);
-    code = _translator->translate(field);
+    code = m_Translator->translate(field);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "static const int number_";
-    auto type = _globalScope->addType<entity::ExtendedType>();
-    type->setTypeId(_int->id());
+    auto type = m_GlobalScope->addType<entity::ExtendedType>();
+    type->setTypeId(m_int->id());
     type->setConstStatus(true);
     field->setTypeId(type->id());
-    code = _translator->translate(field);
+    code = m_Translator->translate(field);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 }
 
@@ -142,25 +142,25 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     method->setConstStatus(true);
 
     QString futureResult("void calc() const");
-    method->setReturnTypeId(_void->id());
-    auto code(_translator->translate(method));
+    method->setReturnTypeId(m_void->id());
+    auto code(m_Translator->translate(method));
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "double sum(double a, double b) const";
-    auto doubleType = _globalScope->addExistsType(
+    auto doubleType = m_GlobalScope->addExistsType(
                           std::make_shared<entity::Type>("double", entity::EntityID::globalScopeID(),
                                                          entity::EntityID::firstFreeID().value() + 3));
     method->setName("sum");
     method->setReturnTypeId(doubleType->id());
     method->addParameter("a", doubleType->id());
     method->addParameter("b", doubleType->id());
-    code = _translator->translate(method);
+    code = m_Translator->translate(method);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "ps::Foo *getFoo(const QString &id) const";
     auto ps = std::make_shared<entity::Scope>("ps");
     ps->setId(entity::EntityID::firstFreeID().value() + 4);
-    _projectDb->addExistsScope(ps);
+    m_ProjectDb->addExistsScope(ps);
 
     auto foo = ps->addExistsType(
                    std::make_shared<entity::Type>(
@@ -172,13 +172,13 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     fooExt->addPointerStatus();
     fooExt->setTypeId(foo->id());
 
-    auto qstr = _globalScope->addExistsType(
+    auto qstr = m_GlobalScope->addExistsType(
                     std::make_shared<entity::Type>(
                         "QString", entity::EntityID::globalScopeID(),
                         entity::EntityID::firstFreeID().value() + 6));
     auto qstrExt = std::make_shared<entity::ExtendedType>();
     qstrExt->setId(entity::EntityID::firstFreeID().value() + 7);
-    _globalScope->addExistsType(qstrExt);
+    m_GlobalScope->addExistsType(qstrExt);
     qstrExt->addLinkStatus();
     qstrExt->setTypeId(qstr->id());
     qstrExt->setConstStatus(true);
@@ -189,14 +189,14 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     method->removeParameter("b");
     method->addParameter("id", qstrExt->id());
 
-    code = _translator->translate(method, translation::ProjectTranslator::WithNamespace);
+    code = m_Translator->translate(method, translation::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "explicit Foo(const QString &name)";
     method = std::make_shared<entity::ClassMethod>("Foo");
     method->addLhsIdentificator(entity::LhsIdentificator::Explicit);
     method->addParameter("name", qstrExt->id());
-    code = _translator->translate(method);
+    code = m_Translator->translate(method);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "virtual ps::Foo *make() = 0";
@@ -204,13 +204,13 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     method->setReturnTypeId(fooExt->id());
     method->setRhsIdentificator(entity::RhsIdentificator::PureVirtual);
     method->addLhsIdentificator(entity::LhsIdentificator::Virtual);
-    code = _translator->translate(method, translation::ProjectTranslator::WithNamespace);
+    code = m_Translator->translate(method, translation::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "ps::Foo *make() override";
     method->removeLhsIdentificator(entity::LhsIdentificator::Virtual);
     method->setRhsIdentificator(entity::RhsIdentificator::Override);
-    code = _translator->translate(method, translation::ProjectTranslator::WithNamespace);
+    code = m_Translator->translate(method, translation::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
@@ -219,13 +219,13 @@ TEST_F(ProjectTranslatorTest, TemplateClassMethod)
     entity::SharedTemplateClassMethod method(std::make_shared<entity::TemplateClassMethod>("swap"));
 
     QString futureResult("template <>\nswap()");
-    auto code(_translator->translate(method));
+    auto code(m_Translator->translate(method));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "template <class T>\nswap()";
     auto t = method->addLocalType("T");
     method->addTemplateParameter(t->id());
-    code = _translator->translate(method);
+    code = m_Translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "template <class T>\nswap(T *first, T *second)";
@@ -234,104 +234,104 @@ TEST_F(ProjectTranslatorTest, TemplateClassMethod)
     ptrT->addPointerStatus();
     method->addParameter("first", ptrT->id());
     method->addParameter("second", ptrT->id());
-    code = _translator->translate(method);
+    code = m_Translator->translate(method);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "template <class T = some_scope::Foo>\n"
                    "std::shared_ptr<T> make(const QString &name)";
     method = std::make_shared<entity::TemplateClassMethod>("make");
-    auto qstring = _globalScope->addType("QString");
-    auto constLinkToQstr = _globalScope->addType<entity::ExtendedType>();
+    auto qstring = m_GlobalScope->addType("QString");
+    auto constLinkToQstr = m_GlobalScope->addType<entity::ExtendedType>();
     constLinkToQstr->setTypeId(qstring->id());
     constLinkToQstr->addLinkStatus();
     constLinkToQstr->setConstStatus(true);
     method->addParameter("name", constLinkToQstr->id());
 
-    auto some_scope = _projectScope->addChildScope("some_scope");
+    auto some_scope = m_ProjectScope->addChildScope("some_scope");
     auto foo = some_scope->addType("Foo");
     t = method->addLocalType("T");
     method->addTemplateParameter(t->id(), foo->id());
 
-    auto stdScope = _globalDb->addScope("std");
+    auto stdScope = m_GlobalDb->addScope("std");
     auto sharedPointer = stdScope->addType("shared_ptr");
     auto sharedPointerToT = stdScope->addType<entity::ExtendedType>();
     sharedPointerToT->setTypeId(sharedPointer->id());
     sharedPointerToT->addTemplateParameter(t->id());
     method->setReturnTypeId(sharedPointerToT->id());
 
-    code = _translator->translate(method, translation::ProjectTranslator::WithNamespace);
+    code = m_Translator->translate(method, translation::ProjectTranslator::WithNamespace);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
 TEST_F(ProjectTranslatorTest, Enum)
 {
-    auto fooEnum = _projectScope->addType<entity::Enum>("Foo");
+    auto fooEnum = m_ProjectScope->addType<entity::Enum>("Foo");
 
     QString futureResult("enum Foo {};");
-    auto code(_translator->translate(fooEnum));
+    auto code(m_Translator->translate(fooEnum));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "enum class Foo {};";
     fooEnum->setStrongStatus(true);
-    code = _translator->translate(fooEnum);
+    code = m_Translator->translate(fooEnum);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "enum class Foo : int {};";
-    fooEnum->setEnumTypeId(_int->id());
-    code = _translator->translate(fooEnum);
+    fooEnum->setEnumTypeId(m_int->id());
+    code = m_Translator->translate(fooEnum);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "enum class Foo : int {bar, baz};";
     fooEnum->addElement("bar");
     fooEnum->addElement("baz");
-    code = _translator->translate(fooEnum);
+    code = m_Translator->translate(fooEnum);
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "enum class Foo : int {bar = 0, baz = 1};";
-    code = _translator->translate(fooEnum, translation::ProjectTranslator::GenerateNumbers);
+    code = m_Translator->translate(fooEnum, translation::ProjectTranslator::GenerateNumbers);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
 TEST_F(ProjectTranslatorTest, Union)
 {
-    auto fooUnion = _projectScope->addType<entity::Union>("Foo");
+    auto fooUnion = m_ProjectScope->addType<entity::Union>("Foo");
 
     QString futureResult("union Foo {};");
-    auto code(_translator->translate(fooUnion));
+    auto code(m_Translator->translate(fooUnion));
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "union Foo {\n    double a;\n    int b;\n};";
-    auto typeDouble = _globalScope->addType("double");
+    auto typeDouble = m_GlobalScope->addType("double");
     fooUnion->addField("a", typeDouble->id());
-    fooUnion->addField("b", _int->id());
-    code = _translator->translate(fooUnion);
+    fooUnion->addField("b", m_int->id());
+    code = m_Translator->translate(fooUnion);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
 TEST_F(ProjectTranslatorTest, Class)
 {
-    auto fooClass = _projectScope->addType<entity::Class>("Foo");
+    auto fooClass = m_ProjectScope->addType<entity::Class>("Foo");
 
     QString futureResult("class Foo {};");
-    auto code(_translator->translate(fooClass));
+    auto code(m_Translator->translate(fooClass));
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "struct Foo {};";
     fooClass->setKind(entity::StructType);
-    code = _translator->translate(fooClass);
+    code = m_Translator->translate(fooClass);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "class Foo : public Bar {};";
     fooClass->setKind(entity::ClassType);
-    auto barClass = _projectScope->addType<entity::Class>("Bar");
+    auto barClass = m_ProjectScope->addType<entity::Class>("Bar");
     fooClass->addParent(barClass->id(), entity::Public);
-    code = _translator->translate(fooClass);
+    code = m_Translator->translate(fooClass);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "class Foo : public Bar, protected Baz {};";
-    auto bazClass = _projectScope->addType<entity::Class>("Baz");
+    auto bazClass = m_ProjectScope->addType<entity::Class>("Baz");
     fooClass->addParent(bazClass->id(), entity::Protected);
-    code = _translator->translate(fooClass);
+    code = m_Translator->translate(fooClass);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     fooClass->removeParent(barClass->id());
@@ -342,13 +342,13 @@ TEST_F(ProjectTranslatorTest, Class)
                            "%1%1int a_;\n"
                            "%1%1Baz b_;\n"
                            "};").arg(INDENT);
-    auto aField = fooClass->addField("a", _int->id());
+    auto aField = fooClass->addField("a", m_int->id());
     aField->setSection(entity::Private);
     aField->setSuffix("_");
     auto bField = fooClass->addField("b", bazClass->id());
     bField->setSection(entity::Private);
     bField->setSuffix("_");
-    code = _translator->translate(fooClass);
+    code = m_Translator->translate(fooClass);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     fooClass->removeField("a");
@@ -362,12 +362,12 @@ TEST_F(ProjectTranslatorTest, Class)
                            "%1private:\n"
                            "%1%1int c;\n"
                            "};").arg(INDENT);
-    aField = fooClass->addField("a", _int->id());
-    bField = fooClass->addField("b", _int->id());
+    aField = fooClass->addField("a", m_int->id());
+    bField = fooClass->addField("b", m_int->id());
     bField->setSection(entity::Protected);
-    auto cField = fooClass->addField("c", _int->id());
+    auto cField = fooClass->addField("c", m_int->id());
     cField->setSection(entity::Private);
-    code = _translator->translate(fooClass);
+    code = m_Translator->translate(fooClass);
     ASSERT_EQ(futureResult, code.toHeader);
 
     fooClass->removeField("a");
@@ -387,23 +387,23 @@ TEST_F(ProjectTranslatorTest, Class)
     cGetter->setSection(entity::Public);
 
     auto cSetter = fooClass->makeMethod("setC");
-    auto voidType = _globalScope->addType("void");
+    auto voidType = m_GlobalScope->addType("void");
     cSetter->setReturnTypeId(voidType->id());
     cSetter->setSection(entity::Public);
-    auto constLintToInt = _projectScope->addType<entity::ExtendedType>();
+    auto constLintToInt = m_ProjectScope->addType<entity::ExtendedType>();
     constLintToInt->setTypeId(cField->typeId());
     constLintToInt->setConstStatus(true);
     constLintToInt->addLinkStatus();
     cSetter->addParameter("newC", constLintToInt->id());
 
-    code = _translator->translate(fooClass);
+    code = m_Translator->translate(fooClass);
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
 TEST_F(ProjectTranslatorTest, ClassWithProperties)
 {
-    auto cl = _projectScope->addType<entity::Class>("Baz");
-    auto prop = cl->addProperty("a", _int->id());
+    auto cl = m_ProjectScope->addType<entity::Class>("Baz");
+    auto prop = cl->addProperty("a", m_int->id());
     prop->addGetter("getA").addSetter("setA").addNotifier("aChanged");
 
     QString expect = QString("class Baz{\n"
@@ -420,7 +420,7 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
                              "%1private:\n"
                              "%1%1int m_a;\n"
                              "};").arg(INDENT);
-    ASSERT_EQ(expect.toStdString(), _translator->translate(cl).toHeader.toStdString());
+    ASSERT_EQ(expect.toStdString(), m_Translator->translate(cl).toHeader.toStdString());
 
     // Add all fields
     prop->addResetter("resetA")
@@ -450,7 +450,7 @@ TEST_F(ProjectTranslatorTest, ClassWithProperties)
                      "%1%1int m_a;\n"
                      "};").arg(INDENT);
 
-    ASSERT_EQ(expect.toStdString(), _translator->translate(cl).toHeader.toStdString());
+    ASSERT_EQ(expect.toStdString(), m_Translator->translate(cl).toHeader.toStdString());
 }
 
 TEST_F(ProjectTranslatorTest, TemplateClass)
@@ -461,7 +461,7 @@ TEST_F(ProjectTranslatorTest, TemplateClass)
                                    "%1T data_;\n"
                                    "%1Node *next;\n"
                                    "};").arg(INDENT);
-    auto nodeStruct = _projectScope->addType<entity::TemplateClass>("Node");
+    auto nodeStruct = m_ProjectScope->addType<entity::TemplateClass>("Node");
     nodeStruct->setKind(entity::StructType);
 
     auto tType = nodeStruct->addLocalType("T");
@@ -470,12 +470,12 @@ TEST_F(ProjectTranslatorTest, TemplateClass)
     auto dataField = nodeStruct->addField("data", tType->id());
     dataField->setSuffix("_");
 
-    auto ptrNode = _projectScope->addType<entity::ExtendedType>();
+    auto ptrNode = m_ProjectScope->addType<entity::ExtendedType>();
     ptrNode->setTypeId(nodeStruct->id());
     ptrNode->addPointerStatus();
     nodeStruct->addField("next", ptrNode->id());
 
-    auto code(_translator->translate(nodeStruct));
+    auto code(m_Translator->translate(nodeStruct));
     ASSERT_EQ(futureResult, code.toHeader);
 }
 
@@ -485,12 +485,12 @@ TEST_F(ProjectTranslatorTest, ClassImplementation)
                          "{\n"
                          "}\n");
 
-    entity::SharedClass classFoo(_projectScope->addType<entity::Class>("Foo"));
+    entity::SharedClass classFoo(m_ProjectScope->addType<entity::Class>("Foo"));
     entity::SharedMethod getterForC(classFoo->makeMethod("getC"));
     getterForC->setConstStatus(true);
-    getterForC->setReturnTypeId(_int->id());
+    getterForC->setReturnTypeId(m_int->id());
 
-    translation::Code code(_translator->generateClassMethodsImpl(classFoo));
+    translation::Code code(m_Translator->generateClassMethodsImpl(classFoo));
     ASSERT_TRUE(code.toHeader.isEmpty())
             << "Header should be empty!";
     ASSERT_EQ(futureResult.toStdString(), code.toSource.toStdString());
@@ -503,11 +503,11 @@ TEST_F(ProjectTranslatorTest, ClassImplementation)
                    "{\n"
                    "}\n";
     entity::SharedMethod setterForC(classFoo->makeMethod("setC"));
-    entity::SharedType voidType(_globalScope->addType("void"));
+    entity::SharedType voidType(m_GlobalScope->addType("void"));
     setterForC->setReturnTypeId(voidType->id());
-    setterForC->addParameter("c", _int->id());
+    setterForC->addParameter("c", m_int->id());
 
-    code = _translator->generateClassMethodsImpl(classFoo);
+    code = m_Translator->generateClassMethodsImpl(classFoo);
     ASSERT_TRUE(code.toHeader.isEmpty()) << "Header should be empty!";
     ASSERT_EQ(futureResult, code.toSource);
 
@@ -524,7 +524,7 @@ TEST_F(ProjectTranslatorTest, ClassImplementation)
     typeTLink->addLinkStatus();
     swapMethod->addParameter("src", typeTLink->id());
 
-    code = _translator->generateClassMethodsImpl(classFoo);
+    code = m_Translator->generateClassMethodsImpl(classFoo);
     ASSERT_FALSE(code.toHeader.isEmpty()) << "Header should be generated!";
     ASSERT_FALSE(code.toSource.isEmpty()) << "Source file should be generated!";
     ASSERT_EQ(futureResultH, code.toHeader);
@@ -538,12 +538,12 @@ TEST_F(ProjectTranslatorTest, TemplateClassImplementation)
                          "{\n"
                          "}");
 
-    entity::SharedType voidType(_globalScope->addType("void"));
+    entity::SharedType voidType(m_GlobalScope->addType("void"));
 
-    entity::SharedScope _std(_globalDb->addScope("std"));
+    entity::SharedScope _std(m_GlobalDb->addScope("std"));
     entity::SharedType dd(_std->addType("default_delete"));
 
-    entity::SharedTemplateClass scopedPointer(_projectScope->addType<entity::TemplateClass>("ScopedPointer"));
+    entity::SharedTemplateClass scopedPointer(m_ProjectScope->addType<entity::TemplateClass>("ScopedPointer"));
     entity::SharedType value(scopedPointer->addLocalType("Value"));
     entity::SharedType deleter(scopedPointer->addLocalType("Deleter"));
     entity::SharedExtendedType defaultDelete(scopedPointer->addLocalType<entity::ExtendedType>());
@@ -559,6 +559,6 @@ TEST_F(ProjectTranslatorTest, TemplateClassImplementation)
     valuePtr->addPointerStatus();
     resetMethod->addParameter("other", valuePtr->id());
 
-    translation::Code code(_translator->generateClassMethodsImpl(scopedPointer));
+    translation::Code code(m_Translator->generateClassMethodsImpl(scopedPointer));
     ASSERT_EQ(futureResult, code.toHeader);
 }

@@ -68,7 +68,8 @@ HEADERS += ../../enums.h \
     cases/signaturemakercases.h \
     cases/classcomponentscases.h \
     cases/signatureparsercases.h \
-    TestComponentSignatureParser.h
+    TestComponentSignatureParser.h \
+    TestProjectBase.h
 
 SOURCES += main.cpp \
            ../../entity/type.cpp \

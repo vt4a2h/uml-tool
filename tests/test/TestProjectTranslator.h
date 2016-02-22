@@ -20,13 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
-
-#include <gtest/gtest.h>
-
-#include <db/projectdatabase.h>
-#include <db/database.h>
 
 #include <entity/scope.h>
 #include <entity/enum.h>
@@ -43,54 +37,29 @@
 #include <translation/code.h>
 #include <helpers/entityhelpres.h>
 
-#include <project/project.h>
-#include <project/project_types.hpp>
-
 #include <helpers/generatorid.h>
 
 #include <enums.h>
 #include <constants.h>
 
-class ProjectTranslatorTest : public ::testing::Test
+#include "TestProjectBase.h"
+
+class ProjectTranslatorTest : public ProjectBase
 {
 protected:
     virtual void SetUp() override
     {
-        _p = std::make_shared<project::Project>();
-        // Usually special slot is used for that
-        const_cast<entity::GeneratorID&>(entity::GeneratorID::instance()).onCurrentProjectChanged(_p);
-        _projectDb = _p->database();
-        _projectScope = _projectDb->getScope(entity::EntityID::projectScopeID());
-        ASSERT_TRUE(!!_projectScope);
+        m_Translator = std::make_shared<translation::ProjectTranslator>(m_GlobalDb, m_ProjectDb);
 
-        _globalDb = std::make_shared<db::Database>("global", "../../");
-        ErrorList errors;
-        _globalDb->load(errors);
-        ASSERT_TRUE(errors.isEmpty());
-        _globalScope = _globalDb->getScope(entity::EntityID::globalScopeID());
-        ASSERT_TRUE(!!_globalScope);
+        m_int = m_GlobalDb->typeByName("int");
+        ASSERT_TRUE(!!m_int);
 
-        _p->setGlobalDatabase(_globalDb);
-
-        _translator = std::make_shared<translation::ProjectTranslator>(_globalDb, _projectDb);
-
-        _int = _globalDb->typeByName("int");
-        ASSERT_TRUE(!!_int);
-
-        _void = _globalDb->typeByName("void");
-        ASSERT_TRUE(!!_void);
+        m_void = m_GlobalDb->typeByName("void");
+        ASSERT_TRUE(!!m_void);
     }
 
-    project::SharedProject _p;
+    translation::SharedTranslator m_Translator;
 
-    db::SharedDatabase _globalDb;
-    db::SharedProjectDatabase _projectDb;
-
-    translation::SharedTranslator _translator;
-
-    entity::SharedScope _globalScope;
-    entity::SharedScope _projectScope;
-
-    entity::SharedType _int;
-    entity::SharedType _void;
+    entity::SharedType m_int;
+    entity::SharedType m_void;
 };
