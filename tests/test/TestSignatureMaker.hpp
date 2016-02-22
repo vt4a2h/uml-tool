@@ -29,14 +29,18 @@
 #include <translation/signaturemaker.h>
 #include <translation/translator_types.hpp>
 
-class SignatureMaker : public ComponentsBase, public ::testing::Test
+#include "TestProjectBase.h"
+
+class SignatureMaker : public ProjectBase
 {
 protected:
-    SignatureMaker()
-    : m_Maker(std::make_unique<translation::SignatureMaker>(m_ApplicationModel->globalDatabase(),
-                                                            m_Project->database(), m_Scope, m_Type))
-    {}
 
-protected:
+    void SetUp()
+    {
+        auto someType = m_ProjectScope->addType<entity::Class>("Foo");
+        m_Maker = std::make_unique<translation::SignatureMaker>(m_GlobalDb, m_ProjectDb,
+                                                                m_ProjectScope, someType);
+    }
+
    translation::UniqueSignatureMaker m_Maker;
 };

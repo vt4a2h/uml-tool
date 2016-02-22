@@ -33,7 +33,6 @@
 
 #include <gui/gui_types.hpp>
 
-const QString projectPath = "../test_data/new.qut";
 const QString globalDbPath = "../../";
 const QString globalDbName = "global";
 
@@ -52,22 +51,17 @@ protected:
         m_GlobalDatabase->load(errors);
         Q_ASSERT(errors.isEmpty());
 
-        m_Project = std::make_shared<project::Project>();
-        m_Project->load(projectPath);
-        Q_ASSERT(!m_Project->hasErrors());
+        m_Project = std::make_shared<project::Project>("Foo Project", "fake path");
         m_Project->setGlobalDatabase(m_GlobalDatabase);
 
         m_ApplicationModel->addProject(m_Project);
         m_ApplicationModel->setCurrentProject(m_Project->name());
-        ASSERT_EQ(m_Project, m_ApplicationModel->currentProject());
+        Q_ASSERT(m_Project == m_ApplicationModel->currentProject());
 
-        const entity::ScopesList &scopes = m_Project->database()->scopes();
-        Q_ASSERT(!scopes.empty());
-        m_Scope = scopes.first();
+        m_ProjectScope = m_Project->database()->getScope(entity::EntityID::projectScopeID());
+        Q_ASSERT(!!m_ProjectScope);
 
-        const entity::TypesList &types = m_Scope->types();
-        Q_ASSERT(!types.isEmpty());
-        m_Type = types.first();
+        m_Type = m_ProjectScope->addType<entity::Class>("Foo");
     }
 
 protected:
@@ -75,6 +69,6 @@ protected:
     db::SharedDatabase m_GlobalDatabase;
     models::SharedApplicationModel m_ApplicationModel;
 
-    entity::SharedScope m_Scope;
+    entity::SharedScope m_ProjectScope;
     entity::SharedType m_Type;
 };

@@ -33,6 +33,7 @@ HEADERS += ../../enums.h \
     ../../entity/entityid.h \
     ../../entity/scope.h \
     ../../constants.h \
+    ../../entity/field.h \
     ../../qthelpers.h \
     ../../models/applicationmodel.h \
     ../../models/projecttreemodel.h \

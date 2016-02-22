@@ -63,7 +63,7 @@ TEST_F(Enteties, SimpleType)
 TEST_F(Enteties, ExtendedType)
 {
     ASSERT_STREQ(_extendedType->name().toStdString().c_str(), "Alias");
-    ASSERT_EQ(_extendedType->typeId(), entity::EntityID::globalScopeID());
+    ASSERT_EQ(_extendedType->typeId(), entity::EntityID::nullID());
     ASSERT_FALSE(_extendedType->isConst());
 
     ASSERT_FALSE(_extendedType->isLink());
@@ -199,8 +199,10 @@ TEST_F(Enteties, OptionalClassMethods)
     ASSERT_TRUE(_class->optionalMethods(entity::Public).isEmpty());
 
     // Add some method
-    // FIXME: set appropriate type
-    entity::SharedProperty p1 = _class->addProperty("p1", -1);
+    auto int_ = m_GlobalDb->typeByName("int");
+    ASSERT_TRUE(!!int_);
+    entity::SharedProperty p1 = _class->addProperty("p1", int_->id());
+    p1->setTypeSearcher(m_GlobalDb);
     p1->addGetter("getSmth");
     auto getter = p1->getter();
     ASSERT_FALSE(_class->optionalMethods(entity::Public).isEmpty());

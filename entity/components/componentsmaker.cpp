@@ -348,6 +348,7 @@ namespace components {
         Q_ASSERT(checkCommonState());
 
         entity::SharedProperty newProperty = std::make_shared<entity::Property>();
+        newProperty->setTypeSearcher(m_Model->globalDatabase());
 
         // Add name
         newProperty->setName(tokens[int(PropGroupNames::Name)]->token());

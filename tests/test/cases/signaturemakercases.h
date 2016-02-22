@@ -41,7 +41,7 @@ namespace
 
 TEST_F(SignatureMaker, MakingFieldSignature)
 {
-    auto typeInt = findType(m_GlobalDatabase, "int");
+    auto typeInt = findType(m_GlobalDb, "int");
     ASSERT_TRUE(!!typeInt);
 
     // type and name
@@ -54,7 +54,7 @@ TEST_F(SignatureMaker, MakingFieldSignature)
     ASSERT_EQ(actual, expect);
 
     // const type name
-    auto constInt = m_Scope->addType<entity::ExtendedType>();
+    auto constInt = m_ProjectScope->addType<entity::ExtendedType>();
     constInt->setTypeId(typeInt->id());
     constInt->setConstStatus(true);
     field->setTypeId(constInt->id());
@@ -77,7 +77,7 @@ TEST_F(SignatureMaker, MakingFieldSignature)
     ASSERT_EQ(actual, expect);
 
     // std
-    auto deque = findType(m_GlobalDatabase, "deque");
+    auto deque = findType(m_GlobalDb, "deque");
     ASSERT_TRUE(!!deque);
     field->setTypeId(deque->id());
     field->removeKeyword(entity::FieldKeyword::Mutable);
@@ -86,11 +86,11 @@ TEST_F(SignatureMaker, MakingFieldSignature)
     ASSERT_EQ(actual, expect);
 
     // with template parameters
-    auto unMap = findType(m_GlobalDatabase, "unordered_map");
+    auto unMap = findType(m_GlobalDb, "unordered_map");
     ASSERT_TRUE(!!unMap);
-    auto str = findType(m_GlobalDatabase, "string");
+    auto str = findType(m_GlobalDb, "string");
     ASSERT_TRUE(!!str);
-    auto extMap = m_Scope->addType<entity::ExtendedType>();
+    auto extMap = m_ProjectScope->addType<entity::ExtendedType>();
     extMap->setTypeId(unMap->id());
     extMap->addTemplateParameter(str->id());
     extMap->addTemplateParameter(typeInt->id());
@@ -103,7 +103,7 @@ TEST_F(SignatureMaker, MakingFieldSignature)
 
 TEST_F(SignatureMaker, MakingMethodSignature)
 {
-    auto typeInt = findType(m_GlobalDatabase, "int");
+    auto typeInt = findType(m_GlobalDb, "int");
     ASSERT_TRUE(!!typeInt);
 
     // simple field
@@ -141,11 +141,12 @@ TEST_F(SignatureMaker, MakingMethodSignature)
 
 TEST_F(SignatureMaker, MakingPropertySignature)
 {
-    auto typeInt = findType(m_GlobalDatabase, "int");
+    auto typeInt = findType(m_GlobalDb, "int");
     ASSERT_TRUE(!!typeInt);
 
     // Simple property
     auto property = std::make_shared<entity::Property>("width", typeInt->id());
+    property->setTypeSearcher(m_GlobalDb);
     property->field()->setPrefix("m_");
     QString actual = m_Maker->signature(property);
     QString expect = "int width MEMBER m_width";

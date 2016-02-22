@@ -27,15 +27,24 @@
 
 TEST_F(ProjectMaker, MakeClass)
 {
-    auto scopeWork = projectDb_->addScope("work");
+    auto scopeWork = m_ProjectDb->addScope("work");
     auto empClass  = scopeWork->addType<entity::Class>("Employee");
+
+    auto string_ = m_GlobalDb->typeByName("string");
+    ASSERT_TRUE(!!string_);
+    auto bool_ = m_GlobalDb->typeByName("bool");
+    ASSERT_TRUE(!!bool_);
+    auto double_ = m_GlobalDb->typeByName("double");
+    ASSERT_TRUE(!!double_);
+    auto void_ = m_GlobalDb->typeByName("void");
+    ASSERT_TRUE(!!void_);
 
     empClass->addField("firstName", string_->id(), "m_", entity::Private);
     empClass->addField("lastName",  string_->id(), "m_", entity::Private);
     empClass->addField("status",    bool_->id(),   "m_", entity::Private);
     empClass->addField("salary",    double_->id(), "m_", entity::Private);
 
-    auto constLinkToString = globalScope_->addType<entity::ExtendedType>();
+    auto constLinkToString = m_GlobalScope->addType<entity::ExtendedType>();
     constLinkToString->setTypeId(string_->id());
     constLinkToString->setConstStatus(true);
     constLinkToString->addLinkStatus();
@@ -90,7 +99,7 @@ TEST_F(ProjectMaker, MakeClass)
 
 TEST_F(ProjectMaker, MakeTemplateClass)
 {
-    auto scopeMemory = projectDb_->addScope("memory");
+    auto scopeMemory = m_ProjectDb->addScope("memory");
     auto ptrClass    = scopeMemory->addType<entity::TemplateClass>("shared_pointer");
     auto linkToPtr   = scopeMemory->addType<entity::ExtendedType>();
     linkToPtr->setTypeId(ptrClass->id());
@@ -115,9 +124,15 @@ TEST_F(ProjectMaker, MakeTemplateClass)
 
     ptrClass->makeMethod("~shared_pointer")->setReturnTypeId(entity::EntityID::nullID());
 
+    auto void_ = m_GlobalDb->typeByName("void");
+    ASSERT_TRUE(!!void_);
+
     auto resetMethod = ptrClass->makeMethod("reset");
     resetMethod->addParameter("other", pointerToT->id())->setDefaultValue("nullptr");
     resetMethod->setReturnTypeId(void_->id());
+
+    auto uint_ = m_GlobalDb->typeByName("uint");
+    ASSERT_TRUE(!!uint_);
 
     auto useCountMethod = ptrClass->makeMethod("use_count");
     useCountMethod->setReturnTypeId(uint_->id());

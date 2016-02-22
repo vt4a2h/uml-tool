@@ -28,7 +28,9 @@
 #include <entity/classmethod.h>
 #include <entity/property.h>
 
-class ClassComponents : public ::testing::Test
+#include "TestProjectBase.h"
+
+class ClassComponents : public ProjectBase
 {
 protected:
     void SetUp() override {}

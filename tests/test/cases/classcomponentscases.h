@@ -101,6 +101,7 @@ TEST_F(ClassComponents, Property)
 {
     // Check a several methods which are not covered in previous tests
     auto property = std::make_shared<entity::Property>();
+    property->setTypeSearcher(m_GlobalDb);
     ASSERT_EQ(property->name(), DEFAULT_NAME);
     ASSERT_EQ(property->typeId(), entity::EntityID::nullID());
 

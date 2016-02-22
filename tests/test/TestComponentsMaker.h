@@ -33,7 +33,7 @@ class ComponentsMaker : public ComponentsBase, public ::testing::Test
 {
 protected:
     ComponentsMaker()
-        : m_Maker(std::make_unique<components::ComponentsMaker>(m_ApplicationModel, m_Type, m_Scope))
+        : m_Maker(std::make_unique<components::ComponentsMaker>(m_ApplicationModel, m_Type, m_ProjectScope))
         , m_Parser(std::make_unique<components::ComponentSignatureParser>())
     {}
 

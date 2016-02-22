@@ -32,7 +32,9 @@
 #include <entity/templateclass.h>
 #include <entity/entity_types.hpp>
 
-class Enteties : public ::testing::Test
+#include "TestProjectBase.h"
+
+class Enteties : public ProjectBase
 {
 protected:
     virtual void SetUp() override
@@ -43,16 +45,6 @@ protected:
         _union         = std::make_unique<entity::Union>()        ;
         _class         = std::make_unique<entity::Class>()        ;
         _templateClass = std::make_unique<entity::TemplateClass>();
-    }
-
-    virtual void TearDown() override
-    {
-        _type.reset();
-        _extendedType.reset();
-        _enum.reset();
-        _union.reset();
-        _class.reset();
-        _templateClass.reset();
     }
 
     std::unique_ptr<entity::Type>          _type         ;
