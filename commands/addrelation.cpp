@@ -24,8 +24,12 @@
 
 #include <QGraphicsScene>
 
+#include <db/projectdatabase.h>
+
 #include <gui/graphics/entity.h>
 #include <gui/graphics/graphicsrelation.h>
+
+#include <project/project.h>
 
 #include <relationship/relation.h>
 
@@ -47,6 +51,13 @@ namespace commands {
     }
 
     /**
+     * @brief AddRelation::~AddRelation
+     */
+    AddRelation::~AddRelation()
+    {
+    }
+
+    /**
      * @brief AddRelation::redo
      */
     void AddRelation::redo()
@@ -55,16 +66,28 @@ namespace commands {
         auto scene = G_ASSERT(m_From->scene());
 
         if (m_Done) {
-            scene->addItem(G_ASSERT(m_Relation));
+            if (auto p = G_ASSERT(pr())) {
+                if (auto d = p->database()) {
+                    scene->addItem(G_ASSERT(m_GraphicRelation.get()));
+                    Q_ASSERT(!d->containsRelation(m_Relation->id()));
+                    d->addRelation(m_Relation);
+                }
+            }
         } else {
-            auto relationData = std::make_shared<relationship::Relation>(); // Just for test now
-            m_Relation = new graphics::Relation(relationData, m_From, m_To);
-            scene->addItem(m_Relation.data());
+            if (auto p = G_ASSERT(pr())) {
+                if (auto d = p->database()) {
 
-            m_Done = true;
+                    // TODO: specify relation type
+                    m_Relation = std::make_shared<relationship::Relation>();
+                    d->addRelation(m_Relation);
+
+                    m_GraphicRelation = std::make_unique<graphics::Relation>(m_Relation, m_From, m_To);
+                    scene->addItem(m_GraphicRelation.get());
+
+                    m_Done = true;
+                }
+            }
         }
-
-         m_CleaningRequired = false;
     }
 
     /**
@@ -75,17 +98,16 @@ namespace commands {
         Q_ASSERT(m_From && m_To);
         auto scene = G_ASSERT(m_From->scene());
 
-        scene->removeItem(m_Relation.data());
-        m_CleaningRequired = true;
+        scene->removeItem(m_GraphicRelation.get());
     }
 
     /**
-     * @brief AddRelation::cleanup
+     * @brief AddRelation::pr
+     * @return
      */
-    void AddRelation::cleanup()
+    project::SharedProject AddRelation::pr() const
     {
-        if (m_CleaningRequired && m_Relation)
-            delete m_Relation.data();
+        return m_Project.lock();
     }
 
 } // namespace commands

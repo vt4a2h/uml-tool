@@ -22,6 +22,8 @@
 *****************************************************************************/
 #pragma once
 
+#include <memory>
+
 #include <QPointer>
 
 namespace graphics {
@@ -31,6 +33,7 @@ namespace graphics {
 
     class Relation;
     using RelationPtr = QPointer<Relation>;
+    using UniqueGraphicRelation = std::unique_ptr<Relation>;
 
 } // namespace graphics
 

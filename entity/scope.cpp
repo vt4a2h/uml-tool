@@ -161,24 +161,14 @@ namespace entity {
     }
 
     /**
-     * @brief Scope::addClonedType
-     * @param type
-     */
-    void Scope::addClonedType(const SharedType &type)
-    {
-        SharedType newType(std::make_shared<Type>(*type));
-        newType->setScopeId(id());
-        newType->setId(GeneratorID::instance().genID());
-        m_Types[newType->id()] = newType;
-        m_TypesByName[newType->name()] = newType;
-    }
-
-    /**
      * @brief Scope::addExistsType
      * @param type
      */
     SharedType Scope::addExistsType(const SharedType &type)
     {
+        Q_ASSERT(!m_Types.contains(type->id()));
+        Q_ASSERT(!m_TypesByName.contains(type->name()));
+
         type->setScopeId(m_Id);
         m_TypesByName[type->name()] = type;
         return *m_Types.insert(type->id(), type);

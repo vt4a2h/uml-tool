@@ -63,7 +63,6 @@ namespace entity {
         SharedType type(const QString &name) ;
 
         template <class T = Type> std::shared_ptr<T> addType(const QString &name = "");
-        void addClonedType(const SharedType &type);
         SharedType addExistsType(const SharedType &type);
         bool containsType(const EntityID &typeId) const;
         bool containsType(const QString &name) const;
@@ -89,6 +88,8 @@ namespace entity {
     private:
         void copyFrom(const Scope &src);
         void moveFrom(Scope &&src);
+
+        // TODO: add map <HashType, counter> in order to uniquify elements names
 
         Scopes m_Scopes;
         Types  m_Types;

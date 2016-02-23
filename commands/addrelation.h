@@ -24,6 +24,10 @@
 
 #include <gui/graphics/graphics_types.h>
 
+#include <project/project_types.hpp>
+
+#include <relationship/relationship_types.hpp>
+
 #include "basecommand.h"
 
 namespace graphics {
@@ -39,18 +43,22 @@ namespace commands {
     public:
         AddRelation(const graphics::EntityPtr &from, const graphics::EntityPtr &to);
 
+        ~AddRelation();
+
     public: // QUndoCommand overrides
         void redo() override;
         void undo() override;
 
-    protected: // Base commands overrides
-        void cleanup() override;
-
     private:
-        bool m_CleaningRequired = false;
+        project::SharedProject pr() const;
+
         graphics::EntityPtr m_From;
         graphics::EntityPtr m_To;
-        graphics::RelationPtr m_Relation;
+
+        graphics::UniqueGraphicRelation m_GraphicRelation;
+        relationship::SharedRelation m_Relation;
+
+        project::WeakProject m_Project;
     };
 
 } // namespace commands

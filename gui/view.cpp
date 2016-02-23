@@ -157,13 +157,7 @@ namespace gui {
     {
         if (auto pr = project()) {
             auto projectDb = G_ASSERT(pr->database());
-            auto scope = projectDb->getScope(entity::EntityID::projectScopeID());
-            if (!scope && projectDb->anyScopes())
-                scope = G_ASSERT(projectDb->scopes().first());
-            else {
-                qWarning() << Q_FUNC_INFO << ": project has no scopes.";
-                return;
-            }
+            auto scope = G_ASSERT(projectDb->getScope(entity::EntityID::projectScopeID()));
 
             if (auto stack = pr->commandsStack()) {
                 auto pos = mapToScene(eventPos);
