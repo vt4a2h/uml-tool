@@ -261,6 +261,15 @@ namespace graphics {
     }
 
     /**
+     * @brief Entity::redraw
+     */
+    void Entity::redraw()
+    {
+        // TODO: add flags and update only needed elements, e.g. header
+        update(boundingRect());
+    }
+
+    /**
      * @brief Entity::mousePressEvent
      * @param event
      */

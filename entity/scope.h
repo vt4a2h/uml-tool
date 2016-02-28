@@ -28,8 +28,9 @@
 #include <QString>
 #include <QHash>
 
-#include <entity/entity_types.hpp>
+#include <helpers/entityhelpres.h>
 
+#include "entity_types.hpp"
 #include "qthelpers.h"
 #include "basicentity.h"
 #include "class.h"
@@ -78,6 +79,8 @@ namespace entity {
         void removeChildScope(const EntityID &typeId);
         ScopesList scopes() const;
 
+        // TODO: add slot to handle name changing
+
     signals:
         void typeSearcherRequired(const SharedTypeUser &);
 
@@ -86,10 +89,9 @@ namespace entity {
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
     private:
+        void setUniqueName(const SharedBasicEntity &e);
         void copyFrom(const Scope &src);
         void moveFrom(Scope &&src);
-
-        // TODO: add map <HashType, counter> in order to uniquify elements names
 
         Scopes m_Scopes;
         Types  m_Types;
@@ -103,6 +105,8 @@ namespace entity {
                                                      std::is_base_of<Type, T>::value,
                                                      T, Type>::type;
         auto value = std::make_shared<ResultType>(name, m_Id);
+        setUniqueName(value);
+
         m_Types[value->id()] = value;
         m_TypesByName[value->name()] = value;
 

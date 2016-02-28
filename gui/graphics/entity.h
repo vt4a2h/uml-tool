@@ -71,6 +71,9 @@ namespace graphics {
         void positionChanged(const QPointF &from, const QPointF &to);
         void sizeChanged();
 
+    public slots:
+        void redraw();
+
     private:
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;

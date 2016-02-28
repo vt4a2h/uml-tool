@@ -53,10 +53,21 @@ namespace entity {
         }
     }
 
-    // Feel free to add required types
-    static const QHash<QString, QString> nameIDMap =
+    void uniquifyName(BasicEntity &ent, const QStringList &names)
     {
-        {"bool", BOOL_ID}, {"void", VOID_ID},
-    };
+        EntityID::ValueType counter = ent.id().value() - EntityID::firstFreeID().value();
+        while (names.contains(ent.name())) {
+
+            Q_ASSERT(counter != 0);
+            QString prevNum = QString::number(counter - 1);
+            QString newName = ent.name();
+            if (newName.endsWith(prevNum))
+                newName = newName.remove(prevNum).trimmed();
+
+            ent.setName(newName + QChar::Space + QString::number(counter));
+
+            ++counter;
+        }
+    }
 
 } // namespace entity

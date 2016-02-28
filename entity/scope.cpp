@@ -166,10 +166,12 @@ namespace entity {
      */
     SharedType Scope::addExistsType(const SharedType &type)
     {
+        type->setScopeId(m_Id);
+        setUniqueName(type);
+
         Q_ASSERT(!m_Types.contains(type->id()));
         Q_ASSERT(!m_TypesByName.contains(type->name()));
 
-        type->setScopeId(m_Id);
         m_TypesByName[type->name()] = type;
         return *m_Types.insert(type->id(), type);
     }
@@ -296,6 +298,21 @@ namespace entity {
     ScopesList Scope::scopes() const
     {
         return m_Scopes.values();
+    }
+
+    /**
+     * @brief Scope::onTypeNameChanged
+     * @param name
+     */
+    void Scope::setUniqueName(const SharedBasicEntity &e)
+    {
+        QString oldName = value->name();
+        uniquifyName(*value, m_TypesByName.keys());
+
+        if (oldName != ) {
+            m_TypesByName.remove(e);
+            m_TypesByName[newName] = type;
+        }
     }
 
     /**

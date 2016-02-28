@@ -50,7 +50,7 @@ namespace entity {
                                                  const SharedType &type, const QPointF &pos) const
     {
         graphics::Entity * entity = newEntity(scene, pos, type);
-        connectEntity(entity, project.get());
+        connectEntity(entity, project.get(), type.get());
         return entity;
     }
 
@@ -61,19 +61,25 @@ namespace entity {
     {
     }
 
-    void EntitiesFactory::connectEntity(graphics::Entity * entity, project::Project * currentProject) const
+    void EntitiesFactory::connectEntity(graphics::Entity *entity, project::Project *currentProject,
+                                        BasicEntity *type) const
     {
         Q_ASSERT(entity);
         Q_ASSERT(currentProject);
+        Q_ASSERT(type);
 
+        // Connect project
         QObject::connect(entity, &graphics::Entity::xChanged, currentProject, &project::Project::touch);
         QObject::connect(entity, &graphics::Entity::yChanged, currentProject, &project::Project::touch);
         QObject::connect(entity, &graphics::Entity::moved,
                          [=](const QPointF &from, const QPointF &to) {
-                            auto cmd = std::make_unique<commands::MoveGraphicObject>(*entity, entity->typeObject()->name(),
-                                                                                     from, to);
+                            auto cmd = std::make_unique<commands::MoveGraphicObject>(
+                                           *entity, entity->typeObject()->name(), from, to);
                             currentProject->commandsStack()->push(cmd.release());
                          });
+
+        // Connect type
+        QObject::connect(type, &BasicEntity::nameChanged, entity, &graphics::Entity::redraw);
     }
 
     graphics::Entity *EntitiesFactory::newEntity(QGraphicsScene &scene, const QPointF &pos,

@@ -29,4 +29,7 @@ namespace entity {
     /// Get scope from chain
     SharedScope chainScopeSearch(const entity::Scopes& scopes, const QStringList &scopesNames);
 
+    /// Set unique name for entity
+    void uniquifyName(BasicEntity &ent, const QStringList &names);
+
 } // namespace entity

@@ -47,12 +47,13 @@ namespace entity {
                    QGraphicsScene &scene, const QPointF &pos) const
         {
             auto type = model->makeType<Type>(scopeID);
-            type->setName(type->defaultName());
 
             auto &&currentProject = model->currentProject();
 
             graphics::Entity * entity = newEntity(scene, pos, type);
-            connectEntity(entity, currentProject.get());
+            connectEntity(entity, currentProject.get(), type.get());
+
+            type->setName(type->defaultName());
 
             currentProject->touch();
 
@@ -71,7 +72,8 @@ namespace entity {
         graphics::Entity *newEntity(QGraphicsScene &scene, const QPointF &pos,
                                     const entity::SharedType &type = nullptr) const;
 
-        void connectEntity(graphics::Entity * entity, project::Project * currentProject) const;
+        void connectEntity(graphics::Entity *entity, project::Project *currentProject,
+                           entity::BasicEntity *type) const;
     };
 
 } // namespace entity
