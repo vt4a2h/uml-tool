@@ -63,7 +63,7 @@ namespace entity {
         static QString staticDefaultName();
 
     signals:
-        void nameChanged(const QString &newName);
+        void nameChanged(const QString &oldName, const QString &newName);
 
     public:
         BasicEntity &operator =(const BasicEntity &rhs);

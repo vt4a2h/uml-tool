@@ -69,17 +69,14 @@ namespace entity {
         Q_ASSERT(type);
 
         // Connect project
-        QObject::connect(entity, &graphics::Entity::xChanged, currentProject, &project::Project::touch);
-        QObject::connect(entity, &graphics::Entity::yChanged, currentProject, &project::Project::touch);
-        QObject::connect(entity, &graphics::Entity::moved,
-                         [=](const QPointF &from, const QPointF &to) {
-                            auto cmd = std::make_unique<commands::MoveGraphicObject>(
-                                           *entity, entity->typeObject()->name(), from, to);
-                            currentProject->commandsStack()->push(cmd.release());
-                         });
-
-        // Connect type
-        QObject::connect(type, &BasicEntity::nameChanged, entity, &graphics::Entity::redraw);
+        G_CONNECT(entity, &graphics::Entity::xChanged, currentProject, &project::Project::touch);
+        G_CONNECT(entity, &graphics::Entity::yChanged, currentProject, &project::Project::touch);
+        G_CONNECT(entity, &graphics::Entity::moved,
+                          [=](const QPointF &from, const QPointF &to) {
+                             auto cmd = std::make_unique<commands::MoveGraphicObject>(
+                                            *entity, entity->typeObject()->name(), from, to);
+                             currentProject->commandsStack()->push(cmd.release());
+                          });
     }
 
     graphics::Entity *EntitiesFactory::newEntity(QGraphicsScene &scene, const QPointF &pos,

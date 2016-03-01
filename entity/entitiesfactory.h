@@ -46,15 +46,11 @@ namespace entity {
         makeEntity(const models::SharedApplicationModel &model, const entity::EntityID  &scopeID,
                    QGraphicsScene &scene, const QPointF &pos) const
         {
-            auto type = model->makeType<Type>(scopeID);
+            auto type = model->makeType<Type>(scopeID, Type::staticDefaultName());
+            graphics::Entity * entity = newEntity(scene, pos, type);
 
             auto &&currentProject = model->currentProject();
-
-            graphics::Entity * entity = newEntity(scene, pos, type);
             connectEntity(entity, currentProject.get(), type.get());
-
-            type->setName(type->defaultName());
-
             currentProject->touch();
 
             return {type, entity};

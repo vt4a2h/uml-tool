@@ -36,6 +36,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QStringList>
+#include <QDebug>
 
 #include <utility/helpfunctions.h>
 
@@ -167,7 +168,7 @@ namespace entity {
     SharedType Scope::addExistsType(const SharedType &type)
     {
         type->setScopeId(m_Id);
-        setUniqueName(type);
+        uniquifyName(*type, m_TypesByName.keys());
 
         Q_ASSERT(!m_Types.contains(type->id()));
         Q_ASSERT(!m_TypesByName.contains(type->name()));
@@ -301,21 +302,6 @@ namespace entity {
     }
 
     /**
-     * @brief Scope::onTypeNameChanged
-     * @param name
-     */
-    void Scope::setUniqueName(const SharedBasicEntity &e)
-    {
-        QString oldName = value->name();
-        uniquifyName(*value, m_TypesByName.keys());
-
-        if (oldName != ) {
-            m_TypesByName.remove(e);
-            m_TypesByName[newName] = type;
-        }
-    }
-
-    /**
      * @brief Scope::toJson
      * @return
      */
@@ -379,6 +365,26 @@ namespace entity {
         });
 
         Q_ASSERT(m_Types.count() == m_TypesByName.count());
+    }
+
+    /**
+     * @brief Scope::onEntityNameChanged
+     * @param oldName
+     * @param newName
+     */
+    void Scope::onTypeNameChanged(const QString &oldName, const QString &newName)
+    {
+        if (!m_TypesByName.contains(newName) && m_TypesByName.contains(oldName)) {
+            auto type = m_TypesByName[oldName];
+            m_TypesByName.remove(oldName);
+
+            Q_ASSERT(type->name() == newName);
+
+            m_TypesByName[newName] = type;
+            m_Types[type->id()] = type;
+        } else {
+            qWarning() << "Wrong new type name: " << newName << ", old was: " << oldName;
+        }
     }
 
     /**

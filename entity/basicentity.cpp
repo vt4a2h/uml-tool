@@ -189,8 +189,10 @@ namespace entity {
     void BasicEntity::setName(const QString &name)
     {
         if (m_Name != name) {
+            auto oldName = m_Name;
             m_Name = name;
-            emit nameChanged(m_Name);
+
+            emit nameChanged(oldName, m_Name);
         }
     }
 

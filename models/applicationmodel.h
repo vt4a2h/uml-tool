@@ -93,10 +93,10 @@ namespace models {
             if (auto scope = currentProject()->database()->getScope(scopeID)) {
                 if (auto type = scope->addType<T>(name)) {
                     m_TreeModel->addType(type, scope->id(), currentProject()->name());
-                    connect(type.get(), &entity::BasicEntity::nameChanged,
-                            m_CurrentProject.get(), &project::Project::touch);
-                    // todo: connect scope id change to project touch
-                    // note: moce to the factory class?
+                    G_CONNECT(type.get(), &entity::BasicEntity::nameChanged,
+                              m_CurrentProject.get(), &project::Project::touch);
+                    G_CONNECT(type.get(), &entity::BasicEntity::nameChanged,
+                              scope.get(), &entity::Scope::onTypeNameChanged);
 
                     return type;
                 }

@@ -79,17 +79,17 @@ namespace entity {
         void removeChildScope(const EntityID &typeId);
         ScopesList scopes() const;
 
-        // TODO: add slot to handle name changing
-
-    signals:
-        void typeSearcherRequired(const SharedTypeUser &);
-
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
+    public slots:
+        void onTypeNameChanged(const QString &oldName, const QString &newName);
+
+    signals:
+        void typeSearcherRequired(const SharedTypeUser &);
+
     private:
-        void setUniqueName(const SharedBasicEntity &e);
         void copyFrom(const Scope &src);
         void moveFrom(Scope &&src);
 
@@ -105,7 +105,7 @@ namespace entity {
                                                      std::is_base_of<Type, T>::value,
                                                      T, Type>::type;
         auto value = std::make_shared<ResultType>(name, m_Id);
-        setUniqueName(value);
+        uniquifyName(*value, m_TypesByName.keys());
 
         m_Types[value->id()] = value;
         m_TypesByName[value->name()] = value;
