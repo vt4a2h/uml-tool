@@ -24,7 +24,7 @@
 
 #include <gui/graphics/graphics_types.h>
 
-#include <project/project_types.hpp>
+#include <db/db_types.hpp>
 
 #include <relationship/relationship_types.hpp>
 
@@ -41,7 +41,8 @@ namespace commands {
     class AddRelation : public BaseCommand
     {
     public:
-        AddRelation(const graphics::EntityPtr &from, const graphics::EntityPtr &to);
+        AddRelation(const db::SharedProjectDatabase &database, const graphics::EntityPtr &from,
+                    const graphics::EntityPtr &to);
 
         ~AddRelation();
 
@@ -50,7 +51,7 @@ namespace commands {
         void undo() override;
 
     private:
-        project::SharedProject pr() const;
+        db::SharedProjectDatabase database() const;
 
         graphics::EntityPtr m_From;
         graphics::EntityPtr m_To;
@@ -58,7 +59,7 @@ namespace commands {
         graphics::UniqueGraphicRelation m_GraphicRelation;
         relationship::SharedRelation m_Relation;
 
-        project::WeakProject m_Project;
+        db::WeakProjectDatabase m_Db;
     };
 
 } // namespace commands

@@ -196,8 +196,9 @@ namespace graphics {
 
             // Add relation (do it via command, now just for test)
             if (!m_TrackFrom.isNull() && !m_TrackTo.isNull()) {
-                auto cmd = std::make_unique<commands::AddRelation>(m_TrackFrom, m_TrackTo);
                 auto currentProject = G_ASSERT(pr());
+                auto cmd = std::make_unique<commands::AddRelation>(currentProject->database(),
+                                                                   m_TrackFrom, m_TrackTo);
                 currentProject->commandsStack()->push(cmd.release());
                 // TODO: handle situation when user moved item and then clicked undo
                 // relation is not updated in this case

@@ -29,8 +29,6 @@
 #include <gui/graphics/entity.h>
 #include <gui/graphics/graphicsrelation.h>
 
-#include <project/project.h>
-
 #include <relationship/relation.h>
 
 #include "qthelpers.h"
@@ -42,12 +40,13 @@ namespace commands {
      * @param from
      * @param to
      */
-    AddRelation::AddRelation(const graphics::EntityPtr &from,
+    AddRelation::AddRelation(const db::SharedProjectDatabase &database, const graphics::EntityPtr &from,
                              const graphics::EntityPtr &to)
         : m_From(from)
         , m_To(to)
+        , m_Db(database)
     {
-        Q_ASSERT(m_From && m_To && m_From->scene() == m_To->scene());
+        Q_ASSERT(m_Db.lock() && m_From && m_To && m_From->scene() == m_To->scene());
     }
 
     /**
@@ -66,26 +65,22 @@ namespace commands {
         auto scene = G_ASSERT(m_From->scene());
 
         if (m_Done) {
-            if (auto p = G_ASSERT(pr())) {
-                if (auto d = p->database()) {
-                    scene->addItem(G_ASSERT(m_GraphicRelation.get()));
-                    Q_ASSERT(!d->containsRelation(m_Relation->id()));
-                    d->addRelation(m_Relation);
-                }
+            if (auto d = G_ASSERT(database())) {
+                scene->addItem(G_ASSERT(m_GraphicRelation.get()));
+                Q_ASSERT(!d->containsRelation(m_Relation->id()));
+                d->addRelation(m_Relation);
             }
         } else {
-            if (auto p = G_ASSERT(pr())) {
-                if (auto d = p->database()) {
+            if (auto d = G_ASSERT(database())) {
 
-                    // TODO: specify relation type
-                    m_Relation = std::make_shared<relationship::Relation>();
-                    d->addRelation(m_Relation);
+                // TODO: specify relation type
+                m_Relation = std::make_shared<relationship::Relation>();
+                d->addRelation(m_Relation);
 
-                    m_GraphicRelation = std::make_unique<graphics::Relation>(m_Relation, m_From, m_To);
-                    scene->addItem(m_GraphicRelation.get());
+                m_GraphicRelation = std::make_unique<graphics::Relation>(m_Relation, m_From, m_To);
+                scene->addItem(m_GraphicRelation.get());
 
-                    m_Done = true;
-                }
+                m_Done = true;
             }
         }
     }
@@ -105,9 +100,9 @@ namespace commands {
      * @brief AddRelation::pr
      * @return
      */
-    project::SharedProject AddRelation::pr() const
+    db::SharedProjectDatabase AddRelation::database() const
     {
-        return m_Project.lock();
+        return m_Db.lock();
     }
 
 } // namespace commands

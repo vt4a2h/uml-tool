@@ -37,6 +37,7 @@ namespace db {
     class ProjectDatabase;
     using SharedDatabase = std::shared_ptr<Database>;
     using SharedProjectDatabase = std::shared_ptr<ProjectDatabase>;
+    using WeakProjectDatabase = std::weak_ptr<ProjectDatabase>;
 
     using IDPos = QPair<entity::EntityID, QPointF>;
     using ItemsPos = QVector<IDPos>;

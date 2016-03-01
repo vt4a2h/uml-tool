@@ -38,7 +38,7 @@ namespace graphics {
         /// Find first intersection point of polyline segment and line
         inline QPointF intersection(const QPolygonF &p, const QLineF &l)
         {
-            Q_ASSERT(p.count() == 4);
+//            Q_ASSERT(p.count() == 4);
 
             QPointF result(defaultPoint);
             for (int i = 0, j = 1, c = p.count(); j < c; ++i, ++j)
