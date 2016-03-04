@@ -156,7 +156,6 @@ namespace graphics {
             // Check an element under the cursor
             QPointF scenePos = event->scenePos();
             if (auto elem = entElem(this, scenePos)) {
-
                 // Setup second element
                 if (elem != m_TrackFrom && elem != m_TrackTo) {
                     setTrackedItemStatus(m_TrackTo, false /*status*/, true /*update*/);
@@ -164,7 +163,6 @@ namespace graphics {
                     setTrackedItemStatus(m_TrackTo, true /*status*/, true /*update*/);
                 }
             } else {
-
                 // Unselect previous second element
                 setTrackedItemStatus(m_TrackTo, false /*status*/, true /*update*/);
                 m_TrackTo.clear();
@@ -209,6 +207,8 @@ namespace graphics {
             m_TrackFrom.clear();
             setTrackedItemStatus(m_TrackTo, false);
             m_TrackTo.clear();
+
+            emit relationCompleted();
 
             event->accept();
             return;

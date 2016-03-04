@@ -52,11 +52,12 @@ namespace commands {
 
     private:
         db::SharedProjectDatabase database() const;
+        void removeRelationFromScene();
 
         graphics::EntityPtr m_From;
         graphics::EntityPtr m_To;
 
-        graphics::UniqueGraphicRelation m_GraphicRelation;
+        graphics::GraphicRelationPtr m_GraphicRelation;
         relationship::SharedRelation m_Relation;
 
         db::WeakProjectDatabase m_Db;

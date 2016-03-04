@@ -40,12 +40,13 @@ namespace entity {
     {
     public:
         Type();
-        Type(Type &&src);
-        Type(const Type &src);
         Type(const QString &name, const EntityID &scopeId, const EntityID &typeId = EntityID::nullID());
+        Type(Type &&) noexcept = default;
+        Type(const Type &) = default;
 
-        Type &operator =(const Type &rhs);
-        Type &operator =(Type &&rhs);
+        Type& operator= (Type &&) noexcept = default;
+        Type& operator= (const Type &) = default;
+
         friend bool operator ==(const Type &lhs, const Type &rhs);
 
         virtual bool isEqual(const Type &rhs, bool withTypeid = true) const;
@@ -63,16 +64,8 @@ namespace entity {
         QString defaultName() const override;
         static QString staticDefaultName();
 
-    protected:
-        virtual void moveFrom(Type &&src);
-        virtual void copyFrom(const Type &src);
-
     private:
-        void baseTypeName();
-
-        // position
-        QString m_X;
-        QString m_Y;
+        void setBaseTypeName();
     };
 
 } // namespace entity

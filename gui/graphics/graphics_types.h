@@ -34,6 +34,7 @@ namespace graphics {
     class Relation;
     using RelationPtr = QPointer<Relation>;
     using UniqueGraphicRelation = std::unique_ptr<Relation>;
+    using GraphicRelationPtr = QPointer<Relation>;
 
 } // namespace graphics
 

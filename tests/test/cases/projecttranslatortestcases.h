@@ -147,13 +147,10 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
     futureResult = "double sum(double a, double b) const";
-    auto doubleType = m_GlobalScope->addExistsType(
-                          std::make_shared<entity::Type>("double", entity::EntityID::globalScopeID(),
-                                                         entity::EntityID::firstFreeID().value() + 3));
     method->setName("sum");
-    method->setReturnTypeId(doubleType->id());
-    method->addParameter("a", doubleType->id());
-    method->addParameter("b", doubleType->id());
+    method->setReturnTypeId(m_double->id());
+    method->addParameter("a", m_double->id());
+    method->addParameter("b", m_double->id());
     code = m_Translator->translate(method);
     ASSERT_EQ(futureResult.toStdString(), code.toHeader.toStdString());
 
@@ -172,15 +169,11 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
     fooExt->addPointerStatus();
     fooExt->setTypeId(foo->id());
 
-    auto qstr = m_GlobalScope->addExistsType(
-                    std::make_shared<entity::Type>(
-                        "QString", entity::EntityID::globalScopeID(),
-                        entity::EntityID::firstFreeID().value() + 6));
     auto qstrExt = std::make_shared<entity::ExtendedType>();
     qstrExt->setId(entity::EntityID::firstFreeID().value() + 7);
     m_GlobalScope->addExistsType(qstrExt);
     qstrExt->addLinkStatus();
-    qstrExt->setTypeId(qstr->id());
+    qstrExt->setTypeId(m_qstring->id());
     qstrExt->setConstStatus(true);
 
     method->setName("getFoo");
@@ -240,9 +233,8 @@ TEST_F(ProjectTranslatorTest, TemplateClassMethod)
     futureResult = "template <class T = some_scope::Foo>\n"
                    "std::shared_ptr<T> make(const QString &name)";
     method = std::make_shared<entity::TemplateClassMethod>("make");
-    auto qstring = m_GlobalScope->addType("QString");
     auto constLinkToQstr = m_GlobalScope->addType<entity::ExtendedType>();
-    constLinkToQstr->setTypeId(qstring->id());
+    constLinkToQstr->setTypeId(m_qstring->id());
     constLinkToQstr->addLinkStatus();
     constLinkToQstr->setConstStatus(true);
     method->addParameter("name", constLinkToQstr->id());
@@ -301,8 +293,7 @@ TEST_F(ProjectTranslatorTest, Union)
     ASSERT_EQ(futureResult, code.toHeader);
 
     futureResult = "union Foo {\n    double a;\n    int b;\n};";
-    auto typeDouble = m_GlobalScope->addType("double");
-    fooUnion->addField("a", typeDouble->id());
+    fooUnion->addField("a", m_double->id());
     fooUnion->addField("b", m_int->id());
     code = m_Translator->translate(fooUnion);
     ASSERT_EQ(futureResult, code.toHeader);
@@ -387,8 +378,7 @@ TEST_F(ProjectTranslatorTest, Class)
     cGetter->setSection(entity::Public);
 
     auto cSetter = fooClass->makeMethod("setC");
-    auto voidType = m_GlobalScope->addType("void");
-    cSetter->setReturnTypeId(voidType->id());
+    cSetter->setReturnTypeId(m_void->id());
     cSetter->setSection(entity::Public);
     auto constLintToInt = m_ProjectScope->addType<entity::ExtendedType>();
     constLintToInt->setTypeId(cField->typeId());
@@ -503,8 +493,7 @@ TEST_F(ProjectTranslatorTest, ClassImplementation)
                    "{\n"
                    "}\n";
     entity::SharedMethod setterForC(classFoo->makeMethod("setC"));
-    entity::SharedType voidType(m_GlobalScope->addType("void"));
-    setterForC->setReturnTypeId(voidType->id());
+    setterForC->setReturnTypeId(m_void->id());
     setterForC->addParameter("c", m_int->id());
 
     code = m_Translator->generateClassMethodsImpl(classFoo);
@@ -516,7 +505,7 @@ TEST_F(ProjectTranslatorTest, ClassImplementation)
                           "{\n"
                           "}\n");
     entity::SharedTemplateClassMethod swapMethod(classFoo->makeMethod<entity::TemplateClassMethod>("swap"));
-    swapMethod->setReturnTypeId(voidType->id());
+    swapMethod->setReturnTypeId(m_void->id());
     entity::SharedType typeT(swapMethod->addLocalType("T"));
     swapMethod->addTemplateParameter(typeT->id());
     entity::SharedExtendedType typeTLink(swapMethod->addLocalType<entity::ExtendedType>());
@@ -538,9 +527,8 @@ TEST_F(ProjectTranslatorTest, TemplateClassImplementation)
                          "{\n"
                          "}");
 
-    entity::SharedType voidType(m_GlobalScope->addType("void"));
-
-    entity::SharedScope _std(m_GlobalDb->addScope("std"));
+    entity::SharedScope _std = m_GlobalDb->getScope(entity::EntityID::stdScopeID());
+    ASSERT_TRUE(!!_std);
     entity::SharedType dd(_std->addType("default_delete"));
 
     entity::SharedTemplateClass scopedPointer(m_ProjectScope->addType<entity::TemplateClass>("ScopedPointer"));
@@ -553,7 +541,7 @@ TEST_F(ProjectTranslatorTest, TemplateClassImplementation)
     scopedPointer->addTemplateParameter(deleter->id(), defaultDelete->id());
 
     entity::SharedMethod resetMethod(scopedPointer->makeMethod("reset"));
-    resetMethod->setReturnTypeId(voidType->id());
+    resetMethod->setReturnTypeId(m_void->id());
     entity::SharedExtendedType valuePtr(scopedPointer->addLocalType<entity::ExtendedType>());
     valuePtr->setTypeId(value->id());
     valuePtr->addPointerStatus();

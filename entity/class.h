@@ -50,11 +50,11 @@ namespace entity {
 
     public:
         Class();
-        Class(Class &&src);
+        Class(Class &&src) noexcept = default;
         Class(const Class &src);
         Class(const QString &name, const EntityID &scopeId);
 
-        Class &operator =(Class &&rhs);
+        Class &operator =(Class &&rhs) noexcept = default;
         Class &operator =(const Class &rhs);
 
         friend bool operator ==(const Class &lhs, const Class &rhs);
@@ -139,7 +139,6 @@ namespace entity {
         void typeUserAdded(const SharedTypeUser& tu);
 
     protected:
-        void moveFrom(Class &&src);
         void copyFrom(const Class &src);
 
     private Q_SLOTS:

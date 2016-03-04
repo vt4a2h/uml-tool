@@ -59,17 +59,6 @@ namespace entity {
     /**
      * @brief BasicEntity::BasicEntity
      * @param src
-     */
-    BasicEntity::BasicEntity(BasicEntity &&src)
-        : m_Name(std::move(src.m_Name))
-        , m_Id(std::move(src.m_Id))
-        , m_ScopeId(std::move(src.m_ScopeId))
-    {
-    }
-
-    /**
-     * @brief BasicEntity::BasicEntity
-     * @param src
      * @param errorList
      */
     BasicEntity::BasicEntity(const QJsonObject &src, QStringList &errorList)
@@ -110,22 +99,6 @@ namespace entity {
     bool operator ==(const BasicEntity &lhs, const BasicEntity &rhs)
     {
         return lhs.m_Name == rhs.m_Name && lhs.m_Id == rhs.m_Id && lhs.m_ScopeId == rhs.m_ScopeId;
-    }
-
-    /**
-     * @brief BasicEntity::operator =
-     * @param rhs
-     * @return
-     */
-    BasicEntity &BasicEntity::operator =(BasicEntity &&rhs)
-    {
-        if (this != &rhs) {
-            m_Name = std::move(rhs.m_Name);
-            m_Id = std::move(rhs.m_Id);
-            m_ScopeId = std::move(rhs.m_ScopeId);
-        }
-
-        return *this;
     }
 
     /**

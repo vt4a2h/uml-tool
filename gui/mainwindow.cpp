@@ -364,6 +364,8 @@ namespace gui {
                   m_MainScene.get(), &graphics::Scene::setShowRelationTrack);
         G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
                   m_MainScene.get(), &graphics::Scene::onProjectChanged);
+        G_CONNECT(m_MainScene.get(), &graphics::Scene::relationCompleted,
+                  this, &MainWindow::onRelationCompleted);
     }
 
     /**
@@ -490,6 +492,14 @@ namespace gui {
         } else {
             qWarning() << QString("Current project with id %1 is not found.").arg(name);
         }
+    }
+
+    /**
+     * @brief MainWindow::onRelationMade
+     */
+    void MainWindow::onRelationCompleted()
+    {
+        ui->actionAddRelation->setChecked(false);
     }
 
     /**

@@ -48,26 +48,6 @@ namespace entity {
 
     /**
      * @brief Type::Type
-     * @param src
-     */
-    Type::Type(Type &&src)
-        : BasicEntity(std::move(src))
-    {
-       moveFrom(std::move(src));
-    }
-
-    /**
-     * @brief Type::Type
-     * @param src
-     */
-    Type::Type(const Type &src)
-        : BasicEntity(src)
-    {
-        copyFrom(src);
-    }
-
-    /**
-     * @brief Type::Type
      * @param name
      * @param scopeId
      * @param typeId
@@ -76,22 +56,7 @@ namespace entity {
         : BasicEntity(name, scopeId, typeId.isValid() ? typeId : GeneratorID::instance().genID() )
     {
         if (m_Name.isEmpty() || m_Name == DEFAULT_NAME)
-            baseTypeName();
-    }
-
-    /**
-     * @brief Type::operator =
-     * @param rhs
-     * @return
-     */
-    Type &Type::operator =(Type &&rhs)
-    {
-        if (this != &rhs) {
-            BasicEntity::operator =(std::move(rhs));
-            moveFrom(std::move(rhs));
-        }
-
-        return *this;
+            setBaseTypeName();
     }
 
     /**
@@ -103,21 +68,6 @@ namespace entity {
     bool operator ==(const Type &lhs, const Type &rhs)
     {
         return lhs.isEqual(rhs);
-    }
-
-    /**
-     * @brief Type::operator =
-     * @param rhs
-     * @return
-     */
-    Type &Type::operator =(const Type &rhs)
-    {
-        if (this != &rhs) {
-            BasicEntity::operator =(rhs);
-            copyFrom(rhs);
-        }
-
-        return *this;
     }
 
     /**
@@ -205,33 +155,15 @@ namespace entity {
      */
     bool Type::isEqual(const Type &rhs, bool withTypeid) const
     {
-        return rhs.hashType() == this->hashType()       &&
-                m_Name        == rhs.m_Name             &&
+        return rhs.hashType() == this->hashType()      &&
+               m_Name        == rhs.m_Name             &&
                ( withTypeid ? m_Id == rhs.m_Id : true );
-    }
-
-    /**
-     * @brief Type::moveFrom
-     * @param src
-     */
-    void Type::moveFrom(Type &&src)
-    {
-        Q_UNUSED(src);
-    }
-
-    /**
-     * @brief Type::copyFrom
-     * @param src
-     */
-    void Type::copyFrom(const Type &src)
-    {
-        Q_UNUSED(src);
     }
 
     /**
      * @brief Type::generateUniqueName
      */
-    void Type::baseTypeName()
+    void Type::setBaseTypeName()
     {
         m_Name = BASE_TYPE_NAME;
     }

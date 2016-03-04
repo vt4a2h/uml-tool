@@ -53,6 +53,7 @@ namespace entity {
     ExtendedType::ExtendedType(const QString &name, const EntityID &scopeId)
         : Type(name, scopeId)
         , m_ConstStatus(false)
+        , m_UseAlias(false)
     {
     }
 
@@ -73,7 +74,8 @@ namespace entity {
      */
     bool ExtendedType::isLink() const
     {
-        return range::find_if(m_PointersAndLinks, [](const Pl &pl){ return pl.first == "&"; }) != m_PointersAndLinks.end();
+        return range::find_if(m_PointersAndLinks, [](auto &&pl){ return pl.first == "&"; }) !=
+               m_PointersAndLinks.end();
     }
 
     /**
@@ -100,7 +102,8 @@ namespace entity {
      */
     bool ExtendedType::isPointer() const
     {
-        return range::find_if(m_PointersAndLinks, [](const Pl &pl){ return pl.first == "*"; }) != m_PointersAndLinks.end();
+        return range::find_if(m_PointersAndLinks, [](auto &&pl){ return pl.first == "*"; }) !=
+               m_PointersAndLinks.end();
     }
 
     /**
@@ -212,6 +215,7 @@ namespace entity {
 
         result.insert("Const status", m_ConstStatus);
         result.insert("Type id", m_TypeId.toJson());
+        result.insert("Use alias", m_UseAlias);
 
         QJsonArray pointersAndLinks;
         QJsonObject obj;
@@ -238,8 +242,12 @@ namespace entity {
     void ExtendedType::fromJson(const QJsonObject &src, QStringList &errorList)
     {
        Type::fromJson(src, errorList);
-       utility::checkAndSet(src, "Const status", errorList, [&src, this](){ m_ConstStatus = src["Const status"].toBool(); });
-       utility::checkAndSet(src, "Type id", errorList, [&src, &errorList, this](){ m_TypeId.fromJson(src["Type id"], errorList); });
+       utility::checkAndSet(src, "Const status", errorList,
+                            [&src, this](){ m_ConstStatus = src["Const status"].toBool(); });
+       utility::checkAndSet(src, "Type id", errorList,
+                            [&src, &errorList, this](){ m_TypeId.fromJson(src["Type id"], errorList); });
+       utility::checkAndSet(src, "Use alias", errorList,
+                            [&src, this](){ m_UseAlias = src["Use alias"].toBool(); });
 
        m_PointersAndLinks.clear();
        utility::checkAndSet(src, "Pointers and links", errorList, [&src, &errorList, this](){
@@ -248,8 +256,10 @@ namespace entity {
                QJsonObject obj;
                for (auto &&value : src["Pointers and links"].toArray()) {
                     obj = value.toObject();
-                    utility::checkAndSet(obj, "Pl", errorList, [&obj, &pl](){ pl.first = obj["Pl"].toString(); });
-                    utility::checkAndSet(obj, "Const pl status", errorList, [&obj, &pl](){ pl.second = obj["Const pl status"].toBool(); });
+                    utility::checkAndSet(obj, "Pl", errorList,
+                                         [&obj, &pl](){ pl.first = obj["Pl"].toString(); });
+                    utility::checkAndSet(obj, "Const pl status", errorList,
+                                         [&obj, &pl](){ pl.second = obj["Const pl status"].toBool(); });
                     m_PointersAndLinks << pl;
                }
            } else {
@@ -326,6 +336,24 @@ namespace entity {
     }
 
     /**
+     * @brief ExtendedType::useAlias
+     * @return
+     */
+    bool ExtendedType::useAlias() const
+    {
+        return m_UseAlias;
+    }
+
+    /**
+     * @brief ExtendedType::setUseAlias
+     * @param useAlias
+     */
+    void ExtendedType::setUseAlias(bool useAlias)
+    {
+        m_UseAlias = useAlias;
+    }
+
+    /**
      * @brief ExtendedType::isEqual
      * @param rhs
      * @return
@@ -336,11 +364,12 @@ namespace entity {
             return false;
 
         auto r = static_cast<const ExtendedType &>(rhs);
-        return Type::isEqual(r, withTypeid)                 &&
-               m_ConstStatus        == r.m_ConstStatus      &&
-               m_TypeId             == r.m_TypeId           &&
-               m_PointersAndLinks   == r.m_PointersAndLinks &&
-               m_TemplateParameters == r.m_TemplateParameters;
+        return Type::isEqual(r, withTypeid)                   &&
+               m_ConstStatus        == r.m_ConstStatus        &&
+               m_TypeId             == r.m_TypeId             &&
+               m_PointersAndLinks   == r.m_PointersAndLinks   &&
+               m_TemplateParameters == r.m_TemplateParameters &&
+               m_UseAlias           == r.m_UseAlias;
     }
 
 } // namespace entity

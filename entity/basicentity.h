@@ -67,7 +67,7 @@ namespace entity {
 
     public:
         BasicEntity &operator =(const BasicEntity &rhs);
-        BasicEntity &operator =(BasicEntity &&rhs);
+        BasicEntity &operator =(BasicEntity &&rhs) noexcept = default;
 
         friend bool operator ==(const BasicEntity &lhs, const BasicEntity &rhs);
 
@@ -75,7 +75,7 @@ namespace entity {
         explicit BasicEntity(const QString &name = "", const EntityID &id = EntityID::nullID());
         BasicEntity(const QString &name, const EntityID &scopeId, const EntityID &id);
         BasicEntity(const BasicEntity &src);
-        BasicEntity(BasicEntity &&src);
+        BasicEntity(BasicEntity &&src) noexcept = default;
         BasicEntity(const QJsonObject &src, QStringList &errorList);
 
         QString m_Name;

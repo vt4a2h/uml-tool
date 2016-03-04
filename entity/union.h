@@ -37,12 +37,12 @@ namespace entity {
     {
     public:
         Union();
-        Union(Union &&src);
+        Union(Union &&src) noexcept = default;
         Union(const Union &src);
         Union(const QString &name, const EntityID &scopeId);
 
         Union &operator= (const Union &rhs);
-        Union &operator= (Union &&rhs);
+        Union &operator= (Union &&rhs) noexcept = default;
         friend bool operator ==(const Union &lhs, const Union &rhs);
 
         // TODO: extract this functionality for class and union to the separate class
@@ -73,7 +73,6 @@ namespace entity {
         static QString staticDefaultName();
 
     private:
-        void moveFrom(Union &src);
         void copyFrom(const Union &src);
 
         FieldsList m_Fields;

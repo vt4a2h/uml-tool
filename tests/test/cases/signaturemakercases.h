@@ -98,7 +98,7 @@ TEST_F(SignatureMaker, MakingFieldSignature)
 
     actual = m_Maker->signature(field);
     expect = "std::unordered_map<std::string, int> a";
-    ASSERT_EQ(actual, expect);
+    ASSERT_EQ(actual.toStdString(), expect.toStdString());
 }
 
 TEST_F(SignatureMaker, MakingMethodSignature)

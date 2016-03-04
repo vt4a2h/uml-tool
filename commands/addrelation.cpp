@@ -54,6 +54,10 @@ namespace commands {
      */
     AddRelation::~AddRelation()
     {
+        if (!m_GraphicRelation.isNull()) {
+            removeRelationFromScene();
+            delete m_GraphicRelation.data();
+        }
     }
 
     /**
@@ -66,7 +70,9 @@ namespace commands {
 
         if (m_Done) {
             if (auto d = G_ASSERT(database())) {
-                scene->addItem(G_ASSERT(m_GraphicRelation.get()));
+                Q_ASSERT(!m_GraphicRelation.isNull());
+                scene->addItem(G_ASSERT(m_GraphicRelation.data()));
+
                 Q_ASSERT(!d->containsRelation(m_Relation->id()));
                 d->addRelation(m_Relation);
             }
@@ -77,8 +83,8 @@ namespace commands {
                 m_Relation = std::make_shared<relationship::Relation>();
                 d->addRelation(m_Relation);
 
-                m_GraphicRelation = std::make_unique<graphics::Relation>(m_Relation, m_From, m_To);
-                scene->addItem(m_GraphicRelation.get());
+                m_GraphicRelation = new graphics::Relation(m_Relation, m_From, m_To);
+                scene->addItem(m_GraphicRelation.data());
 
                 m_Done = true;
             }
@@ -90,10 +96,9 @@ namespace commands {
      */
     void AddRelation::undo()
     {
-        Q_ASSERT(m_From && m_To);
-        auto scene = G_ASSERT(m_From->scene());
-
-        scene->removeItem(m_GraphicRelation.get());
+        removeRelationFromScene();
+        if (auto d = G_ASSERT(database()))
+            d->removeRelation(m_Relation->id());
     }
 
     /**
@@ -103,6 +108,16 @@ namespace commands {
     db::SharedProjectDatabase AddRelation::database() const
     {
         return m_Db.lock();
+    }
+
+    void AddRelation::removeRelationFromScene()
+    {
+        if (m_From && m_To) {
+            auto scene = G_ASSERT(m_From->scene());
+
+            if (!m_GraphicRelation.isNull())
+                scene->removeItem(m_GraphicRelation.data());
+        }
     }
 
 } // namespace commands

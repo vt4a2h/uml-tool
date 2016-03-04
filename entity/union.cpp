@@ -63,16 +63,6 @@ namespace entity {
 
     /**
      * @brief Union::Union
-     * @param src
-     */
-    Union::Union(Union &&src)
-        : Type(std::move(src))
-    {
-        moveFrom(src);
-    }
-
-    /**
-     * @brief Union::Union
      * @param name
      * @param scopeId
      */
@@ -97,21 +87,6 @@ namespace entity {
     }
 
     /**
-     * @brief Union::operator =
-     * @param rhs
-     * @return
-     */
-    Union &Union::operator=(Union &&rhs)
-    {
-        if (this != &rhs) {
-            Type::operator =(std::move(rhs));
-            moveFrom(rhs);
-        }
-
-        return *this;
-    }
-
-    /**
      * @brief operator ==
      * @param lhs
      * @param rhs
@@ -130,7 +105,6 @@ namespace entity {
     SharedField Union::getField(const QString &name) const
     {
         auto it = range::find_if(m_Fields, [&](auto &&f) {return f->name() == name;});
-
         return it != m_Fields.cend() ? *it : SharedField();
     }
 
@@ -318,15 +292,6 @@ namespace entity {
         int pos = m_Fields.indexOf(field);
         m_Fields.removeOne(field);
         return pos;
-    }
-
-    /**
-     * @brief Union::moveFrom
-     * @param src
-     */
-    void Union::moveFrom(Union &src)
-    {
-        m_Fields = std::move(src.m_Fields);
     }
 
     /**

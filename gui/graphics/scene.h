@@ -58,6 +58,7 @@ namespace graphics {
 
     signals:
         void showRelationTrackChanged(bool showRelationTrack);
+        void relationCompleted();
 
     private:
         project::SharedProject pr() const;

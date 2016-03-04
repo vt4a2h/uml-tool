@@ -69,6 +69,7 @@ namespace db {
 
     public slots:
         void onTypeUserAdded(const entity::SharedTypeUser &tu);
+        // TODO: add signals to detect adding/ removing relation in order to touch project
 
     public: // Database overrides
         entity::SharedScope addScope

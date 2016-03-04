@@ -56,10 +56,18 @@ protected:
 
         m_void = m_GlobalDb->typeByName("void");
         ASSERT_TRUE(!!m_void);
+
+        m_double = m_GlobalDb->typeByName("double");
+        ASSERT_TRUE(!!m_double);
+
+        m_qstring = m_GlobalDb->typeByName("QString");
+        ASSERT_TRUE(!!m_void);
     }
 
     translation::SharedTranslator m_Translator;
 
     entity::SharedType m_int;
     entity::SharedType m_void;
+    entity::SharedType m_double;
+    entity::SharedType m_qstring;
 };

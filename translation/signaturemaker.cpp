@@ -212,8 +212,7 @@ namespace translation {
         if (!type)
             return "";
 
-        // Has alias... Just return it.
-        if (type->name() != DEFAULT_NAME && type->name() != BASE_TYPE_NAME)
+        if (type->useAlias())
             return type->name();
 
         if (auto baseType = findType(type->typeId())) {

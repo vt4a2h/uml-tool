@@ -97,6 +97,7 @@ namespace gui {
         void updateWindowState();
 
         void setCurrentProject(const QString &name);
+        void onRelationCompleted();
 
     private:
         bool maybeExit();

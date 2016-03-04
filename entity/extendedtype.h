@@ -44,7 +44,11 @@ namespace entity {
 
         ExtendedType();
         ExtendedType(const QString &name, const EntityID &scopeId);
+        ExtendedType(ExtendedType &&) noexcept = default;
+        ExtendedType(const ExtendedType &) = default;
 
+        ExtendedType& operator= (ExtendedType &&) noexcept = default;
+        ExtendedType& operator= (const ExtendedType &) = default;
         friend bool operator ==(const ExtendedType &lhs, const ExtendedType &rhs);
 
         bool isPointer() const;
@@ -68,6 +72,9 @@ namespace entity {
         EntityID typeId() const;
         void setTypeId(const EntityID &typeId);
 
+        bool useAlias() const;
+        void setUseAlias(bool useAlias);
+
         bool isEqual(const Type &rhs, bool withTypeid = true) const override;
 
     public: // BasicEntity implementation
@@ -84,9 +91,10 @@ namespace entity {
         static QString staticDefaultName();
 
     protected:
-        bool    m_ConstStatus;
+        bool     m_ConstStatus;
+        bool     m_UseAlias;
         EntityID m_TypeId;
-        PlList  m_PointersAndLinks;
+        PlList   m_PointersAndLinks;
 
         ExtendedTypesIdList m_TemplateParameters;
     };

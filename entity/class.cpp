@@ -68,16 +68,6 @@ namespace entity {
      * @brief Class::Class
      * @param src
      */
-    Class::Class(Class &&src)
-        : Type(std::move(src))
-    {
-        moveFrom(std::move(src));
-    }
-
-    /**
-     * @brief Class::Class
-     * @param src
-     */
     Class::Class(const Class &src)
         : Type(src)
     {
@@ -94,21 +84,6 @@ namespace entity {
         , m_Kind(Kind::ClassType)
         , m_FinalStatus(false)
     {
-    }
-
-    /**
-     * @brief Class::operator =
-     * @param rhs
-     * @return
-     */
-    Class &Class::operator =(Class &&rhs)
-    {
-        if (this != &rhs) {
-            Type::operator =(std::move(rhs));
-            moveFrom(std::move(rhs));
-        }
-
-        return *this;
     }
 
     /**
@@ -863,24 +838,6 @@ namespace entity {
             m_Methods << method;
         else
             m_Methods.insert(pos, method);
-    }
-
-    /**
-     * @brief Class::moveFrom
-     * @param src
-     */
-    void Class::moveFrom(Class &&src)
-    {
-        m_Kind = std::move(src.m_Kind);
-        m_FinalStatus = std::move(src.m_FinalStatus);
-
-        m_Parents = std::move(src.m_Parents);
-        m_Methods = std::move(src.m_Methods);
-        m_Fields  = std::move(src.m_Fields );
-        m_Properties = std::move(src.m_Properties);
-
-        m_OptionalMethods = std::move(src.m_OptionalMethods);
-        m_OptionalFields = std::move(src.m_OptionalFields);
     }
 
     /**
