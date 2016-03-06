@@ -360,8 +360,8 @@ namespace gui {
                   this, &MainWindow::onProjectTreeMenu);
         G_CONNECT(m_NewProjectDialog, &NewProjectDialog::newProject,
                   this, &MainWindow::createNewProject);
-        G_CONNECT(ui->actionAddRelation, &QAction::toggled,
-                  m_MainScene.get(), &graphics::Scene::setShowRelationTrack);
+//        G_CONNECT(ui->actionAddRelation, &QAction::toggled,
+//                  m_MainScene.get(), &graphics::Scene::setShowRelationTrack);
         G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
                   m_MainScene.get(), &graphics::Scene::onProjectChanged);
         G_CONNECT(m_MainScene.get(), &graphics::Scene::relationCompleted,
@@ -499,7 +499,7 @@ namespace gui {
      */
     void MainWindow::onRelationCompleted()
     {
-        ui->actionAddRelation->setChecked(false);
+//        ui->actionAddRelation->setChecked(false);
     }
 
     /**

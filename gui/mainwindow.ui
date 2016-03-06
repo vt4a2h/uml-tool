@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>19</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -75,10 +75,16 @@
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
     <addaction name="actionCreateScope"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddAssociation"/>
+    <addaction name="actionAddDependency"/>
+    <addaction name="actionAddGeneralization"/>
+    <addaction name="actionAddAggregation"/>
+    <addaction name="actionAddComposition"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View</string>
+     <string>&amp;View</string>
     </property>
     <addaction name="actionProjectsDockWidget"/>
     <addaction name="actionCommandsDockWidget"/>
@@ -103,7 +109,11 @@
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
    <addaction name="separator"/>
-   <addaction name="actionAddRelation"/>
+   <addaction name="actionAddAssociation"/>
+   <addaction name="actionAddDependency"/>
+   <addaction name="actionAddGeneralization"/>
+   <addaction name="actionAddAggregation"/>
+   <addaction name="actionAddComposition"/>
   </widget>
   <action name="actionExit">
    <property name="text">
@@ -148,7 +158,7 @@
      <normaloff>:/icons/pic/icon_action_scope.png</normaloff>:/icons/pic/icon_action_scope.png</iconset>
    </property>
    <property name="text">
-    <string>CreateScope</string>
+    <string>&amp;CreateScope</string>
    </property>
    <property name="toolTip">
     <string>Add new scope to the current project</string>
@@ -160,7 +170,7 @@
      <normaloff>:/icons/pic/icon_redo.png</normaloff>:/icons/pic/icon_redo.png</iconset>
    </property>
    <property name="text">
-    <string>Redo</string>
+    <string>&amp;Redo</string>
    </property>
    <property name="toolTip">
     <string>Redo last actions</string>
@@ -175,7 +185,7 @@
      <normaloff>:/icons/pic/icon_undo.png</normaloff>:/icons/pic/icon_undo.png</iconset>
    </property>
    <property name="text">
-    <string>Undo</string>
+    <string>&amp;Undo</string>
    </property>
    <property name="toolTip">
     <string>Undo last actions</string>
@@ -240,15 +250,79 @@
     <string>Ctrl+Shift+E</string>
    </property>
   </action>
-  <action name="actionAddRelation">
+  <action name="actionAddAssociation">
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="main.qrc">
+     <normaloff>:/icons/pic/icon_association.png</normaloff>:/icons/pic/icon_association.png</iconset>
+   </property>
    <property name="text">
-    <string>AddRelation</string>
+    <string>Add association</string>
    </property>
    <property name="toolTip">
-    <string>Test button to add realtion</string>
+    <string>Add association relation</string>
+   </property>
+  </action>
+  <action name="actionAddDependency">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="main.qrc">
+     <normaloff>:/icons/pic/icon_dependency.png</normaloff>:/icons/pic/icon_dependency.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add dependency</string>
+   </property>
+   <property name="toolTip">
+    <string>Add dependency relation</string>
+   </property>
+  </action>
+  <action name="actionAddGeneralization">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="main.qrc">
+     <normaloff>:/icons/pic/icon_generalization.png</normaloff>:/icons/pic/icon_generalization.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add generalization</string>
+   </property>
+   <property name="toolTip">
+    <string>Add generalization relation</string>
+   </property>
+  </action>
+  <action name="actionAddAggregation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="main.qrc">
+     <normaloff>:/icons/pic/icon_aggregation.png</normaloff>:/icons/pic/icon_aggregation.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add aggregation</string>
+   </property>
+   <property name="toolTip">
+    <string>Add aggregation relation</string>
+   </property>
+  </action>
+  <action name="actionAddComposition">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="main.qrc">
+     <normaloff>:/icons/pic/icon_composition.png</normaloff>:/icons/pic/icon_composition.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add composition</string>
+   </property>
+   <property name="toolTip">
+    <string>Add composition relation</string>
    </property>
   </action>
  </widget>

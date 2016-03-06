@@ -19,6 +19,11 @@
         <file>pic/icon_component_edit.png</file>
         <file>pic/icon_component_delete.png</file>
         <file>pic/icon_component_plus.png</file>
+        <file>pic/icon_aggregation.png</file>
+        <file>pic/icon_association.png</file>
+        <file>pic/icon_composition.png</file>
+        <file>pic/icon_dependency.png</file>
+        <file>pic/icon_generalization.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>pic/main.png</file>
