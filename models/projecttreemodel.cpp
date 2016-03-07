@@ -88,7 +88,7 @@ namespace models {
                 break;
 
             case DataType:
-                result = QVariant::fromValue(item->itemType());
+                result = QVariant::fromValue(item->type());
                 break;
 
             case ID:

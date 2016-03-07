@@ -85,8 +85,6 @@ namespace gui {
         void onOpenProject();
         void onSaveProject();
 
-        void onMakeRelation();
-
         void createNewProject(const QString &name, const QString &path);
         void createScope(const QString &name);
         void makeTitle();
@@ -96,6 +94,7 @@ namespace gui {
 
         void updateWindowState();
 
+        void onRelationActionToggled(bool checked);
         void setCurrentProject(const QString &name);
         void onRelationCompleted();
 
@@ -105,6 +104,7 @@ namespace gui {
         void showEvent(QShowEvent *ev) override;
 
         void setUpWidgets();
+        void configure();
         void makeConnections();
 
         void readSettings();
@@ -113,7 +113,7 @@ namespace gui {
         void addDock(const QString &name, QAction * action, Qt::DockWidgetArea area, QWidget * widget,
                      bool visible = true);
 
-        QScopedPointer<Ui::MainWindow> ui;
+        std::unique_ptr<Ui::MainWindow> ui;
         std::unique_ptr<graphics::Scene> m_MainScene;
 
         QMenu *m_ProjectTreeMenu;
@@ -128,11 +128,7 @@ namespace gui {
         NewProjectDialog *m_NewProjectDialog;
         AddScope         *m_AddScope;
 
-        using CommandFunction = std::function<std::unique_ptr<QUndoCommand>(
-                                    const models::SharedApplicationModel &, const QString &, QGraphicsScene &,
-                                    const QPointF &, QUndoCommand *)>;
-        using ActionMaker = QPair<QAction*, CommandFunction>;
-        QList<ActionMaker> m_AddActions;
+        QList<QAction*> m_RelationActions;
 
         models::SharedApplicationModel m_ApplicationModel;
     };

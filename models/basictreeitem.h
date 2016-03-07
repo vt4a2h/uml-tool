@@ -86,8 +86,8 @@ namespace models {
 
         BasicTreeItem *parentNode() const;
 
-        TreeItemType itemType() const;
-        void setItemType(const TreeItemType &itemType);
+        TreeItemType type() const;
+        void setType(const TreeItemType &type);
 
         const static int maxColumnCount = 1;
 

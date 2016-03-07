@@ -41,6 +41,7 @@
 #include <QDebug>
 
 #include <boost/range/algorithm/find_if.hpp>
+#include <boost/range/algorithm/for_each.hpp>
 
 #include <application/settings.h>
 
@@ -116,7 +117,7 @@ namespace gui {
      */
     MainWindow::MainWindow(const models::SharedApplicationModel &applicationModel, QWidget *parent)
         : QMainWindow(parent)
-        , ui(new Ui::MainWindow)
+        , ui(std::make_unique<Ui::MainWindow>())
         , m_MainScene(std::make_unique<graphics::Scene>())
         , m_ProjectTreeMenu(new QMenu(this))
         , m_ProjectTreeView(new QTreeView(this))
@@ -132,11 +133,11 @@ namespace gui {
         ui->setupUi(this);
 
         setUpWidgets();
+        configure();
         makeConnections();
 
         m_MainScene->installEventFilter(new SceneFilter(m_ApplicationModel, m_MainScene.get(),
                                                         this, this));
-
         update();
     }
 
@@ -261,14 +262,6 @@ namespace gui {
     }
 
     /**
-     * @brief MainWindow::onMakeRelation
-     */
-    void MainWindow::onMakeRelation()
-    {
-
-    }
-
-    /**
      * @brief MainWindow::createNewProject
      * @param name
      * @param path
@@ -352,6 +345,17 @@ namespace gui {
     }
 
     /**
+     * @brief MainWindow::configure
+     */
+    void MainWindow::configure()
+    {
+        // Add relation actions
+        m_RelationActions << ui->actionAddAssociation << ui->actionAddDependency
+                          << ui->actionAddGeneralization << ui->actionAddAggregation
+                          << ui->actionAddComposition;
+    }
+
+    /**
      * @brief MainWindow::makeConnections
      */
     void MainWindow::makeConnections()
@@ -360,12 +364,16 @@ namespace gui {
                   this, &MainWindow::onProjectTreeMenu);
         G_CONNECT(m_NewProjectDialog, &NewProjectDialog::newProject,
                   this, &MainWindow::createNewProject);
-//        G_CONNECT(ui->actionAddRelation, &QAction::toggled,
-//                  m_MainScene.get(), &graphics::Scene::setShowRelationTrack);
         G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
                   m_MainScene.get(), &graphics::Scene::onProjectChanged);
         G_CONNECT(m_MainScene.get(), &graphics::Scene::relationCompleted,
                   this, &MainWindow::onRelationCompleted);
+
+        for (auto &&a : m_RelationActions) {
+            G_CONNECT(a, &QAction::toggled, this, &MainWindow::onRelationActionToggled);
+        }
+//        G_CONNECT(ui->actionAddRelation, &QAction::toggled,
+//                  m_MainScene.get(), &graphics::Scene::setShowRelationTrack);
     }
 
     /**
@@ -457,6 +465,22 @@ namespace gui {
         m_Elements->setEnabled(state);
         m_ProjectTreeView->setEnabled(state);
         m_MainView->setEnabled(state);
+
+        boost::range::for_each(m_RelationActions, [&](auto &&a){ a->setEnabled(state); });
+    }
+
+    /**
+     * @brief MainWindow::onRelationActionToggled
+     * @param state
+     */
+    void MainWindow::onRelationActionToggled(bool checked)
+    {
+        if (checked) {
+            QAction * sender = G_ASSERT(qobject_cast<QAction*>(QObject::sender()));
+            for (auto &&a : m_RelationActions)
+                if (a != sender)
+                    a->setChecked(false);
+        }
     }
 
     /**

@@ -42,23 +42,6 @@
 
 #include <utility/helpfunctions.h>
 
-// NOTE: project name must be unique. It's used as ID.
-#define declare_methods_map(map_name, method_name)\
-    QMap<TreeItemType, std::function<QVariant(const QVariant&)>> map_name = {\
-          {TreeItemType::ProjectItem,\
-           [](const QVariant &item){ return QVariant::fromValue(item.value<project::SharedProject>()->name()); }},\
-          {TreeItemType::ScopeItem,\
-           [](const QVariant &item){ return QVariant::fromValue(item.value<entity::SharedScope>()->method_name()); }},\
-          {TreeItemType::TypeItem,\
-           [](const QVariant &item){ return QVariant::fromValue(item.value<entity::SharedType>()->method_name()); }},\
-          {TreeItemType::FieldItem,\
-           [](const QVariant &item){ return QVariant::fromValue(item.value<entity::SharedField>()->method_name()); }},\
-          {TreeItemType::MethodItem,\
-           [](const QVariant &item){ return QVariant::fromValue(item.value<entity::SharedMethod>()->method_name()); }},\
-          {TreeItemType::RelationItem,\
-           [](const QVariant &item){ return QVariant::fromValue(item.value<relationship::SharedRelation>()->method_name()); }}\
-    };
-
 namespace models {
 
     /**
@@ -238,8 +221,45 @@ namespace models {
     }
 
     namespace {
-        declare_methods_map(nameGetters, name)
-        declare_methods_map(idGetters, id)
+        QMap<TreeItemType, std::function<QVariant(const QVariant&)>> nameGetters = {
+              {TreeItemType::ProjectItem,
+               [](const QVariant &item){ return item.value<project::SharedProject>()->name(); }},
+              {TreeItemType::ScopeItem,
+               [](const QVariant &item){
+                    auto s = item.value<entity::SharedScope>();
+                    bool projectScope = s->id() == entity::EntityID::projectScopeID();
+                    return projectScope ? BasicTreeItem::tr("Global scope") : s->name(); }},
+              {TreeItemType::TypeItem,
+               [](const QVariant &item){ return item.value<entity::SharedType>()->name(); }},
+              {TreeItemType::FieldItem,
+               [](const QVariant &item){ return item.value<entity::SharedField>()->name(); }},
+              {TreeItemType::MethodItem,
+               [](const QVariant &item){ return item.value<entity::SharedMethod>()->name(); }},
+              {TreeItemType::RelationItem,
+               [](const QVariant &item){ return item.value<relationship::SharedRelation>()->name(); }}
+        };
+
+        QMap<TreeItemType, std::function<QVariant(const QVariant&)>> idGetters = {
+              {TreeItemType::ProjectItem,
+               [](const QVariant &item){
+                    // Project name must be unique. It's used as ID.
+                    return QVariant::fromValue(item.value<project::SharedProject>()->name()); }},
+              {TreeItemType::ScopeItem,
+               [](const QVariant &item){
+                    return QVariant::fromValue(item.value<entity::SharedScope>()->id()); }},
+              {TreeItemType::TypeItem,
+               [](const QVariant &item){
+                    return QVariant::fromValue(item.value<entity::SharedType>()->id()); }},
+              {TreeItemType::FieldItem,
+               [](const QVariant &item){
+                    return QVariant::fromValue(item.value<entity::SharedField>()->id()); }},
+              {TreeItemType::MethodItem,
+               [](const QVariant &item){
+                    return QVariant::fromValue(item.value<entity::SharedMethod>()->id()); }},
+              {TreeItemType::RelationItem,
+               [](const QVariant &item){
+                    return QVariant::fromValue(item.value<relationship::SharedRelation>()->id()); }}
+        };
 
         QMap<TreeItemType, QString> icons = {
             {TreeItemType::ProjectItem,  ":/icons/pic/icon_project.png" },
@@ -313,7 +333,7 @@ namespace models {
      * @brief BasicTreeItem::ItemType
      * @return
      */
-    TreeItemType BasicTreeItem::itemType() const
+    TreeItemType BasicTreeItem::type() const
     {
         return m_Type;
     }
@@ -322,7 +342,7 @@ namespace models {
      * @brief BasicTreeItem::setItemType
      * @param itemType
      */
-    void BasicTreeItem::setItemType(const TreeItemType &itemType)
+    void BasicTreeItem::setType(const TreeItemType &itemType)
     {
         m_Type = itemType;
     }
