@@ -186,3 +186,6 @@ FORMS += \
 
 RESOURCES += \
     gui/main.qrc
+
+DISTFILES += \
+    CMakeLists.txt
