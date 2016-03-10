@@ -90,10 +90,10 @@ namespace commands {
     };
 
     /// The RemoveElement class
-    class RemoveElement : public RemoveComponentBaseCommand<entity::SharedElement>
+    class RemoveElement : public RemoveComponentBaseCommand<entity::SharedEnumarator>
     {
     public:
-        RemoveElement(const models::SharedClassComponentsModel &model, const entity::SharedElement &element, int pos = -1,
+        RemoveElement(const models::SharedClassComponentsModel &model, const entity::SharedEnumarator &element, int pos = -1,
                     QUndoCommand *parent = nullptr);
 
         void redo() override;

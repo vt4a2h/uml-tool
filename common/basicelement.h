@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 09/02/2015.
+** Created 10/03/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -24,25 +24,20 @@
 
 #include <QObject>
 
-#include "entityid.h"
+#include <entity/entityid.h>
 
-namespace entity {
+namespace common {
 
-     enum Section : int;
-
-    /// The BasicEntity class
-    class BasicEntity : public QObject
+    class BasicElement : public QObject
     {
         Q_OBJECT
 
     public:
-        virtual EntityID id() const;
-        virtual void setId(const EntityID &id);
+        virtual entity::EntityID id() const;
+        virtual void setId(const entity::EntityID &id);
 
-        virtual EntityID scopeId() const;
-        virtual void setScopeId(const EntityID &id);
-
-        virtual Section section() const;
+        virtual entity::EntityID scopeId() const;
+        virtual void setScopeId(const entity::EntityID &id);
 
         virtual QString name() const;
         void setName(const QString &name);
@@ -66,21 +61,21 @@ namespace entity {
         void nameChanged(const QString &oldName, const QString &newName);
 
     public:
-        BasicEntity &operator =(const BasicEntity &rhs);
-        BasicEntity &operator =(BasicEntity &&rhs) noexcept = default;
+        BasicElement &operator =(const BasicElement &rhs);
+        BasicElement &operator =(BasicElement &&rhs) noexcept = default;
 
-        friend bool operator ==(const BasicEntity &lhs, const BasicEntity &rhs);
+        friend bool operator ==(const BasicElement &lhs, const BasicElement &rhs);
 
     protected:
-        explicit BasicEntity(const QString &name = "", const EntityID &id = EntityID::nullID());
-        BasicEntity(const QString &name, const EntityID &scopeId, const EntityID &id);
-        BasicEntity(const BasicEntity &src);
-        BasicEntity(BasicEntity &&src) noexcept = default;
-        BasicEntity(const QJsonObject &src, QStringList &errorList);
+        explicit BasicElement(const QString &name = "", const entity::EntityID &id = entity::EntityID::nullID());
+        BasicElement(const QString &name, const entity::EntityID &scopeId, const entity::EntityID &id);
+        BasicElement(const BasicElement &src);
+        BasicElement(BasicElement &&src) noexcept = default;
+        BasicElement(const QJsonObject &src, QStringList &errorList);
 
         QString m_Name;
-        EntityID m_Id;
-        EntityID m_ScopeId;
+        entity::EntityID m_Id;
+        entity::EntityID m_ScopeId;
     };
 
-} // namespace entity
+} // namespace common

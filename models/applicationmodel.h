@@ -93,9 +93,9 @@ namespace models {
             if (auto scope = currentProject()->database()->getScope(scopeID)) {
                 if (auto type = scope->addType<T>(name)) {
                     m_TreeModel->addType(type, scope->id(), currentProject()->name());
-                    G_CONNECT(type.get(), &entity::BasicEntity::nameChanged,
+                    G_CONNECT(type.get(), &entity::BasicElement::nameChanged,
                               m_CurrentProject.get(), &project::Project::touch);
-                    G_CONNECT(type.get(), &entity::BasicEntity::nameChanged,
+                    G_CONNECT(type.get(), &entity::BasicElement::nameChanged,
                               scope.get(), &entity::Scope::onTypeNameChanged);
 
                     return type;

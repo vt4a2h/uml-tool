@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 09/02/2015.
+** Created 10/03/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "basicentity.h"
+#include "basicelement.h"
 
 #include <utility/helpfunctions.h>
 
@@ -29,7 +29,9 @@
 #include "enums.h"
 #include "itypeuser.h"
 
-namespace entity {
+namespace common {
+
+    using namespace entity;
 
     namespace {
         const QString nameMark = "Name";
@@ -37,7 +39,7 @@ namespace entity {
         const QString scopeIdMark = "Scope ID";
     }
 
-    BasicEntity::BasicEntity(const QString &name, const EntityID &scopeId, const EntityID &id)
+    BasicElement::BasicElement(const QString &name, const EntityID &scopeId, const EntityID &id)
         : m_Name(name)
         , m_Id(id)
         , m_ScopeId(scopeId)
@@ -48,7 +50,7 @@ namespace entity {
      * @brief BasicEntity::BasicEntity
      * @param src
      */
-    BasicEntity::BasicEntity(const BasicEntity &src)
+    BasicElement::BasicElement(const BasicElement &src)
         : QObject()
         , m_Name(src.m_Name)
         , m_Id(src.m_Id)
@@ -61,7 +63,7 @@ namespace entity {
      * @param src
      * @param errorList
      */
-    BasicEntity::BasicEntity(const QJsonObject &src, QStringList &errorList)
+    BasicElement::BasicElement(const QJsonObject &src, QStringList &errorList)
     {
         fromJson(src, errorList);
     }
@@ -71,7 +73,7 @@ namespace entity {
      * @param rhs
      * @return
      */
-    BasicEntity &BasicEntity::operator =(const BasicEntity &rhs)
+    BasicElement &BasicElement::operator =(const BasicElement &rhs)
     {
         if (this != &rhs) {
             setName(rhs.name());
@@ -85,8 +87,8 @@ namespace entity {
     /**
      * @brief BasicEntity::BasicEntity
      */
-    BasicEntity::BasicEntity(const QString &name, const EntityID &id)
-        : BasicEntity(name, EntityID::nullID(), id)
+    BasicElement::BasicElement(const QString &name, const EntityID &id)
+        : BasicElement(name, EntityID::nullID(), id)
     {
     }
 
@@ -96,7 +98,7 @@ namespace entity {
      * @param rhs
      * @return
      */
-    bool operator ==(const BasicEntity &lhs, const BasicEntity &rhs)
+    bool operator ==(const BasicElement &lhs, const BasicElement &rhs)
     {
         return lhs.m_Name == rhs.m_Name && lhs.m_Id == rhs.m_Id && lhs.m_ScopeId == rhs.m_ScopeId;
     }
@@ -105,7 +107,7 @@ namespace entity {
      * @brief BasicEntity::id
      * @return
      */
-    EntityID BasicEntity::id() const
+    EntityID BasicElement::id() const
     {
         return m_Id;
     }
@@ -114,7 +116,7 @@ namespace entity {
      * @brief BasicEntity::setId
      * @param id
      */
-    void BasicEntity::setId(const EntityID &id)
+    void BasicElement::setId(const EntityID &id)
     {
         m_Id = id;
     }
@@ -123,7 +125,7 @@ namespace entity {
      * @brief BasicEntity::scopeId
      * @return
      */
-    EntityID BasicEntity::scopeId() const
+    EntityID BasicElement::scopeId() const
     {
         return m_ScopeId;
     }
@@ -132,25 +134,16 @@ namespace entity {
      * @brief BasicEntity::setScopeId
      * @param id
      */
-    void BasicEntity::setScopeId(const EntityID &id)
+    void BasicElement::setScopeId(const EntityID &id)
     {
         m_ScopeId = id;
-    }
-
-    /**
-     * @brief BasicEntity::section
-     * @return
-     */
-    Section BasicEntity::section() const
-    {
-        return Section::Public;
     }
 
     /**
      * @brief BasicEntity::name
      * @return
      */
-    QString BasicEntity::name() const
+    QString BasicElement::name() const
     {
         return m_Name;
     }
@@ -159,7 +152,7 @@ namespace entity {
      * @brief BasicEntity::setName
      * @param name
      */
-    void BasicEntity::setName(const QString &name)
+    void BasicElement::setName(const QString &name)
     {
         if (m_Name != name) {
             auto oldName = m_Name;
@@ -173,7 +166,7 @@ namespace entity {
      * @brief BasicEntity::writeToFile
      * @param fileName
      */
-    void BasicEntity::writeToFile(const QString &fileName) const
+    void BasicElement::writeToFile(const QString &fileName) const
     {
         utility::writeToFile(*this, fileName);
     }
@@ -183,7 +176,7 @@ namespace entity {
      * @param fileName
      * @return
      */
-    bool BasicEntity::readFromFile(const QString &fileName)
+    bool BasicElement::readFromFile(const QString &fileName)
     {
         return utility::readFromFile(*this, fileName);
     }
@@ -192,7 +185,7 @@ namespace entity {
      * @brief BasicEntity::toJson
      * @return
      */
-    QJsonObject BasicEntity::toJson() const
+    QJsonObject BasicElement::toJson() const
     {
         QJsonObject result;
 
@@ -209,7 +202,7 @@ namespace entity {
      * @param src
      * @param errorList
      */
-    void BasicEntity::fromJson(const QJsonObject &src, QStringList &errorList)
+    void BasicElement::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         using namespace utility;
 
@@ -222,34 +215,34 @@ namespace entity {
      * @brief BasicEntity::hashType
      * @return
      */
-    size_t BasicEntity::hashType() const
+    size_t BasicElement::hashType() const
     {
-        return BasicEntity::staticHashType();
+        return BasicElement::staticHashType();
     }
 
     /**
      * @brief BasicEntity::staticHashType
      * @return
      */
-    size_t BasicEntity::staticHashType()
+    size_t BasicElement::staticHashType()
     {
-        return typeid(BasicEntity).hash_code();
+        return typeid(BasicElement).hash_code();
     }
 
     /**
      * @brief BasicEntity::marker
      * @return
      */
-    QString BasicEntity::marker() const
+    QString BasicElement::marker() const
     {
-        return BasicEntity::staticMarker();
+        return BasicElement::staticMarker();
     }
 
     /**
      * @brief BasicEntity::staticMarker
      * @return
      */
-    QString BasicEntity::staticMarker()
+    QString BasicElement::staticMarker()
     {
         return "BasicEntity";
     }
@@ -258,7 +251,7 @@ namespace entity {
      * @brief BasicEntity::defaultName
      * @return
      */
-    QString BasicEntity::defaultName() const
+    QString BasicElement::defaultName() const
     {
        return staticDefaultName();
     }
@@ -267,9 +260,9 @@ namespace entity {
      * @brief BasicEntity::staticDefaultName
      * @return
      */
-    QString BasicEntity::staticDefaultName()
+    QString BasicElement::staticDefaultName()
     {
         return tr("Basic entity");
     }
 
-}
+} // namespace common

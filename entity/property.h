@@ -24,31 +24,34 @@
 
 #include <memory>
 
+#include <common/basicelement.h>
+
 #include <db/db_types.hpp>
 
 #include "classmethod.h"
-#include "basicentity.h"
 #include "constants.h"
 #include "itypeuser.h"
+#include "isectional.h"
 
 namespace entity {
 
     /// The class Property
     class Property
-        : public BasicEntity
+        : public common::BasicElement
         , public ITypeUser
+        , public ISectional
         , public std::enable_shared_from_this<Property>
     {
         Q_OBJECT
 
     public:
         Property();
-        Property(Property &&src);
+        Property(Property &&src) noexcept = default;
         Property(const Property &src);
         Property(const QString &name, const EntityID &typeId, QObject *parent = nullptr);
 
         Property &operator =(const Property &rhs);
-        Property &operator =(Property &&rhs);
+        Property &operator =(Property &&rhs) noexcept = default;
         friend bool operator ==(const Property &lhs, const Property &rhs);
 
         Property &setName(const QString &name);
@@ -136,7 +139,6 @@ namespace entity {
         void fieldRemoved(const entity::SharedProperty &, const entity::SharedField &);
 
     protected:
-        void moveFrom(Property &&src);
         void copyFrom(const Property &src);
 
     private: // Methods

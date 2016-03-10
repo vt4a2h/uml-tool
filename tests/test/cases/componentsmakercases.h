@@ -41,7 +41,7 @@
     ASSERT_EQ(name_->name(), match);
 
 namespace {
-    auto to_f(const entity::BasicEntity *e){ return static_cast<const entity::Field*>(e); }
+    auto to_f(const entity::BasicElement *e){ return static_cast<const entity::Field*>(e); }
     auto to_p(const entity::SharedBasicEntity &e){ return std::static_pointer_cast<entity::Property>(e); }
     auto to_m(const entity::SharedBasicEntity &e){ return std::static_pointer_cast<entity::ClassMethod>(e); }
     auto to_et(const entity::Type *e){ return static_cast<const entity::ExtendedType*>(e); }

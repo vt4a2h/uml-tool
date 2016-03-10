@@ -67,7 +67,7 @@ namespace models {
         BasicTreeItem *find(const QVariant &id);
         const BasicTreeItem *find(const QVariant &id) const;
         void update(BasicTreeItem *item);
-        void observeItemChanging(entity::BasicEntity * entity, BasicTreeItem *item);
+        void observeItemChanging(entity::BasicElement * entity, BasicTreeItem *item);
 
         mutable QList<BasicTreeItem> m_Items; // TODO: store as pointers
         project::SharedProject m_Project;

@@ -28,11 +28,12 @@
 #include <QString>
 #include <QHash>
 
+#include <common/basicelement.h>
+
 #include <helpers/entityhelpres.h>
 
 #include "entity_types.hpp"
 #include "qthelpers.h"
-#include "basicentity.h"
 #include "class.h"
 #include "itypeuser.h"
 
@@ -43,7 +44,7 @@ namespace entity {
     /**
      * @brief The Scope class
      */
-    class Scope : public BasicEntity
+    class Scope : public common::BasicElement
     {
         Q_OBJECT
 

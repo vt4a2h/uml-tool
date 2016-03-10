@@ -73,7 +73,7 @@ namespace {
         using namespace std::placeholders;
         map[T::staticHashType()] =
             std::bind(
-                f, this_, std::bind(std::static_pointer_cast<T,entity::BasicEntity>, _1), _2, _3, _4
+                f, this_, std::bind(std::static_pointer_cast<T,entity::BasicElement>, _1), _2, _3, _4
             );
     }
 }
@@ -359,10 +359,10 @@ namespace translation {
 
         QStringList values;
         if (options & GenerateNumbers) {
-            for (auto &&v : _enum->elements())
+            for (auto &&v : _enum->enumerators())
                 values << QString("%1 = %2").arg(v->name(), QString::number(v->value()));
         } else {
-            for (auto &&v : _enum->elements())
+            for (auto &&v : _enum->enumerators())
                 values << v->name();
         }
         result.replace("%values%", values.isEmpty() ? "" : values.join(", "));

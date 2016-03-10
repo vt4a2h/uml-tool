@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 10/05/2015.
+** Created 10/03/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,19 +22,16 @@
 *****************************************************************************/
 #pragma once
 
-#include <memory>
+namespace entity {
 
-#include <QHash>
-#include <QMetaType>
+    enum Section : int;
 
-namespace relationship {
-    class Node;
-    using SharedNode = std::shared_ptr<Node>;
+    /// For objects which can belongs to some section, e.g. public
+    class ISectional
+    {
+    public:
+        virtual Section section() const;
+        virtual void setSection(Section section);
+    };
 
-    class Relation;
-    using SharedRelation = std::shared_ptr<Relation>;
-    using Relations = QHash<QString, SharedRelation>;
-    using RelationsList = QVector<SharedRelation>;
-}
-
-Q_DECLARE_METATYPE(relationship::SharedRelation)
+} // namespace entity

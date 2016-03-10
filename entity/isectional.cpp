@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 10/05/2015.
+** Created 10/03/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,21 +20,28 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#pragma once
+#include "isectional.h"
 
-#include <memory>
+#include "enums.h"
 
-#include <QHash>
-#include <QMetaType>
+namespace entity {
 
-namespace relationship {
-    class Node;
-    using SharedNode = std::shared_ptr<Node>;
+    /**
+     * @brief ISectional::section
+     * @return
+     */
+    Section ISectional::section() const
+    {
+        return Section::Public;
+    }
 
-    class Relation;
-    using SharedRelation = std::shared_ptr<Relation>;
-    using Relations = QHash<QString, SharedRelation>;
-    using RelationsList = QVector<SharedRelation>;
-}
+    /**
+     * @brief ISectional::setSection
+     * @param section
+     */
+    void ISectional::setSection(Section section)
+    {
+        Q_UNUSED(section); Q_ASSERT(false);
+    }
 
-Q_DECLARE_METATYPE(relationship::SharedRelation)
+} // namespace entity

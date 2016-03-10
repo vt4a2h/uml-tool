@@ -24,7 +24,8 @@
 
 #include <QString>
 
-#include "basicentity.h"
+#include <common/basicelement.h>
+
 #include <entity/components/icomponents.h>
 
 class QJsonObject;
@@ -36,7 +37,7 @@ namespace entity {
     /**
      * @brief The Type class
      */
-    class Type : public BasicEntity, public IComponents
+    class Type : public common::BasicElement, public IComponents
     {
     public:
         Type();

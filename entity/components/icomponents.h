@@ -42,10 +42,10 @@ namespace entity {
         virtual int removeField(const SharedField &field);
         virtual FieldsList fields() const;
 
-        virtual SharedElement addNewElement();
-        virtual void addExistsElement(const SharedElement &element, int pos);
-        virtual int removeElement(const SharedElement &element);
-        virtual ElementsList elements() const;
+        virtual SharedEnumarator addNewEnumerator();
+        virtual void addExistsEnumerator(const SharedEnumarator &element, int pos);
+        virtual int removeEnumerator(const SharedEnumarator &element);
+        virtual Enumerators enumerators() const;
 
         virtual SharedProperty addNewProperty();
         virtual void addExistsProperty(const SharedProperty &property, int pos);

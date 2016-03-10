@@ -29,7 +29,6 @@ SOURCES += \
     entity/components/componentsignatureparser.cpp \
     entity/components/icomponents.cpp \
     entity/components/componentsmaker.cpp \
-    entity/basicentity.cpp \
     entity/entitiesfactory.cpp \
     entity/property.cpp \
     generator/abstractprojectgenerator.cpp \
@@ -81,7 +80,9 @@ SOURCES += \
     gui/graphics/graphicsrelation.cpp \
     commands/addrelation.cpp \
     helpers/generatorid.cpp \
-    entity/entityid.cpp
+    entity/entityid.cpp \
+    common/basicelement.cpp \
+    entity/isectional.cpp
 
 HEADERS += \
     enums.h \
@@ -103,7 +104,6 @@ HEADERS += \
     entity/components/componentsignatureparser.h \
     entity/components/icomponents.h \
     entity/components/componentsmaker.h \
-    entity/basicentity.h \
     entity/entitiesfactory.h \
     entity/entity_types.hpp \
     entity/property.h \
@@ -172,7 +172,9 @@ HEADERS += \
     helpers/generatorid.h \
     entity/entityid.h \
     db/itypesearcher.h \
-    entity/itypeuser.h
+    entity/itypeuser.h \
+    common/basicelement.h \
+    entity/isectional.h
 
 FORMS += \
     gui/mainwindow.ui \

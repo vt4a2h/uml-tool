@@ -67,7 +67,7 @@ namespace entity {
      * @param src
      */
     ClassMethod::ClassMethod(ClassMethod &&src)
-        : BasicEntity(std::move(src))
+        : BasicElement(std::move(src))
     {
         moveFrom(std::move(src));
     }
@@ -77,7 +77,7 @@ namespace entity {
      * @param src
      */
     ClassMethod::ClassMethod(const ClassMethod &src)
-        : BasicEntity(src)
+        : BasicElement(src)
     {
         copyFrom(src);
     }
@@ -87,7 +87,7 @@ namespace entity {
      * @param name
      */
     ClassMethod::ClassMethod(const QString &name)
-        : BasicEntity(name)
+        : BasicElement(name)
         , m_Type(SimpleMethod)
         , m_Section(Public)
         , m_ConstStatus(false)
@@ -114,7 +114,7 @@ namespace entity {
     ClassMethod &ClassMethod::operator =(ClassMethod &&rhs)
     {
         if (this != &rhs) {
-            static_cast<BasicEntity*>(this)->operator =(std::forward<ClassMethod>(rhs));
+            static_cast<BasicElement*>(this)->operator =(std::forward<ClassMethod>(rhs));
             moveFrom(std::forward<ClassMethod>(rhs));
         }
 
@@ -129,7 +129,7 @@ namespace entity {
     ClassMethod &ClassMethod::operator =(const ClassMethod &rhs)
     {
         if (this != &rhs) {
-            static_cast<BasicEntity*>(this)->operator =(rhs);
+            static_cast<BasicElement*>(this)->operator =(rhs);
             copyFrom(rhs);
         }
 
@@ -144,7 +144,7 @@ namespace entity {
      */
     bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs)
     {
-        return static_cast<const BasicEntity&>(lhs) == static_cast<const BasicEntity&>(rhs) &&
+        return static_cast<const BasicElement&>(lhs) == static_cast<const BasicElement&>(rhs) &&
                lhs.m_Section           == rhs.m_Section           &&
                lhs.m_ConstStatus       == rhs.m_ConstStatus       &&
                lhs.m_SlotStatus        == rhs.m_SlotStatus        &&
@@ -262,7 +262,7 @@ namespace entity {
      */
     LhsIdentificatorsList ClassMethod::lhsIdentificators() const
     {
-        return m_LhsIdentificators.values();
+        return m_LhsIdentificators.values().toVector();
     }
 
     /**
@@ -379,7 +379,7 @@ namespace entity {
      */
     QJsonObject ClassMethod::toJson() const
     {
-        QJsonObject result = BasicEntity::toJson();
+        QJsonObject result = BasicElement::toJson();
 
         result.insert(sectionMark, m_Section);
         result.insert(typeMark, m_Type);
@@ -409,7 +409,7 @@ namespace entity {
      */
     void ClassMethod::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        BasicEntity::fromJson(src, errorList);
+        BasicElement::fromJson(src, errorList);
 
         utility::checkAndSet(src, sectionMark, errorList, [&src, this](){
             m_Section = static_cast<Section>(src[sectionMark].toInt());

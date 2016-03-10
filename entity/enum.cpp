@@ -43,7 +43,7 @@ using namespace boost;
 namespace entity {
 
     namespace {
-        const QString newElementName = Element::tr("newElement");
+        const QString newElementName = Enumerator::tr("newElement");
         const QString nameMark   = "Name";
         const QString numberMark = "Number";
     }
@@ -51,8 +51,8 @@ namespace entity {
     /**
      * @brief Element::Element
      */
-    Element::Element()
-        : Element("Enumeration", 0)
+    Enumerator::Enumerator()
+        : Enumerator("Enumeration", 0)
     {}
 
     /**
@@ -60,8 +60,8 @@ namespace entity {
      * @param name
      * @param value
      */
-    Element::Element(const QString &name, int value)
-        : BasicEntity(name)
+    Enumerator::Enumerator(const QString &name, int value)
+        : BasicElement(name)
         , m_Value(value)
     {}
 
@@ -69,8 +69,8 @@ namespace entity {
      * @brief Variable::toJson
      * @return
      */
-    Element::Element(const QJsonObject &src, QStringList &errorList)
-        : BasicEntity(src, errorList)
+    Enumerator::Enumerator(const QJsonObject &src, QStringList &errorList)
+        : BasicElement(src, errorList)
         , m_Value(0)
     {
         fromJson(src, errorList);
@@ -82,9 +82,9 @@ namespace entity {
      * @param rhs
      * @return
      */
-    bool operator ==(const Element &lhs, const Element &rhs)
+    bool operator ==(const Enumerator &lhs, const Enumerator &rhs)
     {
-        return static_cast<BasicEntity const&>(lhs) == static_cast<BasicEntity const&>(rhs) &&
+        return static_cast<BasicElement const&>(lhs) == static_cast<BasicElement const&>(rhs) &&
                lhs.m_Value == rhs.m_Value;
     }
 
@@ -92,9 +92,9 @@ namespace entity {
      * @brief Element::toJson
      * @return
      */
-    QJsonObject Element::toJson() const
+    QJsonObject Enumerator::toJson() const
     {
-        QJsonObject result = BasicEntity::toJson();
+        QJsonObject result = BasicElement::toJson();
         result.insert(numberMark, m_Value);
 
         return result;
@@ -105,9 +105,9 @@ namespace entity {
      * @param src
      * @param errorList
      */
-    void Element::fromJson(const QJsonObject &src, QStringList &errorList)
+    void Enumerator::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        BasicEntity::fromJson(src, errorList);
+        BasicElement::fromJson(src, errorList);
         utility::checkAndSet(src, numberMark, errorList, [&src, this](){ m_Value = src[numberMark].toInt();  });
     }
 
@@ -115,25 +115,25 @@ namespace entity {
      * @brief Variable::hashType
      * @return
      */
-    size_t Element::hashType() const
+    size_t Enumerator::hashType() const
     {
-        return Element::staticHashType();
+        return Enumerator::staticHashType();
     }
 
     /**
      * @brief Variable::staticHashType
      * @return
      */
-    size_t Element::staticHashType()
+    size_t Enumerator::staticHashType()
     {
-        return typeid(Element).hash_code();
+        return typeid(Enumerator).hash_code();
     }
 
     /**
      * @brief Element::value
      * @return
      */
-    int Element::value() const
+    int Enumerator::value() const
     {
         return m_Value;
     }
@@ -142,7 +142,7 @@ namespace entity {
      * @brief Element::setValue
      * @param value
      */
-    void Element::setValue(int value)
+    void Enumerator::setValue(int value)
     {
         m_Value = value;
     }
@@ -201,9 +201,9 @@ namespace entity {
      * @param name
      * @return
      */
-    SharedElement Enum::addElement(const QString &name)
+    SharedEnumarator Enum::addElement(const QString &name)
     {
-        auto element = std::make_shared<Element>(name, m_Elements.size());
+        auto element = std::make_shared<Enumerator>(name, m_Elements.size());
         m_Elements << element;
         return element;
     }
@@ -213,17 +213,17 @@ namespace entity {
      * @param name
      * @return
      */
-    SharedElement Enum::element(const QString &name) const
+    SharedEnumarator Enum::element(const QString &name) const
     {
         auto it = range::find_if(m_Elements, [&](auto &&e){ return e->name() == name; });
-        return it != cend(m_Elements) ? *it : SharedElement();
+        return it != cend(m_Elements) ? *it : SharedEnumarator();
     }
 
     /**
      * @brief Enum::removeVariable
      * @param name
      */
-    void Enum::removeElement(const QString &name)
+    void Enum::removeEnumerator(const QString &name)
     {
         auto it = range::find_if(m_Elements, [&](auto &&v){ return v->name() == name; });
         if (it != m_Elements.end())
@@ -245,7 +245,7 @@ namespace entity {
      * @brief Enum::variables
      * @return
      */
-    ElementsList Enum::elements() const
+    Enumerators Enum::enumerators() const
     {
         return m_Elements;
     }
@@ -304,7 +304,7 @@ namespace entity {
         utility::checkAndSet(src, "Elements", errorList, [&src, &errorList, this](){
             if (src["Elements"].isArray()) {
                 for (auto &&value : src["Elements"].toArray())
-                    m_Elements.append(std::make_shared<Element>(value.toObject(), errorList));
+                    m_Elements.append(std::make_shared<Enumerator>(value.toObject(), errorList));
             } else {
                 errorList << "Error: \"Elements\" is not array";
             }
@@ -385,7 +385,7 @@ namespace entity {
      * @brief Enum::addNewElement
      * @return
      */
-    SharedElement Enum::addNewElement()
+    SharedEnumarator Enum::addNewEnumerator()
     {
         return addElement(newElementName + QString::number(m_Elements.count()));
     }
@@ -395,7 +395,7 @@ namespace entity {
      * @param element
      * @param pos
      */
-    void Enum::addExistsElement(const SharedElement &element, int pos)
+    void Enum::addExistsEnumerator(const SharedEnumarator &element, int pos)
     {
         m_Elements.insert(pos, element);
     }
@@ -405,7 +405,7 @@ namespace entity {
      * @param element
      * @return
      */
-    int Enum::removeElement(const SharedElement &element)
+    int Enum::removeEnumerator(const SharedEnumarator &element)
     {
         int pos = m_Elements.indexOf(element);
         m_Elements.removeAt(pos);

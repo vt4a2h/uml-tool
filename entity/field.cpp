@@ -52,7 +52,7 @@ namespace entity {
      * @param src
      */
     Field::Field(const Field &src)
-        : BasicEntity(src)
+        : BasicElement(src)
     {
         copyFrom(src);
     }
@@ -62,7 +62,7 @@ namespace entity {
      * @param src
      */
     Field::Field(Field &&src)
-        : BasicEntity(std::move(src))
+        : BasicElement(std::move(src))
     {
         moveFrom(std::move(src));
     }
@@ -85,7 +85,7 @@ namespace entity {
      * @param section
      */
     Field::Field(const QString &name, const EntityID &typeId, const QString &prefix, Section section)
-        : BasicEntity(name)
+        : BasicElement(name)
         , m_TypeId(typeId)
         , m_Section(section)
         , m_Prefix(prefix)
@@ -101,7 +101,7 @@ namespace entity {
     Field &Field::operator =(Field &&rhs)
     {
         if (this != &rhs) {
-            static_cast<BasicEntity*>(this)->operator =(std::forward<Field>(rhs));
+            static_cast<BasicElement*>(this)->operator =(std::forward<Field>(rhs));
             moveFrom(std::forward<Field>(rhs));
         }
 
@@ -116,7 +116,7 @@ namespace entity {
     Field &Field::operator =(const Field &rhs)
     {
         if (this != &rhs) {
-            static_cast<BasicEntity*>(this)->operator =(rhs);
+            static_cast<BasicElement*>(this)->operator =(rhs);
             copyFrom(rhs);
         }
 
@@ -131,7 +131,8 @@ namespace entity {
      */
     bool operator==(const Field &lhs, const Field &rhs)
     {
-        return static_cast<const BasicEntity&>(lhs) == static_cast<const BasicEntity&>(rhs) &&
+        return static_cast<const common::BasicElement&>(lhs) ==
+               static_cast<const common::BasicElement&>(rhs) &&
                lhs.m_TypeId   == rhs.m_TypeId   &&
                lhs.m_Section  == rhs.m_Section  &&
                lhs.m_Prefix   == rhs.m_Prefix   &&
@@ -199,7 +200,7 @@ namespace entity {
      */
     FieldKeywordsList Field::keywords() const
     {
-        return m_Keywords.values();
+        return m_Keywords.values().toVector();
     }
 
     /**
@@ -263,7 +264,7 @@ namespace entity {
      */
     QJsonObject Field::toJson() const
     {
-        QJsonObject result = BasicEntity::toJson();
+        QJsonObject result = BasicElement::toJson();
 
         result.insert("Type ID", m_TypeId.toJson());
         result.insert("Section", m_Section);
@@ -286,7 +287,7 @@ namespace entity {
      */
     void Field::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        BasicEntity::fromJson(src, errorList);
+        BasicElement::fromJson(src, errorList);
 
         utility::checkAndSet(src, "Type ID", errorList, [&src, &errorList, this](){
             m_TypeId.fromJson(src["Type ID"], errorList);

@@ -89,9 +89,9 @@ namespace commands {
      * @param pos
      * @param parent
      */
-    AddElement::AddElement(const models::SharedClassComponentsModel &model, const entity::SharedElement &element,
+    AddElement::AddElement(const models::SharedClassComponentsModel &model, const entity::SharedEnumarator &element,
                            int pos, QUndoCommand *parent)
-        : AddComponentBaseCommand<entity::SharedElement>(tr("Add new element"), model, element, pos, parent)
+        : AddComponentBaseCommand<entity::SharedEnumarator>(tr("Add new element"), model, element, pos, parent)
     {}
 
     /**

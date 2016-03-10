@@ -79,9 +79,9 @@ namespace models {
         int removeField(const entity::SharedField &field);
         int removeField(const QModelIndex &index);
 
-        entity::SharedElement addElement();
-        void addExistsElement(const entity::SharedElement &element, int pos = -1);
-        int removeElement(const entity::SharedElement &element);
+        entity::SharedEnumarator addElement();
+        void addExistsElement(const entity::SharedEnumarator &element, int pos = -1);
+        int removeElement(const entity::SharedEnumarator &element);
         int removeElement(const QModelIndex &index);
 
         void addProperty();

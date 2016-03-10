@@ -149,7 +149,7 @@ namespace db {
      */
     relationship::RelationsList ProjectDatabase::relations() const
     {
-        return m_Relations.values();
+        return m_Relations.values().toVector();
     }
 
     /**

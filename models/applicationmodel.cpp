@@ -105,7 +105,7 @@ namespace models {
      */
     project::ProjectsList ApplicationModel::projects() const
     {
-        return m_Projects.values();
+        return m_Projects.values().toVector();
     }
 
     /**
@@ -189,7 +189,7 @@ namespace models {
             if (auto &&db = pr->database())
                 if (auto &&scope = db->getScope(scopeID)) {
                     scope->addExistsType(type);
-                    connect(type.get(), &entity::BasicEntity::nameChanged,
+                    connect(type.get(), &entity::BasicElement::nameChanged,
                             m_CurrentProject.get(), &project::Project::touch);
                     // todo: connect scope id change to project touch
                 }

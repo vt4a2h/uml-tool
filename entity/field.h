@@ -25,8 +25,10 @@
 
 #include <QString>
 
-#include "basicentity.h"
+#include <common/basicelement.h>
+
 #include "entity_types.hpp"
+#include "isectional.h"
 
 uint qHash(const entity::SharedField& f);
 #include <QSet>
@@ -42,7 +44,7 @@ namespace entity {
     /**
      * @brief The Field class
      */
-    class Field : public BasicEntity
+    class Field : public common::BasicElement, public ISectional
     {
     public:
         Field();
@@ -56,9 +58,6 @@ namespace entity {
         friend bool operator== (const Field &lhs, const Field &rhs);
 
         QString fullName() const;
-
-        Section section() const;
-        void setSection(Section section);
 
         QString prefix() const;
         void removePrefix();
@@ -86,6 +85,10 @@ namespace entity {
 
         size_t hashType() const override;
         static size_t staticHashType();
+
+    public: // ISectional implementation
+        Section section() const override;
+        void setSection(Section section) override;
 
     private:
         void copyFrom(const Field &src);

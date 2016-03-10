@@ -490,7 +490,7 @@ namespace gui {
     {
         componentDeleters[models::DisplayPart::Elements] =
             [this](const QModelIndex &index){
-                addRemoveCommand<commands::RemoveElement, entity::SharedElement>(m_ComponentsModel, index, m_CommandsStack.data());
+                addRemoveCommand<commands::RemoveElement, entity::SharedEnumarator>(m_ComponentsModel, index, m_CommandsStack.data());
             };
         componentDeleters[models::DisplayPart::Fields] =
             [this](const QModelIndex &index){

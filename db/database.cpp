@@ -254,7 +254,7 @@ namespace db {
      */
     entity::ScopesList Database::scopes() const
     {
-        return m_Scopes.values();
+        return m_Scopes.values().toVector();
     }
 
     /**

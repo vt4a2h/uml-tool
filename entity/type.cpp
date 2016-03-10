@@ -53,7 +53,7 @@ namespace entity {
      * @param typeId
      */
     Type::Type(const QString &name, const EntityID &scopeId, const EntityID &typeId)
-        : BasicEntity(name, scopeId, typeId.isValid() ? typeId : GeneratorID::instance().genID() )
+        : BasicElement(name, scopeId, typeId.isValid() ? typeId : GeneratorID::instance().genID() )
     {
         if (m_Name.isEmpty() || m_Name == DEFAULT_NAME)
             setBaseTypeName();
@@ -76,7 +76,7 @@ namespace entity {
      */
     QJsonObject Type::toJson() const
     {
-        QJsonObject result = BasicEntity::toJson();
+        QJsonObject result = BasicElement::toJson();
 
         result.insert("Kind of type", marker());
 
@@ -90,7 +90,7 @@ namespace entity {
      */
     void Type::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        BasicEntity::fromJson(src, errorList);
+        BasicElement::fromJson(src, errorList);
         // TODO: read Kind of type here!
     }
 
@@ -157,7 +157,7 @@ namespace entity {
     {
         return rhs.hashType() == this->hashType()      &&
                m_Name        == rhs.m_Name             &&
-               ( withTypeid ? m_Id == rhs.m_Id : true );
+                ( withTypeid ? m_Id == rhs.m_Id : true );
     }
 
     /**

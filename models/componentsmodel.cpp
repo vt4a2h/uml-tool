@@ -47,7 +47,7 @@ namespace models {
                     return components->methods().count();
 
                 case DisplayPart::Elements:
-                    return components->elements().count();
+                    return components->enumerators().count();
 
                 case DisplayPart::Properties:
                     return 0;
@@ -169,10 +169,10 @@ namespace models {
     /**
      * @brief ComponentsModel::addElement
      */
-    entity::SharedElement ComponentsModel::addElement()
+    entity::SharedEnumarator ComponentsModel::addElement()
     {
-         return add<entity::SharedElement>([this](){ return m_Components->addNewElement(); },
-                                            m_Components->elements().count());
+         return add<entity::SharedEnumarator>([this](){ return m_Components->addNewEnumerator(); },
+                                            m_Components->enumerators().count());
     }
 
     /**
@@ -180,10 +180,10 @@ namespace models {
      * @param element
      * @param pos
      */
-    void ComponentsModel::addExistsElement(const entity::SharedElement &element, int pos)
+    void ComponentsModel::addExistsElement(const entity::SharedEnumarator &element, int pos)
     {
-        int count = m_Components->elements().count();
-        addExists([this, &element](int pos){ m_Components->addExistsElement(element, pos); }, count, pos);
+        int count = m_Components->enumerators().count();
+        addExists([this, &element](int pos){ m_Components->addExistsEnumerator(element, pos); }, count, pos);
     }
 
     /**
@@ -191,9 +191,9 @@ namespace models {
      * @param element
      * @return
      */
-    int ComponentsModel::removeElement(const entity::SharedElement &element)
+    int ComponentsModel::removeElement(const entity::SharedEnumarator &element)
     {
-        return removeElement(index(m_Components->elements().indexOf(element), 0));
+        return removeElement(index(m_Components->enumerators().indexOf(element), 0));
     }
 
     /**
@@ -203,7 +203,7 @@ namespace models {
      */
     int ComponentsModel::removeElement(const QModelIndex &index)
     {
-        return remove([this](int pos){ return m_Components->removeElement(m_Components->elements()[pos]); }, index);
+        return remove([this](int pos){ return m_Components->removeEnumerator(m_Components->enumerators()[pos]); }, index);
     }
 
     /**
@@ -264,7 +264,7 @@ namespace models {
                         return m_SignatureMaker->signature(m_Components->fields()[index.row()]);
 
                     case DisplayPart::Elements:
-                        return m_Components->elements()[index.row()]->name(); // TODO: add variables to signature maker
+                        return m_Components->enumerators()[index.row()]->name(); // TODO: add variables to signature maker
 
                     case DisplayPart::Properties:
                         return m_Components->properties()[index.row()]->name(); // TODO: add variables to signature maker
@@ -284,7 +284,7 @@ namespace models {
                     return QVariant::fromValue(m_Components->fields()[index.row()]);
 
                 case DisplayPart::Elements:
-                    return QVariant::fromValue(m_Components->elements()[index.row()]);
+                    return QVariant::fromValue(m_Components->enumerators()[index.row()]);
 
                 case DisplayPart::Properties:
                     return QVariant::fromValue(m_Components->properties()[index.row()]);

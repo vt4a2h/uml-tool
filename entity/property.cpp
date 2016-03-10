@@ -100,18 +100,8 @@ namespace entity {
      * @brief Property::Property
      * @param src
      */
-    Property::Property(Property &&src)
-        : BasicEntity(std::move(src))
-    {
-        moveFrom(std::move(src));
-    }
-
-    /**
-     * @brief Property::Property
-     * @param src
-     */
     Property::Property(const Property &src)
-        : BasicEntity(src)
+        : BasicElement(src)
         , enable_shared_from_this<Property>(src) // do nothing
     {
         copyFrom(src);
@@ -123,7 +113,7 @@ namespace entity {
      * @param parent
      */
     Property::Property(const QString &name, const EntityID &typeId, QObject *parent)
-        : BasicEntity(name)
+        : BasicElement(name)
         , m_Field(std::make_shared<entity::Field>(name, typeId))
     {
         init();
@@ -141,23 +131,8 @@ namespace entity {
     Property &Property::operator =(const Property &rhs)
     {
         if (this != &rhs) {
-            BasicEntity::operator =(rhs);
+            BasicElement::operator =(rhs);
             copyFrom(rhs);
-        }
-
-        return *this;
-    }
-
-    /**
-     * @brief Property::operator =
-     * @param rhs
-     * @return
-     */
-    Property &Property::operator =(Property &&rhs)
-    {
-        if (this != &rhs) {
-            BasicEntity::operator =(std::forward<Property>(rhs));
-            moveFrom(std::forward<Property>(rhs));
         }
 
         return *this;
@@ -235,7 +210,8 @@ namespace entity {
     {
         using namespace utility;
 
-        return static_cast<BasicEntity const&>(lhs) == static_cast<BasicEntity const&>(rhs) &&
+        return static_cast<common::BasicElement const&>(lhs) ==
+               static_cast<common::BasicElement const&>(rhs) &&
 
                sharedPtrEq(lhs.m_Field, rhs.m_Field) &&
 
@@ -784,7 +760,7 @@ namespace entity {
      */
     QJsonObject Property::toJson() const
     {
-        QJsonObject result = BasicEntity::toJson();
+        QJsonObject result = BasicElement::toJson();
 
         result.insert(memberMark, m_Field ? m_Field->toJson() : QJsonValue(QString("")));
 
@@ -818,7 +794,7 @@ namespace entity {
     {
         using namespace utility;
 
-        BasicEntity::fromJson(src, errorList);
+        BasicElement::fromJson(src, errorList);
 
         checkAndSet(src, memberMark, errorList,
                     [&](){ readOptional(src[memberMark], this, &Property::addField,
@@ -905,35 +881,6 @@ namespace entity {
     QString Property::staticMarker()
     {
         return ::marker;
-    }
-
-    /**
-     * @brief Property::moveFrom
-     * @param src
-     */
-    void Property::moveFrom(Property &&src)
-    {
-        m_typeSearcher = std::move(src.typeSearcher());
-
-        m_Field = std::move(src.m_Field);
-
-        assignMethod(m_Getter, std::move(src.m_Getter));
-        assignMethod(m_Setter, std::move(src.m_Setter));
-        assignMethod(m_Resetter, std::move(src.m_Resetter));
-        assignMethod(m_Notifier, std::move(src.m_Notifier));
-
-        assignMethod(m_DesignableGetter, std::move(src.m_DesignableGetter));
-        assignMethod(m_ScriptableGetter, std::move(src.m_ScriptableGetter));
-
-        m_Revision = std::move(src.m_Revision);
-
-        m_Member     = std::move(src.m_Member);
-        m_Designable = std::move(src.m_Designable);
-        m_Scriptable = std::move(src.m_Scriptable);
-        m_Stored     = std::move(src.m_Stored);
-        m_User       = std::move(src.m_User);
-        m_Constant   = std::move(src.m_Constant);
-        m_Final      = std::move(src.m_Final);
     }
 
     void Property::copyFrom(const Property &src)

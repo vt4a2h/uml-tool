@@ -156,7 +156,7 @@ namespace project {
 
         for (auto &&scope : m_Database->scopes())
             for (auto &&entity : scope->types())
-                connect(entity.get(), &entity::BasicEntity::nameChanged, this, &Project::touch);
+                connect(entity.get(), &entity::BasicElement::nameChanged, this, &Project::touch);
 
         // Fixup if needed
         if (!m_Database->getScope(entity::EntityID::projectScopeID()))

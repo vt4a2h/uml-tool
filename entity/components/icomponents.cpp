@@ -115,9 +115,9 @@ namespace entity {
      * @brief IComponents::addNewElement
      * @return
      */
-    SharedElement IComponents::addNewElement()
+    SharedEnumarator IComponents::addNewEnumerator()
     {
-        return SharedElement();
+        return SharedEnumarator();
     }
 
     /**
@@ -125,7 +125,7 @@ namespace entity {
      * @param element
      * @param pos
      */
-    void IComponents::addExistsElement(const SharedElement &element, int pos)
+    void IComponents::addExistsEnumerator(const SharedEnumarator &element, int pos)
     {
         Q_UNUSED(element);
         Q_UNUSED(pos);
@@ -136,7 +136,7 @@ namespace entity {
      * @param element
      * @return
      */
-    int IComponents::removeElement(const SharedElement &element)
+    int IComponents::removeEnumerator(const SharedEnumarator &element)
     {
         Q_UNUSED(element);
         return -1;
@@ -146,9 +146,9 @@ namespace entity {
      * @brief IComponents::variables
      * @return
      */
-    ElementsList IComponents::elements() const
+    Enumerators IComponents::enumerators() const
     {
-        return ElementsList();
+        return Enumerators();
     }
 
     /**

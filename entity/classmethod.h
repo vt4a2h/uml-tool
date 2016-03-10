@@ -25,9 +25,12 @@
 
 #include <QString>
 #include <QSet>
+#include <QVector>
 
-#include "basicentity.h"
+#include <common/basicelement.h>
+
 #include "entity_types.hpp"
+#include "isectional.h"
 
 class QJsonObject;
 
@@ -47,7 +50,7 @@ namespace entity {
     /**
      * @brief The ClassMethod class
      */
-    class ClassMethod : public BasicEntity
+    class ClassMethod : public common::BasicElement, public ISectional
     {
     public:
         ClassMethod();
@@ -60,9 +63,6 @@ namespace entity {
         ClassMethod &operator =(const ClassMethod &rhs);
 
         friend bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs);
-
-        Section section() const;
-        void setSection(Section section);
 
         bool isConst() const;
         void setConstStatus(bool newStatus);
@@ -102,6 +102,10 @@ namespace entity {
 
         size_t hashType() const override;
         static size_t staticHashType();
+
+    public: // ISectional implementation
+        Section section() const override;
+        void setSection(Section section) override;
 
     protected:
         virtual void moveFrom(ClassMethod &&src);

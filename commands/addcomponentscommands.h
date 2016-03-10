@@ -100,10 +100,10 @@ namespace commands {
     };
 
     /// The AddElement class
-    class AddElement : public AddComponentBaseCommand<entity::SharedElement>
+    class AddElement : public AddComponentBaseCommand<entity::SharedEnumarator>
     {
     public:
-        AddElement(const models::SharedClassComponentsModel &model, const entity::SharedElement &element = nullptr,
+        AddElement(const models::SharedClassComponentsModel &model, const entity::SharedEnumarator &element = nullptr,
                   int pos = -1, QUndoCommand *parent = nullptr);
 
         void redo() override;

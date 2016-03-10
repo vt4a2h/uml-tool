@@ -89,9 +89,9 @@ namespace commands {
      * @param pos
      * @param parent
      */
-    RemoveElement::RemoveElement(const models::SharedClassComponentsModel &model, const entity::SharedElement &element,
+    RemoveElement::RemoveElement(const models::SharedClassComponentsModel &model, const entity::SharedEnumarator &element,
                                  int pos, QUndoCommand *parent)
-        : RemoveComponentBaseCommand<entity::SharedElement>(tr("Remove element"), model, element, pos, parent)
+        : RemoveComponentBaseCommand<entity::SharedEnumarator>(tr("Remove element"), model, element, pos, parent)
     {}
 
     /**

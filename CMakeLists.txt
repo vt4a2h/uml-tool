@@ -28,6 +28,7 @@ set(PROJECT ${ROOT}/project)
 set(REL ${ROOT}/relationship)
 set(TRANSLATION ${ROOT}/translation)
 set(UTIL ${ROOT}/utility)
+set(COMMON ${ROOT}/common)
 
 file(GLOB APP_SRC ${APP}/*.cpp)
 file(GLOB CMD_SRC ${CMD}/*.cpp)
@@ -43,15 +44,17 @@ file(GLOB PROJECT_SRC ${PROJECT}/*.cpp)
 file(GLOB REL_SRC ${REL}/*.cpp)
 file(GLOB TRANSLATION_SRC ${TRANSLATION}/*.cpp)
 file(GLOB UTIL_SRC ${UTIL}/*.cpp)
+file(GLOB COMMON_SRC ${COMMON}/*.cpp)
 
 set(RESOURCES ${GUI}/main.qrc)
 
 include_directories(${Qt5Widgets_INCLUDES} ${Boost_INCLUDE_DIRS} ${ROOT} ${APP} ${CMD} ${DB} ${ENTITY}
                     ${ENTITY_COMPONENTS} ${GEN} ${GUI} ${GUI_GRAPHICS} ${HELPERS} ${MODELS}
-                    ${PROJECT} ${REL} ${TRANSLATION} ${UTIL})
+                    ${PROJECT} ${REL} ${TRANSLATION} ${UTIL} ${COMMON})
 
 add_executable(uml-tool main.cpp ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${ENTITY_SRC}
                ${ENTITY_COMPONENTS_SRC} ${GEN_SRC} ${GUI_SRC} ${GUI_GRAPHICS_SRC} ${HELPERS_SRC}
-               ${MODELS_SRC} ${PROJECT_SRC} ${REL_SRC} ${TRANSLATION_SRC} ${UTIL_SRC} ${RESOURCES})
+               ${MODELS_SRC} ${PROJECT_SRC} ${REL_SRC} ${TRANSLATION_SRC} ${UTIL_SRC}
+               ${COMMON_SRC} ${RESOURCES})
 target_link_libraries(uml-tool ${Boost_LIBRARIES})
 qt5_use_modules(uml-tool Widgets Core)

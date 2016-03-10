@@ -22,24 +22,30 @@
 *****************************************************************************/
 #pragma once
 
-#include "type.h"
-
 #include <QHash>
 #include <QStringList>
+#include <QVector>
+
+#include "type.h"
+#include "isectional.h"
 
 namespace entity {
 
     class EntityID;
 
     /// The Variable class
-    class Element : public BasicEntity
+    class Enumerator : public common::BasicElement, public ISectional
     {
     public:
-        Element();
-        Element(const QString &name, int value);
-        Element(const QJsonObject &src, QStringList &errorList);
+        Enumerator();
+        Enumerator(const QString &name, int value);
+        Enumerator(const QJsonObject &src, QStringList &errorList);
+        Enumerator(Enumerator &&) noexcept = default;
+        Enumerator(const Enumerator &) = default;
 
-        friend bool operator ==(const Element &lhs, const Element &rhs);
+        Enumerator& operator= (Enumerator &&) noexcept = default;
+        Enumerator& operator= (const Enumerator &) = default;
+        friend bool operator ==(const Enumerator &lhs, const Enumerator &rhs);
 
         int value() const;
         void setValue(int value);
@@ -71,9 +77,9 @@ namespace entity {
         bool isStrong() const;
         void setStrongStatus(bool status);
 
-        SharedElement addElement(const QString &name);
-        SharedElement element(const QString &name) const;
-        void removeElement(const QString &name);
+        SharedEnumarator addElement(const QString &name);
+        SharedEnumarator element(const QString &name) const;
+        void removeEnumerator(const QString &name);
         bool containsElement(const QString &name) const;
 
         EntityID enumTypeId() const;
@@ -82,10 +88,10 @@ namespace entity {
         bool isEqual(const Type &rhs, bool withTypeid = true) const override;
 
     public: // IComponents implmentaion
-        SharedElement addNewElement() override;
-        void addExistsElement(const SharedElement &element, int pos = -1) override;
-        int removeElement(const SharedElement &element) override;
-        ElementsList elements() const override;
+        SharedEnumarator addNewEnumerator() override;
+        void addExistsEnumerator(const SharedEnumarator &element, int pos = -1) override;
+        int removeEnumerator(const SharedEnumarator &element) override;
+        Enumerators enumerators() const override;
 
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
@@ -103,10 +109,10 @@ namespace entity {
     private:
         EntityID m_EnumTypeId;
         bool m_StrongStatus;
-        ElementsList m_Elements;
+        Enumerators m_Elements;
     };
 
 } // namespace entity
 
-Q_DECLARE_METATYPE(entity::Element)
-Q_DECLARE_METATYPE(entity::SharedElement)
+Q_DECLARE_METATYPE(entity::Enumerator)
+Q_DECLARE_METATYPE(entity::SharedEnumarator)

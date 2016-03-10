@@ -149,7 +149,7 @@ namespace graphics {
         setAcceptHoverEvents(true);
         setCursor(defaultCursorShape);
 
-        connect(G_ASSERT(type.get()), &entity::BasicEntity::nameChanged, [=]{ update(); });
+        connect(G_ASSERT(type.get()), &entity::BasicElement::nameChanged, [=]{ update(); });
     }
 
     /**
@@ -456,7 +456,7 @@ namespace graphics {
         drawSection(painter, tr("Properties"), m_Type->properties(), topLeft, len, m_Width, color);
         drawSection(painter, tr("Methods"), m_Type->methods(), topLeft, len, m_Width, color);
         drawSection(painter, tr("Fields"), m_Type->fields(), topLeft, len, m_Width, color);
-        drawSection(painter, tr("Elements"), m_Type->elements(), topLeft, len, m_Width, color);
+        drawSection(painter, tr("Elements"), m_Type->enumerators(), topLeft, len, m_Width, color);
 
         painter->restore();
     }

@@ -28,7 +28,7 @@
 #include "entity_types.hpp"
 
 #include <QString>
-#include <QList>
+#include <QVector>
 
 namespace entity {
 

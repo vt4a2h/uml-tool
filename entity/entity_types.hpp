@@ -30,32 +30,32 @@
 namespace entity {
     class EntityID;
 
-    class BasicEntity;
-    using SharedBasicEntity = std::shared_ptr<BasicEntity>;
+    class BasicElement;
+    using SharedBasicEntity = std::shared_ptr<BasicElement>;
 
     enum FieldKeyword : int;
     using FieldKeywords     = QSet<FieldKeyword>;
-    using FieldKeywordsList = QList<FieldKeyword>;
+    using FieldKeywordsList = QVector<FieldKeyword>;
 
     class Property;
     using SharedProperty = std::shared_ptr<Property>;
     using ConstSharedProperty = std::shared_ptr<const Property>;
-    using PropertiesList = QList<SharedProperty>;
+    using PropertiesList = QVector<SharedProperty>;
 
     class ClassMethod;
     using SharedMethod = std::shared_ptr<ClassMethod>;
     using WeakMethod   = std::weak_ptr<ClassMethod>;
     using Methods      = QMultiHash<QString, SharedMethod>;
-    using MethodsList  = QList<SharedMethod>;
-    using WeakMethodsList = QList<WeakMethod>;
+    using MethodsList  = QVector<SharedMethod>;
+    using WeakMethodsList = QVector<WeakMethod>;
     using WeakMethodsMap = QMap<SharedProperty, WeakMethodsList>;
 
     class Field;
     using SharedField = std::shared_ptr<Field>;
     using Fields      = QHash<QString, SharedField>;
-    using FieldsList  = QList<SharedField>;
+    using FieldsList  = QVector<SharedField>;
     using WeakField   = std::weak_ptr<Field>;
-    using WeakFieldsList = QList<WeakField>;
+    using WeakFieldsList = QVector<WeakField>;
     using WeakFieldsMap = QMap<SharedProperty, WeakFieldsList>;
 
     class TemplateClassMethod;
@@ -63,18 +63,18 @@ namespace entity {
 
     enum class LhsIdentificator : int;
     using LhsIdentificators     = QSet<LhsIdentificator>;
-    using LhsIdentificatorsList = QList<LhsIdentificator>;
+    using LhsIdentificatorsList = QVector<LhsIdentificator>;
 
     class Type;
     using SharedType  = std::shared_ptr<Type>;
     using Types       = QHash<EntityID, SharedType>;
     using TypesByName = QHash<QString, SharedType>;
-    using TypesList   = QList<SharedType>;
+    using TypesList   = QVector<SharedType>;
 
     class Class;
     using SharedClass = std::shared_ptr<Class>;
     using Classes     = QHash<QString, SharedClass>;
-    using ClassesList = QList<SharedClass>;
+    using ClassesList = QVector<SharedClass>;
 
     class TemplateClass;
     using SharedTemplateClass = std::shared_ptr<TemplateClass>;
@@ -85,38 +85,38 @@ namespace entity {
     class Union;
     using SharedUnion = std::shared_ptr<Union>;
     using Unions      = QHash<QString, SharedUnion>;
-    using UnionsList  = QList<SharedUnion>;
+    using UnionsList  = QVector<SharedUnion>;
 
     class Enum;
     using SharedEnum = std::shared_ptr<Enum>;
     using Enums      = QHash<QString, SharedEnum>;
-    using EnumsList  = QList<SharedEnum>;
+    using EnumsList  = QVector<SharedEnum>;
 
     enum Section : int;
     using Parent      = std::pair<EntityID, Section>;
     using Parents     = QHash<QString, Parent>; // id : {id, section}
-    using ParentsList = QList<Parent>;
+    using ParentsList = QVector<Parent>;
 
     class ExtendedType;
     using TemplateParameter      = QPair<EntityID, EntityID>; // (type id, default type id)
     using TemplateParameters     = QHash<QString, TemplateParameter>;
-    using TemplateParametersList = QList<TemplateParameter>;
+    using TemplateParametersList = QVector<TemplateParameter>;
     using SharedExtendedType     = std::shared_ptr<ExtendedType>;
     using ExtendedTypes          = QHash<QString, SharedExtendedType>;
-    using ExtendedTypesList      = QList<SharedExtendedType>;
-    using ExtendedTypesIdList    = QList<EntityID>;
+    using ExtendedTypesList      = QVector<SharedExtendedType>;
+    using ExtendedTypesIdList    = QVector<EntityID>;
 
     class Scope;
     using SharedScope = std::shared_ptr<Scope>;
     using Scopes      = QHash<EntityID, SharedScope>;
-    using ScopesList  = QList<SharedScope>;
+    using ScopesList  = QVector<SharedScope>;
 
     class IComponents;
     using SharedComponents = std::shared_ptr<IComponents>;
 
-    class Element;
-    using SharedElement = std::shared_ptr<Element>;
-    using ElementsList = QList<SharedElement>;
+    class Enumerator;
+    using SharedEnumarator = std::shared_ptr<Enumerator>;
+    using Enumerators = QVector<SharedEnumarator>;
 
     struct Member;
     using SharedMember = std::shared_ptr<Member>;

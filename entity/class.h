@@ -24,6 +24,7 @@
 #pragma once
 
 #include <QMap>
+#include <QVector>
 
 #include "type.h"
 #include "types.h"

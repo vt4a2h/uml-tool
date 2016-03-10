@@ -50,7 +50,7 @@ namespace entity {
      * @param src
      */
     Scope::Scope(Scope &&src)
-        : BasicEntity(std::move(src))
+        : BasicElement(std::move(src))
     {
         moveFrom(std::move(src));
     }
@@ -60,7 +60,7 @@ namespace entity {
      * @param src
      */
     Scope::Scope(const Scope &src)
-        : BasicEntity(src)
+        : BasicElement(src)
     {
         copyFrom(src);
     }
@@ -71,7 +71,7 @@ namespace entity {
      * @param scopeId
      */
     Scope::Scope(const QString &scopeName, const EntityID &parentScopeID)
-        : BasicEntity(!scopeName.isEmpty() ? scopeName : DEFAULT_NAME,
+        : BasicElement(!scopeName.isEmpty() ? scopeName : DEFAULT_NAME,
                       parentScopeID.isValid() ? parentScopeID : EntityID::globalScopeID(),
                       GeneratorID::instance().genID())
     {
@@ -85,7 +85,7 @@ namespace entity {
     Scope &Scope::operator =(const Scope &rhs)
     {
         if (this != &rhs) {
-            BasicEntity::operator =(rhs);
+            BasicElement::operator =(rhs);
             copyFrom(rhs);
         }
 
@@ -100,7 +100,7 @@ namespace entity {
     Scope &Scope::operator =(Scope &&rhs)
     {
         if (this != &rhs) {
-            BasicEntity::operator =(std::move(rhs));
+            BasicElement::operator =(std::move(rhs));
             moveFrom(std::move(rhs));
         }
 
@@ -115,7 +115,7 @@ namespace entity {
      */
     bool operator ==(const Scope &lhs, const Scope &rhs)
     {
-        return static_cast<BasicEntity const&>(lhs) == static_cast<BasicEntity const&>(rhs) &&
+        return static_cast<BasicElement const&>(lhs) == static_cast<BasicElement const&>(rhs) &&
                utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes) &&
                utility::seqSharedPointerEq(lhs.m_Types, rhs.m_Types)   &&
                utility::seqSharedPointerEq(lhs.m_TypesByName, rhs.m_TypesByName);
@@ -216,7 +216,7 @@ namespace entity {
      */
     TypesList Scope::types() const
     {
-        return m_Types.values();
+        return m_Types.values().toVector();
     }
 
     /**
@@ -298,7 +298,7 @@ namespace entity {
      */
     ScopesList Scope::scopes() const
     {
-        return m_Scopes.values();
+        return m_Scopes.values().toVector();
     }
 
     /**
@@ -307,7 +307,7 @@ namespace entity {
      */
     QJsonObject Scope::toJson() const
     {
-        QJsonObject result = BasicEntity::toJson();
+        QJsonObject result = BasicElement::toJson();
 
         QJsonArray scopes;
         for (auto &&scope : m_Scopes.values())
@@ -329,7 +329,7 @@ namespace entity {
      */
     void Scope::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        BasicEntity::fromJson(src, errorList);
+        BasicElement::fromJson(src, errorList);
 
         m_Scopes.clear();
         utility::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
