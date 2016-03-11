@@ -127,7 +127,7 @@ TEST_F(FileJson, TemplateClassJson)
     class_->writeToFile(m_JsonFileName);
 
     auto class_comp(std::make_shared<entity::TemplateClass>());
-//    json_eq(class_, class_comp, "TemplateClass")
+    json_eq(class_, class_comp, "TemplateClass")
     ASSERT_TRUE(class_comp->readFromFile(m_JsonFileName));
     EXPECT_EQ(*class_, *class_comp);
 }

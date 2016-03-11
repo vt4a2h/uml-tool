@@ -106,7 +106,11 @@ namespace entity {
      */
     bool Template::removeParameter(const EntityID &typeId)
     {
-        return m_TemplateParameters.removeOne(getTemplateParameter(typeId));
+        auto pos = m_TemplateParameters.indexOf(getTemplateParameter(typeId));
+        if (pos != -1)
+            m_TemplateParameters.remove(pos);
+
+        return pos != -1;
     }
 
     /**

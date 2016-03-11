@@ -362,7 +362,7 @@ namespace entity {
     {
         auto parameter = getParameter(name);
         if (parameter)
-            m_Parameters.removeOne(parameter);
+            m_Parameters.remove(m_Parameters.indexOf(parameter));
     }
 
     /**

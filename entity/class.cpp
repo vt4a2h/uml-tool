@@ -31,6 +31,7 @@
 #include <boost/range/adaptor/transformed.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/range/algorithm/find_if.hpp>
+#include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm_ext/erase.hpp>
 
 #include <utility/helpfunctions.h>
@@ -210,7 +211,8 @@ namespace entity {
     void Class::removeMethods(const QString &name)
     {
         auto methods = getMethod(name);
-        for (auto &&m : methods) m_Methods.removeAll(m);
+        for (auto &&m : methods)
+            m_Methods.remove(m_Methods.indexOf(m));
     }
 
     /**
@@ -220,7 +222,7 @@ namespace entity {
     int Class::removeMethod(const SharedMethod &method)
     {
         int pos = m_Methods.indexOf(method);
-        m_Methods.removeOne(method);
+        m_Methods.remove(pos);
         return pos;
     }
 
@@ -263,7 +265,7 @@ namespace entity {
     int Class::removeField(const SharedField &field)
     {
         int pos = m_Fields.indexOf(field);
-        m_Fields.removeOne(field);
+        m_Fields.remove(pos);
         return pos;
     }
 
@@ -455,7 +457,7 @@ namespace entity {
         if (pos != -1) {
             disconnect(property.get(), &Property::methodAdded, this, &Class::onOptionalMethodAdded);
             disconnect(property.get(), &Property::methodRemoved, this, &Class::onOptionalMethodRemoved);
-            m_Properties.removeOne(property);
+            m_Properties.remove(pos);
         }
 
         return pos;
@@ -545,7 +547,7 @@ namespace entity {
             G_DISCONNECT(prop.get(), &Property::fieldAdded, this, &Class::onOptionalFieldAdded);
             G_DISCONNECT(prop.get(), &Property::fieldRemoved, this, &Class::onOptionalFieldRemoved);
 
-            m_Properties.removeOne(prop);
+            m_Properties.remove(m_Properties.indexOf(prop));
             m_OptionalMethods.remove(prop);
             m_OptionalFields.remove(prop);
         }
@@ -863,8 +865,8 @@ namespace entity {
         inline void addOptionalEntity(Container &c, const entity::SharedProperty &p, const Entity &e)
         {
             if (e) {
-                Q_ASSERT(c[G_ASSERT(p)].indexOf(e) == -1);
-                c[p] << e;
+                Q_ASSERT(range::find(c[G_ASSERT(p)], e) == std::cend(c[G_ASSERT(p)]));
+                c[p].push_back(e);
             }
         }
 
@@ -872,11 +874,11 @@ namespace entity {
         inline void removeOptionalEntity(Container &c, const entity::SharedProperty &p, const Entity &e)
         {
             if (G_ASSERT(e)) {
-                Q_ASSERT(c[G_ASSERT(p)].indexOf(e) != -1);
-                c[p].removeOne(e);
+                Q_ASSERT(range::find(c[G_ASSERT(p)], e) != std::cend(c[G_ASSERT(p)]));
+                range::remove_erase(c[p], e);
 
                 // Also remove possible NULL pointers
-                range::remove_erase_if(c[p], [](auto p){ return !p.lock(); });
+                range::remove_erase_if(c[p], [](auto &&p){ return !p.lock(); });
             }
         }
     }

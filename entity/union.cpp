@@ -290,7 +290,7 @@ namespace entity {
     int Union::removeField(const SharedField &field)
     {
         int pos = m_Fields.indexOf(field);
-        m_Fields.removeOne(field);
+        m_Fields.remove(pos);
         return pos;
     }
 
