@@ -273,7 +273,8 @@ namespace components {
                                     .remove(QChar::Space)
                                     .split(",", QString::SkipEmptyParts);
             entity::ScopesList scopes = m_Model->currentProject()->database()->scopes();
-            scopes.append(m_Model->globalDatabase()->scopes());
+            for (auto && s : m_Model->globalDatabase()->scopes())
+                scopes << s;
 
             // TODO: add namespaces, * and const
             for (auto &&name : arguments) {
