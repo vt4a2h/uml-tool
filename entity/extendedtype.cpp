@@ -175,7 +175,7 @@ namespace entity {
      */
     void ExtendedType::removeTemplateParameters(const EntityID &typeId)
     {
-        m_TemplateParameters.removeAll(typeId);
+        m_TemplateParameters.remove(m_TemplateParameters.indexOf(typeId));
     }
 
     /**

@@ -131,7 +131,8 @@ namespace entity {
     void Union::removeField(const QString &name)
     {
         auto field = getField(name);
-        if (field) m_Fields.removeAll(field);
+        if (field)
+            m_Fields.remove(m_Fields.indexOf(field));
     }
 
     /**
