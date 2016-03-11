@@ -22,12 +22,13 @@
 *****************************************************************************/
 #include "basicelement.h"
 
+#include <entity/itypeuser.h>
+
 #include <utility/helpfunctions.h>
 
 #include <helpers/generatorid.h>
 
 #include "enums.h"
-#include "itypeuser.h"
 
 namespace common {
 

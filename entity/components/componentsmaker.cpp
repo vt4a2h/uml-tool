@@ -125,7 +125,7 @@ namespace components {
         if (!tokens.isEmpty())
             return m_ComponentMakerMap[display](tokens);
 
-        return {tr("Wrong signature"), entity::SharedBasicEntity()};
+        return {tr("Wrong signature"), common::SharedBasicEntity()};
     }
 
     /**

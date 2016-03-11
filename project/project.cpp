@@ -29,7 +29,8 @@
 #include <QDebug>
 #include <QUndoStack>
 
-#include <entity/basicentity.h>
+#include <common/basicelement.h>
+
 #include <entity/type.h>
 #include <entity/scope.h>
 
@@ -156,7 +157,7 @@ namespace project {
 
         for (auto &&scope : m_Database->scopes())
             for (auto &&entity : scope->types())
-                connect(entity.get(), &entity::BasicElement::nameChanged, this, &Project::touch);
+                connect(entity.get(), &common::BasicElement::nameChanged, this, &Project::touch);
 
         // Fixup if needed
         if (!m_Database->getScope(entity::EntityID::projectScopeID()))

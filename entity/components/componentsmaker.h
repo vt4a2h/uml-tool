@@ -25,6 +25,7 @@
 #include <QCoreApplication>
 
 #include <entity/entity_types.hpp>
+#include <common/common_types.h>
 
 #include <models/models_types.hpp>
 #include <models/componentsmodel.h>
@@ -37,7 +38,7 @@ namespace components {
     struct OptionalEntity
     {
         QString errorMessage;
-        entity::SharedBasicEntity resultEntity;
+        common::SharedBasicEntity resultEntity;
     };
 
     /// The ComponentsMaker class

@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include <entity/entity_types.hpp>
+#include <common/common_types.h>
 
 #include "basecommand.h"
 
@@ -33,14 +33,14 @@ namespace commands
     class RenameEntity : public BaseCommand
     {
     public:
-        RenameEntity(const entity::SharedBasicEntity &entity, const QString &newName,
+        RenameEntity(const common::SharedBasicEntity &entity, const QString &newName,
                      QUndoCommand *parent = nullptr);
 
         void redo() override;
         void undo() override;
 
     private:
-        entity::SharedBasicEntity m_Entity;
+        common::SharedBasicEntity m_Entity;
         QString m_NewName;
         QString m_OldName;
     };

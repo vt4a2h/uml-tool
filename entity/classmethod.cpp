@@ -144,7 +144,8 @@ namespace entity {
      */
     bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs)
     {
-        return static_cast<const BasicElement&>(lhs) == static_cast<const BasicElement&>(rhs) &&
+        return static_cast<const common::BasicElement&>(lhs) ==
+               static_cast<const common::BasicElement&>(rhs) &&
                lhs.m_Section           == rhs.m_Section           &&
                lhs.m_ConstStatus       == rhs.m_ConstStatus       &&
                lhs.m_SlotStatus        == rhs.m_SlotStatus        &&

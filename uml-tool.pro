@@ -174,7 +174,8 @@ HEADERS += \
     db/itypesearcher.h \
     entity/itypeuser.h \
     common/basicelement.h \
-    entity/isectional.h
+    entity/isectional.h \
+    common/common_types.h
 
 FORMS += \
     gui/mainwindow.ui \

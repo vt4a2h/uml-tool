@@ -427,12 +427,12 @@ namespace models {
         emit dataChanged(topLeftIndex, bottomRightIndex);
     }
 
-    void ProjectTreeModel::observeItemChanging(entity::BasicElement * entity, BasicTreeItem *item)
+    void ProjectTreeModel::observeItemChanging(common::BasicElement * entity, BasicTreeItem *item)
     {
         Q_ASSERT(m_Project);
 
-        connect(entity, &entity::BasicElement::nameChanged, [=]{ update(item); });
-        connect(entity, &entity::BasicElement::nameChanged, m_Project.get(), &project::Project::touch);
+        connect(entity, &common::BasicElement::nameChanged, [=]{ update(item); });
+        connect(entity, &common::BasicElement::nameChanged, m_Project.get(), &project::Project::touch);
     }
 
 } // namespace models

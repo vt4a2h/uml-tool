@@ -25,9 +25,14 @@
 #include <QCoreApplication>
 #include <QMap>
 
+#include <common/common_types.h>
+
 #include <models/models_types.hpp>
+
 #include <entity/entity_types.hpp>
+
 #include <project/project_types.hpp>
+
 #include <db/db_types.hpp>
 
 namespace translation {
@@ -44,7 +49,7 @@ namespace translation {
 
         ~SignatureMaker();
 
-        QString signature(const entity::SharedBasicEntity &component);
+        QString signature(const common::SharedBasicEntity &component);
 
         entity::SharedType type() const;
         void setType(const entity::SharedType &type);
@@ -72,7 +77,7 @@ namespace translation {
         db::SharedDatabase m_GlobalDatabase;
         db::SharedProjectDatabase m_ProjectDatabase;
 
-        using MakerFunction = std::function<QString(const entity::SharedBasicEntity &)>;
+        using MakerFunction = std::function<QString(const common::SharedBasicEntity &)>;
         QMap<size_t, MakerFunction> m_MakersMap;
     };
 

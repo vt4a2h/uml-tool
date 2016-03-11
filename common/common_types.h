@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 26/07/2015.
+** Created 11/03/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,15 +22,17 @@
 *****************************************************************************/
 #pragma once
 
-#include <entity/entity_types.hpp>
-#include <common/common_types.h>
+#include <memory>
 
-namespace entity {
+#include <QMetaType>
 
-    /// Get scope from chain
-    SharedScope chainScopeSearch(const entity::Scopes& scopes, const QStringList &scopesNames);
+namespace common
+{
 
-    /// Set unique name for entity
-    void uniquifyName(common::BasicElement &ent, const QStringList &names);
+    class BasicElement;
+    // TODO: rename
+    using SharedBasicEntity = std::shared_ptr<BasicElement>;
 
-} // namespace entity
+} // common
+
+Q_DECLARE_METATYPE(common::SharedBasicEntity)

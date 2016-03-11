@@ -84,7 +84,8 @@ namespace entity {
      */
     bool operator ==(const Enumerator &lhs, const Enumerator &rhs)
     {
-        return static_cast<BasicElement const&>(lhs) == static_cast<BasicElement const&>(rhs) &&
+        return static_cast<common::BasicElement const&>(lhs) ==
+               static_cast<common::BasicElement const&>(rhs) &&
                lhs.m_Value == rhs.m_Value;
     }
 
@@ -397,7 +398,7 @@ namespace entity {
      */
     void Enum::addExistsEnumerator(const SharedEnumarator &element, int pos)
     {
-        m_Elements.insert(pos, element);
+        m_Elements.insert(pos > 0 && pos < m_Elements.size() ? pos : m_Elements.size(), element);
     }
 
     /**

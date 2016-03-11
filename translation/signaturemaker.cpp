@@ -100,15 +100,15 @@ namespace translation {
         , m_ProjectDatabase(projectDb)
     {
         m_MakersMap[entity::Field::staticHashType()] =
-            [&](const entity::SharedBasicEntity &component) {
+            [&](const common::SharedBasicEntity &component) {
                 return makeField(std::static_pointer_cast<entity::Field>(component));
             };
         m_MakersMap[entity::ClassMethod::staticHashType()] =
-                [&](const entity::SharedBasicEntity &component) {
+                [&](const common::SharedBasicEntity &component) {
                     return makeMethod(std::static_pointer_cast<entity::ClassMethod>(component));
                 };
         m_MakersMap[entity::Property::staticHashType()] =
-                [&](const entity::SharedBasicEntity &component) {
+                [&](const common::SharedBasicEntity &component) {
                     return makeProperty(std::static_pointer_cast<entity::Property>(component));
                 };
     }
@@ -125,7 +125,7 @@ namespace translation {
      * @param entity
      * @return
      */
-    QString SignatureMaker::signature(const entity::SharedBasicEntity &component)
+    QString SignatureMaker::signature(const common::SharedBasicEntity &component)
     {
         return m_MakersMap.value(component->hashType(), [](auto){ return tr("Wrong component"); })(component);
     }

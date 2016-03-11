@@ -28,11 +28,20 @@
 
 namespace common {
 
+    /// Base class for all elements
     class BasicElement : public QObject
     {
         Q_OBJECT
 
     public:
+        explicit BasicElement(const QString &name = "",
+                              const entity::EntityID &id = entity::EntityID::nullID());
+        BasicElement(const QString &name, const entity::EntityID &scopeId,
+                     const entity::EntityID &id);
+        BasicElement(const BasicElement &src);
+        BasicElement(BasicElement &&src) noexcept = default;
+        BasicElement(const QJsonObject &src, QStringList &errorList);
+
         virtual entity::EntityID id() const;
         virtual void setId(const entity::EntityID &id);
 
@@ -67,12 +76,6 @@ namespace common {
         friend bool operator ==(const BasicElement &lhs, const BasicElement &rhs);
 
     protected:
-        explicit BasicElement(const QString &name = "", const entity::EntityID &id = entity::EntityID::nullID());
-        BasicElement(const QString &name, const entity::EntityID &scopeId, const entity::EntityID &id);
-        BasicElement(const BasicElement &src);
-        BasicElement(BasicElement &&src) noexcept = default;
-        BasicElement(const QJsonObject &src, QStringList &errorList);
-
         QString m_Name;
         entity::EntityID m_Id;
         entity::EntityID m_ScopeId;

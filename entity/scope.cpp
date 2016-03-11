@@ -115,7 +115,8 @@ namespace entity {
      */
     bool operator ==(const Scope &lhs, const Scope &rhs)
     {
-        return static_cast<BasicElement const&>(lhs) == static_cast<BasicElement const&>(rhs) &&
+        return static_cast<common::BasicElement const&>(lhs) ==
+               static_cast<common::BasicElement const&>(rhs) &&
                utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes) &&
                utility::seqSharedPointerEq(lhs.m_Types, rhs.m_Types)   &&
                utility::seqSharedPointerEq(lhs.m_TypesByName, rhs.m_TypesByName);

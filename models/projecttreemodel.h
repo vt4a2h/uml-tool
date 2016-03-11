@@ -26,6 +26,7 @@
 
 #include <entity/entity_types.hpp>
 #include <project/project_types.hpp>
+#include <common/common_types.h>
 
 #include "basictreeitem.h"
 
@@ -67,7 +68,7 @@ namespace models {
         BasicTreeItem *find(const QVariant &id);
         const BasicTreeItem *find(const QVariant &id) const;
         void update(BasicTreeItem *item);
-        void observeItemChanging(entity::BasicElement * entity, BasicTreeItem *item);
+        void observeItemChanging(common::BasicElement * entity, BasicTreeItem *item);
 
         mutable QList<BasicTreeItem> m_Items; // TODO: store as pointers
         project::SharedProject m_Project;

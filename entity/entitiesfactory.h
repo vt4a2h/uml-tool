@@ -69,7 +69,7 @@ namespace entity {
                                     const entity::SharedType &type = nullptr) const;
 
         void connectEntity(graphics::Entity *entity, project::Project *currentProject,
-                           entity::BasicElement *type) const;
+                           common::BasicElement *type) const;
     };
 
 } // namespace entity

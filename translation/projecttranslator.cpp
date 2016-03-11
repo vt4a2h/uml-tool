@@ -73,7 +73,7 @@ namespace {
         using namespace std::placeholders;
         map[T::staticHashType()] =
             std::bind(
-                f, this_, std::bind(std::static_pointer_cast<T,entity::BasicElement>, _1), _2, _3, _4
+                f, this_, std::bind(std::static_pointer_cast<T,common::BasicElement>, _1), _2, _3, _4
             );
     }
 }
@@ -816,7 +816,7 @@ namespace translation {
         m_ProjectDatabase = projectDatabase;
     }
 
-    Code ProjectTranslator::translate(const entity::SharedBasicEntity &e,
+    Code ProjectTranslator::translate(const common::SharedBasicEntity &e,
                                       const TranslatorOptions &options,
                                       const db::SharedDatabase &localeDatabase,
                                       const db::SharedDatabase &classDatabase) const

@@ -189,7 +189,7 @@ namespace models {
             if (auto &&db = pr->database())
                 if (auto &&scope = db->getScope(scopeID)) {
                     scope->addExistsType(type);
-                    connect(type.get(), &entity::BasicElement::nameChanged,
+                    connect(type.get(), &common::BasicElement::nameChanged,
                             m_CurrentProject.get(), &project::Project::touch);
                     // todo: connect scope id change to project touch
                 }

@@ -252,8 +252,8 @@ TEST_F(Enteties, OptionaClassFields)
     // Check a few fields
     // FIXME: set appropriate type
     auto p1 = _class->addProperty("p1", -1);
-    ASSERT_EQ(entity::FieldsList({p1->field(), p->field()}).toSet(),
-              _class->optionalFields(entity::Private).toSet());
+    ASSERT_EQ(entity::FieldsList({p1->field(), p->field()}).toList().toSet(),
+              _class->optionalFields(entity::Private).toList().toSet());
 }
 
 TEST_F(Enteties, Union)
@@ -279,11 +279,11 @@ TEST_F(Enteties, Enum)
     auto element = _enum->addElement("new element");
     ASSERT_EQ(*element, *_enum->element(element->name()));
     ASSERT_TRUE(_enum->containsElement(element->name()));
-    _enum->removeElement(element);
+    _enum->removeEnumerator(element);
     ASSERT_EQ(nullptr, _enum->element(element->name()));
     ASSERT_FALSE(_enum->containsElement(element->name()));
 
-    _enum->addExistsElement(element);
+    _enum->addExistsEnumerator(element);
     test_copy_move(Enum, _enum)
 }
 

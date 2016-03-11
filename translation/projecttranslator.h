@@ -29,6 +29,7 @@
 
 #include <db/db_types.hpp>
 #include <entity/entity_types.hpp>
+#include <common/common_types.h>
 
 namespace translation {
 
@@ -63,7 +64,7 @@ namespace translation {
         db::SharedProjectDatabase projectDatabase() const;
         void setProjectDatabase(const db::SharedProjectDatabase &projectDatabase);
 
-        Code translate(const entity::SharedBasicEntity &e,
+        Code translate(const common::SharedBasicEntity &e,
                        const TranslatorOptions &options = WithNamespace,
                        const db::SharedDatabase &localeDatabase = nullptr,
                        const db::SharedDatabase &classDatabase = nullptr) const;
@@ -130,7 +131,7 @@ namespace translation {
         db::SharedDatabase m_GlobalDatabase;
         db::SharedProjectDatabase m_ProjectDatabase;
 
-        using TranslatorsMap = QHash<size_t, std::function<Code(const entity::SharedBasicEntity &,
+        using TranslatorsMap = QHash<size_t, std::function<Code(const common::SharedBasicEntity &,
                                                                 const ProjectTranslator::TranslatorOptions &,
                                                                 const db::SharedDatabase &,
                                                                 const db::SharedDatabase &)>>;

@@ -62,7 +62,7 @@ namespace entity {
     }
 
     void EntitiesFactory::connectEntity(graphics::Entity *entity, project::Project *currentProject,
-                                        BasicElement *type) const
+                                        common::BasicElement *type) const
     {
         Q_ASSERT(entity);
         Q_ASSERT(currentProject);

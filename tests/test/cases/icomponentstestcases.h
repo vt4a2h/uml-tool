@@ -47,7 +47,7 @@
 namespace {
     TEST_COMPONENTS(Method, methods, Methods)
     TEST_COMPONENTS(Field, fields, Fields)
-    TEST_COMPONENTS(Element, elements, Elements)
+    TEST_COMPONENTS(Enumerator, enumerators, Enumerators)
     TEST_COMPONENTS(Property, properties, Properties)
 }
 
@@ -55,7 +55,7 @@ TEST_F(Components, SimpleType)
 {
     testMethods(_type, false);
     testFields(_type, false);
-    testElements(_type, false);
+    testEnumerators(_type, false);
     testProperties(_type, false);
 }
 
@@ -63,7 +63,7 @@ TEST_F(Components, ExtendedType)
 {
     testMethods(_extendedType, false);
     testFields(_extendedType, false);
-    testElements(_extendedType, false);
+    testEnumerators(_extendedType, false);
     testProperties(_extendedType, false);
 }
 
@@ -71,7 +71,7 @@ TEST_F(Components, Class)
 {
     testMethods(_class, true);
     testFields(_class, true);
-    testElements(_class, false);
+    testEnumerators(_class, false);
     testProperties(_class, true);
 }
 
@@ -79,7 +79,7 @@ TEST_F(Components, Union)
 {
     testMethods(_union, false);
     testFields(_union, true);
-    testElements(_union, false);
+    testEnumerators(_union, false);
     testProperties(_union, false);
 }
 
@@ -87,6 +87,6 @@ TEST_F(Components, Enum)
 {
     testMethods(_enum, false);
     testFields(_enum, false);
-    testElements(_enum, true);
+    testEnumerators(_enum, true);
     testProperties(_enum, false);
 }

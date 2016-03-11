@@ -24,14 +24,16 @@ linux-g++ {
 INCLUDEPATH += ../../
 
 HEADERS += ../../enums.h \
+    ../../common/basicelement.h \
     ../../db/database.h \
     ../../db/projectdatabase.h \
     ../../project/project.h \
-    ../../entity/basicentity.h \
     ../../entity/property.h \
     ../../entity/class.h \
     ../../entity/entityid.h \
     ../../entity/scope.h \
+    ../../entity/isectional.h \
+    ../../entity/components/icomponents.h \
     ../../constants.h \
     ../../entity/field.h \
     ../../qthelpers.h \
@@ -73,10 +75,10 @@ HEADERS += ../../enums.h \
     TestProjectBase.h
 
 SOURCES += main.cpp \
+           ../../common/basicelement.cpp \
            ../../entity/type.cpp \
            ../../entity/components/icomponents.cpp \
            ../../entity/components/token.cpp \
-           ../../entity/basicentity.cpp \
            ../../entity/class.cpp \
            ../../entity/enum.cpp \
            ../../entity/field.cpp \
@@ -87,6 +89,7 @@ SOURCES += main.cpp \
            ../../entity/template.cpp \
            ../../entity/property.cpp \
            ../../entity/entityid.cpp \
+           ../../entity/isectional.cpp \
            ../../utility/helpfunctions.cpp \
            ../../db/database.cpp \
            ../../db/projectdatabase.cpp \

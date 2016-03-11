@@ -149,7 +149,7 @@ namespace graphics {
         setAcceptHoverEvents(true);
         setCursor(defaultCursorShape);
 
-        connect(G_ASSERT(type.get()), &entity::BasicElement::nameChanged, [=]{ update(); });
+        connect(G_ASSERT(type.get()), &common::BasicElement::nameChanged, [=]{ update(); });
     }
 
     /**

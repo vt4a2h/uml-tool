@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "renameentity.h"
 
-#include <entity/basicentity.h>
+#include <common/basicelement.h>
 
 namespace commands
 {
@@ -33,7 +33,7 @@ namespace commands
      * @param newName
      * @param parent
      */
-    RenameEntity::RenameEntity(const entity::SharedBasicEntity &entity, const QString &newName,
+    RenameEntity::RenameEntity(const common::SharedBasicEntity &entity, const QString &newName,
                                QUndoCommand *parent)
         : BaseCommand(tr("Change name from \"%1\" to \"%2\".").arg(entity->name(), newName), parent)
         , m_Entity(entity)

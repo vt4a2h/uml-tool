@@ -53,7 +53,7 @@ namespace entity {
         }
     }
 
-    void uniquifyName(BasicElement &ent, const QStringList &names)
+    void uniquifyName(common::BasicElement &ent, const QStringList &names)
     {
         EntityID::ValueType counter = ent.id().value() - EntityID::firstFreeID().value();
         while (names.contains(ent.name())) {

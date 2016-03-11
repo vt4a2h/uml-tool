@@ -337,7 +337,7 @@ namespace models {
                         auto dstField = ent.value<entity::SharedField>();
                         Q_ASSERT(dstField);
 
-                        auto srcField = value.value<entity::SharedBasicEntity>();
+                        auto srcField = value.value<common::SharedBasicEntity>();
                         Q_ASSERT(srcField);
 
                         *dstField = *std::static_pointer_cast<entity::Field>(srcField);

@@ -30,9 +30,6 @@
 namespace entity {
     class EntityID;
 
-    class BasicElement;
-    using SharedBasicEntity = std::shared_ptr<BasicElement>;
-
     enum FieldKeyword : int;
     using FieldKeywords     = QSet<FieldKeyword>;
     using FieldKeywordsList = QVector<FieldKeyword>;
@@ -131,4 +128,3 @@ Q_DECLARE_METATYPE(entity::SharedType)
 Q_DECLARE_METATYPE(entity::SharedClass)
 Q_DECLARE_METATYPE(entity::SharedScope)
 Q_DECLARE_METATYPE(entity::SharedProperty)
-Q_DECLARE_METATYPE(entity::SharedBasicEntity)
