@@ -194,42 +194,6 @@ namespace entity {
     }
 
     /**
-     * @brief Union::hashType
-     * @return
-     */
-    size_t Union::hashType() const
-    {
-        return Union::staticHashType();
-    }
-
-    /**
-     * @brief Union::staticHashType
-     * @return
-     */
-    size_t Union::staticHashType()
-    {
-        return typeid(Union).hash_code();
-    }
-
-    /**
-     * @brief Union::marker
-     * @return
-     */
-    QString Union::marker() const
-    {
-        return Union::staticMarker();
-    }
-
-    /**
-     * @brief Union::staticMarker
-     * @return
-     */
-    QString Union::staticMarker()
-    {
-        return "Union";
-    }
-
-    /**
      * @brief Union::defaultName
      * @return
      */

@@ -747,42 +747,6 @@ namespace entity {
     }
 
     /**
-     * @brief Class::hashType
-     * @return
-     */
-    size_t Class::hashType() const
-    {
-        return Class::staticHashType();
-    }
-
-    /**
-     * @brief Class::staticHashType
-     * @return
-     */
-    size_t Class::staticHashType()
-    {
-        return typeid(Class).hash_code();
-    }
-
-    /**
-     * @brief Class::marker
-     * @return
-     */
-    QString Class::marker() const
-    {
-        return Class::staticMarker();
-    }
-
-    /**
-     * @brief Class::staticMarker
-     * @return
-     */
-    QString Class::staticMarker()
-    {
-        return "Class";
-    }
-
-    /**
      * @brief Class::defaultName
      * @return
      */

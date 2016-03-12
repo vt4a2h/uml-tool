@@ -175,7 +175,8 @@ HEADERS += \
     entity/itypeuser.h \
     common/basicelement.h \
     entity/isectional.h \
-    common/common_types.h
+    common/common_types.h \
+    common/meta.h
 
 FORMS += \
     gui/mainwindow.ui \

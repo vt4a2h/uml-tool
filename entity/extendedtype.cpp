@@ -282,42 +282,6 @@ namespace entity {
     }
 
     /**
-     * @brief ExtendedType::hashType
-     * @return
-     */
-    size_t ExtendedType::hashType() const
-    {
-        return ExtendedType::staticHashType();
-    }
-
-    /**
-     * @brief ExtendedType::staticHashType
-     * @return
-     */
-    size_t ExtendedType::staticHashType()
-    {
-        return typeid(ExtendedType).hash_code();
-    }
-
-    /**
-     * @brief ExtendedType::marker
-     * @return
-     */
-    QString ExtendedType::marker() const
-    {
-        return ExtendedType::staticMarker();
-    }
-
-    /**
-     * @brief ExtendedType::staticMarker
-     * @return
-     */
-    QString ExtendedType::staticMarker()
-    {
-        return "ExtendedType";
-    }
-
-    /**
      * @brief ExtendedType::defaultName
      * @return
      */

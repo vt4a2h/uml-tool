@@ -40,8 +40,6 @@
 #include "enums.h"
 
 namespace {
-    const QString marker = "property";
-
     const int defaultRevision = 0;
 
     const bool defaultMember     = false;
@@ -845,42 +843,6 @@ namespace entity {
         checkAndSet(src, userMark, errorList, [&](){ m_User = src[userMark].toBool(); });
         checkAndSet(src, constantMark, errorList, [&](){ m_Constant = src[constantMark].toBool(); });
         checkAndSet(src, finalMark, errorList, [&](){ m_Final = src[finalMark].toBool(); });
-    }
-
-    /**
-     * @brief Property::hashType
-     * @return
-     */
-    size_t Property::hashType() const
-    {
-        return Property::staticHashType();
-    }
-
-    /**
-     * @brief Property::staticHashType
-     * @return
-     */
-    size_t Property::staticHashType()
-    {
-        return typeid(Property).hash_code();
-    }
-
-    /**
-     * @brief Property::marker
-     * @return
-     */
-    QString Property::marker() const
-    {
-        return Property::staticMarker();
-    }
-
-    /**
-     * @brief Property::staticMarker
-     * @return
-     */
-    QString Property::staticMarker()
-    {
-        return ::marker;
     }
 
     void Property::copyFrom(const Property &src)

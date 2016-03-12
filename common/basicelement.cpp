@@ -216,7 +216,7 @@ namespace common {
      * @brief BasicEntity::hashType
      * @return
      */
-    size_t BasicElement::hashType() const
+    size_t BasicElement::hashType() const noexcept
     {
         return BasicElement::staticHashType();
     }
@@ -225,7 +225,7 @@ namespace common {
      * @brief BasicEntity::staticHashType
      * @return
      */
-    size_t BasicElement::staticHashType()
+    size_t BasicElement::staticHashType() noexcept
     {
         return typeid(BasicElement).hash_code();
     }
@@ -234,7 +234,7 @@ namespace common {
      * @brief BasicEntity::marker
      * @return
      */
-    QString BasicElement::marker() const
+    QString BasicElement::marker() const noexcept
     {
         return BasicElement::staticMarker();
     }
@@ -243,27 +243,9 @@ namespace common {
      * @brief BasicEntity::staticMarker
      * @return
      */
-    QString BasicElement::staticMarker()
+    QString BasicElement::staticMarker() noexcept
     {
         return "BasicEntity";
-    }
-
-    /**
-     * @brief BasicEntity::defaultName
-     * @return
-     */
-    QString BasicElement::defaultName() const
-    {
-       return staticDefaultName();
-    }
-
-    /**
-     * @brief BasicEntity::staticDefaultName
-     * @return
-     */
-    QString BasicElement::staticDefaultName()
-    {
-        return tr("Basic entity");
     }
 
 } // namespace common

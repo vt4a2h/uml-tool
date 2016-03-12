@@ -92,24 +92,6 @@ namespace entity {
     }
 
     /**
-     * @brief TemplateClassMethod::hashType
-     * @return
-     */
-    size_t TemplateClassMethod::hashType() const
-    {
-        return TemplateClassMethod::staticHashType();
-    }
-
-    /**
-     * @brief TemplateClassMethod::staticHashType
-     * @return
-     */
-    size_t TemplateClassMethod::staticHashType()
-    {
-        return typeid(TemplateClassMethod).hash_code();
-    }
-
-    /**
      * @brief TemplateClassMethod::isEqual
      * @param rhs
      * @return

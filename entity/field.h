@@ -26,6 +26,7 @@
 #include <QString>
 
 #include <common/basicelement.h>
+#include <common/meta.h>
 
 #include "entity_types.hpp"
 #include "isectional.h"
@@ -83,8 +84,7 @@ namespace entity {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
-        size_t hashType() const override;
-        static size_t staticHashType();
+        add_meta(Field)
 
     public: // ISectional implementation
         Section section() const override;

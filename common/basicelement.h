@@ -57,14 +57,11 @@ namespace common {
         virtual QJsonObject toJson() const;
         virtual void fromJson(const QJsonObject &src, QStringList &errorList);
 
-        virtual size_t hashType() const;
-        static size_t staticHashType();
+        virtual size_t hashType() const noexcept;
+        static size_t staticHashType() noexcept;
 
-        virtual QString marker() const;
-        static QString staticMarker();
-
-        virtual QString defaultName() const;
-        static QString staticDefaultName();
+        virtual QString marker() const noexcept;
+        static QString staticMarker() noexcept;
 
     signals:
         void nameChanged(const QString &oldName, const QString &newName);

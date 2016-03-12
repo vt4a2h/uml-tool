@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 29/10/2014.
+** Created 13/03/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,37 +20,12 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
 
-#include "class.h"
-#include "template.h"
-
-namespace entity {
-
-    class EntityID;
-
-    /**
-     * @brief The TemplateClass class
-     */
-    class TemplateClass : public Class, public Template
-    {
-    public:
-        TemplateClass();
-        TemplateClass(const QString &name, const EntityID &scopeId);
-
-        friend bool operator ==(const TemplateClass &lhs, const TemplateClass &rhs);
-
-        bool isEqual(const Type &rhs, bool withTypeid = true) const override;
-
-    public: // BasicEntity implementation
-        QJsonObject toJson() const override;
-        void fromJson(const QJsonObject &src, QStringList &errorList) override;
-
-        QString defaultName() const override;
-        static QString staticDefaultName();
-
-        add_meta(TemplateClass)
-    };
-
-} // namespace entity
+// The easiest way to implement it (template approach is not perfect in this case)
+#define add_meta(type)                                                            \
+    size_t hashType() const noexcept override { return type::staticHashType(); }  \
+    static size_t staticHashType() noexcept {  return typeid(type).hash_code(); } \
+                                                                                  \
+    QString marker() const noexcept override { return type::staticMarker(); }     \
+    static QString staticMarker() noexcept { return #type; }

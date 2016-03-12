@@ -460,24 +460,6 @@ namespace entity {
     }
 
     /**
-     * @brief ClassMethod::hashType
-     * @return
-     */
-    size_t ClassMethod::hashType() const
-    {
-        return ClassMethod::staticHashType();
-    }
-
-    /**
-     * @brief ClassMethod::staticHashType
-     * @return
-     */
-    size_t ClassMethod::staticHashType()
-    {
-        return typeid(ClassMethod).hash_code();
-    }
-
-    /**
      * @brief ClassMethod::type
      * @return
      */

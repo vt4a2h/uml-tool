@@ -64,14 +64,10 @@ namespace entity {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
-        size_t hashType() const override;
-        static size_t staticHashType();
-
-        QString marker() const override;
-        static QString staticMarker();
-
         QString defaultName() const override;
         static QString staticDefaultName();
+
+        add_meta(Union)
 
     private:
         void copyFrom(const Union &src);

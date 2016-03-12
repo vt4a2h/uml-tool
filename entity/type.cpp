@@ -95,42 +95,6 @@ namespace entity {
     }
 
     /**
-     * @brief Type::hashType
-     * @return
-     */
-    size_t Type::hashType() const
-    {
-        return Type::staticHashType();
-    }
-
-    /**
-     * @brief Type::staticHashType
-     * @return
-     */
-    size_t Type::staticHashType()
-    {
-        return typeid(Type).hash_code();
-    }
-
-    /**
-     * @brief Type::marker
-     * @return
-     */
-    QString Type::marker() const
-    {
-        return Type::staticMarker();
-    }
-
-    /**
-     * @brief Type::staticMarker
-     * @return
-     */
-    QString Type::staticMarker()
-    {
-        return "Type";
-    }
-
-    /**
      * @brief Type::defaultName
      * @return
      */

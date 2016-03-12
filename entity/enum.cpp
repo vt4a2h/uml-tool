@@ -113,24 +113,6 @@ namespace entity {
     }
 
     /**
-     * @brief Variable::hashType
-     * @return
-     */
-    size_t Enumerator::hashType() const
-    {
-        return Enumerator::staticHashType();
-    }
-
-    /**
-     * @brief Variable::staticHashType
-     * @return
-     */
-    size_t Enumerator::staticHashType()
-    {
-        return typeid(Enumerator).hash_code();
-    }
-
-    /**
      * @brief Element::value
      * @return
      */
@@ -310,42 +292,6 @@ namespace entity {
                 errorList << "Error: \"Elements\" is not array";
             }
         });
-    }
-
-    /**
-     * @brief Enum::hashType
-     * @return
-     */
-    size_t Enum::hashType() const
-    {
-        return Enum::staticHashType();
-    }
-
-    /**
-     * @brief Enum::staticHashType
-     * @return
-     */
-    size_t Enum::staticHashType()
-    {
-        return typeid(Enum).hash_code();
-    }
-
-    /**
-     * @brief Enum::marker
-     * @return
-     */
-    QString Enum::marker() const
-    {
-        return Enum::staticMarker();
-    }
-
-    /**
-     * @brief Enum::staticMarker
-     * @return
-     */
-    QString Enum::staticMarker()
-    {
-        return "Enum";
     }
 
     /**

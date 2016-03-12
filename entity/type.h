@@ -25,6 +25,7 @@
 #include <QString>
 
 #include <common/basicelement.h>
+#include <common/meta.h>
 
 #include <entity/components/icomponents.h>
 
@@ -56,14 +57,10 @@ namespace entity {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
-        size_t hashType() const override;
-        static size_t staticHashType();
-
-        QString marker() const override;
-        static QString staticMarker();
-
-        QString defaultName() const override;
+        virtual QString defaultName() const;
         static QString staticDefaultName();
+
+        add_meta(Type)
 
     private:
         void setBaseTypeName();

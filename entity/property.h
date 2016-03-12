@@ -25,6 +25,7 @@
 #include <memory>
 
 #include <common/basicelement.h>
+#include <common/meta.h>
 
 #include <db/db_types.hpp>
 
@@ -122,11 +123,7 @@ namespace entity {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
-        size_t hashType() const override;
-        static size_t staticHashType();
-
-        QString marker() const override;
-        static QString staticMarker();
+        add_meta(Property)
 
     public slots:
         void setTypeSearcher(const db::SharedTypeSearcher &typeSearcher) override;
