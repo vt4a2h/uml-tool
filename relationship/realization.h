@@ -49,6 +49,8 @@ namespace relationship {
 
         bool isEqual(const Realization &rhs) const;
 
+        add_meta(Realization)
+
     protected:
         void clear() override;
         void make() override;

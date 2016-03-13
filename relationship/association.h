@@ -55,6 +55,8 @@ namespace relationship {
         entity::EntityID FieldTypeId() const;
         void setFieldTypeId(const entity::EntityID &FieldTypeId);
 
+        add_meta(Association)
+
     protected:
         void make() override;
         void clear() override;

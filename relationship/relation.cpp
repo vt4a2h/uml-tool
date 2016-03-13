@@ -32,6 +32,7 @@
 #include <db/database.h>
 #include <entity/class.h>
 #include <utility/helpfunctions.h>
+#include <helpers/generatorid.h>
 
 namespace relationship {
 
@@ -47,16 +48,8 @@ namespace relationship {
      * @brief Relation::Relation
      * @param src
      */
-    Relation::Relation(Relation &&src)
-    {
-        moveFrom(src);
-    }
-
-    /**
-     * @brief Relation::Relation
-     * @param src
-     */
     Relation::Relation(const Relation &src)
+        : common::BasicElement(src)
     {
         copyFrom(src);
     }
@@ -72,7 +65,7 @@ namespace relationship {
                        db::Database *globalDatabase, db::Database *projectDatabase)
         : m_TailNode(std::make_shared<Node>(tailTypeId))
         , m_HeadNode(std::make_shared<Node>(headTypeId))
-        , m_Id(utility::genId())
+        , m_Id(entity::GeneratorID::instance().genID())
         , m_RelationType(SimpleRelation)
         , m_GlobalDatabase(globalDatabase)
         , m_ProjectDatabase(projectDatabase)
@@ -84,33 +77,16 @@ namespace relationship {
     }
 
     /**
-     * @brief Relation::~Relation
-     */
-    Relation::~Relation()
-    {
-    }
-
-    /**
      * @brief Relation::operator =
      * @param rhs
      * @return
      */
-    Relation &Relation::operator =(Relation rhs)
+    Relation &Relation::operator =(const Relation &rhs)
     {
-        moveFrom(rhs);
-
-        return *this;
-    }
-
-    /**
-     * @brief Relation::operator =
-     * @param rhs
-     * @return
-     */
-    Relation &Relation::operator =(Relation &&rhs)
-    {
-        if (this != &rhs)
-            moveFrom(rhs);
+        if (this != &rhs) {
+            common::BasicElement::operator =(rhs);
+            copyFrom(rhs);
+        }
 
         return *this;
     }
@@ -123,32 +99,14 @@ namespace relationship {
      */
     bool operator ==(const Relation &lhs, const Relation &rhs)
     {
-        return lhs.m_Name     == rhs.m_Name     &&
+        return static_cast<const common::BasicElement&>(lhs)  ==
+               static_cast<const common::BasicElement&>(rhs)  &&
                lhs.m_GlobalDatabase  == rhs.m_GlobalDatabase  &&
-               lhs.m_Id              == rhs.m_Id              &&
                lhs.m_ProjectDatabase == rhs.m_ProjectDatabase &&
                (lhs.m_HeadClass == rhs.m_HeadClass || *lhs.m_HeadClass == *rhs.m_HeadClass) &&
                (lhs.m_HeadNode  == rhs.m_HeadNode  || *lhs.m_HeadNode  == *rhs.m_HeadNode ) &&
                (lhs.m_TailClass == rhs.m_TailClass || *lhs.m_TailClass == *rhs.m_TailClass) &&
                (lhs.m_TailNode  == rhs.m_TailNode  || *lhs.m_TailNode  == *rhs.m_TailNode );
-    }
-
-    /**
-     * @brief Relation::description
-     * @return
-     */
-    QString Relation::name() const
-    {
-        return m_Name;
-    }
-
-    /**
-     * @brief Relation::setDescription
-     * @param description
-     */
-    void Relation::setName(const QString &description)
-    {
-        m_Name = description;
     }
 
     /**
@@ -184,26 +142,6 @@ namespace relationship {
     }
 
     /**
-     * @brief Relation::moveFrom
-     * @param src
-     */
-    void Relation::moveFrom(Relation &src)
-    {
-        m_TailNode = std::move(src.m_TailNode);
-        m_HeadNode = std::move(src.m_HeadNode);
-
-        m_HeadClass = std::move(src.m_HeadClass);
-        m_TailClass = std::move(src.m_TailClass);
-
-        m_Id = std::move(src.m_Id);
-        m_Name = std::move(src.m_Name);
-        m_RelationType = std::move(src.m_RelationType);
-
-        m_GlobalDatabase = std::move(src.m_GlobalDatabase);
-        m_ProjectDatabase = std::move(src.m_ProjectDatabase);
-    }
-
-    /**
      * @brief Relation::copyFrom
      * @param src
      */
@@ -216,8 +154,6 @@ namespace relationship {
         m_HeadClass = src.m_HeadClass;
         m_TailClass = src.m_TailClass;
 
-        m_Id = src.m_Id;
-        m_Name = src.m_Name;
         m_RelationType = src.m_RelationType;
 
         m_GlobalDatabase = src.m_GlobalDatabase;
@@ -254,33 +190,13 @@ namespace relationship {
     }
 
     /**
-     * @brief Relation::id
-     * @return
-     */
-    QString Relation::id() const
-    {
-        return m_Id;
-    }
-
-    /**
-     * @brief Relation::setId
-     * @param id
-     */
-    void Relation::setId(const QString &id)
-    {
-        m_Id = id;
-    }
-
-    /**
      * @brief Relation::toJson
      * @return
      */
     QJsonObject Relation::toJson() const
     {
-        QJsonObject result;
+        QJsonObject result = common::BasicElement::toJson();
 
-        result.insert("ID", m_Id);
-        result.insert("Type", m_RelationType);
         result.insert("Description", m_Name);
         result.insert("Head node", m_HeadNode->toJson());
         result.insert("Tail node", m_TailNode->toJson());
@@ -295,12 +211,7 @@ namespace relationship {
      */
     void Relation::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "ID", errorList, [&src, this](){
-            m_Id = src["ID"].toString();
-        });
-        utility::checkAndSet(src, "Description", errorList, [&src, this](){
-            m_Name = src["Description"].toString();
-        });
+        common::BasicElement::fromJson(src, errorList);
         utility::checkAndSet(src, "Type", errorList, [&src, this](){
             m_RelationType = static_cast<RelationType>(src["Type"].toInt());
         });

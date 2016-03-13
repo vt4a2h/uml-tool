@@ -50,6 +50,8 @@ namespace relationship {
 
         bool isEqual(const MultiplyAssociation &rhs) const;
 
+        add_meta(MultiplyAssociation)
+
     protected:
         void make() override;
         void clear() override;

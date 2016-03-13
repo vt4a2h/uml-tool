@@ -25,6 +25,9 @@
 
 #include <QString>
 
+#include <common/meta.h>
+#include <common/basicelement.h>
+
 #include <entity/entity_types.hpp>
 
 #include "relationship_types.hpp"
@@ -39,21 +42,22 @@ namespace relationship {
 
     enum RelationType : int;
 
+    // TODO: use copy-and-swap for copying. And in other classes too.
+
     /**
      * @brief The Relation class
      */
-    class Relation
+    class Relation : public common::BasicElement
     {
     public:
         Relation();
-        Relation(Relation &&src);
+        Relation(Relation &&src) noexcept = default;
         Relation(const Relation &src);
         Relation(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
                  db::Database *globalDatabase, db::Database *projectDatabase);
-        virtual ~Relation();
 
-        Relation &operator =(Relation rhs);
-        Relation &operator =(Relation &&rhs);
+        Relation &operator =(const Relation &rhs);
+        Relation &operator =(Relation &&rhs) noexcept = default;
 
         friend bool operator ==(const Relation &lhs, const Relation &rhs);
 
@@ -66,28 +70,26 @@ namespace relationship {
         RelationType relationType() const;
         void setRelationType(const RelationType &relationType);
 
-        QString id() const;
-        void setId(const QString &id);
-
         db::Database *globalDatabase() const;
         void setGlobalDatabase(db::Database *globalDatabase);
 
         db::Database *projectDatabase() const;
         void setProjectDatabase(db::Database *projectDatabase);
 
-        virtual QJsonObject toJson() const;
-        virtual void fromJson(const QJsonObject &src, QStringList &errorList);
+        QJsonObject toJson() const override;
+        void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
         virtual bool isEqual(const Relation &rhs) const;
 
         void writeToFile(const QString &fileName) const;
         bool readFromFile(const QString &fileName);
 
+        add_meta(Relation)
+
     protected:
         virtual void make();
         virtual void clear();
 
-        virtual void moveFrom(Relation &src);
         virtual void copyFrom(const Relation &src);
 
         void check();
@@ -101,8 +103,6 @@ namespace relationship {
         entity::SharedType m_HeadClass;
         entity::SharedClass m_TailClass;
 
-        QString m_Id;
-        QString m_Name;
         RelationType m_RelationType;
 
         // TODO: should be weak pointers

@@ -51,6 +51,8 @@ namespace relationship {
 
         bool isEqual(const Generalization &rhs) const;
 
+        add_meta(Generalization)
+
     protected:
         void clear() override;
         void make() override;

@@ -34,6 +34,7 @@ namespace entity
 {
 
     // TODO: add tests
+    // TODO: move to common!
     /// ID for all entities
     class EntityID : public boost::equality_comparable<EntityID>
                    , public boost::less_than_comparable<EntityID>
