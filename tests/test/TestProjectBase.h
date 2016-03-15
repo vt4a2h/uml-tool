@@ -43,14 +43,14 @@ protected:
         // Usually special slot is used for that
         const_cast<entity::GeneratorID&>(entity::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
         m_ProjectDb = m_Project->database();
-        m_ProjectScope = m_ProjectDb->getScope(entity::EntityID::projectScopeID());
+        m_ProjectScope = m_ProjectDb->getScope(common::ID::projectScopeID());
         ASSERT_TRUE(!!m_ProjectScope);
 
         m_GlobalDb = std::make_shared<db::Database>("global", "../../");
         ErrorList errors;
         m_GlobalDb->load(errors);
         ASSERT_TRUE(errors.isEmpty());
-        m_GlobalScope = m_GlobalDb->getScope(entity::EntityID::globalScopeID());
+        m_GlobalScope = m_GlobalDb->getScope(common::ID::globalScopeID());
         ASSERT_TRUE(!!m_GlobalScope);
 
         m_Project->setGlobalDatabase(m_GlobalDb);

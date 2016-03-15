@@ -93,7 +93,7 @@ namespace entity {
         , m_ConstStatus(false)
         , m_SlotStatus(false)
         , m_SignalStatus(false)
-        , m_ReturnTypeId(EntityID::nullID())
+        , m_ReturnTypeId(common::ID::nullID())
         , m_RhsIdentificator(RhsIdentificator::None)
     {
         static int r = qRegisterMetaType<entity::ClassMethod>("entity::ClassMethod"); Q_UNUSED(r);
@@ -321,7 +321,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedField ClassMethod::addParameter(const QString &name, const EntityID &typeId)
+    SharedField ClassMethod::addParameter(const QString &name, const common::ID &typeId)
     {
         if (!name.isEmpty()) {
             auto existField = getParameter(name);
@@ -522,7 +522,7 @@ namespace entity {
      * @brief ClassMethod::returnTypeId
      * @return
      */
-    EntityID ClassMethod::returnTypeId() const
+    common::ID ClassMethod::returnTypeId() const
     {
        return m_ReturnTypeId;
     }
@@ -531,7 +531,7 @@ namespace entity {
      * @brief ClassMethod::setReturnTypeId
      * @param returnTypeId
      */
-    void ClassMethod::setReturnTypeId(const EntityID &returnTypeId)
+    void ClassMethod::setReturnTypeId(const common::ID &returnTypeId)
     {
         m_ReturnTypeId = returnTypeId;
     }

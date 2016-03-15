@@ -61,7 +61,7 @@ protected:
         m_ApplicationModel->setCurrentProject(m_Project->name());
         Q_ASSERT(m_Project == m_ApplicationModel->currentProject());
 
-        m_ProjectScope = m_Project->database()->getScope(entity::EntityID::projectScopeID());
+        m_ProjectScope = m_Project->database()->getScope(common::ID::projectScopeID());
         Q_ASSERT(!!m_ProjectScope);
 
         m_Type = m_ProjectScope->addType<entity::Class>("Foo");

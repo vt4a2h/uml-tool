@@ -53,17 +53,17 @@ namespace entity {
         Class();
         Class(Class &&src) noexcept = default;
         Class(const Class &src);
-        Class(const QString &name, const EntityID &scopeId);
+        Class(const QString &name, const common::ID &scopeId);
 
         Class &operator =(Class &&rhs) noexcept = default;
         Class &operator =(const Class &rhs);
 
         friend bool operator ==(const Class &lhs, const Class &rhs);
 
-        Parent addParent(const EntityID &typeId, Section section);
-        Parent parent(const EntityID &typeId) const;
-        bool containsParent(const EntityID &typeId);
-        void removeParent(const EntityID &typeId);
+        Parent addParent(const common::ID &typeId, Section section);
+        Parent parent(const common::ID &typeId) const;
+        bool containsParent(const common::ID &typeId);
+        void removeParent(const common::ID &typeId);
         bool anyParents() const;
         ParentsList parents() const;
 
@@ -82,14 +82,14 @@ namespace entity {
         MethodsList allMethods(Section s) const;
         FieldsList allFields(Section s) const;
 
-        SharedField addField(const QString &name, const EntityID &typeId,
+        SharedField addField(const QString &name, const common::ID &typeId,
                              const QString &prefix = "", Section section = Public);
         SharedField getField(const QString &name) const;
         bool containsField(const QString &name) const;
         void removeField(const QString &name);
         bool anyFields() const;
 
-        SharedProperty addProperty(const QString &name, const EntityID &typeId);
+        SharedProperty addProperty(const QString &name, const common::ID &typeId);
         ConstSharedProperty property(const QString &name) const;
         SharedProperty property(const QString &name);
         bool containsProperty(const QString &name) const;

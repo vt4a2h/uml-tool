@@ -169,7 +169,7 @@ namespace models {
      * @brief ApplicationModel::removeScope
      * @param id
      */
-    void ApplicationModel::removeScope(const entity::EntityID &id)
+    void ApplicationModel::removeScope(const common::ID &id)
     {
         if (m_CurrentProject) {
             m_CurrentProject->database()->removeScope(id);
@@ -182,7 +182,7 @@ namespace models {
      * @brief ApplicationModel::addExistsType
      * @param type
      */
-    void ApplicationModel::addExistsType(const QString &projectName, const entity::EntityID &scopeID,
+    void ApplicationModel::addExistsType(const QString &projectName, const common::ID &scopeID,
                                          const entity::SharedType &type)
     {
         if (auto &&pr = project(projectName))
@@ -203,8 +203,8 @@ namespace models {
      * @param scopeID
      * @param typeID
      */
-    void ApplicationModel::removeType(const QString &projectName, const entity::EntityID &scopeID,
-                                      const entity::EntityID &typeID)
+    void ApplicationModel::removeType(const QString &projectName, const common::ID &scopeID,
+                                      const common::ID &typeID)
     {
         if (auto &&pr = project(projectName))
             if (auto &&db = pr->database())

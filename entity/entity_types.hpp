@@ -27,9 +27,9 @@
 #include <QtContainerFwd>
 #include <QMetaType>
 
-namespace entity {
-    class EntityID;
+namespace common { class ID; }
 
+namespace entity {
     enum FieldKeyword : int;
     using FieldKeywords     = QSet<FieldKeyword>;
     using FieldKeywordsList = QVector<FieldKeyword>;
@@ -64,7 +64,7 @@ namespace entity {
 
     class Type;
     using SharedType  = std::shared_ptr<Type>;
-    using Types       = QHash<EntityID, SharedType>;
+    using Types       = QHash<common::ID, SharedType>;
     using TypesByName = QHash<QString, SharedType>;
     using TypesList   = QVector<SharedType>;
 
@@ -90,22 +90,22 @@ namespace entity {
     using EnumsList  = QVector<SharedEnum>;
 
     enum Section : int;
-    using Parent      = std::pair<EntityID, Section>;
+    using Parent      = std::pair<common::ID, Section>;
     using Parents     = QHash<QString, Parent>; // id : {id, section}
     using ParentsList = QVector<Parent>;
 
     class ExtendedType;
-    using TemplateParameter      = QPair<EntityID, EntityID>; // (type id, default type id)
+    using TemplateParameter      = QPair<common::ID, common::ID>; // (type id, default type id)
     using TemplateParameters     = QHash<QString, TemplateParameter>;
     using TemplateParametersList = QVector<TemplateParameter>;
     using SharedExtendedType     = std::shared_ptr<ExtendedType>;
     using ExtendedTypes          = QHash<QString, SharedExtendedType>;
     using ExtendedTypesList      = QVector<SharedExtendedType>;
-    using ExtendedTypesIdList    = QVector<EntityID>;
+    using ExtendedTypesIdList    = QVector<common::ID>;
 
     class Scope;
     using SharedScope = std::shared_ptr<Scope>;
-    using Scopes      = QHash<EntityID, SharedScope>;
+    using Scopes      = QHash<common::ID, SharedScope>;
     using ScopesList  = QVector<SharedScope>;
 
     class IComponents;

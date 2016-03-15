@@ -39,7 +39,7 @@ namespace relationship {
      * @brief MultiplyAssociation::MultiplyAssociation
      */
     MultiplyAssociation::MultiplyAssociation()
-        : MultiplyAssociation(entity::EntityID::nullID(), entity::EntityID::nullID(), nullptr, nullptr)
+        : MultiplyAssociation(common::ID::nullID(), common::ID::nullID(), nullptr, nullptr)
     {
     }
 
@@ -50,8 +50,8 @@ namespace relationship {
      * @param globalDatabase
      * @param projectDatabase
      */
-    MultiplyAssociation::MultiplyAssociation(const entity::EntityID &tailTypeId,
-                                             const entity::EntityID &headTypeId,
+    MultiplyAssociation::MultiplyAssociation(const common::ID &tailTypeId,
+                                             const common::ID &headTypeId,
                                              db::Database *globalDatabase,
                                              db::Database *projectDatabase)
         : Association(tailTypeId, headTypeId, globalDatabase, projectDatabase)
@@ -98,7 +98,7 @@ namespace relationship {
      * @brief MultiplyAssociation::containerTypeId
      * @return
      */
-    entity::EntityID MultiplyAssociation::containerTypeId() const
+    common::ID MultiplyAssociation::containerTypeId() const
     {
         return m_ContainerTypeId;
     }
@@ -107,7 +107,7 @@ namespace relationship {
      * @brief MultiplyAssociation::setContainerTypeId
      * @param containerTypeId
      */
-    void MultiplyAssociation::setContainerTypeId(const entity::EntityID &containerTypeId)
+    void MultiplyAssociation::setContainerTypeId(const common::ID &containerTypeId)
     {
         m_ContainerClass = tryToFindType(containerTypeId);
         Q_ASSERT_X(m_ContainerClass,
@@ -226,7 +226,7 @@ namespace relationship {
      * @brief MultiplyAssociation::keyTypeId
      * @return
      */
-    entity::EntityID MultiplyAssociation::keyTypeId() const
+    common::ID MultiplyAssociation::keyTypeId() const
     {
         return m_KeyTypeId;
     }
@@ -235,7 +235,7 @@ namespace relationship {
      * @brief MultiplyAssociation::setKeyTypeId
      * @param indexTypeId
      */
-    void MultiplyAssociation::setKeyTypeId(const entity::EntityID &indexTypeId)
+    void MultiplyAssociation::setKeyTypeId(const common::ID &indexTypeId)
     {
         m_KeyTypeId = indexTypeId;
     }

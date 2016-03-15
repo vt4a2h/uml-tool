@@ -30,28 +30,27 @@
 
 #include "types.h"
 
-namespace entity
+namespace common
 {
 
     // TODO: add tests
-    // TODO: move to common!
     /// ID for all entities
-    class EntityID : public boost::equality_comparable<EntityID>
-                   , public boost::less_than_comparable<EntityID>
+    class ID : public boost::equality_comparable<ID>
+             , public boost::less_than_comparable<ID>
     {
     public:
         using ValueType = quint64;
 
-        EntityID();
-        EntityID(quint64 value);
-        EntityID(EntityID const&) = default;
-        EntityID(EntityID &&) = default;
+        ID();
+        ID(quint64 value);
+        ID(ID const&) = default;
+        ID(ID &&) = default;
 
-        EntityID &operator =(EntityID const&) = default;
-        EntityID &operator =(EntityID &&) = default;
+        ID &operator =(ID const&) = default;
+        ID &operator =(ID &&) = default;
 
-        friend bool operator ==(const EntityID &lhs, const EntityID &rhs);
-        friend bool operator < (const EntityID &lhs, const EntityID &rhs);
+        friend bool operator ==(const ID &lhs, const ID &rhs);
+        friend bool operator < (const ID &lhs, const ID &rhs);
 
         bool isValid() const;
 
@@ -65,24 +64,24 @@ namespace entity
         void fromJson(const QJsonValue &in, ErrorList & errors);
 
     public: // Constants
-        static EntityID nullID();
+        static ID nullID();
 
-        static EntityID firstFreeID();
-        static EntityID firstNonConstID();
+        static ID firstFreeID();
+        static ID firstNonConstID();
 
         // Keep order please, add new item to the end. Next item value =
         // previous item value + 1, e.g. stdScopeID = globalScopeID + 1
-        static EntityID globalScopeID();
-        static EntityID stdScopeID();
-        static EntityID globalDatabaseID();
-        static EntityID localTemplateScopeID();
-        static EntityID projectScopeID();
+        static ID globalScopeID();
+        static ID stdScopeID();
+        static ID globalDatabaseID();
+        static ID localTemplateScopeID();
+        static ID projectScopeID();
 
     private:
         ValueType m_value;
     };
 
-    uint qHash(const entity::EntityID &e);
-}
+    uint qHash(const ID &e);
+} // namespace common
 
-Q_DECLARE_METATYPE(entity::EntityID)
+Q_DECLARE_METATYPE(common::ID)

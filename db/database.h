@@ -25,7 +25,7 @@
 #include <QHash>
 
 #include <entity/entity_types.hpp>
-#include <entity/entityid.h>
+#include <common/id.h>
 
 #include "itypesearcher.h"
 #include "types.h"
@@ -59,19 +59,19 @@ namespace db {
 
         QString fullPath() const;
 
-        entity::SharedScope getScope(const entity::EntityID &id) const;
+        entity::SharedScope getScope(const common::ID &id) const;
         virtual entity::SharedScope addScope(
-            const QString &name = "", const entity::EntityID &parentScopeId = entity::EntityID::nullID());
+            const QString &name = "", const common::ID &parentScopeId = common::ID::nullID());
         virtual entity::SharedScope addExistsScope(const entity::SharedScope &scope);
         entity::SharedScope chainScopeSearch(const QStringList& scopesNames) const;
-        bool containsScope(const entity::EntityID &id) const;
+        bool containsScope(const common::ID &id) const;
         bool anyScopes() const;
-        void removeScope(const entity::EntityID &id);
+        void removeScope(const common::ID &id);
         entity::ScopesList scopes() const;
 
-        entity::SharedScope depthScopeSearch(const entity::EntityID &scopeId) const;
+        entity::SharedScope depthScopeSearch(const common::ID &scopeId) const;
 
-        entity::SharedType typeByID(const entity::EntityID &typeId) const override;
+        entity::SharedType typeByID(const common::ID &typeId) const override;
         entity::SharedType typeByName(const QString &name) const override;
 
         void load(ErrorList &errorList);
@@ -83,8 +83,8 @@ namespace db {
 
         virtual bool isEqual(const Database &rhs) const;
 
-        entity::EntityID id() const;
-        void setId(const entity::EntityID &entityID);
+        common::ID id() const;
+        void setId(const common::ID &ID);
 
         bool valid() const;
 
@@ -94,17 +94,17 @@ namespace db {
 
         QString          m_Name  ;
         QString          m_Path  ;
-        entity::EntityID m_ID    ;
+        common::ID m_ID    ;
         bool             m_Valid ;
 
         entity::Scopes m_Scopes;
 
     private:
-        using EntityIDList = QList<entity::EntityID>;
-        EntityIDList makeDepthIdList(const entity::EntityID &id) const;
-        entity::SharedScope getScopeWithDepthList(const EntityIDList &ids) const;
+        using IDList = QList<common::ID>;
+        IDList makeDepthIdList(const common::ID &id) const;
+        entity::SharedScope getScopeWithDepthList(const IDList &ids) const;
         QString makeFullPath() const;
-        void recursiveFind(entity::SharedScope scope, const entity::EntityID &id, EntityIDList &ids) const;
+        void recursiveFind(entity::SharedScope scope, const common::ID &id, IDList &ids) const;
     };
 
 } // namespace db

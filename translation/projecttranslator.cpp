@@ -126,7 +126,7 @@ namespace translation {
      * @param classDatabase
      * @return
      */
-    QString ProjectTranslator::generateCodeForExtTypeOrType(const entity::EntityID &id,
+    QString ProjectTranslator::generateCodeForExtTypeOrType(const common::ID &id,
                                                             const TranslatorOptions &options,
                                                             const db::SharedDatabase &localeDatabase,
                                                             const db::SharedDatabase &classDatabase) const
@@ -269,7 +269,7 @@ namespace translation {
                                                        t->database())
                           .prepend("class ")
                           .trimmed();
-            if (parameter.second.isValid() && parameter.second != entity::EntityID::nullID() && withDefaultTypes) {
+            if (parameter.second.isValid() && parameter.second != common::ID::nullID() && withDefaultTypes) {
                 parameters.last()
                           .append(" = ")
                           .append(generateCodeForExtTypeOrType(parameter.second,
@@ -851,8 +851,8 @@ namespace translation {
         entity::SharedScope scope = utility::findScope(id, localeDatabase, classDatabase,
                                                        m_ProjectDatabase, m_GlobalDatabase);
         do {
-            if (!scope || id == entity::EntityID::globalScopeID() ||
-                id == entity::EntityID::localTemplateScopeID())
+            if (!scope || id == common::ID::globalScopeID() ||
+                id == common::ID::localTemplateScopeID())
                 break;
 
             if (scope->name() != DEFAULT_NAME)

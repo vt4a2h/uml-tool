@@ -37,7 +37,7 @@ namespace relationship {
      * @brief Dependency::Dependency
      */
     Dependency::Dependency()
-        : Dependency(entity::EntityID::nullID(), entity::EntityID::nullID(), nullptr, nullptr)
+        : Dependency(common::ID::nullID(), common::ID::nullID(), nullptr, nullptr)
     {
     }
 
@@ -48,7 +48,7 @@ namespace relationship {
      * @param globalDatabase
      * @param projectDatabase
      */
-    Dependency::Dependency(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
+    Dependency::Dependency(const common::ID &tailTypeId, const common::ID &headTypeId,
                            db::Database *globalDatabase, db::Database *projectDatabase)
         : Relation(tailTypeId, headTypeId, globalDatabase, projectDatabase)
     {

@@ -40,7 +40,7 @@ namespace relationship {
      * @brief Relation::Relation
      */
     Relation::Relation()
-        : Relation(entity::EntityID::nullID(), entity::EntityID::nullID(), nullptr, nullptr)
+        : Relation(common::ID::nullID(), common::ID::nullID(), nullptr, nullptr)
     {
     }
 
@@ -61,18 +61,18 @@ namespace relationship {
      * @param globalDatabase
      * @param projectDatabase
      */
-    Relation::Relation(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
+    Relation::Relation(const common::ID &tailTypeId, const common::ID &headTypeId,
                        db::Database *globalDatabase, db::Database *projectDatabase)
-        : m_TailNode(std::make_shared<Node>(tailTypeId))
+        : common::BasicElement("" /*name*/, entity::GeneratorID::instance().genID())
+        , m_TailNode(std::make_shared<Node>(tailTypeId))
         , m_HeadNode(std::make_shared<Node>(headTypeId))
-        , m_Id(entity::GeneratorID::instance().genID())
         , m_RelationType(SimpleRelation)
         , m_GlobalDatabase(globalDatabase)
         , m_ProjectDatabase(projectDatabase)
     {
-        if (headTypeId != entity::EntityID::nullID())
+        if (headTypeId != common::ID::nullID())
             addHeadClass(headTypeId);
-        if (tailTypeId != entity::EntityID::nullID())
+        if (tailTypeId != common::ID::nullID())
             addTailClass(tailTypeId);
     }
 
@@ -300,7 +300,7 @@ namespace relationship {
      * @brief Relation::addHeadClass
      * @param id
      */
-    void Relation::addHeadClass(const entity::EntityID &id)
+    void Relation::addHeadClass(const common::ID &id)
     {
         auto tmpHead = tryToFindType(id);
 
@@ -315,7 +315,7 @@ namespace relationship {
      * @brief Relation::addTailClass
      * @param id
      */
-    void Relation::addTailClass(const entity::EntityID &id)
+    void Relation::addTailClass(const common::ID &id)
     {
         // TODO: investigate and fix
         auto tmpTailClass = std::dynamic_pointer_cast<entity::Class>(tryToFindType(id));
@@ -332,7 +332,7 @@ namespace relationship {
      * @param typeId
      * @return
      */
-    entity::SharedType Relation::tryToFindType(const entity::EntityID &typeId) const
+    entity::SharedType Relation::tryToFindType(const common::ID &typeId) const
     {
         entity::SharedType result = m_ProjectDatabase->typeByID(typeId);
         return (result ? result : m_GlobalDatabase->typeByID(typeId));

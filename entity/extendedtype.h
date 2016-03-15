@@ -43,7 +43,7 @@ namespace entity {
         using PlList = QList<Pl>;
 
         ExtendedType();
-        ExtendedType(const QString &name, const EntityID &scopeId);
+        ExtendedType(const QString &name, const common::ID &scopeId);
         ExtendedType(ExtendedType &&) noexcept = default;
         ExtendedType(const ExtendedType &) = default;
 
@@ -64,13 +64,13 @@ namespace entity {
         bool isConst() const;
         void setConstStatus(bool status);
 
-        void addTemplateParameter(const EntityID &typeId);
-        bool containsTemplateParameter(const EntityID &typeId) const;
-        void removeTemplateParameters(const EntityID &typeId);
+        void addTemplateParameter(const common::ID &typeId);
+        bool containsTemplateParameter(const common::ID &typeId) const;
+        void removeTemplateParameters(const common::ID &typeId);
         ExtendedTypesIdList templateParameters() const;
 
-        EntityID typeId() const;
-        void setTypeId(const EntityID &typeId);
+        common::ID typeId() const;
+        void setTypeId(const common::ID &typeId);
 
         bool useAlias() const;
         void setUseAlias(bool useAlias);
@@ -87,10 +87,10 @@ namespace entity {
         add_meta(ExtendedType)
 
     protected:
-        bool     m_ConstStatus;
-        bool     m_UseAlias;
-        EntityID m_TypeId;
-        PlList   m_PointersAndLinks;
+        bool       m_ConstStatus;
+        bool       m_UseAlias;
+        common::ID m_TypeId;
+        PlList     m_PointersAndLinks;
 
         ExtendedTypesIdList m_TemplateParameters;
     };

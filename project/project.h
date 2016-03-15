@@ -28,7 +28,7 @@
 #include <db/db_types.hpp>
 
 #include <entity/entity_types.hpp>
-#include <entity/entityid.h>
+#include <common/id.h>
 
 #include "types.h"
 
@@ -81,7 +81,7 @@ namespace project {
         QUndoStack * commandsStack();
         const QUndoStack * commandsStack() const;
 
-        entity::EntityID genID();
+        common::ID genID();
 
     public slots:
         void setSaveStatus(bool newStatus);
@@ -108,7 +108,7 @@ namespace project {
         QString m_Name;
         QString m_Path;
 
-        entity::EntityID::ValueType m_nextUniqueID;
+        common::ID::ValueType m_nextUniqueID;
 
         bool m_SaveStatus;
 

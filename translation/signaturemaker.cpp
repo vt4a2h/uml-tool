@@ -39,9 +39,9 @@ namespace translation {
 
     namespace {
         const QString noSignature = SignatureMaker::tr("Not available.");
-        const QSet<entity::EntityID> globalIds = {entity::EntityID::globalScopeID(),
-                                                  entity::EntityID::projectScopeID(),
-                                                  entity::EntityID::globalDatabaseID()};
+        const QSet<common::ID> globalIds = {common::ID::globalScopeID(),
+                                                  common::ID::projectScopeID(),
+                                                  common::ID::globalDatabaseID()};
 
         const QString memberMark      = "MEMBER";
         const QString readMark        = "READ";
@@ -180,9 +180,9 @@ namespace translation {
 
         QStringList scopes;
         auto scopeId = type->scopeId();
-        QSet<entity::EntityID> forbidden = {entity::EntityID::projectScopeID(),
-                                            entity::EntityID::globalScopeID(),
-                                            entity::EntityID::localTemplateScopeID()};
+        QSet<common::ID> forbidden = {common::ID::projectScopeID(),
+                                            common::ID::globalScopeID(),
+                                            common::ID::localTemplateScopeID()};
         while (!globalIds.contains(scopeId)) {
             if (auto scope = findScope(scopeId)) {
                 if (!scope->name().isEmpty() && !forbidden.contains(scopeId))
@@ -282,7 +282,7 @@ namespace translation {
      * @param id
      * @return
      */
-    QString SignatureMaker::typeSignatureById(const entity::EntityID &id) const
+    QString SignatureMaker::typeSignatureById(const common::ID &id) const
     {
         const auto &type = findType(id);
         return type ? makeTypeOrExtType(type) : "";
@@ -454,7 +454,7 @@ namespace translation {
      * @param scope
      * @return
      */
-    entity::SharedScope SignatureMaker::findScope(const entity::EntityID &scopeId) const
+    entity::SharedScope SignatureMaker::findScope(const common::ID &scopeId) const
     {
         return utility::findScope(scopeId, m_ProjectDatabase, m_GlobalDatabase);
     }
@@ -464,7 +464,7 @@ namespace translation {
      * @param typeId
      * @return
      */
-    entity::SharedType SignatureMaker::findType(const entity::EntityID &typeId) const
+    entity::SharedType SignatureMaker::findType(const common::ID &typeId) const
     {
         return utility::findType(typeId, m_ProjectDatabase, m_GlobalDatabase);
     }

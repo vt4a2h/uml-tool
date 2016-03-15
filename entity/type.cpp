@@ -34,7 +34,6 @@
 #include "scope.h"
 #include "enums.h"
 #include "constants.h"
-#include "entityid.h"
 
 namespace entity {
 
@@ -42,7 +41,7 @@ namespace entity {
      * @brief Type::Type
      */
     Type::Type()
-        : Type(DEFAULT_NAME, EntityID::globalScopeID())
+        : Type(DEFAULT_NAME, common::ID::globalScopeID())
     {
     }
 
@@ -52,7 +51,7 @@ namespace entity {
      * @param scopeId
      * @param typeId
      */
-    Type::Type(const QString &name, const EntityID &scopeId, const EntityID &typeId)
+    Type::Type(const QString &name, const common::ID &scopeId, const common::ID &typeId)
         : BasicElement(name, scopeId, typeId.isValid() ? typeId : GeneratorID::instance().genID() )
     {
         if (m_Name.isEmpty() || m_Name == DEFAULT_NAME)

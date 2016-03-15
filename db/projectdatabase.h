@@ -48,10 +48,10 @@ namespace db {
         ProjectDatabase &operator =(ProjectDatabase &&rhs);
         ProjectDatabase &operator =(ProjectDatabase rhs);
 
-        relationship::SharedRelation getRelation(const QString &id) const;
+        relationship::SharedRelation getRelation(const common::ID &id) const;
         void addRelation(const relationship::SharedRelation &relation);
-        bool containsRelation(const QString &id) const;
-        void removeRelation(const QString &id);
+        bool containsRelation(const common::ID &id) const;
+        void removeRelation(const common::ID &id);
         relationship::RelationsList relations() const;
 
         db::SharedDatabase globalDatabase() const;
@@ -74,7 +74,7 @@ namespace db {
     public: // Database overrides
         entity::SharedScope addScope
                                ( const QString &name
-                               , const entity::EntityID &parentScopeId = entity::EntityID::nullID()
+                               , const common::ID &parentScopeId = common::ID::nullID()
                                ) override;
         entity::SharedScope addExistsScope(const entity::SharedScope &scope) override;
 

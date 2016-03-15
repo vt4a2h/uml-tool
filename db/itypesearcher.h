@@ -30,7 +30,7 @@ namespace db {
     class ITypeSearcher
     {
     public:
-        virtual entity::SharedType typeByID(const entity::EntityID &typeId) const = 0;
+        virtual entity::SharedType typeByID(const common::ID &typeId) const = 0;
         virtual entity::SharedType typeByName(const QString &name) const = 0;
     };
 

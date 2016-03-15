@@ -61,7 +61,7 @@ namespace entity {
      * @brief Class::Class
      */
     Class::Class()
-        : Class(defaultName(), EntityID::nullID())
+        : Class(defaultName(), common::ID::nullID())
     {
     }
 
@@ -80,7 +80,7 @@ namespace entity {
      * @param name
      * @param scopeId
      */
-    Class::Class(const QString &name, const EntityID &scopeId)
+    Class::Class(const QString &name, const common::ID &scopeId)
         : Type(name, scopeId)
         , m_Kind(Kind::ClassType)
         , m_FinalStatus(false)
@@ -119,7 +119,7 @@ namespace entity {
      * @param section
      * @return
      */
-    Parent Class::addParent(const EntityID &typeId, Section section)
+    Parent Class::addParent(const common::ID &typeId, Section section)
     {
         auto parent = Parent(typeId, section);
         if (containsParent(typeId))
@@ -134,7 +134,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    Parent Class::parent(const EntityID &typeId) const
+    Parent Class::parent(const common::ID &typeId) const
     {
         auto it = range::find_if(m_Parents, [&](auto &&parent){ return parent.first == typeId; });
         return it != m_Parents.cend() ? *it : Parent();
@@ -145,7 +145,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Class::containsParent(const EntityID &typeId)
+    bool Class::containsParent(const common::ID &typeId)
     {
         return range::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; }) != m_Parents.end();
     }
@@ -154,7 +154,7 @@ namespace entity {
      * @brief Class::removeParent
      * @param typeId
      */
-    void Class::removeParent(const EntityID &typeId)
+    void Class::removeParent(const common::ID &typeId)
     {
         auto it = range::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; });
         if (it != m_Parents.end())
@@ -241,7 +241,7 @@ namespace entity {
      */
     SharedField Class::addNewField()
     {
-        return addField(newFieldName, EntityID::nullID());
+        return addField(newFieldName, common::ID::nullID());
     }
 
     /**
@@ -375,7 +375,7 @@ namespace entity {
      * @param section
      * @return
      */
-    SharedField Class::addField(const QString &name, const EntityID &typeId, const QString &prefix,
+    SharedField Class::addField(const QString &name, const common::ID &typeId, const QString &prefix,
                                 Section section)
     {
         auto field = std::make_shared<Field>(name, typeId, prefix, section);
@@ -430,7 +430,7 @@ namespace entity {
      */
     SharedProperty Class::addNewProperty()
     {
-        return addProperty(newPropertyName, EntityID::nullID());
+        return addProperty(newPropertyName, common::ID::nullID());
     }
 
     /**
@@ -487,7 +487,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedProperty Class::addProperty(const QString &name, const EntityID &typeId)
+    SharedProperty Class::addProperty(const QString &name, const common::ID &typeId)
     {
         SharedProperty property(std::make_shared<Property>(name, typeId));
         G_CONNECT(property.get(), &Property::methodAdded, this, &Class::onOptionalMethodAdded);
@@ -737,7 +737,7 @@ namespace entity {
             if (src["Properties"].isArray()) {
                 SharedProperty property;
                 for (auto &&value : src["Properties"].toArray()) {
-                    property = addProperty("", EntityID::nullID());
+                    property = addProperty("", common::ID::nullID());
                     property->fromJson(value.toObject(), errorList);
                 }
             } else {

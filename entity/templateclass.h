@@ -28,7 +28,7 @@
 
 namespace entity {
 
-    class EntityID;
+    class ID;
 
     /**
      * @brief The TemplateClass class
@@ -37,7 +37,7 @@ namespace entity {
     {
     public:
         TemplateClass();
-        TemplateClass(const QString &name, const EntityID &scopeId);
+        TemplateClass(const QString &name, const common::ID &scopeId);
 
         friend bool operator ==(const TemplateClass &lhs, const TemplateClass &rhs);
 

@@ -83,26 +83,26 @@ namespace utility {
     QStringList scopesNamesList(const entity::SharedType &type, const db::SharedDatabase &db);
 
     template <class D>
-    std::shared_ptr<entity::Type> findType(const entity::EntityID &id, const D &database)
+    std::shared_ptr<entity::Type> findType(const common::ID &id, const D &database)
     {
         return database ? database->typeByID(id) : nullptr;
     }
 
     template <class D, class... Args>
-    std::shared_ptr<entity::Type> findType(const entity::EntityID &id, const D &database, const Args&... args)
+    std::shared_ptr<entity::Type> findType(const common::ID &id, const D &database, const Args&... args)
     {
         auto result = findType(id, database);
         return result ? result : findType(id, args...);
     }
 
     template <class D>
-    std::shared_ptr<entity::Scope> findScope(const entity::EntityID &id, const D &database)
+    std::shared_ptr<entity::Scope> findScope(const common::ID &id, const D &database)
     {
         return database ? database->depthScopeSearch(id) : nullptr;
     }
 
     template <class D, class... Args>
-    std::shared_ptr<entity::Scope> findScope(const entity::EntityID &id, const D &database, const Args&... args)
+    std::shared_ptr<entity::Scope> findScope(const common::ID &id, const D &database, const Args&... args)
     {
         auto result = findScope(id, database);
         return result ? result : findScope(id, args...);

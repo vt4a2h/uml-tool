@@ -77,8 +77,8 @@ namespace entity {
         RhsIdentificator rhsIdentificator() const;
         void setRhsIdentificator(RhsIdentificator identificator);
 
-        EntityID returnTypeId() const;
-        void setReturnTypeId(const EntityID &returnTypeId);
+        common::ID returnTypeId() const;
+        void setReturnTypeId(const common::ID &returnTypeId);
 
         LhsIdentificatorsList lhsIdentificators() const;
         void addLhsIdentificator(LhsIdentificator identificator);
@@ -87,7 +87,7 @@ namespace entity {
         void removeLhsIdentificator(LhsIdentificator identificator);
 
         SharedField getParameter(const QString &name) const;
-        SharedField addParameter(const QString &name, const EntityID &typeId);
+        SharedField addParameter(const QString &name, const common::ID &typeId);
         bool containsParameter(const QString &name);
         bool hasParameters() const;
         void removeParameter(const QString &name);
@@ -118,7 +118,7 @@ namespace entity {
         bool    m_ConstStatus;
         bool    m_SlotStatus;
         bool    m_SignalStatus;
-        EntityID m_ReturnTypeId;
+        common::ID m_ReturnTypeId;
 
         FieldsList m_Parameters;
 

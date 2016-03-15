@@ -34,7 +34,7 @@
 #include <helpers/entityhelpres.h>
 
 #include <entity/scope.h>
-#include <entity/entityid.h>
+#include <common/id.h>
 
 #include "constants.h"
 
@@ -66,7 +66,7 @@ namespace db {
     Database::Database(const QString &name, const QString &path)
         : m_Name(name.isEmpty() ? DEFAULT_DATABASE_NAME : name)
         , m_Path(path)
-        , m_ID(entity::EntityID::nullID())
+        , m_ID(common::ID::nullID())
         , m_Valid(false)
     {
     }
@@ -166,7 +166,7 @@ namespace db {
      * @param id
      * @return
      */
-    entity::SharedScope Database::getScope(const entity::EntityID &id) const
+    entity::SharedScope Database::getScope(const common::ID &id) const
     {
         return m_Scopes.contains(id) ? m_Scopes[id] : nullptr;
     }
@@ -177,12 +177,12 @@ namespace db {
      * @param parentScopeId
      * @return
      */
-    entity::SharedScope Database::addScope(const QString &name, const entity::EntityID &parentScopeId)
+    entity::SharedScope Database::addScope(const QString &name, const common::ID &parentScopeId)
     {
         entity::SharedScope scope(nullptr);
 
         if (!parentScopeId.isValid()) {
-            scope = std::make_shared<entity::Scope>(name, entity::EntityID::globalScopeID());
+            scope = std::make_shared<entity::Scope>(name, common::ID::globalScopeID());
             m_Scopes.insert(scope->id(), scope);
         } else {
             auto searchResults = std::move(makeDepthIdList(parentScopeId));
@@ -225,7 +225,7 @@ namespace db {
      * @param id
      * @return
      */
-    bool Database::containsScope(const entity::EntityID &id) const
+    bool Database::containsScope(const common::ID &id) const
     {
         return m_Scopes.contains(id);
     }
@@ -243,7 +243,7 @@ namespace db {
      * @brief Database::removeScope
      * @param id
      */
-    void Database::removeScope(const entity::EntityID &id)
+    void Database::removeScope(const common::ID &id)
     {
         m_Scopes.remove(id);
     }
@@ -262,7 +262,7 @@ namespace db {
      * @param scopeId
      * @return
      */
-    entity::SharedScope Database::depthScopeSearch(const entity::EntityID &scopeId) const
+    entity::SharedScope Database::depthScopeSearch(const common::ID &scopeId) const
     {
         return getScopeWithDepthList(makeDepthIdList(scopeId));
     }
@@ -305,7 +305,7 @@ namespace db {
      * @param typeId
      * @return
      */
-    entity::SharedType Database::typeByID(const entity::EntityID &typeId) const
+    entity::SharedType Database::typeByID(const common::ID &typeId) const
     {
         return typeSearchImpl(typeId, m_Scopes);
     }
@@ -325,9 +325,9 @@ namespace db {
      * @param id
      * @return
      */
-    Database::EntityIDList Database::makeDepthIdList(const entity::EntityID &id) const
+    Database::IDList Database::makeDepthIdList(const common::ID &id) const
     {
-        EntityIDList result;
+        IDList result;
 
         if (containsScope(id)) {
             result << id;
@@ -346,7 +346,7 @@ namespace db {
      * @param ids
      * @return
      */
-    entity::SharedScope Database::getScopeWithDepthList(const EntityIDList &ids) const
+    entity::SharedScope Database::getScopeWithDepthList(const IDList &ids) const
     {
         entity::SharedScope result(nullptr);
         if (!ids.isEmpty() && containsScope(ids[0])) {
@@ -474,7 +474,7 @@ namespace db {
      * @brief Database::id
      * @return
      */
-    entity::EntityID Database::id() const
+    common::ID Database::id() const
     {
         return m_ID;
     }
@@ -483,9 +483,9 @@ namespace db {
      * @brief Database::setId
      * @param entotyID
      */
-    void Database::setId(const entity::EntityID &entityID)
+    void Database::setId(const common::ID &ID)
     {
-        m_ID = entityID;
+        m_ID = ID;
     }
 
     /**
@@ -547,7 +547,7 @@ namespace db {
      * @param id
      * @param ids
      */
-    void Database::recursiveFind(entity::SharedScope scope, const entity::EntityID &id, EntityIDList &ids) const
+    void Database::recursiveFind(entity::SharedScope scope, const common::ID &id, IDList &ids) const
     {
         if (scope->scopes().isEmpty())  {
             ids.clear();

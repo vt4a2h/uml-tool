@@ -27,7 +27,7 @@
 #include <QJsonArray>
 
 #include <entity/scope.h>
-#include <entity/entityid.h>
+#include <common/id.h>
 #include <entity/property.h>
 
 #include <relationship/relation.h>
@@ -110,7 +110,7 @@ namespace db {
      * @param id
      * @return
      */
-    relationship::SharedRelation ProjectDatabase::getRelation(const QString &id) const
+    relationship::SharedRelation ProjectDatabase::getRelation(const common::ID &id) const
     {
         return (m_Relations.contains(id) ? m_Relations[id] : nullptr);
     }
@@ -129,7 +129,7 @@ namespace db {
      * @param id
      * @return
      */
-    bool ProjectDatabase::containsRelation(const QString &id) const
+    bool ProjectDatabase::containsRelation(const common::ID &id) const
     {
         return m_Relations.contains(id);
     }
@@ -138,7 +138,7 @@ namespace db {
      * @brief ProjectDatabase::removeRelation
      * @param id
      */
-    void ProjectDatabase::removeRelation(const QString &id)
+    void ProjectDatabase::removeRelation(const common::ID &id)
     {
         m_Relations.remove(id);
     }
@@ -221,7 +221,7 @@ namespace db {
                 QJsonObject obj;
                 for (auto &&val : src["Positions"].toArray()) {
                     obj = val.toObject();
-                    entity::EntityID id;
+                    common::ID id;
                     id.fromJson(obj["id"], errorList);
                     m_ItemsPos.append({id, {obj["x"].toDouble(), obj["y"].toDouble()}});
                 }
@@ -276,7 +276,7 @@ namespace db {
      * @return
      */
     entity::SharedScope ProjectDatabase::addScope(const QString &name,
-                                                  const entity::EntityID &parentScopeId)
+                                                  const common::ID &parentScopeId)
     {
         auto result = Database::addScope(name, parentScopeId);
         G_CONNECT(result.get(), &entity::Scope::typeSearcherRequired,

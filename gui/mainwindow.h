@@ -42,7 +42,7 @@ namespace models {
 }
 
 namespace graphics { class Scene; }
-namespace entity { class EntityID; }
+namespace entity { class ID; }
 /**
  * @brief namespace gui
  */

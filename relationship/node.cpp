@@ -35,7 +35,7 @@ namespace relationship {
      * @brief Node::Node
      */
     Node::Node()
-        :Node(entity::EntityID::nullID())
+        :Node(common::ID::nullID())
     {
     }
 
@@ -44,7 +44,7 @@ namespace relationship {
      * @param typeId
      * @param multiplicity
      */
-    Node::Node(const entity::EntityID &typeId, Multiplicity multiplicity)
+    Node::Node(const common::ID &typeId, Multiplicity multiplicity)
         : m_TypeId(typeId)
         , m_Description(DEFAULT_DESCRIPTION)
         , m_Multiplicity(multiplicity)
@@ -68,7 +68,7 @@ namespace relationship {
      * @brief Node::typeId
      * @return
      */
-    entity::EntityID Node::typeId() const
+    common::ID Node::typeId() const
     {
         return m_TypeId;
     }
@@ -77,7 +77,7 @@ namespace relationship {
      * @brief Node::setTypeId
      * @param typeId
      */
-    void Node::setTypeId(const entity::EntityID &typeId)
+    void Node::setTypeId(const common::ID &typeId)
     {
         m_TypeId = typeId;
     }

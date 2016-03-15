@@ -24,7 +24,7 @@
 
 #include <QObject>
 
-#include <entity/entityid.h>
+#include <common/id.h>
 
 namespace common {
 
@@ -35,18 +35,18 @@ namespace common {
 
     public:
         explicit BasicElement(const QString &name = "",
-                              const entity::EntityID &id = entity::EntityID::nullID());
-        BasicElement(const QString &name, const entity::EntityID &scopeId,
-                     const entity::EntityID &id);
+                              const common::ID &id = common::ID::nullID());
+        BasicElement(const QString &name, const common::ID &scopeId,
+                     const common::ID &id);
         BasicElement(const BasicElement &src);
         BasicElement(BasicElement &&src) noexcept = default;
         BasicElement(const QJsonObject &src, QStringList &errorList);
 
-        virtual entity::EntityID id() const;
-        virtual void setId(const entity::EntityID &id);
+        virtual common::ID id() const;
+        virtual void setId(const common::ID &id);
 
-        virtual entity::EntityID scopeId() const;
-        virtual void setScopeId(const entity::EntityID &id);
+        virtual common::ID scopeId() const;
+        virtual void setScopeId(const common::ID &id);
 
         virtual QString name() const;
         void setName(const QString &name);
@@ -74,8 +74,8 @@ namespace common {
 
     protected:
         QString m_Name;
-        entity::EntityID m_Id;
-        entity::EntityID m_ScopeId;
+        common::ID m_Id;
+        common::ID m_ScopeId;
     };
 
 } // namespace common

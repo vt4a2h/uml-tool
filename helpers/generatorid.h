@@ -26,9 +26,11 @@
 
 #include <project/project_types.hpp>
 
-#include <entity/entityid.h>
+#include <common/id.h>
 
 namespace entity {
+
+    //TODO: move to common
 
     /// Generator ID for current project items (entities, relations, bases etc.)
     class GeneratorID : public QObject
@@ -43,7 +45,7 @@ namespace entity {
 
         static const GeneratorID &instance();
 
-        entity::EntityID genID() const;
+        common::ID genID() const;
 
     public slots:
         void onCurrentProjectChanged(const project::SharedProject &p);

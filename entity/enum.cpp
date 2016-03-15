@@ -36,7 +36,6 @@
 
 #include "constants.h"
 #include "enums.h"
-#include "entityid.h"
 
 using namespace boost;
 
@@ -134,7 +133,7 @@ namespace entity {
      * @brief Enum::Enum
      */
     Enum::Enum()
-        : Enum(defaultName(), EntityID::globalScopeID())
+        : Enum(defaultName(), common::ID::globalScopeID())
     {
     }
 
@@ -143,9 +142,9 @@ namespace entity {
      * @param name
      * @param scopeId
      */
-    Enum::Enum(const QString &name, const EntityID &scopeId)
+    Enum::Enum(const QString &name, const common::ID &scopeId)
         : Type(name, scopeId)
-        , m_EnumTypeId(EntityID::nullID())
+        , m_EnumTypeId(common::ID::nullID())
         , m_StrongStatus(false)
     {
     }
@@ -237,7 +236,7 @@ namespace entity {
      * @brief Enum::enumTypeId
      * @return
      */
-    EntityID Enum::enumTypeId() const
+    common::ID Enum::enumTypeId() const
     {
         return m_EnumTypeId;
     }
@@ -246,7 +245,7 @@ namespace entity {
      * @brief Enum::setEnumTypeId
      * @param enumTypeId
      */
-    void Enum::setEnumTypeId(const EntityID &enumTypeId)
+    void Enum::setEnumTypeId(const common::ID &enumTypeId)
     {
         m_EnumTypeId = enumTypeId;
     }

@@ -51,33 +51,33 @@ namespace entity {
     public:
         Scope(Scope &&src);
         Scope(const Scope &src);
-        Scope(const QString &scopeName = "", const EntityID &parentScopeID = EntityID::nullID());
+        Scope(const QString &scopeName = "", const common::ID &parentScopeID = common::ID::nullID());
 
         Scope &operator =(const Scope &rhs);
         Scope &operator =(Scope &&rhs);
 
         friend bool operator ==(const Scope &lhs, const Scope &rhs);
 
-        SharedType type(const EntityID &typeId) const;
-        SharedType type(const EntityID &typeId);
+        SharedType type(const common::ID &typeId) const;
+        SharedType type(const common::ID &typeId);
 
         SharedType type(const QString &name) const;
         SharedType type(const QString &name) ;
 
         template <class T = Type> std::shared_ptr<T> addType(const QString &name = "");
         SharedType addExistsType(const SharedType &type);
-        bool containsType(const EntityID &typeId) const;
+        bool containsType(const common::ID &typeId) const;
         bool containsType(const QString &name) const;
-        void removeType(const EntityID &typeId);
+        void removeType(const common::ID &typeId);
         TypesList types() const;
 
-        SharedScope getChildScope(const EntityID &typeId);
+        SharedScope getChildScope(const common::ID &typeId);
         SharedScope addChildScope(const QString &name = "");
         SharedScope chainScopeSearch(const QStringList& scopesNames) const;
         void addExistsChildScope(const SharedScope &scope);
-        bool containsChildScope(const EntityID &typeId) const;
+        bool containsChildScope(const common::ID &typeId) const;
         bool hasChildScopes() const;
-        void removeChildScope(const EntityID &typeId);
+        void removeChildScope(const common::ID &typeId);
         ScopesList scopes() const;
 
     public: // BasicEntity implementation

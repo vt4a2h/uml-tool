@@ -20,31 +20,31 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "entityid.h"
+#include "id.h"
 
 #include <QHash>
 #include <QMetaType>
 
-namespace entity
+namespace common
 {
 
     /**
-     * @brief EntityID::EntityID
+     * @brief ID::ID
      */
-    EntityID::EntityID()
-        : EntityID(nullID())
+    ID::ID()
+        : ID(nullID())
     {
     }
 
     /**
-     * @brief EntityID::EntityID
+     * @brief ID::ID
      * @param value
      */
-    EntityID::EntityID(quint64 value)
+    ID::ID(quint64 value)
         : m_value(value)
     {
-        static int type = qRegisterMetaType<entity::EntityID>("entity::EntityID");
-        static bool comparators = QMetaType::registerComparators<entity::EntityID>();
+        static int type = qRegisterMetaType<common::ID>("common::ID");
+        static bool comparators = QMetaType::registerComparators<common::ID>();
         Q_UNUSED(type);
         Q_UNUSED(comparators);
     }
@@ -55,7 +55,7 @@ namespace entity
      * @param rhs
      * @return
      */
-    bool operator <(const EntityID &lhs, const EntityID &rhs)
+    bool operator <(const ID &lhs, const ID &rhs)
     {
         return lhs.m_value < rhs.m_value;
     }
@@ -66,35 +66,35 @@ namespace entity
      * @param rhs
      * @return
      */
-    bool operator ==(const EntityID &lhs, const EntityID &rhs)
+    bool operator ==(const ID &lhs, const ID &rhs)
     {
         return lhs.m_value == rhs.m_value;
     }
 
     /**
-     * @brief EntityID::isValid
+     * @brief ID::isValid
      * @return
      */
-    bool EntityID::isValid() const
+    bool ID::isValid() const
     {
         return m_value != nullID();
     }
 
     /**
-     * @brief EntityID::toString
+     * @brief ID::toString
      * @return
      */
-    QString EntityID::toString() const
+    QString ID::toString() const
     {
         return QString::number(m_value);
     }
 
     /**
-     * @brief EntityID::fromString
+     * @brief ID::fromString
      * @param in
      * @return
      */
-    bool EntityID::fromString(const QString &in)
+    bool ID::fromString(const QString &in)
     {
         bool result = false;
         m_value = in.toULongLong(&result);
@@ -105,7 +105,7 @@ namespace entity
      * @brief GeneratorID::defaultID
      * @return
      */
-    EntityID EntityID::nullID()
+    ID ID::nullID()
     {
         return 0;
     }
@@ -115,7 +115,7 @@ namespace entity
      *        for Qt and C++ types. Can be used to init project id counter or for sanity check.
      * @return first free ID.
      */
-    EntityID EntityID::firstFreeID()
+    ID ID::firstFreeID()
     {
         return 4097;
     }
@@ -124,7 +124,7 @@ namespace entity
      * @brief From nullID to this value are placed some constants like globalScopeID.
      * @return
      */
-    EntityID EntityID::firstNonConstID()
+    ID ID::firstNonConstID()
     {
         return 500;
     }
@@ -133,7 +133,7 @@ namespace entity
      * @brief GeneratorID::globalScopeID
      * @return
      */
-    EntityID EntityID::globalScopeID()
+    ID ID::globalScopeID()
     {
         return nullID().value() + 1;
     }
@@ -142,72 +142,72 @@ namespace entity
      * @brief GeneratorID::stdScopeID
      * @return
      */
-    EntityID EntityID::stdScopeID()
+    ID ID::stdScopeID()
     {
         return globalScopeID().value() + 1;
     }
 
     /**
-     * @brief EntityID::globalDatabaseID
+     * @brief ID::globalDatabaseID
      * @return
      */
-    EntityID EntityID::globalDatabaseID()
+    ID ID::globalDatabaseID()
     {
         return stdScopeID().value() + 1;
     }
 
     /**
-     * @brief EntityID::localTemplateScopeID
+     * @brief ID::localTemplateScopeID
      * @return
      */
-    EntityID EntityID::localTemplateScopeID()
+    ID ID::localTemplateScopeID()
     {
         return globalDatabaseID().value() + 1;
     }
 
     /**
-     * @brief EntityID::projectScopeID
+     * @brief ID::projectScopeID
      * @return
      */
-    EntityID EntityID::projectScopeID()
+    ID ID::projectScopeID()
     {
         return localTemplateScopeID().value() + 1;
     }
 
     /**
-     * @brief EntityID::value
+     * @brief ID::value
      * @return
      */
-    quint64 EntityID::value() const
+    quint64 ID::value() const
     {
         return m_value;
     }
 
     /**
-     * @brief EntityID::setValue
+     * @brief ID::setValue
      * @param value
      */
-    void EntityID::setValue(const quint64 &value)
+    void ID::setValue(const quint64 &value)
     {
         m_value = value;
     }
 
     /**
-     * @brief EntityID::toJson
+     * @brief ID::toJson
      * @return
      */
-    QJsonValue EntityID::toJson() const
+    QJsonValue ID::toJson() const
     {
         // Workaround for correct saving
         return QJsonValue(QString::number(m_value));
     }
 
     /**
-     * @brief EntityID::fromJson
+     * @brief ID::fromJson
      * @param in
      * @param errors
      */
-    void EntityID::fromJson(const QJsonValue &in, ErrorList &errors)
+    void ID::fromJson(const QJsonValue &in, ErrorList &errors)
     {
         QString result = in.toString();
         if (result.isEmpty()) {
@@ -226,10 +226,9 @@ namespace entity
      * @param e
      * @return
      */
-    uint qHash(const entity::EntityID &e)
+    uint qHash(const ID &e)
     {
         return ::qHash(e.value());
     }
 
-} // namespace entity
-
+} // namespace common

@@ -26,7 +26,7 @@
 
 TEST_F(FileJson, TypeJson)
 {
-    entity::SharedType type(std::make_shared<entity::Type>("stub_name", entity::EntityID::nullID()));
+    entity::SharedType type(std::make_shared<entity::Type>("stub_name", common::ID::nullID()));
     type->writeToFile(m_JsonFileName);
 
     auto type_comp(std::make_shared<entity::Type>());
@@ -36,13 +36,13 @@ TEST_F(FileJson, TypeJson)
 TEST_F(FileJson, ExtendedTypeJson)
 {
     entity::SharedExtendedType type =
-        std::make_shared<entity::ExtendedType>("stub_name", entity::EntityID::nullID());
+        std::make_shared<entity::ExtendedType>("stub_name", common::ID::nullID());
     type->addLinkStatus();
     type->addPointerStatus(true);
-    type->addTemplateParameter(entity::EntityID::firstFreeID());
-    type->addTemplateParameter(entity::EntityID::firstFreeID().value() + 1);
+    type->addTemplateParameter(common::ID::firstFreeID());
+    type->addTemplateParameter(common::ID::firstFreeID().value() + 1);
     type->setConstStatus(true);
-    type->setId(entity::EntityID::firstFreeID().value() + 2);
+    type->setId(common::ID::firstFreeID().value() + 2);
     type->writeToFile(m_JsonFileName);
 
     auto type_comp(std::make_shared<entity::ExtendedType>());
@@ -52,8 +52,8 @@ TEST_F(FileJson, ExtendedTypeJson)
 TEST_F(FileJson, UnionJson)
 {
     entity::SharedUnion union_ =
-        std::make_shared<entity::Union>("stub_name", entity::EntityID::nullID());
-    union_->addField("stub_name", entity::EntityID::nullID());
+        std::make_shared<entity::Union>("stub_name", common::ID::nullID());
+    union_->addField("stub_name", common::ID::nullID());
     union_->writeToFile(m_JsonFileName);
 
     auto union_comp(std::make_shared<entity::Union>());
@@ -62,7 +62,7 @@ TEST_F(FileJson, UnionJson)
 
 TEST_F(FileJson, EnumJson)
 {
-    entity::SharedEnum enum_(std::make_shared<entity::Enum>("stub_name", entity::EntityID::nullID()));
+    entity::SharedEnum enum_(std::make_shared<entity::Enum>("stub_name", common::ID::nullID()));
     enum_->setStrongStatus(true);
     enum_->addElement("a");
     enum_->addElement("b");
@@ -74,10 +74,10 @@ TEST_F(FileJson, EnumJson)
 
 TEST_F(FileJson, ClassJson)
 {
-    entity::SharedClass class_(std::make_shared<entity::Class>("stub_name", entity::EntityID::nullID()));
-    class_->addParent(entity::EntityID::nullID(), entity::Protected);
-    class_->addField("stub_field_name", entity::EntityID::nullID());
-    class_->addField("stub_field_name_1", entity::EntityID::nullID());
+    entity::SharedClass class_(std::make_shared<entity::Class>("stub_name", common::ID::nullID()));
+    class_->addParent(common::ID::nullID(), entity::Protected);
+    class_->addField("stub_field_name", common::ID::nullID());
+    class_->addField("stub_field_name_1", common::ID::nullID());
     class_->makeMethod("stub_method_name");
     class_->makeMethod("stub_method_name_1");
     class_->writeToFile(m_JsonFileName);
@@ -88,7 +88,7 @@ TEST_F(FileJson, ClassJson)
 
 TEST_F(FileJson, FieldJson)
 {
-    entity::SharedField field(std::make_shared<entity::Field>("stub_name", entity::EntityID::nullID()));
+    entity::SharedField field(std::make_shared<entity::Field>("stub_name", common::ID::nullID()));
     field->addKeyword(entity::Mutable);
     field->setPrefix("m_");
     field->setSection(entity::Private);
@@ -103,12 +103,12 @@ TEST_F(FileJson, ClassMethodJson)
 {
     entity::SharedMethod method(std::make_shared<entity::ClassMethod>("stub_name"));
     method->setConstStatus(true);
-    method->setReturnTypeId(entity::EntityID::nullID());
+    method->setReturnTypeId(common::ID::nullID());
     method->setRhsIdentificator(entity::RhsIdentificator::Final);
     method->setSection(entity::Private);
     method->addLhsIdentificator(entity::LhsIdentificator::Inline);
-    method->addParameter("stub_parameter", entity::EntityID::nullID());
-    method->addParameter("stub_parameter_1", entity::EntityID::nullID());
+    method->addParameter("stub_parameter", common::ID::nullID());
+    method->addParameter("stub_parameter_1", common::ID::nullID());
     method->writeToFile(m_JsonFileName);
 
     auto method_comp(std::make_shared<entity::ClassMethod>());
@@ -117,9 +117,9 @@ TEST_F(FileJson, ClassMethodJson)
 
 TEST_F(FileJson, TemplateClassJson)
 {
-    entity::SharedTemplateClass class_(std::make_shared<entity::TemplateClass>("stub_name", entity::EntityID::nullID()));
-    class_->addTemplateParameter(entity::EntityID::nullID(), entity::EntityID::nullID());
-    class_->addTemplateParameter(entity::EntityID::nullID(), entity::EntityID::nullID());
+    entity::SharedTemplateClass class_(std::make_shared<entity::TemplateClass>("stub_name", common::ID::nullID()));
+    class_->addTemplateParameter(common::ID::nullID(), common::ID::nullID());
+    class_->addTemplateParameter(common::ID::nullID(), common::ID::nullID());
     EXPECT_TRUE(!!class_->addLocalType("type"))
             << "Locale type must be added.";
     EXPECT_TRUE(!!class_->addLocalType("type_1"))
@@ -148,7 +148,7 @@ TEST_F(FileJson, TemplateClassMethodJson)
 TEST_F(FileJson, ScopeJson)
 {
     entity::SharedScope scope =
-        std::make_shared<entity::Scope>("stub_scope_name", entity::EntityID::nullID());
+        std::make_shared<entity::Scope>("stub_scope_name", common::ID::nullID());
     scope->addType("type");
     scope->addType("type_1");
     scope->addChildScope("scope");
@@ -162,7 +162,7 @@ TEST_F(FileJson, ScopeJson)
 TEST_F(FileJson, PropertyJson)
 {
     entity::SharedProperty property =
-        std::make_shared<entity::Property>("stub_property_name", entity::EntityID::nullID());
+        std::make_shared<entity::Property>("stub_property_name", common::ID::nullID());
     property->setTypeSearcher(m_GlobalDb);
 
     // Test with optional methods
@@ -185,7 +185,7 @@ TEST_F(FileJson, PropertyJson)
 TEST_F(FileJson, NodeJson)
 {
     relationship::SharedNode node =
-        std::make_shared<relationship::Node>(entity::EntityID::nullID(), relationship::ZeroOrInf);
+        std::make_shared<relationship::Node>(common::ID::nullID(), relationship::ZeroOrInf);
     node->setDescription("stub_description");
     node->writeToFile(m_JsonFileName);
 
@@ -201,8 +201,8 @@ TEST_F(FileJson, BasicRelationJson)
 TEST_F(FileJson, AssociationRelationJson)
 {
     test_relation(Association, [&](){
-        relation->setGetSetTypeId(entity::EntityID::nullID());
-        relation->setFieldTypeId(entity::EntityID::nullID());
+        relation->setGetSetTypeId(common::ID::nullID());
+        relation->setFieldTypeId(common::ID::nullID());
     })
 }
 

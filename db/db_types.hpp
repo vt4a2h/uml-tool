@@ -30,7 +30,7 @@
 #include <QString>
 #include <QMetaType>
 
-#include <entity/entityid.h>
+#include <common/id.h>
 
 namespace db {
     class Database;
@@ -39,7 +39,7 @@ namespace db {
     using SharedProjectDatabase = std::shared_ptr<ProjectDatabase>;
     using WeakProjectDatabase = std::weak_ptr<ProjectDatabase>;
 
-    using IDPos = QPair<entity::EntityID, QPointF>;
+    using IDPos = QPair<common::ID, QPointF>;
     using ItemsPos = QVector<IDPos>;
 
     class ITypeSearcher;

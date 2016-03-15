@@ -90,7 +90,7 @@ namespace entity {
      * @brief Property::Property
      */
     Property::Property()
-        : Property(DEFAULT_NAME, EntityID::nullID())
+        : Property(DEFAULT_NAME, common::ID::nullID())
     {
     }
 
@@ -110,7 +110,7 @@ namespace entity {
      * @param name
      * @param parent
      */
-    Property::Property(const QString &name, const EntityID &typeId, QObject *parent)
+    Property::Property(const QString &name, const common::ID &typeId, QObject *parent)
         : BasicElement(name)
         , m_Field(std::make_shared<entity::Field>(name, typeId))
     {
@@ -173,7 +173,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    Property &Property::addField(const QString &name, const EntityID &typeId)
+    Property &Property::addField(const QString &name, const common::ID &typeId)
     {
         auto oldField = m_Field;
         auto newTypeId = typeId;
@@ -797,7 +797,7 @@ namespace entity {
         checkAndSet(src, memberMark, errorList,
                     [&](){ readOptional(src[memberMark], this, &Property::addField,
                                         &Property::field, &Property::deleteField, errorList,
-                                        "" /*name*/, EntityID::nullID()); });
+                                        "" /*name*/, common::ID::nullID()); });
 
         checkAndSet(src, getterMark, errorList,
                     [&](){ readOptional(src[getterMark], this, &Property::addGetter, &Property::getter,
@@ -923,16 +923,16 @@ namespace entity {
      * @brief Property::getTypeId
      * @return
      */
-    EntityID Property::typeId() const
+    common::ID Property::typeId() const
     {
-        return G_ASSERT(m_Field) ? m_Field->typeId() : EntityID::nullID();
+        return G_ASSERT(m_Field) ? m_Field->typeId() : common::ID::nullID();
     }
 
     /**
      * @brief Property::setTypeId
      * @param typeId
      */
-    void Property::setTypeId(const EntityID &typeId)
+    void Property::setTypeId(const common::ID &typeId)
     {
         if (G_ASSERT(m_Field))
             m_Field->setTypeId(typeId);

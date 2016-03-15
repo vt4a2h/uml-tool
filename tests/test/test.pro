@@ -30,7 +30,7 @@ HEADERS += ../../enums.h \
     ../../project/project.h \
     ../../entity/property.h \
     ../../entity/class.h \
-    ../../entity/entityid.h \
+    ../../common/id.h \
     ../../entity/scope.h \
     ../../entity/isectional.h \
     ../../entity/components/icomponents.h \
@@ -88,7 +88,7 @@ SOURCES += main.cpp \
            ../../entity/extendedtype.cpp\
            ../../entity/template.cpp \
            ../../entity/property.cpp \
-           ../../entity/entityid.cpp \
+           ../../common/id.cpp \
            ../../entity/isectional.cpp \
            ../../utility/helpfunctions.cpp \
            ../../db/database.cpp \

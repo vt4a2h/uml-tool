@@ -40,7 +40,7 @@ namespace entity {
         Union();
         Union(Union &&src) noexcept = default;
         Union(const Union &src);
-        Union(const QString &name, const EntityID &scopeId);
+        Union(const QString &name, const common::ID &scopeId);
 
         Union &operator= (const Union &rhs);
         Union &operator= (Union &&rhs) noexcept = default;
@@ -48,7 +48,7 @@ namespace entity {
 
         // TODO: extract this functionality for class and union to the separate class
         SharedField getField(const QString &name) const;
-        SharedField addField(const QString &name, const EntityID &typeId);
+        SharedField addField(const QString &name, const common::ID &typeId);
         void removeField(const QString &name);
         bool containsField(const QString &name);
 

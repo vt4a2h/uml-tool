@@ -53,16 +53,13 @@ namespace relationship {
         Relation();
         Relation(Relation &&src) noexcept = default;
         Relation(const Relation &src);
-        Relation(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
+        Relation(const common::ID &tailTypeId, const common::ID &headTypeId,
                  db::Database *globalDatabase, db::Database *projectDatabase);
 
         Relation &operator =(const Relation &rhs);
         Relation &operator =(Relation &&rhs) noexcept = default;
 
         friend bool operator ==(const Relation &lhs, const Relation &rhs);
-
-        QString name() const;
-        void setName(const QString &name);
 
         void makeRelation();
         void removeRelation();
@@ -93,9 +90,9 @@ namespace relationship {
         virtual void copyFrom(const Relation &src);
 
         void check();
-        void addHeadClass(const entity::EntityID &id);
-        void addTailClass(const entity::EntityID &id);
-        entity::SharedType tryToFindType(const entity::EntityID &typeId) const;
+        void addHeadClass(const common::ID &id);
+        void addTailClass(const common::ID &id);
+        entity::SharedType tryToFindType(const common::ID &typeId) const;
 
         SharedNode m_TailNode;
         SharedNode m_HeadNode;

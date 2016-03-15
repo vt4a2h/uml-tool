@@ -29,9 +29,10 @@
 
 #include <utility/helpfunctions.h>
 
+#include <common/id.h>
+
 #include "constants.h"
 #include "enums.h"
-#include "entityid.h"
 
 namespace entity {
 
@@ -39,7 +40,7 @@ namespace entity {
      * @brief TemplateClass::TemplateClass
      */
     TemplateClass::TemplateClass()
-        : TemplateClass("Template class", EntityID::globalScopeID())
+        : TemplateClass("Template class", common::ID::globalScopeID())
     {
     }
 
@@ -48,7 +49,7 @@ namespace entity {
      * @param name
      * @param scopeId
      */
-    TemplateClass::TemplateClass(const QString &name, const EntityID &scopeId)
+    TemplateClass::TemplateClass(const QString &name, const common::ID &scopeId)
         : Class (name, scopeId)
     {
     }

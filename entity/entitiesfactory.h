@@ -43,7 +43,7 @@ namespace entity {
 
         template<class Type>
         std::pair<std::shared_ptr<Type>, graphics::Entity*>
-        makeEntity(const models::SharedApplicationModel &model, const entity::EntityID  &scopeID,
+        makeEntity(const models::SharedApplicationModel &model, const common::ID  &scopeID,
                    QGraphicsScene &scene, const QPointF &pos) const
         {
             auto type = model->makeType<Type>(scopeID, Type::staticDefaultName());

@@ -227,7 +227,7 @@ namespace models {
               {TreeItemType::ScopeItem,
                [](const QVariant &item){
                     auto s = item.value<entity::SharedScope>();
-                    bool projectScope = s->id() == entity::EntityID::projectScopeID();
+                    bool projectScope = s->id() == common::ID::projectScopeID();
                     return projectScope ? BasicTreeItem::tr("Global scope") : s->name(); }},
               {TreeItemType::TypeItem,
                [](const QVariant &item){ return item.value<entity::SharedType>()->name(); }},

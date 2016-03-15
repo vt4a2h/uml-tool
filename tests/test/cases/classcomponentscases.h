@@ -74,7 +74,7 @@ TEST_F(ClassComponents, Method)
     ASSERT_FALSE(method->hasParameters());
     ASSERT_FALSE(method->hasLhsIdentificators());
 
-    auto p1 = method->addParameter("p1", entity::EntityID::nullID());
+    auto p1 = method->addParameter("p1", common::ID::nullID());
     method->addLhsIdentificator(entity::LhsIdentificator::Inline);
     ASSERT_TRUE(method->containsParameter(p1->name()));
     ASSERT_TRUE(method->containsLhsIdentficator(entity::LhsIdentificator::Inline));
@@ -103,10 +103,10 @@ TEST_F(ClassComponents, Property)
     auto property = std::make_shared<entity::Property>();
     property->setTypeSearcher(m_GlobalDb);
     ASSERT_EQ(property->name(), DEFAULT_NAME);
-    ASSERT_EQ(property->typeId(), entity::EntityID::nullID());
+    ASSERT_EQ(property->typeId(), common::ID::nullID());
 
-    property->setTypeId(entity::EntityID::firstFreeID().value() + 1);
-    ASSERT_EQ(property->typeId(), entity::EntityID::firstFreeID().value() + 1);
+    property->setTypeId(common::ID::firstFreeID().value() + 1);
+    ASSERT_EQ(property->typeId(), common::ID::firstFreeID().value() + 1);
 
     ASSERT_TRUE(!!property->field());
     ASSERT_EQ(property->field()->section(), entity::Private);
@@ -132,8 +132,8 @@ TEST_F(ClassComponents, Property)
     ASSERT_EQ(property->hashType(), entity::Property::staticHashType());
     ASSERT_EQ(property->marker(), entity::Property::staticMarker());
 
-    property->setId(entity::EntityID::firstFreeID().value() + 2);
-    ASSERT_EQ(property->id(), entity::EntityID::firstFreeID().value() + 2);
+    property->setId(common::ID::firstFreeID().value() + 2);
+    ASSERT_EQ(property->id(), common::ID::firstFreeID().value() + 2);
 
     // Check moving
     check_moving(entity::Property, property)

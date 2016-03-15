@@ -27,13 +27,15 @@
 #include <QHash>
 #include <QMetaType>
 
+namespace common { class ID; }
+
 namespace relationship {
     class Node;
     using SharedNode = std::shared_ptr<Node>;
 
     class Relation;
     using SharedRelation = std::shared_ptr<Relation>;
-    using Relations = QHash<QString, SharedRelation>;
+    using Relations = QHash<common::ID, SharedRelation>;
     using RelationsList = QVector<SharedRelation>;
 }
 

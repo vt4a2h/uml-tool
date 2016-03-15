@@ -49,10 +49,10 @@ TEST_F(ProjectMaker, MakeClass)
     constLinkToString->setConstStatus(true);
     constLinkToString->addLinkStatus();
 
-    empClass->makeMethod("Employee")->setReturnTypeId(entity::EntityID::nullID());
+    empClass->makeMethod("Employee")->setReturnTypeId(common::ID::nullID());
 
     auto parCtor = empClass->makeMethod("Employee");
-    parCtor->setReturnTypeId(entity::EntityID::nullID());
+    parCtor->setReturnTypeId(common::ID::nullID());
     parCtor->addParameter("firstName", constLinkToString->id());
     parCtor->addParameter("lastName", constLinkToString->id());
 
@@ -118,11 +118,11 @@ TEST_F(ProjectMaker, MakeTemplateClass)
     cPointerToT->setConstStatus(true);
 
     auto ctor = ptrClass->makeMethod("shared_pointer");
-    ctor->setReturnTypeId(entity::EntityID::nullID());
+    ctor->setReturnTypeId(common::ID::nullID());
     ctor->addLhsIdentificator(entity::LhsIdentificator::Explicit);
     ctor->addParameter("value", pointerToT->id())->setDefaultValue("nullptr");
 
-    ptrClass->makeMethod("~shared_pointer")->setReturnTypeId(entity::EntityID::nullID());
+    ptrClass->makeMethod("~shared_pointer")->setReturnTypeId(common::ID::nullID());
 
     auto void_ = m_GlobalDb->typeByName("void");
     ASSERT_TRUE(!!void_);

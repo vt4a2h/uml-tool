@@ -358,7 +358,7 @@ namespace components {
         // Not support namespaces for now, so check only in global database.
         // Work with namespaces and custom types in project will be hard due to Qt meta-stuff.
         // And also required more detail work on current code generation functionality. TODO: implement!
-        const entity::SharedScope &globasScope = m_Model->globalDatabase()->getScope(entity::EntityID::globalScopeID());
+        const entity::SharedScope &globasScope = m_Model->globalDatabase()->getScope(common::ID::globalScopeID());
         if (!globasScope)
             return {tr("Cannot find global scope."), nullptr};
 

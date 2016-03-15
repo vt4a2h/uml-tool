@@ -40,7 +40,7 @@ namespace common {
         const QString scopeIdMark = "Scope ID";
     }
 
-    BasicElement::BasicElement(const QString &name, const EntityID &scopeId, const EntityID &id)
+    BasicElement::BasicElement(const QString &name, const ID &scopeId, const ID &id)
         : m_Name(name)
         , m_Id(id)
         , m_ScopeId(scopeId)
@@ -88,8 +88,8 @@ namespace common {
     /**
      * @brief BasicEntity::BasicEntity
      */
-    BasicElement::BasicElement(const QString &name, const EntityID &id)
-        : BasicElement(name, EntityID::nullID(), id)
+    BasicElement::BasicElement(const QString &name, const ID &id)
+        : BasicElement(name, ID::nullID(), id)
     {
     }
 
@@ -105,10 +105,10 @@ namespace common {
     }
 
     /**
-     * @brief BasicEntity::id
+     * @brief Basiccommon::ID
      * @return
      */
-    EntityID BasicElement::id() const
+    ID BasicElement::id() const
     {
         return m_Id;
     }
@@ -117,7 +117,7 @@ namespace common {
      * @brief BasicEntity::setId
      * @param id
      */
-    void BasicElement::setId(const EntityID &id)
+    void BasicElement::setId(const ID &id)
     {
         m_Id = id;
     }
@@ -126,7 +126,7 @@ namespace common {
      * @brief BasicEntity::scopeId
      * @return
      */
-    EntityID BasicElement::scopeId() const
+    ID BasicElement::scopeId() const
     {
         return m_ScopeId;
     }
@@ -135,7 +135,7 @@ namespace common {
      * @brief BasicEntity::setScopeId
      * @param id
      */
-    void BasicElement::setScopeId(const EntityID &id)
+    void BasicElement::setScopeId(const ID &id)
     {
         m_ScopeId = id;
     }

@@ -32,18 +32,13 @@
 
 #include <utility/helpfunctions.h>
 
-uint qHash(const entity::SharedField &f)
-{
-    return ::qHash(QJsonDocument(f->toJson()).toJson()); // Hackish way!
-}
-
 namespace entity {
 
     /**
      * @brief Field::Field
      */
     Field::Field()
-        : Field(DEFAULT_NAME, EntityID::nullID())
+        : Field(DEFAULT_NAME, common::ID::nullID())
     {
     }
 
@@ -72,7 +67,7 @@ namespace entity {
      * @param name
      * @param typeId
      */
-    Field::Field(const QString &name, const EntityID &typeId)
+    Field::Field(const QString &name, const common::ID &typeId)
         : Field(name, typeId, "", Public)
     {
     }
@@ -84,7 +79,7 @@ namespace entity {
      * @param prefix
      * @param section
      */
-    Field::Field(const QString &name, const EntityID &typeId, const QString &prefix, Section section)
+    Field::Field(const QString &name, const common::ID &typeId, const QString &prefix, Section section)
         : BasicElement(name)
         , m_TypeId(typeId)
         , m_Section(section)
@@ -244,7 +239,7 @@ namespace entity {
      * @brief Field::typeId
      * @return
      */
-    EntityID Field::typeId() const
+    common::ID Field::typeId() const
     {
         return m_TypeId;
     }
@@ -253,7 +248,7 @@ namespace entity {
      * @brief Field::setTypeId
      * @param typeId
      */
-    void Field::setTypeId(const EntityID &typeId)
+    void Field::setTypeId(const common::ID &typeId)
     {
         m_TypeId = typeId;
     }
@@ -388,6 +383,11 @@ namespace entity {
     void Field::setDefaultValue(const QString &defaultValue)
     {
         m_DefaultValue = defaultValue;
+    }
+
+    uint qHash(const SharedField &f)
+    {
+        return ::qHash(QJsonDocument(f->toJson()).toJson()); // Hackish way!
     }
 
 } // namespace entity

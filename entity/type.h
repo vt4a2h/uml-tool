@@ -42,7 +42,8 @@ namespace entity {
     {
     public:
         Type();
-        Type(const QString &name, const EntityID &scopeId, const EntityID &typeId = EntityID::nullID());
+        Type(const QString &name, const common::ID &scopeId,
+             const common::ID &typeId = common::ID::nullID());
         Type(Type &&) noexcept = default;
         Type(const Type &) = default;
 

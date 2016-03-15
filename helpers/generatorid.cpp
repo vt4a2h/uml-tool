@@ -40,10 +40,10 @@ namespace entity {
      * @brief GeneratorID::genID
      * @return
      */
-    EntityID GeneratorID::genID() const
+    common::ID GeneratorID::genID() const
     {
         auto pr = project();
-        return pr ? pr->genID() : EntityID::nullID();
+        return pr ? pr->genID() : common::ID::nullID();
     }
 
     /**

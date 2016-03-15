@@ -39,7 +39,7 @@ namespace relationship {
      * @brief Association::Association
      */
     Association::Association()
-        : Association(entity::EntityID::nullID(), entity::EntityID::nullID(), nullptr, nullptr)
+        : Association(common::ID::nullID(), common::ID::nullID(), nullptr, nullptr)
     {
     }
 
@@ -50,7 +50,7 @@ namespace relationship {
      * @param globalDatabase
      * @param projectDatabase
      */
-    Association::Association(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
+    Association::Association(const common::ID &tailTypeId, const common::ID &headTypeId,
                              db::Database *globalDatabase, db::Database *projectDatabase)
         : Relation(tailTypeId, headTypeId, globalDatabase, projectDatabase)
         , m_GetSetTypeId(headTypeId)
@@ -135,7 +135,7 @@ namespace relationship {
      * @brief Association::FieldTypeId
      * @return
      */
-    entity::EntityID Association::FieldTypeId() const
+    common::ID Association::FieldTypeId() const
     {
         return m_FieldTypeId;
     }
@@ -144,7 +144,7 @@ namespace relationship {
      * @brief Association::setFieldTypeId
      * @param FieldTypeId
      */
-    void Association::setFieldTypeId(const entity::EntityID &FieldTypeId)
+    void Association::setFieldTypeId(const common::ID &FieldTypeId)
     {
         m_FieldTypeId = FieldTypeId;
     }
@@ -153,7 +153,7 @@ namespace relationship {
      * @brief Association::GetSetTypeId
      * @return
      */
-    entity::EntityID Association::GetSetTypeId() const
+    common::ID Association::GetSetTypeId() const
     {
         return m_GetSetTypeId;
     }
@@ -162,7 +162,7 @@ namespace relationship {
      * @brief Association::setGetSetTypeId
      * @param GetSetTypeId
      */
-    void Association::setGetSetTypeId(const entity::EntityID &GetSetTypeId)
+    void Association::setGetSetTypeId(const common::ID &GetSetTypeId)
     {
         m_GetSetTypeId = GetSetTypeId;
     }

@@ -27,7 +27,7 @@
 #include <QHash>
 #include <QMetaType>
 
-#include <entity/entityid.h>
+#include <common/id.h>
 
 namespace project {
     class Project;

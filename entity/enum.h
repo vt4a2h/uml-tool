@@ -31,7 +31,7 @@
 
 namespace entity {
 
-    class EntityID;
+    class ID;
 
     /// The Variable class
     class Enumerator : public common::BasicElement, public ISectional
@@ -65,7 +65,7 @@ namespace entity {
     {
     public:
         Enum();
-        Enum(const QString &name, const EntityID &scopeId);
+        Enum(const QString &name, const common::ID &scopeId);
         Enum(Enum &&) noexcept = default;
         Enum(const Enum &) = default;
 
@@ -81,8 +81,8 @@ namespace entity {
         void removeEnumerator(const QString &name);
         bool containsElement(const QString &name) const;
 
-        EntityID enumTypeId() const;
-        void setEnumTypeId(const EntityID &enumTypeId);
+        common::ID enumTypeId() const;
+        void setEnumTypeId(const common::ID &enumTypeId);
 
         bool isEqual(const Type &rhs, bool withTypeid = true) const override;
 
@@ -102,7 +102,7 @@ namespace entity {
         add_meta(Enum)
 
     private:
-        EntityID m_EnumTypeId;
+        common::ID m_EnumTypeId;
         bool m_StrongStatus;
         Enumerators m_Elements;
     };

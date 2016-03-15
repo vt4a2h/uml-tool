@@ -56,7 +56,7 @@ TEST_F(ComponentsMaker, MakingField)
     auto field = to_f(result.resultEntity.get());
     ASSERT_EQ(field->name(), "a");
 
-    auto globalScope = m_GlobalDatabase->getScope(entity::EntityID::globalScopeID());
+    auto globalScope = m_GlobalDatabase->getScope(common::ID::globalScopeID());
     auto t = globalScope->type(field->typeId());
     ASSERT_TRUE(!!t) << "Type with name int is not found in global database";
     ASSERT_EQ(t->name(), "int");
@@ -115,7 +115,7 @@ TEST_F(ComponentsMaker, MakingMethod)
     auto method = to_m(result.resultEntity);
     ASSERT_EQ(method->name(), "get");
 
-    auto globalScope = m_GlobalDatabase->getScope(entity::EntityID::globalScopeID());
+    auto globalScope = m_GlobalDatabase->getScope(common::ID::globalScopeID());
     auto t = globalScope->type(method->returnTypeId());
     ASSERT_TRUE(!!t) << "Type with name int is not found in global database";
     ASSERT_EQ(t->name(), "int");
@@ -168,7 +168,7 @@ TEST_F(ComponentsMaker, MakingProperty)
     ASSERT_EQ(property->name(), "width");
 
     // Type
-    auto globalScope = m_GlobalDatabase->getScope(entity::EntityID::globalScopeID());
+    auto globalScope = m_GlobalDatabase->getScope(common::ID::globalScopeID());
     auto t = globalScope->type(property->typeId());
     ASSERT_TRUE(!!t) << "Type with name int is not found in global database";
     ASSERT_EQ(t->name(), "int");

@@ -38,7 +38,7 @@ namespace relationship {
      * @brief Realization::Realization
      */
     Realization::Realization()
-        : Realization(entity::EntityID::nullID(), entity::EntityID::nullID(), nullptr, nullptr)
+        : Realization(common::ID::nullID(), common::ID::nullID(), nullptr, nullptr)
     {
     }
 
@@ -49,7 +49,7 @@ namespace relationship {
      * @param globalDatabase
      * @param projectDatabase
      */
-    Realization::Realization(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
+    Realization::Realization(const common::ID &tailTypeId, const common::ID &headTypeId,
                              db::Database *globalDatabase, db::Database *projectDatabase)
         : Generalization(tailTypeId, headTypeId, globalDatabase, projectDatabase)
     {

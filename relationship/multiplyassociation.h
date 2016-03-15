@@ -34,16 +34,16 @@ namespace relationship {
     {
     public:
         MultiplyAssociation();
-        MultiplyAssociation(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
+        MultiplyAssociation(const common::ID &tailTypeId, const common::ID &headTypeId,
                             db::Database *globalDatabase, db::Database *projectDatabase);
 
         friend bool operator ==(const MultiplyAssociation &lhs, const MultiplyAssociation &rhs);
 
-        entity::EntityID containerTypeId() const;
-        void setContainerTypeId(const entity::EntityID &containerTypeId);
+        common::ID containerTypeId() const;
+        void setContainerTypeId(const common::ID &containerTypeId);
 
-        entity::EntityID keyTypeId() const;
-        void setKeyTypeId(const entity::EntityID &keyTypeId);
+        common::ID keyTypeId() const;
+        void setKeyTypeId(const common::ID &keyTypeId);
 
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
@@ -68,8 +68,8 @@ namespace relationship {
         void removeGroupGetter();
 
         entity::SharedType m_ContainerClass;
-        entity::EntityID m_ContainerTypeId;
-        entity::EntityID m_KeyTypeId;
+        common::ID m_ContainerTypeId;
+        common::ID m_KeyTypeId;
     };
 
 } // namespace relationship

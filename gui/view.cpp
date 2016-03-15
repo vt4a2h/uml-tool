@@ -157,7 +157,7 @@ namespace gui {
     {
         if (auto pr = project()) {
             auto projectDb = G_ASSERT(pr->database());
-            auto scope = G_ASSERT(projectDb->getScope(entity::EntityID::projectScopeID()));
+            auto scope = G_ASSERT(projectDb->getScope(common::ID::projectScopeID()));
 
             if (auto stack = pr->commandsStack()) {
                 auto pos = mapToScene(eventPos);

@@ -57,10 +57,10 @@ namespace models {
         void addProject(const project::SharedProject &pr);
 
         void addScope(const entity::SharedScope &scope, const QString &projectName);
-        void removeScope(const entity::EntityID &scopeId, const QString &projectName);
+        void removeScope(const common::ID &scopeId, const QString &projectName);
 
-        void addType(const entity::SharedType &type, const entity::EntityID &scopeId, const QString &projectName);
-        void removeType(const QString &projectName, const entity::EntityID &scopeID, const entity::EntityID &typeID);
+        void addType(const entity::SharedType &type, const common::ID &scopeId, const QString &projectName);
+        void removeType(const QString &projectName, const common::ID &scopeID, const common::ID &typeID);
 
     private:
         void addProjectItem(const project::SharedProject &pr);

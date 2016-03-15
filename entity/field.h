@@ -24,15 +24,13 @@
 #pragma once
 
 #include <QString>
+#include <QSet>
 
 #include <common/basicelement.h>
 #include <common/meta.h>
 
 #include "entity_types.hpp"
 #include "isectional.h"
-
-uint qHash(const entity::SharedField& f);
-#include <QSet>
 
 class QJsonObject;
 class QStringList;
@@ -51,8 +49,8 @@ namespace entity {
         Field();
         Field(const Field &src);
         Field(Field &&src);
-        Field(const QString &name, const EntityID &typeId);
-        Field(const QString &name, const EntityID &typeId, const QString &prefix, Section section);
+        Field(const QString &name, const common::ID &typeId);
+        Field(const QString &name, const common::ID &typeId, const QString &prefix, Section section);
 
         Field &operator =(Field &&rhs);
         Field &operator =(const Field &rhs);
@@ -70,8 +68,8 @@ namespace entity {
         bool hasKeywords() const;
         void removeKeyword(FieldKeyword keyword);
 
-        EntityID typeId() const;
-        void setTypeId(const EntityID &typeId);
+        common::ID typeId() const;
+        void setTypeId(const common::ID &typeId);
 
         QString suffix() const;
         void removeSuffix();
@@ -94,7 +92,7 @@ namespace entity {
         void copyFrom(const Field &src);
         void moveFrom(Field &&src);
 
-        EntityID m_TypeId;
+        common::ID m_TypeId;
         Section m_Section;
         QString m_Prefix;
         QString m_Suffix;
@@ -107,5 +105,7 @@ namespace entity {
     {
         return lhs.lock() == rhs.lock();
     }
+
+    uint qHash(const SharedField& f);
 
 } // namespace entity

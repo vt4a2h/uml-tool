@@ -70,10 +70,10 @@ namespace entity {
      * @param scopeName
      * @param scopeId
      */
-    Scope::Scope(const QString &scopeName, const EntityID &parentScopeID)
+    Scope::Scope(const QString &scopeName, const common::ID &parentScopeID)
         : BasicElement(!scopeName.isEmpty() ? scopeName : DEFAULT_NAME,
-                      parentScopeID.isValid() ? parentScopeID : EntityID::globalScopeID(),
-                      GeneratorID::instance().genID())
+                       parentScopeID.isValid() ? parentScopeID : common::ID::globalScopeID(),
+                       GeneratorID::instance().genID())
     {
     }
 
@@ -127,7 +127,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedType Scope::type(const EntityID &typeId) const
+    SharedType Scope::type(const common::ID &typeId) const
     {
         return m_Types.value(typeId);
     }
@@ -137,7 +137,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedType Scope::type(const EntityID &typeId)
+    SharedType Scope::type(const common::ID &typeId)
     {
         return m_Types.value(typeId);
     }
@@ -183,7 +183,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Scope::containsType(const EntityID &typeId) const
+    bool Scope::containsType(const common::ID &typeId) const
     {
         return m_Types.contains(typeId);
     }
@@ -202,7 +202,7 @@ namespace entity {
      * @brief Scope::removeType
      * @param typeId
      */
-    void Scope::removeType(const EntityID &typeId)
+    void Scope::removeType(const common::ID &typeId)
     {
         auto type = m_Types.value(typeId);
         if (type)
@@ -225,7 +225,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedScope Scope::getChildScope(const EntityID &typeId)
+    SharedScope Scope::getChildScope(const common::ID &typeId)
     {
         return m_Scopes.value(typeId);
     }
@@ -270,7 +270,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Scope::containsChildScope(const EntityID &typeId) const
+    bool Scope::containsChildScope(const common::ID &typeId) const
     {
         return m_Scopes.contains(typeId);
     }
@@ -288,7 +288,7 @@ namespace entity {
      * @brief Scope::removeChildScope
      * @param typeId
      */
-    void Scope::removeChildScope(const EntityID &typeId)
+    void Scope::removeChildScope(const common::ID &typeId)
     {
         m_Scopes.remove(typeId);
     }

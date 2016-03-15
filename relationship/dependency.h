@@ -34,7 +34,7 @@ namespace relationship {
     {
     public:
         Dependency();
-        Dependency(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
+        Dependency(const common::ID &tailTypeId, const common::ID &headTypeId,
                    db::Database *globalDatabase, db::Database *projectDatabase);
 
         friend bool operator ==(const Dependency &lhs, const Dependency &rhs);

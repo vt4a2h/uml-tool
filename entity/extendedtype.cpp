@@ -41,7 +41,7 @@ namespace entity {
      * @brief ExtendedType::ExtendedType
      */
     ExtendedType::ExtendedType()
-        : ExtendedType(defaultName(), EntityID::nullID())
+        : ExtendedType(defaultName(), common::ID::nullID())
     {
     }
 
@@ -50,7 +50,7 @@ namespace entity {
      * @param name
      * @param scopeId
      */
-    ExtendedType::ExtendedType(const QString &name, const EntityID &scopeId)
+    ExtendedType::ExtendedType(const QString &name, const common::ID &scopeId)
         : Type(name, scopeId)
         , m_ConstStatus(false)
         , m_UseAlias(false)
@@ -154,7 +154,7 @@ namespace entity {
      * @brief ExtendedType::addTemplateParameter
      * @param typeId
      */
-    void ExtendedType::addTemplateParameter(const EntityID &typeId)
+    void ExtendedType::addTemplateParameter(const common::ID &typeId)
     {
         m_TemplateParameters << typeId;
     }
@@ -164,7 +164,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool ExtendedType::containsTemplateParameter(const EntityID &typeId) const
+    bool ExtendedType::containsTemplateParameter(const common::ID &typeId) const
     {
         return m_TemplateParameters.contains(typeId);
     }
@@ -173,7 +173,7 @@ namespace entity {
      * @brief ExtendedType::removeTemplateParameters
      * @param typeId
      */
-    void ExtendedType::removeTemplateParameters(const EntityID &typeId)
+    void ExtendedType::removeTemplateParameters(const common::ID &typeId)
     {
         m_TemplateParameters.remove(m_TemplateParameters.indexOf(typeId));
     }
@@ -191,7 +191,7 @@ namespace entity {
      * @brief ExtendedType::typeId
      * @return
      */
-    EntityID ExtendedType::typeId() const
+    common::ID ExtendedType::typeId() const
     {
         return m_TypeId;
     }
@@ -200,7 +200,7 @@ namespace entity {
      * @brief ExtendedType::setTypeId
      * @param typeId
      */
-    void ExtendedType::setTypeId(const EntityID &typeId)
+    void ExtendedType::setTypeId(const common::ID &typeId)
     {
         m_TypeId = typeId;
     }
@@ -271,7 +271,7 @@ namespace entity {
        utility::checkAndSet(src, "Template parameters", errorList, [&src, &errorList, this](){
            if (src["Template parameters"].isArray()) {
                for (auto &&value : src["Template parameters"].toArray()) {
-                   EntityID tmp;
+                   common::ID tmp;
                    tmp.fromJson(value, errorList);
                    m_TemplateParameters << tmp;
                }

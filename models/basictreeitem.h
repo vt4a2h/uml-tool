@@ -30,7 +30,7 @@
 #include <QVariant>
 #include <QCoreApplication>
 
-#include <entity/entityid.h>
+#include <common/id.h>
 
 #include "models_types.hpp"
 

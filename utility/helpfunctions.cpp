@@ -253,9 +253,9 @@ namespace utility {
     {
         QStringList result;
         entity::SharedScope scope(db->depthScopeSearch(type->scopeId()));
-        auto id(scope ? scope->id() : entity::EntityID::globalScopeID());
+        auto id(scope ? scope->id() : common::ID::globalScopeID());
 
-        while (scope && id != entity::EntityID::globalScopeID()) {
+        while (scope && id != common::ID::globalScopeID()) {
             result << scope->name();
             id = scope->scopeId();
             scope = db->depthScopeSearch(id);

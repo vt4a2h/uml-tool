@@ -80,7 +80,7 @@ SOURCES += \
     gui/graphics/graphicsrelation.cpp \
     commands/addrelation.cpp \
     helpers/generatorid.cpp \
-    entity/entityid.cpp \
+    common/id.cpp \
     common/basicelement.cpp \
     entity/isectional.cpp
 
@@ -170,7 +170,7 @@ HEADERS += \
     commands/addrelation.h \
     gui/graphics/graphics_types.h \
     helpers/generatorid.h \
-    entity/entityid.h \
+    common/id.h \
     db/itypesearcher.h \
     entity/itypeuser.h \
     common/basicelement.h \

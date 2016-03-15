@@ -48,7 +48,7 @@ namespace entity {
         : m_LocalDatabase(std::make_shared<db::Database>())
     {
         auto scope = std::make_shared<entity::Scope>();
-        scope->setId(entity::EntityID::localTemplateScopeID());
+        scope->setId(common::ID::localTemplateScopeID());
         m_LocalDatabase->addExistsScope(scope);
     }
 
@@ -69,10 +69,10 @@ namespace entity {
      * @param typeId
      * @return
      */
-    TemplateParameter Template::getTemplateParameter(const EntityID &typeId) const
+    TemplateParameter Template::getTemplateParameter(const common::ID &typeId) const
     {
         auto it = range::find_if(m_TemplateParameters, [&typeId](auto &&p) { return p.first == typeId; });
-        return it != m_TemplateParameters.cend() ? *it : TemplateParameter(EntityID::nullID(), EntityID::nullID());
+        return it != m_TemplateParameters.cend() ? *it : TemplateParameter(common::ID::nullID(), common::ID::nullID());
     }
 
     /**
@@ -80,7 +80,7 @@ namespace entity {
      * @param typeId
      * @param defaultTypeId
      */
-    TemplateParameter Template::addTemplateParameter(const EntityID &typeId, const EntityID &defaultTypeId)
+    TemplateParameter Template::addTemplateParameter(const common::ID &typeId, const common::ID &defaultTypeId)
     {
         if (contains(typeId))
             removeParameter(typeId);
@@ -94,9 +94,9 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Template::contains(const EntityID &typeId) const
+    bool Template::contains(const common::ID &typeId) const
     {
-        return getTemplateParameter(typeId).first != EntityID::nullID();
+        return getTemplateParameter(typeId).first != common::ID::nullID();
     }
 
     /**
@@ -104,7 +104,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Template::removeParameter(const EntityID &typeId)
+    bool Template::removeParameter(const common::ID &typeId)
     {
         auto pos = m_TemplateParameters.indexOf(getTemplateParameter(typeId));
         if (pos != -1)
@@ -136,7 +136,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    SharedType Template::getLocalType(const EntityID &typeId) const
+    SharedType Template::getLocalType(const common::ID &typeId) const
     {
         return m_LocalDatabase->anyScopes() ?
                m_LocalDatabase->scopes()[0]->type(typeId) : nullptr;
@@ -147,7 +147,7 @@ namespace entity {
      * @param typeId
      * @return
      */
-    bool Template::containsLocalType(const EntityID &typeId) const
+    bool Template::containsLocalType(const common::ID &typeId) const
     {
         return m_LocalDatabase->anyScopes() ?
                     m_LocalDatabase->scopes()[0]->containsType(typeId) : false;
@@ -157,7 +157,7 @@ namespace entity {
      * @brief Template::removeLocaleType
      * @param typeId
      */
-    void Template::removeLocalType(const EntityID &typeId)
+    void Template::removeLocalType(const common::ID &typeId)
     {
         if (m_LocalDatabase->anyScopes())
             m_LocalDatabase->scopes()[0]->removeType(typeId);
@@ -184,8 +184,8 @@ namespace entity {
         QJsonArray parameters;
         QJsonObject templateParameter;
         for (auto &&value : m_TemplateParameters) {
-            templateParameter.insert("Type ID", value.first.toJson());
-            templateParameter.insert("Default type ID", value.second.toJson());
+            templateParameter.insert("Type common::ID", value.first.toJson());
+            templateParameter.insert("Default type common::ID", value.second.toJson());
             parameters.append(templateParameter);
         }
         result.insert("Template parameters", parameters);
@@ -210,11 +210,11 @@ namespace entity {
             if (src["Template parameters"].isArray()) {
                 for (auto &&value : src["Template parameters"].toArray()) {
                     obj = value.toObject();
-                    utility::checkAndSet(obj, "Type ID", errorList, [&obj, &parameter, &errorList, this](){
-                        parameter.first.fromJson(obj["Type ID"], errorList);
+                    utility::checkAndSet(obj, "Type common::ID", errorList, [&obj, &parameter, &errorList, this](){
+                        parameter.first.fromJson(obj["Type common::ID"], errorList);
                     });
-                    utility::checkAndSet(obj, "Default type ID", errorList, [&obj, &parameter, &errorList, this](){
-                        parameter.second.fromJson(obj["Default type ID"], errorList);
+                    utility::checkAndSet(obj, "Default type common::ID", errorList, [&obj, &parameter, &errorList, this](){
+                        parameter.second.fromJson(obj["Default type common::ID"], errorList);
                     });
                     m_TemplateParameters.append(parameter);
                 }

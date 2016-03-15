@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <entity/entityid.h>
+#include <common/id.h>
 
 #include "relation.h"
 
@@ -39,7 +39,7 @@ namespace relationship {
     {
     public:
         Association();
-        Association(const entity::EntityID &tailTypeId, const entity::EntityID &headTypeId,
+        Association(const common::ID &tailTypeId, const common::ID &headTypeId,
                     db::Database *globalDatabase, db::Database *projectDatabase);
 
         friend bool operator ==(const Association &lhs, const Association &rhs);
@@ -49,11 +49,11 @@ namespace relationship {
 
         bool isEqual(const Association &rhs) const;
 
-        entity::EntityID GetSetTypeId() const;
-        void setGetSetTypeId(const entity::EntityID &GetSetTypeId);
+        common::ID GetSetTypeId() const;
+        void setGetSetTypeId(const common::ID &GetSetTypeId);
 
-        entity::EntityID FieldTypeId() const;
-        void setFieldTypeId(const entity::EntityID &FieldTypeId);
+        common::ID FieldTypeId() const;
+        void setFieldTypeId(const common::ID &FieldTypeId);
 
         add_meta(Association)
 
@@ -68,8 +68,8 @@ namespace relationship {
         virtual void removeGetter();
         virtual void removeSetter();
 
-        entity::EntityID m_GetSetTypeId;
-        entity::EntityID m_FieldTypeId;
+        common::ID m_GetSetTypeId;
+        common::ID m_FieldTypeId;
     };
 
 } // namespace relationship

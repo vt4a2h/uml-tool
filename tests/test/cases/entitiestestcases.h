@@ -51,11 +51,11 @@
 TEST_F(Enteties, SimpleType)
 {
     ASSERT_STREQ(_type->name().toStdString().c_str(), BASE_TYPE_NAME);
-    ASSERT_EQ(_type->scopeId(), entity::EntityID::globalScopeID());
+    ASSERT_EQ(_type->scopeId(), common::ID::globalScopeID());
 
     _type->setName("some name");
-    _type->setId(entity::EntityID::firstFreeID().value() + 1);
-    _type->setScopeId(entity::EntityID::globalScopeID());
+    _type->setId(common::ID::firstFreeID().value() + 1);
+    _type->setScopeId(common::ID::globalScopeID());
 
     test_copy_move(Type, _type)
 }
@@ -63,7 +63,7 @@ TEST_F(Enteties, SimpleType)
 TEST_F(Enteties, ExtendedType)
 {
     ASSERT_STREQ(_extendedType->name().toStdString().c_str(), "Alias");
-    ASSERT_EQ(_extendedType->typeId(), entity::EntityID::nullID());
+    ASSERT_EQ(_extendedType->typeId(), common::ID::nullID());
     ASSERT_FALSE(_extendedType->isConst());
 
     ASSERT_FALSE(_extendedType->isLink());
@@ -88,8 +88,8 @@ TEST_F(Enteties, ExtendedType)
     _extendedType->setConstStatus(false);
     ASSERT_FALSE(_extendedType->isConst());
 
-    const entity::EntityID par1 = entity::EntityID::firstFreeID().value() + 1;
-    const entity::EntityID par2 = par1.value() + 1;
+    const common::ID par1 = common::ID::firstFreeID().value() + 1;
+    const common::ID par2 = par1.value() + 1;
 
     _extendedType->addTemplateParameter(par1);
     ASSERT_TRUE(_extendedType->containsTemplateParameter(par1));
@@ -113,7 +113,7 @@ TEST_F(Enteties, Class)
     ASSERT_EQ(_class->kind(), entity::ClassType);
 
     // Parents test
-    const entity::EntityID parentID = entity::EntityID::firstFreeID().value() + 1;
+    const common::ID parentID = common::ID::firstFreeID().value() + 1;
     auto parent = _class->addParent(parentID, entity::Private);
     auto parents = _class->parents();
 
@@ -162,7 +162,7 @@ TEST_F(Enteties, Class)
 
     // Fields
     ASSERT_FALSE(_class->anyFields());
-    auto field = _class->addField("Some field", entity::EntityID::nullID());
+    auto field = _class->addField("Some field", common::ID::nullID());
     ASSERT_TRUE(_class->anyFields());
     ASSERT_TRUE(_class->containsField(field->name()));
     ASSERT_EQ(_class->getField(field->name()), field);
@@ -181,7 +181,7 @@ TEST_F(Enteties, Class)
 
     // Properties
     ASSERT_FALSE(_class->anyProperties());
-    auto property = _class->addProperty("some name", entity::EntityID::nullID());
+    auto property = _class->addProperty("some name", common::ID::nullID());
     ASSERT_TRUE(_class->anyProperties());
     ASSERT_EQ(property, _class->property(property->name()));
     ASSERT_TRUE(_class->containsProperty(property->name()));
@@ -258,7 +258,7 @@ TEST_F(Enteties, OptionaClassFields)
 
 TEST_F(Enteties, Union)
 {
-    auto field = _union->addField("some field", entity::EntityID::nullID());
+    auto field = _union->addField("some field", common::ID::nullID());
     ASSERT_EQ(field, _union->getField(field->name()));
     ASSERT_TRUE(_union->containsField(field->name()));
     _union->removeField(field->name());
@@ -271,8 +271,8 @@ TEST_F(Enteties, Union)
 
 TEST_F(Enteties, Enum)
 {
-    ASSERT_EQ(entity::EntityID::nullID(), _enum->enumTypeId());
-    const entity::EntityID newId(entity::EntityID::firstFreeID().value() + 1);
+    ASSERT_EQ(common::ID::nullID(), _enum->enumTypeId());
+    const common::ID newId(common::ID::firstFreeID().value() + 1);
     _enum->setEnumTypeId(newId);
     ASSERT_EQ(newId, _enum->enumTypeId());
 
@@ -290,8 +290,8 @@ TEST_F(Enteties, Enum)
 TEST_F(Enteties, TemplateClass)
 {
     ASSERT_TRUE(_templateClass->templateParameters().empty());
-    auto p = _templateClass->addTemplateParameter(entity::EntityID::firstFreeID().value() + 1);
-    auto p1 = _templateClass->addTemplateParameter(entity::EntityID::firstFreeID().value() + 2);
+    auto p = _templateClass->addTemplateParameter(common::ID::firstFreeID().value() + 1);
+    auto p1 = _templateClass->addTemplateParameter(common::ID::firstFreeID().value() + 2);
     ASSERT_EQ(_templateClass->getTemplateParameter(p.first), p);
     ASSERT_FALSE(_templateClass->templateParameters().empty());
     ASSERT_TRUE(_templateClass->contains(p.first));

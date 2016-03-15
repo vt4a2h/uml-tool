@@ -43,18 +43,18 @@ namespace entity {
 
         friend bool operator ==(const Template &lhs, const Template &rhs);
 
-        TemplateParameter getTemplateParameter(const EntityID &typeId) const;
-        TemplateParameter addTemplateParameter(const EntityID &typeId,
-                                               const EntityID &defaultTypeId= EntityID::nullID());
-        bool contains(const EntityID &typeId) const;
-        bool removeParameter(const EntityID &typeId);
+        TemplateParameter getTemplateParameter(const common::ID &typeId) const;
+        TemplateParameter addTemplateParameter(const common::ID &typeId,
+                                               const common::ID &defaultTypeId= common::ID::nullID());
+        bool contains(const common::ID &typeId) const;
+        bool removeParameter(const common::ID &typeId);
         TemplateParametersList templateParameters() const;
 
         const db::SharedDatabase database() const;
-        SharedType getLocalType(const EntityID &typeId) const;
+        SharedType getLocalType(const common::ID &typeId) const;
         template <class T = Type> std::shared_ptr<T> addLocalType(const QString &name = "");
-        bool containsLocalType(const EntityID &typeId) const;
-        void removeLocalType(const EntityID &typeId);
+        bool containsLocalType(const common::ID &typeId) const;
+        void removeLocalType(const common::ID &typeId);
         TypesList localTypes() const;
 
         QJsonObject templateToJson() const;

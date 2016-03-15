@@ -49,7 +49,7 @@ namespace project {
         entity::SharedScope makeProjectScope()
         {
             auto scope(std::make_shared<entity::Scope>());
-            scope->setId(entity::EntityID::projectScopeID());
+            scope->setId(common::ID::projectScopeID());
             return scope;
         }
 
@@ -70,7 +70,7 @@ namespace project {
     Project::Project(const QString &name, const QString &path)
         : m_Name(name)
         , m_Path(path)
-        , m_nextUniqueID(entity::EntityID::firstFreeID().value())
+        , m_nextUniqueID(common::ID::firstFreeID().value())
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
         , m_CommandsStack(std::make_unique<QUndoStack>())
@@ -160,7 +160,7 @@ namespace project {
                 connect(entity.get(), &common::BasicElement::nameChanged, this, &Project::touch);
 
         // Fixup if needed
-        if (!m_Database->getScope(entity::EntityID::projectScopeID()))
+        if (!m_Database->getScope(common::ID::projectScopeID()))
             m_Database->addExistsScope(makeProjectScope());
 
         if (!m_Errors.isEmpty())
@@ -322,7 +322,7 @@ namespace project {
      * @brief Project::genID
      * @return
      */
-    entity::EntityID Project::genID()
+    common::ID Project::genID()
     {
         return m_nextUniqueID++;
     }
