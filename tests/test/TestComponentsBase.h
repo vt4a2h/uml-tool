@@ -54,7 +54,7 @@ protected:
         Q_ASSERT(errors.isEmpty());
 
         m_Project = std::make_shared<project::Project>("Foo Project", "fake path");
-        const_cast<entity::GeneratorID&>(entity::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
+        const_cast<helpers::GeneratorID&>(helpers::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
         m_Project->setGlobalDatabase(m_GlobalDatabase);
 
         m_ApplicationModel->addProject(m_Project);

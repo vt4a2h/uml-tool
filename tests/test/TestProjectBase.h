@@ -41,7 +41,7 @@ protected:
     {
         m_Project = std::make_shared<project::Project>();
         // Usually special slot is used for that
-        const_cast<entity::GeneratorID&>(entity::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
+        const_cast<helpers::GeneratorID&>(helpers::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
         m_ProjectDb = m_Project->database();
         m_ProjectScope = m_ProjectDb->getScope(common::ID::projectScopeID());
         ASSERT_TRUE(!!m_ProjectScope);

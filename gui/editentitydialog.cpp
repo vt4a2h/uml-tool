@@ -258,26 +258,6 @@ namespace gui {
         maker.setScope(m_Scope);
         maker.setEntity(m_Type);
 
-        // Temporary {
-        if (m_Type->hashType() == entity::Class::staticHashType()) {
-            auto cl = std::static_pointer_cast<entity::Class>(m_Type);
-
-            if (cl->methods().isEmpty()) {
-                auto intType = m_Scope->addType("int");
-                auto doubleType = m_Scope->addType("double");
-
-                cl->makeMethod("foo")->setReturnTypeId(intType->id());
-                cl->makeMethod("bar")->setReturnTypeId(doubleType->id());
-                cl->makeMethod("baz");
-            }
-
-            if (cl->fields().isEmpty()) {
-                cl->addField("f1", entity::GeneratorID::instance().genID());
-                cl->addField("f2", entity::GeneratorID::instance().genID());
-            }
-        }
-        // }
-
         auto signatureMaker = std::make_unique<translation::SignatureMaker>(
                                   m_ApplicationModel->globalDatabase(), m_Project->database(),
                                   m_Scope, m_Type

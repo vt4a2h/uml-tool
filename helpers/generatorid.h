@@ -28,9 +28,7 @@
 
 #include <common/id.h>
 
-namespace entity {
-
-    //TODO: move to common
+namespace helpers {
 
     /// Generator ID for current project items (entities, relations, bases etc.)
     class GeneratorID : public QObject
@@ -57,4 +55,4 @@ namespace entity {
         project::WeakProject m_CurrentProject;
     };
 
-} // entity
+} // helpers

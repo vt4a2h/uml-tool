@@ -73,7 +73,7 @@ namespace entity {
     Scope::Scope(const QString &scopeName, const common::ID &parentScopeID)
         : BasicElement(!scopeName.isEmpty() ? scopeName : DEFAULT_NAME,
                        parentScopeID.isValid() ? parentScopeID : common::ID::globalScopeID(),
-                       GeneratorID::instance().genID())
+                       helpers::GeneratorID::instance().genID())
     {
     }
 

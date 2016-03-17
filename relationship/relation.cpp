@@ -63,7 +63,7 @@ namespace relationship {
      */
     Relation::Relation(const common::ID &tailTypeId, const common::ID &headTypeId,
                        db::Database *globalDatabase, db::Database *projectDatabase)
-        : common::BasicElement("" /*name*/, entity::GeneratorID::instance().genID())
+        : common::BasicElement("" /*name*/, helpers::GeneratorID::instance().genID())
         , m_TailNode(std::make_shared<Node>(tailTypeId))
         , m_HeadNode(std::make_shared<Node>(headTypeId))
         , m_RelationType(SimpleRelation)
@@ -197,7 +197,7 @@ namespace relationship {
     {
         QJsonObject result = common::BasicElement::toJson();
 
-        result.insert("Description", m_Name);
+        result.insert("RelType", static_cast<int>(m_RelationType));
         result.insert("Head node", m_HeadNode->toJson());
         result.insert("Tail node", m_TailNode->toJson());
 
@@ -212,8 +212,8 @@ namespace relationship {
     void Relation::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         common::BasicElement::fromJson(src, errorList);
-        utility::checkAndSet(src, "Type", errorList, [&src, this](){
-            m_RelationType = static_cast<RelationType>(src["Type"].toInt());
+        utility::checkAndSet(src, "RelType", errorList, [&src, this](){
+            m_RelationType = static_cast<RelationType>(src["RelType"].toInt());
         });
         utility::checkAndSet(src, "Head node", errorList, [&src, &errorList, this](){
             m_HeadNode->fromJson(src["Head node"].toObject(), errorList);

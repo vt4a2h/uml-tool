@@ -34,7 +34,7 @@ namespace common
 {
 
     // TODO: add tests
-    /// ID for all entities
+    /// ID for all objects
     class ID : public boost::equality_comparable<ID>
              , public boost::less_than_comparable<ID>
     {

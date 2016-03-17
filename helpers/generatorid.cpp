@@ -24,7 +24,7 @@
 
 #include <project/project.h>
 
-namespace entity {
+namespace helpers {
 
     /**
      * @brief GeneratorID::instance
@@ -73,4 +73,4 @@ namespace entity {
         return m_CurrentProject.lock();
     }
 
-} // entity
+} // helpers

@@ -106,7 +106,7 @@ namespace application {
         , m_MainWindow(std::make_unique<gui::MainWindow>(m_ApplicationModel))
     {
         G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
-                  &entity::GeneratorID::instance(), &entity::GeneratorID::onCurrentProjectChanged);
+                  &helpers::GeneratorID::instance(), &helpers::GeneratorID::onCurrentProjectChanged);
         qRegisterMetaTypeStreamOperators<application::settings::TstType>("application::settings::TstType");
     }
 
