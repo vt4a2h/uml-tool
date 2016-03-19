@@ -108,7 +108,7 @@ namespace relationship {
      */
     void MultiplyAssociation::setContainerTypeId(const common::ID &containerTypeId)
     {
-        m_ContainerClass = tryToFindType(containerTypeId);
+        m_ContainerClass = findType(containerTypeId);
         Q_ASSERT_X(m_ContainerClass,
                    "MultiplyAssociation::setContainerTypeId",
                    "container class not found");
@@ -262,7 +262,7 @@ namespace relationship {
     {
         utility::checkAndSet(src, "Conatiner ID", errorList, [&src, &errorList, this](){
             m_ContainerTypeId.fromJson(src["Conatiner ID"], errorList);
-            m_ContainerClass = tryToFindType(m_ContainerTypeId);
+            m_ContainerClass = findType(m_ContainerTypeId);
             Q_ASSERT_X(m_ContainerClass,
                        "MultiplyAssociation::fromJson",
                        "container class is not found");

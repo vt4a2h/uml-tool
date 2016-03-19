@@ -26,6 +26,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QUndoStack>
+#include <QAction>
 #include <QDebug>
 
 #include <commands/addrelation.h>
@@ -85,6 +86,7 @@ namespace graphics {
         , m_TrackRelationIsActive(false)
         , m_TrackFrom(nullptr)
         , m_TrackTo(nullptr)
+        , m_activeRelationType(relationship::SimpleRelation)
     {
         initTrackLine();
     }
@@ -194,9 +196,12 @@ namespace graphics {
 
             // Add relation (do it via command, now just for test)
             if (!m_TrackFrom.isNull() && !m_TrackTo.isNull()) {
+                Q_ASSERT(m_activeRelationType != relationship::SimpleRelation);
+
                 auto currentProject = G_ASSERT(pr());
-                auto cmd = std::make_unique<commands::AddRelation>(currentProject->database(),
-                                                                   m_TrackFrom, m_TrackTo);
+                auto cmd = std::make_unique<commands::AddRelation>(m_activeRelationType,
+                                                                   m_TrackFrom, m_TrackTo,
+                                                                   currentProject->database());
                 currentProject->commandsStack()->push(cmd.release());
                 // TODO: handle situation when user moved item and then clicked undo
                 // relation is not updated in this case
@@ -207,6 +212,7 @@ namespace graphics {
             m_TrackFrom.clear();
             setTrackedItemStatus(m_TrackTo, false);
             m_TrackTo.clear();
+            m_activeRelationType = relationship::SimpleRelation;
 
             emit relationCompleted();
 
@@ -225,6 +231,9 @@ namespace graphics {
     {
         if (m_ShowRelationTrack == showRelationTrack)
             return;
+
+        auto action = G_ASSERT(qobject_cast<QAction*>(QObject::sender()));
+        m_activeRelationType = relationship::RelationType(action->data().value<int>());
 
         m_ShowRelationTrack = showRelationTrack;
         if (!m_ShowRelationTrack && m_RelationTrackLine->isVisible())

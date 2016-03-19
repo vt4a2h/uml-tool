@@ -27,6 +27,8 @@
 
 #include <project/project_types.hpp>
 
+#include "enums.h"
+
 namespace graphics {
 
     class Entity;
@@ -67,6 +69,8 @@ namespace graphics {
         bool m_TrackRelationIsActive;
         QPointer<Entity> m_TrackFrom;
         QPointer<Entity> m_TrackTo;
+
+        relationship::RelationType m_activeRelationType;
 
         QGraphicsLineItem * m_RelationTrackLine;
 

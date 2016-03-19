@@ -350,6 +350,12 @@ namespace gui {
     void MainWindow::configure()
     {
         // Add relation actions
+        ui->actionAddAssociation->setData(int(relationship::AssociationRelation));
+        ui->actionAddDependency->setData(int(relationship::DependencyRelation));
+        ui->actionAddGeneralization->setData(int(relationship::GeneralizationRelation));
+        ui->actionAddAggregation->setData(int(relationship::AggregationRelation));
+        ui->actionAddComposition->setData(int(relationship::CompositionRelation));
+
         m_RelationActions << ui->actionAddAssociation << ui->actionAddDependency
                           << ui->actionAddGeneralization << ui->actionAddAggregation
                           << ui->actionAddComposition;

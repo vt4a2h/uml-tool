@@ -30,11 +30,39 @@
 #include <QDebug>
 
 #include <db/database.h>
+
 #include <entity/class.h>
+
 #include <utility/helpfunctions.h>
+
 #include <helpers/generatorid.h>
 
+#include "qthelpers.h"
+
 namespace relationship {
+
+    namespace {
+
+        const QString relMark = "RelType";
+        const QString headMark = "Head node";
+        const QString tailMark = "Tail node";
+
+        void readNode(const SharedNode &node, const QString& mark, const QJsonObject &src,
+                      QStringList &errorList, Relation &r)
+        {
+            utility::checkAndSet(src, mark, errorList, [&](){
+                // Read node itself
+                auto jsonObject = src[mark].toObject();
+                node->fromJson(jsonObject, errorList);
+
+                // Set type for node
+                common::ID id;
+                id.fromJson(jsonObject[Node::typeIDMark()], errorList);
+                r.setType(node, id);
+            });
+        }
+
+    }
 
     /**
      * @brief Relation::Relation
@@ -64,15 +92,15 @@ namespace relationship {
     Relation::Relation(const common::ID &tailTypeId, const common::ID &headTypeId,
                        const db::WeakTypeSearchers &typeSearchers)
         : common::BasicElement("" /*name*/, helpers::GeneratorID::instance().genID())
-        , m_TailNode(std::make_shared<Node>(tailTypeId))
-        , m_HeadNode(std::make_shared<Node>(headTypeId))
+        , m_TailNode(std::make_shared<Node>())
+        , m_HeadNode(std::make_shared<Node>())
         , m_RelationType(SimpleRelation)
         , m_TypeSearchers(typeSearchers)
     {
         if (headTypeId != common::ID::nullID())
-            addHeadClass(headTypeId);
+            setType(m_HeadNode, headTypeId);
         if (tailTypeId != common::ID::nullID())
-            addTailClass(tailTypeId);
+            setType(m_TailNode, tailTypeId);
     }
 
     /**
@@ -101,9 +129,7 @@ namespace relationship {
         return static_cast<const common::BasicElement&>(lhs)  ==
                static_cast<const common::BasicElement&>(rhs)  &&
                lhs.m_TypeSearchers == rhs.m_TypeSearchers     &&
-               (lhs.m_HeadClass == rhs.m_HeadClass || *lhs.m_HeadClass == *rhs.m_HeadClass) &&
                (lhs.m_HeadNode  == rhs.m_HeadNode  || *lhs.m_HeadNode  == *rhs.m_HeadNode ) &&
-               (lhs.m_TailClass == rhs.m_TailClass || *lhs.m_TailClass == *rhs.m_TailClass) &&
                (lhs.m_TailNode  == rhs.m_TailNode  || *lhs.m_TailNode  == *rhs.m_TailNode );
     }
 
@@ -148,10 +174,6 @@ namespace relationship {
         m_TailNode = std::make_shared<Node>(*src.m_TailNode);
         m_HeadNode = std::make_shared<Node>(*src.m_HeadNode);
 
-        // shallow copy
-        m_HeadClass = src.m_HeadClass;
-        m_TailClass = src.m_TailClass;
-
         m_RelationType = src.m_RelationType;
 
         m_TypeSearchers = src.m_TypeSearchers;
@@ -162,13 +184,23 @@ namespace relationship {
      */
     void Relation::check()
     {
-        Q_ASSERT_X(m_HeadClass, Q_FUNC_INFO, "head class not found");
-        Q_ASSERT_X(m_TailClass, Q_FUNC_INFO, "tail class not found");
+        Q_ASSERT_X(m_HeadNode->type(), Q_FUNC_INFO, "head class not found");
+        Q_ASSERT_X(m_TailNode->type(), Q_FUNC_INFO, "tail class not found");
 
 #ifdef QT_DEBUG
         for (auto &&ts : m_TypeSearchers)
             Q_ASSERT_X(!!ts.lock(), Q_FUNC_INFO, "type searcher is not valid");
 #endif
+    }
+
+    /**
+     * @brief Relation::addType
+     * @param node
+     * @param typeId
+     */
+    void Relation::setType(const SharedNode &node, const common::ID &typeId)
+    {
+        node->setType(G_ASSERT(findType(typeId)));
     }
 
     /**
@@ -190,39 +222,39 @@ namespace relationship {
     }
 
     /**
-     * @brief Relation::headNode
+     * @brief Relation::headClass
      * @return
      */
-    SharedNode &Relation::headNode()
+    entity::SharedType Relation::headType() const
     {
-        return m_HeadNode;
+        return m_HeadNode->type();
     }
 
     /**
-     * @brief Relation::headNode
-     * @return
+     * @brief Relation::setHeadType
+     * @param c
      */
-    const SharedNode &Relation::headNode() const
+    void Relation::setHeadType(const entity::SharedType &type)
     {
-        return m_HeadNode;
+        m_HeadNode->setType(type);
     }
 
     /**
-     * @brief Relation::tailNode
+     * @brief Relation::tailType
      * @return
      */
-    SharedNode &Relation::tailNode()
+    entity::SharedType Relation::tailType() const
     {
-        return m_TailNode;
+        return m_TailNode->type();
     }
 
     /**
-     * @brief Relation::tailNode
-     * @return
+     * @brief Relation::setTailType
+     * @param c
      */
-    const SharedNode &Relation::tailNode() const
+    void Relation::setTailType(const entity::SharedType &type)
     {
-        return m_TailNode;
+        m_TailNode->setType(type);
     }
 
     /**
@@ -233,9 +265,9 @@ namespace relationship {
     {
         QJsonObject result = common::BasicElement::toJson();
 
-        result.insert("RelType", static_cast<int>(m_RelationType));
-        result.insert("Head node", m_HeadNode->toJson());
-        result.insert("Tail node", m_TailNode->toJson());
+        result.insert(relMark, static_cast<int>(m_RelationType));
+        result.insert(headMark, m_HeadNode->toJson());
+        result.insert(tailMark, m_TailNode->toJson());
 
         return result;
     }
@@ -248,17 +280,11 @@ namespace relationship {
     void Relation::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         common::BasicElement::fromJson(src, errorList);
-        utility::checkAndSet(src, "RelType", errorList, [&src, this](){
-            m_RelationType = static_cast<RelationType>(src["RelType"].toInt());
+        utility::checkAndSet(src, relMark, errorList, [&src, this](){
+            m_RelationType = static_cast<RelationType>(src[relMark].toInt());
         });
-        utility::checkAndSet(src, "Head node", errorList, [&src, &errorList, this](){
-            m_HeadNode->fromJson(src["Head node"].toObject(), errorList);
-            addHeadClass(m_HeadNode->typeId());
-        });
-        utility::checkAndSet(src, "Tail node", errorList, [&src, &errorList, this](){
-            m_TailNode->fromJson(src["Tail node"].toObject(), errorList);
-            addTailClass(m_TailNode->typeId());
-        });
+        readNode(m_HeadNode, headMark, src, errorList, *this);
+        readNode(m_TailNode, tailMark, src, errorList, *this);
     }
 
     /**
@@ -272,42 +298,11 @@ namespace relationship {
     }
 
     /**
-     * @brief Relation::addHeadClass
-     * @param id
-     */
-    void Relation::addHeadClass(const common::ID &id)
-    {
-        auto tmpHead = tryToFindType(id);
-
-        Q_ASSERT_X(tmpHead,
-                   "Relation::addHeadClass",
-                   "head class not found");
-
-        m_HeadClass = tmpHead;
-    }
-
-    /**
-     * @brief Relation::addTailClass
-     * @param id
-     */
-    void Relation::addTailClass(const common::ID &id)
-    {
-        // TODO: investigate and fix
-        auto tmpTailClass = std::dynamic_pointer_cast<entity::Class>(tryToFindType(id));
-
-        Q_ASSERT_X(tmpTailClass,
-                   "Relation::addTailClass",
-                   "tail class not found or not Class");
-
-        m_TailClass = tmpTailClass ;
-    }
-
-    /**
      * @brief Relation::tryToFindType
      * @param typeId
      * @return
      */
-    entity::SharedType Relation::tryToFindType(const common::ID &typeId) const
+    entity::SharedType Relation::findType(const common::ID &typeId) const
     {
         for (auto &&weakTypeSearcher : m_TypeSearchers)
             if (auto ts = weakTypeSearcher.lock())

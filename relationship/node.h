@@ -27,6 +27,8 @@
 
 #include <common/id.h>
 
+#include <entity/entity_types.hpp>
+
 class QJsonObject;
 
 namespace relationship {
@@ -40,7 +42,8 @@ namespace relationship {
     {
     public:
         Node();
-        Node(const common::ID &typeId, Multiplicity multiplicity = static_cast<Multiplicity>(0));
+        Node(const entity::SharedType &type,
+             Multiplicity multiplicity = static_cast<Multiplicity>(0));
 
         friend bool operator ==(const Node &lhs, const Node &rhs);
 
@@ -50,17 +53,19 @@ namespace relationship {
         QString description() const;
         void setDescription(const QString &description);
 
-        common::ID typeId() const;
-        void setTypeId(const common::ID &typeId);
-
         QJsonObject toJson() const;
         void fromJson(const QJsonObject &src, QStringList &errorList);
 
         void writeToFile(const QString &fileName) const;
         bool readFromFile(const QString &fileName);
 
+        entity::SharedType type() const;
+        void setType(const entity::SharedType &type);
+
+        static QString typeIDMark();
+
     private:
-        common::ID m_TypeId;
+        entity::SharedType m_Type;
         QString m_Description;
         Multiplicity m_Multiplicity;
     };

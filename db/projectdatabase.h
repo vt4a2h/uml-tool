@@ -67,6 +67,10 @@ namespace db {
         void setItemsPos(const ItemsPos &positions);
         ItemsPos itemsPos() const;
 
+    signals:
+        void relationAdded();
+        void relationRemoved();
+
     public slots:
         void onTypeUserAdded(const entity::SharedTypeUser &tu);
         // TODO: add signals to detect adding/ removing relation in order to touch project

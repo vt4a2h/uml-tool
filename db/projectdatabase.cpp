@@ -123,6 +123,7 @@ namespace db {
     {
         relation->setTypeSearchers({m_GlobalDatabase, safeShared()});
         m_Relations[relation->id()] = relation;
+        emit relationAdded();
     }
 
     /**
@@ -141,7 +142,8 @@ namespace db {
      */
     void ProjectDatabase::removeRelation(const common::ID &id)
     {
-        m_Relations.remove(id);
+        if (m_Relations.remove(id) != 0)
+            emit relationRemoved();
     }
 
     /**

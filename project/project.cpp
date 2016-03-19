@@ -76,6 +76,9 @@ namespace project {
         , m_CommandsStack(std::make_unique<QUndoStack>())
     {
         m_Database->addExistsScope(makeProjectScope());
+
+        G_CONNECT(m_Database.get(), &db::ProjectDatabase::relationAdded, this, &Project::touch);
+        G_CONNECT(m_Database.get(), &db::ProjectDatabase::relationRemoved, this, &Project::touch);
     }
 
     /**

@@ -213,7 +213,7 @@ namespace utility {
     }
 
     template<class T>
-    bool sharedPtrEq(const std::shared_ptr<T> &lhs, const std::shared_ptr<T> &rhs)
+    inline bool sharedPtrEq(const std::shared_ptr<T> &lhs, const std::shared_ptr<T> &rhs)
     {
         // The same pointers
         if (lhs == rhs || (!lhs && !rhs))

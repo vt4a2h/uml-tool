@@ -31,6 +31,8 @@
 
 #include <relationship/relation.h>
 
+#include <utility/helpfunctions.h>
+
 #include "qthelpers.h"
 
 namespace commands {
@@ -40,9 +42,11 @@ namespace commands {
      * @param from
      * @param to
      */
-    AddRelation::AddRelation(const db::SharedProjectDatabase &database, const graphics::EntityPtr &from,
-                             const graphics::EntityPtr &to)
-        : m_From(from)
+    AddRelation::AddRelation(relationship::RelationType relType, const graphics::EntityPtr &from,
+                             const graphics::EntityPtr &to, const db::SharedProjectDatabase &database)
+        : BaseCommand(tr("Add relation"))
+        , m_Type(relType)
+        , m_From(from)
         , m_To(to)
         , m_Db(database)
     {
@@ -79,8 +83,9 @@ namespace commands {
         } else {
             if (auto d = G_ASSERT(database())) {
 
-                // TODO: specify relation type
-                m_Relation = std::make_shared<relationship::Relation>();
+                m_Relation = G_ASSERT(utility::makeRelation(m_Type));
+                m_Relation->setHeadType(m_To->typeObject());
+                m_Relation->setTailType(m_From->typeObject());
                 d->addRelation(m_Relation);
 
                 m_GraphicRelation = new graphics::Relation(m_Relation, m_From, m_To);

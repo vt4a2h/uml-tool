@@ -29,6 +29,7 @@
 #include <relationship/relationship_types.hpp>
 
 #include "basecommand.h"
+#include "enums.h"
 
 namespace graphics {
     class Entity;
@@ -41,8 +42,8 @@ namespace commands {
     class AddRelation : public BaseCommand
     {
     public:
-        AddRelation(const db::SharedProjectDatabase &database, const graphics::EntityPtr &from,
-                    const graphics::EntityPtr &to);
+        AddRelation(relationship::RelationType relType, const graphics::EntityPtr &from,
+                    const graphics::EntityPtr &to, const db::SharedProjectDatabase &database);
 
         ~AddRelation();
 
@@ -53,6 +54,8 @@ namespace commands {
     private:
         db::SharedProjectDatabase database() const;
         void removeRelationFromScene();
+
+        relationship::RelationType m_Type;
 
         graphics::EntityPtr m_From;
         graphics::EntityPtr m_To;

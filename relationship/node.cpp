@@ -27,15 +27,22 @@
 
 #include <QJsonObject>
 
+#include <entity/type.h>
+
 #include <utility/helpfunctions.h>
 
 namespace relationship {
+
+    namespace {
+        const QString multMark  = "Multiplicity";
+        const QString descrMark = "Description";
+    }
 
     /**
      * @brief Node::Node
      */
     Node::Node()
-        :Node(common::ID::nullID())
+        :Node(nullptr)
     {
     }
 
@@ -44,8 +51,8 @@ namespace relationship {
      * @param typeId
      * @param multiplicity
      */
-    Node::Node(const common::ID &typeId, Multiplicity multiplicity)
-        : m_TypeId(typeId)
+    Node::Node(const entity::SharedType &type, Multiplicity multiplicity)
+        : m_Type(type)
         , m_Description(DEFAULT_DESCRIPTION)
         , m_Multiplicity(multiplicity)
     {
@@ -59,27 +66,9 @@ namespace relationship {
      */
     bool operator ==(const Node &lhs, const Node &rhs)
     {
-        return lhs.m_TypeId       == rhs.m_TypeId      &&
+        return utility::sharedPtrEq(lhs.m_Type, rhs.m_Type) &&
                lhs.m_Description  == rhs.m_Description &&
                lhs.m_Multiplicity == rhs.m_Multiplicity;
-    }
-
-    /**
-     * @brief Node::typeId
-     * @return
-     */
-    common::ID Node::typeId() const
-    {
-        return m_TypeId;
-    }
-
-    /**
-     * @brief Node::setTypeId
-     * @param typeId
-     */
-    void Node::setTypeId(const common::ID &typeId)
-    {
-        m_TypeId = typeId;
     }
 
     /**
@@ -90,9 +79,9 @@ namespace relationship {
     {
         QJsonObject result;
 
-        result.insert("Type ID", m_TypeId.toJson());
-        result.insert("Description", m_Description);
-        result.insert("Multiplicity", m_Multiplicity);
+        result.insert(typeIDMark(), m_Type->id().toJson());
+        result.insert(descrMark, m_Description);
+        result.insert(multMark, m_Multiplicity);
 
         return result;
     }
@@ -104,14 +93,11 @@ namespace relationship {
      */
     void Node::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Type ID", errorList, [&src, &errorList, this](){
-            m_TypeId.fromJson(src["Type ID"], errorList);
+        utility::checkAndSet(src, descrMark, errorList, [&src, this](){
+            m_Description = src[descrMark].toString();
         });
-        utility::checkAndSet(src, "Description", errorList, [&src, this](){
-            m_Description = src["Description"].toString();
-        });
-        utility::checkAndSet(src, "Multiplicity", errorList, [&src, this](){
-            m_Multiplicity = static_cast<Multiplicity>(src["Multiplicity"].toInt());
+        utility::checkAndSet(src, multMark, errorList, [&src, this](){
+            m_Multiplicity = static_cast<Multiplicity>(src[multMark].toInt());
         });
     }
 
@@ -132,6 +118,33 @@ namespace relationship {
     bool Node::readFromFile(const QString &fileName)
     {
        return utility::readFromFile(*this, fileName);
+    }
+
+    /**
+     * @brief Node::type
+     * @return
+     */
+    entity::SharedType Node::type() const
+    {
+        return m_Type;
+    }
+
+    /**
+     * @brief Node::setType
+     * @param type
+     */
+    void Node::setType(const entity::SharedType &type)
+    {
+        m_Type = type;
+    }
+
+    /**
+     * @brief Node::typeIDMark
+     * @return
+     */
+    QString Node::typeIDMark()
+    {
+        return "Type ID";
     }
 
     /**

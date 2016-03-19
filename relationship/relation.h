@@ -69,11 +69,13 @@ namespace relationship {
         RelationType relationType() const;
         void setRelationType(const RelationType &relationType);
 
-        SharedNode &headNode();
-        const SharedNode &headNode() const;
+        entity::SharedType headType() const;
+        void setHeadType(const entity::SharedType &type);
 
-        SharedNode &tailNode();
-        const SharedNode &tailNode() const;
+        entity::SharedType tailType() const;
+        void setTailType(const entity::SharedType &type);
+
+        void setType(const SharedNode &node, const common::ID &typeId);
 
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
@@ -92,16 +94,10 @@ namespace relationship {
         virtual void copyFrom(const Relation &src);
 
         void check();
-        void addHeadClass(const common::ID &id);
-        void addTailClass(const common::ID &id);
-        entity::SharedType tryToFindType(const common::ID &typeId) const;
+        entity::SharedType findType(const common::ID &typeId) const;
 
         SharedNode m_TailNode;
         SharedNode m_HeadNode;
-
-        // TODO: move to node
-        entity::SharedType m_HeadClass;
-        entity::SharedClass m_TailClass;
 
         RelationType m_RelationType;
 
