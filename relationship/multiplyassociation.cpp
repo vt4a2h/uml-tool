@@ -39,7 +39,7 @@ namespace relationship {
      * @brief MultiplyAssociation::MultiplyAssociation
      */
     MultiplyAssociation::MultiplyAssociation()
-        : MultiplyAssociation(common::ID::nullID(), common::ID::nullID(), nullptr, nullptr)
+        : MultiplyAssociation(common::ID::nullID(), common::ID::nullID(), db::WeakTypeSearchers())
     {
     }
 
@@ -52,9 +52,8 @@ namespace relationship {
      */
     MultiplyAssociation::MultiplyAssociation(const common::ID &tailTypeId,
                                              const common::ID &headTypeId,
-                                             db::Database *globalDatabase,
-                                             db::Database *projectDatabase)
-        : Association(tailTypeId, headTypeId, globalDatabase, projectDatabase)
+                                             const db::WeakTypeSearchers &typeSearchers)
+        : Association(tailTypeId, headTypeId, typeSearchers)
         , m_ContainerClass(nullptr)
     {
         m_RelationType = MultiRelation;

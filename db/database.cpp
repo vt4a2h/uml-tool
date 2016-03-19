@@ -29,6 +29,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QTextStream>
+#include <QDebug>
 
 #include <utility/helpfunctions.h>
 #include <helpers/entityhelpres.h>
@@ -54,6 +55,7 @@ namespace db {
      * @param src
      */
     Database::Database(const Database &src)
+        : enable_shared_from_this<Database>(src)
     {
         copyFrom(src);
     }
@@ -509,6 +511,20 @@ namespace db {
         m_Valid = std::move(src.m_Valid);
 
         m_Scopes = std::move(src.m_Scopes);
+    }
+
+    /**
+     * @brief Database::safeShared
+     * @return
+     */
+    SharedDatabase Database::safeShared()
+    {
+        try {
+            return shared_from_this();
+        } catch (...) {
+            qWarning() << "Creating shared property failed." << Q_FUNC_INFO;
+            return SharedDatabase();
+        }
     }
 
     /**

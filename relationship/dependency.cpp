@@ -37,7 +37,7 @@ namespace relationship {
      * @brief Dependency::Dependency
      */
     Dependency::Dependency()
-        : Dependency(common::ID::nullID(), common::ID::nullID(), nullptr, nullptr)
+        : Dependency(common::ID::nullID(), common::ID::nullID(), db::WeakTypeSearchers())
     {
     }
 
@@ -49,8 +49,8 @@ namespace relationship {
      * @param projectDatabase
      */
     Dependency::Dependency(const common::ID &tailTypeId, const common::ID &headTypeId,
-                           db::Database *globalDatabase, db::Database *projectDatabase)
-        : Relation(tailTypeId, headTypeId, globalDatabase, projectDatabase)
+                           const db::WeakTypeSearchers &typeSearchers)
+        : Relation(tailTypeId, headTypeId, typeSearchers)
     {
         m_RelationType = DependencyRelation;
     }

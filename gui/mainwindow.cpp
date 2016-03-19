@@ -371,9 +371,8 @@ namespace gui {
 
         for (auto &&a : m_RelationActions) {
             G_CONNECT(a, &QAction::toggled, this, &MainWindow::onRelationActionToggled);
+            G_CONNECT(a, &QAction::toggled, m_MainScene.get(), &graphics::Scene::setShowRelationTrack);
         }
-//        G_CONNECT(ui->actionAddRelation, &QAction::toggled,
-//                  m_MainScene.get(), &graphics::Scene::setShowRelationTrack);
     }
 
     /**
@@ -523,7 +522,7 @@ namespace gui {
      */
     void MainWindow::onRelationCompleted()
     {
-//        ui->actionAddRelation->setChecked(false);
+        range::for_each(m_RelationActions, [](auto &&a){ a->setChecked(false); });
     }
 
     /**

@@ -25,10 +25,12 @@
 #include <QHash>
 
 #include <entity/entity_types.hpp>
+
 #include <common/id.h>
 
 #include "itypesearcher.h"
 #include "types.h"
+#include "db_types.hpp"
 
 /**
  *  @brief namespace db
@@ -38,7 +40,7 @@ namespace db {
     /**
      * @brief The Database class
      */
-    class Database : public ITypeSearcher
+    class Database : public ITypeSearcher, public std::enable_shared_from_this<Database>
     {
     public:
         Database(Database &&src);
@@ -91,6 +93,8 @@ namespace db {
     protected:
         virtual void copyFrom(const Database &src);
         virtual void moveFrom(Database &src);
+
+        SharedDatabase safeShared();
 
         QString          m_Name  ;
         QString          m_Path  ;

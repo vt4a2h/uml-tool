@@ -25,6 +25,8 @@
 
 #include <QString>
 
+#include <db/db_types.hpp>
+
 #include <common/meta.h>
 #include <common/basicelement.h>
 
@@ -54,7 +56,7 @@ namespace relationship {
         Relation(Relation &&src) noexcept = default;
         Relation(const Relation &src);
         Relation(const common::ID &tailTypeId, const common::ID &headTypeId,
-                 db::Database *globalDatabase, db::Database *projectDatabase);
+                 const db::WeakTypeSearchers &typeSearchers);
 
         Relation &operator =(const Relation &rhs);
         Relation &operator =(Relation &&rhs) noexcept = default;
@@ -67,19 +69,19 @@ namespace relationship {
         RelationType relationType() const;
         void setRelationType(const RelationType &relationType);
 
-        db::Database *globalDatabase() const;
-        void setGlobalDatabase(db::Database *globalDatabase);
+        SharedNode &headNode();
+        const SharedNode &headNode() const;
 
-        db::Database *projectDatabase() const;
-        void setProjectDatabase(db::Database *projectDatabase);
+        SharedNode &tailNode();
+        const SharedNode &tailNode() const;
 
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
         virtual bool isEqual(const Relation &rhs) const;
 
-        void writeToFile(const QString &fileName) const;
-        bool readFromFile(const QString &fileName);
+        db::WeakTypeSearchers typeSearchers() const;
+        void setTypeSearchers(const db::WeakTypeSearchers &typeSearchers);
 
         add_meta(Relation)
 
@@ -97,14 +99,13 @@ namespace relationship {
         SharedNode m_TailNode;
         SharedNode m_HeadNode;
 
+        // TODO: move to node
         entity::SharedType m_HeadClass;
         entity::SharedClass m_TailClass;
 
         RelationType m_RelationType;
 
-        // TODO: should be weak pointers
-        db::Database *m_GlobalDatabase;
-        db::Database *m_ProjectDatabase;
+        db::WeakTypeSearchers m_TypeSearchers;
     };
 
 } // namespace relationship

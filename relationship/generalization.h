@@ -39,7 +39,7 @@ namespace relationship {
     public:
         Generalization();
         Generalization(const common::ID &tailTypeId, const common::ID &headTypeId,
-                       db::Database *globalDatabase, db::Database *projectDatabase);
+                       const db::WeakTypeSearchers &typeSearchers);
 
         friend bool operator ==(const Generalization &lhs, const Generalization &rhs);
 

@@ -40,7 +40,7 @@ namespace relationship {
      * @brief Relation::Relation
      */
     Relation::Relation()
-        : Relation(common::ID::nullID(), common::ID::nullID(), nullptr, nullptr)
+        : Relation(common::ID::nullID(), common::ID::nullID(), db::WeakTypeSearchers())
     {
     }
 
@@ -62,13 +62,12 @@ namespace relationship {
      * @param projectDatabase
      */
     Relation::Relation(const common::ID &tailTypeId, const common::ID &headTypeId,
-                       db::Database *globalDatabase, db::Database *projectDatabase)
+                       const db::WeakTypeSearchers &typeSearchers)
         : common::BasicElement("" /*name*/, helpers::GeneratorID::instance().genID())
         , m_TailNode(std::make_shared<Node>(tailTypeId))
         , m_HeadNode(std::make_shared<Node>(headTypeId))
         , m_RelationType(SimpleRelation)
-        , m_GlobalDatabase(globalDatabase)
-        , m_ProjectDatabase(projectDatabase)
+        , m_TypeSearchers(typeSearchers)
     {
         if (headTypeId != common::ID::nullID())
             addHeadClass(headTypeId);
@@ -101,8 +100,7 @@ namespace relationship {
     {
         return static_cast<const common::BasicElement&>(lhs)  ==
                static_cast<const common::BasicElement&>(rhs)  &&
-               lhs.m_GlobalDatabase  == rhs.m_GlobalDatabase  &&
-               lhs.m_ProjectDatabase == rhs.m_ProjectDatabase &&
+               lhs.m_TypeSearchers == rhs.m_TypeSearchers     &&
                (lhs.m_HeadClass == rhs.m_HeadClass || *lhs.m_HeadClass == *rhs.m_HeadClass) &&
                (lhs.m_HeadNode  == rhs.m_HeadNode  || *lhs.m_HeadNode  == *rhs.m_HeadNode ) &&
                (lhs.m_TailClass == rhs.m_TailClass || *lhs.m_TailClass == *rhs.m_TailClass) &&
@@ -156,8 +154,7 @@ namespace relationship {
 
         m_RelationType = src.m_RelationType;
 
-        m_GlobalDatabase = src.m_GlobalDatabase;
-        m_ProjectDatabase = src.m_ProjectDatabase;
+        m_TypeSearchers = src.m_TypeSearchers;
     }
 
     /**
@@ -165,10 +162,13 @@ namespace relationship {
      */
     void Relation::check()
     {
-        Q_ASSERT_X(m_HeadClass, "Relation::check", "head class not found");
-        Q_ASSERT_X(m_TailClass, "Relation::check", "tail class not found");
-        Q_ASSERT_X(m_GlobalDatabase, "Relation::check", "glodal database not valid");
-        Q_ASSERT_X(m_ProjectDatabase, "Relation::check", "project database not valid");
+        Q_ASSERT_X(m_HeadClass, Q_FUNC_INFO, "head class not found");
+        Q_ASSERT_X(m_TailClass, Q_FUNC_INFO, "tail class not found");
+
+#ifdef QT_DEBUG
+        for (auto &&ts : m_TypeSearchers)
+            Q_ASSERT_X(!!ts.lock(), Q_FUNC_INFO, "type searcher is not valid");
+#endif
     }
 
     /**
@@ -187,6 +187,42 @@ namespace relationship {
     void Relation::setRelationType(const RelationType &relationType)
     {
         m_RelationType = relationType;
+    }
+
+    /**
+     * @brief Relation::headNode
+     * @return
+     */
+    SharedNode &Relation::headNode()
+    {
+        return m_HeadNode;
+    }
+
+    /**
+     * @brief Relation::headNode
+     * @return
+     */
+    const SharedNode &Relation::headNode() const
+    {
+        return m_HeadNode;
+    }
+
+    /**
+     * @brief Relation::tailNode
+     * @return
+     */
+    SharedNode &Relation::tailNode()
+    {
+        return m_TailNode;
+    }
+
+    /**
+     * @brief Relation::tailNode
+     * @return
+     */
+    const SharedNode &Relation::tailNode() const
+    {
+        return m_TailNode;
     }
 
     /**
@@ -236,67 +272,6 @@ namespace relationship {
     }
 
     /**
-     * @brief Relation::writeToFile
-     * @param fileName
-     */
-    void Relation::writeToFile(const QString &fileName) const
-    {
-        utility::writeToFile(*this, fileName);
-    }
-
-    /**
-     * @brief Relation::readFromFile
-     * @param fileName
-     * @return
-     */
-    bool Relation::readFromFile(const QString &fileName)
-    {
-        return utility::readFromFile(*this, fileName);
-    }
-
-    /**
-     * @brief Relation::globalDatabase
-     * @return
-     */
-    db::Database *Relation::globalDatabase() const
-    {
-        return m_GlobalDatabase;
-    }
-
-    /**
-     * @brief Relation::setGlobalDatabase
-     * @param globalDatabase
-     */
-    void Relation::setGlobalDatabase(db::Database *globalDatabase)
-    {
-        Q_ASSERT_X(globalDatabase,
-                   "Relation::setGlobalDatabase",
-                   "glodal database not valid");
-        m_GlobalDatabase = globalDatabase;
-    }
-
-    /**
-     * @brief Relation::projectDatabase
-     * @return
-     */
-    db::Database *Relation::projectDatabase() const
-    {
-        return m_ProjectDatabase;
-    }
-
-    /**
-     * @brief Relation::setProjectDatabase
-     * @param projectDatabase
-     */
-    void Relation::setProjectDatabase(db::Database *projectDatabase)
-    {
-        Q_ASSERT_X(projectDatabase,
-                   "Relation::setProjectDatabase",
-                   "project database not valid");
-        m_ProjectDatabase = projectDatabase;
-    }
-
-    /**
      * @brief Relation::addHeadClass
      * @param id
      */
@@ -334,8 +309,31 @@ namespace relationship {
      */
     entity::SharedType Relation::tryToFindType(const common::ID &typeId) const
     {
-        entity::SharedType result = m_ProjectDatabase->typeByID(typeId);
-        return (result ? result : m_GlobalDatabase->typeByID(typeId));
+        for (auto &&weakTypeSearcher : m_TypeSearchers)
+            if (auto ts = weakTypeSearcher.lock())
+                if (auto result = ts->typeByID(typeId))
+                    return result;
+
+        qWarning() << "Type is not found." << Q_FUNC_INFO;
+        return entity::SharedType();
+    }
+
+    /**
+     * @brief Relation::typeSearchers
+     * @return
+     */
+    db::WeakTypeSearchers Relation::typeSearchers() const
+    {
+        return m_TypeSearchers;
+    }
+
+    /**
+     * @brief Relation::setTypeSearchers
+     * @param typeSearchers
+     */
+    void Relation::setTypeSearchers(const db::WeakTypeSearchers &typeSearchers)
+    {
+        m_TypeSearchers = typeSearchers;
     }
 
 } // namespace relationship

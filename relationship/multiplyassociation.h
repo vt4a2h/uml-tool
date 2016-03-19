@@ -35,7 +35,7 @@ namespace relationship {
     public:
         MultiplyAssociation();
         MultiplyAssociation(const common::ID &tailTypeId, const common::ID &headTypeId,
-                            db::Database *globalDatabase, db::Database *projectDatabase);
+                            const db::WeakTypeSearchers &typeSearchers);
 
         friend bool operator ==(const MultiplyAssociation &lhs, const MultiplyAssociation &rhs);
 

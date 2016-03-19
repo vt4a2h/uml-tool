@@ -36,7 +36,7 @@ namespace relationship {
      * @brief Generalization::Generalization
      */
     Generalization::Generalization()
-        : Generalization(common::ID::nullID(), common::ID::nullID(), nullptr, nullptr)
+        : Generalization(common::ID::nullID(), common::ID::nullID(), db::WeakTypeSearchers())
     {
     }
 
@@ -47,8 +47,9 @@ namespace relationship {
      * @param globalDatabase
      * @param projectDatabase
      */
-    Generalization::Generalization(const common::ID &tailTypeId, const common::ID &headTypeId, db::Database *globalDatabase, db::Database *projectDatabase)
-        :  Relation(tailTypeId, headTypeId, globalDatabase, projectDatabase)
+    Generalization::Generalization(const common::ID &tailTypeId, const common::ID &headTypeId,
+                                   const db::WeakTypeSearchers &typeSearchers)
+        :  Relation(tailTypeId, headTypeId, typeSearchers)
         ,  m_Section(entity::Public)
     {
         m_RelationType = GeneralizationRelation;

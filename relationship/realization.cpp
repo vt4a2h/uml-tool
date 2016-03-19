@@ -38,7 +38,7 @@ namespace relationship {
      * @brief Realization::Realization
      */
     Realization::Realization()
-        : Realization(common::ID::nullID(), common::ID::nullID(), nullptr, nullptr)
+        : Realization(common::ID::nullID(), common::ID::nullID(), db::WeakTypeSearchers())
     {
     }
 
@@ -50,8 +50,8 @@ namespace relationship {
      * @param projectDatabase
      */
     Realization::Realization(const common::ID &tailTypeId, const common::ID &headTypeId,
-                             db::Database *globalDatabase, db::Database *projectDatabase)
-        : Generalization(tailTypeId, headTypeId, globalDatabase, projectDatabase)
+                             const db::WeakTypeSearchers &typeSearchers)
+        : Generalization(tailTypeId, headTypeId, typeSearchers)
     {
         m_RelationType = RealizationRelation;
     }

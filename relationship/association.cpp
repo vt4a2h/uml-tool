@@ -39,7 +39,7 @@ namespace relationship {
      * @brief Association::Association
      */
     Association::Association()
-        : Association(common::ID::nullID(), common::ID::nullID(), nullptr, nullptr)
+        : Association(common::ID::nullID(), common::ID::nullID(), db::WeakTypeSearchers())
     {
     }
 
@@ -51,8 +51,8 @@ namespace relationship {
      * @param projectDatabase
      */
     Association::Association(const common::ID &tailTypeId, const common::ID &headTypeId,
-                             db::Database *globalDatabase, db::Database *projectDatabase)
-        : Relation(tailTypeId, headTypeId, globalDatabase, projectDatabase)
+                             const db::WeakTypeSearchers &typeSearchers)
+        : Relation(tailTypeId, headTypeId, typeSearchers)
         , m_GetSetTypeId(headTypeId)
     {
         m_RelationType = AssociationRelation;

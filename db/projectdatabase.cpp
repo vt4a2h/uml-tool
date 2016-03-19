@@ -121,7 +121,8 @@ namespace db {
      */
     void ProjectDatabase::addRelation(const relationship::SharedRelation &relation)
     {
-        m_Relations.insert(relation->id(), relation);
+        relation->setTypeSearchers({m_GlobalDatabase, safeShared()});
+        m_Relations[relation->id()] = relation;
     }
 
     /**
@@ -205,8 +206,7 @@ namespace db {
                     utility::checkAndSet(obj, "Type", errorList,
                                          [&obj, &errorList, &relation, this](){
                         relation = utility::makeRelation(static_cast<relationship::RelationType>(obj["Type"].toInt()));
-                        relation->setProjectDatabase(this);
-                        relation->setGlobalDatabase(m_GlobalDatabase ? m_GlobalDatabase.get() : nullptr);
+                        relation->setTypeSearchers({m_GlobalDatabase, safeShared()});
                         relation->fromJson(obj, errorList);
                         m_Relations.insert(relation->id(), relation);
                     });

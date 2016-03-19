@@ -23,6 +23,7 @@
 #pragma once
 
 #include <entity/entity_types.hpp>
+#include <db/db_types.hpp>
 
 namespace db {
 
@@ -33,5 +34,10 @@ namespace db {
         virtual entity::SharedType typeByID(const common::ID &typeId) const = 0;
         virtual entity::SharedType typeByName(const QString &name) const = 0;
     };
+
+    inline bool operator ==(const WeakTypeSearcher &lhs, const WeakTypeSearcher &rhs)
+    {
+        return lhs.lock() == rhs.lock();
+    }
 
 } // namespace db
