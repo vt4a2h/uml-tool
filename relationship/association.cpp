@@ -33,6 +33,8 @@
 #include <entity/field.h>
 #include <utility/helpfunctions.h>
 
+#include "qthelpers.h"
+
 namespace relationship {
 
     /**
@@ -96,9 +98,9 @@ namespace relationship {
      */
     void Association::makeGetter()
     {
-        QString getterName(m_HeadClass->name().toLower());
+        QString getterName(G_ASSERT(headClass())->name().toLower());
 
-        auto getter = m_TailClass->makeMethod(getterName);
+        auto getter = G_ASSERT(tailClass())->makeMethod(getterName);
         getter->setReturnTypeId(m_GetSetTypeId);
         getter->setConstStatus(true);
     }
@@ -108,10 +110,10 @@ namespace relationship {
      */
     void Association::makeSetter()
     {
-        QString setterName(QString("set%1").arg(m_HeadClass->name()));
+        QString setterName(QString("set%1").arg(G_ASSERT(headClass())->name()));
 
-        auto setter = m_TailClass->makeMethod(setterName);
-        auto param = setter->addParameter(QString("src_%1").arg(m_HeadClass->name().toLower()), m_GetSetTypeId);
+        auto setter = G_ASSERT(tailClass())->makeMethod(setterName);
+        auto param = setter->addParameter(QString("src_%1").arg(G_ASSERT(headClass())->name().toLower()), m_GetSetTypeId);
         param->setPrefix("");
     }
 
@@ -120,7 +122,7 @@ namespace relationship {
      */
     void Association::removeGetter()
     {
-        m_TailClass->removeMethods(m_HeadClass->name().toLower());
+        G_ASSERT(tailClass())->removeMethods(G_ASSERT(headClass())->name().toLower());
     }
 
     /**
@@ -128,7 +130,7 @@ namespace relationship {
      */
     void Association::removeSetter()
     {
-        m_TailClass->removeMethods(QString("set%1").arg(m_HeadClass->name()));
+        G_ASSERT(tailClass())->removeMethods(QString("set%1").arg(G_ASSERT(headClass())->name()));
     }
 
     /**
@@ -213,7 +215,7 @@ namespace relationship {
      */
     void Association::makeField()
     {
-        m_TailClass->addField(m_HeadClass->name(), m_FieldTypeId);
+        G_ASSERT(tailClass())->addField(G_ASSERT(headClass())->name(), m_FieldTypeId);
     }
 
     /**
@@ -221,7 +223,7 @@ namespace relationship {
      */
     void Association::removeField()
     {
-        m_TailClass->removeField(m_HeadClass->name());
+        G_ASSERT(tailClass())->removeField(G_ASSERT(headClass())->name());
     }
 
 } // namespace relationship

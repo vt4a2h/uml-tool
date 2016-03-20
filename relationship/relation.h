@@ -91,6 +91,9 @@ namespace relationship {
         virtual void make();
         virtual void clear();
 
+        entity::SharedClass headClass() const;
+        entity::SharedClass tailClass() const;
+
         virtual void copyFrom(const Relation &src);
 
         void check();

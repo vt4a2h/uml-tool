@@ -31,6 +31,8 @@
 #include <entity/classmethod.h>
 #include <utility/helpfunctions.h>
 
+#include "qthelpers.h"
+
 namespace relationship {
 
     /**
@@ -72,7 +74,7 @@ namespace relationship {
      */
     void Dependency::make()
     {
-        m_TailClass->addExistsMethod(m_Method);
+        G_ASSERT(tailClass())->addExistsMethod(m_Method);
     }
 
     /**
@@ -80,7 +82,7 @@ namespace relationship {
      */
     void Dependency::clear()
     {
-        m_TailClass->removeMethod(m_Method);
+        G_ASSERT(tailClass())->removeMethod(m_Method);
     }
 
     /**

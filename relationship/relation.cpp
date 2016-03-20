@@ -32,6 +32,7 @@
 #include <db/database.h>
 
 #include <entity/class.h>
+#include <entity/templateclass.h>
 
 #include <utility/helpfunctions.h>
 
@@ -60,6 +61,15 @@ namespace relationship {
                 id.fromJson(jsonObject[Node::typeIDMark()], errorList);
                 r.setType(node, id);
             });
+        }
+
+        inline entity::SharedClass castToClass(const entity::SharedType &type)
+        {
+            if (type->hashType() == entity::Class::staticHashType() ||
+                type->hashType() == entity::TemplateClass::staticHashType())
+                return std::static_pointer_cast<entity::Class>(type);
+
+            return entity::SharedClass();
         }
 
     }
@@ -163,6 +173,24 @@ namespace relationship {
      */
     void Relation::clear()
     {
+    }
+
+    /**
+     * @brief Relation::headClass
+     * @return
+     */
+    entity::SharedClass Relation::headClass() const
+    {
+        return castToClass(m_HeadNode->type());
+    }
+
+    /**
+     * @brief Relation::tailClass
+     * @return
+     */
+    entity::SharedClass Relation::tailClass() const
+    {
+        return castToClass(m_TailNode->type());
     }
 
     /**

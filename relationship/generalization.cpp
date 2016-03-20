@@ -30,6 +30,8 @@
 #include <entity/class.h>
 #include <utility/helpfunctions.h>
 
+#include "qthelpers.h"
+
 namespace relationship {
 
     /**
@@ -127,7 +129,7 @@ namespace relationship {
      */
     void Generalization::make()
     {
-        m_TailClass->addParent(m_HeadClass->id(), m_Section);
+        G_ASSERT(tailClass())->addParent(G_ASSERT(headClass())->id(), m_Section);
     }
 
     /**
@@ -135,7 +137,7 @@ namespace relationship {
      */
     void Generalization::clear()
     {
-        m_TailClass->removeParent(m_HeadClass->id());
+        G_ASSERT(tailClass())->removeParent(G_ASSERT(headClass())->id());
     }
 
 } // namespace relationship

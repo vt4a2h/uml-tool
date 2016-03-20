@@ -198,6 +198,8 @@ namespace graphics {
             if (!m_TrackFrom.isNull() && !m_TrackTo.isNull()) {
                 Q_ASSERT(m_activeRelationType != relationship::SimpleRelation);
 
+                // TODO: check From and To types, sometimes relation cannot be created
+
                 auto currentProject = G_ASSERT(pr());
                 auto cmd = std::make_unique<commands::AddRelation>(m_activeRelationType,
                                                                    m_TrackFrom, m_TrackTo,

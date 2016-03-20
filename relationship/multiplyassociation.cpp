@@ -33,6 +33,8 @@
 #include <entity/field.h>
 #include <utility/helpfunctions.h>
 
+#include "qthelpers.h"
+
 namespace relationship {
 
     /**
@@ -121,9 +123,9 @@ namespace relationship {
      */
     void MultiplyAssociation::makeGetter()
     {
-        QString getterName(QString("get%1").arg(m_HeadClass->name()));
+        QString getterName(QString("get%1").arg(G_ASSERT(headClass())->name()));
 
-        auto getter = m_TailClass->makeMethod(getterName);
+        auto getter = G_ASSERT(tailClass())->makeMethod(getterName);
         getter->setReturnTypeId(m_GetSetTypeId);
         getter->setConstStatus(true);
 
@@ -136,10 +138,10 @@ namespace relationship {
      */
     void MultiplyAssociation::makeSetter()
     {
-        QString setterName(QString("add%1").arg(m_HeadClass->name()));
+        QString setterName(QString("add%1").arg(G_ASSERT(headClass())->name()));
 
-        auto setter = m_TailClass->makeMethod(setterName);
-        auto param = setter->addParameter(QString("src_%1").arg(m_HeadClass->name().toLower()), m_GetSetTypeId);
+        auto setter = G_ASSERT(tailClass())->makeMethod(setterName);
+        auto param = setter->addParameter(QString("src_%1").arg(G_ASSERT(headClass())->name().toLower()), m_GetSetTypeId);
         param->setPrefix("");
     }
 
@@ -151,7 +153,7 @@ namespace relationship {
         Q_ASSERT_X(m_ContainerClass,
                    "MultiplyAssociation::makeField",
                    "container class not found");
-        m_TailClass->addField(m_ContainerClass->name(), containerTypeId());
+        G_ASSERT(tailClass())->addField(m_ContainerClass->name(), containerTypeId());
     }
 
     /**
@@ -159,9 +161,9 @@ namespace relationship {
      */
     void MultiplyAssociation::makeDeleter()
     {
-        QString deleterName(QString("remove%1").arg(m_HeadClass->name()));
+        QString deleterName(QString("remove%1").arg(G_ASSERT(headClass())->name()));
 
-        auto deleter = m_TailClass->makeMethod(deleterName);
+        auto deleter = G_ASSERT(tailClass())->makeMethod(deleterName);
         auto parameter = deleter->addParameter("key", m_KeyTypeId);
         parameter->setPrefix("");
     }
@@ -171,9 +173,9 @@ namespace relationship {
      */
     void MultiplyAssociation::makeGroupGetter()
     {
-        QString groupGetterName(QString("%1s").arg(m_HeadClass->name().toLower()));
+        QString groupGetterName(QString("%1s").arg(G_ASSERT(headClass())->name().toLower()));
 
-        auto groupGetter = m_TailClass->makeMethod(groupGetterName);
+        auto groupGetter = G_ASSERT(tailClass())->makeMethod(groupGetterName);
         groupGetter->setReturnTypeId(m_ContainerTypeId);
         groupGetter->setConstStatus(true);
     }
@@ -183,7 +185,7 @@ namespace relationship {
      */
     void MultiplyAssociation::removeGetter()
     {
-        m_TailClass->removeMethods(QString("get%1").arg(m_HeadClass->name()));
+        G_ASSERT(tailClass())->removeMethods(QString("get%1").arg(G_ASSERT(headClass())->name()));
     }
 
     /**
@@ -191,7 +193,7 @@ namespace relationship {
      */
     void MultiplyAssociation::removeSetter()
     {
-        m_TailClass->removeMethods(QString("add%1").arg(m_HeadClass->name()));
+        G_ASSERT(tailClass())->removeMethods(QString("add%1").arg(G_ASSERT(headClass())->name()));
     }
 
     /**
@@ -202,7 +204,7 @@ namespace relationship {
         Q_ASSERT_X(m_ContainerClass,
                    "MultiplyAssociation::removeField",
                    "container class not found");
-        m_TailClass->removeField(m_ContainerClass->name());
+        G_ASSERT(tailClass())->removeField(m_ContainerClass->name());
     }
 
     /**
@@ -210,7 +212,7 @@ namespace relationship {
      */
     void MultiplyAssociation::removeDeleter()
     {
-        m_TailClass->removeMethods(QString("remove%1").arg(m_HeadClass->name()));
+        G_ASSERT(tailClass())->removeMethods(QString("remove%1").arg(G_ASSERT(headClass())->name()));
     }
 
     /**
@@ -218,7 +220,7 @@ namespace relationship {
      */
     void MultiplyAssociation::removeGroupGetter()
     {
-        m_TailClass->removeMethods(QString("%1s").arg(m_HeadClass->name().toLower()));
+        G_ASSERT(tailClass())->removeMethods(QString("%1s").arg(G_ASSERT(headClass())->name().toLower()));
     }
 
     /**

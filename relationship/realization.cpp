@@ -32,6 +32,8 @@
 #include <entity/classmethod.h>
 #include <utility/helpfunctions.h>
 
+#include "qthelpers.h"
+
 namespace relationship {
 
     /**
@@ -142,7 +144,7 @@ namespace relationship {
     void Realization::make()
     {
         entity::SharedMethod m;
-        entity::SharedClass head = std::dynamic_pointer_cast<entity::Class>(m_HeadClass);
+        entity::SharedClass head = std::dynamic_pointer_cast<entity::Class>(G_ASSERT(headClass()));
         Q_ASSERT_X(head, "Realization::make", "head class not found or not Class");
         for (auto &&method : m_Methods) {
             m = std::make_shared<entity::ClassMethod>(*method.get());
@@ -151,7 +153,7 @@ namespace relationship {
 
             m = std::make_shared<entity::ClassMethod>(*method.get());
             m->setRhsIdentificator(entity::RhsIdentificator::Override);
-            m_TailClass->addExistsMethod(m);
+            G_ASSERT(tailClass())->addExistsMethod(m);
         }
     }
 
@@ -160,11 +162,11 @@ namespace relationship {
      */
     void Realization::clear()
     {
-        entity::SharedClass head = std::dynamic_pointer_cast<entity::Class>(m_HeadClass);
+        entity::SharedClass head = std::dynamic_pointer_cast<entity::Class>(G_ASSERT(headClass()));
         Q_ASSERT_X(head, "Realization::clear", "head class not found or not Class");
         for (auto method : m_Methods) {
             head->removeMethods(method->name());
-            m_TailClass->removeMethods(method->name());
+            G_ASSERT(tailClass())->removeMethods(method->name());
         }
     }
 
