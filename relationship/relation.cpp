@@ -107,9 +107,9 @@ namespace relationship {
         , m_RelationType(SimpleRelation)
         , m_TypeSearchers(typeSearchers)
     {
-        if (headTypeId != common::ID::nullID())
+        if (headTypeId != common::ID::nullID() && !typeSearchers.isEmpty())
             setType(m_HeadNode, headTypeId);
-        if (tailTypeId != common::ID::nullID())
+        if (tailTypeId != common::ID::nullID() && !typeSearchers.isEmpty() )
             setType(m_TailNode, tailTypeId);
     }
 

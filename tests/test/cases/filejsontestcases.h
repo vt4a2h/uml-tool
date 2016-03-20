@@ -185,7 +185,7 @@ TEST_F(FileJson, PropertyJson)
 TEST_F(FileJson, NodeJson)
 {
     relationship::SharedNode node =
-        std::make_shared<relationship::Node>(common::ID::nullID(), relationship::ZeroOrInf);
+        std::make_shared<relationship::Node>(nullptr, relationship::ZeroOrInf);
     node->setDescription("stub_description");
     node->writeToFile(m_JsonFileName);
 

@@ -27,10 +27,9 @@
 TEST_F(RelationMaker, MultiplyAssociation)
 {
     auto multAssociation =
-            std::make_shared<relationship::MultiplyAssociation>(m_FirstClass->id(),
-                                                                m_SecondClass->id(),
-                                                                m_GlobalDb.get(),
-                                                                m_ProjectDb.get());
+            std::make_shared<relationship::MultiplyAssociation>(
+                m_FirstClass->id(), m_SecondClass->id(),
+                db::WeakTypeSearchers({m_GlobalDb, m_ProjectDb}));
 
     EXPECT_EQ(multAssociation->relationType(), relationship::MultiRelation)
             << "MultiplyAssociation should have type relationship::MultiRelation";
@@ -110,11 +109,9 @@ TEST_F(RelationMaker, MultiplyAssociation)
 
 TEST_F(RelationMaker, Association)
 {
-    auto association = std::make_shared<relationship::Association>(m_FirstClass->id(),
-                                                                   m_SecondClass->id(),
-                                                                   m_GlobalDb.get(),
-                                                                   m_ProjectDb.get());
-
+    auto association = std::make_shared<relationship::Association>(
+                           m_FirstClass->id(), m_SecondClass->id(),
+                           db::WeakTypeSearchers({m_GlobalDb, m_ProjectDb}));
     EXPECT_EQ(association->relationType(), relationship::AssociationRelation)
             << "Association should have type relationship::Association";
 
@@ -152,11 +149,9 @@ TEST_F(RelationMaker, Association)
 
 TEST_F(RelationMaker, Generalization)
 {
-    auto generalization = std::make_shared<relationship::Generalization>(m_FirstClass->id(),
-                                                                         m_SecondClass->id(),
-                                                                         m_GlobalDb.get(),
-                                                                         m_ProjectDb.get());
-
+    auto generalization = std::make_shared<relationship::Generalization>(
+                              m_FirstClass->id(), m_SecondClass->id(),
+                              db::WeakTypeSearchers({m_GlobalDb, m_ProjectDb}));
     EXPECT_EQ(generalization->relationType(), relationship::GeneralizationRelation)
             << "Generalization should have type relationship::GeneralizationRelation";
 
@@ -183,10 +178,9 @@ TEST_F(RelationMaker, Dependency)
     depMethod->setReturnTypeId(v->id());
     depMethod->addParameter("second", ext->id());
 
-    auto dependency = std::make_shared<relationship::Dependency>(m_FirstClass->id(),
-                                                                 m_SecondClass->id(),
-                                                                 m_GlobalDb.get(),
-                                                                 m_ProjectDb.get());
+    auto dependency = std::make_shared<relationship::Dependency>(
+                          m_FirstClass->id(), m_SecondClass->id(),
+                          db::WeakTypeSearchers({m_GlobalDb, m_ProjectDb}));
     dependency->setMethod(depMethod);
 
     EXPECT_EQ(dependency->relationType(), relationship::DependencyRelation)

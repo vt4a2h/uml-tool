@@ -79,7 +79,7 @@ namespace relationship {
     {
         QJsonObject result;
 
-        result.insert(typeIDMark(), m_Type->id().toJson());
+        result.insert(typeIDMark(), m_Type ? m_Type->id().toJson() : common::ID().toJson());
         result.insert(descrMark, m_Description);
         result.insert(multMark, m_Multiplicity);
 
