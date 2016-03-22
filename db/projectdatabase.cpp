@@ -205,9 +205,12 @@ namespace db {
                 QJsonObject obj;
                 for (auto &&val : src["Relations"].toArray()) {
                     obj = val.toObject();
-                    utility::checkAndSet(obj, "Type", errorList,
+                    utility::checkAndSet(obj, relationship::Relation::typeMark(), errorList,
                                          [&obj, &errorList, &relation, this](){
-                        relation = utility::makeRelation(static_cast<relationship::RelationType>(obj["Type"].toInt()));
+                        relation =
+                            utility::makeRelation(
+                                static_cast<relationship::RelationType>(
+                                    obj[relationship::Relation::typeMark()].toInt()));
                         relation->setTypeSearchers({m_GlobalDatabase, safeShared()});
                         relation->fromJson(obj, errorList);
                         m_Relations.insert(relation->id(), relation);
