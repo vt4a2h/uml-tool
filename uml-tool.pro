@@ -82,7 +82,8 @@ SOURCES += \
     helpers/generatorid.cpp \
     common/id.cpp \
     common/basicelement.cpp \
-    entity/isectional.cpp
+    entity/isectional.cpp \
+    relationship/RelationFactory.cpp
 
 HEADERS += \
     enums.h \
@@ -176,7 +177,8 @@ HEADERS += \
     common/basicelement.h \
     entity/isectional.h \
     common/common_types.h \
-    common/meta.h
+    common/meta.h \
+    relationship/RelationFactory.h
 
 FORMS += \
     gui/mainwindow.ui \

@@ -201,10 +201,10 @@ namespace graphics {
                 // TODO: check From and To types, sometimes relation cannot be created
                 // TODO: add relation factory, implement store/restore relations
                 auto currentProject = G_ASSERT(pr());
-                auto cmd = std::make_unique<commands::AddRelation>(m_activeRelationType,
-                                                                   m_TrackFrom, m_TrackTo,
-                                                                   currentProject->database());
-                currentProject->commandsStack()->push(cmd.release());
+//                auto cmd = std::make_unique<commands::AddRelation>(m_activeRelationType,
+//                                                                   m_TrackFrom, m_TrackTo,
+//                                                                   currentProject->database());
+//                currentProject->commandsStack()->push(cmd.release());
                 // TODO: handle situation when user moved item and then clicked undo
                 // relation is not updated in this case
             }

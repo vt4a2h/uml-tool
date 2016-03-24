@@ -26,10 +26,14 @@
 
 #include <db/db_types.hpp>
 
+#include <entity/entity_types.hpp>
+
 #include <relationship/relationship_types.hpp>
 
 #include "basecommand.h"
 #include "enums.h"
+
+class QGraphicsScene;
 
 namespace graphics {
     class Entity;
@@ -42,10 +46,12 @@ namespace commands {
     class AddRelation : public BaseCommand
     {
     public:
-        AddRelation(relationship::RelationType relType, const graphics::EntityPtr &from,
-                    const graphics::EntityPtr &to, const db::SharedProjectDatabase &database);
+        AddRelation(relationship::RelationType relType, const entity::SharedType &from,
+                    const entity::SharedType &to, const db::SharedProjectDatabase &database);
 
         ~AddRelation();
+
+        relationship::SharedRelation relation() const;
 
     public: // QUndoCommand overrides
         void redo() override;
@@ -57,13 +63,14 @@ namespace commands {
 
         relationship::RelationType m_Type;
 
-        graphics::EntityPtr m_From;
-        graphics::EntityPtr m_To;
+        entity::SharedType m_From;
+        entity::SharedType m_To;
 
         graphics::GraphicRelationPtr m_GraphicRelation;
         relationship::SharedRelation m_Relation;
 
         db::WeakProjectDatabase m_Db;
+        QPointer<QGraphicsScene> m_Scene;
     };
 
 } // namespace commands
