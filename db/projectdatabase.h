@@ -28,6 +28,7 @@
 #include "db_types.hpp"
 
 #include <relationship/relationship_types.hpp>
+#include <gui/graphics/graphics_types.h>
 
 namespace db {
 
@@ -76,10 +77,8 @@ namespace db {
         // TODO: add signals to detect adding/ removing relation in order to touch project
 
     public: // Database overrides
-        entity::SharedScope addScope
-                               ( const QString &name
-                               , const common::ID &parentScopeId = common::ID::nullID()
-                               ) override;
+        entity::SharedScope addScope(const QString &name,
+                                     const common::ID &parentScopeId = common::ID::nullID()) override;
         entity::SharedScope addExistsScope(const entity::SharedScope &scope) override;
 
     protected:
@@ -92,7 +91,8 @@ namespace db {
         relationship::Relations m_Relations;
         db::SharedDatabase m_GlobalDatabase;
 
-        ItemsPos m_ItemsPos;
+        ItemsPos m_ItemsPos; // TODO: remove
+        graphics::EntityHashMap m_grpahicsEntities;
     };
 
 } // namespace db

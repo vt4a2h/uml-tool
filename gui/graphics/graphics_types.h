@@ -26,10 +26,13 @@
 
 #include <QPointer>
 
+namespace common { class ID; }
+
 namespace graphics {
 
     class Entity;
     using EntityPtr = QPointer<Entity>;
+    using EntityHashMap = QHash<common::ID, EntityPtr>;
 
     class Relation;
     using RelationPtr = QPointer<Relation>;

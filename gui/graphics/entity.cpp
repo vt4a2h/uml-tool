@@ -137,12 +137,13 @@ namespace graphics {
     Entity::Entity(const entity::SharedType &type, QGraphicsItem *parent)
         : QGraphicsObject(parent)
         , m_Type(type)
+        , m_ID(G_ASSERT(type)->id())
         , m_LastPos(0, 0)
         , m_ResizeMode(false)
         , m_selectedToConnect(false)
         , m_Width(minimumWidth)
         , m_Height(minimumHeight)
-        , m_HeaderHeight(minimumHeight)
+        , (minimumHeight)
     {
         setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
 
@@ -222,6 +223,16 @@ namespace graphics {
     void Entity::setTypeObject(const entity::SharedType &type)
     {
         m_Type = type;
+        m_ID = type ? type->id() : common::ID::nullID();
+    }
+
+    /**
+     * @brief Entity::id
+     * @return
+     */
+    common::ID Entity::id() const
+    {
+        return m_ID;
     }
 
     /**
@@ -258,6 +269,58 @@ namespace graphics {
     QRectF Entity::frameRect() const
     {
         return QRectF(-m_Width / 2, -m_Height / 2, m_Width, m_Height);
+    }
+
+    namespace {
+        const QString idMark     = "ID";
+        const QString heightMark = "Height";
+        const QString widthMark  = "Width";
+        const QString xMark  = "X";
+        const QString yMark  = "Y";
+    }
+
+    /**
+     * @brief Entity::toJson
+     * @return
+     */
+    QJsonObject Entity::toJson() const
+    {
+        QJsonObject result;
+
+        result[idMark]     = m_ID.toJson();
+        result[heightMark] = m_Height;
+        result[widthMark]  = m_Width;
+        result[xMark]      = pos.x();
+        result[yMark]      = pos.y();
+    }
+
+    /**
+     * @brief Entity::fromJson
+     * @param src
+     * @param errorList
+     */
+    void Entity::fromJson(const QJsonObject &src, QStringList &errorList)
+    {
+        utility::checkAndSet(src, idMark, errorList, [&src, &errorList, this](){
+            m_ID.fromJson(src[idMark], errorList);
+        }
+        utility::checkAndSet(src, heightMark, errorList, [&src, &errorList, this](){
+            m_Height = src[heightMark].toDouble();
+        }
+        utility::checkAndSet(src, widthMark, errorList, [&src, &errorList, this](){
+            m_Width = src[widthMark].toDouble();
+        }
+
+        QPointF pos(0., 0.);
+        utility::checkAndSet(src, xMark, errorList, [&src, &pos](){
+            pos.rx() = src[xMark].toDouble();
+        }
+        utility::checkAndSet(src, yMark, errorList, [&src, &pos](){
+            pos.ry() = src[yMark].toDouble();
+        }
+        setPos(pos);
+
+        redraw();
     }
 
     /**
@@ -374,10 +437,10 @@ namespace graphics {
         QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
 
         // Fill background
-        QLinearGradient gradient(0, -m_Height / 2, 0, -m_Height / 2 + m_HeaderHeight);
+        QLinearGradient gradient(0, -m_Height / 2, 0, -m_Height / 2 + );
         gradient.setColorAt(0, color);
         gradient.setColorAt(1, Qt::white);
-        QRectF headerRect(-m_Width / 2, -m_Height / 2, m_Width, m_HeaderHeight);
+        QRectF headerRect(-m_Width / 2, -m_Height / 2, m_Width, );
         painter->fillRect(headerRect, QBrush(gradient));
 
         // Draw frame

@@ -51,8 +51,8 @@ namespace graphics {
 
         QRectF boundingRect() const override;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                   QWidget *widget = nullptr);
-        QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+                   QWidget *widget = nullptr) override;
+        QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
         enum { Type = UserType + int(ElementType::Entity) };
         int type() const override;
@@ -60,11 +60,17 @@ namespace graphics {
         entity::SharedType typeObject() const;
         void setTypeObject(const entity::SharedType &type);
 
+        common::ID id() const;
+
         void setSelectedToConnect(bool status);
         bool selectedToConnect() const;
 
         static qreal rectMargin();
         QRectF frameRect() const;
+
+        // TODO: add tests
+        QJsonObject toJson() const;
+        void fromJson(const QJsonObject &src, QStringList &errorList);
 
     signals:
         void moved(const QPointF &from, const QPointF &to);
@@ -90,6 +96,7 @@ namespace graphics {
         void drawConnectFrame(QPainter * painter);
 
         entity::SharedType m_Type;
+        common::ID m_ID; // Unique id (the same with type ID)
         QPointF m_LastPos;
         bool m_ResizeMode;
         bool m_selectedToConnect;
