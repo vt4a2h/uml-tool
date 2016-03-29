@@ -53,7 +53,7 @@
 #include <gui/graphics/entity.h>
 #include <gui/graphics/scene.h>
 
-#include <entity/entitiesfactory.h>
+#include <entity/EntityFactory.h>
 #include <entity/type.h>
 
 #include <commands/createscope.h>
@@ -105,7 +105,7 @@ namespace {
         for (auto &&item : database->itemsPos())
             if (const entity::SharedType &type = database->typeByID(item.first))
                 if (auto &&scope = database->depthScopeSearch(type->scopeId()))
-                    entity::EntitiesFactory::get().addEntity(*scene, project, type, item.second /*pos*/);
+                    entity::EntityFactory::instance().addEntity(*scene, project, type, item.second /*pos*/);
     }
 }
 

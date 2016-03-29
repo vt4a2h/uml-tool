@@ -65,9 +65,6 @@ namespace db {
 
         bool isEqual(const ProjectDatabase &rhs) const;
 
-        void setItemsPos(const ItemsPos &positions);
-        ItemsPos itemsPos() const;
-
     signals:
         void relationAdded();
         void relationRemoved();
@@ -89,10 +86,9 @@ namespace db {
         void installTypeSearchers();
 
         relationship::Relations m_Relations;
-        db::SharedDatabase m_GlobalDatabase;
+        graphics::EntityHashMap m_GraphicsEntities;
 
-        ItemsPos m_ItemsPos; // TODO: remove
-        graphics::EntityHashMap m_grpahicsEntities;
+        db::SharedDatabase m_GlobalDatabase;
     };
 
 } // namespace db

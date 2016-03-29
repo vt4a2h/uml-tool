@@ -28,7 +28,7 @@
 #include <QDebug>
 
 #include <project/project.h>
-#include <db/projectdatabase.h>
+#include <db/ProjectDatabase.h>
 #include <commands/createentity.h>
 #include <models/applicationmodel.h>
 

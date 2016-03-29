@@ -35,6 +35,18 @@ namespace entity {
 
     class Scope;
 
+    /// The type of type :)
+    enum class KindOfType : int
+    {
+        Type,          ///< Type
+        ExtendedType,  ///< ExtendedType
+        Enum,          ///< Enum
+        Union,         ///< Union
+        Class,         ///< Class
+        Structure,     ///< Structure
+        TemplateClass, ///< TemplateClass
+    }
+
     /**
      * @brief The Type class
      */

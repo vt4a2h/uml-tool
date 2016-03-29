@@ -24,7 +24,7 @@
 
 #include <QGraphicsScene>
 
-#include <db/projectdatabase.h>
+#include <db/ProjectDatabase.h>
 
 #include <gui/graphics/entity.h>
 #include <gui/graphics/graphicsrelation.h>

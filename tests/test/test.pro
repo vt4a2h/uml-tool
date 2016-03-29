@@ -26,7 +26,6 @@ INCLUDEPATH += ../../
 HEADERS += ../../enums.h \
     ../../common/basicelement.h \
     ../../db/database.h \
-    ../../db/projectdatabase.h \
     ../../project/project.h \
     ../../entity/property.h \
     ../../entity/class.h \
@@ -72,7 +71,8 @@ HEADERS += ../../enums.h \
     cases/classcomponentscases.h \
     cases/signatureparsercases.h \
     TestComponentSignatureParser.h \
-    TestProjectBase.h
+    TestProjectBase.h \
+    ../../db/ProjectDatabase.h
 
 SOURCES += main.cpp \
            ../../common/basicelement.cpp \

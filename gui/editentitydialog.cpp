@@ -40,7 +40,7 @@
 
 #include <project/project.h>
 
-#include <db/projectdatabase.h>
+#include <db/ProjectDatabase.h>
 
 #include <utility/helpfunctions.h>
 

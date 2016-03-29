@@ -35,7 +35,7 @@
 #include <entity/field.h>
 #include <entity/union.h>
 
-#include <db/projectdatabase.h>
+#include <db/ProjectDatabase.h>
 
 #include <utility/helpfunctions.h>
 

@@ -21,16 +21,20 @@
 **
 *****************************************************************************/
 
-#include "projectdatabase.h"
+#include "ProjectDatabase.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
 
 #include <entity/scope.h>
-#include <common/id.h>
 #include <entity/property.h>
 
+#include <common/id.h>
+
+#include <gui/graphics/entity.h>
+
 #include <relationship/relation.h>
+
 #include <utility/helpfunctions.h>
 
 #include "constants.h"
@@ -164,6 +168,22 @@ namespace db {
         m_Relations.clear();
     }
 
+    namespace
+    {
+        const QString relationsMark = "Relations";
+        const QString positionsMark = "Positions";
+
+        template <class Container>
+        inline QJsonArray mapToJson(const Container &c)
+        {
+            QJsonArray result;
+            for (auto &&val : c)
+                result.append(val->toJson());
+
+            return result;
+        }
+    }
+
     /**
      * @brief ProjectDatabase::toJson
      * @return
@@ -172,20 +192,8 @@ namespace db {
     {
         QJsonObject result(Database::toJson());
 
-        QJsonArray relations;
-        for (auto &&val : m_Relations.values())
-            relations.append(val->toJson());
-        result.insert("Relations", relations);
-
-        QJsonArray positions;
-        for (auto &&val : m_ItemsPos) {
-            QJsonObject obj;
-            obj["id"] = val.first.toJson();
-            obj["x"]  = val.second.x();
-            obj["y"]  = val.second.y();
-            positions.append(obj);
-        }
-        result.insert("Positions", positions);
+        result[relationsMark] = mapToJson(m_Relations);
+        result[positionsMark] = mapToJson(m_GraphicsEntities);
 
         return result;
     }
@@ -199,11 +207,13 @@ namespace db {
     {
         Database::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Relations", errorList, [&src, &errorList, this](){
-            if (src["Relations"].isArray()) {
+        // TODO: restore graphics objects first
+
+        utility::checkAndSet(src, relationsMark, errorList, [&src, &errorList, this](){
+            if (src[relationsMark].isArray()) {
                 relationship::SharedRelation relation;
                 QJsonObject obj;
-                for (auto &&val : src["Relations"].toArray()) {
+                for (auto &&val : src[relationsMark.toArray()) {
                     obj = val.toObject();
                     utility::checkAndSet(obj, relationship::Relation::typeMark(), errorList,
                                          [&obj, &errorList, &relation, this](){
@@ -221,19 +231,7 @@ namespace db {
             }
         });
 
-        utility::checkAndSet(src, "Positions", errorList, [&, this](){
-            if (src["Positions"].isArray()) {
-                QJsonObject obj;
-                for (auto &&val : src["Positions"].toArray()) {
-                    obj = val.toObject();
-                    common::ID id;
-                    id.fromJson(obj["id"], errorList);
-                    m_ItemsPos.append({id, {obj["x"].toDouble(), obj["y"].toDouble()}});
-                }
-            } else {
-                errorList << "Error: \"Positions\" is not array";
-            }
-        });
+
     }
 
     /**
@@ -244,24 +242,6 @@ namespace db {
     bool ProjectDatabase::isEqual(const ProjectDatabase &rhs) const
     {
         return *this == rhs;
-    }
-
-    /**
-     * @brief ProjectDatabase::setItemsPos
-     * @param positions
-     */
-    void ProjectDatabase::setItemsPos(const ItemsPos &positions)
-    {
-        m_ItemsPos = positions;
-    }
-
-    /**
-     * @brief ProjectDatabase::itemsPos
-     * @return
-     */
-    ItemsPos ProjectDatabase::itemsPos() const
-    {
-        return m_ItemsPos;
     }
 
     /**

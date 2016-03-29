@@ -25,7 +25,7 @@
 #include <QObject>
 
 #include <project/project.h>
-#include <db/projectdatabase.h>
+#include <db/ProjectDatabase.h>
 #include <entity/scope.h>
 
 #include "projecttreemodel.h"
@@ -86,6 +86,7 @@ namespace models {
         SharedTreeModel m_TreeModel;
     };
 
+    // FIXME: move to entity factory
     template <class T>
     std::shared_ptr<T> ApplicationModel::makeType(const common::ID &scopeID, const QString &name)
     {

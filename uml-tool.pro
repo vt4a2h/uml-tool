@@ -14,7 +14,6 @@ SOURCES += \
     main.cpp \
     templates.cpp \
     db/database.cpp \
-    db/projectdatabase.cpp \
     entity/class.cpp \
     entity/classmethod.cpp \
     entity/enum.cpp \
@@ -29,7 +28,6 @@ SOURCES += \
     entity/components/componentsignatureparser.cpp \
     entity/components/icomponents.cpp \
     entity/components/componentsmaker.cpp \
-    entity/entitiesfactory.cpp \
     entity/property.cpp \
     generator/abstractprojectgenerator.cpp \
     generator/basiccppprojectgenerator.cpp \
@@ -83,7 +81,9 @@ SOURCES += \
     common/id.cpp \
     common/basicelement.cpp \
     entity/isectional.cpp \
-    relationship/RelationFactory.cpp
+    relationship/RelationFactory.cpp \
+    entity/EntityFactory.cpp \
+    db/ProjectDatabase.cpp
 
 HEADERS += \
     enums.h \
@@ -105,7 +105,6 @@ HEADERS += \
     entity/components/componentsignatureparser.h \
     entity/components/icomponents.h \
     entity/components/componentsmaker.h \
-    entity/entitiesfactory.h \
     entity/entity_types.hpp \
     entity/property.h \
     generator/abstractprojectgenerator.h \
@@ -178,7 +177,8 @@ HEADERS += \
     entity/isectional.h \
     common/common_types.h \
     common/meta.h \
-    relationship/RelationFactory.h
+    relationship/RelationFactory.h \
+    entity/EntityFactory.h
 
 FORMS += \
     gui/mainwindow.ui \

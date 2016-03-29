@@ -26,7 +26,7 @@
 #include <gtest/gtest.h>
 
 #include <db/database.h>
-#include <db/projectdatabase.h>
+#include <db/ProjectDatabase.h>
 #include <entity/scope.h>
 #include <entity/type.h>
 #include <entity/class.h>

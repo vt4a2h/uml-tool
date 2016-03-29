@@ -26,7 +26,7 @@
 #include <QGraphicsScene>
 
 #include <entity/entity_types.hpp>
-#include <entity/entitiesfactory.h>
+#include <entity/EntityFactory.h>
 #include <entity/type.h>
 #include <entity/class.h>
 #include <entity/enum.h>
@@ -85,7 +85,7 @@ namespace commands {
                 m_Scene.addItem(m_Item);
                 static_cast<graphics::Entity *>(m_Item)->setTypeObject(m_TypeItem);
             } else {
-                auto const& factory = entity::EntitiesFactory::get();
+                auto const& factory = entity::EntityFactory::instance();
                 auto entity = factory.makeEntity<Type>(m_Model, m_ScopeID, m_Scene, m_Pos);
 
                 m_TypeItem = G_ASSERT(entity.first);
