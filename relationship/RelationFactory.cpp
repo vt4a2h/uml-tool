@@ -78,35 +78,8 @@ namespace relationship {
      * @param parent
      */
     RelationFactory::RelationFactory(QObject *parent)
-        : QObject(parent)
+        : common::ElementsFactory(parent)
     {
-    }
-
-    /**
-     * @brief RelationFactory::scene
-     * @return
-     */
-    QPointer<QGraphicsScene> RelationFactory::scene() const
-    {
-        return m_Scene;
-    }
-
-    /**
-     * @brief RelationFactory::setSceneChanged
-     * @param scene
-     */
-    void RelationFactory::setSceneChanged(const QPointer<QGraphicsScene> &scene)
-    {
-        m_Scene = scene;
-    }
-
-    /**
-     * @brief RelationFactory::onDbChanged
-     * @param newDb
-     */
-    void RelationFactory::onDbChanged(const db::SharedProjectDatabase &newDb)
-    {
-        m_Db = newDb;
     }
 
 } // namespace relationship

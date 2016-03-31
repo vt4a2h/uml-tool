@@ -83,7 +83,8 @@ SOURCES += \
     entity/isectional.cpp \
     relationship/RelationFactory.cpp \
     entity/EntityFactory.cpp \
-    db/ProjectDatabase.cpp
+    db/ProjectDatabase.cpp \
+    common/ElementsFactory.cpp
 
 HEADERS += \
     enums.h \
@@ -178,7 +179,8 @@ HEADERS += \
     common/common_types.h \
     common/meta.h \
     relationship/RelationFactory.h \
-    entity/EntityFactory.h
+    entity/EntityFactory.h \
+    common/ElementsFactory.h
 
 FORMS += \
     gui/mainwindow.ui \

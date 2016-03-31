@@ -22,11 +22,10 @@
 *****************************************************************************/
 #pragma once
 
-#include <QPointer>
-
-#include <db/db_types.hpp>
 #include <relationship/relationship_types.hpp>
 #include <entity/entity_types.hpp>
+
+#include <common/ElementsFactory.h>
 
 #include "enums.h"
 
@@ -35,7 +34,7 @@ class QGraphicsScene;
 namespace relationship {
 
     /// Relation maker
-    class RelationFactory : public QObject
+    class RelationFactory : public common::ElementsFactory
     {
         Q_OBJECT
 
@@ -54,17 +53,8 @@ namespace relationship {
         UniqueRelationCmd makeCmd(RelationType relType, const entity::SharedType &tail,
                                   const entity::SharedType &head) const;
 
-        QPointer<QGraphicsScene> scene() const;
-
-    public slots:
-        void onDbChanged(const db::SharedProjectDatabase &newDb);
-        void setSceneChanged(const QPointer<QGraphicsScene> &scene);
-
     private:
         explicit RelationFactory(QObject * parent = nullptr);
-
-        QPointer<QGraphicsScene> m_Scene;
-        db::WeakProjectDatabase m_Db;
     };
 
 } // namespace relationship

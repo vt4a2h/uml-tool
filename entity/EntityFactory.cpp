@@ -40,6 +40,15 @@ namespace entity {
         return instance;
     }
 
+    /**
+     * @brief EntityFactory::EntityFactory
+     * @param parent
+     */
+    EntityFactory::EntityFactory(QObject *parent)
+        : common::ElementsFactory(parent)
+    {
+    }
+
 //    /**
 //     * @brief EntitiesFactory::addEntity
 //     * @param scene

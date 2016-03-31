@@ -22,24 +22,20 @@
 *****************************************************************************/
 #pragma once
 
-#include "entity_types.hpp"
+#include <common/ElementsFactory.h>
 
-#include <project/project_types.hpp>
+#include "entity_types.hpp"
 
 #include <gui/graphics/entity.h>
 
-#include <models/applicationmodel.h>
-#include <models/models_types.hpp>
 
 class QGraphicsScene;
 
 namespace entity {
 
     /// The EntitiesFactory class
-    class EntityFactory : public QObject
+    class EntityFactory : public common::ElementsFactory
     {
-        Q_OBJECT
-
     public:
         EntityFactory(const EntityFactory &) = delete;
         EntityFactory(EntityFactory &&) = delete;
@@ -71,6 +67,7 @@ namespace entity {
 //                                    const entity::SharedType &type, const QPointF &pos) const;
 
     private:
+        explicit RelationFactory(QObject * parent = nullptr);
 //        graphics::Entity *newEntity(QGraphicsScene &scene, const QPointF &pos,
 //                                    const entity::SharedType &type = nullptr) const;
 
