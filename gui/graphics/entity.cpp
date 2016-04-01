@@ -143,7 +143,7 @@ namespace graphics {
         , m_selectedToConnect(false)
         , m_Width(minimumWidth)
         , m_Height(minimumHeight)
-        , (minimumHeight)
+        , m_HeaderHeight(minimumHeight)
     {
         setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
 
@@ -290,8 +290,10 @@ namespace graphics {
         result[idMark]     = m_ID.toJson();
         result[heightMark] = m_Height;
         result[widthMark]  = m_Width;
-        result[xMark]      = pos.x();
-        result[yMark]      = pos.y();
+        result[xMark]      = pos().x();
+        result[yMark]      = pos().y();
+
+        return result;
     }
 
     /**
@@ -303,21 +305,21 @@ namespace graphics {
     {
         utility::checkAndSet(src, idMark, errorList, [&src, &errorList, this](){
             m_ID.fromJson(src[idMark], errorList);
-        }
+        });
         utility::checkAndSet(src, heightMark, errorList, [&src, &errorList, this](){
             m_Height = src[heightMark].toDouble();
-        }
+        });
         utility::checkAndSet(src, widthMark, errorList, [&src, &errorList, this](){
             m_Width = src[widthMark].toDouble();
-        }
+        });
 
         QPointF pos(0., 0.);
         utility::checkAndSet(src, xMark, errorList, [&src, &pos](){
             pos.rx() = src[xMark].toDouble();
-        }
+        });
         utility::checkAndSet(src, yMark, errorList, [&src, &pos](){
             pos.ry() = src[yMark].toDouble();
-        }
+        });
         setPos(pos);
 
         redraw();
@@ -437,10 +439,10 @@ namespace graphics {
         QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
 
         // Fill background
-        QLinearGradient gradient(0, -m_Height / 2, 0, -m_Height / 2 + );
+        QLinearGradient gradient(0, -m_Height / 2, 0, -m_Height / 2 + m_HeaderHeight );
         gradient.setColorAt(0, color);
         gradient.setColorAt(1, Qt::white);
-        QRectF headerRect(-m_Width / 2, -m_Height / 2, m_Width, );
+        QRectF headerRect(-m_Width / 2, -m_Height / 2, m_Width, m_HeaderHeight);
         painter->fillRect(headerRect, QBrush(gradient));
 
         // Draw frame

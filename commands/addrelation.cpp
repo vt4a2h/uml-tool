@@ -87,7 +87,8 @@ namespace commands {
                 m_Relation->setTailType(m_From);
                 d->addRelation(m_Relation);
 
-                m_GraphicRelation = new graphics::Relation(m_Relation, m_From, m_To);
+                // FIXME:
+//                m_GraphicRelation = new graphics::Relation(m_Relation, m_From, m_To);
                 m_Scene->addItem(m_GraphicRelation.data());
 
                 m_Done = true;
@@ -117,10 +118,11 @@ namespace commands {
     void AddRelation::removeRelationFromScene()
     {
         if (m_From && m_To) {
-            auto scene = G_ASSERT(m_From->scene());
+            // FIXME:
+//            auto scene = G_ASSERT(m_From->scene());
 
-            if (!m_GraphicRelation.isNull())
-                scene->removeItem(m_GraphicRelation.data());
+//            if (!m_GraphicRelation.isNull())
+//                scene->removeItem(m_GraphicRelation.data());
         }
     }
 

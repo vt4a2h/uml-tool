@@ -26,7 +26,11 @@
 
 #include "entity_types.hpp"
 
+#include <entity/type.h>
+
 #include <gui/graphics/entity.h>
+
+#include <models/models_types.hpp>
 
 
 class QGraphicsScene;
@@ -44,7 +48,7 @@ namespace entity {
 
         static const EntityFactory &instance();
 
-        SharedType make(KindOfType type) const;
+        SharedType make(KindOfType type, const common::ID &scopeID) const;
 
 
 //        template<class Type>
@@ -66,8 +70,13 @@ namespace entity {
 //        graphics::Entity *addEntity(QGraphicsScene &scene, const project::SharedProject &project,
 //                                    const entity::SharedType &type, const QPointF &pos) const;
 
+        models::WeakTreeModel treeModel() const;
+        void setTreeModel(const models::WeakTreeModel &treeModel);
+
     private:
-        explicit RelationFactory(QObject * parent = nullptr);
+        explicit EntityFactory(QObject * parent = nullptr);
+
+        models::WeakTreeModel m_TreeModel;
 //        graphics::Entity *newEntity(QGraphicsScene &scene, const QPointF &pos,
 //                                    const entity::SharedType &type = nullptr) const;
 

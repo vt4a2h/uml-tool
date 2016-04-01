@@ -92,7 +92,7 @@ SOURCES += main.cpp \
            ../../entity/isectional.cpp \
            ../../utility/helpfunctions.cpp \
            ../../db/database.cpp \
-           ../../db/projectdatabase.cpp \
+           ../../db/ProjectDatabase.cpp \
            ../../relationship/relation.cpp \
            ../../relationship/node.cpp \
            ../../relationship/generalization.cpp \

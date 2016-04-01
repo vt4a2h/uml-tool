@@ -213,7 +213,7 @@ namespace db {
             if (src[relationsMark].isArray()) {
                 relationship::SharedRelation relation;
                 QJsonObject obj;
-                for (auto &&val : src[relationsMark.toArray()) {
+                for (auto &&val : src[relationsMark].toArray()) {
                     obj = val.toObject();
                     utility::checkAndSet(obj, relationship::Relation::typeMark(), errorList,
                                          [&obj, &errorList, &relation, this](){

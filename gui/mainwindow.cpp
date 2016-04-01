@@ -82,30 +82,32 @@ namespace {
 
     void storeItemsPosition(const QGraphicsScene *scene, db::ProjectDatabase *db)
     {
-        Q_ASSERT(scene);
-        Q_ASSERT(db);
+        // FIXME: remove this func
+//        Q_ASSERT(scene);
+//        Q_ASSERT(db);
 
-        db::ItemsPos positions;
+//        db::ItemsPos positions;
 
-        for (auto &&item: scene->items())
-            if (auto entityItem = dynamic_cast<graphics::Entity *>(item))
-                positions.append({entityItem->typeObject()->id(), entityItem->pos()});
+//        for (auto &&item: scene->items())
+//            if (auto entityItem = dynamic_cast<graphics::Entity *>(item))
+//                positions.append({entityItem->typeObject()->id(), entityItem->pos()});
 
-        db->setItemsPos(positions);
+//        db->setItemsPos(positions);
     }
 
     void addGraphicsItems(graphics::Scene *scene, const project::SharedProject &project)
     {
-        Q_ASSERT(scene);
+        //FIXME: remove
+//        Q_ASSERT(scene);
 
-        scene->clear();
-        scene->initTrackLine();
+//        scene->clear();
+//        scene->initTrackLine();
 
-        db::ProjectDatabase * database = project->database().get();
-        for (auto &&item : database->itemsPos())
-            if (const entity::SharedType &type = database->typeByID(item.first))
-                if (auto &&scope = database->depthScopeSearch(type->scopeId()))
-                    entity::EntityFactory::instance().addEntity(*scene, project, type, item.second /*pos*/);
+//        db::ProjectDatabase * database = project->database().get();
+//        for (auto &&item : database->itemsPos())
+//            if (const entity::SharedType &type = database->typeByID(item.first))
+//                if (auto &&scope = database->depthScopeSearch(type->scopeId()))
+//                    entity::EntityFactory::instance().addEntity(*scene, project, type, item.second /*pos*/);
     }
 }
 

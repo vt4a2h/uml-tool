@@ -45,7 +45,7 @@ namespace entity {
         Class,         ///< Class
         Structure,     ///< Structure
         TemplateClass, ///< TemplateClass
-    }
+    };
 
     /**
      * @brief The Type class

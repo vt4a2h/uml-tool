@@ -86,10 +86,11 @@ namespace commands {
                 static_cast<graphics::Entity *>(m_Item)->setTypeObject(m_TypeItem);
             } else {
                 auto const& factory = entity::EntityFactory::instance();
-                auto entity = factory.makeEntity<Type>(m_Model, m_ScopeID, m_Scene, m_Pos);
+                // FIXME:
+//                auto entity = factory.makeEntity<Type>(m_Model, m_ScopeID, m_Scene, m_Pos);
 
-                m_TypeItem = G_ASSERT(entity.first);
-                m_Item = G_ASSERT(entity.second);
+//                m_TypeItem = G_ASSERT(entity.first);
+//                m_Item = G_ASSERT(entity.second);
 
                 m_Done = true;
             }

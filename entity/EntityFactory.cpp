@@ -49,13 +49,31 @@ namespace entity {
     {
     }
 
-//    /**
-//     * @brief EntitiesFactory::addEntity
-//     * @param scene
-//     * @param type
-//     * @param pos
-//     */
-//    graphics::Entity *EntitiesFactory::addEntity(QGraphicsScene &scene, const project::SharedProject &project,
+    /**
+     * @brief EntityFactory::treeModel
+     * @return
+     */
+    models::WeakTreeModel EntityFactory::treeModel() const
+    {
+        return m_TreeModel.lock();
+    }
+
+    /**
+     * @brief EntityFactory::setTreeModel
+     * @param treeModel
+     */
+    void EntityFactory::setTreeModel(const models::WeakTreeModel &treeModel)
+    {
+        m_TreeModel = treeModel;
+    }
+
+    //    /**
+    //     * @brief EntitiesFactory::addEntity
+    //     * @param scene
+    //     * @param type
+    //     * @param pos
+    //     */
+    //    graphics::Entity *EntitiesFactory::addEntity(QGraphicsScene &scene, const project::SharedProject &project,
 //                                                 const SharedType &type, const QPointF &pos) const
 //    {
 //        graphics::Entity * entity = newEntity(scene, pos, type);
@@ -69,6 +87,8 @@ namespace entity {
 //        Q_ASSERT(entity);
 //        Q_ASSERT(currentProject);
 
+
+    // TODO: implement via slot-signals
 //        // Connect project
 //        G_CONNECT(entity, &graphics::Entity::xChanged, currentProject, &project::Project::touch);
 //        G_CONNECT(entity, &graphics::Entity::yChanged, currentProject, &project::Project::touch);

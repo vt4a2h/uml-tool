@@ -60,8 +60,8 @@ namespace models {
         void addExistsScope(const entity::SharedScope &scope);
         void removeScope(const common::ID &id);
 
-        template <class T = entity::Type>
-        std::shared_ptr<T> makeType(const common::ID &scopeID, const QString &name = "");
+//        template <class T = entity::Type>
+//        std::shared_ptr<T> makeType(const common::ID &scopeID, const QString &name = "");
         void addExistsType(const QString &projectName, const common::ID &scopeID, const entity::SharedType &type);
         void removeType(const QString &projectName, const common::ID &scopeID, const common::ID &typeID);
         // }
@@ -87,24 +87,24 @@ namespace models {
     };
 
     // FIXME: move to entity factory
-    template <class T>
-    std::shared_ptr<T> ApplicationModel::makeType(const common::ID &scopeID, const QString &name)
-    {
-        if (currentProject() && currentProject()->database()) {
-            if (auto scope = currentProject()->database()->getScope(scopeID)) {
-                if (auto type = scope->addType<T>(name)) {
-                    m_TreeModel->addType(type, scope->id(), currentProject()->name());
-                    G_CONNECT(type.get(), &common::BasicElement::nameChanged,
-                              m_CurrentProject.get(), &project::Project::touch);
-                    G_CONNECT(type.get(), &common::BasicElement::nameChanged,
-                              scope.get(), &entity::Scope::onTypeNameChanged);
+//    template <class T>
+//    std::shared_ptr<T> ApplicationModel::makeType(const common::ID &scopeID, const QString &name)
+//    {
+//        if (currentProject() && currentProject()->database()) {
+//            if (auto scope = currentProject()->database()->getScope(scopeID)) {
+//                if (auto type = scope->addType<T>(name)) {
+//                    m_TreeModel->addType(type, scope->id(), currentProject()->name());
+//                    G_CONNECT(type.get(), &common::BasicElement::nameChanged,
+//                              m_CurrentProject.get(), &project::Project::touch);
+//                    G_CONNECT(type.get(), &common::BasicElement::nameChanged,
+//                              scope.get(), &entity::Scope::onTypeNameChanged);
 
-                    return type;
-                }
-            }
-        }
+//                    return type;
+//                }
+//            }
+//        }
 
-        return std::shared_ptr<T>(); // stub
-    }
+//        return std::shared_ptr<T>(); // stub
+//    }
 
 } // namespace models

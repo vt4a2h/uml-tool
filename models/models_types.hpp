@@ -24,12 +24,13 @@
 
 #include <memory>
 
-#include <QList>
+#include <QtContainerFwd>
 
 namespace models {
     class ProjectTreeModel;
     using UniqueTreeModel = std::unique_ptr<ProjectTreeModel>;
     using SharedTreeModel = std::shared_ptr<ProjectTreeModel>;
+    using WeakTreeModel = std::weak_ptr<ProjectTreeModel>;
 
     class BasicTreeItem;
     using ChildItems = QList<BasicTreeItem*>;

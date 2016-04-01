@@ -90,7 +90,7 @@ HEADERS += \
     enums.h \
     types.h \
     db/database.h \
-    db/projectdatabase.h \
+    db/ProjectDatabase.h \
     db/db_types.hpp \
     entity/class.h \
     entity/classmethod.h \
