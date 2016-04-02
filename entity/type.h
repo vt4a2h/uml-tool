@@ -47,6 +47,8 @@ namespace entity {
         TemplateClass, ///< TemplateClass
     };
 
+    uint qHash(const KindOfType &e);
+
     /**
      * @brief The Type class
      */

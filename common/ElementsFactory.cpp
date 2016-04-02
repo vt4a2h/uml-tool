@@ -22,6 +22,8 @@
 *****************************************************************************/
 #include "ElementsFactory.h"
 
+#include <project/project.h>
+
 namespace common {
 
     /**
@@ -33,21 +35,21 @@ namespace common {
     }
 
     /**
-     * @brief ElementsFactory::onDbChanged
-     * @param newDb
-     */
-    void ElementsFactory::onDbChanged(const db::SharedProjectDatabase &newDb)
-    {
-        m_Db = newDb;
-    }
-
-    /**
      * @brief ElementsFactory::onSceneChanged
      * @param scene
      */
     void ElementsFactory::onSceneChanged(const QPointer<QGraphicsScene> &scene)
     {
         m_Scene = scene;
+    }
+
+    /**
+     * @brief ElementsFactory::onProjectChanged
+     * @param p
+     */
+    void ElementsFactory::onProjectChanged(const project::SharedProject &p)
+    {
+        m_Project = p;
     }
 
     /**
@@ -65,7 +67,16 @@ namespace common {
      */
     db::SharedProjectDatabase ElementsFactory::db() const
     {
-        return m_Db.lock();
+        return project() ? project()->database() : nullptr;
+    }
+
+    /**
+     * @brief ElementsFactory::project
+     * @return
+     */
+    project::SharedProject ElementsFactory::project() const
+    {
+        return m_Project.lock();
     }
 
 } // namespace common

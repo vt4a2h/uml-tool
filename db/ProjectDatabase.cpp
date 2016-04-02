@@ -160,6 +160,26 @@ namespace db {
     }
 
     /**
+     * @brief ProjectDatabase::registerGraphicsEntity
+     * @param e
+     */
+    void ProjectDatabase::registerGraphicsEntity(const graphics::EntityPtr &e)
+    {
+        if (e)
+            m_GraphicsEntities[e->id()] = e;
+    }
+
+    /**
+     * @brief ProjectDatabase::unregisterGraphicsEntity
+     * @param e
+     */
+    void ProjectDatabase::unregisterGraphicsEntity(const graphics::EntityPtr &e)
+    {
+        if (e)
+            m_GraphicsEntities.remove(e->id());
+    }
+
+    /**
      * @brief ProjectDatabase::clear
      */
     void ProjectDatabase::clear()

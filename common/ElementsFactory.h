@@ -27,28 +27,44 @@
 
 #include <db/db_types.hpp>
 
+#include <project/project_types.hpp>
+
 class QGraphicsScene;
 
 namespace common {
 
+    /// The base class for schema elements factories
     class ElementsFactory : public QObject
     {
         Q_OBJECT
+
+    public: // Types
+
+        /// Creation options
+        enum CreationOption {
+            NoOptions      = 0x0, ///< Empty
+            AddToScene     = 0x1, ///< Add graphic representation of item to the scene
+            AddToTreeModel = 0x2, ///< Add item to the tree model
+        };
+        Q_DECLARE_FLAGS(CreationOptions, CreationOption)
 
     public:
         explicit ElementsFactory(QObject *parent = 0);
 
     public slots:
-        void onDbChanged(const db::SharedProjectDatabase &newDb);
         void onSceneChanged(const QPointer<QGraphicsScene> &scene);
+        void onProjectChanged(const project::SharedProject &p);
 
     protected:
         QPointer<QGraphicsScene> scene() const;
         db::SharedProjectDatabase db() const;
+        project::SharedProject project() const;
 
     private:
         QPointer<QGraphicsScene> m_Scene;
-        db::WeakProjectDatabase m_Db;
+        project::WeakProject m_Project;
     };
 
 } // namespace common
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(common::ElementsFactory::CreationOptions)

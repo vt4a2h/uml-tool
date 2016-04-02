@@ -132,4 +132,14 @@ namespace entity {
         m_Name = BASE_TYPE_NAME;
     }
 
+    /**
+     * @brief qHash
+     * @param e
+     * @return
+     */
+    uint qHash(const KindOfType &e)
+    {
+        return ::qHash(static_cast<int>(e));
+    }
+
 } // namespace entity

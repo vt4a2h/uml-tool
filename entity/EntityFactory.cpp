@@ -26,9 +26,36 @@
 
 #include <commands/movegraphicobject.h>
 
-#include "class.h"
+#include <db/ProjectDatabase.h>
+
+#include <entity/class.h>
+#include <entity/extendedtype.h>
+#include <entity/union.h>
+#include <entity/enum.h>
+#include <entity/templateclass.h>
+
+#include <models/projecttreemodel.h>
+
+#include <project/project.h>
 
 namespace entity {
+
+    namespace {
+        QHash<KindOfType, std::function<SharedType()>> makers = {
+            { KindOfType::Type,          [] { return std::make_shared<entity::Type>();          } },
+            { KindOfType::ExtendedType,  [] { return std::make_shared<entity::ExtendedType>();  } },
+            { KindOfType::Enum,          [] { return std::make_shared<entity::Enum>();          } },
+            { KindOfType::Union,         [] { return std::make_shared<entity::Union>();         } },
+            { KindOfType::Class,         [] { return std::make_shared<entity::Class>();         } },
+            { KindOfType::TemplateClass, [] { return std::make_shared<entity::TemplateClass>(); } },
+            { KindOfType::Structure,
+              [] {
+                    auto structure = std::make_shared<entity::Class>();
+                    structure->setKind(Kind::StructType);
+                    return structure;
+                 } },
+        };
+    }
 
     /**
      * @brief EntitiesFactory::get
@@ -38,6 +65,48 @@ namespace entity {
     {
         static EntityFactory instance;
         return instance;
+    }
+
+    /**
+     * @brief EntityFactory::make
+     * @param kindOfType
+     * @param pos
+     * @param scopeID
+     * @param options
+     * @return
+     */
+    SharedType EntityFactory::make(KindOfType kindOfType, const QPointF &pos, const common::ID &scopeID,
+                                   CreationOptions options) const
+    {
+        if (auto database = db()) {
+            if (auto scope = database->depthScopeSearch(scopeID)) {
+                if (auto maker = makers[kindOfType]) {
+                    auto type = maker();
+
+                    if (options.testFlag(AddToScene)) {
+                        if (auto s = scene()) {
+                            auto graphicEntity = new graphics::Entity(type);
+                            graphicEntity->setPos(pos);
+
+                            // Register in the database
+                            database->registerGraphicsEntity(graphicEntity);
+
+                            // Transfer ownership
+                            s->addItem(graphicEntity);
+                        }
+                    }
+
+                    if (options.testFlag(AddToTreeModel))
+                        if (auto tm = treeModel())
+                            if (auto p = project())
+                                tm->addType(type, scopeID, p->name());
+
+                    return type;
+                }
+            }
+        }
+
+        return nullptr;
     }
 
     /**
@@ -53,7 +122,7 @@ namespace entity {
      * @brief EntityFactory::treeModel
      * @return
      */
-    models::WeakTreeModel EntityFactory::treeModel() const
+    models::SharedTreeModel EntityFactory::treeModel() const
     {
         return m_TreeModel.lock();
     }
@@ -66,20 +135,6 @@ namespace entity {
     {
         m_TreeModel = treeModel;
     }
-
-    //    /**
-    //     * @brief EntitiesFactory::addEntity
-    //     * @param scene
-    //     * @param type
-    //     * @param pos
-    //     */
-    //    graphics::Entity *EntitiesFactory::addEntity(QGraphicsScene &scene, const project::SharedProject &project,
-//                                                 const SharedType &type, const QPointF &pos) const
-//    {
-//        graphics::Entity * entity = newEntity(scene, pos, type);
-//        connectEntity(entity, project.get(), type.get());
-//        return entity;
-//    }
 
 //    void EntitiesFactory::connectEntity(graphics::Entity *entity, project::Project *currentProject,
 //                                        common::BasicElement */*type*/) const

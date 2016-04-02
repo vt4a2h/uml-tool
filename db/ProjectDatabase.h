@@ -55,6 +55,9 @@ namespace db {
         void removeRelation(const common::ID &id);
         relationship::RelationsList relations() const;
 
+        void registerGraphicsEntity(const graphics::EntityPtr &e);
+        void unregisterGraphicsEntity(const graphics::EntityPtr &e);
+
         db::SharedDatabase globalDatabase() const;
         void setGlobalDatabase(const db::SharedDatabase &globalDatabase);
 

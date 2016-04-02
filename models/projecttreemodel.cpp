@@ -276,14 +276,14 @@ namespace models {
      * @param scopeId
      * @param projectId
      */
-    void ProjectTreeModel::addType(const entity::SharedType &type, const common::ID &scopeId,
+    void ProjectTreeModel::addType(const entity::SharedType &type, const common::ID &scopeID,
                                    const QString &projectName)
     {
         if (auto &&pr = find(projectName)) {
             auto &&projectIndex = index(indexOf(pr), 0);
             Q_ASSERT(projectIndex.isValid());
 
-            if (auto &&scope = pr->itemById(QVariant::fromValue(scopeId))) {
+            if (auto &&scope = pr->itemById(QVariant::fromValue(scopeID))) {
                 auto &&scopeIndex = projectIndex.child(pr->rowForItem(scope), 0);
                 Q_ASSERT(scopeIndex.isValid());
 

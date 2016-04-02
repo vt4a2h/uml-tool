@@ -48,40 +48,17 @@ namespace entity {
 
         static const EntityFactory &instance();
 
-        SharedType make(KindOfType type, const common::ID &scopeID) const;
+        SharedType make(KindOfType kindOfType, const QPointF &pos = QPointF(0, 0),
+                        const common::ID &scopeID = common::ID::projectScopeID(),
+                        CreationOptions options = AddToScene | AddToTreeModel) const;
 
-
-//        template<class Type>
-//        std::pair<std::shared_ptr<Type>, graphics::Entity*>
-//        makeEntity(const models::SharedApplicationModel &model, const common::ID  &scopeID,
-//                   QGraphicsScene &scene, const QPointF &pos) const
-//        {
-//            auto type = model->makeType<Type>(scopeID, Type::staticDefaultName());
-//            graphics::Entity * entity = newEntity(scene, pos, type);
-
-//            auto &&currentProject = model->currentProject();
-//            connectEntity(entity, currentProject.get(), type.get());
-//            currentProject->touch();
-
-//            return {type, entity};
-//        }
-
-
-//        graphics::Entity *addEntity(QGraphicsScene &scene, const project::SharedProject &project,
-//                                    const entity::SharedType &type, const QPointF &pos) const;
-
-        models::WeakTreeModel treeModel() const;
+        models::SharedTreeModel treeModel() const;
         void setTreeModel(const models::WeakTreeModel &treeModel);
 
     private:
         explicit EntityFactory(QObject * parent = nullptr);
 
         models::WeakTreeModel m_TreeModel;
-//        graphics::Entity *newEntity(QGraphicsScene &scene, const QPointF &pos,
-//                                    const entity::SharedType &type = nullptr) const;
-
-//        void connectEntity(graphics::Entity *entity, project::Project *currentProject,
-//                           common::BasicElement *type) const;
     };
 
 } // namespace entity
