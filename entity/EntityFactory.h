@@ -51,6 +51,9 @@ namespace entity {
         SharedType make(KindOfType kindOfType, const QPointF &pos = QPointF(0, 0),
                         const common::ID &scopeID = common::ID::projectScopeID(),
                         CreationOptions options = AddToScene | AddToTreeModel) const;
+        SharedType make(const QJsonObject &src, ErrorList &errors,
+                        const common::ID &scopeID = common::ID::projectScopeID(),
+                        CreationOptions options = AddToScene | AddToTreeModel) const;
 
         models::SharedTreeModel treeModel() const;
         void setTreeModel(const models::WeakTreeModel &treeModel);

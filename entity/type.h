@@ -68,6 +68,8 @@ namespace entity {
 
         virtual bool isEqual(const Type &rhs, bool withTypeid = true) const;
 
+        static QString kindMarker();
+
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
@@ -76,6 +78,9 @@ namespace entity {
         static QString staticDefaultName();
 
         add_meta(Type)
+
+    protected:
+        KindOfType m_KindOfType;
 
     private:
         void setBaseTypeName();

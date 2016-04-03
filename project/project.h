@@ -25,10 +25,13 @@
 #include <QObject>
 #include <QJsonObject>
 
+#include <common/id.h>
+
 #include <db/db_types.hpp>
 
 #include <entity/entity_types.hpp>
-#include <common/id.h>
+
+#include <gui/graphics/graphics_types.h>
 
 #include "types.h"
 
@@ -100,10 +103,15 @@ namespace project {
         void saved();
         void modified();
 
+    private slots:
+        void onGraphicsEntityRegistred(const graphics::EntityPtr &e);
+        void onGraphicsEntityUnregistred(const graphics::EntityPtr &e);
+
     private:
         QString projectFileName() const;
         QString databaseFileName() const;
         QString projectPath(const QString &basePath) const;
+        void makeConnections();
 
         QString m_Name;
         QString m_Path;

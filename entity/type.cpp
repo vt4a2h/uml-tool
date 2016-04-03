@@ -37,6 +37,10 @@
 
 namespace entity {
 
+    namespace {
+        const QString kindOfTypeMark = "Kind of type";
+    }
+
     /**
      * @brief Type::Type
      */
@@ -78,7 +82,7 @@ namespace entity {
     {
         QJsonObject result = BasicElement::toJson();
 
-        result.insert("Kind of type", marker());
+        result.insert(kindOfTypeMark, int(m_KindOfType));
 
         return result;
     }
@@ -91,7 +95,8 @@ namespace entity {
     void Type::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         BasicElement::fromJson(src, errorList);
-        // TODO: read Kind of type here!
+        utility::checkAndSet(src, kindOfTypeMark, errorList,
+                             [&](){ m_KindOfType = KindOfType(src[kindOfTypeMark].toInt()); });
     }
 
     /**
@@ -119,9 +124,18 @@ namespace entity {
      */
     bool Type::isEqual(const Type &rhs, bool withTypeid) const
     {
-        return rhs.hashType() == this->hashType()      &&
-               m_Name        == rhs.m_Name             &&
-                ( withTypeid ? m_Id == rhs.m_Id : true );
+        return rhs.hashType()   == this->hashType() &&
+               rhs.m_KindOfType == m_KindOfType     &&
+               ( withTypeid ? m_Id == rhs.m_Id : true );
+    }
+
+    /**
+     * @brief Type::kindMarker
+     * @return
+     */
+    QString Type::kindMarker()
+    {
+        return kindOfTypeMark;
     }
 
     /**

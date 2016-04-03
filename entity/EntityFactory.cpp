@@ -33,6 +33,7 @@
 #include <entity/union.h>
 #include <entity/enum.h>
 #include <entity/templateclass.h>
+#include <entity/scope.h>
 
 #include <models/projecttreemodel.h>
 
@@ -41,16 +42,22 @@
 namespace entity {
 
     namespace {
-        QHash<KindOfType, std::function<SharedType()>> makers = {
-            { KindOfType::Type,          [] { return std::make_shared<entity::Type>();          } },
-            { KindOfType::ExtendedType,  [] { return std::make_shared<entity::ExtendedType>();  } },
-            { KindOfType::Enum,          [] { return std::make_shared<entity::Enum>();          } },
-            { KindOfType::Union,         [] { return std::make_shared<entity::Union>();         } },
-            { KindOfType::Class,         [] { return std::make_shared<entity::Class>();         } },
-            { KindOfType::TemplateClass, [] { return std::make_shared<entity::TemplateClass>(); } },
+        QHash<KindOfType, std::function<SharedType(const entity::SharedScope &)>> makers = {
+            { KindOfType::Type,
+              [] (const entity::SharedScope &s) { return s->addType<entity::Type>();          } },
+            { KindOfType::ExtendedType,
+              [] (const entity::SharedScope &s) { return s->addType<entity::ExtendedType>();  } },
+            { KindOfType::Enum,
+              [] (const entity::SharedScope &s) { return s->addType<entity::Enum>();          } },
+            { KindOfType::Union,
+              [] (const entity::SharedScope &s) { return s->addType<entity::Union>();         } },
+            { KindOfType::Class,
+              [] (const entity::SharedScope &s) { return s->addType<entity::Class>();         } },
+            { KindOfType::TemplateClass,
+              [] (const entity::SharedScope &s) { return s->addType<entity::TemplateClass>(); } },
             { KindOfType::Structure,
-              [] {
-                    auto structure = std::make_shared<entity::Class>();
+              [] (const entity::SharedScope &s) {
+                    auto structure = s->addType<entity::Class>();
                     structure->setKind(Kind::StructType);
                     return structure;
                  } },
@@ -75,13 +82,16 @@ namespace entity {
      * @param options
      * @return
      */
-    SharedType EntityFactory::make(KindOfType kindOfType, const QPointF &pos, const common::ID &scopeID,
+    SharedType EntityFactory::make(KindOfType kindOfType, const QPointF &pos,
+                                   const common::ID &scopeID,
                                    CreationOptions options) const
     {
         if (auto database = db()) {
             if (auto scope = database->depthScopeSearch(scopeID)) {
                 if (auto maker = makers[kindOfType]) {
-                    auto type = maker();
+                    auto type = maker(scope);
+                    if (!type)
+                        return nullptr;
 
                     if (options.testFlag(AddToScene)) {
                         if (auto s = scene()) {
@@ -103,6 +113,31 @@ namespace entity {
 
                     return type;
                 }
+            }
+        }
+
+        return nullptr;
+    }
+
+    /**
+     * @brief EntityFactory::make
+     * @param src
+     * @param errors
+     * @param scopeID
+     * @param options
+     * @return
+     */
+    SharedType EntityFactory::make(const QJsonObject &src, ErrorList &errors, const common::ID &scopeID,
+                                   common::ElementsFactory::CreationOptions options) const
+    {
+        if (src.contains(entity::Type::kindMarker())) {
+            auto kind = KindOfType(src[entity::Type::kindMarker()].toInt());
+            if (auto result = make(kind, QPointF(0, 0), scopeID, options)) {
+                result->fromJson(src, errors);
+                if (errors.isEmpty())
+                    return result;
+            } else {
+                errors << "Cannot create object.";
             }
         }
 
@@ -135,34 +170,5 @@ namespace entity {
     {
         m_TreeModel = treeModel;
     }
-
-//    void EntitiesFactory::connectEntity(graphics::Entity *entity, project::Project *currentProject,
-//                                        common::BasicElement */*type*/) const
-//    {
-//        Q_ASSERT(entity);
-//        Q_ASSERT(currentProject);
-
-
-    // TODO: implement via slot-signals
-//        // Connect project
-//        G_CONNECT(entity, &graphics::Entity::xChanged, currentProject, &project::Project::touch);
-//        G_CONNECT(entity, &graphics::Entity::yChanged, currentProject, &project::Project::touch);
-//        G_CONNECT(entity, &graphics::Entity::moved,
-//                          [=](const QPointF &from, const QPointF &to) {
-//                             auto cmd = std::make_unique<commands::MoveGraphicObject>(
-//                                            *entity, entity->typeObject()->name(), from, to);
-//                             currentProject->commandsStack()->push(cmd.release());
-//                          });
-//    }
-
-//    graphics::Entity *EntitiesFactory::newEntity(QGraphicsScene &scene, const QPointF &pos,
-//                                                 const entity::SharedType &type) const
-//    {
-//        graphics::Entity * entity = new graphics::Entity(type);
-//        entity->setPos(pos);
-//        scene.addItem(entity);
-
-//        return entity;
-//    }
 
 } // namespace entity

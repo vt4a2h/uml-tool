@@ -31,10 +31,14 @@
 
 #include <common/basicelement.h>
 
+#include <commands/movegraphicobject.h>
+
 #include <entity/type.h>
 #include <entity/scope.h>
 
 #include <db/ProjectDatabase.h>
+
+#include <gui/graphics/entity.h>
 
 #include <utility/helpfunctions.h>
 
@@ -77,8 +81,7 @@ namespace project {
     {
         m_Database->addExistsScope(makeProjectScope());
 
-        G_CONNECT(m_Database.get(), &db::ProjectDatabase::relationAdded, this, &Project::touch);
-        G_CONNECT(m_Database.get(), &db::ProjectDatabase::relationRemoved, this, &Project::touch);
+        makeConnections();
     }
 
     /**
@@ -399,6 +402,36 @@ namespace project {
     }
 
     /**
+     * @brief Project::onGraphicsEntityRegistred
+     * @param e
+     */
+    void Project::onGraphicsEntityRegistred(const graphics::EntityPtr &e)
+    {
+        if (!e)
+            return;
+
+        G_CONNECT(e, &graphics::Entity::xChanged, this, &project::Project::touch);
+        G_CONNECT(e, &graphics::Entity::yChanged, this, &project::Project::touch);
+        G_CONNECT(e, &graphics::Entity::moved,
+                  [this, &e](const QPointF &from, const QPointF &to) {
+                           auto cmd = std::make_unique<commands::MoveGraphicObject>(
+                           *e, G_ASSERT(e->typeObject())->name(), from, to);
+                           G_ASSERT(commandsStack())->push(cmd.release());
+        });
+    }
+
+    /**
+     * @brief Project::onGraphicsEntityUnregistred
+     * @param e
+     */
+    void Project::onGraphicsEntityUnregistred(const graphics::EntityPtr &e)
+    {
+        G_DISCONNECT(e, &graphics::Entity::xChanged, this, &project::Project::touch);
+        G_DISCONNECT(e, &graphics::Entity::yChanged, this, &project::Project::touch);
+        G_DISCONNECT(e, SIGNAL(moved()));
+    }
+
+    /**
      * @brief Project::projectFileName
      * @return
      */
@@ -425,6 +458,19 @@ namespace project {
     {
         QChar sep = QDir(basePath).separator();
         return basePath + sep + projectFileName() + "." + PROJECT_FILE_EXTENTION;
+    }
+
+    /**
+     * @brief Project::makeConnections
+     */
+    void Project::makeConnections()
+    {
+        G_CONNECT(m_Database.get(), &db::ProjectDatabase::relationAdded, this, &Project::touch);
+        G_CONNECT(m_Database.get(), &db::ProjectDatabase::relationRemoved, this, &Project::touch);
+        G_CONNECT(m_Database.get(), &db::ProjectDatabase::graphicsEntityRegistred,
+                  this, &Project::onGraphicsEntityRegistred);
+        G_CONNECT(m_Database.get(), &db::ProjectDatabase::graphicsEntityUnregistred,
+                  this, &Project::onGraphicsEntityUnregistred);
     }
 
 } // namespace project

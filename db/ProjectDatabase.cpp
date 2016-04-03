@@ -165,8 +165,10 @@ namespace db {
      */
     void ProjectDatabase::registerGraphicsEntity(const graphics::EntityPtr &e)
     {
-        if (e)
+        if (e) {
             m_GraphicsEntities[e->id()] = e;
+            emit graphicsEntityRegistred(e);
+        }
     }
 
     /**
@@ -175,8 +177,10 @@ namespace db {
      */
     void ProjectDatabase::unregisterGraphicsEntity(const graphics::EntityPtr &e)
     {
-        if (e)
+        if (e) {
             m_GraphicsEntities.remove(e->id());
+            emit graphicsEntityUnregistred(e);
+        }
     }
 
     /**

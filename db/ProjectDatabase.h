@@ -72,6 +72,9 @@ namespace db {
         void relationAdded();
         void relationRemoved();
 
+        void graphicsEntityRegistred(const graphics::EntityPtr &);
+        void graphicsEntityUnregistred(const graphics::EntityPtr &);
+
     public slots:
         void onTypeUserAdded(const entity::SharedTypeUser &tu);
         // TODO: add signals to detect adding/ removing relation in order to touch project

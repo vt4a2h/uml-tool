@@ -30,6 +30,7 @@
 #include "enums.h"
 #include "extendedtype.h"
 #include "constants.h"
+#include "EntityFactory.h"
 
 #include <utility>
 
@@ -350,16 +351,9 @@ namespace entity {
         m_TypesByName.clear();
         utility::checkAndSet(src, "Types", errorList, [&src, &errorList, this](){
             if (src["Types"].isArray()) {
-                SharedType type;
-                QJsonObject obj;
-                for (auto &&val : src["Types"].toArray()) {
-                    obj = val.toObject();
-                    utility::checkAndSet(obj, "Kind of type", errorList, [&obj, &type, &errorList, this](){
-                        type = utility::makeType(obj.value("Kind of type").toString());
-                        type->fromJson(obj, errorList);
-                        addExistsType(type);
-                    });
-                }
+                auto const & factory = EntityFactory::instance();
+                for (auto &&val : src["Types"].toArray())
+                    factory.make(val.toObject(), errorList, id());
             } else {
                 errorList << "Error: \"Types\" is not array";
             }
