@@ -149,7 +149,6 @@ HEADERS += \
     commands/createscope.h \
     commands/basecommand.h \
     commands/movegraphicobject.h \
-    commands/createentity.h \
     commands/renameentity.h \
     commands/movetypetootherscope.h \
     commands/commands_types.hpp \
@@ -180,7 +179,8 @@ HEADERS += \
     common/meta.h \
     relationship/RelationFactory.h \
     entity/EntityFactory.h \
-    common/ElementsFactory.h
+    common/ElementsFactory.h \
+    commands/CreateEntity.h
 
 FORMS += \
     gui/mainwindow.ui \

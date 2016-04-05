@@ -57,7 +57,7 @@
 #include <entity/type.h>
 
 #include <commands/createscope.h>
-#include <commands/createentity.h>
+#include <commands/CreateEntity.h>
 
 #include "about.h"
 #include "newproject.h"

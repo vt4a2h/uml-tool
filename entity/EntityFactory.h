@@ -24,6 +24,8 @@
 
 #include <common/ElementsFactory.h>
 
+#include <commands/CreateEntity.h>
+
 #include "entity_types.hpp"
 
 #include <entity/type.h>
@@ -54,6 +56,8 @@ namespace entity {
         SharedType make(const QJsonObject &src, ErrorList &errors,
                         const common::ID &scopeID = common::ID::projectScopeID(),
                         CreationOptions options = AddToScene | AddToTreeModel) const;
+
+
 
         models::SharedTreeModel treeModel() const;
         void setTreeModel(const models::WeakTreeModel &treeModel);
