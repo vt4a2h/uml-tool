@@ -84,7 +84,8 @@ SOURCES += \
     relationship/RelationFactory.cpp \
     entity/EntityFactory.cpp \
     db/ProjectDatabase.cpp \
-    common/ElementsFactory.cpp
+    common/ElementsFactory.cpp \
+    commands/CreateEntity.cpp
 
 HEADERS += \
     enums.h \

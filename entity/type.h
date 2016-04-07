@@ -43,7 +43,6 @@ namespace entity {
         Enum,          ///< Enum
         Union,         ///< Union
         Class,         ///< Class
-        Structure,     ///< Structure
         TemplateClass, ///< TemplateClass
     };
 

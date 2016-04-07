@@ -23,42 +23,28 @@
 #pragma once
 
 #include <QPointF>
-#include <QGraphicsScene>
 
-#include <entity/entity_types.hpp>
-#include <entity/EntityFactory.h>
 #include <entity/type.h>
-#include <entity/class.h>
-#include <entity/enum.h>
-#include <entity/union.h>
-#include <entity/extendedtype.h>
-#include <entity/templateclass.h>
 
-#include <gui/graphics/entity.h>
-
-#include <models/models_types.hpp>
-#include <models/applicationmodel.h>
-
-#include <utility/helpfunctions.h>
-
-#include "constants.h"
-#include "enums.h"
 #include "basecommand.h"
-#include "qthelpers.h"
 
-class QGraphicsItem;
 class QGraphicsScene;
 
 namespace commands {
 
-//    const QMap<size_t, QString> hashName = {
-//        { entity::Type::staticHashType(), BaseCommand::tr("type") },
-//        { entity::Class::staticHashType(), BaseCommand::tr("class (struct)") },
-//        { entity::Enum::staticHashType(), BaseCommand::tr("enum") },
-//        { entity::Union::staticHashType(), BaseCommand::tr("union") },
-//        { entity::ExtendedType::staticHashType(), BaseCommand::tr("type alias") },
-//        { entity::TemplateClass::staticHashType(), BaseCommand::tr("template class") },
-//    };
+    class CreateEntity : public BaseCommand
+    {
+    public:
+        CreateEntity(entity::KindOfType entityType, const common::ID &scopeID, const QPointF &pos,
+                     QGraphicsScene & scene,
+                     QUndoCommand *parent = nullptr);
+
+    private:
+        entity::KindOfType m_Type;
+        common::ID         m_ScopeID;
+        QPointF            m_Pos;
+        QGraphicsScene &   m_Scene;
+    };
 
 //    /// The class CreateEntity
 //    template<class Type>

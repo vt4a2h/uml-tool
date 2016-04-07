@@ -55,12 +55,6 @@ namespace entity {
               [] (const entity::SharedScope &s) { return s->addType<entity::Class>();         } },
             { KindOfType::TemplateClass,
               [] (const entity::SharedScope &s) { return s->addType<entity::TemplateClass>(); } },
-            { KindOfType::Structure,
-              [] (const entity::SharedScope &s) {
-                    auto structure = s->addType<entity::Class>();
-                    structure->setKind(Kind::StructType);
-                    return structure;
-                 } },
         };
     }
 
