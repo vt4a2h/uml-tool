@@ -30,7 +30,7 @@
 
 #include <entity/type.h>
 
-#include <gui/graphics/entity.h>
+#include <gui/graphics/Entity.h>
 
 #include <models/models_types.hpp>
 

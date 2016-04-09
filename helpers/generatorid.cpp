@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "generatorid.h"
 
-#include <project/project.h>
+#include <project/Project.h>
 
 namespace helpers {
 

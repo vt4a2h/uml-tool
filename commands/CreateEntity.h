@@ -26,9 +26,9 @@
 
 #include <entity/type.h>
 
-#include "basecommand.h"
+#include <gui/graphics/graphics_types.h>
 
-class QGraphicsScene;
+#include "basecommand.h"
 
 namespace commands {
 
@@ -36,88 +36,22 @@ namespace commands {
     {
     public:
         CreateEntity(entity::KindOfType entityType, const common::ID &scopeID, const QPointF &pos,
-                     QGraphicsScene & scene,
                      QUndoCommand *parent = nullptr);
 
+    public: // QUndoCommand overridies
+        void undo()    override;
+        void redo()    override;
+        void cleanup() override;
+
     private:
-        entity::KindOfType m_Type;
+        bool m_CleaningRequired = false;
+
+        entity::KindOfType m_KindOfType;
         common::ID         m_ScopeID;
         QPointF            m_Pos;
-        QGraphicsScene &   m_Scene;
+
+        entity::SharedType  m_Entity;
+        graphics::EntityPtr m_GraphicEntity;
     };
-
-//    /// The class CreateEntity
-//    template<class Type>
-//    class CreateEntity : public BaseCommand
-//    {
-//    public:
-//        CreateEntity(const models::SharedApplicationModel &model, const common::ID &scopeID,
-//                     QGraphicsScene &scene, const QPointF &pos, QUndoCommand *parent = nullptr)
-//            : BaseCommand(tr("Add %1").arg(hashName[typeid(Type).hash_code()]), parent)
-//            , m_Model(model)
-//            , m_ProjectName(model && model->currentProject() ? model->currentProject()->name()
-//                                                             : "")
-//            , m_ScopeID(scopeID)
-//            , m_Pos(pos)
-//            , m_Scene(scene)
-//        {
-//        }
-
-//        void redo() override
-//        {
-//            if (m_Done) {
-//                m_Model->addExistsType(m_ProjectName, m_ScopeID, m_TypeItem);
-
-//                m_Scene.addItem(m_Item);
-//                static_cast<graphics::Entity *>(m_Item)->setTypeObject(m_TypeItem);
-//            } else {
-////                auto const& factory = entity::EntityFactory::instance();
-//                // FIXME:
-////                auto entity = factory.makeEntity<Type>(m_Model, m_ScopeID, m_Scene, m_Pos);
-
-////                m_TypeItem = G_ASSERT(entity.first);
-////                m_Item = G_ASSERT(entity.second);
-
-//                m_Done = true;
-//            }
-
-//            m_CleaningRequired = false;
-//        }
-
-//        void undo() override
-//        {
-//            Q_ASSERT(m_Model);
-//            Q_ASSERT(m_TypeItem);
-
-//            m_Scene.removeItem(m_Item);
-//            m_Model->removeType(m_ProjectName, m_ScopeID, m_TypeItem->id());
-//            m_CleaningRequired = true;
-//        }
-
-//        std::shared_ptr<Type> entity() const { return m_TypeItem; }
-
-//    protected:
-//        void cleanup() override
-//        {
-//            if (m_CleaningRequired && m_Item)
-//                delete m_Item;
-//        }
-
-//    private:
-//        bool m_CleaningRequired = false;
-//        models::SharedApplicationModel m_Model;
-//        QString m_ProjectName;
-//        common::ID m_ScopeID;
-//        QPointF m_Pos;
-//        QGraphicsItem  * m_Item = nullptr;
-//        QGraphicsScene & m_Scene;
-//        std::shared_ptr<Type> m_TypeItem = nullptr;
-//    };
-
-//    using MakeClass = CreateEntity<entity::Class>;
-//    using MakeAlias = CreateEntity<entity::ExtendedType>;
-//    using MakeEnum  = CreateEntity<entity::Enum>;
-//    using MakeUnion = CreateEntity<entity::Union>;
-//    using MakeTemplate = CreateEntity<entity::TemplateClass>;
 
 } // namespace commands

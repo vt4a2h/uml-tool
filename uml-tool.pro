@@ -46,12 +46,10 @@ SOURCES += \
     translation/signaturemaker.cpp \
     utility/helpfunctions.cpp \
     application/application.cpp \
-    project/project.cpp \
     gui/mainwindow.cpp \
     gui/about.cpp \
     gui/newproject.cpp \
     gui/addscope.cpp \
-    gui/graphics/entity.cpp \
     gui/editentitydialog.cpp \
     gui/scenefilter.cpp \
     gui/editmethoddialog.cpp \
@@ -59,7 +57,6 @@ SOURCES += \
     gui/componentseditdelegate.cpp \
     gui/signatureeditdelegate.cpp \
     models/basictreeitem.cpp \
-    models/projecttreemodel.cpp \
     models/applicationmodel.cpp \
     models/componentsmodel.cpp \
     commands/createscope.cpp \
@@ -85,7 +82,10 @@ SOURCES += \
     entity/EntityFactory.cpp \
     db/ProjectDatabase.cpp \
     common/ElementsFactory.cpp \
-    commands/CreateEntity.cpp
+    commands/CreateEntity.cpp \
+    gui/graphics/Entity.cpp \
+    models/ProjectTreeModel.cpp \
+    project/Project.cpp
 
 HEADERS += \
     enums.h \
@@ -129,12 +129,10 @@ HEADERS += \
     translation/signaturemaker.h \
     utility/helpfunctions.h \
     application/application.h \
-    project/project.h \
     gui/mainwindow.h \
     gui/about.h \
     gui/newproject.h \
     gui/addscope.h \
-    gui/graphics/entity.h \
     gui/editentitydialog.h \
     gui/gui_types.hpp \
     gui/scenefilter.h \
@@ -143,7 +141,6 @@ HEADERS += \
     gui/componentseditdelegate.h \
     gui/signatureeditdelegate.h \
     models/basictreeitem.h \
-    models/projecttreemodel.h \
     models/applicationmodel.h \
     models/models_types.hpp \
     models/componentsmodel.h \
@@ -181,7 +178,10 @@ HEADERS += \
     relationship/RelationFactory.h \
     entity/EntityFactory.h \
     common/ElementsFactory.h \
-    commands/CreateEntity.h
+    commands/CreateEntity.h \
+    gui/graphics/Entity.h \
+    models/ProjectTreeModel.h \
+    project/Project.h
 
 FORMS += \
     gui/mainwindow.ui \

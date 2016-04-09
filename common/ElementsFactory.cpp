@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "ElementsFactory.h"
 
-#include <project/project.h>
+#include <project/Project.h>
 
 namespace common {
 

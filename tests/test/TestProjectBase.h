@@ -28,7 +28,7 @@
 #include <db/ProjectDatabase.h>
 #include <db/database.h>
 
-#include <project/project.h>
+#include <project/Project.h>
 #include <project/project_types.hpp>
 
 class ProjectBase : public ::testing::Test

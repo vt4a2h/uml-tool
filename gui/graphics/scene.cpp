@@ -30,9 +30,9 @@
 #include <QDebug>
 
 #include <commands/addrelation.h>
-#include <project/project.h>
+#include <project/Project.h>
 
-#include "entity.h"
+#include "Entity.h"
 #include "qthelpers.h"
 
 namespace graphics {

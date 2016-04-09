@@ -30,7 +30,7 @@
 
 #include <models/applicationmodel.h>
 
-#include "graphics/entity.h"
+#include "graphics/Entity.h"
 #include "editentitydialog.h"
 #include "mainwindow.h"
 

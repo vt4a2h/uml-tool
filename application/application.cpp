@@ -34,6 +34,7 @@
 #include <helpers/generatorid.h>
 
 #include <entity/type.h>
+#include <entity/EntityFactory.h>
 
 #include "settings.h"
 #include "qthelpers.h"
@@ -107,6 +108,13 @@ namespace application {
     {
         G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
                   &helpers::GeneratorID::instance(), &helpers::GeneratorID::onCurrentProjectChanged);
+
+        // Set up factories
+        G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
+                  &entity::EntityFactory::instance(), &entity::EntityFactory::onProjectChanged);
+        const_cast<entity::EntityFactory&>(
+            entity::EntityFactory::instance()).onSceneChanged(m_MainWindow->scene());
+
         qRegisterMetaTypeStreamOperators<application::settings::TstType>("application::settings::TstType");
     }
 

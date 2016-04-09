@@ -20,14 +20,14 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "projecttreemodel.h"
+#include "ProjectTreeModel.h"
 
 #include <QPixmap>
 #include <QDebug>
 
 #include <boost/range/algorithm/find_if.hpp>
 
-#include <project/project.h>
+#include <project/Project.h>
 
 #include <entity/scope.h>
 #include <entity/class.h>

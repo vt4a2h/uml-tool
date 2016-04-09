@@ -31,7 +31,7 @@
 
 #include <common/id.h>
 
-#include <gui/graphics/entity.h>
+#include <gui/graphics/Entity.h>
 
 #include <relationship/relation.h>
 
@@ -157,6 +157,16 @@ namespace db {
     relationship::RelationsList ProjectDatabase::relations() const
     {
         return m_Relations.values().toVector();
+    }
+
+    /**
+     * @brief ProjectDatabase::graphicsEntity
+     * @param id
+     * @return
+     */
+    graphics::EntityPtr ProjectDatabase::graphicsEntity(const common::ID &id) const
+    {
+        return m_GraphicsEntities[id];
     }
 
     /**

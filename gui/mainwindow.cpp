@@ -46,11 +46,11 @@
 #include <application/settings.h>
 
 #include <models/applicationmodel.h>
-#include <models/projecttreemodel.h>
+#include <models/ProjectTreeModel.h>
 
-#include <project/project.h>
+#include <project/Project.h>
 
-#include <gui/graphics/entity.h>
+#include <gui/graphics/Entity.h>
 #include <gui/graphics/scene.h>
 
 #include <entity/EntityFactory.h>
@@ -148,6 +148,15 @@ namespace gui {
      */
     MainWindow::~MainWindow()
     {
+    }
+
+    /**
+     * @brief MainWindow::scene
+     * @return
+     */
+    QPointer<QGraphicsScene> MainWindow::scene() const
+    {
+        return m_MainScene.get();
     }
 
     /**

@@ -22,16 +22,25 @@
 *****************************************************************************/
 #include "CreateEntity.h"
 
-#include <QMap>
+#include <QGraphicsScene>
+
+#include <db/ProjectDatabase.h>
 
 #include <entity/type.h>
+#include <entity/EntityFactory.h>
+#include <entity/scope.h>
+
+#include <models/ProjectTreeModel.h>
+#include <project/Project.h>
+
+#include "qthelpers.h"
 
 namespace commands {
 
     namespace {
         const QMap<entity::KindOfType, QString> hashName = {
             { entity::KindOfType::Type         , BaseCommand::tr("type")           },
-            { entity::KindOfType::Class        , BaseCommand::tr("class (struct)") },
+            { entity::KindOfType::Class        , BaseCommand::tr("class")          },
             { entity::KindOfType::Enum         , BaseCommand::tr("enum")           },
             { entity::KindOfType::Union        , BaseCommand::tr("union")          },
             { entity::KindOfType::ExtendedType , BaseCommand::tr("type alias")     },
@@ -39,14 +48,70 @@ namespace commands {
         };
     }
 
+    /**
+     * @brief CreateEntity::CreateEntity
+     * @param entityType
+     * @param scopeID
+     * @param pos
+     * @param parent
+     */
     CreateEntity::CreateEntity(entity::KindOfType entityType, const common::ID &scopeID,
-                               const QPointF &pos, QGraphicsScene &scene, QUndoCommand *parent)
+                               const QPointF &pos, QUndoCommand *parent)
         : BaseCommand(tr("Add %1").arg(hashName[entityType]), parent)
-        , m_Type(entityType)
+        , m_KindOfType(entityType)
         , m_ScopeID(scopeID)
         , m_Pos(pos)
-        , m_Scene(scene)
     {
     }
 
+    /**
+     * @brief CreateEntity::undo
+     */
+    void CreateEntity::undo()
+    {
+        // TODO: move to the RemoveEntity command (when it'll be created)
+        auto &&factory = entity::EntityFactory::instance();
+
+        if (auto &&scene = G_ASSERT(factory.scene()))
+            scene->removeItem(m_GraphicEntity);
+
+        if (auto &&db = G_ASSERT(factory.db()))
+            if (auto && scope = G_ASSERT(db->getScope(m_ScopeID)))
+                scope->removeType(m_Entity->id());
+
+        if (auto &&tm = G_ASSERT(factory.treeModel()))
+            if (auto &&p = G_ASSERT(factory.project()))
+                tm->removeType(p->name(), m_ScopeID, m_Entity->id());
+    }
+
+    /**
+     * @brief CreateEntity::redo
+     */
+    void CreateEntity::redo()
+    {
+        if (m_Done) {
+
+        } else {
+            auto &&factory = entity::EntityFactory::instance();
+
+            m_Entity = G_ASSERT(factory.make(m_KindOfType, m_Pos, m_ScopeID));
+            m_GraphicEntity = G_ASSERT(G_ASSERT(factory.db())->graphicsEntity(m_Entity->id()));
+
+            m_Done = true;
+        }
+
+        m_CleaningRequired = false;
+    }
+
+    /**
+     * @brief CreateEntity::cleanup
+     */
+    void CreateEntity::cleanup()
+    {
+        if (m_CleaningRequired && m_GraphicEntity)
+            delete m_GraphicEntity;
+    }
+
 } // namespace commands
+
+

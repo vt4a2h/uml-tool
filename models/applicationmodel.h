@@ -24,11 +24,11 @@
 
 #include <QObject>
 
-#include <project/project.h>
+#include <project/Project.h>
 #include <db/ProjectDatabase.h>
 #include <entity/scope.h>
 
-#include "projecttreemodel.h"
+#include "ProjectTreeModel.h"
 
 #include "types.h"
 

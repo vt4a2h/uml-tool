@@ -38,7 +38,7 @@
 #include <models/applicationmodel.h>
 #include <models/componentsmodel.h>
 
-#include <project/project.h>
+#include <project/Project.h>
 
 #include <db/ProjectDatabase.h>
 

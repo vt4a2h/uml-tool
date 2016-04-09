@@ -26,7 +26,7 @@
 
 #include <relationship/relation.h>
 
-#include "entity.h"
+#include "Entity.h"
 #include "qthelpers.h"
 
 namespace graphics {

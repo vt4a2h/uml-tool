@@ -27,7 +27,7 @@
 #include <QMimeData>
 #include <QDebug>
 
-#include <project/project.h>
+#include <project/Project.h>
 #include <db/ProjectDatabase.h>
 #include <commands/CreateEntity.h>
 #include <models/applicationmodel.h>

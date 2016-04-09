@@ -21,7 +21,7 @@
 **
 *****************************************************************************/
 
-#include "project.h"
+#include "Project.h"
 
 #include <QDir>
 #include <QFile>
@@ -38,7 +38,7 @@
 
 #include <db/ProjectDatabase.h>
 
-#include <gui/graphics/entity.h>
+#include <gui/graphics/Entity.h>
 
 #include <utility/helpfunctions.h>
 

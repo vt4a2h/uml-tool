@@ -51,14 +51,13 @@ namespace common {
     public:
         explicit ElementsFactory(QObject *parent = 0);
 
-    public slots:
-        void onSceneChanged(const QPointer<QGraphicsScene> &scene);
-        void onProjectChanged(const project::SharedProject &p);
-
-    protected:
         QPointer<QGraphicsScene> scene() const;
         db::SharedProjectDatabase db() const;
         project::SharedProject project() const;
+
+    public slots:
+        void onSceneChanged(const QPointer<QGraphicsScene> &scene);
+        void onProjectChanged(const project::SharedProject &p);
 
     private:
         QPointer<QGraphicsScene> m_Scene;

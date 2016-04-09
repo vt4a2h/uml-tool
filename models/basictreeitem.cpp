@@ -27,7 +27,7 @@
 #include <QHash>
 #include <QIcon>
 
-#include <project/project.h>
+#include <project/Project.h>
 #include <project/project_types.hpp>
 
 #include <entity/scope.h>

@@ -24,7 +24,7 @@
 
 #include <helpers/generatorid.h>
 
-#include <project/project.h>
+#include <project/Project.h>
 #include <project/project_types.hpp>
 
 #include <db/database.h>

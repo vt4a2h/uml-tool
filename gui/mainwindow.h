@@ -73,6 +73,8 @@ namespace gui {
                             QWidget *parent = 0);
         ~MainWindow();
 
+        QPointer<QGraphicsScene> scene() const;
+
         void update();
 
     public slots:

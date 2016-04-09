@@ -35,9 +35,9 @@
 #include <entity/templateclass.h>
 #include <entity/scope.h>
 
-#include <models/projecttreemodel.h>
+#include <models/ProjectTreeModel.h>
 
-#include <project/project.h>
+#include <project/Project.h>
 
 namespace entity {
 
