@@ -60,11 +60,11 @@ namespace application {
         const QString elGroup = "Elements";
         const QVector<Setting<QColor>> elColors =
         {
-            { entity::Class::staticMarker()        , {245, 224, 119} },
-            { entity::Enum::staticMarker()         , {83 , 185, 86 } },
-            { entity::Union::staticMarker()        , {144, 199, 229} },
-            { entity::TemplateClass::staticMarker(), {152, 131, 190} },
-            { entity::ExtendedType::staticMarker() , {249, 181, 194} },
+            { entity::kindOfTypeToString(entity::KindOfType::Class)        , {245, 224, 119} },
+            { entity::kindOfTypeToString(entity::KindOfType::Enum)         , {83 , 185, 86 } },
+            { entity::kindOfTypeToString(entity::KindOfType::Union)        , {144, 199, 229} },
+            { entity::kindOfTypeToString(entity::KindOfType::TemplateClass), {152, 131, 190} },
+            { entity::kindOfTypeToString(entity::KindOfType::ExtendedType) , {249, 181, 194} },
         };
 
         // Helpers

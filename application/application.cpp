@@ -112,8 +112,11 @@ namespace application {
         // Set up factories
         G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
                   &entity::EntityFactory::instance(), &entity::EntityFactory::onProjectChanged);
-        const_cast<entity::EntityFactory&>(
-            entity::EntityFactory::instance()).onSceneChanged(m_MainWindow->scene());
+
+        auto &factory = const_cast<entity::EntityFactory&>(entity::EntityFactory::instance());
+        factory.onSceneChanged(m_MainWindow->scene());
+        factory.setGlobalDatabase(m_ApplicationModel->globalDatabase());
+        factory.setTreeModel(m_ApplicationModel->treeModel());
 
         qRegisterMetaTypeStreamOperators<application::settings::TstType>("application::settings::TstType");
     }

@@ -452,9 +452,16 @@ namespace db {
             if (src["Scopes"].isArray()) {
                 entity::SharedScope scope;
                 for (auto &&val : src["Scopes"].toArray()) {
+                    auto obj = val.toObject();
+
                     scope = std::make_shared<entity::Scope>();
-                    scope->fromJson(val.toObject(), errorList);
+
+                    // Read only basic part
+                    scope->BasicElement::fromJson(obj, errorList);
                     addExistsScope(scope);
+
+                    // Read other data
+                    scope->fromJson(obj, errorList);
                 }
             } else {
                 errorList << "Error: \"Scopes\" is not array";

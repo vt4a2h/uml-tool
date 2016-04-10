@@ -87,20 +87,20 @@ namespace entity {
                     if (!type)
                         return nullptr;
 
-                    if (options.testFlag(AddToScene)) {
+                    if (project() && project()->database() && options.testFlag(AddToScene)) {
                         if (auto s = scene()) {
                             auto graphicEntity = new graphics::Entity(type);
                             graphicEntity->setPos(pos);
 
                             // Register in the database
-                            database->registerGraphicsEntity(graphicEntity);
+                            project()->database()->registerGraphicsEntity(graphicEntity);
 
                             // Transfer ownership
                             s->addItem(graphicEntity);
                         }
                     }
 
-                    if (options.testFlag(AddToTreeModel))
+                    if (project() && options.testFlag(AddToTreeModel))
                         if (auto tm = treeModel())
                             if (auto p = project())
                                 tm->addType(type, scopeID, p->name());

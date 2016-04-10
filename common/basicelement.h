@@ -65,6 +65,7 @@ namespace common {
 
     signals:
         void nameChanged(const QString &oldName, const QString &newName);
+        void idChanged(const common::ID &oldID, const common::ID &newID);
 
     public:
         BasicElement &operator =(const BasicElement &rhs);

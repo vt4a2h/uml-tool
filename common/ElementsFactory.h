@@ -51,8 +51,10 @@ namespace common {
     public:
         explicit ElementsFactory(QObject *parent = 0);
 
+        void setGlobalDatabase(const db::SharedDatabase &db);
+
         QPointer<QGraphicsScene> scene() const;
-        db::SharedProjectDatabase db() const;
+        db::SharedDatabase db() const;
         project::SharedProject project() const;
 
     public slots:
@@ -62,6 +64,7 @@ namespace common {
     private:
         QPointer<QGraphicsScene> m_Scene;
         project::WeakProject m_Project;
+        db::WeakDatabase m_GlobalDatabase;
     };
 
 } // namespace common

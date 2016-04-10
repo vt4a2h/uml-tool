@@ -36,6 +36,7 @@ namespace db {
     class Database;
     class ProjectDatabase;
     using SharedDatabase = std::shared_ptr<Database>;
+    using WeakDatabase = std::weak_ptr<Database>;
     using SharedProjectDatabase = std::shared_ptr<ProjectDatabase>;
     using WeakProjectDatabase = std::weak_ptr<ProjectDatabase>;
 

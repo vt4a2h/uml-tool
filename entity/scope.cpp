@@ -175,6 +175,8 @@ namespace entity {
         Q_ASSERT(!m_Types.contains(type->id()));
         Q_ASSERT(!m_TypesByName.contains(type->name()));
 
+        connectType(type.get());
+
         m_TypesByName[type->name()] = type;
         return *m_Types.insert(type->id(), type);
     }
@@ -383,6 +385,26 @@ namespace entity {
     }
 
     /**
+     * @brief Scope::onTypeIdChanged
+     * @param oldID
+     * @param newID
+     */
+    void Scope::onTypeIdChanged(const common::ID &oldID, const common::ID &newID)
+    {
+        if (!m_Types.contains(newID) && m_Types.contains(oldID)) {
+            auto type = m_Types[oldID];
+            m_Types.remove(oldID);
+
+            Q_ASSERT(type->id() == newID);
+
+            m_TypesByName[type->name()] = type;
+            m_Types[newID] = type;
+        } else {
+            qWarning() << "Wrong new type ID: " << newID.value() << ", old was: " << oldID.value();
+        }
+    }
+
+    /**
      * @brief Scope::copyFrom
      * @param src
      */
@@ -402,6 +424,25 @@ namespace entity {
         m_Scopes      = std::move(src.m_Scopes);
         m_Types       = std::move(src.m_Types );
         m_TypesByName = std::move(src.m_TypesByName);
+    }
+
+    /**
+     * @brief Scope::connectType
+     * @param t
+     */
+    void Scope::connectType(Type *t)
+    {
+        if (!t)
+            return;
+
+        // Keep old connection form to make code more generic without extracting connection
+        // to the separate function and using enable_if for
+        if (t->hashType() == Class::staticHashType())
+            G_CONNECT(t, SIGNAL(typeUserAdded(SharedTypeUser)),
+                      this, SIGNAL(typeSearcherRequired(SharedTypeUser)));
+
+        G_CONNECT(t, &common::BasicElement::nameChanged, this, &entity::Scope::onTypeNameChanged);
+        G_CONNECT(t, &common::BasicElement::idChanged, this, &entity::Scope::onTypeIdChanged);
     }
 
 } // namespace entity

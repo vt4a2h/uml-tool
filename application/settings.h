@@ -29,36 +29,6 @@
 
 namespace application {
 
-//    /// The struct settings
-//    struct Setting {
-//        QString name;
-//        QVariant defaultValue;
-//    };
-
-//    /**
-//     * @brief value
-//     * @param settings
-//     * @param s
-//     * @return
-//     */
-//    template<class ValueType>
-//    ValueType value(const QSettings &settings, const Setting &s)
-//    {
-//        if (settings.contains(s.name))
-//            return settings.value(s.name).value<ValueType>();
-//        else
-//            return s.defaultValue.value<ValueType>();
-//    }
-
-//    // Main window
-//    static const QString groupMainWindow = "mainWindow";
-//    static const Setting mwGeometry = { "size", QRect(0, 0, 640, 480) };
-
-//    // Path
-//    static const QString path = "path";
-//    static const Setting pathGlobalDB = { "fullPath", QDir::currentPath() };
-//    static const Setting nameGlobalDB = { "name"    , "global"            };
-
     /// Namespace settings (for now it's the easiest way to store/restore settings)
     namespace settings {
 

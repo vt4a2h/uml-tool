@@ -47,23 +47,13 @@
 namespace gui {
 
     static const QSize elementSize(120, 50);
-    static const QMap<QString, QString> elAttributes =
-        { {entity::Class::staticMarker(),         "Class"},
-          {entity::Enum::staticMarker(),          "Enumeration"},
-          {entity::Union::staticMarker(),         "Union"},
-          {entity::TemplateClass::staticMarker(), "Template class"},
-          {entity::ExtendedType::staticMarker(),  "Alias"},
-        };
 
-    static void addElement(const QString& marker, QWidget &parent, QGridLayout &layout,
+    static void addElement(entity::KindOfType kind, QWidget &parent, QGridLayout &layout,
                            int row, int col)
     {
-        QString name = elAttributes[marker];
-        QColor color = application::settings::elementColor(marker);
-
         // Create widget
         QLabel *lbl = new QLabel(&parent);
-        lbl->setProperty(Elements::elementTypePropertyName(), marker);
+        lbl->setProperty(Elements::elementTypePropertyName(), uint(kind));
 
         // Add graphics element
         QPixmap pic(elementSize);
@@ -74,6 +64,8 @@ namespace gui {
         p.begin(&pic);
         p.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
+        QColor color =
+            application::settings::elementColor(entity::kindOfTypeToString(kind));
         QLinearGradient gradient(elementSize.width() / 2, 0,
                                  elementSize.width() / 2, elementSize.height());
         gradient.setColorAt(0, color);
@@ -83,7 +75,7 @@ namespace gui {
         p.drawRect(QRectF({0, 0}, elementSize));
 
         p.setPen(Qt::black);
-        p.drawText(pic.rect(), Qt::AlignCenter, name);
+        p.drawText(pic.rect(), Qt::AlignCenter, entity::kindOfTypeToString(kind, false /*raw*/));
         p.end();
 
         // Set graphic element
@@ -105,11 +97,11 @@ namespace gui {
         ui->setupUi(this);
 
         // Add items
-        addElement(entity::Class::staticMarker(), *this, *ui->gridLayout, 0, 0);
-        addElement(entity::Enum::staticMarker(), *this, *ui->gridLayout, 0, 1);
-        addElement(entity::Union::staticMarker(), *this, *ui->gridLayout, 1, 0);
-        addElement(entity::TemplateClass::staticMarker(), *this, *ui->gridLayout, 1, 1);
-        addElement(entity::ExtendedType::staticMarker(), *this, *ui->gridLayout, 2, 0);
+        addElement(entity::KindOfType::Class        , *this, *ui->gridLayout, 0, 0);
+        addElement(entity::KindOfType::Enum         , *this, *ui->gridLayout, 0, 1);
+        addElement(entity::KindOfType::Union        , *this, *ui->gridLayout, 1, 0);
+        addElement(entity::KindOfType::TemplateClass, *this, *ui->gridLayout, 1, 1);
+        addElement(entity::KindOfType::ExtendedType , *this, *ui->gridLayout, 2, 0);
     }
 
     /**

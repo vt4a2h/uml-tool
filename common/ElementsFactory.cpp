@@ -22,6 +22,7 @@
 *****************************************************************************/
 #include "ElementsFactory.h"
 
+#include <db/ProjectDatabase.h>
 #include <project/Project.h>
 
 namespace common {
@@ -30,8 +31,18 @@ namespace common {
      * @brief ElementsFactory::ElementsFactory
      * @param parent
      */
-    ElementsFactory::ElementsFactory(QObject *parent) : QObject(parent)
+    ElementsFactory::ElementsFactory(QObject *parent)
+        : QObject(parent)
     {
+    }
+
+    /**
+     * @brief ElementsFactory::setGlobalDatabase
+     * @param db
+     */
+    void ElementsFactory::setGlobalDatabase(const db::SharedDatabase &db)
+    {
+        m_GlobalDatabase = db;
     }
 
     /**
@@ -65,9 +76,9 @@ namespace common {
      * @brief ElementsFactory::db
      * @return
      */
-    db::SharedProjectDatabase ElementsFactory::db() const
+    db::SharedDatabase ElementsFactory::db() const
     {
-        return project() ? project()->database() : nullptr;
+        return project() ? project()->database() : m_GlobalDatabase.lock();
     }
 
     /**

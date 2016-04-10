@@ -47,6 +47,7 @@ namespace entity {
     };
 
     uint qHash(const KindOfType &e);
+    QString kindOfTypeToString(KindOfType kind, bool raw = true);
 
     /**
      * @brief The Type class

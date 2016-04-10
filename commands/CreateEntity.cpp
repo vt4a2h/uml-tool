@@ -95,7 +95,9 @@ namespace commands {
             auto &&factory = entity::EntityFactory::instance();
 
             m_Entity = G_ASSERT(factory.make(m_KindOfType, m_Pos, m_ScopeID));
-            m_GraphicEntity = G_ASSERT(G_ASSERT(factory.db())->graphicsEntity(m_Entity->id()));
+
+            auto project = G_ASSERT(factory.project());
+            m_GraphicEntity = G_ASSERT(G_ASSERT(project->database())->graphicsEntity(m_Entity->id()));
 
             m_Done = true;
         }

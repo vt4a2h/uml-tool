@@ -28,6 +28,7 @@
 #include <models/models_types.hpp>
 
 namespace models { class ApplicationModel; }
+namespace entity { enum class KindOfType : int; }
 
 namespace gui {
 
@@ -51,7 +52,7 @@ namespace gui {
     private:
         project::SharedProject project() const;
         models::SharedApplicationModel appModel() const;
-        void addElement(const QString& marker, const QPoint &eventPos);
+        void addElement(entity::KindOfType kindOfType, const QPoint &eventPos);
 
         project::WeakProject m_Project;
         models::WeakApplicationModel m_ApplicationModel;

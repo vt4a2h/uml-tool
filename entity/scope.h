@@ -86,6 +86,7 @@ namespace entity {
 
     public slots:
         void onTypeNameChanged(const QString &oldName, const QString &newName);
+        void onTypeIdChanged(const common::ID &oldID, const common::ID &newID);
 
     signals:
         void typeSearcherRequired(const SharedTypeUser &);
@@ -93,6 +94,8 @@ namespace entity {
     private:
         void copyFrom(const Scope &src);
         void moveFrom(Scope &&src);
+
+        void connectType(entity::Type * t);
 
         Scopes m_Scopes;
         Types  m_Types;
@@ -111,11 +114,7 @@ namespace entity {
         m_Types[value->id()] = value;
         m_TypesByName[value->name()] = value;
 
-        // Keep old connection form to make code more generic without extracting connection
-        // to the separate function and using enable_if for
-        if (value->hashType() == Class::staticHashType())
-            G_CONNECT(value.get(), SIGNAL(typeUserAdded(SharedTypeUser)),
-                      this, SIGNAL(typeSearcherRequired(SharedTypeUser)));
+        connectType(value.get());
 
         return value;
     }

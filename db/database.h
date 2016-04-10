@@ -96,10 +96,10 @@ namespace db {
 
         SharedDatabase safeShared();
 
-        QString          m_Name  ;
-        QString          m_Path  ;
-        common::ID m_ID    ;
-        bool             m_Valid ;
+        QString    m_Name ;
+        QString    m_Path ;
+        common::ID m_ID   ;
+        bool       m_Valid;
 
         entity::Scopes m_Scopes;
 

@@ -61,10 +61,10 @@ namespace gui {
             QByteArray itemData = de->mimeData()->data(Elements::mimeDataType());
             QDataStream in(&itemData, QIODevice::ReadOnly);
 
-            QString tmpType = entity::Type::staticMarker();
+            uint tmpType = uint(entity::KindOfType::Type);
             in >> tmpType;
-            Q_ASSERT(in.status() == QDataStream::Ok && tmpType != entity::Type::staticMarker());
-            addElement(tmpType, de->pos());
+            Q_ASSERT(in.status() == QDataStream::Ok && tmpType != uint(entity::KindOfType::Type));
+            addElement(entity::KindOfType(tmpType), de->pos());
 
             de->acceptProposedAction();
         }
@@ -130,31 +130,12 @@ namespace gui {
        return m_ApplicationModel.lock();
     }
 
-    // NOTE: mapping isn't convenient here (and using hash instead of marker too)
-    // FIXME:
-//    template <class ... Types>
-//    std::unique_ptr<QUndoCommand> makeCmd(const QString &marker, Types &&... args)
-//    {
-//        if (marker == entity::ExtendedType::staticMarker())
-//            return std::make_unique<commands::MakeAlias>(std::forward<Types>(args)...);
-//        else if (marker == entity::Class::staticMarker())
-//            return std::make_unique<commands::MakeClass>(std::forward<Types>(args)...);
-//        else if(marker == entity::Enum::staticMarker())
-//            return std::make_unique<commands::MakeEnum>(std::forward<Types>(args)...);
-//        else if (marker == entity::TemplateClass::staticMarker())
-//            return std::make_unique<commands::MakeTemplate>(std::forward<Types>(args)...);
-//        else if (marker == entity::Union::staticMarker())
-//            return std::make_unique<commands::MakeUnion>(std::forward<Types >(args)...);
-
-//        return nullptr;
-//    }
-
     /**
      * @brief View::addElement
      * @param type
      * @param eventPos
      */
-    void View::addElement(const QString &marker, const QPoint &eventPos)
+    void View::addElement(entity::KindOfType kindOfType, const QPoint &eventPos)
     {
         if (auto pr = project()) {
             auto projectDb = G_ASSERT(pr->database());
@@ -162,9 +143,8 @@ namespace gui {
 
             if (auto stack = pr->commandsStack()) {
                 auto pos = mapToScene(eventPos);
-                // FIXME
-//                if (auto cmd = makeCmd(marker, appModel(), scope->id(), *scene(), pos, nullptr))
-//                    stack->push(cmd.release());
+                if (auto cmd = std::make_unique<commands::CreateEntity>(kindOfType, scope->id(), pos))
+                    stack->push(cmd.release());
             }
         } else {
             qWarning() << Q_FUNC_INFO << ": there is no project.";

@@ -119,7 +119,12 @@ namespace common {
      */
     void BasicElement::setId(const ID &id)
     {
-        m_Id = id;
+        if (id != m_Id) {
+            auto tmpID = m_Id;
+            m_Id = id;
+
+            emit idChanged(tmpID, m_Id);
+        }
     }
 
     /**
@@ -207,9 +212,15 @@ namespace common {
     {
         using namespace utility;
 
-        checkAndSet(src, nameMark, errorList, [&](){ m_Name = src[nameMark].toString(); });
-        checkAndSet(src, idMark, errorList, [&](){ m_Id.fromJson(src[idMark], errorList); });
-        checkAndSet(src, scopeIdMark, errorList, [&](){ m_ScopeId.fromJson(src[scopeIdMark], errorList); });
+        checkAndSet(src, nameMark, errorList, [&](){ setName(src[nameMark].toString()); });
+        checkAndSet(src, idMark, errorList, [&](){
+            common::ID tmpID;
+            tmpID.fromJson(src[idMark], errorList);
+            setId(tmpID);
+        });
+        checkAndSet(src, scopeIdMark, errorList, [&](){
+            m_ScopeId.fromJson(src[scopeIdMark], errorList);
+        });
     }
 
     /**

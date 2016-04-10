@@ -156,4 +156,22 @@ namespace entity {
         return ::qHash(static_cast<int>(e));
     }
 
+    /**
+     * @brief kindOfTypeToString
+     * @param kind
+     * @return
+     */
+    QString kindOfTypeToString(KindOfType kind, bool raw)
+    {
+        switch (kind) {
+            case KindOfType::Type:          return raw ? "Type"           : Type::tr("Type")          ;
+            case KindOfType::ExtendedType:  return raw ? "Alias"          : Type::tr("Alias")         ;
+            case KindOfType::Enum:          return raw ? "Enumeration"    : Type::tr("Enumeration")   ;
+            case KindOfType::Union:         return raw ? "Union"          : Type::tr("Union")         ;
+            case KindOfType::Class:         return raw ? "Class"          : Type::tr("Class")         ;
+            case KindOfType::TemplateClass: return raw ? "Template Class" : Type::tr("Template Class");
+            default:                        return raw ? "Invalid value"  : Type::tr("Invalid value") ;
+        }
+    }
+
 } // namespace entity
