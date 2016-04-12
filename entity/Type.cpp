@@ -21,7 +21,7 @@
 **
 *****************************************************************************/
 
-#include "type.h"
+#include "Type.h"
 
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -39,13 +39,14 @@ namespace entity {
 
     namespace {
         const QString kindOfTypeMark = "Kind of type";
+        const QString defaultName = Type::tr("Type");
     }
 
     /**
      * @brief Type::Type
      */
     Type::Type()
-        : Type(DEFAULT_NAME, common::ID::globalScopeID())
+        : Type(defaultName, common::ID::globalScopeID())
     {
     }
 
@@ -58,6 +59,7 @@ namespace entity {
     Type::Type(const QString &name, const common::ID &scopeId, const common::ID &typeId)
         : BasicElement(name, scopeId, typeId.isValid() ? typeId
                                                        : helpers::GeneratorID::instance().genID() )
+        , m_KindOfType(KindOfType::Type)
     {
         if (m_Name.isEmpty() || m_Name == DEFAULT_NAME)
             setBaseTypeName();
@@ -97,24 +99,6 @@ namespace entity {
         BasicElement::fromJson(src, errorList);
         utility::checkAndSet(src, kindOfTypeMark, errorList,
                              [&](){ m_KindOfType = KindOfType(src[kindOfTypeMark].toInt()); });
-    }
-
-    /**
-     * @brief Type::defaultName
-     * @return
-     */
-    QString Type::defaultName() const
-    {
-        return staticDefaultName();
-    }
-
-    /**
-     * @brief Type::staticDefaultName
-     * @return
-     */
-    QString Type::staticDefaultName()
-    {
-       return tr("Type");
     }
 
     /**

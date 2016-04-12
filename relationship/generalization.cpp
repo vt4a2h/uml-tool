@@ -27,7 +27,7 @@
 
 #include <QJsonObject>
 
-#include <entity/class.h>
+#include <entity/Class.h>
 #include <utility/helpfunctions.h>
 
 #include "qthelpers.h"

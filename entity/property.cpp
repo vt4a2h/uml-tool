@@ -31,7 +31,7 @@
 #include <helpers/entityhelpres.h>
 #include <db/database.h>
 
-#include "type.h"
+#include "Type.h"
 #include "field.h"
 #include "classmethod.h"
 

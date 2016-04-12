@@ -74,9 +74,6 @@ namespace entity {
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
-        virtual QString defaultName() const;
-        static QString staticDefaultName();
-
         add_meta(Type)
 
     protected:

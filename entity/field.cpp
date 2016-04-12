@@ -22,7 +22,7 @@
 *****************************************************************************/
 
 #include "field.h"
-#include "extendedtype.h"
+#include "ExtendedType.h"
 #include "enums.h"
 #include "constants.h"
 

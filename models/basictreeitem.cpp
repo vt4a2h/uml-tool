@@ -31,8 +31,8 @@
 #include <project/project_types.hpp>
 
 #include <entity/scope.h>
-#include <entity/type.h>
-#include <entity/class.h>
+#include <entity/Type.h>
+#include <entity/Class.h>
 #include <entity/field.h>
 #include <entity/classmethod.h>
 #include <entity/entity_types.hpp>

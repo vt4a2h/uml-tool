@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "elements.h"
+#include "Elements.h"
 #include "ui_elements.h"
 
 #include <QMap>
@@ -34,11 +34,11 @@
 #include <QDrag>
 #include <QMouseEvent>
 
-#include <entity/class.h>
-#include <entity/enum.h>
-#include <entity/union.h>
-#include <entity/templateclass.h>
-#include <entity/extendedtype.h>
+#include <entity/Class.h>
+#include <entity/Enum.h>
+#include <entity/Union.h>
+#include <entity/TemplateClass.h>
+#include <entity/ExtendedType.h>
 
 #include <application/settings.h>
 
@@ -125,7 +125,7 @@ namespace gui {
         QByteArray itemData;
         QDataStream out(&itemData, QIODevice::WriteOnly);
         QVariant type = lbl->property(Elements::elementTypePropertyName());
-        out << type.value<QString>();
+        out << type.value<uint>();
 
         // Set mime data
         QMimeData *mimeData = new QMimeData;

@@ -28,7 +28,7 @@
 
 #include "entity_types.hpp"
 
-#include <entity/type.h>
+#include <entity/Type.h>
 
 #include <gui/graphics/Entity.h>
 

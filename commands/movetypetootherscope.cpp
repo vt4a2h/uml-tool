@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "movetypetootherscope.h"
 
-#include <entity/type.h>
+#include <entity/Type.h>
 #include <entity/scope.h>
 
 #include <models/applicationmodel.h>

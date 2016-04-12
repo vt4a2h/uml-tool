@@ -23,12 +23,12 @@
 #pragma once
 
 #include <entity/scope.h>
-#include <entity/enum.h>
-#include <entity/extendedtype.h>
+#include <entity/Enum.h>
+#include <entity/ExtendedType.h>
 #include <entity/field.h>
-#include <entity/union.h>
-#include <entity/class.h>
-#include <entity/templateclass.h>
+#include <entity/Union.h>
+#include <entity/Class.h>
+#include <entity/TemplateClass.h>
 #include <entity/templateclassmethod.h>
 #include <entity/property.h>
 

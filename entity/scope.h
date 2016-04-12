@@ -34,7 +34,7 @@
 
 #include "entity_types.hpp"
 #include "qthelpers.h"
-#include "class.h"
+#include "Class.h"
 #include "itypeuser.h"
 
 namespace entity {

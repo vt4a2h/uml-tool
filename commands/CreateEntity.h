@@ -24,7 +24,7 @@
 
 #include <QPointF>
 
-#include <entity/type.h>
+#include <entity/Type.h>
 
 #include <gui/graphics/graphics_types.h>
 

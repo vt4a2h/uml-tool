@@ -31,7 +31,7 @@
 
 #include <utility/helpfunctions.h>
 
-#include "extendedtype.h"
+#include "ExtendedType.h"
 #include "field.h"
 #include "enums.h"
 #include "constants.h"

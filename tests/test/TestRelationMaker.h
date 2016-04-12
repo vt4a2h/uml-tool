@@ -28,8 +28,8 @@
 #include <db/database.h>
 #include <db/ProjectDatabase.h>
 #include <entity/scope.h>
-#include <entity/type.h>
-#include <entity/class.h>
+#include <entity/Type.h>
+#include <entity/Class.h>
 #include <entity/classmethod.h>
 #include <entity/field.h>
 #include <relationship/node.h>

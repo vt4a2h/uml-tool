@@ -21,7 +21,7 @@
 **
 *****************************************************************************/
 
-#include "enum.h"
+#include "Enum.h"
 
 #include <algorithm>
 #include <utility>
@@ -45,6 +45,7 @@ namespace entity {
         const QString newElementName = Enumerator::tr("newElement");
         const QString nameMark   = "Name";
         const QString numberMark = "Number";
+        const QString defaultName = Enum::tr("Enumeration");
     }
 
     /**
@@ -133,7 +134,7 @@ namespace entity {
      * @brief Enum::Enum
      */
     Enum::Enum()
-        : Enum(defaultName(), common::ID::globalScopeID())
+        : Enum(defaultName, common::ID::globalScopeID())
     {
     }
 
@@ -143,10 +144,11 @@ namespace entity {
      * @param scopeId
      */
     Enum::Enum(const QString &name, const common::ID &scopeId)
-        : Type(name, scopeId)
+        : Type(name.isEmpty() ? defaultName : name, scopeId)
         , m_EnumTypeId(common::ID::nullID())
         , m_StrongStatus(false)
     {
+        m_KindOfType = KindOfType::Enum;
     }
 
     /**
@@ -291,24 +293,6 @@ namespace entity {
                 errorList << "Error: \"Elements\" is not array";
             }
         });
-    }
-
-    /**
-     * @brief Enum::defaultName
-     * @return
-     */
-    QString Enum::defaultName() const
-    {
-        return staticDefaultName();
-    }
-
-    /**
-     * @brief Enum::staticDefaultName
-     * @return
-     */
-    QString Enum::staticDefaultName()
-    {
-       return tr("Enumeration");
     }
 
     /**

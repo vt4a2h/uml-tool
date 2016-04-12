@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "union.h"
+#include "Union.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -31,7 +31,7 @@
 #include <utility/helpfunctions.h>
 
 #include "field.h"
-#include "extendedtype.h"
+#include "ExtendedType.h"
 #include "constants.h"
 #include "enums.h"
 
@@ -41,13 +41,14 @@ namespace entity {
 
     namespace {
         const QString newFiledName = Union::tr("newField");
+        const QString defaultName = Union::tr("Union");
     }
 
     /**
      * @brief Union::Union
      */
     Union::Union()
-        : Union(defaultName(), common::ID::globalScopeID())
+        : Union(defaultName, common::ID::globalScopeID())
     {
     }
 
@@ -67,8 +68,9 @@ namespace entity {
      * @param scopeId
      */
     Union::Union(const QString &name, const common::ID &scopeId)
-        : Type(name, scopeId)
+        : Type(name.isEmpty() ? defaultName : name, scopeId)
     {
+        m_KindOfType = KindOfType::Union;
     }
 
     /**
@@ -191,24 +193,6 @@ namespace entity {
                 errorList << "Error: \"Fields\" is not array";
             }
         });
-    }
-
-    /**
-     * @brief Union::defaultName
-     * @return
-     */
-    QString Union::defaultName() const
-    {
-        return staticDefaultName();
-    }
-
-    /**
-     * @brief Union::staticDefaultName
-     * @return
-     */
-    QString Union::staticDefaultName()
-    {
-       return tr("Union");
     }
 
     /**

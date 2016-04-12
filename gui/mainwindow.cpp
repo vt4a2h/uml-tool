@@ -54,7 +54,7 @@
 #include <gui/graphics/scene.h>
 
 #include <entity/EntityFactory.h>
-#include <entity/type.h>
+#include <entity/Type.h>
 
 #include <commands/createscope.h>
 #include <commands/CreateEntity.h>
@@ -64,8 +64,8 @@
 #include "addscope.h"
 #include "scenefilter.h"
 #include "constants.h"
-#include "elements.h"
-#include "view.h"
+#include "Elements.h"
+#include "View.h"
 #include "qthelpers.h"
 
 using namespace boost;
@@ -79,36 +79,6 @@ namespace {
     const double consoleSizeFactor = 0.3;
 
     const QString titleTemplate = "%1Q-UML";
-
-    void storeItemsPosition(const QGraphicsScene *scene, db::ProjectDatabase *db)
-    {
-        // FIXME: remove this func
-//        Q_ASSERT(scene);
-//        Q_ASSERT(db);
-
-//        db::ItemsPos positions;
-
-//        for (auto &&item: scene->items())
-//            if (auto entityItem = dynamic_cast<graphics::Entity *>(item))
-//                positions.append({entityItem->typeObject()->id(), entityItem->pos()});
-
-//        db->setItemsPos(positions);
-    }
-
-    void addGraphicsItems(graphics::Scene *scene, const project::SharedProject &project)
-    {
-        //FIXME: remove
-//        Q_ASSERT(scene);
-
-//        scene->clear();
-//        scene->initTrackLine();
-
-//        db::ProjectDatabase * database = project->database().get();
-//        for (auto &&item : database->itemsPos())
-//            if (const entity::SharedType &type = database->typeByID(item.first))
-//                if (auto &&scope = database->depthScopeSearch(type->scopeId()))
-//                    entity::EntityFactory::instance().addEntity(*scene, project, type, item.second /*pos*/);
-    }
 }
 
 namespace gui {
@@ -239,10 +209,8 @@ namespace gui {
     void MainWindow::onSaveProject()
     {
         if (auto currentPtoject = m_ApplicationModel->currentProject()) {
-            if (!currentPtoject->isSaved()) {
-                storeItemsPosition(m_MainScene.get(), currentPtoject->database().get());
+            if (!currentPtoject->isSaved())
                 currentPtoject->save();
-            }
         } else {
             QMessageBox::information(this, tr("Information"), tr("Nothing to save."), QMessageBox::Ok);
         }
@@ -527,8 +495,6 @@ namespace gui {
             connect(pr->commandsStack(), &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
             connect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &QUndoStack::redo);
             connect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &QUndoStack::undo);
-
-            addGraphicsItems(m_MainScene.get(), m_ApplicationModel->currentProject());
         } else {
             qWarning() << QString("Current project with id %1 is not found.").arg(name);
         }

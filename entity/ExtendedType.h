@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "type.h"
+#include "Type.h"
 #include "types.h"
 #include "entity_types.hpp"
 
@@ -80,9 +80,6 @@ namespace entity {
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
-
-        QString defaultName() const override;
-        static QString staticDefaultName();
 
         add_meta(ExtendedType)
 

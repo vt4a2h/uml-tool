@@ -28,7 +28,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-#include <entity/class.h>
+#include <entity/Class.h>
 #include <entity/classmethod.h>
 #include <utility/helpfunctions.h>
 

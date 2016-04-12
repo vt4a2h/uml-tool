@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "view.h"
+#include "View.h"
 
 #include <QDropEvent>
 #include <QByteArray>
@@ -32,7 +32,7 @@
 #include <commands/CreateEntity.h>
 #include <models/applicationmodel.h>
 
-#include "elements.h"
+#include "Elements.h"
 #include "qthelpers.h"
 
 namespace gui {

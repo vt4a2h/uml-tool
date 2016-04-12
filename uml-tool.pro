@@ -14,17 +14,11 @@ SOURCES += \
     main.cpp \
     templates.cpp \
     db/database.cpp \
-    entity/class.cpp \
     entity/classmethod.cpp \
-    entity/enum.cpp \
-    entity/extendedtype.cpp \
     entity/field.cpp \
     entity/scope.cpp \
     entity/template.cpp \
-    entity/templateclass.cpp \
     entity/templateclassmethod.cpp \
-    entity/type.cpp \
-    entity/union.cpp \
     entity/components/componentsignatureparser.cpp \
     entity/components/icomponents.cpp \
     entity/components/componentsmaker.cpp \
@@ -68,8 +62,6 @@ SOURCES += \
     commands/addcomponentscommands.cpp \
     helpers/entityhelpres.cpp \
     entity/components/token.cpp \
-    gui/elements.cpp \
-    gui/view.cpp \
     application/settings.cpp \
     gui/graphics/scene.cpp \
     gui/graphics/graphicsrelation.cpp \
@@ -85,7 +77,15 @@ SOURCES += \
     commands/CreateEntity.cpp \
     gui/graphics/Entity.cpp \
     models/ProjectTreeModel.cpp \
-    project/Project.cpp
+    project/Project.cpp \
+    gui/Elements.cpp \
+    entity/Type.cpp \
+    entity/ExtendedType.cpp \
+    entity/Enum.cpp \
+    entity/Union.cpp \
+    entity/Class.cpp \
+    entity/TemplateClass.cpp \
+    gui/View.cpp
 
 HEADERS += \
     enums.h \
@@ -93,17 +93,11 @@ HEADERS += \
     db/database.h \
     db/ProjectDatabase.h \
     db/db_types.hpp \
-    entity/class.h \
     entity/classmethod.h \
-    entity/enum.h \
-    entity/extendedtype.h \
     entity/field.h \
     entity/scope.h \
     entity/template.h \
-    entity/templateclass.h \
     entity/templateclassmethod.h \
-    entity/type.h \
-    entity/union.h \
     entity/components/componentsignatureparser.h \
     entity/components/icomponents.h \
     entity/components/componentsmaker.h \
@@ -160,8 +154,6 @@ HEADERS += \
     entity/components/components_types.h \
     entity/components/token.h \
     qthelpers.h \
-    gui/elements.h \
-    gui/view.h \
     gui/graphics/scene.h \
     gui/graphics/common.h \
     gui/graphics/graphicsrelation.h \
@@ -181,7 +173,15 @@ HEADERS += \
     commands/CreateEntity.h \
     gui/graphics/Entity.h \
     models/ProjectTreeModel.h \
-    project/Project.h
+    project/Project.h \
+    gui/Elements.h \
+    entity/Type.h \
+    entity/ExtendedType.h \
+    entity/Enum.h \
+    entity/Union.h \
+    entity/Class.h \
+    entity/TemplateClass.h \
+    gui/View.h
 
 FORMS += \
     gui/mainwindow.ui \

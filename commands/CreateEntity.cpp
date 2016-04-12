@@ -26,7 +26,7 @@
 
 #include <db/ProjectDatabase.h>
 
-#include <entity/type.h>
+#include <entity/Type.h>
 #include <entity/EntityFactory.h>
 #include <entity/scope.h>
 

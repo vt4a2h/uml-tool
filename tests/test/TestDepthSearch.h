@@ -28,10 +28,10 @@
 
 #include <gtest/gtest.h>
 
-#include <entity/type.h>
-#include <entity/class.h>
-#include <entity/enum.h>
-#include <entity/union.h>
+#include <entity/Type.h>
+#include <entity/Class.h>
+#include <entity/Enum.h>
+#include <entity/Union.h>
 #include <db/database.h>
 #include <entity/scope.h>
 

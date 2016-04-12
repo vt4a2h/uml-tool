@@ -24,11 +24,11 @@
 
 #include <gtest/gtest.h>
 
-#include <entity/type.h>
-#include <entity/extendedtype.h>
-#include <entity/enum.h>
-#include <entity/union.h>
-#include <entity/class.h>
+#include <entity/Type.h>
+#include <entity/ExtendedType.h>
+#include <entity/Enum.h>
+#include <entity/Union.h>
+#include <entity/Class.h>
 
 class Components : public ::testing::Test
 {

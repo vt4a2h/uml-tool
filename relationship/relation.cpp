@@ -31,8 +31,8 @@
 
 #include <db/database.h>
 
-#include <entity/class.h>
-#include <entity/templateclass.h>
+#include <entity/Class.h>
+#include <entity/TemplateClass.h>
 
 #include <utility/helpfunctions.h>
 

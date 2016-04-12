@@ -30,10 +30,10 @@
 #include <project/Project.h>
 
 #include <entity/scope.h>
-#include <entity/class.h>
+#include <entity/Class.h>
 #include <entity/classmethod.h>
 #include <entity/field.h>
-#include <entity/union.h>
+#include <entity/Union.h>
 
 #include <db/ProjectDatabase.h>
 

@@ -33,7 +33,7 @@
 
 #include <helpers/generatorid.h>
 
-#include <entity/type.h>
+#include <entity/Type.h>
 #include <entity/EntityFactory.h>
 
 #include "settings.h"

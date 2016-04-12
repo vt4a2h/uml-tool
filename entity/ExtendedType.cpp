@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "extendedtype.h"
+#include "ExtendedType.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -35,13 +35,17 @@
 
 using namespace boost;
 
+namespace {
+    const QString defaultName = entity::ExtendedType::tr("Alias");
+}
+
 namespace entity {
 
     /**
      * @brief ExtendedType::ExtendedType
      */
     ExtendedType::ExtendedType()
-        : ExtendedType(defaultName(), common::ID::nullID())
+        : ExtendedType(defaultName, common::ID::nullID())
     {
     }
 
@@ -51,10 +55,11 @@ namespace entity {
      * @param scopeId
      */
     ExtendedType::ExtendedType(const QString &name, const common::ID &scopeId)
-        : Type(name, scopeId)
+        : Type(name.isEmpty() ? defaultName : name, scopeId)
         , m_ConstStatus(false)
         , m_UseAlias(false)
     {
+        m_KindOfType = KindOfType::ExtendedType;
     }
 
     /**
@@ -279,24 +284,6 @@ namespace entity {
                errorList << "Error: \"Template parameters\" is not array";
            }
        });
-    }
-
-    /**
-     * @brief ExtendedType::defaultName
-     * @return
-     */
-    QString ExtendedType::defaultName() const
-    {
-        return staticDefaultName();
-    }
-
-    /**
-     * @brief ExtendedType::staticDefaultName
-     * @return
-     */
-    QString ExtendedType::staticDefaultName()
-    {
-       return tr("Alias");
     }
 
     /**

@@ -33,8 +33,8 @@
 
 #include <utility/helpfunctions.h>
 
-#include "extendedtype.h"
-#include "type.h"
+#include "ExtendedType.h"
+#include "Type.h"
 #include "constants.h"
 
 using namespace boost;

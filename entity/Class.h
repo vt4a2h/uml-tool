@@ -26,7 +26,7 @@
 #include <QMap>
 #include <QVector>
 
-#include "type.h"
+#include "Type.h"
 #include "types.h"
 #include "enums.h"
 
@@ -126,9 +126,6 @@ namespace entity {
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
-
-        QString defaultName() const override;
-        static QString staticDefaultName();
 
         add_meta(Class)
 

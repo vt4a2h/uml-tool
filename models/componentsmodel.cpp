@@ -24,9 +24,9 @@
 
 #include <type_traits>
 
-#include <entity/class.h>
+#include <entity/Class.h>
 #include <entity/classmethod.h>
-#include <entity/enum.h>
+#include <entity/Enum.h>
 #include <entity/field.h>
 #include <entity/property.h>
 

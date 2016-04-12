@@ -24,8 +24,8 @@
 
 #include <entity/field.h>
 #include <entity/classmethod.h>
-#include <entity/enum.h>
-#include <entity/extendedtype.h>
+#include <entity/Enum.h>
+#include <entity/ExtendedType.h>
 #include <entity/property.h>
 
 #include <models/applicationmodel.h>

@@ -27,7 +27,7 @@
 
 #include <QJsonObject>
 
-#include <entity/type.h>
+#include <entity/Type.h>
 
 #include <utility/helpfunctions.h>
 

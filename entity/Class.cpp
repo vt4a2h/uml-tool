@@ -36,12 +36,12 @@
 
 #include <utility/helpfunctions.h>
 
-#include "class.h"
+#include "Class.h"
 #include "enums.h"
 #include "field.h"
 #include "classmethod.h"
 #include "enums.h"
-#include "extendedtype.h"
+#include "ExtendedType.h"
 #include "property.h"
 #include "constants.h"
 
@@ -53,6 +53,7 @@ namespace {
     const QString newMethodName = entity::Class::tr("newMethod");
     const QString newFieldName  = entity::Class::tr("newField");
     const QString newPropertyName = entity::Class::tr("newProperty");
+    const QString defaultName = entity::Class::tr("Class");
 }
 
 namespace entity {
@@ -61,7 +62,7 @@ namespace entity {
      * @brief Class::Class
      */
     Class::Class()
-        : Class(defaultName(), common::ID::nullID())
+        : Class(defaultName, common::ID::nullID())
     {
     }
 
@@ -81,10 +82,11 @@ namespace entity {
      * @param scopeId
      */
     Class::Class(const QString &name, const common::ID &scopeId)
-        : Type(name, scopeId)
+        : Type(name.isEmpty() ? defaultName : name, scopeId)
         , m_Kind(Kind::ClassType)
         , m_FinalStatus(false)
     {
+        m_KindOfType = KindOfType::Class;
     }
 
     /**
@@ -744,24 +746,6 @@ namespace entity {
                 errorList << "Error: \"Properties\" is not array";
             }
         });
-    }
-
-    /**
-     * @brief Class::defaultName
-     * @return
-     */
-    QString Class::defaultName() const
-    {
-        return staticDefaultName();
-    }
-
-    /**
-     * @brief Class::staticDefaultName
-     * @return
-     */
-    QString Class::staticDefaultName()
-    {
-       return tr("Class");
     }
 
     /**

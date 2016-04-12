@@ -33,7 +33,7 @@
 
 #include <commands/movegraphicobject.h>
 
-#include <entity/type.h>
+#include <entity/Type.h>
 #include <entity/scope.h>
 
 #include <db/ProjectDatabase.h>
@@ -413,7 +413,7 @@ namespace project {
         G_CONNECT(e, &graphics::Entity::xChanged, this, &project::Project::touch);
         G_CONNECT(e, &graphics::Entity::yChanged, this, &project::Project::touch);
         G_CONNECT(e, &graphics::Entity::moved,
-                  [this, &e](const QPointF &from, const QPointF &to) {
+                  [this, e = e](const QPointF &from, const QPointF &to) {
                            auto cmd = std::make_unique<commands::MoveGraphicObject>(
                            *e, G_ASSERT(e->typeObject())->name(), from, to);
                            G_ASSERT(commandsStack())->push(cmd.release());

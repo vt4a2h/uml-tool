@@ -22,8 +22,8 @@
 *****************************************************************************/
 #include "applicationmodel.h"
 
-#include <entity/type.h>
-#include <entity/class.h>
+#include <entity/Type.h>
+#include <entity/Class.h>
 #include <entity/classmethod.h>
 
 #include "constants.h"

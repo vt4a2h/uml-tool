@@ -36,14 +36,14 @@
 #include <QRegularExpressionMatch>
 
 #include <db/database.h>
-#include <entity/type.h>
-#include <entity/class.h>
-#include <entity/templateclass.h>
-#include <entity/union.h>
+#include <entity/Type.h>
+#include <entity/Class.h>
+#include <entity/TemplateClass.h>
+#include <entity/Union.h>
 #include <entity/classmethod.h>
 #include <entity/templateclassmethod.h>
-#include <entity/enum.h>
-#include <entity/extendedtype.h>
+#include <entity/Enum.h>
+#include <entity/ExtendedType.h>
 #include <relationship/association.h>
 #include <relationship/dependency.h>
 #include <relationship/generalization.h>

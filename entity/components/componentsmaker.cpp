@@ -26,8 +26,8 @@
 
 #include <entity/field.h>
 #include <entity/scope.h>
-#include <entity/type.h>
-#include <entity/extendedtype.h>
+#include <entity/Type.h>
+#include <entity/ExtendedType.h>
 #include <entity/property.h>
 #include <entity/components/componentsignatureparser.h>
 

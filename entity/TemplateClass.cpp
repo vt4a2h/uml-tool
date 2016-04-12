@@ -21,7 +21,7 @@
 **
 *****************************************************************************/
 
-#include "templateclass.h"
+#include "TemplateClass.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -34,13 +34,17 @@
 #include "constants.h"
 #include "enums.h"
 
+namespace {
+    const QString defaultName = entity::TemplateClass::tr("Template class");
+}
+
 namespace entity {
 
     /**
      * @brief TemplateClass::TemplateClass
      */
     TemplateClass::TemplateClass()
-        : TemplateClass("Template class", common::ID::globalScopeID())
+        : TemplateClass(defaultName, common::ID::globalScopeID())
     {
     }
 
@@ -50,8 +54,9 @@ namespace entity {
      * @param scopeId
      */
     TemplateClass::TemplateClass(const QString &name, const common::ID &scopeId)
-        : Class (name, scopeId)
+        : Class (name.isEmpty() ? defaultName : name, scopeId)
     {
+        m_KindOfType = KindOfType::TemplateClass;
     }
 
     /**
@@ -89,24 +94,6 @@ namespace entity {
         utility::checkAndSet(src, "Template part", errorList, [&src, &errorList, this](){
             Template::templateLoadFromJson(src["Template part"].toObject(), errorList);
         });
-    }
-
-    /**
-     * @brief TemplateClass::defaultName
-     * @return
-     */
-    QString TemplateClass::defaultName() const
-    {
-        return staticDefaultName();
-    }
-
-    /**
-     * @brief TemplateClass::staticDefaultName
-     * @return
-     */
-    QString TemplateClass::staticDefaultName()
-    {
-       return tr("Template class");
     }
 
     /**

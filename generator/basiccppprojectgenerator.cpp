@@ -32,12 +32,12 @@
 #include <db/database.h>
 #include <db/ProjectDatabase.h>
 #include <entity/scope.h>
-#include <entity/type.h>
-#include <entity/class.h>
-#include <entity/enum.h>
-#include <entity/union.h>
-#include <entity/templateclass.h>
-#include <entity/extendedtype.h>
+#include <entity/Type.h>
+#include <entity/Class.h>
+#include <entity/Enum.h>
+#include <entity/Union.h>
+#include <entity/TemplateClass.h>
+#include <entity/ExtendedType.h>
 #include <translation/code.h>
 
 namespace generator {

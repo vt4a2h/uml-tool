@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "icomponents.h"
 
-#include <entity/enum.h>
+#include <entity/Enum.h>
 
 namespace entity {
 

@@ -22,13 +22,13 @@
 *****************************************************************************/
 
 #include "scope.h"
-#include "type.h"
-#include "class.h"
-#include "templateclass.h"
-#include "union.h"
-#include "enum.h"
+#include "Type.h"
+#include "Class.h"
+#include "TemplateClass.h"
+#include "Union.h"
+#include "Enum.h"
 #include "enums.h"
-#include "extendedtype.h"
+#include "ExtendedType.h"
 #include "constants.h"
 #include "EntityFactory.h"
 
