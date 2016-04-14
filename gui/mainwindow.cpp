@@ -177,6 +177,9 @@ namespace gui {
             return ;
 
         auto newProject = std::make_shared<project::Project>();
+
+        // FIXME: invent better way
+        const_cast<entity::EntityFactory &>(entity::EntityFactory::instance()).onProjectChanged(newProject);
         newProject->load(path);
 
         if (newProject->hasErrors()) {

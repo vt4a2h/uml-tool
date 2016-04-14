@@ -114,6 +114,7 @@ namespace models {
      */
     bool ApplicationModel::removeProject(const QString &name)
     {
+        // FIXME: remove from tree model
         return !!m_Projects.remove(name);
     }
 
