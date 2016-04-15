@@ -102,6 +102,15 @@ namespace entity {
     }
 
     /**
+     * @brief Type::kindOfType
+     * @return
+     */
+    KindOfType Type::kindOfType() const
+    {
+        return m_KindOfType;
+    }
+
+    /**
      * @brief Type::isEqual
      * @param rhs
      * @return

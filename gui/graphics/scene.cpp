@@ -29,7 +29,7 @@
 #include <QAction>
 #include <QDebug>
 
-#include <commands/addrelation.h>
+#include <commands/AddRelation.h>
 #include <project/Project.h>
 
 #include "Entity.h"

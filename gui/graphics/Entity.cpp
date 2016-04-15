@@ -429,6 +429,16 @@ namespace graphics {
     }
 
     /**
+     * @brief Entity::color
+     * @return
+     */
+    QColor Entity::typeColor() const
+    {
+        return application::settings::elementColor(
+                   entity::kindOfTypeToString(G_ASSERT(m_Type)->kindOfType()));
+    }
+
+    /**
      * @brief Entity::drawHeader
      * @param painter
      */
@@ -436,7 +446,7 @@ namespace graphics {
     {
         painter->save();
 
-        QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
+        QColor color = typeColor();
 
         // Fill background
         QLinearGradient gradient(0, -m_Height / 2, 0, -m_Height / 2 + m_HeaderHeight );
@@ -466,7 +476,7 @@ namespace graphics {
     {
         painter->save();
 
-        QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
+        QColor color = typeColor();
         QRectF rect(frameRect());
         painter->fillRect(rect, Qt::white);
 
@@ -486,7 +496,7 @@ namespace graphics {
 
         painter->setRenderHint(QPainter::Antialiasing);
 
-        painter->setPen(application::settings::elementColor(G_ASSERT(m_Type)->marker()));
+        painter->setPen(typeColor());
 
         QRectF rect(resizeCornerRect());
         QPointF bottomLeft(rect.bottomLeft());
@@ -512,7 +522,7 @@ namespace graphics {
         painter->save();
 
         // Calculate initial parameters
-        QColor color = application::settings::elementColor(G_ASSERT(m_Type)->marker());
+        QColor color = typeColor();
         auto topLeft = boundingRect().topLeft() + QPointF(margin, margin);
         topLeft.ry() += m_HeaderHeight;
         qreal len = m_Height - m_HeaderHeight;

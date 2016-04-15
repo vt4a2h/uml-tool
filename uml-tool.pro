@@ -65,7 +65,6 @@ SOURCES += \
     application/settings.cpp \
     gui/graphics/scene.cpp \
     gui/graphics/graphicsrelation.cpp \
-    commands/addrelation.cpp \
     helpers/generatorid.cpp \
     common/id.cpp \
     common/basicelement.cpp \
@@ -85,7 +84,8 @@ SOURCES += \
     entity/Union.cpp \
     entity/Class.cpp \
     entity/TemplateClass.cpp \
-    gui/View.cpp
+    gui/View.cpp \
+    commands/AddRelation.cpp
 
 HEADERS += \
     enums.h \
@@ -157,7 +157,6 @@ HEADERS += \
     gui/graphics/scene.h \
     gui/graphics/common.h \
     gui/graphics/graphicsrelation.h \
-    commands/addrelation.h \
     gui/graphics/graphics_types.h \
     helpers/generatorid.h \
     common/id.h \
@@ -181,7 +180,8 @@ HEADERS += \
     entity/Union.h \
     entity/Class.h \
     entity/TemplateClass.h \
-    gui/View.h
+    gui/View.h \
+    commands/AddRelation.h
 
 FORMS += \
     gui/mainwindow.ui \

@@ -70,6 +70,8 @@ namespace entity {
 
         static QString kindMarker();
 
+        KindOfType kindOfType() const;
+
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;

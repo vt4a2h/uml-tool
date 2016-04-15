@@ -89,6 +89,8 @@ namespace graphics {
         QPolygonF resizeCorner() const;
         QRectF resizeCornerRect() const;
 
+        QColor typeColor() const;
+
         void drawHeader(QPainter * painter);
         void drawFrame(QPainter * painter);
         void drawResizeCorner(QPainter * painter);
