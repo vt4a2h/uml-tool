@@ -27,7 +27,7 @@
 #include <project/Project.h>
 #include <project/project_types.hpp>
 
-#include <db/database.h>
+#include <db/Database.h>
 #include <db/db_types.hpp>
 
 #include <models/applicationmodel.h>

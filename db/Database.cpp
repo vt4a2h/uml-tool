@@ -21,7 +21,7 @@
 **
 *****************************************************************************/
 
-#include "database.h"
+#include "Database.h"
 
 #include <QDir>
 #include <QFile>

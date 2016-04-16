@@ -25,7 +25,7 @@
 
 #include <common/id.h>
 
-#include "relation.h"
+#include "Relation.h"
 
 /**
  * @brief relationship

@@ -25,7 +25,7 @@
 
 #include <gtest/gtest.h>
 
-#include <db/database.h>
+#include <db/Database.h>
 #include <db/ProjectDatabase.h>
 #include <entity/scope.h>
 #include <entity/Type.h>
@@ -33,7 +33,7 @@
 #include <entity/classmethod.h>
 #include <entity/field.h>
 #include <relationship/node.h>
-#include <relationship/relation.h>
+#include <relationship/Relation.h>
 #include <relationship/generalization.h>
 #include <relationship/dependency.h>
 #include <relationship/association.h>

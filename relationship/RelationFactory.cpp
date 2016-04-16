@@ -22,6 +22,16 @@
 *****************************************************************************/
 #include "RelationFactory.h"
 
+#include <QGraphicsScene>
+
+#include <db/Database.h>
+
+#include <gui/graphics/Relation.h>
+
+#include <utility/helpfunctions.h>
+
+#include "Relation.h"
+
 namespace relationship {
 
     /**
@@ -45,7 +55,15 @@ namespace relationship {
     SharedRelation RelationFactory::make(RelationType relType, const common::ID &tail,
                                          const common::ID &head, bool addToScene) const
     {
+        if (auto pr = project()) {
+            // TODO: change maker to construct relation with specific types and searchers
+            if (auto relation = utility::makeRelation(relType)) {
 
+                if (auto graphicsScene = scene()) {
+//                    auto graphicsRelation = std::make_unique<graphics::Relation>();
+                }
+            }
+        }
     }
 
     /**

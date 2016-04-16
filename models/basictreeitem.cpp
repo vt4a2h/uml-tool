@@ -37,7 +37,7 @@
 #include <entity/classmethod.h>
 #include <entity/entity_types.hpp>
 
-#include <relationship/relation.h>
+#include <relationship/Relation.h>
 #include <relationship/relationship_types.hpp>
 
 #include <utility/helpfunctions.h>

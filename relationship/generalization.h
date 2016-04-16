@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "relation.h"
+#include "Relation.h"
 
 namespace entity {
     enum Section : int;

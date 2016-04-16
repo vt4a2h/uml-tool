@@ -27,7 +27,7 @@
 
 #include <QJsonObject>
 
-#include <db/database.h>
+#include <db/Database.h>
 #include <entity/Class.h>
 #include <entity/classmethod.h>
 #include <entity/field.h>

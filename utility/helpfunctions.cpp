@@ -35,7 +35,7 @@
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 
-#include <db/database.h>
+#include <db/Database.h>
 #include <entity/Type.h>
 #include <entity/Class.h>
 #include <entity/TemplateClass.h>
@@ -49,7 +49,7 @@
 #include <relationship/generalization.h>
 #include <relationship/multiplyassociation.h>
 #include <relationship/realization.h>
-#include <relationship/relation.h>
+#include <relationship/Relation.h>
 #include <entity/scope.h>
 
 namespace utility {

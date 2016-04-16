@@ -27,7 +27,7 @@
 
 #include <types.h>
 
-#include <db/database.h>
+#include <db/Database.h>
 #include <generator/virtualdirectory.h>
 #include <generator/basiccppprojectgenerator.h>
 #include <helpers/entityhelpres.h>

@@ -13,7 +13,6 @@ linux-g++ {
 SOURCES += \
     main.cpp \
     templates.cpp \
-    db/database.cpp \
     entity/classmethod.cpp \
     entity/field.cpp \
     entity/scope.cpp \
@@ -34,7 +33,6 @@ SOURCES += \
     relationship/multiplyassociation.cpp \
     relationship/node.cpp \
     relationship/realization.cpp \
-    relationship/relation.cpp \
     translation/code.cpp \
     translation/projecttranslator.cpp \
     translation/signaturemaker.cpp \
@@ -64,7 +62,6 @@ SOURCES += \
     entity/components/token.cpp \
     application/settings.cpp \
     gui/graphics/scene.cpp \
-    gui/graphics/graphicsrelation.cpp \
     helpers/generatorid.cpp \
     common/id.cpp \
     common/basicelement.cpp \
@@ -85,7 +82,10 @@ SOURCES += \
     entity/Class.cpp \
     entity/TemplateClass.cpp \
     gui/View.cpp \
-    commands/AddRelation.cpp
+    commands/AddRelation.cpp \
+    relationship/Relation.cpp \
+    db/Database.cpp \
+    gui/graphics/GraphicsRelation.cpp
 
 HEADERS += \
     enums.h \
@@ -115,7 +115,6 @@ HEADERS += \
     relationship/multiplyassociation.h \
     relationship/node.h \
     relationship/realization.h \
-    relationship/relation.h \
     relationship/relationship_types.hpp \
     translation/code.h \
     translation/projecttranslator.h \
@@ -156,7 +155,6 @@ HEADERS += \
     qthelpers.h \
     gui/graphics/scene.h \
     gui/graphics/common.h \
-    gui/graphics/graphicsrelation.h \
     gui/graphics/graphics_types.h \
     helpers/generatorid.h \
     common/id.h \
@@ -181,7 +179,9 @@ HEADERS += \
     entity/Class.h \
     entity/TemplateClass.h \
     gui/View.h \
-    commands/AddRelation.h
+    commands/AddRelation.h \
+    relationship/Relation.h \
+    gui/graphics/GraphicsRelation.h
 
 FORMS += \
     gui/mainwindow.ui \

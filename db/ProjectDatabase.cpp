@@ -33,7 +33,7 @@
 
 #include <gui/graphics/Entity.h>
 
-#include <relationship/relation.h>
+#include <relationship/Relation.h>
 
 #include <utility/helpfunctions.h>
 
@@ -243,27 +243,27 @@ namespace db {
 
         // TODO: restore graphics objects first
 
-        utility::checkAndSet(src, relationsMark, errorList, [&src, &errorList, this](){
-            if (src[relationsMark].isArray()) {
-                relationship::SharedRelation relation;
-                QJsonObject obj;
-                for (auto &&val : src[relationsMark].toArray()) {
-                    obj = val.toObject();
-                    utility::checkAndSet(obj, relationship::Relation::typeMark(), errorList,
-                                         [&obj, &errorList, &relation, this](){
-                        relation =
-                            utility::makeRelation(
-                                static_cast<relationship::RelationType>(
-                                    obj[relationship::Relation::typeMark()].toInt()));
-                        relation->setTypeSearchers({m_GlobalDatabase, safeShared()});
-                        relation->fromJson(obj, errorList);
-                        m_Relations.insert(relation->id(), relation);
-                    });
-                }
-            } else {
-                errorList << "Error: \"Relations\" is not array";
-            }
-        });
+//        utility::checkAndSet(src, relationsMark, errorList, [&src, &errorList, this](){
+//            if (src[relationsMark].isArray()) {
+//                relationship::SharedRelation relation;
+//                QJsonObject obj;
+//                for (auto &&val : src[relationsMark].toArray()) {
+//                    obj = val.toObject();
+//                    utility::checkAndSet(obj, relationship::Relation::typeMark(), errorList,
+//                                         [&obj, &errorList, &relation, this](){
+//                        relation =
+//                            utility::makeRelation(
+//                                static_cast<relationship::RelationType>(
+//                                    obj[relationship::Relation::typeMark()].toInt()));
+//                        relation->setTypeSearchers({m_GlobalDatabase, safeShared()});
+//                        relation->fromJson(obj, errorList);
+//                        m_Relations.insert(relation->id(), relation);
+//                    });
+//                }
+//            } else {
+//                errorList << "Error: \"Relations\" is not array";
+//            }
+//        });
 
 
     }

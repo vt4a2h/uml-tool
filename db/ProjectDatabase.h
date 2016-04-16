@@ -24,7 +24,7 @@
 
 #include <QObject>
 
-#include "database.h"
+#include "Database.h"
 #include "db_types.hpp"
 
 #include <relationship/relationship_types.hpp>

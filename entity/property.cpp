@@ -29,7 +29,7 @@
 
 #include <utility/helpfunctions.h>
 #include <helpers/entityhelpres.h>
-#include <db/database.h>
+#include <db/Database.h>
 
 #include "Type.h"
 #include "field.h"

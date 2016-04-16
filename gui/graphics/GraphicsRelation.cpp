@@ -20,11 +20,11 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "graphicsrelation.h"
+#include "GraphicsRelation.h"
 
 #include <QPainter>
 
-#include <relationship/relation.h>
+#include <relationship/Relation.h>
 
 #include "Entity.h"
 #include "qthelpers.h"

@@ -27,7 +27,7 @@
 
 #include <boost/range/algorithm/find_if.hpp>
 
-#include <db/database.h>
+#include <db/Database.h>
 #include <db/ProjectDatabase.h>
 #include <entity/Enum.h>
 #include <entity/ExtendedType.h>

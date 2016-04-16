@@ -21,7 +21,7 @@
 **
 *****************************************************************************/
 
-#include "relation.h"
+#include "Relation.h"
 #include "node.h"
 #include "enums.h"
 #include "constants.h"
@@ -29,7 +29,7 @@
 #include <QJsonObject>
 #include <QDebug>
 
-#include <db/database.h>
+#include <db/Database.h>
 
 #include <entity/Class.h>
 #include <entity/TemplateClass.h>

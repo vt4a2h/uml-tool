@@ -26,7 +26,7 @@
 #include "types.h"
 #include "scope.h"
 
-#include <db/database.h>
+#include <db/Database.h>
 #include <db/db_types.hpp>
 
 namespace entity {

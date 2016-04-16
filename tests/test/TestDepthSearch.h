@@ -32,7 +32,7 @@
 #include <entity/Class.h>
 #include <entity/Enum.h>
 #include <entity/Union.h>
-#include <db/database.h>
+#include <db/Database.h>
 #include <entity/scope.h>
 
 #include "TestProjectBase.h"

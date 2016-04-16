@@ -29,7 +29,7 @@
 
 #include <QMap>
 
-#include <db/database.h>
+#include <db/Database.h>
 #include <db/ProjectDatabase.h>
 #include <entity/scope.h>
 #include <entity/Type.h>

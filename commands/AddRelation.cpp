@@ -27,9 +27,9 @@
 #include <db/ProjectDatabase.h>
 
 #include <gui/graphics/Entity.h>
-#include <gui/graphics/graphicsrelation.h>
+#include <gui/graphics/Relation.h>
 
-#include <relationship/relation.h>
+#include <relationship/Relation.h>
 
 #include <utility/helpfunctions.h>
 
