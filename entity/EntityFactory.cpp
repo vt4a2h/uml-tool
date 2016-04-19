@@ -87,6 +87,9 @@ namespace entity {
                     if (!type)
                         return nullptr;
 
+                    // Will be added by default
+                    Q_ASSERT(!options.testFlag(AddToDatabase));
+
                     if (project() && project()->database() && options.testFlag(AddToScene)) {
                         if (auto s = scene()) {
                             auto graphicEntity = new graphics::Entity(type);

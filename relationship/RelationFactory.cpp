@@ -25,14 +25,55 @@
 #include <QGraphicsScene>
 
 #include <db/Database.h>
+#include <db/ProjectDatabase.h>
 
-#include <gui/graphics/Relation.h>
+#include <project/Project.h>
+
+#include <gui/graphics/GraphicsRelation.h>
 
 #include <utility/helpfunctions.h>
 
 #include "Relation.h"
+#include "multiplyassociation.h"
+#include "association.h"
+#include "dependency.h"
+#include "realization.h"
+#include "qthelpers.h"
 
 namespace relationship {
+
+    namespace {
+        using MakerR  = std::function<SharedRelation(const common::ID &, const common::ID &,
+                                                     const db::WeakTypeSearchers &)>;
+        using MakersR = const QMap<RelationType, MakerR>;
+
+        MakersR relationMaker = {
+            {AggregationRelation,    [](auto &&tail, auto &&head, auto &&searchers){
+                 auto rel =
+                     std::make_shared<relationship::MultiplyAssociation>(tail, head, searchers);
+                 rel->setRelationType(AggregationRelation);
+                 return rel;
+             }},
+            {CompositionRelation,    [](auto &&tail, auto &&head, auto &&searchers){
+                 auto rel =
+                     std::make_shared<relationship::MultiplyAssociation>(tail, head, searchers);
+                 rel->setRelationType(CompositionRelation);
+                 return rel;
+             }},
+            {MultiRelation,          [](auto &&tail, auto &&head, auto &&searchers){
+                 return std::make_shared<MultiplyAssociation>(tail, head, searchers); }},
+            {AssociationRelation,    [](auto &&tail, auto &&head, auto &&searchers){
+                 return std::make_shared<Association>(tail, head, searchers);         }},
+            {DependencyRelation ,    [](auto &&tail, auto &&head, auto &&searchers){
+                 return std::make_shared<Dependency>(tail, head, searchers);          }},
+            {GeneralizationRelation, [](auto &&tail, auto &&head, auto &&searchers){
+                 return std::make_shared<Generalization>(tail, head, searchers);      }},
+            {RealizationRelation,    [](auto &&tail, auto &&head, auto &&searchers){
+                 return std::make_shared<Realization>(tail, head, searchers);         }},
+            {SimpleRelation,         [](auto &&tail, auto &&head, auto &&searchers){
+                 return std::make_shared<Relation>(tail, head, searchers);            }}
+        };
+    }
 
     /**
      * @brief RelationFactory::instance
@@ -53,17 +94,30 @@ namespace relationship {
      * @return
      */
     SharedRelation RelationFactory::make(RelationType relType, const common::ID &tail,
-                                         const common::ID &head, bool addToScene) const
+                                         const common::ID &head, CreationOptions options) const
     {
-        if (auto pr = project()) {
-            // TODO: change maker to construct relation with specific types and searchers
-            if (auto relation = utility::makeRelation(relType)) {
+        if (auto pr = G_ASSERT(project())) {
+            if (G_ASSERT(pr->database() && project()->globalDatabase())) {
+                if (auto maker = G_ASSERT(relationMaker[relType])) {
+                    if (auto relation = maker(tail, head, {pr->database(), pr->globalDatabase()})) {
 
-                if (auto graphicsScene = scene()) {
-//                    auto graphicsRelation = std::make_unique<graphics::Relation>();
+                        if (options.testFlag(ElementsFactory::AddToDatabase)) {
+                        }
+
+                        if (options.testFlag(ElementsFactory::AddToScene)) {
+                            if (auto graphicsScene = scene()) {
+                            }
+                        }
+
+                        if (options.testFlag(ElementsFactory::AddToTreeModel)) {
+
+                        }
+                    }
                 }
             }
         }
+
+        return nullptr;
     }
 
     /**
@@ -72,7 +126,7 @@ namespace relationship {
      * @param addToScene
      * @return
      */
-    SharedRelation RelationFactory::make(const QJsonObject &src, bool addToScene) const
+    SharedRelation RelationFactory::make(const QJsonObject &src, CreationOptions options) const
     {
 
     }

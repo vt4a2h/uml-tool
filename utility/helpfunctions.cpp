@@ -139,8 +139,6 @@ namespace utility {
         using MakersT = const std::map<QString, MakerT>;
         using MakerM  = std::function<entity::SharedMethod()>;
         using MakersM = const std::map<entity::ClassMethodType, MakerM>;
-        using MakerR  = std::function<relationship::SharedRelation()>;
-        using MakersR = const std::map<relationship::RelationType, MakerR>;
 
         MakersT kType =
             { {entity::Type::staticMarker(),          [](){ return std::make_shared<entity::Type>();          }},
@@ -150,17 +148,6 @@ namespace utility {
               {entity::Enum::staticMarker(),          [](){ return std::make_shared<entity::Enum>();          }},
               {entity::ExtendedType::staticMarker(),  [](){ return std::make_shared<entity::ExtendedType>();  }}
             };
-
-        MakersR kRelation = {
-            {relationship::AggregationRelation,    [](){ return std::make_shared<relationship::MultiplyAssociation>(); }},
-            {relationship::CompositionRelation,    [](){ return std::make_shared<relationship::MultiplyAssociation>(); }},
-            {relationship::MultiRelation,          [](){ return std::make_shared<relationship::MultiplyAssociation>(); }},
-            {relationship::AssociationRelation,    [](){ return std::make_shared<relationship::Association>();         }},
-            {relationship::DependencyRelation ,    [](){ return std::make_shared<relationship::Dependency>();          }},
-            {relationship::GeneralizationRelation, [](){ return std::make_shared<relationship::Generalization>();      }},
-            {relationship::RealizationRelation,    [](){ return std::make_shared<relationship::Realization>();         }},
-            {relationship::SimpleRelation,         [](){ return std::make_shared<relationship::Relation>();            }}
-        };
 
         MakersM kMethod = { {entity::SimpleMethod,   [](){ return std::make_shared<entity::ClassMethod>();         }},
                             {entity::TemplateMethod, [](){ return std::make_shared<entity::TemplateClassMethod>(); }}
@@ -177,18 +164,6 @@ namespace utility {
         MakerT defaultMaker([](){ return std::make_shared<entity::Type>(); });
 
         return mapSearchHelper(kType, hash, defaultMaker)();
-    }
-
-    /**
-     * @brief makeRelation
-     * @param relation
-     * @return
-     */
-    std::shared_ptr<relationship::Relation> makeRelation(relationship::RelationType relation)
-    {
-        MakerR defaultMaker([](){ return std::make_shared<relationship::Relation>(); });
-
-        return mapSearchHelper(kRelation, relation, defaultMaker)();
     }
 
     /**

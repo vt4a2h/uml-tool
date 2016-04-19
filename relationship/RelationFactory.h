@@ -47,8 +47,8 @@ namespace relationship {
         static const RelationFactory &instance();
 
         SharedRelation make(RelationType relType, const common::ID &tail,
-                            const common::ID &head, bool addToScene = true) const;
-        SharedRelation make(const QJsonObject &src, bool addToScene = true) const;
+                            const common::ID &head,CreationOptions options = RelationCommon) const;
+        SharedRelation make(const QJsonObject &src, CreationOptions options = RelationCommon) const;
 
         UniqueRelationCmd makeCmd(RelationType relType, const entity::SharedType &tail,
                                   const entity::SharedType &head) const;

@@ -77,7 +77,6 @@ namespace utility {
     void checkAndSet(const QJsonObject& object, const QString& key, QStringList& lst, const std::function<void()>& func);
 
     std::shared_ptr<entity::Type> makeType(const QString &hash);
-    std::shared_ptr<relationship::Relation> makeRelation(relationship::RelationType relation);
     std::shared_ptr<entity::ClassMethod> makeMethod(entity::ClassMethodType methodType);
 
     QStringList scopesNamesList(const entity::SharedType &type, const db::SharedDatabase &db);

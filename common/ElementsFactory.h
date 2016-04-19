@@ -45,6 +45,9 @@ namespace common {
             NoOptions      = 0x0, ///< Empty
             AddToScene     = 0x1, ///< Add graphic representation of item to the scene
             AddToTreeModel = 0x2, ///< Add item to the tree model
+            AddToDatabase  = 0x4, ///< Add to the project database, actual only for relations
+            EntityCommon   = AddToScene | AddToTreeModel,
+            RelationCommon = AddToScene | AddToTreeModel | AddToDatabase,
         };
         Q_DECLARE_FLAGS(CreationOptions, CreationOption)
 

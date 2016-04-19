@@ -27,7 +27,7 @@
 #include <db/ProjectDatabase.h>
 
 #include <gui/graphics/Entity.h>
-#include <gui/graphics/Relation.h>
+#include <gui/graphics/GraphicsRelation.h>
 
 #include <relationship/Relation.h>
 
@@ -82,7 +82,7 @@ namespace commands {
         } else {
             if (auto d = G_ASSERT(database())) {
 
-                m_Relation = G_ASSERT(utility::makeRelation(m_Type));
+//                m_Relation = G_ASSERT(utility::makeRelation(m_Type));
                 m_Relation->setHeadType(m_To);
                 m_Relation->setTailType(m_From);
                 d->addRelation(m_Relation);
