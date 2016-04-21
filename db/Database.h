@@ -26,7 +26,7 @@
 
 #include <entity/entity_types.hpp>
 
-#include <common/id.h>
+#include <common/ID.h>
 
 #include "itypesearcher.h"
 #include "types.h"

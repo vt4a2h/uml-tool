@@ -30,7 +30,7 @@
 #include <QString>
 #include <QMetaType>
 
-#include <common/id.h>
+#include <common/ID.h>
 
 namespace db {
     class Database;

@@ -29,7 +29,7 @@
 #include <entity/scope.h>
 #include <entity/property.h>
 
-#include <common/id.h>
+#include <common/ID.h>
 
 #include <gui/graphics/Entity.h>
 
@@ -127,6 +127,10 @@ namespace db {
     {
         relation->setTypeSearchers({m_GlobalDatabase, safeShared()});
         m_Relations[relation->id()] = relation;
+
+        G_CONNECT(relation.get(), &relationship::Relation::idChanged,
+                  this, &ProjectDatabase::onRelationIDChanged);
+
         emit relationAdded();
     }
 
@@ -146,8 +150,11 @@ namespace db {
      */
     void ProjectDatabase::removeRelation(const common::ID &id)
     {
-        if (m_Relations.remove(id) != 0)
+        if (auto relation = m_Relations[id]) {
+            G_DISCONNECT(relation.get(), &relationship::Relation::idChanged,
+                         this, &ProjectDatabase::onRelationIDChanged);
             emit relationRemoved();
+        }
     }
 
     /**
@@ -286,6 +293,19 @@ namespace db {
     {
         if (G_ASSERT(tu))
             tu->setTypeSearcher(globalDatabase());
+    }
+
+    /**
+     * @brief ProjectDatabase::onRelationIDChanged
+     * @param oldID
+     * @param newID
+     */
+    void ProjectDatabase::onRelationIDChanged(const common::ID &oldID, const common::ID &newID)
+    {
+        if (auto relation = m_Relations[oldID]) {
+            m_Relations.remove(oldID);
+            m_Relations[newID] = relation;
+        }
     }
 
     /**

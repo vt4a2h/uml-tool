@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "basicelement.h"
+#include "BasicElement.h"
 
 #include <entity/itypeuser.h>
 
@@ -85,9 +85,6 @@ namespace common {
         return *this;
     }
 
-    /**
-     * @brief BasicEntity::BasicEntity
-     */
     BasicElement::BasicElement(const QString &name, const ID &id)
         : BasicElement(name, ID::nullID(), id)
     {

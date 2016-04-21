@@ -24,11 +24,9 @@ linux-g++ {
 INCLUDEPATH += ../../
 
 HEADERS += ../../enums.h \
-    ../../common/basicelement.h \
     ../../project/project.h \
     ../../entity/property.h \
     ../../entity/class.h \
-    ../../common/id.h \
     ../../entity/scope.h \
     ../../entity/isectional.h \
     ../../entity/components/icomponents.h \
@@ -72,7 +70,9 @@ HEADERS += ../../enums.h \
     TestComponentSignatureParser.h \
     TestProjectBase.h \
     ../../db/ProjectDatabase.h \
-    ../../db/Database.h
+    ../../db/Database.h \
+    ../../common/BasicElement.h \
+    ../../common/ID.h
 
 SOURCES += main.cpp \
            ../../common/basicelement.cpp \

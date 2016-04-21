@@ -28,7 +28,7 @@
 #include <QString>
 #include <QHash>
 
-#include <common/basicelement.h>
+#include <common/BasicElement.h>
 
 #include <helpers/entityhelpres.h>
 

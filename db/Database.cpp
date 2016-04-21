@@ -35,7 +35,7 @@
 #include <helpers/entityhelpres.h>
 
 #include <entity/scope.h>
-#include <common/id.h>
+#include <common/ID.h>
 
 #include "constants.h"
 

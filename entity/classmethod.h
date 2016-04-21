@@ -27,7 +27,7 @@
 #include <QSet>
 #include <QVector>
 
-#include <common/basicelement.h>
+#include <common/BasicElement.h>
 #include <common/meta.h>
 
 #include "entity_types.hpp"

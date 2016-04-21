@@ -29,7 +29,7 @@
 #include <QDebug>
 #include <QUndoStack>
 
-#include <common/basicelement.h>
+#include <common/BasicElement.h>
 
 #include <commands/movegraphicobject.h>
 

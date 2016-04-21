@@ -25,7 +25,7 @@
 
 #include <QString>
 
-#include <common/id.h>
+#include <common/ID.h>
 
 #include <entity/entity_types.hpp>
 

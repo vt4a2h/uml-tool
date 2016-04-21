@@ -63,8 +63,6 @@ SOURCES += \
     application/settings.cpp \
     gui/graphics/scene.cpp \
     helpers/generatorid.cpp \
-    common/id.cpp \
-    common/basicelement.cpp \
     entity/isectional.cpp \
     relationship/RelationFactory.cpp \
     entity/EntityFactory.cpp \
@@ -85,7 +83,9 @@ SOURCES += \
     commands/AddRelation.cpp \
     relationship/Relation.cpp \
     db/Database.cpp \
-    gui/graphics/GraphicsRelation.cpp
+    gui/graphics/GraphicsRelation.cpp \
+    common/BasicElement.cpp \
+    common/ID.cpp
 
 HEADERS += \
     enums.h \
@@ -157,10 +157,10 @@ HEADERS += \
     gui/graphics/common.h \
     gui/graphics/graphics_types.h \
     helpers/generatorid.h \
-    common/id.h \
+    common/ID.h \
     db/itypesearcher.h \
     entity/itypeuser.h \
-    common/basicelement.h \
+    common/BasicElement.h \
     entity/isectional.h \
     common/common_types.h \
     common/meta.h \

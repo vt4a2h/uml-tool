@@ -30,6 +30,7 @@
 #include <project/Project.h>
 
 #include <gui/graphics/GraphicsRelation.h>
+#include <gui/graphics/Entity.h>
 
 #include <utility/helpfunctions.h>
 
@@ -101,16 +102,26 @@ namespace relationship {
                 if (auto maker = G_ASSERT(relationMaker[relType])) {
                     if (auto relation = maker(tail, head, {pr->database(), pr->globalDatabase()})) {
 
-                        if (options.testFlag(ElementsFactory::AddToDatabase)) {
-                        }
+                        auto projectDB = project()->database();
+
+                        if (options.testFlag(ElementsFactory::AddToDatabase))
+                            projectDB->addRelation(relation);
 
                         if (options.testFlag(ElementsFactory::AddToScene)) {
                             if (auto graphicsScene = scene()) {
+                                auto from = G_ASSERT(projectDB->graphicsEntity(tail));
+                                auto to   = G_ASSERT(projectDB->graphicsEntity(head));
+
+                                auto graphicsRelation =
+                                    std::make_unique<graphics::Relation>(relation, from, to);
+                                graphicsScene->addItem(graphicsRelation.release());
+
+                                // FIXME: register relation in the database
                             }
                         }
 
                         if (options.testFlag(ElementsFactory::AddToTreeModel)) {
-
+                            // TODO: implement
                         }
                     }
                 }

@@ -73,11 +73,13 @@ namespace db {
         void relationAdded();
         void relationRemoved();
 
+        // FIXME: also handle changing ID for graphic items
         void graphicsEntityRegistred(const graphics::EntityPtr &);
         void graphicsEntityUnregistred(const graphics::EntityPtr &);
 
     public slots:
         void onTypeUserAdded(const entity::SharedTypeUser &tu);
+        void onRelationIDChanged(const common::ID &oldID, const common::ID &newID);
         // TODO: add signals to detect adding/ removing relation in order to touch project
 
     public: // Database overrides

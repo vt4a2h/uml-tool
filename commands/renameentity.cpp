@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "renameentity.h"
 
-#include <common/basicelement.h>
+#include <common/BasicElement.h>
 
 namespace commands
 {

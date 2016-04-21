@@ -24,7 +24,7 @@
 
 #include <QObject>
 
-#include <common/id.h>
+#include <common/ID.h>
 
 namespace common {
 

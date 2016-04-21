@@ -28,7 +28,7 @@
 #include <db/db_types.hpp>
 
 #include <common/meta.h>
-#include <common/basicelement.h>
+#include <common/BasicElement.h>
 
 #include <entity/entity_types.hpp>
 
@@ -51,6 +51,8 @@ namespace relationship {
      */
     class Relation : public common::BasicElement
     {
+        Q_OBJECT
+
     public:
         Relation();
         Relation(Relation &&src) noexcept = default;
