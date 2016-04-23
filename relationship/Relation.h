@@ -87,7 +87,7 @@ namespace relationship {
         db::WeakTypeSearchers typeSearchers() const;
         void setTypeSearchers(const db::WeakTypeSearchers &typeSearchers);
 
-        static QString typeMark();
+        static QString typeMarker();
 
         add_meta(Relation)
 

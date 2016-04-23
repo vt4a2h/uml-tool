@@ -102,6 +102,7 @@ namespace relationship {
                 if (auto maker = G_ASSERT(relationMaker[relType])) {
                     if (auto relation = maker(tail, head, {pr->database(), pr->globalDatabase()})) {
 
+                        // { TODO: extract to the separate procedure
                         auto projectDB = project()->database();
 
                         if (options.testFlag(ElementsFactory::AddToDatabase))
@@ -112,17 +113,18 @@ namespace relationship {
                                 auto from = G_ASSERT(projectDB->graphicsEntity(tail));
                                 auto to   = G_ASSERT(projectDB->graphicsEntity(head));
 
-                                auto graphicsRelation =
-                                    std::make_unique<graphics::Relation>(relation, from, to);
-                                graphicsScene->addItem(graphicsRelation.release());
-
-                                // FIXME: register relation in the database
+                                auto graphicsRelation = new graphics::Relation(relation, from, to);
+                                projectDB->registerGraphicsRelation(graphicsRelation);
+                                graphicsScene->addItem(graphicsRelation);
                             }
                         }
 
                         if (options.testFlag(ElementsFactory::AddToTreeModel)) {
-                            // TODO: implement
+                            // TODO: implement when will be added ability to display relations
+                            //       in the project tree
                         }
+
+                        // }
                     }
                 }
             }
@@ -139,7 +141,10 @@ namespace relationship {
      */
     SharedRelation RelationFactory::make(const QJsonObject &src, CreationOptions options) const
     {
-
+        if (src.contains(relationship::Relation::typeMarker())) {
+            auto type = RelationType(src[relationship::Relation::typeMarker()].toInt());
+            // TODO: use extracted procedure
+        }
     }
 
     /**

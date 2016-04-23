@@ -38,6 +38,7 @@ namespace graphics {
     using RelationPtr = QPointer<Relation>;
     using UniqueGraphicRelation = std::unique_ptr<Relation>;
     using GraphicRelationPtr = QPointer<Relation>;
+    using RelationHashMap = QHash<common::ID, RelationPtr>;
 
 } // namespace graphics
 

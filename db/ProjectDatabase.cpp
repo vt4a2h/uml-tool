@@ -32,6 +32,7 @@
 #include <common/ID.h>
 
 #include <gui/graphics/Entity.h>
+#include <gui/graphics/GraphicsRelation.h>
 
 #include <relationship/Relation.h>
 
@@ -164,6 +165,38 @@ namespace db {
     relationship::RelationsList ProjectDatabase::relations() const
     {
         return m_Relations.values().toVector();
+    }
+
+    /**
+     * @brief ProjectDatabase::graphicRelation
+     * @param id
+     * @return
+     */
+    graphics::RelationPtr ProjectDatabase::graphicRelation(const common::ID &id) const
+    {
+        return m_GraphicsRelations[id];
+    }
+
+    /**
+     * @brief ProjectDatabase::registerGraphicsRelation
+     * @param e
+     */
+    void ProjectDatabase::registerGraphicsRelation(const graphics::RelationPtr &r)
+    {
+        if (r) {
+            m_GraphicsRelations[r->id()] = r;
+        }
+    }
+
+    /**
+     * @brief ProjectDatabase::unregisterGraphicsRelation
+     * @param e
+     */
+    void ProjectDatabase::unregisterGraphicsRelation(const graphics::RelationPtr &r)
+    {
+        if (r) {
+            m_GraphicsRelations.remove(r->id());
+        }
     }
 
     /**

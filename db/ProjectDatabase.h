@@ -55,6 +55,10 @@ namespace db {
         void removeRelation(const common::ID &id);
         relationship::RelationsList relations() const;
 
+        graphics::RelationPtr graphicRelation(const common::ID &id) const;
+        void registerGraphicsRelation(const graphics::RelationPtr &r);
+        void unregisterGraphicsRelation(const graphics::RelationPtr &r);
+
         graphics::EntityPtr graphicsEntity(const common::ID &id) const;
         void registerGraphicsEntity(const graphics::EntityPtr &e);
         void unregisterGraphicsEntity(const graphics::EntityPtr &e);
@@ -96,6 +100,7 @@ namespace db {
 
         relationship::Relations m_Relations;
         graphics::EntityHashMap m_GraphicsEntities;
+        graphics::RelationHashMap m_GraphicsRelations;
 
         db::SharedDatabase m_GlobalDatabase;
     };

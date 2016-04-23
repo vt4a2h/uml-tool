@@ -54,6 +54,8 @@ namespace graphics {
         EntityPtr to() const;
         void setTo(const EntityPtr &to);
 
+        common::ID id() const;
+
     private slots:
         void recalculateLine();
 

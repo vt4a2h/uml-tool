@@ -359,7 +359,7 @@ namespace relationship {
         m_TypeSearchers = typeSearchers;
     }
 
-    QString Relation::typeMark()
+    QString Relation::typeMarker()
     {
         return relMark;
     }

@@ -142,6 +142,15 @@ namespace graphics {
     }
 
     /**
+     * @brief Relation::id
+     * @return
+     */
+    common::ID Relation::id() const
+    {
+        return m_Relation ? m_Relation->id() : common::ID::nullID();
+    }
+
+    /**
      * @brief Relation::setFrom
      * @param from
      */
