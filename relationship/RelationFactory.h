@@ -48,11 +48,8 @@ namespace relationship {
 
         SharedRelation make(RelationType relType, const common::ID &tail,
                             const common::ID &head,CreationOptions options = RelationCommon) const;
-        SharedRelation make(const QJsonObject &src, CreationOptions options = RelationCommon) const;
-
-        UniqueRelationCmd makeCmd(RelationType relType, const entity::SharedType &tail,
-                                  const entity::SharedType &head) const;
-
+        SharedRelation make(const QJsonObject &src, ErrorList &errors,
+                            CreationOptions options = RelationCommon) const;
     private:
         explicit RelationFactory(QObject * parent = nullptr);
     };

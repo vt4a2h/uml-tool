@@ -23,9 +23,12 @@
 #include "RelationFactory.h"
 
 #include <QGraphicsScene>
+#include <QDebug>
 
 #include <db/Database.h>
 #include <db/ProjectDatabase.h>
+
+#include <entity/Type.h>
 
 #include <project/Project.h>
 
@@ -74,6 +77,31 @@ namespace relationship {
             {SimpleRelation,         [](auto &&tail, auto &&head, auto &&searchers){
                  return std::make_shared<Relation>(tail, head, searchers);            }}
         };
+
+        void addRelation(const SharedRelation &relation, const db::SharedProjectDatabase &projectDB,
+                         const QPointer<QGraphicsScene> &graphicsScene,
+                         RelationFactory::CreationOptions options)
+        {
+            if (!G_ASSERT(relation) || !G_ASSERT(projectDB) || !G_ASSERT(graphicsScene))
+                return;
+
+            if (options.testFlag(RelationFactory::AddToDatabase))
+                projectDB->addRelation(relation);
+
+            if (options.testFlag(RelationFactory::AddToScene)) {
+                auto from = G_ASSERT(projectDB->graphicsEntity(G_ASSERT(relation->tailType())->id()));
+                auto to   = G_ASSERT(projectDB->graphicsEntity(G_ASSERT(relation->headType())->id()));
+
+                auto graphicsRelation = new graphics::Relation(relation, from, to);
+                projectDB->registerGraphicsRelation(graphicsRelation);
+                graphicsScene->addItem(graphicsRelation);
+            }
+
+            if (options.testFlag(RelationFactory::AddToTreeModel)) {
+                // TODO: implement when will be added ability to display relations
+                //       in the project tree
+            }
+        }
     }
 
     /**
@@ -101,30 +129,8 @@ namespace relationship {
             if (G_ASSERT(pr->database() && project()->globalDatabase())) {
                 if (auto maker = G_ASSERT(relationMaker[relType])) {
                     if (auto relation = maker(tail, head, {pr->database(), pr->globalDatabase()})) {
-
-                        // { TODO: extract to the separate procedure
-                        auto projectDB = project()->database();
-
-                        if (options.testFlag(ElementsFactory::AddToDatabase))
-                            projectDB->addRelation(relation);
-
-                        if (options.testFlag(ElementsFactory::AddToScene)) {
-                            if (auto graphicsScene = scene()) {
-                                auto from = G_ASSERT(projectDB->graphicsEntity(tail));
-                                auto to   = G_ASSERT(projectDB->graphicsEntity(head));
-
-                                auto graphicsRelation = new graphics::Relation(relation, from, to);
-                                projectDB->registerGraphicsRelation(graphicsRelation);
-                                graphicsScene->addItem(graphicsRelation);
-                            }
-                        }
-
-                        if (options.testFlag(ElementsFactory::AddToTreeModel)) {
-                            // TODO: implement when will be added ability to display relations
-                            //       in the project tree
-                        }
-
-                        // }
+                        addRelation(relation, pr->database(), scene(), options);
+                        return relation;
                     }
                 }
             }
@@ -139,26 +145,26 @@ namespace relationship {
      * @param addToScene
      * @return
      */
-    SharedRelation RelationFactory::make(const QJsonObject &src, CreationOptions options) const
+    SharedRelation RelationFactory::make(const QJsonObject &src, ErrorList &errors,
+                                         CreationOptions options) const
     {
         if (src.contains(relationship::Relation::typeMarker())) {
-            auto type = RelationType(src[relationship::Relation::typeMarker()].toInt());
-            // TODO: use extracted procedure
+            auto relType = RelationType(src[relationship::Relation::typeMarker()].toInt());
+            if (auto maker = G_ASSERT(relationMaker[relType])) {
+                if (auto relation = maker(common::ID::nullID(), common::ID::nullID(), {})) {
+                    relation->fromJson(src, errors);
+
+                    if (errors.isEmpty()) {
+                        addRelation(relation, G_ASSERT(project())->database(), scene(), options);
+                        return relation;
+                    } else {
+                        qWarning() << "Relation was loaded with errors.";
+                    }
+                }
+            }
         }
-    }
 
-    /**
-     * @brief RelationFactory::makeCmd
-     * @param relType
-     * @param tail
-     * @param head
-     * @return
-     */
-    UniqueRelationCmd RelationFactory::makeCmd(RelationType relType,
-                                               const entity::SharedType &tail,
-                                               const entity::SharedType &head) const
-    {
-
+        return nullptr;
     }
 
     /**
