@@ -32,7 +32,7 @@
 
 #include "graphics/Entity.h"
 #include "editentitydialog.h"
-#include "mainwindow.h"
+#include "MainWindow.h"
 
 namespace gui {
 

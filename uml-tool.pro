@@ -37,8 +37,6 @@ SOURCES += \
     translation/projecttranslator.cpp \
     translation/signaturemaker.cpp \
     utility/helpfunctions.cpp \
-    application/application.cpp \
-    gui/mainwindow.cpp \
     gui/about.cpp \
     gui/newproject.cpp \
     gui/addscope.cpp \
@@ -61,7 +59,6 @@ SOURCES += \
     helpers/entityhelpres.cpp \
     entity/components/token.cpp \
     application/settings.cpp \
-    gui/graphics/scene.cpp \
     helpers/generatorid.cpp \
     entity/isectional.cpp \
     relationship/RelationFactory.cpp \
@@ -85,12 +82,15 @@ SOURCES += \
     db/Database.cpp \
     gui/graphics/GraphicsRelation.cpp \
     common/BasicElement.cpp \
-    common/ID.cpp
+    common/ID.cpp \
+    gui/graphics/Scene.cpp \
+    application/Application.cpp \
+    gui/MainWindow.cpp
 
 HEADERS += \
     enums.h \
     types.h \
-    db/database.h \
+    db/Database.h \
     db/ProjectDatabase.h \
     db/db_types.hpp \
     entity/classmethod.h \
@@ -121,8 +121,6 @@ HEADERS += \
     translation/translator_types.hpp \
     translation/signaturemaker.h \
     utility/helpfunctions.h \
-    application/application.h \
-    gui/mainwindow.h \
     gui/about.h \
     gui/newproject.h \
     gui/addscope.h \
@@ -153,7 +151,6 @@ HEADERS += \
     entity/components/components_types.h \
     entity/components/token.h \
     qthelpers.h \
-    gui/graphics/scene.h \
     gui/graphics/common.h \
     gui/graphics/graphics_types.h \
     helpers/generatorid.h \
@@ -181,7 +178,10 @@ HEADERS += \
     gui/View.h \
     commands/AddRelation.h \
     relationship/Relation.h \
-    gui/graphics/GraphicsRelation.h
+    gui/graphics/GraphicsRelation.h \
+    gui/graphics/Scene.h \
+    application/Application.h \
+    gui/MainWindow.h
 
 FORMS += \
     gui/mainwindow.ui \

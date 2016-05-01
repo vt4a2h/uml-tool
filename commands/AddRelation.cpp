@@ -30,6 +30,9 @@
 #include <gui/graphics/GraphicsRelation.h>
 
 #include <relationship/Relation.h>
+#include <relationship/RelationFactory.h>
+
+#include <project/Project.h>
 
 #include <utility/helpfunctions.h>
 
@@ -42,15 +45,14 @@ namespace commands {
      * @param from
      * @param to
      */
-    AddRelation::AddRelation(relationship::RelationType relType, const entity::SharedType &from,
-                             const entity::SharedType &to, const db::SharedProjectDatabase &database)
+    AddRelation::AddRelation(relationship::RelationType relType, const common::ID &tail,
+                             const common::ID &head)
         : BaseCommand(tr("Add relation"))
         , m_Type(relType)
-        , m_From(from)
-        , m_To(to)
-        , m_Db(database)
+        , m_Tail(tail)
+        , m_Head(head)
     {
-        Q_ASSERT(m_Db.lock() && m_From && m_To && !m_Scene.isNull());
+        Q_ASSERT(m_Tail.isValid() && m_Head.isValid());
     }
 
     /**
@@ -59,8 +61,11 @@ namespace commands {
     AddRelation::~AddRelation()
     {
         if (!m_GraphicRelation.isNull()) {
-            removeRelationFromScene();
-            delete m_GraphicRelation.data();
+            auto &&factory = relationship::RelationFactory::instance();
+            if (auto &&scene = G_ASSERT(factory.scene())) {
+                if (!scene->items().contains(m_GraphicRelation.data()))
+                    delete m_GraphicRelation.data();
+            }
         }
     }
 
@@ -69,30 +74,30 @@ namespace commands {
      */
     void AddRelation::redo()
     {
-        Q_ASSERT(m_From && m_To);
+        Q_ASSERT(m_Tail.isValid() && m_Head.isValid());
+
+        auto &&factory = relationship::RelationFactory::instance();
 
         if (m_Done) {
-            if (auto d = G_ASSERT(database())) {
-                Q_ASSERT(!m_GraphicRelation.isNull());
-                m_Scene->addItem(G_ASSERT(m_GraphicRelation.data()));
+            if (auto &&pr = factory.project()) {
+                if (auto &&projectDb = pr->database()) {
+                    Q_ASSERT(!projectDb->containsRelation(m_Relation->id()));
+                    projectDb->addRelation(m_Relation);
+                }
 
-                Q_ASSERT(!d->containsRelation(m_Relation->id()));
-                d->addRelation(m_Relation);
+                if (auto &&scene = factory.scene()) {
+                    Q_ASSERT(!m_GraphicRelation.isNull());
+                    scene->addItem(G_ASSERT(m_GraphicRelation.data()));
+                }
+
+                // Add also to the tree model (when it'll be supported)
             }
         } else {
-            if (auto d = G_ASSERT(database())) {
+            m_Relation = G_ASSERT(factory.make(m_Type, m_Tail, m_Head));
 
-//                m_Relation = G_ASSERT(utility::makeRelation(m_Type));
-                m_Relation->setHeadType(m_To);
-                m_Relation->setTailType(m_From);
-                d->addRelation(m_Relation);
-
-                // FIXME:
-//                m_GraphicRelation = new graphics::Relation(m_Relation, m_From, m_To);
-                m_Scene->addItem(m_GraphicRelation.data());
-
-                m_Done = true;
-            }
+            if (auto &&pr = factory.project())
+                if (auto &&projectDb = pr->database())
+                    m_GraphicRelation = G_ASSERT(projectDb->graphicRelation(m_Relation->id()));
         }
     }
 
@@ -101,28 +106,15 @@ namespace commands {
      */
     void AddRelation::undo()
     {
-        removeRelationFromScene();
-        if (auto d = G_ASSERT(database()))
-            d->removeRelation(m_Relation->id());
-    }
+        auto &&factory = relationship::RelationFactory::instance();
+        if (auto &&pr = factory.project()) {
+            if (auto &&projectDb = pr->database())
+                projectDb->removeRelation(m_Relation->id());
 
-    /**
-     * @brief AddRelation::pr
-     * @return
-     */
-    db::SharedProjectDatabase AddRelation::database() const
-    {
-        return m_Db.lock();
-    }
+            if (auto &&scene = factory.scene())
+                scene->removeItem(m_GraphicRelation.data());
 
-    void AddRelation::removeRelationFromScene()
-    {
-        if (m_From && m_To) {
-            // FIXME:
-//            auto scene = G_ASSERT(m_From->scene());
-
-//            if (!m_GraphicRelation.isNull())
-//                scene->removeItem(m_GraphicRelation.data());
+            // TODO: remove also from tree model when it'll be supported
         }
     }
 

@@ -90,4 +90,13 @@ namespace common {
         return m_Project.lock();
     }
 
+    /**
+    * @brief ElementsFactory::setTreeModel
+    * @param treeModel
+    */
+    void ElementsFactory::setTreeModel(const models::WeakTreeModel &)
+    {
+        // TODO: implement
+    }
+
 } // namespace common

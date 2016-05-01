@@ -151,6 +151,8 @@ namespace graphics {
         setCursor(defaultCursorShape);
 
         connect(G_ASSERT(type.get()), &common::BasicElement::nameChanged, [=]{ update(); });
+        G_CONNECT(G_ASSERT(type.get()), &common::BasicElement::idChanged,
+                  this, &Entity::onTypeIdChanged);
     }
 
     /**
@@ -222,8 +224,14 @@ namespace graphics {
      */
     void Entity::setTypeObject(const entity::SharedType &type)
     {
+        if (m_Type)
+            G_DISCONNECT(G_ASSERT(m_Type.get()), &common::BasicElement::idChanged,
+                         this, &Entity::onTypeIdChanged);
+
         m_Type = type;
-        m_ID = type ? type->id() : common::ID::nullID();
+        G_CONNECT(G_ASSERT(m_Type.get()), &common::BasicElement::idChanged,
+                  this, &Entity::onTypeIdChanged);
+        m_ID = type->id();
     }
 
     /**
@@ -332,6 +340,15 @@ namespace graphics {
     {
         // TODO: add flags and update only needed elements, e.g. header
         update(boundingRect());
+    }
+
+    /**
+     * @brief Entity::onTypeIdChanged
+     * @param id
+     */
+    void Entity::onTypeIdChanged(const common::ID &id)
+    {
+        m_ID = id;
     }
 
     /**

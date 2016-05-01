@@ -46,8 +46,8 @@ namespace commands {
     class AddRelation : public BaseCommand
     {
     public:
-        AddRelation(relationship::RelationType relType, const entity::SharedType &from,
-                    const entity::SharedType &to, const db::SharedProjectDatabase &database);
+        AddRelation(relationship::RelationType relType, const common::ID &tail,
+                    const common::ID &head);
 
         ~AddRelation();
 
@@ -58,19 +58,13 @@ namespace commands {
         void undo() override;
 
     private:
-        db::SharedProjectDatabase database() const;
-        void removeRelationFromScene();
-
         relationship::RelationType m_Type;
 
-        entity::SharedType m_From;
-        entity::SharedType m_To;
+        common::ID m_Tail;
+        common::ID m_Head;
 
         graphics::GraphicRelationPtr m_GraphicRelation;
         relationship::SharedRelation m_Relation;
-
-        db::WeakProjectDatabase m_Db;
-        QPointer<QGraphicsScene> m_Scene;
     };
 
 } // namespace commands

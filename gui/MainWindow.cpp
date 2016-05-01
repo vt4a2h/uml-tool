@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "ui_mainwindow.h"
 
 #include <QVBoxLayout>
@@ -51,7 +51,7 @@
 #include <project/Project.h>
 
 #include <gui/graphics/Entity.h>
-#include <gui/graphics/scene.h>
+#include <gui/graphics/Scene.h>
 
 #include <entity/EntityFactory.h>
 #include <entity/Type.h>

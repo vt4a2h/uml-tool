@@ -79,6 +79,7 @@ namespace graphics {
 
     public slots:
         void redraw();
+        void onTypeIdChanged(const common::ID& id);
 
     private:
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

@@ -20,13 +20,13 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "application.h"
+#include "Application.h"
 
 #include <QMessageBox>
 #include <QApplication>
 #include <QFile>
 
-#include <gui/mainwindow.h>
+#include <gui/MainWindow.h>
 #include <gui/chooseglobaldatabasedialog.h>
 
 #include <models/applicationmodel.h>
@@ -35,6 +35,8 @@
 
 #include <entity/Type.h>
 #include <entity/EntityFactory.h>
+
+#include <relationship/RelationFactory.h>
 
 #include "settings.h"
 #include "qthelpers.h"
@@ -98,6 +100,22 @@ namespace application {
         return true;
     }
 
+    namespace {
+
+        template <class Factory>
+        void setUpFactory(const Factory& f, const models::SharedApplicationModel &model,
+                          const QPointer<QGraphicsScene>& scene)
+        {
+            G_CONNECT(model.get(), &models::ApplicationModel::currentProjectChanged,
+                      &f, &Factory::onProjectChanged);
+
+            auto &factory = const_cast<Factory&>(f);
+            factory.onSceneChanged(scene);
+            factory.setGlobalDatabase(model->globalDatabase());
+            factory.setTreeModel(model->treeModel());
+        }
+    }
+
     /**
      * @brief Application::Application
      */
@@ -110,13 +128,9 @@ namespace application {
                   &helpers::GeneratorID::instance(), &helpers::GeneratorID::onCurrentProjectChanged);
 
         // Set up factories
-        G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
-                  &entity::EntityFactory::instance(), &entity::EntityFactory::onProjectChanged);
-
-        auto &factory = const_cast<entity::EntityFactory&>(entity::EntityFactory::instance());
-        factory.onSceneChanged(m_MainWindow->scene());
-        factory.setGlobalDatabase(m_ApplicationModel->globalDatabase());
-        factory.setTreeModel(m_ApplicationModel->treeModel());
+        setUpFactory(entity::EntityFactory::instance(), m_ApplicationModel, m_MainWindow->scene());
+        setUpFactory(relationship::RelationFactory::instance(), m_ApplicationModel,
+                     m_MainWindow->scene());
 
         qRegisterMetaTypeStreamOperators<application::settings::TstType>("application::settings::TstType");
     }

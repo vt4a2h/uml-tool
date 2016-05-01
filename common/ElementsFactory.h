@@ -29,6 +29,8 @@
 
 #include <project/project_types.hpp>
 
+#include <models/models_types.hpp>
+
 class QGraphicsScene;
 
 namespace common {
@@ -59,6 +61,8 @@ namespace common {
         QPointer<QGraphicsScene> scene() const;
         db::SharedDatabase db() const;
         project::SharedProject project() const;
+
+        void setTreeModel(const models::WeakTreeModel &treeModel);
 
     public slots:
         void onSceneChanged(const QPointer<QGraphicsScene> &scene);
