@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include <entity/scope.h>
+#include <entity/Scope.h>
 #include <entity/Enum.h>
 #include <entity/ExtendedType.h>
 #include <entity/field.h>

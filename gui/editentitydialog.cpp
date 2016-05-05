@@ -26,7 +26,7 @@
 #include <QMessageBox>
 
 #include <entity/Type.h>
-#include <entity/scope.h>
+#include <entity/Scope.h>
 #include <entity/Enum.h>
 #include <entity/Union.h>
 #include <entity/Class.h>

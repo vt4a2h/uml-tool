@@ -24,7 +24,7 @@
 
 #include <QString>
 #include "types.h"
-#include "scope.h"
+#include "Scope.h"
 
 #include <db/Database.h>
 #include <db/db_types.hpp>

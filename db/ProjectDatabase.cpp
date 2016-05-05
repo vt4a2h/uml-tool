@@ -26,7 +26,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-#include <entity/scope.h>
+#include <entity/Scope.h>
 #include <entity/property.h>
 
 #include <common/ID.h>
@@ -246,7 +246,6 @@ namespace db {
     namespace
     {
         const QString relationsMark = "Relations";
-        const QString positionsMark = "Positions";
 
         template <class Container>
         inline QJsonArray mapToJson(const Container &c)
@@ -268,7 +267,6 @@ namespace db {
         QJsonObject result(Database::toJson());
 
         result[relationsMark] = mapToJson(m_Relations);
-        result[positionsMark] = mapToJson(m_GraphicsEntities);
 
         return result;
     }
@@ -285,10 +283,10 @@ namespace db {
         utility::checkAndSet(src, relationsMark, errorList, [&src, &errorList, this](){
             if (src[relationsMark].isArray()) {
                 auto &&factory = relationship::RelationFactory::instance();
-                for (auto &&val : src[relationsMark].toArray())
+                for (auto &&val: src[relationsMark].toArray())
                     G_ASSERT(factory.make(val.toObject(), errorList));
             } else {
-                errorList << tr("Error: \"Relations\" is not array");
+                errorList << "Error: \"Relations\" is not array";
             }
         });
     }

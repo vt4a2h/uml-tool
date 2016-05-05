@@ -28,7 +28,7 @@
 
 #include <entity/Type.h>
 #include <entity/EntityFactory.h>
-#include <entity/scope.h>
+#include <entity/Scope.h>
 
 #include <models/ProjectTreeModel.h>
 #include <project/Project.h>

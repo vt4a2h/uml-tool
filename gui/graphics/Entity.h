@@ -68,18 +68,15 @@ namespace graphics {
         static qreal rectMargin();
         QRectF frameRect() const;
 
-        // TODO: add tests
-        QJsonObject toJson() const;
-        void fromJson(const QJsonObject &src, QStringList &errorList);
-
     signals:
         void moved(const QPointF &from, const QPointF &to);
         void positionChanged(const QPointF &from, const QPointF &to);
+        void heightChanged(qreal height);
+        void widthChanged(qreal width);
         void sizeChanged();
 
     public slots:
         void redraw();
-        void onTypeIdChanged(const common::ID& id);
 
     private:
         void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -99,14 +96,9 @@ namespace graphics {
         void drawConnectFrame(QPainter * painter);
 
         entity::SharedType m_Type;
-        common::ID m_ID; // Unique id (the same with type ID)
         QPointF m_LastPos;
         bool m_ResizeMode;
         bool m_selectedToConnect;
-
-        qreal m_Width;
-        qreal m_Height;
-        qreal m_HeaderHeight;
     };
 
 } // grpahics

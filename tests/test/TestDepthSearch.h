@@ -33,7 +33,7 @@
 #include <entity/Enum.h>
 #include <entity/Union.h>
 #include <db/Database.h>
-#include <entity/scope.h>
+#include <entity/Scope.h>
 
 #include "TestProjectBase.h"
 

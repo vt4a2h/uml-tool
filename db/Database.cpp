@@ -34,7 +34,7 @@
 #include <utility/helpfunctions.h>
 #include <helpers/entityhelpres.h>
 
-#include <entity/scope.h>
+#include <entity/Scope.h>
 #include <common/ID.h>
 
 #include "constants.h"

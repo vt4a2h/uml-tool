@@ -30,7 +30,7 @@
 #include <project/Project.h>
 #include <project/project_types.hpp>
 
-#include <entity/scope.h>
+#include <entity/Scope.h>
 #include <entity/Type.h>
 #include <entity/Class.h>
 #include <entity/field.h>

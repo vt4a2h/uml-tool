@@ -33,7 +33,7 @@
 #include <entity/Union.h>
 #include <entity/Enum.h>
 #include <entity/TemplateClass.h>
-#include <entity/scope.h>
+#include <entity/Scope.h>
 
 #include <models/ProjectTreeModel.h>
 
@@ -129,6 +129,14 @@ namespace entity {
     {
         if (src.contains(entity::Type::kindMarker())) {
             auto kind = KindOfType(src[entity::Type::kindMarker()].toInt());
+
+            // Add to scene manually later
+            bool addToScene = false;
+            if (options.testFlag(AddToScene)) {
+                options ^= AddToScene;
+                addToScene = true;
+            }
+
             if (auto result = make(kind, QPointF(0, 0), scopeID, options)) {
                 result->fromJson(src, errors);
                 if (errors.isEmpty())
@@ -136,6 +144,32 @@ namespace entity {
             } else {
                 errors << "Cannot create object.";
             }
+
+            if (addToScene) {
+                if (auto s = scene()) {
+//                    auto graphicEntity = new graphics::Entity(type);
+
+                }
+            }
+            // Restore graphic entities (objects should be created in the Database::fromJson)
+    //        utility::checkAndSet(src, relationsMark, errorList, [&src, &errorList, this](){
+    //            if (src[graphicsEntitiesMark].isArray()) {
+    //                for (auto &&val: src[graphicsEntitiesMark].toArray()) {
+    //                    QJsonObject tmpObj = val.toObject();
+    //                    common::ID tmpID;
+    //                    utility::checkAndSet(tmpObj, graphics::Entity::IDMark(), errorList, [&] {
+    //                        tmpID.fromJson(tmpObj[graphics::Entity::IDMark()], errorList);
+    //                    });
+
+    //                    if (tmpID.isValid()) {
+    //                        Q_ASSERT(m_GraphicsEntities.contains(tmpID));
+    //                        m_GraphicsEntities[tmpID]->fromJson(tmpObj, errorList);
+    //                    }
+    //                }
+    //            } else {
+    //                errorList << "Error: \"Graphics entities\" is not array";
+    //            }
+    //        });
         }
 
         return nullptr;

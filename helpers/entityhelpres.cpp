@@ -26,7 +26,7 @@
 
 #include <boost/range/algorithm/find_if.hpp>
 
-#include <entity/scope.h>
+#include <entity/Scope.h>
 
 #include "constants.h"
 

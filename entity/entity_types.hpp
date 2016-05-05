@@ -120,6 +120,9 @@ namespace entity {
 
     class ITypeUser;
     using SharedTypeUser = std::shared_ptr<ITypeUser>;
+
+    class GraphicEntityData;
+    using SharedGraphicEntityData = std::shared_ptr<GraphicEntityData>;
 }
 
 Q_DECLARE_METATYPE(entity::SharedField)

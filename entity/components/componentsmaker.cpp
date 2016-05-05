@@ -25,7 +25,7 @@
 #include <boost/range/algorithm/find_if.hpp>
 
 #include <entity/field.h>
-#include <entity/scope.h>
+#include <entity/Scope.h>
 #include <entity/Type.h>
 #include <entity/ExtendedType.h>
 #include <entity/property.h>

@@ -29,7 +29,7 @@
 
 #include <project/Project.h>
 
-#include <entity/scope.h>
+#include <entity/Scope.h>
 #include <entity/Class.h>
 #include <entity/classmethod.h>
 #include <entity/field.h>

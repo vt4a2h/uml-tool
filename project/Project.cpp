@@ -34,7 +34,7 @@
 #include <commands/movegraphicobject.h>
 
 #include <entity/Type.h>
-#include <entity/scope.h>
+#include <entity/Scope.h>
 
 #include <db/ProjectDatabase.h>
 

@@ -31,7 +31,7 @@
 #include <entity/Class.h>
 #include <entity/Enum.h>
 #include <entity/Union.h>
-#include <entity/scope.h>
+#include <entity/Scope.h>
 #include <entity/ExtendedType.h>
 #include <entity/TemplateClass.h>
 #include <enums.h>

@@ -26,7 +26,7 @@
 
 #include <project/Project.h>
 #include <db/ProjectDatabase.h>
-#include <entity/scope.h>
+#include <entity/Scope.h>
 
 #include "ProjectTreeModel.h"
 

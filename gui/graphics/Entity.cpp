@@ -38,7 +38,7 @@
 #include <entity/Class.h>
 #include <entity/TemplateClass.h>
 #include <entity/ExtendedType.h>
-#include <entity/scope.h>
+#include <entity/Scope.h>
 #include <entity/classmethod.h>
 #include <entity/field.h>
 
@@ -137,13 +137,9 @@ namespace graphics {
     Entity::Entity(const entity::SharedType &type, QGraphicsItem *parent)
         : QGraphicsObject(parent)
         , m_Type(type)
-        , m_ID(G_ASSERT(type)->id())
         , m_LastPos(0, 0)
         , m_ResizeMode(false)
         , m_selectedToConnect(false)
-        , m_Width(minimumWidth)
-        , m_Height(minimumHeight)
-        , m_HeaderHeight(minimumHeight)
     {
         setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
 
@@ -224,14 +220,7 @@ namespace graphics {
      */
     void Entity::setTypeObject(const entity::SharedType &type)
     {
-        if (m_Type)
-            G_DISCONNECT(G_ASSERT(m_Type.get()), &common::BasicElement::idChanged,
-                         this, &Entity::onTypeIdChanged);
-
         m_Type = type;
-        G_CONNECT(G_ASSERT(m_Type.get()), &common::BasicElement::idChanged,
-                  this, &Entity::onTypeIdChanged);
-        m_ID = type->id();
     }
 
     /**
@@ -240,7 +229,7 @@ namespace graphics {
      */
     common::ID Entity::id() const
     {
-        return m_ID;
+        return m_Type ? m_Type->id() : common::ID::nullID();
     }
 
     /**
@@ -279,60 +268,6 @@ namespace graphics {
         return QRectF(-m_Width / 2, -m_Height / 2, m_Width, m_Height);
     }
 
-    namespace {
-        const QString idMark     = "ID";
-        const QString heightMark = "Height";
-        const QString widthMark  = "Width";
-        const QString xMark  = "X";
-        const QString yMark  = "Y";
-    }
-
-    /**
-     * @brief Entity::toJson
-     * @return
-     */
-    QJsonObject Entity::toJson() const
-    {
-        QJsonObject result;
-
-        result[idMark]     = m_ID.toJson();
-        result[heightMark] = m_Height;
-        result[widthMark]  = m_Width;
-        result[xMark]      = pos().x();
-        result[yMark]      = pos().y();
-
-        return result;
-    }
-
-    /**
-     * @brief Entity::fromJson
-     * @param src
-     * @param errorList
-     */
-    void Entity::fromJson(const QJsonObject &src, QStringList &errorList)
-    {
-        utility::checkAndSet(src, idMark, errorList, [&src, &errorList, this](){
-            m_ID.fromJson(src[idMark], errorList);
-        });
-        utility::checkAndSet(src, heightMark, errorList, [&src, &errorList, this](){
-            m_Height = src[heightMark].toDouble();
-        });
-        utility::checkAndSet(src, widthMark, errorList, [&src, &errorList, this](){
-            m_Width = src[widthMark].toDouble();
-        });
-
-        QPointF pos(0., 0.);
-        utility::checkAndSet(src, xMark, errorList, [&src, &pos](){
-            pos.rx() = src[xMark].toDouble();
-        });
-        utility::checkAndSet(src, yMark, errorList, [&src, &pos](){
-            pos.ry() = src[yMark].toDouble();
-        });
-        setPos(pos);
-
-        redraw();
-    }
-
     /**
      * @brief Entity::redraw
      */
@@ -340,15 +275,6 @@ namespace graphics {
     {
         // TODO: add flags and update only needed elements, e.g. header
         update(boundingRect());
-    }
-
-    /**
-     * @brief Entity::onTypeIdChanged
-     * @param id
-     */
-    void Entity::onTypeIdChanged(const common::ID &id)
-    {
-        m_ID = id;
     }
 
     /**
@@ -466,10 +392,10 @@ namespace graphics {
         QColor color = typeColor();
 
         // Fill background
-        QLinearGradient gradient(0, -m_Height / 2, 0, -m_Height / 2 + m_HeaderHeight );
+        QLinearGradient gradient(0, -m_Height / 2, 0, -m_Height / 2 + minimumHeight );
         gradient.setColorAt(0, color);
         gradient.setColorAt(1, Qt::white);
-        QRectF headerRect(-m_Width / 2, -m_Height / 2, m_Width, m_HeaderHeight);
+        QRectF headerRect(-m_Width / 2, -m_Height / 2, m_Width, minimumHeight);
         painter->fillRect(headerRect, QBrush(gradient));
 
         // Draw frame
@@ -541,8 +467,8 @@ namespace graphics {
         // Calculate initial parameters
         QColor color = typeColor();
         auto topLeft = boundingRect().topLeft() + QPointF(margin, margin);
-        topLeft.ry() += m_HeaderHeight;
-        qreal len = m_Height - m_HeaderHeight;
+        topLeft.ry() += minimumHeight;
+        qreal len = m_Height - minimumHeight;
 
         // Draw sections
         drawSection(painter, tr("Properties"), m_Type->properties(), topLeft, len, m_Width, color);

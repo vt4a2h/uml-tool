@@ -21,7 +21,7 @@
 **
 *****************************************************************************/
 
-#include "scope.h"
+#include "Scope.h"
 #include "Type.h"
 #include "Class.h"
 #include "TemplateClass.h"
@@ -355,7 +355,7 @@ namespace entity {
             if (src["Types"].isArray()) {
                 auto const & factory = EntityFactory::instance();
                 for (auto &&val : src["Types"].toArray())
-                    factory.make(val.toObject(), errorList, id());
+                    G_ASSERT(factory.make(val.toObject(), errorList, id()));
             } else {
                 errorList << "Error: \"Types\" is not array";
             }

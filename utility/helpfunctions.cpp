@@ -50,7 +50,7 @@
 #include <relationship/multiplyassociation.h>
 #include <relationship/realization.h>
 #include <relationship/Relation.h>
-#include <entity/scope.h>
+#include <entity/Scope.h>
 
 namespace utility {
 

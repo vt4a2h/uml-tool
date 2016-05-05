@@ -31,7 +31,7 @@
 #include <utility/helpfunctions.h>
 #include <helpers/generatorid.h>
 
-#include "scope.h"
+#include "Scope.h"
 #include "enums.h"
 #include "constants.h"
 

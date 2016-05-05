@@ -31,7 +31,7 @@
 #include <db/ProjectDatabase.h>
 #include <entity/Enum.h>
 #include <entity/ExtendedType.h>
-#include <entity/scope.h>
+#include <entity/Scope.h>
 #include <entity/field.h>
 #include <entity/classmethod.h>
 #include <entity/Union.h>

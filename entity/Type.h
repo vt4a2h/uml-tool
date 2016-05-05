@@ -29,6 +29,8 @@
 
 #include <entity/components/icomponents.h>
 
+#include "entity_types.hpp"
+
 class QJsonObject;
 
 namespace entity {
