@@ -61,10 +61,10 @@ namespace entity {
         Type(const QString &name, const common::ID &scopeId,
              const common::ID &typeId = common::ID::nullID());
         Type(Type &&) noexcept = default;
-        Type(const Type &) = default;
+        Type(const Type &src);
 
         Type& operator= (Type &&) noexcept = default;
-        Type& operator= (const Type &) = default;
+        Type& operator= (Type src);
 
         friend bool operator ==(const Type &lhs, const Type &rhs);
 
@@ -73,6 +73,11 @@ namespace entity {
         static QString kindMarker();
 
         KindOfType kindOfType() const;
+
+        SharedGraphicEntityData graphicEntityData() const;
+        void setGraphicEntityData(const SharedGraphicEntityData &graphicEntityData);
+
+        friend void swap(Type &lhs, Type &rhs) noexcept;
 
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
@@ -85,6 +90,8 @@ namespace entity {
 
     private:
         void setBaseTypeName();
+
+        SharedGraphicEntityData m_GraphicEntityData;
     };
 
 } // namespace entity

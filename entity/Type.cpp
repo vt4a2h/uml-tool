@@ -34,11 +34,13 @@
 #include "Scope.h"
 #include "enums.h"
 #include "constants.h"
+#include "GraphicEntityData.h"
 
 namespace entity {
 
     namespace {
         const QString kindOfTypeMark = "Kind of type";
+        const QString graphicsDataMark = "Graphics entity data";
         const QString defaultName = Type::tr("Type");
     }
 
@@ -60,9 +62,32 @@ namespace entity {
         : BasicElement(name, scopeId, typeId.isValid() ? typeId
                                                        : helpers::GeneratorID::instance().genID() )
         , m_KindOfType(KindOfType::Type)
+        , m_GraphicEntityData(std::make_shared<GraphicEntityData>())
     {
         if (m_Name.isEmpty() || m_Name == DEFAULT_NAME)
             setBaseTypeName();
+    }
+
+    /**
+     * @brief Type::Type
+     * @param src
+     */
+    Type::Type(const Type &src)
+        : BasicElement(src)
+        , m_KindOfType(src.m_KindOfType)
+        , m_GraphicEntityData(src.m_GraphicEntityData)
+    {
+    }
+
+    /**
+     * @brief Type::operator =
+     * @param src
+     * @return
+     */
+    Type &Type::operator=(Type src)
+    {
+        swap(*this, src);
+        return *this;
     }
 
     /**
@@ -84,7 +109,8 @@ namespace entity {
     {
         QJsonObject result = BasicElement::toJson();
 
-        result.insert(kindOfTypeMark, int(m_KindOfType));
+        result[kindOfTypeMark] = int(m_KindOfType);
+        result[graphicsDataMark] = G_ASSERT(m_GraphicEntityData)->toJson();
 
         return result;
     }
@@ -98,7 +124,11 @@ namespace entity {
     {
         BasicElement::fromJson(src, errorList);
         utility::checkAndSet(src, kindOfTypeMark, errorList,
-                             [&](){ m_KindOfType = KindOfType(src[kindOfTypeMark].toInt()); });
+                             [&] { m_KindOfType = KindOfType(src[kindOfTypeMark].toInt()); });
+        utility::checkAndSet(src, graphicsDataMark, errorList,
+        [&] {
+            G_ASSERT(m_GraphicEntityData)->fromJson(src[graphicsDataMark].toObject(), errorList);
+        });
     }
 
     /**
@@ -119,6 +149,7 @@ namespace entity {
     {
         return rhs.hashType()   == this->hashType() &&
                rhs.m_KindOfType == m_KindOfType     &&
+               utility::sharedPtrEq(rhs.m_GraphicEntityData, m_GraphicEntityData) &&
                ( withTypeid ? m_Id == rhs.m_Id : true );
     }
 
@@ -138,7 +169,39 @@ namespace entity {
     {
         m_Name = BASE_TYPE_NAME;
     }
+    
+    /**
+     * @brief Type::graphicEntityData
+     * @return
+     */
+    SharedGraphicEntityData Type::graphicEntityData() const
+    {
+        return m_GraphicEntityData;
+    }
+    
+    /**
+     * @brief Type::setGraphicEntityData
+     * @param graphicEntityData
+     */
+    void Type::setGraphicEntityData(const SharedGraphicEntityData &graphicEntityData)
+    {
+        m_GraphicEntityData = graphicEntityData;
+    }
 
+    /**
+     * @brief entity::Type::swap
+     * @param lhs
+     * @param rhs
+     */
+    void swap(Type &lhs, Type &rhs) noexcept
+    {
+        using std::swap;
+
+        swap(static_cast<common::BasicElement&>(lhs), static_cast<common::BasicElement&>(rhs));
+        swap(lhs.m_KindOfType, rhs.m_KindOfType);
+        swap(lhs.m_GraphicEntityData, rhs.m_GraphicEntityData);
+    }
+    
     /**
      * @brief qHash
      * @param e
@@ -148,7 +211,7 @@ namespace entity {
     {
         return ::qHash(static_cast<int>(e));
     }
-
+    
     /**
      * @brief kindOfTypeToString
      * @param kind

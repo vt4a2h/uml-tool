@@ -45,6 +45,7 @@
 #include <utility/helpfunctions.h>
 
 #include <entity/property.h>
+#include <entity/GraphicEntityData.h>
 
 #include "constants.h"
 #include "qthelpers.h"
@@ -143,12 +144,18 @@ namespace graphics {
     {
         setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
 
+        if (width() < minimumWidth)
+            setWidth(minimumWidth);
+
+        if (height() < minimumHeight)
+            setHeight(minimumHeight);
+
+        setPos(dataPos());
+
         setAcceptHoverEvents(true);
         setCursor(defaultCursorShape);
 
-        connect(G_ASSERT(type.get()), &common::BasicElement::nameChanged, [=]{ update(); });
-        G_CONNECT(G_ASSERT(type.get()), &common::BasicElement::idChanged,
-                  this, &Entity::onTypeIdChanged);
+        connect();
     }
 
     /**
@@ -164,8 +171,8 @@ namespace graphics {
      */
     QRectF Entity::boundingRect() const
     {
-        return QRectF(-m_Width / 2 - margin, -m_Height / 2 - margin,
-                      m_Width + margin, m_Height + margin);
+        return QRectF(-width() / 2 - margin, -height() / 2 - margin,
+                      width() + margin, height() + margin);
     }
 
     /**
@@ -220,7 +227,17 @@ namespace graphics {
      */
     void Entity::setTypeObject(const entity::SharedType &type)
     {
+        // Disconnect old type
+        if (m_Type)
+            connect(false);
+
+        // Setup new one
         m_Type = type;
+        connect(true);
+        setPos(dataPos());
+
+        // Update
+        redraw();
     }
 
     /**
@@ -265,7 +282,7 @@ namespace graphics {
      */
     QRectF Entity::frameRect() const
     {
-        return QRectF(-m_Width / 2, -m_Height / 2, m_Width, m_Height);
+        return QRectF(-width() / 2, -height() / 2, width(), height());
     }
 
     /**
@@ -322,13 +339,13 @@ namespace graphics {
 
             prepareGeometryChange();
 
-            auto tmpHeight = m_Height + yLen * yFactor;
+            auto tmpHeight = height() + yLen * yFactor;
             if (tmpHeight >= minimumHeight)
-                m_Height = tmpHeight;
+                setHeight(tmpHeight);
 
-            auto tmpWidth = m_Width + xLen * xFactor;
+            auto tmpWidth = width() + xLen * xFactor;
             if (tmpWidth >= minimumWidth)
-                m_Width = tmpWidth;
+                setWidth(tmpWidth);
 
             emit sizeChanged();
         }
@@ -366,9 +383,54 @@ namespace graphics {
      */
     QRectF Entity::resizeCornerRect() const
     {
-        return QRectF(m_Width / 2  - resizeCornerSize.width(),
-                      m_Height / 2 - resizeCornerSize.height(),
+        return QRectF(width() / 2  - resizeCornerSize.width(),
+                      height() / 2 - resizeCornerSize.height(),
                       resizeCornerSize.width(), resizeCornerSize.height());
+    }
+
+    /**
+     * @brief Entity::width
+     * @return
+     */
+    qreal Entity::width() const
+    {
+        return G_ASSERT(G_ASSERT(m_Type)->graphicEntityData())->width();
+    }
+
+    /**
+     * @brief Entity::setWidth
+     * @param newWidth
+     */
+    void Entity::setWidth(qreal newWidth)
+    {
+        G_ASSERT(G_ASSERT(m_Type)->graphicEntityData())->setWidth(newWidth);
+    }
+
+    /**
+     * @brief Entity::height
+     * @return
+     */
+    qreal Entity::height() const
+    {
+        return G_ASSERT(G_ASSERT(m_Type)->graphicEntityData())->height();
+    }
+
+    /**
+     * @brief Entity::setHeight
+     * @param newHeight
+     */
+    void Entity::setHeight(qreal newHeight)
+    {
+        G_ASSERT(G_ASSERT(m_Type)->graphicEntityData())->setHeight(newHeight);
+    }
+
+    /**
+     * @brief Entity::dataPos
+     * @return
+     */
+    QPointF Entity::dataPos() const
+    {
+        return G_ASSERT(G_ASSERT(m_Type)->graphicEntityData())->pos();
     }
 
     /**
@@ -378,7 +440,24 @@ namespace graphics {
     QColor Entity::typeColor() const
     {
         return application::settings::elementColor(
-                   entity::kindOfTypeToString(G_ASSERT(m_Type)->kindOfType()));
+                    entity::kindOfTypeToString(G_ASSERT(m_Type)->kindOfType()));
+    }
+
+    void Entity::connect(bool connect)
+    {
+        entity::GraphicEntityData *data = G_ASSERT(m_Type->graphicEntityData()).get();
+
+        if (connect) {
+            G_CONNECT(G_ASSERT(m_Type.get()), &common::BasicElement::nameChanged,
+                      this, &Entity::redraw);
+            G_CONNECT(this, &Entity::positionChanged,
+                      G_ASSERT(data), &entity::GraphicEntityData::onPosChanged);
+        } else {
+            G_DISCONNECT(G_ASSERT(m_Type.get()), &common::BasicElement::nameChanged,
+                         this, &Entity::redraw);
+            G_DISCONNECT(this, &Entity::positionChanged,
+                         G_ASSERT(data), &entity::GraphicEntityData::onPosChanged);
+        }
     }
 
     /**
@@ -392,10 +471,10 @@ namespace graphics {
         QColor color = typeColor();
 
         // Fill background
-        QLinearGradient gradient(0, -m_Height / 2, 0, -m_Height / 2 + minimumHeight );
+        QLinearGradient gradient(0, -height() / 2, 0, -height() / 2 + minimumHeight );
         gradient.setColorAt(0, color);
         gradient.setColorAt(1, Qt::white);
-        QRectF headerRect(-m_Width / 2, -m_Height / 2, m_Width, minimumHeight);
+        QRectF headerRect(-width() / 2, -height() / 2, width(), minimumHeight);
         painter->fillRect(headerRect, QBrush(gradient));
 
         // Draw frame
@@ -405,7 +484,7 @@ namespace graphics {
         // Add element name
         painter->setPen(Qt::black);
         painter->setRenderHint(QPainter::TextAntialiasing);
-        QString name(cutText(G_ASSERT(m_Type)->name(), painter->fontMetrics(), m_Width));
+        QString name(cutText(G_ASSERT(m_Type)->name(), painter->fontMetrics(), width()));
         painter->drawText(headerRect, Qt::AlignCenter, name);
 
         painter->restore();
@@ -468,13 +547,13 @@ namespace graphics {
         QColor color = typeColor();
         auto topLeft = boundingRect().topLeft() + QPointF(margin, margin);
         topLeft.ry() += minimumHeight;
-        qreal len = m_Height - minimumHeight;
+        qreal len = height() - minimumHeight;
 
         // Draw sections
-        drawSection(painter, tr("Properties"), m_Type->properties(), topLeft, len, m_Width, color);
-        drawSection(painter, tr("Methods"), m_Type->methods(), topLeft, len, m_Width, color);
-        drawSection(painter, tr("Fields"), m_Type->fields(), topLeft, len, m_Width, color);
-        drawSection(painter, tr("Elements"), m_Type->enumerators(), topLeft, len, m_Width, color);
+        drawSection(painter, tr("Properties"), m_Type->properties(), topLeft, len, width(), color);
+        drawSection(painter, tr("Methods"), m_Type->methods(), topLeft, len, width(), color);
+        drawSection(painter, tr("Fields"), m_Type->fields(), topLeft, len, width(), color);
+        drawSection(painter, tr("Elements"), m_Type->enumerators(), topLeft, len, width(), color);
 
         painter->restore();
     }

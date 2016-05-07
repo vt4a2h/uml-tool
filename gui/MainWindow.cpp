@@ -193,7 +193,6 @@ namespace gui {
             if (m_ApplicationModel->addProject(newProject))
             {
                 setCurrentProject(newProject->name());
-                newProject->save();
                 update();
             } else {
                 QMessageBox::information

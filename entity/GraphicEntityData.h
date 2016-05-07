@@ -43,6 +43,8 @@ namespace entity {
         GraphicEntityData& operator= (GraphicEntityData &&) noexcept = default;
         GraphicEntityData& operator= (const GraphicEntityData &) = default;
 
+        friend bool operator ==(const GraphicEntityData &lhs, const GraphicEntityData &rhs);
+
         QJsonObject toJson() const;
         void fromJson(const QJsonObject &src, ErrorList &errorList);
 
@@ -50,15 +52,13 @@ namespace entity {
         void setPos(const QPointF &pos);
 
         qreal width() const;
-        void setWidth(const qreal &width);
+        void setWidth(qreal width);
 
         qreal height() const;
-        void setHeight(const qreal &height);
+        void setHeight(qreal height);
 
     public slots:
         void onPosChanged(const QPointF &from, const QPointF &to);
-        void onHeightChanged(qreal height);
-        void onWidthChanged(qreal width);
 
     private:
         QPointF m_Pos;

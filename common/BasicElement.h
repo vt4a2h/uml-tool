@@ -73,6 +73,8 @@ namespace common {
 
         friend bool operator ==(const BasicElement &lhs, const BasicElement &rhs);
 
+        friend void swap(BasicElement &lhs, BasicElement &rhs);
+
     protected:
         QString m_Name;
         common::ID m_Id;

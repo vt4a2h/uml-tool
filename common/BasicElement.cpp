@@ -85,6 +85,20 @@ namespace common {
         return *this;
     }
 
+    /**
+     * @brief swap
+     * @param lhs
+     * @param rhs
+     */
+    void swap(BasicElement &lhs, BasicElement &rhs)
+    {
+        using std::swap;
+
+        swap(lhs.m_Name, rhs.m_Name);
+        swap(lhs.m_Id, rhs.m_Id);
+        swap(lhs.m_ScopeId, rhs.m_ScopeId);
+    }
+
     BasicElement::BasicElement(const QString &name, const ID &id)
         : BasicElement(name, ID::nullID(), id)
     {

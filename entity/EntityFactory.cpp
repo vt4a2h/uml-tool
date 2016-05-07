@@ -56,6 +56,25 @@ namespace entity {
             { KindOfType::TemplateClass,
               [] (const entity::SharedScope &s) { return s->addType<entity::TemplateClass>(); } },
         };
+
+        void addGraphicEntity(const QPointer<QGraphicsScene> &scene,
+                              const db::SharedProjectDatabase &projectDB,
+                              const entity::SharedType &type,
+                              const QPointF pos = QPointF())
+        {
+            if (G_ASSERT(scene) && G_ASSERT(projectDB)) {
+                auto graphicEntity = new graphics::Entity(type);
+
+                if (!pos.isNull())
+                    graphicEntity->setPos(pos);
+
+                // Register in the database
+                projectDB->registerGraphicsEntity(graphicEntity);
+
+                // Transfer ownership
+                scene->addItem(graphicEntity);
+            }
+        }
     }
 
     /**
@@ -90,18 +109,8 @@ namespace entity {
                     // Will be added by default
                     Q_ASSERT(!options.testFlag(AddToDatabase));
 
-                    if (project() && project()->database() && options.testFlag(AddToScene)) {
-                        if (auto s = scene()) {
-                            auto graphicEntity = new graphics::Entity(type);
-                            graphicEntity->setPos(pos);
-
-                            // Register in the database
-                            project()->database()->registerGraphicsEntity(graphicEntity);
-
-                            // Transfer ownership
-                            s->addItem(graphicEntity);
-                        }
-                    }
+                    if (project() && options.testFlag(AddToScene))
+                        addGraphicEntity(scene(), project()->database(), type, pos);
 
                     if (project() && options.testFlag(AddToTreeModel))
                         if (auto tm = treeModel())
@@ -139,37 +148,16 @@ namespace entity {
 
             if (auto result = make(kind, QPointF(0, 0), scopeID, options)) {
                 result->fromJson(src, errors);
-                if (errors.isEmpty())
+                if (errors.isEmpty()) {
+                    if (addToScene && G_ASSERT(project()))
+                        addGraphicEntity(scene(), project()->database(), result);
+
                     return result;
+                }
             } else {
                 errors << "Cannot create object.";
             }
 
-            if (addToScene) {
-                if (auto s = scene()) {
-//                    auto graphicEntity = new graphics::Entity(type);
-
-                }
-            }
-            // Restore graphic entities (objects should be created in the Database::fromJson)
-    //        utility::checkAndSet(src, relationsMark, errorList, [&src, &errorList, this](){
-    //            if (src[graphicsEntitiesMark].isArray()) {
-    //                for (auto &&val: src[graphicsEntitiesMark].toArray()) {
-    //                    QJsonObject tmpObj = val.toObject();
-    //                    common::ID tmpID;
-    //                    utility::checkAndSet(tmpObj, graphics::Entity::IDMark(), errorList, [&] {
-    //                        tmpID.fromJson(tmpObj[graphics::Entity::IDMark()], errorList);
-    //                    });
-
-    //                    if (tmpID.isValid()) {
-    //                        Q_ASSERT(m_GraphicsEntities.contains(tmpID));
-    //                        m_GraphicsEntities[tmpID]->fromJson(tmpObj, errorList);
-    //                    }
-    //                }
-    //            } else {
-    //                errorList << "Error: \"Graphics entities\" is not array";
-    //            }
-    //        });
         }
 
         return nullptr;

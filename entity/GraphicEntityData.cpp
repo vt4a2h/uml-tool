@@ -44,6 +44,19 @@ namespace entity {
     }
 
     /**
+     * @brief operator ==
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator ==(const GraphicEntityData &lhs, const GraphicEntityData &rhs)
+    {
+        return lhs.m_Pos    == rhs.m_Pos   &&
+               lhs.m_Width  == rhs.m_Width &&
+               lhs.m_Height == rhs.m_Height;
+    }
+
+    /**
      * @brief EntityData::toJson
      * @return
      */
@@ -114,7 +127,7 @@ namespace entity {
      * @brief EntityData::setWidth
      * @param width
      */
-    void GraphicEntityData::setWidth(const qreal &width)
+    void GraphicEntityData::setWidth(qreal width)
     {
         m_Width = width;
     }
@@ -132,7 +145,7 @@ namespace entity {
      * @brief EntityData::setHeight
      * @param height
      */
-    void GraphicEntityData::setHeight(const qreal &height)
+    void GraphicEntityData::setHeight(qreal height)
     {
         m_Height = height;
     }
@@ -146,24 +159,6 @@ namespace entity {
     {
         Q_UNUSED(from)
         m_Pos = to;
-    }
-
-    /**
-     * @brief EntityData::onHeightChanged
-     * @param height
-     */
-    void GraphicEntityData::onHeightChanged(qreal height)
-    {
-        m_Height = height;
-    }
-
-    /**
-     * @brief EntityData::onWidthChanged
-     * @param width
-     */
-    void GraphicEntityData::onWidthChanged(qreal width)
-    {
-        m_Width = width;
     }
 
 } // namespace graphics
