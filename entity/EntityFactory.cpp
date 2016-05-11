@@ -65,14 +65,16 @@ namespace entity {
             if (G_ASSERT(scene) && G_ASSERT(projectDB)) {
                 auto graphicEntity = new graphics::Entity(type);
 
-                if (!pos.isNull())
-                    graphicEntity->setPos(pos);
-
                 // Register in the database
                 projectDB->registerGraphicsEntity(graphicEntity);
 
                 // Transfer ownership
                 scene->addItem(graphicEntity);
+
+                // Set position only after adding item in order to appropriate event will be generated
+                // and signal about changing position will be emitted
+                if (!pos.isNull())
+                    graphicEntity->setPos(pos);
             }
         }
     }
