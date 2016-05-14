@@ -26,6 +26,7 @@
 #include <QJsonObject>
 
 #include <common/ID.h>
+#include <common/SharedFromThis.h>
 
 #include <db/db_types.hpp>
 
@@ -34,6 +35,7 @@
 #include <gui/graphics/graphics_types.h>
 
 #include "types.h"
+#include "project_types.hpp"
 
 class QUndoStack;
 
@@ -45,7 +47,7 @@ namespace project {
     /**
      * @brief The Project class
      */
-    class Project : public QObject
+    class Project : public QObject, public common::SharedFromThis<Project>
     {
         Q_OBJECT
         Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
@@ -125,6 +127,22 @@ namespace project {
         ErrorList m_Errors;
 
         std::unique_ptr<QUndoStack> m_CommandsStack;
+    };
+
+    /// Helper for project load. Should be in the header due to Qt Meta system limitation
+    class ScopedProjectSetter : public QObject
+    {
+        Q_OBJECT
+
+    public:
+        ScopedProjectSetter(const SharedProject &p);
+        ~ScopedProjectSetter();
+
+    signals:
+        void projectChanged(const SharedProject &p);
+
+    private:
+        SharedProject m_OldProject;
     };
 
 } // namespace project

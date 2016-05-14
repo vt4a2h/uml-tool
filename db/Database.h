@@ -27,6 +27,7 @@
 #include <entity/entity_types.hpp>
 
 #include <common/ID.h>
+#include <common/SharedFromThis.h>
 
 #include "itypesearcher.h"
 #include "types.h"
@@ -40,7 +41,7 @@ namespace db {
     /**
      * @brief The Database class
      */
-    class Database : public ITypeSearcher, public std::enable_shared_from_this<Database>
+    class Database : public ITypeSearcher, public common::SharedFromThis<Database>
     {
     public:
         Database(Database &&src);
@@ -93,8 +94,6 @@ namespace db {
     protected:
         virtual void copyFrom(const Database &src);
         virtual void moveFrom(Database &src);
-
-        SharedDatabase safeShared();
 
         QString    m_Name ;
         QString    m_Path ;

@@ -20,7 +20,6 @@ SOURCES += \
     entity/components/componentsignatureparser.cpp \
     entity/components/icomponents.cpp \
     entity/components/componentsmaker.cpp \
-    entity/property.cpp \
     generator/abstractprojectgenerator.cpp \
     generator/basiccppprojectgenerator.cpp \
     generator/virtualdirectory.cpp \
@@ -86,7 +85,8 @@ SOURCES += \
     application/Application.cpp \
     gui/MainWindow.cpp \
     entity/Scope.cpp \
-    entity/GraphicEntityData.cpp
+    entity/GraphicEntityData.cpp \
+    entity/Property.cpp
 
 HEADERS += \
     enums.h \
@@ -102,7 +102,6 @@ HEADERS += \
     entity/components/icomponents.h \
     entity/components/componentsmaker.h \
     entity/entity_types.hpp \
-    entity/property.h \
     generator/abstractprojectgenerator.h \
     generator/basiccppprojectgenerator.h \
     generator/virtualdirectory.h \
@@ -183,7 +182,9 @@ HEADERS += \
     application/Application.h \
     gui/MainWindow.h \
     entity/Scope.h \
-    entity/GraphicEntityData.h
+    entity/GraphicEntityData.h \
+    common/SharedFromThis.h \
+    entity/Property.h
 
 FORMS += \
     gui/mainwindow.ui \

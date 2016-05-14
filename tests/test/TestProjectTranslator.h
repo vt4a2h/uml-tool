@@ -30,7 +30,7 @@
 #include <entity/Class.h>
 #include <entity/TemplateClass.h>
 #include <entity/templateclassmethod.h>
-#include <entity/property.h>
+#include <entity/Property.h>
 
 #include <translation/projecttranslator.h>
 #include <translation/translator_types.hpp>

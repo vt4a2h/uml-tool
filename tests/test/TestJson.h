@@ -36,7 +36,7 @@
 #include <entity/Class.h>
 #include <entity/classmethod.h>
 #include <entity/field.h>
-#include <entity/property.h>
+#include <entity/Property.h>
 
 #include <relationship/node.h>
 #include <relationship/Relation.h>

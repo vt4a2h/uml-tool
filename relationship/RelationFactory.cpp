@@ -151,7 +151,8 @@ namespace relationship {
         if (src.contains(relationship::Relation::typeMarker())) {
             auto relType = RelationType(src[relationship::Relation::typeMarker()].toInt());
             if (auto maker = G_ASSERT(relationMaker[relType])) {
-                if (auto relation = maker(common::ID::nullID(), common::ID::nullID(), {})) {
+                db::WeakTypeSearchers ts {G_ASSERT(project())->database(), G_ASSERT(project())->globalDatabase()};
+                if (auto relation = maker(common::ID::nullID(), common::ID::nullID(), ts)) {
                     relation->fromJson(src, errors);
 
                     if (errors.isEmpty()) {

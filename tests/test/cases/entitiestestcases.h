@@ -26,7 +26,7 @@
 
 #include <boost/range/algorithm/equal.hpp>
 
-#include <entity/property.h>
+#include <entity/Property.h>
 
 #include "constants.h"
 

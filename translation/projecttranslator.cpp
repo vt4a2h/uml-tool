@@ -38,7 +38,7 @@
 #include <entity/Class.h>
 #include <entity/templateclassmethod.h>
 #include <entity/TemplateClass.h>
-#include <entity/property.h>
+#include <entity/Property.h>
 #include <utility/helpfunctions.h>
 
 #include "enums.h"

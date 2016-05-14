@@ -25,7 +25,7 @@
 #include "TestComponentsMaker.h"
 
 #include <entity/field.h>
-#include <entity/property.h>
+#include <entity/Property.h>
 
 #include <utility/helpfunctions.h>
 

@@ -26,7 +26,7 @@
 #include <entity/classmethod.h>
 #include <entity/Enum.h>
 #include <entity/ExtendedType.h>
-#include <entity/property.h>
+#include <entity/Property.h>
 
 #include <models/applicationmodel.h>
 

@@ -26,6 +26,7 @@
 
 #include <common/BasicElement.h>
 #include <common/meta.h>
+#include <common/SharedFromThis.h>
 
 #include <db/db_types.hpp>
 
@@ -41,7 +42,7 @@ namespace entity {
         : public common::BasicElement
         , public ITypeUser
         , public ISectional
-        , public std::enable_shared_from_this<Property>
+        , public common::SharedFromThis<Property>
     {
         Q_OBJECT
 
@@ -140,7 +141,6 @@ namespace entity {
 
     private: // Methods
         void init();
-        SharedProperty safeShared();
 
         // TODO: add the same for field!
         template <class Method>

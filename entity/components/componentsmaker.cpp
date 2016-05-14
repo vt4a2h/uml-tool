@@ -28,7 +28,7 @@
 #include <entity/Scope.h>
 #include <entity/Type.h>
 #include <entity/ExtendedType.h>
-#include <entity/property.h>
+#include <entity/Property.h>
 #include <entity/components/componentsignatureparser.h>
 
 #include <models/applicationmodel.h>

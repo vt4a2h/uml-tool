@@ -53,7 +53,6 @@
 #include <gui/graphics/Entity.h>
 #include <gui/graphics/Scene.h>
 
-#include <entity/EntityFactory.h>
 #include <entity/Type.h>
 
 #include <commands/createscope.h>
@@ -178,8 +177,6 @@ namespace gui {
 
         auto newProject = std::make_shared<project::Project>();
 
-        // FIXME: invent better way
-        const_cast<entity::EntityFactory &>(entity::EntityFactory::instance()).onProjectChanged(newProject);
         newProject->load(path);
 
         if (newProject->hasErrors()) {

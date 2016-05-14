@@ -27,7 +27,7 @@
 #include <QJsonArray>
 
 #include <entity/Scope.h>
-#include <entity/property.h>
+#include <entity/Property.h>
 
 #include <common/ID.h>
 

@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 16/08/2015.
+** Created 14/05/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,17 +22,27 @@
 *****************************************************************************/
 #pragma once
 
-#include <gtest/gtest.h>
+#include <memory>
+#include <qdebug.h>
 
-#include <entity/field.h>
-#include <entity/classmethod.h>
-#include <entity/Property.h>
+namespace common {
 
-#include "TestProjectBase.h"
+    template <class T>
+    struct SharedFromThis : public std::enable_shared_from_this<T>
+    {
+        std::shared_ptr<T> safeShared() noexcept
+        {
+            try {
+                return this->shared_from_this();
+            } catch (const std::exception &e) {
+                qDebug() << "Cannot create shared pointer: " << e.what();
+            } catch (...) {
+                qDebug() << "Cannot create shared pointer: unhandled exception";
+            }
 
-class ClassComponents : public ProjectBase
-{
-protected:
-    void SetUp() override {}
-    void TearDown() override {}
-};
+            return nullptr;
+        }
+    };
+
+} // common
+

@@ -35,12 +35,15 @@
 
 #include <entity/Type.h>
 #include <entity/Scope.h>
+#include <entity/EntityFactory.h>
 
 #include <db/ProjectDatabase.h>
 
 #include <gui/graphics/Entity.h>
 
 #include <utility/helpfunctions.h>
+
+#include <relationship/RelationFactory.h>
 
 #include <helpers/generatorid.h>
 
@@ -154,6 +157,9 @@ namespace project {
 
         if (m_Path != path)
             m_Path = QFileInfo(path).absolutePath();
+
+        // We need to temporary change current project of factories to this one in order to load types and relations
+        ScopedProjectSetter ps(safeShared()); Q_UNUSED(ps);
 
         m_Database->setPath(m_Path);
         m_Database->setName(databaseFileName());
@@ -471,6 +477,38 @@ namespace project {
                   this, &Project::onGraphicsEntityRegistred);
         G_CONNECT(m_Database.get(), &db::ProjectDatabase::graphicsEntityUnregistred,
                   this, &Project::onGraphicsEntityUnregistred);
+    }
+
+    /**
+     * @brief ScopedProjectSetter::ScopedProjectSetter
+     * @param p
+     */
+    ScopedProjectSetter::ScopedProjectSetter(const SharedProject &p)
+    {
+        Q_ASSERT(p);
+        Q_ASSERT(entity::EntityFactory::instance().project() ==
+                 relationship::RelationFactory::instance().project());
+
+        G_CONNECT(this, &ScopedProjectSetter::projectChanged,
+                  &entity::EntityFactory::instance(), &entity::EntityFactory::onProjectChanged);
+        G_CONNECT(this, &ScopedProjectSetter::projectChanged,
+                  &relationship::RelationFactory::instance(), &relationship::RelationFactory::onProjectChanged);
+
+        m_OldProject = entity::EntityFactory::instance().project();
+        emit projectChanged(p);
+    }
+
+    /**
+     * @brief ScopedProjectSetter::~ScopedProjectSetter
+     */
+    ScopedProjectSetter::~ScopedProjectSetter()
+    {
+        emit projectChanged(m_OldProject);
+
+        G_DISCONNECT(this, &ScopedProjectSetter::projectChanged,
+                     &entity::EntityFactory::instance(), &entity::EntityFactory::onProjectChanged);
+        G_DISCONNECT(this, &ScopedProjectSetter::projectChanged,
+                     &relationship::RelationFactory::instance(), &relationship::RelationFactory::onProjectChanged);
     }
 
 } // namespace project

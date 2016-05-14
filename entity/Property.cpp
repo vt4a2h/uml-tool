@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "property.h"
+#include "Property.h"
 
 #include <typeinfo>
 
@@ -100,7 +100,6 @@ namespace entity {
      */
     Property::Property(const Property &src)
         : BasicElement(src)
-        , enable_shared_from_this<Property>(src) // do nothing
     {
         copyFrom(src);
     }
@@ -886,19 +885,6 @@ namespace entity {
 
         G_ASSERT(m_Field)->setPrefix("m_");
         m_Field->setSection(Private);
-    }
-
-    SharedProperty Property::safeShared()
-    {
-        try
-        {
-            return shared_from_this();
-        }
-        catch (...)
-        {
-            qDebug() << "Creating shared property failed.";
-            return SharedProperty();
-        }
     }
 
     /**

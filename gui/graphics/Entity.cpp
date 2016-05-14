@@ -44,7 +44,7 @@
 
 #include <utility/helpfunctions.h>
 
-#include <entity/property.h>
+#include <entity/Property.h>
 #include <entity/GraphicEntityData.h>
 
 #include "constants.h"

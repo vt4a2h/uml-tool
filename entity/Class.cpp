@@ -42,7 +42,7 @@
 #include "classmethod.h"
 #include "enums.h"
 #include "ExtendedType.h"
-#include "property.h"
+#include "Property.h"
 #include "constants.h"
 
 #include "qthelpers.h"
