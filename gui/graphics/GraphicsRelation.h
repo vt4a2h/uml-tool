@@ -32,7 +32,7 @@ namespace graphics {
 
     class Entity;
 
-    /// Graphics represenation of relation
+    /// Graphics represenation of relation (from P1 to P2)
     class Relation : public QObject, public QGraphicsLineItem
     {
         Q_OBJECT
@@ -47,6 +47,7 @@ namespace graphics {
 
     public: // QGraphicsLineItem overrides
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+        QRectF boundingRect() const override;
 
         EntityPtr from() const;
         void setFrom(const EntityPtr &from);
@@ -62,6 +63,15 @@ namespace graphics {
     private:
         void initEntity(const EntityPtr &e);
         void setEntity(EntityPtr &e, const EntityPtr &newEntity);
+
+        void drawLine(QPainter * p, const QLineF &l) const;
+//        void drawArrow(QPainter * p, const QLineF &l, const QPointF &startPoint) const;
+
+        QPointF fromPoint() const;
+        void setFromPoint(const QPointF &fromPoint);
+
+        QPointF toPoint() const;
+        void setToPoint(const QPointF &toPoint);
 
         relationship::SharedRelation m_Relation;
         EntityPtr m_From;

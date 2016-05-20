@@ -22,21 +22,26 @@
 *****************************************************************************/
 #include "GraphicsRelation.h"
 
+#include <math.h>
+
 #include <QPainter>
 
 #include <relationship/Relation.h>
 
 #include "Entity.h"
 #include "qthelpers.h"
+#include "enums.h"
 
 namespace graphics {
 
     namespace  {
 
         const QPointF defaultPoint(std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max());
+        const qreal arrowHeight = 10.;
+        const qreal arrowNormal = tan(30 * M_PI / 180) * arrowHeight;
 
         /// Find first intersection point of polyline segment and line
-        inline QPointF intersection(const QPolygonF &p, const QLineF &l)
+        QPointF intersection(const QPolygonF &p, const QLineF &l)
         {
 //            Q_ASSERT(p.count() == 4);
 
@@ -49,6 +54,31 @@ namespace graphics {
             return result;
         }
 
+        QPointF heightPoint(const QLineF &line)
+        {
+           QLineF tmp(line);
+           tmp.setLength(line.length() - arrowHeight);
+           return tmp.p2();
+        }
+
+        QLineF normal(const QLineF &line, const QPointF &p, qreal len, bool inverted = false)
+        {
+           qreal percent = len / line.length();
+           qreal dy = line.dy() * percent;
+           qreal dx = line.dx() * percent;
+           return QLineF(p, p + QPointF(inverted ? -dy : dy, inverted ? dx : -dx));
+        }
+
+        void drawArrow(QPainter *p, const QLineF &l, const QPointF &startPoint)
+        {
+          p->save();
+
+          QPointF hp = heightPoint(l);
+          p->drawLine(startPoint, normal(l, hp, arrowNormal).p2());
+          p->drawLine(startPoint, normal(l, hp, arrowNormal, true /*inverted*/).p2());
+
+          p->restore();
+        }
     }
 
     /**
@@ -93,10 +123,35 @@ namespace graphics {
      * @param option
      * @param widget
      */
-    void Relation::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+    void Relation::paint(QPainter *painter, const QStyleOptionGraphicsItem */*option*/, QWidget */*widget*/)
     {
+        painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
-        QGraphicsLineItem::paint(painter, option, widget);
+
+        QPen pen = painter->pen();
+        pen.setWidthF(1.5f);
+        painter->setPen(pen);
+        painter->drawLine(line());
+
+        if (m_Relation->relationType() == relationship::DependencyRelation ||
+            m_Relation->relationType() == relationship::AssociationRelation)
+            drawArrow(painter, line(), line().p2());
+
+        painter->restore();
+    }
+
+    /**
+     * @brief Relation::boundingRect
+     * @return
+     */
+    QRectF Relation::boundingRect() const
+    {
+      auto result = QGraphicsLineItem::boundingRect();
+//      result.setWidth(result.width() + 2 * arrowHeight);
+//      result.setHeight(result.height() + 2 * arrowHeight);
+//      result.setLeft(result.bottom() + arrowHeight);
+//      result.setLeft(result.left() + arrowHeight);
+      return result;
     }
 
     /**
@@ -112,6 +167,11 @@ namespace graphics {
         }
     }
 
+    /**
+     * @brief Relation::setEntity
+     * @param e
+     * @param newEntity
+     */
     void Relation::setEntity(EntityPtr &e, const EntityPtr &newEntity)
     {
         if (e) {
@@ -129,7 +189,7 @@ namespace graphics {
      */
     EntityPtr Relation::to() const
     {
-        return m_To;
+       return m_To;
     }
 
     /**
@@ -180,6 +240,10 @@ namespace graphics {
         if (isVisible()) {
             setP1(intersection(fromRect, QLineF(m_From->pos(), line().p2())));
             setP2(intersection(toRect, QLineF(line().p1(), m_To->pos())));
+
+            auto l = line();
+            l.setLength(l.length() - 2);
+            setLine(l);
         }
     }
 
