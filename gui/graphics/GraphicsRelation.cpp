@@ -36,7 +36,9 @@ namespace graphics {
 
     namespace  {
 
-        const QPointF defaultPoint(std::numeric_limits<qreal>::max(), std::numeric_limits<qreal>::max());
+        const QPointF defaultPoint(std::numeric_limits<qreal>::max(),
+                                   std::numeric_limits<qreal>::max());
+        const qreal penWidth = 1.2f;
         const qreal arrowHeight = 10.;
         const qreal arrowNormal = tan(30 * M_PI / 180) * arrowHeight;
 
@@ -54,10 +56,10 @@ namespace graphics {
             return result;
         }
 
-        QPointF heightPoint(const QLineF &line)
+        QPointF heightPoint(const QLineF &line, qreal multFactor = 1.)
         {
            QLineF tmp(line);
-           tmp.setLength(line.length() - arrowHeight);
+           tmp.setLength(line.length() - arrowHeight * multFactor);
            return tmp.p2();
         }
 
@@ -69,16 +71,86 @@ namespace graphics {
            return QLineF(p, p + QPointF(inverted ? -dy : dy, inverted ? dx : -dx));
         }
 
+        QVector<QPointF> arrowPoints(const QLineF &l)
+        {
+            QPointF hp = heightPoint(l);
+            QPointF left = normal(l, hp, arrowNormal).p2();
+            QPointF right = normal(l, hp, arrowNormal, true /*inverted*/).p2();
+
+            return {left, right};
+        }
+
         void drawArrow(QPainter *p, const QLineF &l, const QPointF &startPoint)
         {
           p->save();
 
-          QPointF hp = heightPoint(l);
-          p->drawLine(startPoint, normal(l, hp, arrowNormal).p2());
-          p->drawLine(startPoint, normal(l, hp, arrowNormal, true /*inverted*/).p2());
+          auto ap = arrowPoints(l);
+          p->drawLine(startPoint, ap[0]);
+          p->drawLine(startPoint, ap[1]);
 
           p->restore();
         }
+
+        void drawLineWithArrow(QPainter *p, const QLineF &l, bool dashLine = false)
+        {
+            p->save();
+
+            drawArrow(p, l, l.p2());
+
+            if (dashLine)
+                p->setPen(Qt::DashLine);
+
+            p->drawLine(l);
+
+            p->restore();
+        }
+
+        void drawTriangleLine(QPainter *p, const QLineF &l)
+        {
+            p->save();
+
+            p->drawLine(l);
+
+            p->setBrush(Qt::white);
+            auto ap = arrowPoints(l);
+            p->drawPolygon(QVector<QPointF>{l.p2(), ap[0], ap[1]});
+
+            p->restore();
+        }
+
+        void drawLineWithRect(QPainter * p, const QLineF &l, bool black = false)
+        {
+            p->save();
+
+            p->drawLine(l);
+
+            QVector<QPointF> points;
+            points << l.p2();
+
+            auto ap = arrowPoints(l);
+            points << ap[0];
+            points << heightPoint(l, 2.);
+            points << ap[1];
+
+            p->setBrush(black ? Qt::black : Qt::white);
+            p->drawPolygon(points);
+
+            p->restore();
+        }
+
+        using DrawingFunctor = std::function<void(QPainter *, const QLineF &)>;
+        const QHash<relationship::RelationType, DrawingFunctor> drawingMap = {
+            { relationship::AssociationRelation,
+              [](QPainter *p, const QLineF &l){ drawLineWithArrow(p, l); } },
+            { relationship::DependencyRelation,
+              [](QPainter *p, const QLineF &l){ drawLineWithArrow(p, l, true /*dashLine*/); } },
+            { relationship::GeneralizationRelation,
+              [](QPainter *p, const QLineF &l){ drawTriangleLine(p, l); } },
+            { relationship::CompositionRelation,
+              [](QPainter *p, const QLineF &l){ drawLineWithRect(p, l, true /*black*/); } },
+            { relationship::AggregationRelation,
+              [](QPainter *p, const QLineF &l){ drawLineWithRect(p, l); } },
+        };
     }
 
     /**
@@ -128,14 +200,15 @@ namespace graphics {
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
 
+        // Set pen parameters
         QPen pen = painter->pen();
-        pen.setWidthF(1.5f);
+        pen.setWidthF(penWidth);
         painter->setPen(pen);
-        painter->drawLine(line());
 
-        if (m_Relation->relationType() == relationship::DependencyRelation ||
-            m_Relation->relationType() == relationship::AssociationRelation)
-            drawArrow(painter, line(), line().p2());
+        // Draw relation
+        auto it = drawingMap.find(m_Relation->relationType());
+        if (it != drawingMap.end())
+            (*it)(painter, line());
 
         painter->restore();
     }
