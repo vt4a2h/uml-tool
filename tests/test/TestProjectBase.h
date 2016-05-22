@@ -31,6 +31,9 @@
 #include <project/Project.h>
 #include <project/project_types.hpp>
 
+#include <entity/EntityFactory.h>
+#include <relationship/RelationFactory.h>
+
 class ProjectBase : public ::testing::Test
 {
 protected:
@@ -56,6 +59,11 @@ protected:
         m_Project->setGlobalDatabase(m_GlobalDb);
 
         // TODO: set databases for factories!
+        auto ef = const_cast<entity::EntityFactory &>(entity::EntityFactory::instance());
+        ef.setGlobalDatabase(m_GlobalDb);
+        ef.onProjectChanged(m_Project);
+
+        auto rf = const_cast<relationship::RelationFactory &>(relationship::RelationFactory::instance());
     }
 
     project::SharedProject m_Project;
@@ -65,4 +73,6 @@ protected:
 
     entity::SharedScope m_GlobalScope;
     entity::SharedScope m_ProjectScope;
+
+    std::unique_ptr<QGraphicsScene> m_fakeScene = std::make_unique<QGraphicsScene>();
 };

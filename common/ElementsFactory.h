@@ -62,8 +62,6 @@ namespace common {
         db::SharedDatabase db() const;
         project::SharedProject project() const;
 
-        void setTreeModel(const models::WeakTreeModel &treeModel);
-
     public slots:
         void onSceneChanged(const QPointer<QGraphicsScene> &scene);
         void onProjectChanged(const project::SharedProject &p);
