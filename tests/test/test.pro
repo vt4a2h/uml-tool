@@ -24,12 +24,15 @@ linux-g++ {
 INCLUDEPATH += ../../
 
 HEADERS += ../../enums.h \
+    ../../application/settings.h \
     ../../project/project.h \
     ../../entity/property.h \
     ../../entity/class.h \
     ../../entity/scope.h \
     ../../entity/isectional.h \
     ../../entity/components/icomponents.h \
+    ../../entity/GraphicEntityData.h \
+    ../../entity/EntityFactory.h \
     ../../constants.h \
     ../../entity/field.h \
     ../../qthelpers.h \
@@ -38,6 +41,13 @@ HEADERS += ../../enums.h \
     ../../models/basictreeitem.h \
     ../../helpers/entityhelpres.h\
     ../../helpers/generatorid.h\
+    ../../gui/graphics/GraphicsRelation.h \
+    ../../gui/graphics/Entity.h \
+    ../../relationship/Relation.h \
+    ../../relationship/RelationFactory.h \
+    ../../common/ElementsFactory.h \
+    ../../commands/movegraphicobject.h \
+    ../../commands/basecommand.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -75,6 +85,7 @@ HEADERS += ../../enums.h \
     ../../common/ID.h
 
 SOURCES += main.cpp \
+           ../../application/settings.cpp \
            ../../common/basicelement.cpp \
            ../../entity/type.cpp \
            ../../entity/components/icomponents.cpp \
@@ -88,22 +99,27 @@ SOURCES += main.cpp \
            ../../entity/extendedtype.cpp\
            ../../entity/template.cpp \
            ../../entity/property.cpp \
+           ../../entity/GraphicEntityData.cpp \
            ../../common/id.cpp \
            ../../entity/isectional.cpp \
            ../../utility/helpfunctions.cpp \
            ../../db/database.cpp \
            ../../db/ProjectDatabase.cpp \
-           ../../relationship/relation.cpp \
+           ../../relationship/Relation.cpp \
            ../../relationship/node.cpp \
            ../../relationship/generalization.cpp \
            ../../relationship/dependency.cpp \
            ../../relationship/association.cpp \
            ../../relationship/realization.cpp \
            ../../relationship/multiplyassociation.cpp \
+           ../../relationship/RelationFactory.cpp \
+           ../../gui/graphics/GraphicsRelation.cpp \
+           ../../gui/graphics/Entity.cpp \
            ../../entity/templateclassmethod.cpp \
+           ../../entity/scope.cpp \
+           ../../entity/EntityFactory.cpp \
            ../../translation/projecttranslator.cpp \
            ../../templates.cpp \
-           ../../entity/scope.cpp \
            ../../generator/virtualfile.cpp \
            ../../generator/virtualdirectory.cpp \
            ../../generator/virtualfilesystemabstractitem.cpp \
@@ -118,4 +134,7 @@ SOURCES += main.cpp \
            ../../models/projecttreemodel.cpp \
            ../../models/basictreeitem.cpp \
            ../../helpers/entityhelpres.cpp \
-           ../../helpers/generatorid.cpp
+           ../../helpers/generatorid.cpp \
+           ../../common/ElementsFactory.cpp \
+           ../../commands/movegraphicobject.cpp \
+           ../../commands/basecommand.cpp

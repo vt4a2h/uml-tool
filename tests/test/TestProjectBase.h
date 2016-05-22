@@ -54,6 +54,8 @@ protected:
         ASSERT_TRUE(!!m_GlobalScope);
 
         m_Project->setGlobalDatabase(m_GlobalDb);
+
+        // TODO: set databases for factories!
     }
 
     project::SharedProject m_Project;
