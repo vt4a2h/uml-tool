@@ -1,7 +1,6 @@
 TEMPLATE = app
 
-CONFIG += console qt c++14
-CONFIG -= app_bundle
+CONFIG += core gui c++14
 
 QT += widgets
 

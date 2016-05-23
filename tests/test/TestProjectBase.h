@@ -22,8 +22,9 @@
 *****************************************************************************/
 #pragma once
 
-
 #include <gtest/gtest.h>
+
+#include <QGraphicsScene>
 
 #include <db/ProjectDatabase.h>
 #include <db/Database.h>
@@ -58,12 +59,17 @@ protected:
 
         m_Project->setGlobalDatabase(m_GlobalDb);
 
-        // TODO: set databases for factories!
-        auto ef = const_cast<entity::EntityFactory &>(entity::EntityFactory::instance());
+        initFactory(entity::EntityFactory::instance());
+        initFactory(relationship::RelationFactory::instance());
+    }
+
+    void initFactory(const common::ElementsFactory &factory)
+    {
+        auto &&ef = const_cast<common::ElementsFactory &>(factory);
         ef.setGlobalDatabase(m_GlobalDb);
         ef.onProjectChanged(m_Project);
-
-        auto rf = const_cast<relationship::RelationFactory &>(relationship::RelationFactory::instance());
+        ef.onSceneChanged(m_fakeScene.get());
+        ef.setTreeModel(m_fakeTreeModel);
     }
 
     project::SharedProject m_Project;
@@ -74,5 +80,7 @@ protected:
     entity::SharedScope m_GlobalScope;
     entity::SharedScope m_ProjectScope;
 
-    std::unique_ptr<QGraphicsScene> m_fakeScene = std::make_unique<QGraphicsScene>();
+    std::unique_ptr<QGraphicsScene> m_fakeScene = std::unique_ptr<QGraphicsScene>(new QGraphicsScene);
+    std::shared_ptr<models::ProjectTreeModel> m_fakeTreeModel =
+        std::make_shared<models::ProjectTreeModel>();
 };

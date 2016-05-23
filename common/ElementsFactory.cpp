@@ -90,4 +90,23 @@ namespace common {
         return m_Project.lock();
     }
 
+
+    /**
+     * @brief EntityFactory::treeModel
+     * @return
+     */
+    models::SharedTreeModel ElementsFactory::treeModel() const
+    {
+        return m_TreeModel.lock();
+    }
+
+    /**
+     * @brief EntityFactory::setTreeModel
+     * @param treeModel
+     */
+    void ElementsFactory::setTreeModel(const models::WeakTreeModel &treeModel)
+    {
+        m_TreeModel = treeModel;
+    }
+
 } // namespace common

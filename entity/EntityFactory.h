@@ -57,15 +57,8 @@ namespace entity {
                         const common::ID &scopeID = common::ID::projectScopeID(),
                         CreationOptions options = EntityCommon) const;
 
-
-
-        models::SharedTreeModel treeModel() const;
-        void setTreeModel(const models::WeakTreeModel &treeModel);
-
     private:
         explicit EntityFactory(QObject * parent = nullptr);
-
-        models::WeakTreeModel m_TreeModel;
     };
 
 } // namespace entity

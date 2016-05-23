@@ -174,22 +174,4 @@ namespace entity {
     {
     }
 
-    /**
-     * @brief EntityFactory::treeModel
-     * @return
-     */
-    models::SharedTreeModel EntityFactory::treeModel() const
-    {
-        return m_TreeModel.lock();
-    }
-
-    /**
-     * @brief EntityFactory::setTreeModel
-     * @param treeModel
-     */
-    void EntityFactory::setTreeModel(const models::WeakTreeModel &treeModel)
-    {
-        m_TreeModel = treeModel;
-    }
-
 } // namespace entity
