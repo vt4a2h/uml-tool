@@ -24,8 +24,6 @@
 
 #include <gtest/gtest.h>
 
-#include <QGraphicsScene>
-
 #include <db/ProjectDatabase.h>
 #include <db/Database.h>
 
@@ -43,24 +41,24 @@ protected:
 
     void init()
     {
-        m_Project = std::make_shared<project::Project>();
+        initFactory(entity::EntityFactory::instance());
+        initFactory(relationship::RelationFactory::instance());
+
+        ErrorList errors;
+        m_GlobalDb->load(errors); // TODO: add keys for graphics data to types to fix loading
+
+        m_Project =
         // Usually special slot is used for that
         const_cast<helpers::GeneratorID&>(helpers::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
         m_ProjectDb = m_Project->database();
         m_ProjectScope = m_ProjectDb->getScope(common::ID::projectScopeID());
         ASSERT_TRUE(!!m_ProjectScope);
 
-        m_GlobalDb = std::make_shared<db::Database>("global", "../../");
-        ErrorList errors;
-        m_GlobalDb->load(errors);
         ASSERT_TRUE(errors.isEmpty());
         m_GlobalScope = m_GlobalDb->getScope(common::ID::globalScopeID());
         ASSERT_TRUE(!!m_GlobalScope);
 
         m_Project->setGlobalDatabase(m_GlobalDb);
-
-        initFactory(entity::EntityFactory::instance());
-        initFactory(relationship::RelationFactory::instance());
     }
 
     void initFactory(const common::ElementsFactory &factory)
@@ -68,19 +66,17 @@ protected:
         auto &&ef = const_cast<common::ElementsFactory &>(factory);
         ef.setGlobalDatabase(m_GlobalDb);
         ef.onProjectChanged(m_Project);
-        ef.onSceneChanged(m_fakeScene.get());
         ef.setTreeModel(m_fakeTreeModel);
     }
 
-    project::SharedProject m_Project;
+    db::SharedDatabase m_GlobalDb = std::make_shared<db::Database>("global", "../../");
 
-    db::SharedDatabase m_GlobalDb;
+    project::SharedProject m_Project = std::make_shared<project::Project>();
     db::SharedProjectDatabase m_ProjectDb;
 
     entity::SharedScope m_GlobalScope;
     entity::SharedScope m_ProjectScope;
 
-    std::unique_ptr<QGraphicsScene> m_fakeScene = std::unique_ptr<QGraphicsScene>(new QGraphicsScene);
     std::shared_ptr<models::ProjectTreeModel> m_fakeTreeModel =
         std::make_shared<models::ProjectTreeModel>();
 };

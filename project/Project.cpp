@@ -158,7 +158,8 @@ namespace project {
         if (m_Path != path)
             m_Path = QFileInfo(path).absolutePath();
 
-        // We need to temporary change current project of factories to this one in order to load types and relations
+        // We need to temporary change current project of factories to this one in order to load
+        // types and relations
         ScopedProjectSetter ps(safeShared()); Q_UNUSED(ps);
 
         m_Database->setPath(m_Path);
