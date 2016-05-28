@@ -169,7 +169,7 @@ namespace entity {
     {
         m_Name = BASE_TYPE_NAME;
     }
-    
+
     /**
      * @brief Type::graphicEntityData
      * @return
@@ -178,7 +178,7 @@ namespace entity {
     {
         return m_GraphicEntityData;
     }
-    
+
     /**
      * @brief Type::setGraphicEntityData
      * @param graphicEntityData
@@ -201,7 +201,7 @@ namespace entity {
         swap(lhs.m_KindOfType, rhs.m_KindOfType);
         swap(lhs.m_GraphicEntityData, rhs.m_GraphicEntityData);
     }
-    
+
     /**
      * @brief qHash
      * @param e
@@ -211,7 +211,7 @@ namespace entity {
     {
         return ::qHash(static_cast<int>(e));
     }
-    
+
     /**
      * @brief kindOfTypeToString
      * @param kind

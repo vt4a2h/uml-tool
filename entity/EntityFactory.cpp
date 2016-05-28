@@ -151,7 +151,7 @@ namespace entity {
             if (auto result = make(kind, QPointF(0, 0), scopeID, options)) {
                 result->fromJson(src, errors);
                 if (errors.isEmpty()) {
-                    if (addToScene && G_ASSERT(project()))
+                    if (addToScene && project())
                         addGraphicEntity(scene(), project()->database(), result);
 
                     return result;

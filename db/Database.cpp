@@ -421,7 +421,8 @@ namespace db {
     QJsonObject Database::toJson() const
     {
         QJsonArray scopes;
-        for (auto &&scope : m_Scopes.values()) scopes.append(scope->toJson());
+        for (auto &&scope : m_Scopes.values())
+            scopes.append(scope->toJson());
 
         QJsonObject result;
         result.insert("Name", m_Name);

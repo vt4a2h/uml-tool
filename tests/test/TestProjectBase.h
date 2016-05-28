@@ -41,24 +41,31 @@ protected:
 
     void init()
     {
+        m_GlobalDb = std::make_shared<db::Database>("global", "../../");
+
         initFactory(entity::EntityFactory::instance());
         initFactory(relationship::RelationFactory::instance());
 
         ErrorList errors;
-        m_GlobalDb->load(errors); // TODO: add keys for graphics data to types to fix loading
+        m_GlobalDb->load(errors);
+        Q_ASSERT(errors.isEmpty());
 
-        m_Project =
+        m_Project = std::make_shared<project::Project>();
+
         // Usually special slot is used for that
         const_cast<helpers::GeneratorID&>(helpers::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
         m_ProjectDb = m_Project->database();
+
         m_ProjectScope = m_ProjectDb->getScope(common::ID::projectScopeID());
         ASSERT_TRUE(!!m_ProjectScope);
 
-        ASSERT_TRUE(errors.isEmpty());
         m_GlobalScope = m_GlobalDb->getScope(common::ID::globalScopeID());
         ASSERT_TRUE(!!m_GlobalScope);
 
         m_Project->setGlobalDatabase(m_GlobalDb);
+
+        initFactory(entity::EntityFactory::instance());
+        initFactory(relationship::RelationFactory::instance());
     }
 
     void initFactory(const common::ElementsFactory &factory)
@@ -69,9 +76,9 @@ protected:
         ef.setTreeModel(m_fakeTreeModel);
     }
 
-    db::SharedDatabase m_GlobalDb = std::make_shared<db::Database>("global", "../../");
+    db::SharedDatabase m_GlobalDb;
 
-    project::SharedProject m_Project = std::make_shared<project::Project>();
+    project::SharedProject m_Project;
     db::SharedProjectDatabase m_ProjectDb;
 
     entity::SharedScope m_GlobalScope;
