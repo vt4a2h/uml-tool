@@ -63,9 +63,6 @@ protected:
         ASSERT_TRUE(!!m_GlobalScope);
 
         m_Project->setGlobalDatabase(m_GlobalDb);
-
-        initFactory(entity::EntityFactory::instance());
-        initFactory(relationship::RelationFactory::instance());
     }
 
     void initFactory(const common::ElementsFactory &factory)
