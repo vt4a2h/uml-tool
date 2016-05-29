@@ -35,7 +35,7 @@
 #include "enums.h"
 
 namespace {
-    const QString defaultName = entity::TemplateClass::tr("Template class");
+    const QString defaultName = entity::Template::tr("Template class");
 }
 
 namespace entity {

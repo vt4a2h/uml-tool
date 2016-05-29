@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "template.h"
+#include "Template.h"
 
 #include <algorithm>
 #include <utility>
@@ -228,9 +228,13 @@ namespace entity {
         else
             m_LocalDatabase->clear();
 
+        emit requestUsingAdditionalScopeSearcher(m_LocalDatabase);
+
         utility::checkAndSet(src, "Local database", errorList, [&src, &errorList, this](){
             m_LocalDatabase->fromJson(src["Local database"].toObject(), errorList);
         });
+
+        emit forgetAboutAdditionalScopeSearcher(m_LocalDatabase);
     }
 
     /**

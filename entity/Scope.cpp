@@ -436,10 +436,21 @@ namespace entity {
             return;
 
         // Keep old connection form to make code more generic without extracting connection
-        // to the separate function and using enable_if for
+        // to the separate function and using enable_if
         if (t->hashType() == Class::staticHashType())
             G_CONNECT(t, SIGNAL(typeUserAdded(SharedTypeUser)),
                       this, SIGNAL(typeSearcherRequired(SharedTypeUser)));
+
+        if (t->hashType() == TemplateClass::staticHashType()) {
+            G_CONNECT(t,
+                      SIGNAL(requestUsingAdditionalScopeSearcher(db::SharedScopeSearcher)),
+                      &entity::EntityFactory::instance(),
+                      SLOT(addAdditionaScopeSearcher(db::SharedScopeSearcher)));
+            G_CONNECT(t,
+                      SIGNAL(forgetAboutAdditionalScopeSearcher(db::SharedScopeSearcher)),
+                      &entity::EntityFactory::instance(),
+                      SLOT(removeAdditionaScopeSearcher(db::SharedScopeSearcher)));
+        }
 
         G_CONNECT(t, &common::BasicElement::nameChanged, this, &entity::Scope::onTypeNameChanged);
         G_CONNECT(t, &common::BasicElement::idChanged, this, &entity::Scope::onTypeIdChanged);

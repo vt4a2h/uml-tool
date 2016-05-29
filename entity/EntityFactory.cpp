@@ -101,26 +101,24 @@ namespace entity {
                                    const common::ID &scopeID,
                                    CreationOptions options) const
     {
-        if (auto database = db()) {
-            if (auto scope = database->depthScopeSearch(scopeID)) {
-                if (auto maker = makers[kindOfType]) {
-                    auto type = maker(scope);
-                    if (!type)
-                        return nullptr;
+        if (auto currentScope = scope(scopeID)) {
+            if (auto maker = makers[kindOfType]) {
+                auto type = maker(currentScope);
+                if (!type)
+                    return nullptr;
 
-                    // Will be added by default
-                    Q_ASSERT(!options.testFlag(AddToDatabase));
+                // Will be added by default
+                Q_ASSERT(!options.testFlag(AddToDatabase));
 
-                    if (project() && options.testFlag(AddToScene))
-                        addGraphicEntity(scene(), project()->database(), type, pos);
+                if (project() && options.testFlag(AddToScene))
+                    addGraphicEntity(scene(), project()->database(), type, pos);
 
-                    if (project() && options.testFlag(AddToTreeModel))
-                        if (auto tm = treeModel())
-                            if (auto p = project())
-                                tm->addType(type, scopeID, p->name());
+                if (project() && options.testFlag(AddToTreeModel))
+                    if (auto tm = treeModel())
+                        if (auto p = project())
+                            tm->addType(type, scopeID, p->name());
 
-                    return type;
-                }
+                return type;
             }
         }
 

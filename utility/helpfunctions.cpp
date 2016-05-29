@@ -227,13 +227,13 @@ namespace utility {
     QStringList scopesNamesList(const entity::SharedType &type, const db::SharedDatabase &db)
     {
         QStringList result;
-        entity::SharedScope scope(db->depthScopeSearch(type->scopeId()));
+        entity::SharedScope scope(db->scope(type->scopeId(), true /*searchInDepth*/));
         auto id(scope ? scope->id() : common::ID::globalScopeID());
 
         while (scope && id != common::ID::globalScopeID()) {
             result << scope->name();
             id = scope->scopeId();
-            scope = db->depthScopeSearch(id);
+            scope = db->scope(id, true /*searchInDepth*/);
         }
 
         return result;

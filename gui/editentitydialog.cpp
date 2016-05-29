@@ -250,7 +250,7 @@ namespace gui {
 
         m_ApplicationModel = model;
         m_Project = m_ApplicationModel->currentProject();
-        m_Scope = m_Project->database()->getScope(type->scopeId());
+        m_Scope = m_Project->database()->scope(type->scopeId());
         m_Type = type;
 
         components::ComponentsMaker &maker = m_SignatureEditDelegate->maker();
@@ -319,10 +319,10 @@ namespace gui {
         {
             auto db = m_Project->database();
 
-            auto srcScope = db->getScope(m_Type->scopeId());
+            auto srcScope = db->scope(m_Type->scopeId());
             Q_ASSERT(srcScope);
 
-            auto dstScope = db->getScope(scope->id());
+            auto dstScope = db->scope(scope->id());
             Q_ASSERT(dstScope);
 
             Q_ASSERT(m_ApplicationModel);

@@ -524,7 +524,7 @@ namespace translation {
         QStringList signatures;
         if (!properties.isEmpty()) {
             SignatureMaker maker(m_GlobalDatabase, m_ProjectDatabase,
-                                 m_ProjectDatabase->getScope(_class->scopeId()), _class);
+                                 m_ProjectDatabase->scope(_class->scopeId()), _class);
             for (auto &&p : properties)
                 signatures << maker.signature(p);
         }

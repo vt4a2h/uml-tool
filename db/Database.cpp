@@ -163,13 +163,19 @@ namespace db {
     }
 
     /**
-     * @brief Database::getScope
+     * @brief Database::scope
      * @param id
+     * @param searchInDepth
      * @return
      */
-    entity::SharedScope Database::getScope(const common::ID &id) const
+    entity::SharedScope Database::scope(const common::ID &id, bool searchInDepth) const
     {
-        return m_Scopes.contains(id) ? m_Scopes[id] : nullptr;
+        if (!searchInDepth) {
+            auto it = m_Scopes.find(id);
+            return it != m_Scopes.end() ? *it : nullptr;
+        } else {
+            return depthScopeSearch(id);
+        }
     }
 
     /**
@@ -260,12 +266,12 @@ namespace db {
 
     /**
      * @brief Database::depthScopeSearch
-     * @param scopeId
+     * @param id
      * @return
      */
-    entity::SharedScope Database::depthScopeSearch(const common::ID &scopeId) const
+    entity::SharedScope Database::depthScopeSearch(const common::ID &id) const
     {
-        return getScopeWithDepthList(makeDepthIdList(scopeId));
+        return getScopeWithDepthList(makeDepthIdList(id));
     }
 
     namespace
@@ -351,7 +357,7 @@ namespace db {
     {
         entity::SharedScope result(nullptr);
         if (!ids.isEmpty() && containsScope(ids[0])) {
-            result = getScope(ids[0]);
+            result = scope(ids[0]);
             for (int i = 1, size = ids.size(); i < size; ++i)
                 if (result->containsChildScope(ids[i]))
                     result = result->getChildScope(ids[i]);

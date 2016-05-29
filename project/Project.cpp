@@ -173,7 +173,7 @@ namespace project {
                 connect(entity.get(), &common::BasicElement::nameChanged, this, &Project::touch);
 
         // Fixup if needed
-        if (!m_Database->getScope(common::ID::projectScopeID()))
+        if (!m_Database->scope(common::ID::projectScopeID()))
             m_Database->addExistsScope(makeProjectScope());
 
         if (!m_Errors.isEmpty())

@@ -94,9 +94,9 @@ SOURCES += main.cpp \
            ../../entity/field.cpp \
            ../../entity/union.cpp \
            ../../entity/classmethod.cpp \
-           ../../entity/templateclass.cpp \
+           ../../entity/TemplateClass.cpp \
            ../../entity/extendedtype.cpp\
-           ../../entity/template.cpp \
+           ../../entity/Template.cpp \
            ../../entity/property.cpp \
            ../../entity/GraphicEntityData.cpp \
            ../../common/id.cpp \

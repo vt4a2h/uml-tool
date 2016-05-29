@@ -36,8 +36,10 @@ namespace entity {
     /**
      * @brief The Template class
      */
-    class Template
+    class Template : public QObject
     {
+        Q_OBJECT
+
     public:
         Template();
 
@@ -61,6 +63,10 @@ namespace entity {
         void templateLoadFromJson(const QJsonObject &src, QStringList &errorList);
 
         bool templatePartEq(const Template &rhs) const;
+
+    signals:
+        void requestUsingAdditionalScopeSearcher(const db::SharedScopeSearcher &s);
+        void forgetAboutAdditionalScopeSearcher(const db::SharedScopeSearcher &s);
 
     private:
         TemplateParametersList m_TemplateParameters;

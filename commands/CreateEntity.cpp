@@ -76,7 +76,7 @@ namespace commands {
             scene->removeItem(m_GraphicEntity);
 
         if (auto &&db = G_ASSERT(factory.db()))
-            if (auto && scope = G_ASSERT(db->getScope(m_ScopeID)))
+            if (auto && scope = G_ASSERT(db->scope(m_ScopeID)))
                 scope->removeType(m_Entity->id());
 
         if (auto &&tm = G_ASSERT(factory.treeModel()))

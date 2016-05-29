@@ -47,6 +47,12 @@ namespace db {
     using SharedTypeSearcher = std::shared_ptr<ITypeSearcher>;
     using WeakTypeSearcher = std::weak_ptr<ITypeSearcher>;
     using WeakTypeSearchers = QVector<WeakTypeSearcher>;
+
+    class IScopeSearcher;
+    using SharedScopeSearcher = std::shared_ptr<IScopeSearcher>;
+    using WeakScopeSearcher = std::weak_ptr<IScopeSearcher>;
+    using WeakScopeSearchers = QVector<WeakScopeSearcher>;
 }
 
 Q_DECLARE_METATYPE(db::IDPos)
+Q_DECLARE_METATYPE(db::SharedScopeSearcher)

@@ -97,7 +97,7 @@ namespace utility {
     template <class D>
     std::shared_ptr<entity::Scope> findScope(const common::ID &id, const D &database)
     {
-        return database ? database->depthScopeSearch(id) : nullptr;
+        return database ? database->scope(id, true /*searchInDepth*/) : nullptr;
     }
 
     template <class D, class... Args>

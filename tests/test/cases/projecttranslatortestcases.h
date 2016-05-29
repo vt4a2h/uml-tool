@@ -527,7 +527,7 @@ TEST_F(ProjectTranslatorTest, TemplateClassImplementation)
                          "{\n"
                          "}");
 
-    entity::SharedScope _std = m_GlobalDb->getScope(common::ID::stdScopeID());
+    entity::SharedScope _std = m_GlobalDb->scope(common::ID::stdScopeID());
     ASSERT_TRUE(!!_std);
     entity::SharedType dd(_std->addType("default_delete"));
 

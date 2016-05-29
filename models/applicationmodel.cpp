@@ -188,7 +188,7 @@ namespace models {
     {
         if (auto &&pr = project(projectName))
             if (auto &&db = pr->database())
-                if (auto &&scope = db->getScope(scopeID)) {
+                if (auto &&scope = db->scope(scopeID)) {
                     scope->addExistsType(type);
                     connect(type.get(), &common::BasicElement::nameChanged,
                             m_CurrentProject.get(), &project::Project::touch);
@@ -209,7 +209,7 @@ namespace models {
     {
         if (auto &&pr = project(projectName))
             if (auto &&db = pr->database())
-                if (auto &&scope = db->getScope(scopeID))
+                if (auto &&scope = db->scope(scopeID))
                     scope->removeType(typeID);
 
         m_TreeModel->removeType(projectName, scopeID, typeID);

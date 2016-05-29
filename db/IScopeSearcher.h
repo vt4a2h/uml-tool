@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 29/10/2014.
+** Created 29/05/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,34 +20,28 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
 
-#include "Class.h"
-#include "Template.h"
+#include <common/common_types.h>
+#include <entity/entity_types.hpp>
+#include <db/db_types.hpp>
 
-namespace entity {
+namespace db {
 
-    class ID;
-
-    /**
-     * @brief The TemplateClass class
-     */
-    class TemplateClass : public Class, public Template
+    /// Auxiliary class for looking up scopes
+    class IScopeSearcher
     {
     public:
-        TemplateClass();
-        TemplateClass(const QString &name, const common::ID &scopeId);
+        /// Search scope
+        virtual entity::SharedScope scope(const common::ID &id, bool searchInDepth = false) const = 0;
 
-        friend bool operator ==(const TemplateClass &lhs, const TemplateClass &rhs);
-
-        bool isEqual(const Type &rhs, bool withTypeid = true) const override;
-
-    public: // BasicEntity implementation
-        QJsonObject toJson() const override;
-        void fromJson(const QJsonObject &src, QStringList &errorList) override;
-
-        add_meta(TemplateClass)
+        /// All scopes from the first nesting level
+        virtual entity::ScopesList scopes() const = 0;
     };
 
-} // namespace entity
+    inline bool operator ==(const WeakScopeSearcher &lhs, const WeakScopeSearcher &rhs)
+    {
+        return lhs.lock() == rhs.lock();
+    }
+
+} // namespace db

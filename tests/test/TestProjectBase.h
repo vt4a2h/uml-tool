@@ -56,13 +56,16 @@ protected:
         const_cast<helpers::GeneratorID&>(helpers::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
         m_ProjectDb = m_Project->database();
 
-        m_ProjectScope = m_ProjectDb->getScope(common::ID::projectScopeID());
+        m_ProjectScope = m_ProjectDb->scope(common::ID::projectScopeID());
         ASSERT_TRUE(!!m_ProjectScope);
 
-        m_GlobalScope = m_GlobalDb->getScope(common::ID::globalScopeID());
+        m_GlobalScope = m_GlobalDb->scope(common::ID::globalScopeID());
         ASSERT_TRUE(!!m_GlobalScope);
 
         m_Project->setGlobalDatabase(m_GlobalDb);
+
+        initFactory(entity::EntityFactory::instance());
+        initFactory(relationship::RelationFactory::instance());
     }
 
     void initFactory(const common::ElementsFactory &factory)

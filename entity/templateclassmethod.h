@@ -24,7 +24,7 @@
 #pragma once
 
 #include "classmethod.h"
-#include "template.h"
+#include "Template.h"
 
 namespace entity {
 

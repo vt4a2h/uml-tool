@@ -31,6 +31,8 @@
 
 #include <models/models_types.hpp>
 
+#include <entity/entity_types.hpp>
+
 class QGraphicsScene;
 
 namespace common {
@@ -68,11 +70,17 @@ namespace common {
     public slots:
         void onSceneChanged(const QPointer<QGraphicsScene> &scene);
         void onProjectChanged(const project::SharedProject &p);
+        void addAdditionaScopeSearcher(const db::SharedScopeSearcher &s);
+        void removeAdditionaScopeSearcher(const db::SharedScopeSearcher &s);
+
+    protected:
+        entity::SharedScope scope(const common::ID &id) const;
 
     private:
         QPointer<QGraphicsScene> m_Scene;
         project::WeakProject m_Project;
         db::WeakDatabase m_GlobalDatabase;
+        db::WeakScopeSearchers m_AdditionalScopeSearchers;
         models::WeakTreeModel m_TreeModel;
     };
 

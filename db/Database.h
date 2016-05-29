@@ -29,7 +29,8 @@
 #include <common/ID.h>
 #include <common/SharedFromThis.h>
 
-#include "itypesearcher.h"
+#include "ITypeSearcher.h"
+#include "IScopeSearcher.h"
 #include "types.h"
 #include "db_types.hpp"
 
@@ -41,7 +42,10 @@ namespace db {
     /**
      * @brief The Database class
      */
-    class Database : public ITypeSearcher, public common::SharedFromThis<Database>
+    class Database
+        : public ITypeSearcher
+        , public IScopeSearcher
+        , public common::SharedFromThis<Database>
     {
     public:
         Database(Database &&src);
@@ -62,7 +66,6 @@ namespace db {
 
         QString fullPath() const;
 
-        entity::SharedScope getScope(const common::ID &id) const;
         virtual entity::SharedScope addScope(
             const QString &name = "", const common::ID &parentScopeId = common::ID::nullID());
         virtual entity::SharedScope addExistsScope(const entity::SharedScope &scope);
@@ -70,12 +73,6 @@ namespace db {
         bool containsScope(const common::ID &id) const;
         bool anyScopes() const;
         void removeScope(const common::ID &id);
-        entity::ScopesList scopes() const;
-
-        entity::SharedScope depthScopeSearch(const common::ID &scopeId) const;
-
-        entity::SharedType typeByID(const common::ID &typeId) const override;
-        entity::SharedType typeByName(const QString &name) const override;
 
         void load(ErrorList &errorList);
         bool save() const;
@@ -91,7 +88,16 @@ namespace db {
 
         bool valid() const;
 
+    public: // ITypeSearcher overrides
+        entity::SharedType typeByID(const common::ID &typeId) const override;
+        entity::SharedType typeByName(const QString &name) const override;
+
+    public: // IScopeSearcher overrides
+        entity::SharedScope scope(const common::ID &id, bool searchInDepth = false) const override;
+        entity::ScopesList  scopes() const override;
+
     protected:
+        entity::SharedScope depthScopeSearch(const common::ID &id) const;
         virtual void copyFrom(const Database &src);
         virtual void moveFrom(Database &src);
 

@@ -15,7 +15,6 @@ SOURCES += \
     templates.cpp \
     entity/classmethod.cpp \
     entity/field.cpp \
-    entity/template.cpp \
     entity/templateclassmethod.cpp \
     entity/components/componentsignatureparser.cpp \
     entity/components/icomponents.cpp \
@@ -86,7 +85,8 @@ SOURCES += \
     gui/MainWindow.cpp \
     entity/Scope.cpp \
     entity/GraphicEntityData.cpp \
-    entity/Property.cpp
+    entity/Property.cpp \
+    entity/Template.cpp
 
 HEADERS += \
     enums.h \
@@ -96,7 +96,6 @@ HEADERS += \
     db/db_types.hpp \
     entity/classmethod.h \
     entity/field.h \
-    entity/template.h \
     entity/templateclassmethod.h \
     entity/components/componentsignatureparser.h \
     entity/components/icomponents.h \
@@ -154,7 +153,6 @@ HEADERS += \
     gui/graphics/graphics_types.h \
     helpers/generatorid.h \
     common/ID.h \
-    db/itypesearcher.h \
     entity/itypeuser.h \
     common/BasicElement.h \
     entity/isectional.h \
@@ -184,7 +182,10 @@ HEADERS += \
     entity/Scope.h \
     entity/GraphicEntityData.h \
     common/SharedFromThis.h \
-    entity/Property.h
+    entity/Property.h \
+    db/IScopeSearcher.h \
+    db/ITypeSearcher.h \
+    entity/Template.h
 
 FORMS += \
     gui/mainwindow.ui \
