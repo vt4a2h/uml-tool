@@ -32,6 +32,7 @@ HEADERS += ../../enums.h \
     ../../entity/components/icomponents.h \
     ../../entity/GraphicEntityData.h \
     ../../entity/EntityFactory.h \
+    ../../entity/Template.h \
     ../../constants.h \
     ../../entity/field.h \
     ../../qthelpers.h \

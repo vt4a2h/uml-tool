@@ -441,15 +441,16 @@ namespace entity {
             G_CONNECT(t, SIGNAL(typeUserAdded(SharedTypeUser)),
                       this, SIGNAL(typeSearcherRequired(SharedTypeUser)));
 
+        // TODO: fix!!!
         if (t->hashType() == TemplateClass::staticHashType()) {
-            G_CONNECT(t,
-                      SIGNAL(requestUsingAdditionalScopeSearcher(db::SharedScopeSearcher)),
-                      &entity::EntityFactory::instance(),
-                      SLOT(addAdditionaScopeSearcher(db::SharedScopeSearcher)));
-            G_CONNECT(t,
-                      SIGNAL(forgetAboutAdditionalScopeSearcher(db::SharedScopeSearcher)),
-                      &entity::EntityFactory::instance(),
-                      SLOT(removeAdditionaScopeSearcher(db::SharedScopeSearcher)));
+            G_CONNECT(dynamic_cast<Template*>(t),
+                      &Template::requestUsingAdditionalScopeSearcher,
+                      &EntityFactory::instance(),
+                      &EntityFactory::addAdditionaScopeSearcher);
+            G_CONNECT(dynamic_cast<Template*>(t),
+                      &Template::forgetAboutAdditionalScopeSearcher,
+                      &EntityFactory::instance(),
+                      &EntityFactory::removeAdditionaScopeSearcher);
         }
 
         G_CONNECT(t, &common::BasicElement::nameChanged, this, &entity::Scope::onTypeNameChanged);

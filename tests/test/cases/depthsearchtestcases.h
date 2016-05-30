@@ -29,8 +29,8 @@ TEST_F(DepthSearch, ScopeSearchWorks)
 {
     entity::SharedScope p(nullptr);
 
-    search_circle(_scopes, depthScopeSearch, scope)
-    invalid_case(depthScopeSearch, -1)
+    search_circle(_scopes, scope, scope, true)
+    invalid_case(scope, -1, true)
 }
 
 TEST_F(DepthSearch, TypeSearchWorks)

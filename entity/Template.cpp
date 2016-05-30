@@ -53,6 +53,28 @@ namespace entity {
     }
 
     /**
+     * @brief Template::Template
+     * @param src
+     */
+    Template::Template(const Template &src)
+        : QObject()
+        , m_TemplateParameters(src.m_TemplateParameters)
+        , m_LocalDatabase(std::make_shared<db::Database>(*src.m_LocalDatabase))
+    {
+    }
+
+    /**
+     * @brief Template::operator =
+     * @param src
+     * @return
+     */
+    Template &Template::operator =(Template rhs)
+    {
+        swap(*this, rhs);
+        return *this;
+    }
+
+    /**
      * @brief operator ==
      * @param lhs
      * @param rhs
@@ -61,7 +83,7 @@ namespace entity {
     bool operator ==(const Template &lhs, const Template &rhs)
     {
         return lhs.m_TemplateParameters == rhs.m_TemplateParameters &&
-               *lhs.m_LocalDatabase == *rhs.m_LocalDatabase;
+               utility::sharedPtrEq(lhs.m_LocalDatabase, rhs.m_LocalDatabase);
     }
 
     /**
@@ -245,6 +267,18 @@ namespace entity {
     bool Template::templatePartEq(const Template &rhs) const
     {
         return *this == rhs;
+    }
+
+    /**
+     * @brief swap
+     * @param lhs
+     * @param rhs
+     */
+    void swap(Template &lhs, Template &rhs) noexcept
+    {
+        using std::swap;
+        swap(lhs.m_TemplateParameters, rhs.m_TemplateParameters);
+        swap(lhs.m_LocalDatabase, rhs.m_LocalDatabase);
     }
 
 } // namespace entity

@@ -42,6 +42,11 @@ namespace entity {
 
     public:
         Template();
+        Template(const Template &src);
+        Template(Template &&src) = default;
+
+        Template &operator =(Template rhs);
+        Template &operator =(Template &&rhs) = default;
 
         friend bool operator ==(const Template &lhs, const Template &rhs);
 
@@ -63,6 +68,8 @@ namespace entity {
         void templateLoadFromJson(const QJsonObject &src, QStringList &errorList);
 
         bool templatePartEq(const Template &rhs) const;
+
+        friend void swap(Template &lhs, Template &rhs) noexcept;
 
     signals:
         void requestUsingAdditionalScopeSearcher(const db::SharedScopeSearcher &s);

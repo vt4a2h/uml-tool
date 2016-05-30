@@ -23,9 +23,9 @@
 
 #pragma once
 
-#define search_circle(table_name, method_name, type)   \
+#define search_circle(table_name, method_name, type, ...)   \
 for (auto key : table_name.keys()) {\
-    p = m_ProjectDb->method_name(table_name[key]->id());\
+    p = m_ProjectDb->method_name(table_name[key]->id(), ##__VA_ARGS__);\
     \
     EXPECT_TRUE(p.operator bool())\
             << QString(#method_name "() should return valid ptr for " #type " \"%1\"")\
@@ -35,8 +35,8 @@ for (auto key : table_name.keys()) {\
                .arg(table_name[key]->name()).toStdString();\
 }
 
-#define invalid_case(method_name, invalid_id) \
-p = m_ProjectDb->method_name(invalid_id);\
+#define invalid_case(method_name, invalid_id, ...) \
+p = m_ProjectDb->method_name(invalid_id, ##__VA_ARGS__);\
 EXPECT_EQ(p, nullptr) << #method_name "() should return nullptr for invalid id";
 
 #define json_eq(basic_obj, comp_obj, name)\
