@@ -62,7 +62,7 @@ namespace entity {
                               const entity::SharedType &type,
                               const QPointF pos = QPointF())
         {
-            if (G_ASSERT(scene) && G_ASSERT(projectDB)) {
+            if (scene && projectDB) {
                 auto graphicEntity = new graphics::Entity(type);
 
                 // Register in the database

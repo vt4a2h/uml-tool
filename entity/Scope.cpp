@@ -441,7 +441,6 @@ namespace entity {
             G_CONNECT(t, SIGNAL(typeUserAdded(SharedTypeUser)),
                       this, SIGNAL(typeSearcherRequired(SharedTypeUser)));
 
-        // TODO: fix!!!
         if (t->hashType() == TemplateClass::staticHashType()) {
             G_CONNECT(dynamic_cast<Template*>(t),
                       &Template::requestUsingAdditionalScopeSearcher,

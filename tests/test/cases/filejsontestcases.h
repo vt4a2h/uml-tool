@@ -117,7 +117,7 @@ TEST_F(FileJson, ClassMethodJson)
 
 TEST_F(FileJson, TemplateClassJson)
 {
-    entity::SharedTemplateClass class_(std::make_shared<entity::TemplateClass>("stub_name", common::ID::nullID()));
+    auto class_(m_ProjectScope->addType<entity::TemplateClass>("stub_name"));
     class_->addTemplateParameter(common::ID::nullID(), common::ID::nullID());
     class_->addTemplateParameter(common::ID::nullID(), common::ID::nullID());
     EXPECT_TRUE(!!class_->addLocalType("type"))
@@ -126,7 +126,7 @@ TEST_F(FileJson, TemplateClassJson)
             << "Locale type must be added.";
     class_->writeToFile(m_JsonFileName);
 
-    auto class_comp(std::make_shared<entity::TemplateClass>());
+    auto class_comp(m_ProjectScope->addType<entity::TemplateClass>("stub_name_1"));
     json_eq(class_, class_comp, "TemplateClass")
     ASSERT_TRUE(class_comp->readFromFile(m_JsonFileName));
     EXPECT_EQ(*class_, *class_comp);

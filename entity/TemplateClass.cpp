@@ -103,7 +103,8 @@ namespace entity {
      */
     bool TemplateClass::isEqual(const Type &rhs, bool withTypeid) const
     {
-        return Class::isEqual(rhs, withTypeid) && templatePartEq(static_cast<const TemplateClass &>(rhs));
+        return Class::isEqual(rhs, withTypeid) &&
+               templatePartEq(dynamic_cast<const TemplateClass &>(rhs));
     }
 
 } // namespace entity
