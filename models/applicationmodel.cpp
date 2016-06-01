@@ -24,7 +24,7 @@
 
 #include <entity/Type.h>
 #include <entity/Class.h>
-#include <entity/classmethod.h>
+#include <entity/ClassMethod.h>
 
 #include "constants.h"
 

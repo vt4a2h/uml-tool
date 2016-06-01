@@ -25,6 +25,7 @@
 #include "Type.h"
 #include "Class.h"
 #include "TemplateClass.h"
+#include "TemplateClassMethod.h"
 #include "Union.h"
 #include "Enum.h"
 #include "enums.h"
@@ -405,6 +406,15 @@ namespace entity {
     }
 
     /**
+     * @brief Scope::onTemplateMethodAdded
+     * @param m
+     */
+    void Scope::onTemplateMethodAdded(const SharedTemplateClassMethod &m)
+    {
+        connectTemplate(m.get());
+    }
+
+    /**
      * @brief Scope::copyFrom
      * @param src
      */
@@ -427,6 +437,22 @@ namespace entity {
     }
 
     /**
+     * @brief Scope::connectTemplate
+     * @param t
+     */
+    void Scope::connectTemplate(Template *t)
+    {
+        G_CONNECT(t,
+                  &Template::requestUsingAdditionalScopeSearcher,
+                  &EntityFactory::instance(),
+                  &EntityFactory::addAdditionaScopeSearcher);
+        G_CONNECT(t,
+                  &Template::forgetAboutAdditionalScopeSearcher,
+                  &EntityFactory::instance(),
+                  &EntityFactory::removeAdditionaScopeSearcher);
+    }
+
+    /**
      * @brief Scope::connectType
      * @param t
      */
@@ -437,19 +463,16 @@ namespace entity {
 
         // Keep old connection form to make code more generic without extracting connection
         // to the separate function and using enable_if
-        if (t->hashType() == Class::staticHashType())
+        if (t->hashType() == Class::staticHashType() ||
+            t->hashType() == TemplateClass::staticHashType()) {
             G_CONNECT(t, SIGNAL(typeUserAdded(SharedTypeUser)),
                       this, SIGNAL(typeSearcherRequired(SharedTypeUser)));
+            G_CONNECT(t, SIGNAL(templateMethodAdded(SharedTemplateClassMethod)),
+                      this, SLOT(onTemplateMethodAdded(SharedTemplateClassMethod)));
+        }
 
         if (t->hashType() == TemplateClass::staticHashType()) {
-            G_CONNECT(dynamic_cast<Template*>(t),
-                      &Template::requestUsingAdditionalScopeSearcher,
-                      &EntityFactory::instance(),
-                      &EntityFactory::addAdditionaScopeSearcher);
-            G_CONNECT(dynamic_cast<Template*>(t),
-                      &Template::forgetAboutAdditionalScopeSearcher,
-                      &EntityFactory::instance(),
-                      &EntityFactory::removeAdditionaScopeSearcher);
+            connectTemplate(dynamic_cast<Template*>(t));
         }
 
         G_CONNECT(t, &common::BasicElement::nameChanged, this, &entity::Scope::onTypeNameChanged);

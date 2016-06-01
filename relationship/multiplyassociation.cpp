@@ -29,7 +29,7 @@
 
 #include <db/Database.h>
 #include <entity/Class.h>
-#include <entity/classmethod.h>
+#include <entity/ClassMethod.h>
 #include <entity/field.h>
 #include <utility/helpfunctions.h>
 

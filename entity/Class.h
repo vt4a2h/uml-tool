@@ -29,6 +29,7 @@
 #include "Type.h"
 #include "types.h"
 #include "enums.h"
+#include "TemplateClassMethod.h"
 
 /**
  * @brief entity
@@ -131,6 +132,8 @@ namespace entity {
 
     signals:
         void typeUserAdded(const SharedTypeUser& tu);
+        void templateMethodAdded(const SharedTemplateClassMethod &method);
+        void templateMethodRemoved(const SharedTemplateClassMethod &method);
 
     protected:
         void copyFrom(const Class &src);
@@ -164,6 +167,9 @@ namespace entity {
         auto value = std::make_shared<ResultType>(name);
         value->setScopeId(scopeId());
         m_Methods << value;
+
+        if (value->hashType() == TemplateClassMethod::staticHashType())
+            emit templateMethodAdded(std::static_pointer_cast<TemplateClassMethod>(value));
 
         return value;
     }

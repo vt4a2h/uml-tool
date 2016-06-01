@@ -13,9 +13,7 @@ linux-g++ {
 SOURCES += \
     main.cpp \
     templates.cpp \
-    entity/classmethod.cpp \
     entity/field.cpp \
-    entity/templateclassmethod.cpp \
     entity/components/componentsignatureparser.cpp \
     entity/components/icomponents.cpp \
     entity/components/componentsmaker.cpp \
@@ -86,7 +84,9 @@ SOURCES += \
     entity/Scope.cpp \
     entity/GraphicEntityData.cpp \
     entity/Property.cpp \
-    entity/Template.cpp
+    entity/Template.cpp \
+    entity/ClassMethod.cpp \
+    entity/TemplateClassMethod.cpp
 
 HEADERS += \
     enums.h \
@@ -94,9 +94,7 @@ HEADERS += \
     db/Database.h \
     db/ProjectDatabase.h \
     db/db_types.hpp \
-    entity/classmethod.h \
     entity/field.h \
-    entity/templateclassmethod.h \
     entity/components/componentsignatureparser.h \
     entity/components/icomponents.h \
     entity/components/componentsmaker.h \
@@ -185,7 +183,9 @@ HEADERS += \
     entity/Property.h \
     db/IScopeSearcher.h \
     db/ITypeSearcher.h \
-    entity/Template.h
+    entity/Template.h \
+    entity/ClassMethod.h \
+    entity/TemplateClassMethod.h
 
 FORMS += \
     gui/mainwindow.ui \

@@ -30,7 +30,7 @@
 #include <entity/Scope.h>
 #include <entity/Type.h>
 #include <entity/Class.h>
-#include <entity/classmethod.h>
+#include <entity/ClassMethod.h>
 #include <entity/field.h>
 #include <relationship/node.h>
 #include <relationship/Relation.h>

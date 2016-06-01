@@ -32,7 +32,7 @@
 #include <entity/Class.h>
 #include <entity/TemplateClass.h>
 #include <entity/ExtendedType.h>
-#include <entity/classmethod.h> // TODO: remove
+#include <entity/ClassMethod.h> // TODO: remove
 #include <entity/components/componentsmaker.h>
 
 #include <models/applicationmodel.h>

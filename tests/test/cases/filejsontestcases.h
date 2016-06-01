@@ -134,21 +134,23 @@ TEST_F(FileJson, TemplateClassJson)
 
 TEST_F(FileJson, TemplateClassMethodJson)
 {
-    entity::SharedTemplateClassMethod method(std::make_shared<entity::TemplateClassMethod>("stub name"));
+    // Add stub type in order to set template database as additional scpe searcher
+    auto class_(m_ProjectScope->addType<entity::TemplateClass>("stub_name"));
+
+    auto method(class_->makeMethod<entity::TemplateClassMethod>("stub name"));
     EXPECT_TRUE(!!method->addLocalType("type"))
             << "Locale type must be added.";
     EXPECT_TRUE(!!method->addLocalType("type_1"))
             << "Locale type must be added.";
     method->writeToFile(m_JsonFileName);
 
-    auto method_comp(std::make_shared<entity::TemplateClassMethod>());
+    auto method_comp(class_->makeMethod<entity::TemplateClassMethod>("stub_name 1"));
     json_eq(method, method_comp, "TemplateClassMethod");
 }
 
 TEST_F(FileJson, ScopeJson)
 {
-    entity::SharedScope scope =
-        std::make_shared<entity::Scope>("stub_scope_name", common::ID::nullID());
+    auto scope = m_ProjectDb->addScope("stub_scope_name", common::ID::nullID());
     scope->addType("type");
     scope->addType("type_1");
     scope->addChildScope("scope");

@@ -23,11 +23,12 @@
 #pragma once
 
 #include <QString>
-#include "types.h"
-#include "Scope.h"
 
 #include <db/Database.h>
 #include <db/db_types.hpp>
+
+#include "Scope.h"
+#include "types.h"
 
 namespace entity {
 

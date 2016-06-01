@@ -21,7 +21,7 @@
 **
 *****************************************************************************/
 
-#include "classmethod.h"
+#include "ClassMethod.h"
 
 #include <QStringList>
 #include <QJsonObject>

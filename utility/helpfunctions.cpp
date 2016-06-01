@@ -40,8 +40,8 @@
 #include <entity/Class.h>
 #include <entity/TemplateClass.h>
 #include <entity/Union.h>
-#include <entity/classmethod.h>
-#include <entity/templateclassmethod.h>
+#include <entity/ClassMethod.h>
+#include <entity/TemplateClassMethod.h>
 #include <entity/Enum.h>
 #include <entity/ExtendedType.h>
 #include <relationship/association.h>

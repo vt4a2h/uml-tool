@@ -31,7 +31,7 @@
 
 #include <entity/Scope.h>
 #include <entity/Class.h>
-#include <entity/classmethod.h>
+#include <entity/ClassMethod.h>
 #include <entity/field.h>
 #include <entity/Union.h>
 

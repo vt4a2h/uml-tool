@@ -23,7 +23,7 @@
 #include "signaturemaker.h"
 
 #include <entity/field.h>
-#include <entity/classmethod.h>
+#include <entity/ClassMethod.h>
 #include <entity/Enum.h>
 #include <entity/ExtendedType.h>
 #include <entity/Property.h>

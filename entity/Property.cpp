@@ -33,7 +33,7 @@
 
 #include "Type.h"
 #include "field.h"
-#include "classmethod.h"
+#include "ClassMethod.h"
 
 #include "constants.h"
 #include "qthelpers.h"

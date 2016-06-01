@@ -33,10 +33,10 @@
 #include <entity/ExtendedType.h>
 #include <entity/Scope.h>
 #include <entity/field.h>
-#include <entity/classmethod.h>
+#include <entity/ClassMethod.h>
 #include <entity/Union.h>
 #include <entity/Class.h>
-#include <entity/templateclassmethod.h>
+#include <entity/TemplateClassMethod.h>
 #include <entity/TemplateClass.h>
 #include <entity/Property.h>
 #include <utility/helpfunctions.h>

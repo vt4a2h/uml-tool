@@ -20,7 +20,6 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
 
 #include <type_traits>
@@ -34,7 +33,6 @@
 
 #include "entity_types.hpp"
 #include "qthelpers.h"
-#include "Class.h"
 #include "itypeuser.h"
 
 namespace entity {
@@ -87,6 +85,7 @@ namespace entity {
     public slots:
         void onTypeNameChanged(const QString &oldName, const QString &newName);
         void onTypeIdChanged(const common::ID &oldID, const common::ID &newID);
+        void onTemplateMethodAdded(const SharedTemplateClassMethod &m);
 
     signals:
         void typeSearcherRequired(const SharedTypeUser &);
@@ -95,7 +94,8 @@ namespace entity {
         void copyFrom(const Scope &src);
         void moveFrom(Scope &&src);
 
-        void connectType(entity::Type * t);
+        void connectType(Type * t);
+        void connectTemplate(Template *t);
 
         Scopes m_Scopes;
         Types  m_Types;

@@ -28,6 +28,7 @@
 
 #include <entity/Scope.h>
 #include <entity/Property.h>
+#include <entity/Class.h>
 
 #include <common/ID.h>
 

@@ -21,7 +21,7 @@
 **
 *****************************************************************************/
 
-#include "templateclassmethod.h"
+#include "TemplateClassMethod.h"
 #include "constants.h"
 #include "enums.h"
 

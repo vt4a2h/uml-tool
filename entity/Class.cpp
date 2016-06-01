@@ -39,7 +39,6 @@
 #include "Class.h"
 #include "enums.h"
 #include "field.h"
-#include "classmethod.h"
 #include "enums.h"
 #include "ExtendedType.h"
 #include "Property.h"
@@ -214,7 +213,7 @@ namespace entity {
     {
         auto methods = getMethod(name);
         for (auto &&m : methods)
-            m_Methods.remove(m_Methods.indexOf(m));
+            removeMethod(m);
     }
 
     /**
@@ -224,7 +223,15 @@ namespace entity {
     int Class::removeMethod(const SharedMethod &method)
     {
         int pos = m_Methods.indexOf(method);
-        m_Methods.remove(pos);
+
+        if (pos != -1) {
+            if (m_Methods[pos]->hashType() == TemplateClassMethod::staticHashType())
+                emit templateMethodRemoved(
+                        std::static_pointer_cast<TemplateClassMethod>(m_Methods[pos]));
+
+            m_Methods.remove(pos);
+        }
+
         return pos;
     }
 

@@ -25,7 +25,7 @@
 #include <gtest/gtest.h>
 
 #include <entity/field.h>
-#include <entity/classmethod.h>
+#include <entity/ClassMethod.h>
 #include <entity/Property.h>
 
 #include "TestProjectBase.h"

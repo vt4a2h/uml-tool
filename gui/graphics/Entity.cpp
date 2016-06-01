@@ -39,7 +39,7 @@
 #include <entity/TemplateClass.h>
 #include <entity/ExtendedType.h>
 #include <entity/Scope.h>
-#include <entity/classmethod.h>
+#include <entity/ClassMethod.h>
 #include <entity/field.h>
 
 #include <utility/helpfunctions.h>

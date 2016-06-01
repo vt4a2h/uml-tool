@@ -29,7 +29,7 @@
 #include <entity/Union.h>
 #include <entity/Class.h>
 #include <entity/TemplateClass.h>
-#include <entity/templateclassmethod.h>
+#include <entity/TemplateClassMethod.h>
 #include <entity/Property.h>
 
 #include <translation/projecttranslator.h>
