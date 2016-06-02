@@ -24,6 +24,8 @@
 
 #include <helpers/generatorid.h>
 
+#include <entity/EntityFactory.h>
+
 #include <project/Project.h>
 #include <project/project_types.hpp>
 
@@ -49,6 +51,9 @@ protected:
         m_GlobalDatabase = m_ApplicationModel->globalDatabase();
         m_GlobalDatabase->setPath(globalDbPath);
         m_GlobalDatabase->setName(globalDbName);
+
+        initFactory(entity::EntityFactory::instance());
+
         ErrorList errors;
         m_GlobalDatabase->load(errors);
         Q_ASSERT(errors.isEmpty());
@@ -56,6 +61,8 @@ protected:
         m_Project = std::make_shared<project::Project>("Foo Project", "fake path");
         const_cast<helpers::GeneratorID&>(helpers::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
         m_Project->setGlobalDatabase(m_GlobalDatabase);
+
+        initFactory(entity::EntityFactory::instance());
 
         m_ApplicationModel->addProject(m_Project);
         m_ApplicationModel->setCurrentProject(m_Project->name());
@@ -65,6 +72,13 @@ protected:
         Q_ASSERT(!!m_ProjectScope);
 
         m_Type = m_ProjectScope->addType<entity::Class>("Foo");
+    }
+
+    void initFactory(const common::ElementsFactory &factory)
+    {
+        auto &&ef = const_cast<common::ElementsFactory &>(factory);
+        ef.setGlobalDatabase(m_GlobalDatabase);
+        ef.onProjectChanged(m_Project);
     }
 
 protected:
