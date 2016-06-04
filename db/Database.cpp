@@ -55,6 +55,7 @@ namespace db {
      * @param src
      */
     Database::Database(const Database &src)
+        : QObject(nullptr)
     {
         copyFrom(src);
     }
@@ -190,7 +191,7 @@ namespace db {
 
         if (!parentScopeId.isValid()) {
             scope = std::make_shared<entity::Scope>(name, common::ID::globalScopeID());
-            m_Scopes.insert(scope->id(), scope);
+            m_Scopes[scope->id()] = scope;
         } else {
             auto searchResults = std::move(makeDepthIdList(parentScopeId));
             if (!searchResults.isEmpty()) {
@@ -199,6 +200,9 @@ namespace db {
                     scope = depthScope->addChildScope(name);
             }
         }
+
+        if (scope)
+            connectScope(scope.get());
 
         return scope;
     }
@@ -214,6 +218,7 @@ namespace db {
 
         Q_ASSERT(!m_Scopes.contains(scope->id()));
         m_Scopes[scope->id()] = scope;
+        connectScope(scope.get());
         return scope;
     }
 
@@ -252,7 +257,11 @@ namespace db {
      */
     void Database::removeScope(const common::ID &id)
     {
-        m_Scopes.remove(id);
+        auto it = m_Scopes.find(id);
+        if (it != m_Scopes.end()) {
+            connectScope(it->get(), false /*connect*/);
+            m_Scopes.remove((*it)->id());
+        }
     }
 
     /**
@@ -262,6 +271,26 @@ namespace db {
     entity::ScopesList Database::scopes() const
     {
         return m_Scopes.values().toVector();
+    }
+
+    /**
+     * @brief Database::onScopeIDChanged
+     * @param oldID
+     * @param newID
+     */
+    void Database::onScopeIDChanged(const common::ID &oldID, const common::ID &newID)
+    {
+        auto it = m_Scopes.find(oldID);
+        if (!m_Scopes.contains(newID) && it != m_Scopes.end()) {
+            auto scope = *it;
+            m_Scopes.remove(oldID);
+
+            Q_ASSERT(scope->id() == newID);
+
+            m_Scopes[newID] = scope;
+        } else {
+            qWarning() << "Wrong new scope ID: " << newID.value() << ", old was: " << oldID.value();
+        }
     }
 
     /**
@@ -459,14 +488,7 @@ namespace db {
                 entity::SharedScope scope;
                 for (auto &&val : src["Scopes"].toArray()) {
                     auto obj = val.toObject();
-
-                    scope = std::make_shared<entity::Scope>();
-
-                    // Read only basic part
-                    scope->BasicElement::fromJson(obj, errorList);
-                    addExistsScope(scope);
-
-                    // Read other data
+                    scope = addScope();
                     scope->fromJson(obj, errorList);
                 }
             } else {
@@ -577,6 +599,19 @@ namespace db {
         } else {
             for (auto sc : scope->scopes()) recursiveFind(sc, id, ids);
         }
+    }
+
+    /**
+     * @brief Database::connectScope
+     * @param scope
+     * @param connect
+     */
+    void Database::connectScope(entity::Scope *scope, bool connect)
+    {
+        if (connect)
+            G_CONNECT(scope, &common::BasicElement::idChanged, this, &Database::onScopeIDChanged);
+        else
+            G_DISCONNECT(scope, &common::BasicElement::idChanged, this, &Database::onScopeIDChanged);
     }
 
 } // namespace db

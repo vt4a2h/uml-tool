@@ -58,8 +58,7 @@ namespace db {
      * @param src
      */
     ProjectDatabase::ProjectDatabase(const ProjectDatabase &src)
-        : QObject(nullptr)
-        , Database(src)
+        : Database(src)
     {
         copyFrom(src);
     }
@@ -70,8 +69,7 @@ namespace db {
      * @param path
      */
     ProjectDatabase::ProjectDatabase(const QString &name, const QString &path)
-        : QObject(nullptr)
-        , Database(name, path)
+        : Database(name, path)
     {
     }
 

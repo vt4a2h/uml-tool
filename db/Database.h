@@ -43,10 +43,13 @@ namespace db {
      * @brief The Database class
      */
     class Database
-        : public ITypeSearcher
+        : public QObject
+        , public ITypeSearcher
         , public IScopeSearcher
         , public common::SharedFromThis<Database>
     {
+        Q_OBJECT
+
     public:
         Database(Database &&src);
         Database(const Database &src);
@@ -96,6 +99,9 @@ namespace db {
         entity::SharedScope scope(const common::ID &id, bool searchInDepth = false) const override;
         entity::ScopesList  scopes() const override;
 
+    public slots:
+        void onScopeIDChanged(const common::ID &oldID, const common::ID &newID);
+
     protected:
         entity::SharedScope depthScopeSearch(const common::ID &id) const;
         virtual void copyFrom(const Database &src);
@@ -114,6 +120,8 @@ namespace db {
         entity::SharedScope getScopeWithDepthList(const IDList &ids) const;
         QString makeFullPath() const;
         void recursiveFind(entity::SharedScope scope, const common::ID &id, IDList &ids) const;
+
+        void connectScope(entity::Scope *scope, bool connect = true);
     };
 
 } // namespace db

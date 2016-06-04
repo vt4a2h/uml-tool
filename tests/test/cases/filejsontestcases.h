@@ -126,6 +126,9 @@ TEST_F(FileJson, TemplateClassJson)
             << "Locale type must be added.";
     class_->writeToFile(m_JsonFileName);
 
+    // Remove class to avoid clash
+    m_ProjectScope->removeType(class_->id());
+
     auto class_comp(m_ProjectScope->addType<entity::TemplateClass>("stub_name_1"));
     json_eq(class_, class_comp, "TemplateClass")
     ASSERT_TRUE(class_comp->readFromFile(m_JsonFileName));
@@ -144,20 +147,27 @@ TEST_F(FileJson, TemplateClassMethodJson)
             << "Locale type must be added.";
     method->writeToFile(m_JsonFileName);
 
+    // Remove method to avoid clash
+    class_->removeMethod(method);
+
     auto method_comp(class_->makeMethod<entity::TemplateClassMethod>("stub_name 1"));
     json_eq(method, method_comp, "TemplateClassMethod");
 }
 
 TEST_F(FileJson, ScopeJson)
 {
-    auto scope = m_ProjectDb->addScope("stub_scope_name", common::ID::nullID());
+    auto scope = m_ProjectDb->addScope("stub_scope_name");
     scope->addType("type");
     scope->addType("type_1");
     scope->addChildScope("scope");
     scope->addChildScope("scope_1");
     scope->writeToFile(m_JsonFileName);
 
-    auto scope_comp(std::make_shared<entity::Scope>());
+    // Remove scope to avoid clash
+    m_ProjectDb->removeScope(scope->id());
+
+    auto scope_comp = m_ProjectDb->addScope("another_scope_name");
+    scope_comp->readFromFile(m_JsonFileName);
     json_eq(scope, scope_comp, "Scope");
 }
 

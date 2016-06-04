@@ -26,6 +26,8 @@
 #include <memory>
 #include <map>
 
+#include <boost/range/algorithm/equal.hpp>
+
 #include <QFile>
 #include <QTextStream>
 #include <QJsonDocument>
@@ -133,16 +135,26 @@ namespace utility {
         dst = std::move(tmpList);
     }
 
+    template<class T>
+    inline bool sharedPtrEq(const std::shared_ptr<T> &lhs, const std::shared_ptr<T> &rhs)
+    {
+        // The same pointers
+        if (lhs == rhs || (!lhs && !rhs))
+            return true;
+
+        if (lhs && rhs)
+            return *lhs == *rhs;
+
+        return false;
+    }
+
     template <class Container>
     bool seqSharedPointerEq(const Container &lhs, const Container &rhs)
     {
-        if (lhs.size()  != rhs.size() ||
-            typeid(lhs) != typeid(lhs))
+        if (lhs.size() != rhs.size())
             return false;
 
-        using ValueType = decltype(*lhs.begin());
-        return std::equal(lhs.begin(), lhs.end(), rhs.begin(),
-                          [](const ValueType &r, const ValueType &l){ return r == l || *r == *l; });
+        return boost::range::equal(lhs, rhs, [](auto &&r, auto &&l){ return sharedPtrEq(l, r); });
     }
 
     // NOTE: maybe problems with unique id's
@@ -207,19 +219,6 @@ namespace utility {
                 }
             }
         }
-
-        return false;
-    }
-
-    template<class T>
-    inline bool sharedPtrEq(const std::shared_ptr<T> &lhs, const std::shared_ptr<T> &rhs)
-    {
-        // The same pointers
-        if (lhs == rhs || (!lhs && !rhs))
-            return true;
-
-        if (lhs && rhs)
-            return *lhs == *rhs;
 
         return false;
     }

@@ -35,7 +35,7 @@ namespace db {
     /**
      * @brief The ProjectDatabase class
      */
-    class ProjectDatabase : public QObject, public Database
+    class ProjectDatabase : public Database
     {
         Q_OBJECT
 

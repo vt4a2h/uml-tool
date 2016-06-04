@@ -392,8 +392,9 @@ namespace entity {
      */
     void Scope::onTypeIdChanged(const common::ID &oldID, const common::ID &newID)
     {
-        if (!m_Types.contains(newID) && m_Types.contains(oldID)) {
-            auto type = m_Types[oldID];
+        auto it = m_Types.find(oldID);
+        if (!m_Types.contains(newID) && it != m_Types.end()) {
+            auto type = *it;
             m_Types.remove(oldID);
 
             Q_ASSERT(type->id() == newID);
