@@ -485,12 +485,8 @@ namespace db {
 
         utility::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
             if (src["Scopes"].isArray()) {
-                entity::SharedScope scope;
-                for (auto &&val : src["Scopes"].toArray()) {
-                    auto obj = val.toObject();
-                    scope = addScope();
-                    scope->fromJson(obj, errorList);
-                }
+                for (auto &&val : src["Scopes"].toArray())
+                    addScope()->fromJson(val.toObject(), errorList);
             } else {
                 errorList << "Error: \"Scopes\" is not array";
             }

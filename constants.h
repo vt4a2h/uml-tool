@@ -32,7 +32,7 @@ namespace {
 
     static constexpr char* DEFAULT_NAME = (char*)"__noname";
     static constexpr char* DEFAULT_DESCRIPTION = (char*)"_nothing";
-    static constexpr char* BASE_TYPE_NAME= (char*)"type";
+    static constexpr char* BASE_TYPE_NAME= (char*)"Type";
 
     static constexpr char* DEFAULT_DATABASE_NAME = (char*)"_database";
     static constexpr char* DEFAULT_DATABASE_PATH = (char*)"";

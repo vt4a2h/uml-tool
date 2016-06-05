@@ -41,14 +41,14 @@ namespace entity {
     namespace {
         const QString kindOfTypeMark = "Kind of type";
         const QString graphicsDataMark = "Graphics entity data";
-        const QString defaultName = Type::tr("Type");
+        QString defaultName() { return Type::tr("Type"); }
     }
 
     /**
      * @brief Type::Type
      */
     Type::Type()
-        : Type(defaultName, common::ID::globalScopeID())
+        : Type(defaultName(), common::ID::globalScopeID())
     {
     }
 
