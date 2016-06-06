@@ -27,10 +27,9 @@
 
 #include <gtest/gtest.h>
 
-#include <project/Project.h>
-#include <project/project_types.hpp>
+#include "TestProjectBase.h"
 
-class Project : public ::testing::Test
+class Project : public ProjectBase
 {
 protected:
     virtual void SetUp() override
@@ -38,7 +37,7 @@ protected:
         rootPath_.append(sep_).append("tmp");
         QDir().mkpath(rootPath_);
 
-        project_ = std::make_shared<project::Project>("TstProject", rootPath_);
+        m_Project->setPath(rootPath_);
     }
 
     virtual void TearDown() override
@@ -48,5 +47,4 @@ protected:
 
     QString rootPath_ = QDir::current().path();
     QChar   sep_      = QDir(rootPath_).separator();
-    project::SharedProject project_;
 };

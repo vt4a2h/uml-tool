@@ -26,18 +26,26 @@
 
 TEST_F(Project, LoadSaveProject)
 {
-    project_->database()->addScope("foo")->addType("bar");
-    project_->save();
+    m_Project->database()->addScope("foo")->addType("bar");
+    m_Project->save();
 
-    EXPECT_TRUE(project_->isSaved())
+    EXPECT_TRUE(m_Project->isSaved())
             << "Project should be saved.";
 
-    project::SharedProject newProject(std::make_shared<project::Project>("no name here ", "no path here"));
-    newProject->load(rootPath_ + sep_ + project_->name().toLower().replace(" ", "_") + "." + PROJECT_FILE_EXTENTION);
+    auto oldProject = m_Project;
 
-    EXPECT_TRUE(newProject->isSaved())
+    setProject(std::make_shared<project::Project>("no name here ", "no path here"));
+    m_Project->load(rootPath_ + sep_ + oldProject->name().toLower().replace(" ", "_") +
+                    "." + PROJECT_FILE_EXTENTION);
+
+    EXPECT_TRUE(m_Project->isSaved())
             << "Project should be saved.";
 
-    EXPECT_EQ(*project_, *newProject)
+    // We should increase id for old project, because it was increased twice in the loaded project
+    // once for "foo" and once for "bar"
+    oldProject->genID();
+    oldProject->genID();
+
+    EXPECT_EQ(*oldProject, *m_Project)
             << "Saved and loaded projects must be equal";
 }

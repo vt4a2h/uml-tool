@@ -50,22 +50,10 @@ protected:
         m_GlobalDb->load(errors);
         Q_ASSERT(errors.isEmpty());
 
-        m_Project = std::make_shared<project::Project>();
-
-        // Usually special slot is used for that
-        const_cast<helpers::GeneratorID&>(helpers::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
-        m_ProjectDb = m_Project->database();
-
-        m_ProjectScope = m_ProjectDb->scope(common::ID::projectScopeID());
-        ASSERT_TRUE(!!m_ProjectScope);
-
         m_GlobalScope = m_GlobalDb->scope(common::ID::globalScopeID());
         ASSERT_TRUE(!!m_GlobalScope);
 
-        m_Project->setGlobalDatabase(m_GlobalDb);
-
-        initFactory(entity::EntityFactory::instance());
-        initFactory(relationship::RelationFactory::instance());
+        setProject(std::make_shared<project::Project>());
     }
 
     void initFactory(const common::ElementsFactory &factory)
@@ -74,6 +62,23 @@ protected:
         ef.setGlobalDatabase(m_GlobalDb);
         ef.onProjectChanged(m_Project);
         ef.setTreeModel(m_fakeTreeModel);
+    }
+
+    void setProject(const project::SharedProject &pr)
+    {
+        m_Project = pr;
+
+        // Usually special slot is used for that
+        const_cast<helpers::GeneratorID&>(helpers::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
+        m_ProjectDb = m_Project->database();
+
+        m_ProjectScope = m_ProjectDb->scope(common::ID::projectScopeID());
+        ASSERT_TRUE(!!m_ProjectScope);
+
+        m_Project->setGlobalDatabase(m_GlobalDb);
+
+        initFactory(entity::EntityFactory::instance());
+        initFactory(relationship::RelationFactory::instance());
     }
 
     db::SharedDatabase m_GlobalDb;
