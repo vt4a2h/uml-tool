@@ -21,7 +21,7 @@
 **
 *****************************************************************************/
 #include "MainWindow.h"
-#include "ui_mainwindow.h"
+#include "ui_MainWindow.h"
 
 #include <QVBoxLayout>
 #include <QSplitter>
@@ -439,7 +439,8 @@ namespace gui {
         bool state = !!m_ApplicationModel->currentProject();
 
         ui->actionCreateScope->setEnabled(state);
-        ui->actionSaveProject->setEnabled(state && !m_ApplicationModel->currentProject()->isSaved() );
+        ui->actionSaveProject->setEnabled(state && !m_ApplicationModel->currentProject()->isSaved());
+        ui->actionCloseProject->setEnabled(state);
 
         project::Project const * pr = m_ApplicationModel->currentProject().get();
         ui->actionRedo->setEnabled(pr && pr->commandsStack()->canRedo());

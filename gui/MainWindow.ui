@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>30</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -59,6 +59,7 @@
     <addaction name="actionNewProject"/>
     <addaction name="actionOpenProject"/>
     <addaction name="actionSaveProject"/>
+    <addaction name="actionCloseProject"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -133,7 +134,7 @@
   </action>
   <action name="actionSaveProject">
    <property name="text">
-    <string>&amp;Save Project</string>
+    <string>&amp;Save Active Project</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -323,6 +324,17 @@
    </property>
    <property name="toolTip">
     <string>Add composition relation</string>
+   </property>
+  </action>
+  <action name="actionCloseProject">
+   <property name="text">
+    <string>&amp;Close Active Project</string>
+   </property>
+   <property name="toolTip">
+    <string>Close current project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+X</string>
    </property>
   </action>
  </widget>

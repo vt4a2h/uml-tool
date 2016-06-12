@@ -188,14 +188,14 @@ HEADERS += \
     entity/TemplateClassMethod.h
 
 FORMS += \
-    gui/mainwindow.ui \
     gui/about.ui \
     gui/newproject.ui \
     gui/addscope.ui \
     gui/editentitydialog.ui \
     gui/editmethoddialog.ui \
     gui/chooseglobaldatabasedialog.ui \
-    gui/elements.ui
+    gui/elements.ui \
+    gui/MainWindow.ui
 
 RESOURCES += \
     gui/main.qrc
