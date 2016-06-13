@@ -54,6 +54,7 @@ namespace models {
         Q_OBJECT
 
     public:
+        BasicTreeItem();
         BasicTreeItem(const QVariant &entity, const TreeItemType &type,
                       BasicTreeItem *parentNode = nullptr, QObject * parent = nullptr);
         BasicTreeItem(const BasicTreeItem &src);
@@ -63,6 +64,7 @@ namespace models {
         BasicTreeItem &operator =(BasicTreeItem rhs);
         BasicTreeItem &operator =(BasicTreeItem &&rhs);
         friend bool operator ==(const BasicTreeItem &lhs, const BasicTreeItem &rhs);
+        friend bool operator <(const BasicTreeItem &lhs, const BasicTreeItem &rhs);
 
         void appendChild(BasicTreeItem *child);
         BasicTreeItem *makeChild(const QVariant &entity, const TreeItemType &type);
@@ -72,7 +74,7 @@ namespace models {
         int rowForItem(BasicTreeItem * item) const;
         ChildItems childrenItems() const;
 
-        int childCount() const;
+        int childCount(bool recursive = false) const;
         int columnCount() const;
 
         QVariant name() const;
@@ -88,6 +90,8 @@ namespace models {
 
         TreeItemType type() const;
         void setType(const TreeItemType &type);
+
+        void clear();
 
         const static int maxColumnCount = 1;
 
@@ -106,3 +110,4 @@ namespace models {
 } // namespace models
 
 Q_DECLARE_METATYPE(models::TreeItemType)
+Q_DECLARE_METATYPE(models::BasicTreeItem)

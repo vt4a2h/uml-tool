@@ -41,8 +41,6 @@ SOURCES += \
     gui/chooseglobaldatabasedialog.cpp \
     gui/componentseditdelegate.cpp \
     gui/signatureeditdelegate.cpp \
-    models/basictreeitem.cpp \
-    models/applicationmodel.cpp \
     models/componentsmodel.cpp \
     commands/createscope.cpp \
     commands/basecommand.cpp \
@@ -86,7 +84,9 @@ SOURCES += \
     entity/Property.cpp \
     entity/Template.cpp \
     entity/ClassMethod.cpp \
-    entity/TemplateClassMethod.cpp
+    entity/TemplateClassMethod.cpp \
+    models/ApplicationModel.cpp \
+    models/BasicTreeItem.cpp
 
 HEADERS += \
     enums.h \
@@ -127,8 +127,6 @@ HEADERS += \
     gui/chooseglobaldatabasedialog.h \
     gui/componentseditdelegate.h \
     gui/signatureeditdelegate.h \
-    models/basictreeitem.h \
-    models/applicationmodel.h \
     models/models_types.hpp \
     models/componentsmodel.h \
     commands/createscope.h \
@@ -185,7 +183,9 @@ HEADERS += \
     db/ITypeSearcher.h \
     entity/Template.h \
     entity/ClassMethod.h \
-    entity/TemplateClassMethod.h
+    entity/TemplateClassMethod.h \
+    models/ApplicationModel.h \
+    models/BasicTreeItem.h
 
 FORMS += \
     gui/about.ui \

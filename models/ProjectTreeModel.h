@@ -28,7 +28,7 @@
 #include <project/project_types.hpp>
 #include <common/common_types.h>
 
-#include "basictreeitem.h"
+#include "BasicTreeItem.h"
 
 namespace models {
 
@@ -55,6 +55,7 @@ namespace models {
         bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
         void addProject(const project::SharedProject &pr);
+        void removeProject(const project::SharedProject &pr);
 
         void addScope(const entity::SharedScope &scope, const QString &projectName);
         void removeScope(const common::ID &scopeId, const QString &projectName);
@@ -72,8 +73,8 @@ namespace models {
         void update(BasicTreeItem *item);
         void observeItemChanging(common::BasicElement * entity, BasicTreeItem *item);
 
-        mutable QList<BasicTreeItem> m_Items; // TODO: store as pointers
-        project::SharedProject m_Project;
+        mutable QList<BasicTreeItem> m_Projects; // TODO: store as pointers
+        project::SharedProject m_CurrentProject;
     };
 
 } // namespace models

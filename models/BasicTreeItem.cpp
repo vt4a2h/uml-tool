@@ -20,9 +20,12 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "basictreeitem.h"
+#include "BasicTreeItem.h"
 
 #include <functional>
+
+#include <boost/range/numeric.hpp>
+#include <boost/range/algorithm/find_if.hpp>
 
 #include <QHash>
 #include <QIcon>
@@ -49,6 +52,11 @@ namespace models {
      * @param data
      * @param parent
      */
+    BasicTreeItem::BasicTreeItem()
+        : BasicTreeItem(QVariant(), TreeItemType::StubItem, nullptr, nullptr)
+    {
+    }
+
     BasicTreeItem::BasicTreeItem(const QVariant &entity, const TreeItemType &type,
                                  BasicTreeItem *parentNode, QObject *parent)
         : QObject(parent)
@@ -56,6 +64,10 @@ namespace models {
         , m_Type(type)
         , m_Parent(parentNode)
     {
+        static int t = qRegisterMetaType<models::BasicTreeItem>("models::BasicTreeItem");
+        static bool c = QMetaType::registerComparators<models::BasicTreeItem>();
+        Q_UNUSED(t);
+        Q_UNUSED(c);
     }
 
     /**
@@ -104,7 +116,7 @@ namespace models {
      */
     BasicTreeItem::~BasicTreeItem()
     {
-        qDeleteAll(m_Children);
+        clear();
     }
 
     /**
@@ -130,6 +142,19 @@ namespace models {
             moveFrom(rhs);
 
         return *this;
+    }
+
+    /**
+     * @brief operator < Required to register comparators for QVariant. Mustn't ever be invoked.
+     *                   This operator is meaningless for this type.
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator <(const BasicTreeItem &lhs, const BasicTreeItem &rhs)
+    {
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Shouldn't be invoked because it's meaningless.");
+        return int(lhs.m_Type) < int(rhs.m_Type);
     }
 
     /**
@@ -166,11 +191,8 @@ namespace models {
      */
     BasicTreeItem *BasicTreeItem::itemById(const QVariant &id) const
     {
-        for(auto &&item : m_Children)
-            if (item->id() == id)
-                return item;
-
-        return nullptr;
+        auto it = boost::range::find_if(m_Children, [&](auto &&item){ return item->id() == id; });
+        return it != m_Children.end() ? *it : nullptr;
     }
 
     /**
@@ -180,7 +202,12 @@ namespace models {
      */
     bool BasicTreeItem::removeChild(BasicTreeItem *child)
     {
-        return m_Children.removeOne(child);
+        if (m_Children.removeOne(child)) {
+            delete child;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -206,9 +233,11 @@ namespace models {
      * @brief BasicTreeItem::childCount
      * @return
      */
-    int BasicTreeItem::childCount() const
+    int BasicTreeItem::childCount(bool recursive) const
     {
-        return m_Children.count();
+        return recursive ? boost::accumulate(m_Children, m_Children.count(),
+                                             [](int r, auto &&c) { return r + c->childCount(true); })
+                         : m_Children.count();
     }
 
     /**
@@ -345,6 +374,14 @@ namespace models {
     void BasicTreeItem::setType(const TreeItemType &itemType)
     {
         m_Type = itemType;
+    }
+
+    /**
+     * @brief BasicTreeItem::clear
+     */
+    void BasicTreeItem::clear()
+    {
+        qDeleteAll(m_Children);
     }
 
     /**

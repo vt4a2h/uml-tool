@@ -35,7 +35,7 @@
 #include <entity/ClassMethod.h> // TODO: remove
 #include <entity/components/componentsmaker.h>
 
-#include <models/applicationmodel.h>
+#include <models/ApplicationModel.h>
 #include <models/componentsmodel.h>
 
 #include <project/Project.h>

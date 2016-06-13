@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "createscope.h"
 
-#include <models/applicationmodel.h>
+#include <models/ApplicationModel.h>
 
 #include "constants.h"
 

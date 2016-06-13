@@ -32,7 +32,7 @@
 #include <db/Database.h>
 #include <db/db_types.hpp>
 
-#include <models/applicationmodel.h>
+#include <models/ApplicationModel.h>
 #include <models/models_types.hpp>
 
 #include <gui/gui_types.hpp>

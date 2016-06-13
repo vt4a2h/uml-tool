@@ -86,6 +86,7 @@ namespace gui {
         void onNewProject();
         void onOpenProject();
         void onSaveProject();
+        void onCloseProject();
 
         void createNewProject(const QString &name, const QString &path);
         void createScope(const QString &name);

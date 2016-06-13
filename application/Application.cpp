@@ -29,7 +29,7 @@
 #include <gui/MainWindow.h>
 #include <gui/chooseglobaldatabasedialog.h>
 
-#include <models/applicationmodel.h>
+#include <models/ApplicationModel.h>
 
 #include <helpers/generatorid.h>
 

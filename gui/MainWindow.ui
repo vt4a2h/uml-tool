@@ -438,6 +438,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionCloseProject</sender>
+   <signal>triggered()</signal>
+   <receiver>gui::MainWindow</receiver>
+   <slot>onCloseProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onAbout()</slot>
@@ -452,5 +468,6 @@
   <slot>onAddClass()</slot>
   <slot>onAddTemplate()</slot>
   <slot>onMakeRelation()</slot>
+  <slot>onCloseProject()</slot>
  </slots>
 </ui>

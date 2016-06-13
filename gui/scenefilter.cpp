@@ -28,7 +28,7 @@
 #include <QGraphicsView>
 #include <QGraphicsSceneContextMenuEvent>
 
-#include <models/applicationmodel.h>
+#include <models/ApplicationModel.h>
 
 #include "graphics/Entity.h"
 #include "editentitydialog.h"

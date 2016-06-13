@@ -25,7 +25,7 @@
 #include <entity/Type.h>
 #include <entity/Scope.h>
 
-#include <models/applicationmodel.h>
+#include <models/ApplicationModel.h>
 
 namespace commands {
 

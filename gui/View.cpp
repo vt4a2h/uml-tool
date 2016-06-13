@@ -30,7 +30,7 @@
 #include <project/Project.h>
 #include <db/ProjectDatabase.h>
 #include <commands/CreateEntity.h>
-#include <models/applicationmodel.h>
+#include <models/ApplicationModel.h>
 
 #include "Elements.h"
 #include "qthelpers.h"

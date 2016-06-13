@@ -140,7 +140,7 @@ namespace models {
         BasicTreeItem *parentItem =
             parent.isValid() ? static_cast<BasicTreeItem*>(parent.internalPointer()) : nullptr;
         BasicTreeItem *childItem  =
-            parentItem ? parentItem->child(row) : &m_Items[row];
+            parentItem ? parentItem->child(row) : &m_Projects[row];
 
         return childItem ? createIndex(row, column, childItem) : QModelIndex();
     }
@@ -171,7 +171,7 @@ namespace models {
         if (parent.column() > 0)
             return 0;
 
-        return !parent.isValid() ? m_Items.count()
+        return !parent.isValid() ? m_Projects.count()
                                  : static_cast<BasicTreeItem*>(parent.internalPointer())->childCount();
     }
 
@@ -203,11 +203,11 @@ namespace models {
             for (int i = row; i <= row + count; ++i)
                 result = item->removeChild(item->child(i));
         } else {
-            if (m_Items.size() < row) {
-                auto it = std::find(m_Items.begin(), m_Items.end(), m_Items.at(row));
+            if (m_Projects.size() < row) {
+                auto it = std::find(m_Projects.begin(), m_Projects.end(), m_Projects.at(row));
 
-                if (it != m_Items.end()) {
-                    m_Items.erase(it, it + count);
+                if (it != m_Projects.end()) {
+                    m_Projects.erase(it, it + count);
                     result = true;
                 }
             } else {
@@ -226,8 +226,25 @@ namespace models {
      */
     void ProjectTreeModel::addProject(const project::SharedProject &pr)
     {
-        m_Project = pr;
+        m_CurrentProject = pr;
         addProjectItem(pr);
+    }
+
+    /**
+     * @brief ProjectTreeModel::removeProject
+     * @param pr
+     */
+    void ProjectTreeModel::removeProject(const project::SharedProject &pr)
+    {
+        if (pr) {
+            auto it = boost::range::find_if(
+                          m_Projects, [&](auto &&p) { return p.id().toString() == pr->name(); });
+            if (it != m_Projects.end()) {
+                // TODO: begin/end remove rows
+                // TODO: m_Projects should be pointers
+                it->clear();
+            }
+        }
     }
 
     /**
@@ -332,11 +349,11 @@ namespace models {
     void ProjectTreeModel::addProjectItem(const project::SharedProject &pr)
     {
         beginInsertRows(QModelIndex(), rowCount(), rowCount() + 1);
-        m_Items << BasicTreeItem(QVariant::fromValue(pr), TreeItemType::ProjectItem);
+        m_Projects << BasicTreeItem(QVariant::fromValue(pr), TreeItemType::ProjectItem);
         endInsertRows();
 
         db::SharedProjectDatabase database = pr->database();
-        auto projectItem = &m_Items.last();
+        auto projectItem = &m_Projects.last();
         for (auto &&scope : database->scopes()) {
             auto scopeItem = addItem(QVariant::fromValue(scope), projectItem, TreeItemType::ScopeItem);
             observeItemChanging(scope.get(), scopeItem);
@@ -367,7 +384,7 @@ namespace models {
      */
     int ProjectTreeModel::indexOf(const BasicTreeItem *parent)
     {
-        return m_Items.indexOf(*parent);
+        return m_Projects.indexOf(*parent);
     }
 
     /**
@@ -387,8 +404,8 @@ namespace models {
      */
     const BasicTreeItem *ProjectTreeModel::find(const QVariant &id) const
     {
-        auto projectIt = range::find_if(m_Items, [&](auto &&item){ return item.id() == id; });
-        return projectIt != m_Items.cend() ? &*projectIt : nullptr;
+        auto projectIt = range::find_if(m_Projects, [&](auto &&item){ return item.id() == id; });
+        return projectIt != m_Projects.cend() ? &*projectIt : nullptr;
     }
 
     /**
@@ -429,10 +446,10 @@ namespace models {
 
     void ProjectTreeModel::observeItemChanging(common::BasicElement * entity, BasicTreeItem *item)
     {
-        Q_ASSERT(m_Project);
+        Q_ASSERT(m_CurrentProject);
 
         connect(entity, &common::BasicElement::nameChanged, [=]{ update(item); });
-        connect(entity, &common::BasicElement::nameChanged, m_Project.get(), &project::Project::touch);
+        connect(entity, &common::BasicElement::nameChanged, m_CurrentProject.get(), &project::Project::touch);
     }
 
 } // namespace models

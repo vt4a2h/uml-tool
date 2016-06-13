@@ -45,7 +45,7 @@
 
 #include <application/settings.h>
 
-#include <models/applicationmodel.h>
+#include <models/ApplicationModel.h>
 #include <models/ProjectTreeModel.h>
 
 #include <project/Project.h>
@@ -212,6 +212,16 @@ namespace gui {
                 currentPtoject->save();
         } else {
             QMessageBox::information(this, tr("Information"), tr("Nothing to save."), QMessageBox::Ok);
+        }
+    }
+
+    /**
+     * @brief MainWindow::onCloseProject
+     */
+    void MainWindow::onCloseProject()
+    {
+        if (m_ApplicationModel && m_ApplicationModel->currentProject()) {
+//            m_ApplicationModel->
         }
     }
 

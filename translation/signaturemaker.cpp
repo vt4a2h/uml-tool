@@ -28,7 +28,7 @@
 #include <entity/ExtendedType.h>
 #include <entity/Property.h>
 
-#include <models/applicationmodel.h>
+#include <models/ApplicationModel.h>
 
 #include <utility/helpfunctions.h>
 

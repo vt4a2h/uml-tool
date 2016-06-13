@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "applicationmodel.h"
+#include "ApplicationModel.h"
 
 #include <entity/Type.h>
 #include <entity/Class.h>

@@ -31,7 +31,7 @@
 #include <entity/Property.h>
 #include <entity/components/componentsignatureparser.h>
 
-#include <models/applicationmodel.h>
+#include <models/ApplicationModel.h>
 
 #include <utility/helpfunctions.h>
 
