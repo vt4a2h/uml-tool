@@ -221,7 +221,7 @@ namespace gui {
     void MainWindow::onCloseProject()
     {
         if (m_ApplicationModel && m_ApplicationModel->currentProject()) {
-//            m_ApplicationModel->
+            m_ApplicationModel->removeProject(m_ApplicationModel->currentProject()->name());
         }
     }
 

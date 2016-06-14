@@ -114,8 +114,13 @@ namespace models {
      */
     bool ApplicationModel::removeProject(const QString &name)
     {
-        // FIXME: remove from tree model
-        return !!m_Projects.remove(name);
+        auto it = m_Projects.find(name);
+        if (it != m_Projects.end()) {
+            m_TreeModel->removeProject(*it);
+            return !!m_Projects.remove(name);
+        }
+
+        return false;
     }
 
     /**

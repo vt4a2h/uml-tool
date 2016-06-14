@@ -240,9 +240,12 @@ namespace models {
             auto it = boost::range::find_if(
                           m_Projects, [&](auto &&p) { return p.id().toString() == pr->name(); });
             if (it != m_Projects.end()) {
-                // TODO: begin/end remove rows
-                // TODO: m_Projects should be pointers
-                it->clear();
+                auto index = m_Projects.indexOf(*it);
+                beginRemoveRows(QModelIndex(), index, index);
+
+                m_Projects.erase(it);
+
+                endRemoveRows();
             }
         }
     }
