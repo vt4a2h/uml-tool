@@ -22,7 +22,7 @@ script:
    - make -j4
    
    # get and build gtest
-   - wget https://googletest.googlecode.com/files/gtest-1.7.0.zip
+   - wget https://github.com/google/googletest/archive/release-1.8.0.zip
    - unzip gtest-1.7.0.zip
    - cd gtest-1.7.0/ 
    - ./configure CXX=g++-6 CXXFLAGS=-std=c++1y 
