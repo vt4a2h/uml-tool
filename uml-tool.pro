@@ -5,8 +5,8 @@ CONFIG += core gui c++14
 QT += widgets
 
 linux-g++ {
-    message(********** Building with gcc 5 **********)
-    QMAKE_CXX = g++-5
+    message(********** Building with gcc 6 **********)
+    QMAKE_CXX = g++-6
     QMAKE_CXXFLAGS *= -std=gnu++1y
 }
 

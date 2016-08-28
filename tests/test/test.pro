@@ -1,22 +1,23 @@
 TEMPLATE = app
 
-CONFIG += core gui c++14
+CONFIG += console core gui thread c++14
+CONFIG -= app_bundle
 
 QT += widgets
 
 LIBS += -lgtest -lpthread
 
 linux-g++ {
-    message(********** Building with gcc 5 **********)
-    QMAKE_CXX = g++-5
-    QMAKE_CXXFLAGS *= -std=c++1y
+    message(********** Building with gcc 6 **********)
+    QMAKE_CXX = g++-6
+    QMAKE_CXXFLAGS += -std=gnu++1y
 
     equals(WITH_COV, "TRUE") {
         message(********** Collecting test coverage **********)
-        QMAKE_CXX = gcc-5
-        QMAKE_LINK = gcc-5
+        QMAKE_CXX = gcc-6
+        QMAKE_LINK = gcc-6
         QMAKE_LFLAGS *= -lstdc++ --coverage
-        QMAKE_CXXFLAGS *= -std=c++1y -g --coverage
+        QMAKE_CXXFLAGS *= -std=gnu++1z -g --coverage
     }
 }
 

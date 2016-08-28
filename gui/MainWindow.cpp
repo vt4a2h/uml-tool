@@ -299,8 +299,19 @@ namespace gui {
     }
 
     /**
-     * @brief MainWindow::makeElemnts
+     * @brief MainWindow::makeMenu
      */
+    void MainWindow::makeMenu()
+    {
+        auto a = m_ProjectTreeMenu->addAction("&Make active");
+        a->setIcon(QIcon(":/icons/pic/icon_accept_edit_dialog.png"));
+        G_CONNECT(a, &QAction::triggered, this, &MainWindow::setCurrentProjectViaMenu);
+
+        a = m_ProjectTreeMenu->addAction("&Remove");
+        a->setIcon(QIcon(":/icons/pic/icon_component_delete.png"));
+        G_CONNECT(a, &QAction::triggered, this, &MainWindow::onRemoveActivated);
+    }
+
     void MainWindow::setUpWidgets()
     {
         // Canvas
@@ -312,12 +323,12 @@ namespace gui {
         m_ProjectTreeView->setIndentation(treeViewIndent);
         m_ProjectTreeView->setIconSize(iconSize());
         m_ProjectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
+        m_ProjectTreeView->setSelectionMode(QAbstractItemView::MultiSelection);
         m_ProjectTreeView->setModel(m_ApplicationModel->treeModel().get());
         addDock(tr("Projects"), ui->actionProjectsDockWidget, Qt::LeftDockWidgetArea, m_ProjectTreeView);
 
         // Project context menu
-        auto a = m_ProjectTreeMenu->addAction("Make active");
-        connect(a, &QAction::triggered, this, &MainWindow::setCurrentProjectViaMenu);
+        makeMenu();
 
         // Add drag-and-drop entities
         addDock(tr("Elements"), ui->actionElementsDockWidget, Qt::LeftDockWidgetArea, m_Elements);
@@ -438,6 +449,23 @@ namespace gui {
         if (index.isValid() && data.canConvert<project::SharedProject>()) {
            setCurrentProject(index.data(models::ProjectTreeModel::ID).toString());
            update();
+        }
+    }
+
+    /**
+     * @brief MainWindow::onRemoveProject
+     * @param projectName
+     */
+    void MainWindow::onRemoveActivated()
+    {
+        if (auto selectionModel = m_ProjectTreeView->selectionModel()) {
+            // TODO: think about selection model (select only projects, or project and items)
+            // TODO: show/hide some menu items depends on selection
+            // TODO: add command to remove project
+            // TODO: intellectual remove (don't remove all sub-items if parent removed)
+            for (auto && index : selectionModel->selectedIndexes()) {
+                // Perform actions
+            }
         }
     }
 

@@ -94,6 +94,7 @@ namespace gui {
 
         void onProjectTreeMenu(const QPoint &p);
         void setCurrentProjectViaMenu();
+        void onRemoveActivated();
 
         void updateWindowState();
 
@@ -112,6 +113,8 @@ namespace gui {
 
         void readSettings();
         void writeSettings();
+
+        void makeMenu();
 
         void addDock(const QString &name, QAction * action, Qt::DockWidgetArea area, QWidget * widget,
                      bool visible = true);
