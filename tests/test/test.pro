@@ -10,14 +10,14 @@ LIBS += -lgtest -lpthread
 linux-g++ {
     message(********** Building with gcc 6 **********)
     QMAKE_CXX = g++-6
-    QMAKE_CXXFLAGS += -std=gnu++1y
+    QMAKE_CXXFLAGS *= -std=gnu++1y
 
     equals(WITH_COV, "TRUE") {
         message(********** Collecting test coverage **********)
         QMAKE_CXX = gcc-6
         QMAKE_LINK = gcc-6
         QMAKE_LFLAGS *= -lstdc++ --coverage
-        QMAKE_CXXFLAGS *= -std=gnu++1z -g --coverage
+        QMAKE_CXXFLAGS *= -std=gnu++1y -g --coverage
     }
 }
 
