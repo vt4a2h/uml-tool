@@ -20,18 +20,33 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#ifndef COMMANDS_REMOVEPROJECT_H
-#define COMMANDS_REMOVEPROJECT_H
+#pragma once
 
+#include <models/ApplicationModel.h>
+
+#include <gui/graphics/graphics_types.h>
+
+#include "BaseCommand.h"
 
 namespace commands {
 
     class RemoveProject : public BaseCommand
     {
     public:
-        RemoveProject();
+        RemoveProject(const project::SharedProject &p, const models::SharedApplicationModel &a);
+
+    public: // QUndoCommand overridies
+        void undo() override;
+        void redo() override;
+
+    public: // BaseCommand overridies
+        void cleanup() override;
+
+    public: // Data
+        project::SharedProject m_Project;
+        models::SharedApplicationModel m_AppModel;
+
+        graphics::GraphicItems m_GraphicItems;
     };
 
 } // namespace commands
-
-#endif // COMMANDS_REMOVEPROJECT_H

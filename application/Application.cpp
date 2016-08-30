@@ -57,8 +57,6 @@ namespace application {
         QStringList errors;
         db->load(errors);
 
-        db->save();
-
         if (!errors.isEmpty()) {
             QMessageBox::warning(m_MainWindow.get(), tr("Problems with loading global database"), errors.join("\n"),
                                  QMessageBox::Ok);
