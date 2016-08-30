@@ -28,7 +28,7 @@
 
 #include <gui/graphics/graphics_types.h>
 
-#include "basecommand.h"
+#include "BaseCommand.h"
 
 namespace commands {
 
@@ -44,8 +44,6 @@ namespace commands {
         void cleanup() override;
 
     private:
-        bool m_CleaningRequired = false;
-
         entity::KindOfType m_KindOfType;
         common::ID         m_ScopeID;
         QPointF            m_Pos;

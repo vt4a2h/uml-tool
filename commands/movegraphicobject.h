@@ -23,7 +23,7 @@
 #pragma once
 
 #include <QPointF>
-#include "basecommand.h"
+#include "BaseCommand.h"
 
 class QGraphicsItem;
 

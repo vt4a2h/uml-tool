@@ -26,7 +26,7 @@
 
 #include <models/models_types.hpp>
 
-#include "basecommand.h"
+#include "BaseCommand.h"
 
 namespace commands {
 

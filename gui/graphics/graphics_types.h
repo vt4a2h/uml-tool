@@ -26,6 +26,10 @@
 
 #include <QPointer>
 
+QT_BEGIN_NAMESPACE
+class QGraphicsItem;
+QT_END_NAMESPACE
+
 namespace common { class ID; }
 
 namespace graphics {
@@ -33,12 +37,16 @@ namespace graphics {
     class Entity;
     using EntityPtr = QPointer<Entity>;
     using EntityHashMap = QHash<common::ID, EntityPtr>;
+    using EntityVector = QVector<EntityPtr>;
 
     class Relation;
     using RelationPtr = QPointer<Relation>;
     using UniqueGraphicRelation = std::unique_ptr<Relation>;
     using GraphicRelationPtr = QPointer<Relation>;
     using RelationHashMap = QHash<common::ID, RelationPtr>;
+    using RelationVector = QVector<GraphicRelationPtr>;
+
+    using GraphicItems = QList<QGraphicsItem*>;
 
 } // namespace graphics
 

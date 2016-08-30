@@ -23,6 +23,8 @@
 
 #include "ProjectDatabase.h"
 
+#include <boost/range/algorithm/transform.hpp>
+
 #include <QJsonObject>
 #include <QJsonArray>
 
@@ -200,6 +202,15 @@ namespace db {
     }
 
     /**
+     * @brief ProjectDatabase::graphicRelations
+     * @return
+     */
+    graphics::RelationVector ProjectDatabase::graphicsRelations() const
+    {
+        return m_GraphicsRelations.values().toVector();
+    }
+
+    /**
      * @brief ProjectDatabase::graphicsEntity
      * @param id
      * @return
@@ -231,6 +242,31 @@ namespace db {
             m_GraphicsEntities.remove(e->id());
             emit graphicsEntityUnregistred(e);
         }
+    }
+
+    /**
+     * @brief ProjectDatabase::graphicEntities
+     * @return
+     */
+    graphics::EntityVector ProjectDatabase::graphicsEntities() const
+    {
+        return m_GraphicsEntities.values().toVector();
+    }
+
+    /**
+     * @brief ProjectDatabase::graphicsItems
+     * @return
+     */
+    graphics::GraphicItems ProjectDatabase::graphicsItems() const
+    {
+        graphics::GraphicItems result;
+        result.reserve(m_GraphicsEntities.size() + m_GraphicsRelations.size());
+        boost::range::transform(m_GraphicsEntities, std::back_inserter(result),
+                                [](auto &&e) { return e.data(); });
+        boost::range::transform(m_GraphicsRelations, std::back_inserter(result),
+                                [](auto &&e) { return e.data(); });
+
+        return result;
     }
 
     /**

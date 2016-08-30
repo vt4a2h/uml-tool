@@ -24,7 +24,7 @@
 
 #include <functional>
 
-#include "basecommand.h"
+#include "BaseCommand.h"
 
 #include <models/componentsmodel.h>
 #include <models/models_types.hpp>

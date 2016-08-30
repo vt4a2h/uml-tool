@@ -435,7 +435,7 @@ namespace gui {
     {
         QModelIndex index = m_ProjectTreeView->indexAt(p);
         QVariant data = index.data(models::ProjectTreeModel::SharedData);
-        if (index.isValid() && data.canConvert<project::SharedProject>()) // NOTE: temporary
+        if (index.isValid() && data.canConvert<project::SharedProject>())
             m_ProjectTreeMenu->exec(m_ProjectTreeView->mapToGlobal(p));
     }
 

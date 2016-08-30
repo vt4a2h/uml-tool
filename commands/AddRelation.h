@@ -30,7 +30,7 @@
 
 #include <relationship/relationship_types.hpp>
 
-#include "basecommand.h"
+#include "BaseCommand.h"
 #include "enums.h"
 
 class QGraphicsScene;

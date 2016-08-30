@@ -90,7 +90,7 @@ namespace commands {
     void CreateEntity::redo()
     {
         if (m_Done) {
-
+            // ERROR: investigate, why is empty?!
         } else {
             auto &&factory = entity::EntityFactory::instance();
 

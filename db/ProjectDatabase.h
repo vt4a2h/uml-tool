@@ -58,10 +58,14 @@ namespace db {
         graphics::RelationPtr graphicRelation(const common::ID &id) const;
         void registerGraphicsRelation(const graphics::RelationPtr &r);
         void unregisterGraphicsRelation(const graphics::RelationPtr &r);
+        graphics::RelationVector graphicsRelations() const;
 
         graphics::EntityPtr graphicsEntity(const common::ID &id) const;
         void registerGraphicsEntity(const graphics::EntityPtr &e);
         void unregisterGraphicsEntity(const graphics::EntityPtr &e);
+        graphics::EntityVector graphicsEntities() const;
+
+        graphics::GraphicItems graphicsItems() const;
 
         db::SharedDatabase globalDatabase() const;
         void setGlobalDatabase(const db::SharedDatabase &globalDatabase);

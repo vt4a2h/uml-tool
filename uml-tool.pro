@@ -43,7 +43,6 @@ SOURCES += \
     gui/signatureeditdelegate.cpp \
     models/componentsmodel.cpp \
     commands/createscope.cpp \
-    commands/basecommand.cpp \
     commands/movegraphicobject.cpp \
     commands/renameentity.cpp \
     commands/movetypetootherscope.cpp \
@@ -86,7 +85,9 @@ SOURCES += \
     entity/ClassMethod.cpp \
     entity/TemplateClassMethod.cpp \
     models/ApplicationModel.cpp \
-    models/BasicTreeItem.cpp
+    models/BasicTreeItem.cpp \
+    commands/RemoveProject.cpp \
+    commands/BaseCommand.cpp
 
 HEADERS += \
     enums.h \
@@ -130,7 +131,6 @@ HEADERS += \
     models/models_types.hpp \
     models/componentsmodel.h \
     commands/createscope.h \
-    commands/basecommand.h \
     commands/movegraphicobject.h \
     commands/renameentity.h \
     commands/movetypetootherscope.h \
@@ -185,7 +185,9 @@ HEADERS += \
     entity/ClassMethod.h \
     entity/TemplateClassMethod.h \
     models/ApplicationModel.h \
-    models/BasicTreeItem.h
+    models/BasicTreeItem.h \
+    commands/RemoveProject.h \
+    commands/BaseCommand.h
 
 FORMS += \
     gui/about.ui \

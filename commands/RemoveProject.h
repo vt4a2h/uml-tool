@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 24/03/2015.
+** Created 30/08/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,33 +20,18 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#pragma once
+#ifndef COMMANDS_REMOVEPROJECT_H
+#define COMMANDS_REMOVEPROJECT_H
 
-#include "BaseCommand.h"
 
-#include <entity/entity_types.hpp>
-
-namespace models {
-    class ApplicationModel;
-}
-
-/// namespace commands
 namespace commands {
 
-    /// The CreateScope class
-    class CreateScope : public BaseCommand
+    class RemoveProject : public BaseCommand
     {
     public:
-        CreateScope(const QString &name, models::ApplicationModel &model,
-                    QUndoCommand *parent = nullptr);
-
-        void redo() override;
-        void undo() override;
-
-    private:
-        QString m_ScopeName;
-        entity::SharedScope m_NewScope;
-        models::ApplicationModel &m_Model;
+        RemoveProject();
     };
 
 } // namespace commands
+
+#endif // COMMANDS_REMOVEPROJECT_H

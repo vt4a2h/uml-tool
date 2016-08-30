@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "basecommand.h"
+#include "BaseCommand.h"
 
 namespace commands {
 
@@ -40,7 +40,6 @@ namespace commands {
      */
     BaseCommand::BaseCommand(const QString &text, BaseCommand::QUndoCommand *parent)
         : QUndoCommand(text, parent)
-        , m_Done(false)
     {
     }
 

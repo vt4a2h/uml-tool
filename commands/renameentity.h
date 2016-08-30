@@ -24,7 +24,7 @@
 
 #include <common/common_types.h>
 
-#include "basecommand.h"
+#include "BaseCommand.h"
 
 namespace commands
 {

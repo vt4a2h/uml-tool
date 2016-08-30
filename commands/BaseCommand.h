@@ -41,7 +41,8 @@ namespace commands {
     protected:
         virtual void cleanup() {}
 
-        bool m_Done; // do first time -- false, redo -- true
+        bool m_CleaningRequired = false;
+        bool m_Done = false; // do first time -- false, redo -- true
     };
 
 } // namespace commands
