@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 30/08/2016.
+** Created 31/08/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,35 +20,46 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#pragma once
-
-#include <models/ApplicationModel.h>
-
-#include <gui/graphics/graphics_types.h>
-
-#include "BaseCommand.h"
+#include "MakeProjectCurrent.h"
 
 namespace commands {
 
-    class RemoveProject : public BaseCommand
+    /**
+     * @brief MakeProjectCurrent::MakeProjectCurrent
+     * @param projectName
+     * @param model
+     */
+    MakeProjectCurrent::MakeProjectCurrent(const QString &projectName,
+                                           const models::SharedApplicationModel &model)
+        : m_AppModel(model)
+        , m_ProjectName(name)
     {
-    public:
-        RemoveProject(const project::SharedProject &p, const models::SharedApplicationModel &a);
+    }
 
-    public: // QUndoCommand overridies
-        void undo() override;
-        void redo() override;
+    /**
+     * @brief MakeProjectCurrent::undo
+     */
+    void MakeProjectCurrent::undo()
+    {
+        sanityCheck();
 
-    public: // BaseCommand overridies
-        void cleanup() override;
-        void sanityCheck() override;
+        G_ASSERT(m_AppModel->setCurrentProject(m_PreviousProjectName));
+    }
 
-    private: // Data
-        project::SharedProject m_Project;
-        models::SharedApplicationModel m_AppModel;
+    /**
+     * @brief MakeProjectCurrent::redo
+     */
+    void MakeProjectCurrent::redo()
+    {
+        if (!m_Done)
+        {
+            if (auto p = m_AppModel->currentProject())
+                m_PreviousProjectName = p->name();
 
-        graphics::GraphicItems m_GraphicItems;
-        bool m_WasCurrent = false;
-    };
+            m_Done = true;
+        }
+
+        G_ASSERT(m_AppModel->setCurrentProject(m_ProjectName));
+    }
 
 } // namespace commands

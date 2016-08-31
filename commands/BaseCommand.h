@@ -39,7 +39,10 @@ namespace commands {
         ~BaseCommand() override;
 
     protected:
+        /// Perform some cleanups in destructor
         virtual void cleanup() {}
+        /// Perform checking objects state
+        virtual void sanityCheck() {}
 
         bool m_CleaningRequired = false;
         bool m_Done = false; // do first time -- false, redo -- true

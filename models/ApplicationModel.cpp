@@ -236,13 +236,23 @@ namespace models {
      */
     bool ApplicationModel::setCurrentProject(const QString &name)
     {
-        if (!m_Projects.contains(name))
+        if (name.isEmpty()) {
+            m_CurrentProject.reset();
+            emit currentProjectChanged(nullptr);
+            return true;
+        }
+
+        auto it = m_Projects.find(name);
+        if (it == m_Projects.end())
             return false;
 
-        m_CurrentProject = m_Projects[name];
-        emit currentProjectChanged(m_CurrentProject);
+        if (*it != m_CurrentProject) {
+            m_CurrentProject = *it;
+            emit currentProjectChanged(m_CurrentProject);
+            return true;
+        }
 
-        return true;
+        return false;
     }
 
     /**

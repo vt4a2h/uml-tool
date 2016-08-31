@@ -25,6 +25,7 @@
 #include <QGraphicsScene>
 
 #include <boost/range/algorithm/for_each.hpp>
+#include <boost/range/algorithm/equal.hpp>
 
 #include <gui/graphics/GraphicsRelation.h>
 #include <gui/graphics/Entity.h>
@@ -38,8 +39,8 @@ namespace commands {
      */
     RemoveProject::RemoveProject(const project::SharedProject &p,
                                  const models::SharedApplicationModel &a)
-        : m_Project(p)
-        , m_AppModel(a)
+        : m_Project(G_ASSERT(p))
+        , m_AppModel(G_ASSERT(a))
     {
     }
 
@@ -49,7 +50,9 @@ namespace commands {
     void RemoveProject::undo()
     {
         m_AppModel->addProject(m_Project);
-        // TODO: add commad to make project curent
+
+        if (m_WasCurrent)
+            m_AppModel->setCurrentProject(m_Project);
     }
 
     /**
@@ -57,9 +60,22 @@ namespace commands {
      */
     void RemoveProject::redo()
     {
-        G_ASSERT(m_AppModel)->removeProject(G_ASSERT(m_Project)->name());
-        m_GraphicItems = m_Project->database()->graphicsItems();
+        if (!m_Done) {
+            G_ASSERT(m_AppModel)->removeProject(G_ASSERT(m_Project)->name());
+            m_GraphicItems = m_Project->database()->graphicsItems();
+            m_Done = true;
+        }
+
+        sanityCheck();
+
+        // Clean scene
         boost::range::for_each(m_GraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
+
+        if (m_AppModel->currentProject() == m_Project) {
+            // Reset current project
+            m_AppModel->setCurrentProject("");
+            m_WasCurrent = true;
+        }
 
         m_CleaningRequired = true;
     }
@@ -71,6 +87,15 @@ namespace commands {
     {
         if (m_CleaningRequired)
             qDeleteAll(m_GraphicItems);
+    }
+
+    /**
+     * @brief RemoveProject::sanityCheck
+     */
+    void RemoveProject::sanityCheck()
+    {
+        Q_ASSERT_X(boost::range::equal(m_Project->database()->graphicsItems(), m_GraphicItems),
+                   Q_FUNC_INFO, "Project is in the inconsistent state.");
     }
 
 } // namespace commands

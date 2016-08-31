@@ -87,7 +87,8 @@ SOURCES += \
     models/ApplicationModel.cpp \
     models/BasicTreeItem.cpp \
     commands/RemoveProject.cpp \
-    commands/BaseCommand.cpp
+    commands/BaseCommand.cpp \
+    commands/MakeProjectCurrent.cpp
 
 HEADERS += \
     enums.h \
@@ -134,7 +135,6 @@ HEADERS += \
     commands/movegraphicobject.h \
     commands/renameentity.h \
     commands/movetypetootherscope.h \
-    commands/commands_types.hpp \
     commands/removecomponentscommands.h \
     commands/addcomponentscommands.h \
     project/project_types.hpp \
@@ -187,7 +187,9 @@ HEADERS += \
     models/ApplicationModel.h \
     models/BasicTreeItem.h \
     commands/RemoveProject.h \
-    commands/BaseCommand.h
+    commands/BaseCommand.h \
+    commands/CommandsTypes.h \
+    commands/MakeProjectCurrent.h
 
 FORMS += \
     gui/about.ui \

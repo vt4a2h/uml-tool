@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 30/08/2016.
+** Created 10/05/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,33 +22,13 @@
 *****************************************************************************/
 #pragma once
 
-#include <models/ApplicationModel.h>
-
-#include <gui/graphics/graphics_types.h>
-
-#include "BaseCommand.h"
+#include <memory>
 
 namespace commands {
 
-    class RemoveProject : public BaseCommand
-    {
-    public:
-        RemoveProject(const project::SharedProject &p, const models::SharedApplicationModel &a);
-
-    public: // QUndoCommand overridies
-        void undo() override;
-        void redo() override;
-
-    public: // BaseCommand overridies
-        void cleanup() override;
-        void sanityCheck() override;
-
-    private: // Data
-        project::SharedProject m_Project;
-        models::SharedApplicationModel m_AppModel;
-
-        graphics::GraphicItems m_GraphicItems;
-        bool m_WasCurrent = false;
-    };
+    class BaseCommand;
+    using UniqueCommand = std::unique_ptr<BaseCommand>;
+    using SharedCommand = std::shared_ptr<BaseCommand>;
 
 } // namespace commands
+

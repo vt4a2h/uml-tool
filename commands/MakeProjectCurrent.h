@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 10/05/2015.
+** Created 31/08/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,11 +22,25 @@
 *****************************************************************************/
 #pragma once
 
-#include <memory>
+#include <models/ApplicationModel.h>
+
+#include "BaseCommand.h"
 
 namespace commands {
-    class BaseCommand;
-    using UniqueCommand = std::unique_ptr<BaseCommand>;
-    using SharedCommand = std::shared_ptr<BaseCommand>;
-}
 
+    class MakeProjectCurrent : public BaseCommand
+    {
+    public:
+        MakeProjectCurrent(const QString &projectName, const models::SharedApplicationModel &model);
+
+    public: // QUndoCommand overridies
+        void undo() override;
+        void redo() override;
+
+    private:
+        models::SharedApplicationModel m_AppModel;
+        QString m_ProjectName;
+        QString m_PreviousProjectName;
+    };
+
+} // namespace commands
