@@ -52,7 +52,7 @@ namespace commands {
         m_AppModel->addProject(m_Project);
 
         if (m_WasCurrent)
-            m_AppModel->setCurrentProject(m_Project);
+            m_AppModel->setCurrentProject(m_Project->name());
     }
 
     /**

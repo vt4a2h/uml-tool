@@ -23,6 +23,7 @@
 #include "ProjectTreeModel.h"
 
 #include <QPixmap>
+#include <QFont>
 #include <QDebug>
 
 #include <boost/range/algorithm/find_if.hpp>
@@ -73,6 +74,8 @@ namespace models {
 
         QVariant result;
         BasicTreeItem *item = static_cast<BasicTreeItem*>(index.internalPointer());
+        if (!item)
+            return result;
 
         switch (role) {
             case Qt::DisplayRole:
@@ -82,6 +85,19 @@ namespace models {
             case Qt::DecorationRole:
                 result = QPixmap(item->iconPath());
                 break;
+
+            case Qt::FontRole:
+            {
+                if (item->type() == TreeItemType::ProjectItem) {
+                    if (m_CurrentProject && item->name() == m_CurrentProject->name()) {
+                        QFont f;
+                        f.setBold(true);
+                        result = f;
+                    }
+                }
+
+                break;
+            }
 
             case SharedData:
                 result = item->entity();

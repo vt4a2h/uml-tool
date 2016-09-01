@@ -21,6 +21,7 @@
 **
 *****************************************************************************/
 #include "MakeProjectCurrent.h"
+#include <QStringBuilder>
 
 namespace commands {
 
@@ -31,8 +32,9 @@ namespace commands {
      */
     MakeProjectCurrent::MakeProjectCurrent(const QString &projectName,
                                            const models::SharedApplicationModel &model)
-        : m_AppModel(model)
-        , m_ProjectName(name)
+        : BaseCommand("Activate project -- " % projectName)
+        , m_AppModel(model)
+        , m_ProjectName(projectName)
     {
     }
 

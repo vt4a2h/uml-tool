@@ -25,6 +25,7 @@
 #include <QMainWindow>
 
 #include <models/models_types.hpp>
+#include <project/project_types.hpp>
 
 class QSplitter;
 class QHBoxLayout;
@@ -93,13 +94,14 @@ namespace gui {
         void makeTitle();
 
         void onProjectTreeMenu(const QPoint &p);
-        void setCurrentProjectViaMenu();
+        void changeProjectStatus();
         void onRemoveActivated();
 
         void updateWindowState();
 
         void onRelationActionToggled(bool checked);
-        void setCurrentProject(const QString &name);
+        void onCurrentProjectChanged(const project::SharedProject &previous,
+                                     const project::SharedProject &current);
         void onRelationCompleted();
 
     private:
@@ -123,6 +125,7 @@ namespace gui {
         std::unique_ptr<graphics::Scene> m_MainScene;
 
         QMenu *m_ProjectTreeMenu;
+        QAction *m_ChangeProjectStatusAction;
 
         QTreeView      *m_ProjectTreeView;
         View           *m_MainView;

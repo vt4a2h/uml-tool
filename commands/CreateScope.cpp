@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "createscope.h"
+#include "CreateScope.h"
 
 #include <models/ApplicationModel.h>
 

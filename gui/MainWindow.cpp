@@ -55,8 +55,9 @@
 
 #include <entity/Type.h>
 
-#include <commands/createscope.h>
+#include <commands/CreateScope.h>
 #include <commands/CreateEntity.h>
+#include <commands/MakeProjectCurrent.h>
 
 #include "about.h"
 #include "newproject.h"
@@ -188,17 +189,14 @@ namespace gui {
                 );
         } else {
             if (m_ApplicationModel->addProject(newProject))
-            {
-                setCurrentProject(newProject->name());
-                update();
-            } else {
+                commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel).redo();
+            else
                 QMessageBox::information
                     ( this
                     , tr("Q-UML - Information")
                     , tr("Project \"%1\" already exists.").arg(newProject->name())
                     , QMessageBox::Ok
                     );
-            }
         }
     }
 
@@ -283,7 +281,7 @@ namespace gui {
         }
 
         auto newProject = m_ApplicationModel->makeProject( name, path );
-        setCurrentProject(newProject->name());
+        commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel).redo();
         newProject->save();
     }
 
@@ -303,11 +301,12 @@ namespace gui {
      */
     void MainWindow::makeMenu()
     {
-        auto a = m_ProjectTreeMenu->addAction("&Make active");
-        a->setIcon(QIcon(":/icons/pic/icon_accept_edit_dialog.png"));
-        G_CONNECT(a, &QAction::triggered, this, &MainWindow::setCurrentProjectViaMenu);
+        m_ChangeProjectStatusAction = m_ProjectTreeMenu->addAction("&Make active");
+        m_ChangeProjectStatusAction->setIcon(QIcon(":/icons/pic/icon_accept_edit_dialog.png"));
+        G_CONNECT(m_ChangeProjectStatusAction, &QAction::triggered,
+                  this, &MainWindow::changeProjectStatus);
 
-        a = m_ProjectTreeMenu->addAction("&Remove");
+        auto a = m_ProjectTreeMenu->addAction("&Remove");
         a->setIcon(QIcon(":/icons/pic/icon_component_delete.png"));
         G_CONNECT(a, &QAction::triggered, this, &MainWindow::onRemoveActivated);
     }
@@ -369,6 +368,8 @@ namespace gui {
                   this, &MainWindow::onProjectTreeMenu);
         G_CONNECT(m_NewProjectDialog, &NewProjectDialog::newProject,
                   this, &MainWindow::createNewProject);
+        G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
+                  this, &MainWindow::onCurrentProjectChanged);
         G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
                   m_MainScene.get(), &graphics::Scene::onProjectChanged);
         G_CONNECT(m_MainScene.get(), &graphics::Scene::relationCompleted,
@@ -436,19 +437,28 @@ namespace gui {
         QModelIndex index = m_ProjectTreeView->indexAt(p);
         QVariant data = index.data(models::ProjectTreeModel::SharedData);
         if (index.isValid() && data.canConvert<project::SharedProject>())
+        {
+            bool isCurrentProject =
+                data.value<project::SharedProject>() == m_ApplicationModel->currentProject();
+            m_ChangeProjectStatusAction->setText(isCurrentProject ? tr("Deactivate") : tr("Activate"));
             m_ProjectTreeMenu->exec(m_ProjectTreeView->mapToGlobal(p));
+        }
     }
 
     /**
      * @brief MainWindow::setCurrentProject
      */
-    void MainWindow::setCurrentProjectViaMenu()
+    void MainWindow::changeProjectStatus()
     {
         QModelIndex index = m_ProjectTreeView->selectionModel()->currentIndex();
         QVariant data = index.data(models::ProjectTreeModel::SharedData);
         if (index.isValid() && data.canConvert<project::SharedProject>()) {
-           setCurrentProject(index.data(models::ProjectTreeModel::ID).toString());
-           update();
+            auto name = index.data(models::ProjectTreeModel::ID).toString();
+            if (auto project = m_ApplicationModel->project(name))
+            {
+                auto cmd = std::make_unique<commands::MakeProjectCurrent>(name, m_ApplicationModel);
+                project->commandsStack()->push(cmd.release());
+            }
         }
     }
 
@@ -506,36 +516,44 @@ namespace gui {
     }
 
     /**
-     * @brief MainWindow::setCurrentProject
-     * @param id
+     * @brief MainWindow::onCurrentProjectChanged
+     * @param previous
+     * @param current
      */
-    void MainWindow::setCurrentProject(const QString &name)
+    void MainWindow::onCurrentProjectChanged(const project::SharedProject &previous,
+                                             const project::SharedProject &current)
     {
-        if (auto &&pr = m_ApplicationModel->currentProject().get())
+        if (previous)
         {
-            disconnect(pr, &project::Project::saved, this, &MainWindow::update);
-            disconnect(pr, &project::Project::modified, this, &MainWindow::update);
+            G_DISCONNECT(previous.get(), &project::Project::saved, this, &MainWindow::update);
+            G_DISCONNECT(previous.get(), &project::Project::modified, this, &MainWindow::update);
 
-            disconnect(pr->commandsStack(), &QUndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
-            disconnect(pr->commandsStack(), &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
-            disconnect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &QUndoStack::redo);
-            disconnect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &QUndoStack::undo);
+            G_DISCONNECT(previous->commandsStack(), &QUndoStack::canRedoChanged,
+                         ui->actionRedo, &QAction::setEnabled);
+            G_DISCONNECT(previous->commandsStack(), &QUndoStack::canUndoChanged,
+                         ui->actionUndo, &QAction::setEnabled);
+            G_DISCONNECT(ui->actionRedo, &QAction::triggered,
+                         previous->commandsStack(), &QUndoStack::redo);
+            G_DISCONNECT(ui->actionUndo, &QAction::triggered,
+                         previous->commandsStack(), &QUndoStack::undo);
         }
 
-        if (m_ApplicationModel->setCurrentProject(name)) {
-            auto &&pr = m_ApplicationModel->currentProject().get();
+        if (current) {
+            G_CONNECT(current.get(), &project::Project::saved, this, &MainWindow::update);
+            G_CONNECT(current.get(), &project::Project::modified, this, &MainWindow::update);
 
-            connect(pr, &project::Project::saved, this, &MainWindow::update);
-            connect(pr, &project::Project::modified, this, &MainWindow::update);
-
-            m_UndoView->setStack(pr->commandsStack());
-            connect(pr->commandsStack(), &QUndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
-            connect(pr->commandsStack(), &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
-            connect(ui->actionRedo, &QAction::triggered, pr->commandsStack(), &QUndoStack::redo);
-            connect(ui->actionUndo, &QAction::triggered, pr->commandsStack(), &QUndoStack::undo);
-        } else {
-            qWarning() << QString("Current project with id %1 is not found.").arg(name);
+            m_UndoView->setStack(current->commandsStack());
+            G_CONNECT(current->commandsStack(), &QUndoStack::canRedoChanged,
+                      ui->actionRedo, &QAction::setEnabled);
+            G_CONNECT(current->commandsStack(), &QUndoStack::canUndoChanged,
+                      ui->actionUndo, &QAction::setEnabled);
+            G_CONNECT(ui->actionRedo, &QAction::triggered,
+                      current->commandsStack(), &QUndoStack::redo);
+            G_CONNECT(ui->actionUndo, &QAction::triggered,
+                      current->commandsStack(), &QUndoStack::undo);
         }
+
+        update();
     }
 
     /**

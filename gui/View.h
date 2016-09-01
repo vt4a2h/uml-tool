@@ -47,7 +47,8 @@ namespace gui {
         void dragLeaveEvent(QDragLeaveEvent *de) override;
 
     public slots:
-        void onCurrentProjectChanged(const project::SharedProject &p);
+        void onCurrentProjectChanged(const project::SharedProject &previous,
+                                     const project::SharedProject &current);
 
     private:
         project::SharedProject project() const;

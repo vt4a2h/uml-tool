@@ -237,8 +237,9 @@ namespace models {
     bool ApplicationModel::setCurrentProject(const QString &name)
     {
         if (name.isEmpty()) {
+            auto previous = m_CurrentProject;
             m_CurrentProject.reset();
-            emit currentProjectChanged(nullptr);
+            emit currentProjectChanged(previous, nullptr);
             return true;
         }
 
@@ -247,8 +248,9 @@ namespace models {
             return false;
 
         if (*it != m_CurrentProject) {
+            auto previous = m_CurrentProject;
             m_CurrentProject = *it;
-            emit currentProjectChanged(m_CurrentProject);
+            emit currentProjectChanged(previous, m_CurrentProject);
             return true;
         }
 

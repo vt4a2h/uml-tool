@@ -107,9 +107,10 @@ namespace gui {
      * @brief View::onCurrentProjectChanged
      * @param p
      */
-    void View::onCurrentProjectChanged(const project::SharedProject &p)
+    void View::onCurrentProjectChanged(const project::SharedProject &,
+                                       const project::SharedProject &current)
     {
-        m_Project = p;
+        m_Project = current;
     }
 
     /**
