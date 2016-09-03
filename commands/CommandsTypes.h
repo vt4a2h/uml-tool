@@ -24,11 +24,17 @@
 
 #include <memory>
 
+QT_BEGIN_NAMESPACE
+class QUndoStack;
+QT_END_NAMESPACE
+
 namespace commands {
 
     class BaseCommand;
     using UniqueCommand = std::unique_ptr<BaseCommand>;
     using SharedCommand = std::shared_ptr<BaseCommand>;
+
+    using SharedCommandStack = std::shared_ptr<QUndoStack>;
 
 } // namespace commands
 

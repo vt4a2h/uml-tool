@@ -26,6 +26,7 @@
 
 #include <models/models_types.hpp>
 #include <project/project_types.hpp>
+#include <commands/CommandsTypes.h>
 
 class QSplitter;
 class QHBoxLayout;
@@ -140,6 +141,7 @@ namespace gui {
         QList<QAction*> m_RelationActions;
 
         models::SharedApplicationModel m_ApplicationModel;
+        commands::SharedCommandStack m_CommandsStack;
     };
 
 } // namespace gui

@@ -44,6 +44,8 @@ namespace db {
         ProjectDatabase(const ProjectDatabase &src);
         ProjectDatabase(const QString &name = "", const QString &path = "");
 
+        ~ProjectDatabase() override;
+
         friend bool operator ==(const ProjectDatabase &lhs, const ProjectDatabase &rhs);
 
         ProjectDatabase &operator =(ProjectDatabase &&rhs);
@@ -95,6 +97,9 @@ namespace db {
                                      const common::ID &parentScopeId = common::ID::nullID()) override;
         entity::SharedScope addExistsScope(const entity::SharedScope &scope) override;
 
+        bool getClearGraphics() const;
+        void setClearGraphics(bool clear);
+
     protected:
         virtual void copyFrom(const ProjectDatabase &src);
         virtual void moveFrom(ProjectDatabase &src);
@@ -105,6 +110,7 @@ namespace db {
         relationship::Relations m_Relations;
         graphics::EntityHashMap m_GraphicsEntities;
         graphics::RelationHashMap m_GraphicsRelations;
+        bool m_ClearGraphics = false;
 
         db::SharedDatabase m_GlobalDatabase;
     };

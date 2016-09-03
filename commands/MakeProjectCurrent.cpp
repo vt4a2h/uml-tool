@@ -21,9 +21,17 @@
 **
 *****************************************************************************/
 #include "MakeProjectCurrent.h"
+
+#include <boost/range/algorithm/equal.hpp>
+#include <boost/range/algorithm/for_each.hpp>
+
 #include <QStringBuilder>
+#include <QGraphicsScene>
+#include <QGraphicsItem>
 
 namespace commands {
+
+    using namespace boost::range;
 
     /**
      * @brief MakeProjectCurrent::MakeProjectCurrent
@@ -34,7 +42,7 @@ namespace commands {
                                            const models::SharedApplicationModel &model)
         : BaseCommand("Activate project -- " % projectName)
         , m_AppModel(model)
-        , m_ProjectName(projectName)
+        , m_CurrentProjectName(projectName)
     {
     }
 
@@ -45,7 +53,9 @@ namespace commands {
     {
         sanityCheck();
 
+        for_each(m_CurrentGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
         G_ASSERT(m_AppModel->setCurrentProject(m_PreviousProjectName));
+        for_each(m_PreviousGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->addItem(i); });
     }
 
     /**
@@ -56,12 +66,36 @@ namespace commands {
         if (!m_Done)
         {
             if (auto p = m_AppModel->currentProject())
+            {
                 m_PreviousProjectName = p->name();
+                m_PreviousGraphicItems = p->database()->graphicsItems();
+            }
+
+            if (auto p = m_AppModel->project(m_CurrentProjectName))
+                m_CurrentGraphicItems = p->database()->graphicsItems();
 
             m_Done = true;
         }
 
-        G_ASSERT(m_AppModel->setCurrentProject(m_ProjectName));
+        sanityCheck();
+
+        for_each(m_PreviousGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
+        G_ASSERT(m_AppModel->setCurrentProject(m_CurrentProjectName));
+        for_each(m_CurrentGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->addItem(i); });
+    }
+
+    /**
+     * @brief MakeProjectCurrent::sanityCheck
+     */
+    void MakeProjectCurrent::sanityCheck()
+    {
+        if (auto p = m_AppModel->project(m_CurrentProjectName))
+            Q_ASSERT_X(equal(p->database()->graphicsItems(), m_CurrentGraphicItems),
+                       Q_FUNC_INFO, "Current project is in the inconsistent state.");
+
+        if (auto p = m_AppModel->project(m_PreviousProjectName))
+            Q_ASSERT_X(equal(p->database()->graphicsItems(), m_PreviousGraphicItems),
+                       Q_FUNC_INFO, "Previous project is in the inconsistent state.");
     }
 
 } // namespace commands

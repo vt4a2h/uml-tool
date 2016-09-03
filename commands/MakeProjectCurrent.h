@@ -38,9 +38,15 @@ namespace commands {
         void redo() override;
 
     private:
+        void sanityCheck() override;
+
         models::SharedApplicationModel m_AppModel;
-        QString m_ProjectName;
+
+        QString m_CurrentProjectName;
         QString m_PreviousProjectName;
+
+        graphics::GraphicItems m_CurrentGraphicItems;
+        graphics::GraphicItems m_PreviousGraphicItems;
     };
 
 } // namespace commands

@@ -39,6 +39,8 @@ namespace models {
         , m_GlobalDatabase(std::make_shared<db::Database>())
         , m_TreeModel(std::make_shared<ProjectTreeModel>())
     {
+        G_CONNECT(this, &ApplicationModel::currentProjectChanged,
+                  m_TreeModel.get(), &ProjectTreeModel::onCurrentProjectChanged);
     }
 
     /**
@@ -238,7 +240,11 @@ namespace models {
     {
         if (name.isEmpty()) {
             auto previous = m_CurrentProject;
+            if (previous)
+                previous->database()->setClearGraphics(true);
+
             m_CurrentProject.reset();
+
             emit currentProjectChanged(previous, nullptr);
             return true;
         }
@@ -249,7 +255,13 @@ namespace models {
 
         if (*it != m_CurrentProject) {
             auto previous = m_CurrentProject;
+            if (previous)
+                previous->database()->setClearGraphics(true);
+
             m_CurrentProject = *it;
+            if (m_CurrentProject)
+                m_CurrentProject->database()->setClearGraphics(false);
+
             emit currentProjectChanged(previous, m_CurrentProject);
             return true;
         }

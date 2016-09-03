@@ -65,13 +65,17 @@ namespace models {
         void removeType(const QString &projectName, const common::ID &scopeID,
                         const common::ID &typeID);
 
+    public slots:
+        void onCurrentProjectChanged(const project::SharedProject &previous,
+                                     const project::SharedProject &current);
+
     private:
         void addProjectItem(const project::SharedProject &pr);
         int indexOf(const BasicTreeItem *parent);
         BasicTreeItem *find(const QVariant &id);
         const BasicTreeItem *find(const QVariant &id) const;
         void update(BasicTreeItem *item);
-        void observeItemChanging(common::BasicElement * entity, BasicTreeItem *item);
+        void observeItemChanging(const project::SharedProject &p, common::BasicElement * entity, BasicTreeItem *item);
 
         mutable QList<BasicTreeItem> m_Projects; // TODO: store as pointers
         project::SharedProject m_CurrentProject;

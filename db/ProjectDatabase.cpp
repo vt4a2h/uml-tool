@@ -76,6 +76,15 @@ namespace db {
     }
 
     /**
+     * @brief ProjectDatabase::~ProjectDatabase
+     */
+    ProjectDatabase::~ProjectDatabase()
+    {
+        if (m_ClearGraphics)
+            qDeleteAll(graphicsEntities());
+    }
+
+    /**
      * @brief operator ==
      * @param lhs
      * @param rhs
@@ -420,6 +429,24 @@ namespace db {
                 if (c->hashType() == entity::Class::staticHashType())
                     for (auto &&p : c->properties())
                         p->setTypeSearcher(globalDatabase());
+    }
+
+    /**
+     * @brief ProjectDatabase::getClearGraphics
+     * @return
+     */
+    bool ProjectDatabase::getClearGraphics() const
+    {
+        return m_ClearGraphics;
+    }
+
+    /**
+     * @brief ProjectDatabase::setClearGraphics
+     * @param clear
+     */
+    void ProjectDatabase::setClearGraphics(bool clear)
+    {
+        m_ClearGraphics = clear;
     }
 
     /**

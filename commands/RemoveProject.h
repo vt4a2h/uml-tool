@@ -40,7 +40,6 @@ namespace commands {
         void redo() override;
 
     public: // BaseCommand overridies
-        void cleanup() override;
         void sanityCheck() override;
 
     private: // Data

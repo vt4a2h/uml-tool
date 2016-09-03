@@ -32,6 +32,8 @@
 
 namespace commands {
 
+    using namespace boost::range;
+
     /**
      * @brief RemoveProject::RemoveProject
      * @param p
@@ -49,7 +51,8 @@ namespace commands {
      */
     void RemoveProject::undo()
     {
-        m_AppModel->addProject(m_Project);
+        G_ASSERT(m_AppModel->addProject(m_Project));
+        for_each(m_GraphicItems, [](auto &&i) { G_ASSERT(i->scene())->addItem(i); });
 
         if (m_WasCurrent)
             m_AppModel->setCurrentProject(m_Project->name());
@@ -69,24 +72,13 @@ namespace commands {
         sanityCheck();
 
         // Clean scene
-        boost::range::for_each(m_GraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
+        for_each(m_GraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
 
         if (m_AppModel->currentProject() == m_Project) {
             // Reset current project
             m_AppModel->setCurrentProject("");
             m_WasCurrent = true;
         }
-
-        m_CleaningRequired = true;
-    }
-
-    /**
-     * @brief RemoveProject::cleanup
-     */
-    void RemoveProject::cleanup()
-    {
-        if (m_CleaningRequired)
-            qDeleteAll(m_GraphicItems);
     }
 
     /**
@@ -94,7 +86,7 @@ namespace commands {
      */
     void RemoveProject::sanityCheck()
     {
-        Q_ASSERT_X(boost::range::equal(m_Project->database()->graphicsItems(), m_GraphicItems),
+        Q_ASSERT_X(equal(m_Project->database()->graphicsItems(), m_GraphicItems),
                    Q_FUNC_INFO, "Project is in the inconsistent state.");
     }
 

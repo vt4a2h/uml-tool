@@ -27,7 +27,6 @@
 #include <QFile>
 #include <QJsonObject>
 #include <QDebug>
-#include <QUndoStack>
 
 #include <common/BasicElement.h>
 
@@ -80,7 +79,6 @@ namespace project {
         , m_nextUniqueID(common::ID::firstFreeID().value())
         , m_SaveStatus(false)
         , m_Database(std::make_shared<db::ProjectDatabase>())
-        , m_CommandsStack(std::make_unique<QUndoStack>())
     {
         m_Database->addExistsScope(makeProjectScope());
 
@@ -314,24 +312,6 @@ namespace project {
     }
 
     /**
-     * @brief Project::commandsStack
-     * @return
-     */
-    QUndoStack *Project::commandsStack()
-    {
-        return m_CommandsStack.get();
-    }
-
-    /**
-     * @brief Project::commandsStack
-     * @return
-     */
-    const QUndoStack *Project::commandsStack() const
-    {
-        return m_CommandsStack.get();
-    }
-
-    /**
      * @brief Project::genID
      * @return
      */
@@ -421,9 +401,9 @@ namespace project {
         G_CONNECT(e, &graphics::Entity::yChanged, this, &project::Project::touch);
         G_CONNECT(e, &graphics::Entity::moved,
                   [this, e = e](const QPointF &from, const QPointF &to) {
-                           auto cmd = std::make_unique<commands::MoveGraphicObject>(
-                           *e, G_ASSERT(e->typeObject())->name(), from, to);
-                           G_ASSERT(commandsStack())->push(cmd.release());
+                      auto cmd = std::make_unique<commands::MoveGraphicObject>(
+                                     *e, G_ASSERT(e->typeObject())->name(), from, to);
+                      G_ASSERT(commandsStack())->push(cmd.release());
         });
     }
 
@@ -478,6 +458,24 @@ namespace project {
                   this, &Project::onGraphicsEntityRegistred);
         G_CONNECT(m_Database.get(), &db::ProjectDatabase::graphicsEntityUnregistred,
                   this, &Project::onGraphicsEntityUnregistred);
+    }
+
+    /**
+     * @brief Project::CommandsStack
+     * @return
+     */
+    commands::SharedCommandStack Project::commandsStack() const
+    {
+        return m_CommandsStack;
+    }
+
+    /**
+     * @brief Project::setCommandsStack
+     * @param commandsStack
+     */
+    void Project::setCommandsStack(const commands::SharedCommandStack &commandsStack)
+    {
+        m_CommandsStack = commandsStack;
     }
 
     /**

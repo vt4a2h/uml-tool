@@ -101,6 +101,7 @@ namespace gui {
         , m_NewProjectDialog(new NewProjectDialog(this))
         , m_AddScope(new AddScope(this))
         , m_ApplicationModel(applicationModel)
+        , m_CommandsStack(std::make_shared<QUndoStack>())
     {
         ui->setupUi(this);
 
@@ -136,6 +137,7 @@ namespace gui {
     {
         makeTitle();
         updateWindowState();
+        m_ProjectTreeView->update();
     }
 
     /**
@@ -188,8 +190,9 @@ namespace gui {
                 , QMessageBox::Ok
                 );
         } else {
+            newProject->setCommandsStack(m_CommandsStack);
             if (m_ApplicationModel->addProject(newProject))
-                commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel).redo();
+                m_ApplicationModel->setCurrentProject(newProject->name());
             else
                 QMessageBox::information
                     ( this
@@ -280,7 +283,8 @@ namespace gui {
             }
         }
 
-        auto newProject = m_ApplicationModel->makeProject( name, path );
+        auto newProject = m_ApplicationModel->makeProject(name, path);
+        newProject->setCommandsStack(m_CommandsStack);
         commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel).redo();
         newProject->save();
     }
@@ -322,7 +326,7 @@ namespace gui {
         m_ProjectTreeView->setIndentation(treeViewIndent);
         m_ProjectTreeView->setIconSize(iconSize());
         m_ProjectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
-        m_ProjectTreeView->setSelectionMode(QAbstractItemView::MultiSelection);
+        m_ProjectTreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
         m_ProjectTreeView->setModel(m_ApplicationModel->treeModel().get());
         addDock(tr("Projects"), ui->actionProjectsDockWidget, Qt::LeftDockWidgetArea, m_ProjectTreeView);
 
@@ -374,6 +378,16 @@ namespace gui {
                   m_MainScene.get(), &graphics::Scene::onProjectChanged);
         G_CONNECT(m_MainScene.get(), &graphics::Scene::relationCompleted,
                   this, &MainWindow::onRelationCompleted);
+
+        m_UndoView->setStack(m_CommandsStack.get());
+        G_CONNECT(m_CommandsStack.get(), &QUndoStack::canRedoChanged,
+                  ui->actionRedo, &QAction::setEnabled);
+        G_CONNECT(m_CommandsStack.get(), &QUndoStack::canUndoChanged,
+                  ui->actionUndo, &QAction::setEnabled);
+        G_CONNECT(ui->actionRedo, &QAction::triggered,
+                  m_CommandsStack.get(), &QUndoStack::redo);
+        G_CONNECT(ui->actionUndo, &QAction::triggered,
+                  m_CommandsStack.get(), &QUndoStack::undo);
 
         for (auto &&a : m_RelationActions) {
             G_CONNECT(a, &QAction::toggled, this, &MainWindow::onRelationActionToggled);
@@ -456,6 +470,12 @@ namespace gui {
             auto name = index.data(models::ProjectTreeModel::ID).toString();
             if (auto project = m_ApplicationModel->project(name))
             {
+                // TODO: properly handle app state if there is no active projects!!!
+
+                // Check if we nned to unset project
+                if (m_ApplicationModel->currentProject() == project)
+                    name.clear();
+
                 auto cmd = std::make_unique<commands::MakeProjectCurrent>(name, m_ApplicationModel);
                 project->commandsStack()->push(cmd.release());
             }
@@ -527,30 +547,11 @@ namespace gui {
         {
             G_DISCONNECT(previous.get(), &project::Project::saved, this, &MainWindow::update);
             G_DISCONNECT(previous.get(), &project::Project::modified, this, &MainWindow::update);
-
-            G_DISCONNECT(previous->commandsStack(), &QUndoStack::canRedoChanged,
-                         ui->actionRedo, &QAction::setEnabled);
-            G_DISCONNECT(previous->commandsStack(), &QUndoStack::canUndoChanged,
-                         ui->actionUndo, &QAction::setEnabled);
-            G_DISCONNECT(ui->actionRedo, &QAction::triggered,
-                         previous->commandsStack(), &QUndoStack::redo);
-            G_DISCONNECT(ui->actionUndo, &QAction::triggered,
-                         previous->commandsStack(), &QUndoStack::undo);
         }
 
         if (current) {
             G_CONNECT(current.get(), &project::Project::saved, this, &MainWindow::update);
             G_CONNECT(current.get(), &project::Project::modified, this, &MainWindow::update);
-
-            m_UndoView->setStack(current->commandsStack());
-            G_CONNECT(current->commandsStack(), &QUndoStack::canRedoChanged,
-                      ui->actionRedo, &QAction::setEnabled);
-            G_CONNECT(current->commandsStack(), &QUndoStack::canUndoChanged,
-                      ui->actionUndo, &QAction::setEnabled);
-            G_CONNECT(ui->actionRedo, &QAction::triggered,
-                      current->commandsStack(), &QUndoStack::redo);
-            G_CONNECT(ui->actionUndo, &QAction::triggered,
-                      current->commandsStack(), &QUndoStack::undo);
         }
 
         update();

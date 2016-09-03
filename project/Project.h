@@ -28,6 +28,8 @@
 #include <common/ID.h>
 #include <common/SharedFromThis.h>
 
+#include <commands/CommandsTypes.h>
+
 #include <db/db_types.hpp>
 
 #include <entity/entity_types.hpp>
@@ -83,10 +85,10 @@ namespace project {
         bool hasErrors() const;
         ErrorList lastErrors() const;
 
-        QUndoStack * commandsStack();
-        const QUndoStack * commandsStack() const;
-
         common::ID genID();
+
+        commands::SharedCommandStack commandsStack() const;
+        void setCommandsStack(const commands::SharedCommandStack &commandsStack);
 
     public slots:
         void setSaveStatus(bool newStatus);
@@ -126,7 +128,7 @@ namespace project {
 
         ErrorList m_Errors;
 
-        std::unique_ptr<QUndoStack> m_CommandsStack;
+        commands::SharedCommandStack m_CommandsStack;
     };
 
     /// Helper for project load. Should be in the header due to Qt Meta system limitation

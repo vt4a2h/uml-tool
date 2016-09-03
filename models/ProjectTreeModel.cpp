@@ -242,7 +242,6 @@ namespace models {
      */
     void ProjectTreeModel::addProject(const project::SharedProject &pr)
     {
-        m_CurrentProject = pr;
         addProjectItem(pr);
     }
 
@@ -282,7 +281,7 @@ namespace models {
             auto &&newItem = pr->makeChild(QVariant::fromValue(scope), TreeItemType::ScopeItem);
             endInsertRows();
 
-            observeItemChanging(scope.get(), newItem);
+            observeItemChanging(m_CurrentProject, scope.get(), newItem);
         }
     }
 
@@ -328,7 +327,7 @@ namespace models {
                 auto &&newItem = scope->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
                 endInsertRows();
 
-                observeItemChanging(type.get(), newItem);
+                observeItemChanging(m_CurrentProject, type.get(), newItem);
             }
         }
     }
@@ -362,6 +361,17 @@ namespace models {
     }
 
     /**
+     * @brief ProjectTreeModel::onCurrentProjectChanged
+     * @param previous
+     * @param current
+     */
+    void ProjectTreeModel::onCurrentProjectChanged(const project::SharedProject &/*previous*/,
+                                                   const project::SharedProject &current)
+    {
+        m_CurrentProject = current;
+    }
+
+    /**
      * @brief ProjectTreeModel::addProjectItem
      * @param pr
      */
@@ -375,20 +385,20 @@ namespace models {
         auto projectItem = &m_Projects.last();
         for (auto &&scope : database->scopes()) {
             auto scopeItem = addItem(QVariant::fromValue(scope), projectItem, TreeItemType::ScopeItem);
-            observeItemChanging(scope.get(), scopeItem);
+            observeItemChanging(pr, scope.get(), scopeItem);
 
             for (auto &&type : scope->types()) {
                 auto typeItem = addItem(QVariant::fromValue(type), scopeItem, TreeItemType::TypeItem);
-                observeItemChanging(type.get(), typeItem);
+                observeItemChanging(pr, type.get(), typeItem);
 
                 for (auto &&field : type->fields()) {
                     auto fieldItem = addItem(QVariant::fromValue(field), typeItem, TreeItemType::FieldItem);
-                    observeItemChanging(field.get(), fieldItem);
+                    observeItemChanging(pr, field.get(), fieldItem);
                 }
 
                 for (auto &&method : type->methods()) {
                     auto methodItem = addItem(QVariant::fromValue(method), typeItem, TreeItemType::MethodItem);
-                    observeItemChanging(method.get(), methodItem);
+                    observeItemChanging(pr, method.get(), methodItem);
                 }
             }
         }
@@ -463,12 +473,12 @@ namespace models {
         emit dataChanged(topLeftIndex, bottomRightIndex);
     }
 
-    void ProjectTreeModel::observeItemChanging(common::BasicElement * entity, BasicTreeItem *item)
+    void ProjectTreeModel::observeItemChanging(const project::SharedProject &p,
+                                               common::BasicElement * entity, BasicTreeItem *item)
     {
-        Q_ASSERT(m_CurrentProject);
-
         connect(entity, &common::BasicElement::nameChanged, [=]{ update(item); });
-        connect(entity, &common::BasicElement::nameChanged, m_CurrentProject.get(), &project::Project::touch);
+        connect(entity, &common::BasicElement::nameChanged,
+                G_ASSERT(p.get()), &project::Project::touch);
     }
 
 } // namespace models
