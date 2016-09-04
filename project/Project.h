@@ -141,7 +141,7 @@ namespace project {
         ~ScopedProjectSetter();
 
     signals:
-        void projectChanged(const SharedProject &p);
+        void projectChanged(const SharedProject &p, const SharedProject &c);
 
     private:
         SharedProject m_OldProject;

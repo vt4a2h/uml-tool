@@ -33,6 +33,21 @@ namespace commands {
 
     using namespace boost::range;
 
+    namespace {
+
+        inline QString actCmdName(const QString &projectName)
+        {
+            return BaseCommand::tr("Activate project \"") % projectName % "\"";
+        }
+
+        inline QString inactCmdName(const models::SharedApplicationModel &model)
+        {
+            return BaseCommand::tr("Deactivate project \"")  %
+                   G_ASSERT(model->currentProject())->name() % "\"";
+        }
+
+    } // namespace
+
     /**
      * @brief MakeProjectCurrent::MakeProjectCurrent
      * @param projectName
@@ -40,7 +55,7 @@ namespace commands {
      */
     MakeProjectCurrent::MakeProjectCurrent(const QString &projectName,
                                            const models::SharedApplicationModel &model)
-        : BaseCommand("Activate project -- " % projectName)
+        : BaseCommand(!projectName.isEmpty() ? actCmdName(projectName) : inactCmdName(model))
         , m_AppModel(model)
         , m_CurrentProjectName(projectName)
     {
@@ -55,7 +70,7 @@ namespace commands {
 
         for_each(m_CurrentGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
         G_ASSERT(m_AppModel->setCurrentProject(m_PreviousProjectName));
-        for_each(m_PreviousGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->addItem(i); });
+        for_each(m_PreviousGraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->addItem(i); });
     }
 
     /**
@@ -69,10 +84,17 @@ namespace commands {
             {
                 m_PreviousProjectName = p->name();
                 m_PreviousGraphicItems = p->database()->graphicsItems();
+
+                if (!m_PreviousGraphicItems.isEmpty())
+                    m_Scene = G_ASSERT(G_ASSERT(m_PreviousGraphicItems.first())->scene());
             }
 
-            if (auto p = m_AppModel->project(m_CurrentProjectName))
+            if (auto p = m_AppModel->project(m_CurrentProjectName)) {
                 m_CurrentGraphicItems = p->database()->graphicsItems();
+
+                if (!m_Scene && !m_CurrentGraphicItems.isEmpty())
+                    m_Scene = G_ASSERT(G_ASSERT(m_CurrentGraphicItems.first())->scene());
+            }
 
             m_Done = true;
         }
@@ -81,7 +103,7 @@ namespace commands {
 
         for_each(m_PreviousGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
         G_ASSERT(m_AppModel->setCurrentProject(m_CurrentProjectName));
-        for_each(m_CurrentGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->addItem(i); });
+        for_each(m_CurrentGraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->addItem(i); });
     }
 
     /**
@@ -96,6 +118,11 @@ namespace commands {
         if (auto p = m_AppModel->project(m_PreviousProjectName))
             Q_ASSERT_X(equal(p->database()->graphicsItems(), m_PreviousGraphicItems),
                        Q_FUNC_INFO, "Previous project is in the inconsistent state.");
+
+        Q_ASSERT_X(!m_Scene.isNull() ||
+                   (m_Scene.isNull() && m_CurrentGraphicItems.isEmpty() &&
+                    m_PreviousGraphicItems.isEmpty()),
+                   Q_FUNC_INFO, "Invalid scene");
     }
 
 } // namespace commands

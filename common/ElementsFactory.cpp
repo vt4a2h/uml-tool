@@ -63,9 +63,10 @@ namespace common {
      * @brief ElementsFactory::onProjectChanged
      * @param p
      */
-    void ElementsFactory::onProjectChanged(const project::SharedProject &p)
+    void ElementsFactory::onProjectChanged(const project::SharedProject &,
+                                           const project::SharedProject &c)
     {
-        m_Project = p;
+        m_Project = c;
     }
 
     /**

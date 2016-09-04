@@ -246,9 +246,9 @@ namespace graphics {
      * @brief Scene::onProjectChanged
      * @param p
      */
-    void Scene::onProjectChanged(const project::SharedProject &p)
+    void Scene::onProjectChanged(const project::SharedProject &, const project::SharedProject &c)
     {
-       m_Project = p;
+       m_Project = c;
     }
 
     /**

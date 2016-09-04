@@ -22,10 +22,11 @@
 *****************************************************************************/
 #include "RemoveProject.h"
 
-#include <QGraphicsScene>
-
 #include <boost/range/algorithm/for_each.hpp>
 #include <boost/range/algorithm/equal.hpp>
+
+#include <QGraphicsScene>
+#include <QStringBuilder>
 
 #include <gui/graphics/GraphicsRelation.h>
 #include <gui/graphics/Entity.h>
@@ -41,7 +42,8 @@ namespace commands {
      */
     RemoveProject::RemoveProject(const project::SharedProject &p,
                                  const models::SharedApplicationModel &a)
-        : m_Project(G_ASSERT(p))
+        : BaseCommand(tr("Remove project \"") % G_ASSERT(p)->name() % "\"")
+        , m_Project(p)
         , m_AppModel(G_ASSERT(a))
     {
     }
@@ -52,7 +54,7 @@ namespace commands {
     void RemoveProject::undo()
     {
         G_ASSERT(m_AppModel->addProject(m_Project));
-        for_each(m_GraphicItems, [](auto &&i) { G_ASSERT(i->scene())->addItem(i); });
+        for_each(m_GraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->addItem(i); });
 
         if (m_WasCurrent)
             m_AppModel->setCurrentProject(m_Project->name());
@@ -66,6 +68,10 @@ namespace commands {
         if (!m_Done) {
             G_ASSERT(m_AppModel)->removeProject(G_ASSERT(m_Project)->name());
             m_GraphicItems = m_Project->database()->graphicsItems();
+
+            if (!m_GraphicItems.isEmpty())
+                m_Scene = G_ASSERT(G_ASSERT(m_GraphicItems.first())->scene());
+
             m_Done = true;
         }
 
@@ -88,6 +94,9 @@ namespace commands {
     {
         Q_ASSERT_X(equal(m_Project->database()->graphicsItems(), m_GraphicItems),
                    Q_FUNC_INFO, "Project is in the inconsistent state.");
+
+        Q_ASSERT_X(!m_Scene.isNull() || (m_Scene.isNull() && m_GraphicItems.isEmpty()),
+                   Q_FUNC_INFO, "Invalid scene");
     }
 
 } // namespace commands

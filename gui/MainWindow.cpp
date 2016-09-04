@@ -470,14 +470,12 @@ namespace gui {
             auto name = index.data(models::ProjectTreeModel::ID).toString();
             if (auto project = m_ApplicationModel->project(name))
             {
-                // TODO: properly handle app state if there is no active projects!!!
-
-                // Check if we nned to unset project
+                // Check if we need to unset project
                 if (m_ApplicationModel->currentProject() == project)
                     name.clear();
 
                 auto cmd = std::make_unique<commands::MakeProjectCurrent>(name, m_ApplicationModel);
-                project->commandsStack()->push(cmd.release());
+                m_CommandsStack->push(cmd.release());
             }
         }
     }
@@ -496,6 +494,10 @@ namespace gui {
             for (auto && index : selectionModel->selectedIndexes()) {
                 // Perform actions
             }
+
+            // FIXME: fix class entity number on adding entity by drag-and-drop
+            // FIXME: fix undo/redo for entity adding bu drag-and-drop
+            // FIXME: investigate weird stack behaviour: command dissapeared on undo move object command
         }
     }
 
@@ -510,12 +512,11 @@ namespace gui {
         ui->actionSaveProject->setEnabled(state && !m_ApplicationModel->currentProject()->isSaved());
         ui->actionCloseProject->setEnabled(state);
 
-        project::Project const * pr = m_ApplicationModel->currentProject().get();
-        ui->actionRedo->setEnabled(pr && pr->commandsStack()->canRedo());
-        ui->actionUndo->setEnabled(pr && pr->commandsStack()->canUndo());
+        ui->actionRedo->setEnabled(m_CommandsStack->canRedo());
+        ui->actionUndo->setEnabled(m_CommandsStack->canUndo());
 
         m_Elements->setEnabled(state);
-        m_ProjectTreeView->setEnabled(state);
+        m_ProjectTreeView->setEnabled(!m_ApplicationModel->projects().isEmpty());
         m_MainView->setEnabled(state);
 
         boost::range::for_each(m_RelationActions, [&](auto &&a){ a->setEnabled(state); });

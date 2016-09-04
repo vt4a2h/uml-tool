@@ -494,7 +494,7 @@ namespace project {
                   &relationship::RelationFactory::instance(), &relationship::RelationFactory::onProjectChanged);
 
         m_OldProject = entity::EntityFactory::instance().project();
-        emit projectChanged(p);
+        emit projectChanged(nullptr, p);
     }
 
     /**
@@ -502,7 +502,7 @@ namespace project {
      */
     ScopedProjectSetter::~ScopedProjectSetter()
     {
-        emit projectChanged(m_OldProject);
+        emit projectChanged(nullptr, m_OldProject);
 
         G_DISCONNECT(this, &ScopedProjectSetter::projectChanged,
                      &entity::EntityFactory::instance(), &entity::EntityFactory::onProjectChanged);

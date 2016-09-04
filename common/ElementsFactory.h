@@ -69,7 +69,7 @@ namespace common {
 
     public slots:
         void onSceneChanged(const QPointer<QGraphicsScene> &scene);
-        void onProjectChanged(const project::SharedProject &p);
+        void onProjectChanged(const project::SharedProject &p, const project::SharedProject &c);
         void addAdditionaScopeSearcher(const db::SharedScopeSearcher &s);
         void removeAdditionaScopeSearcher(const db::SharedScopeSearcher &s);
 

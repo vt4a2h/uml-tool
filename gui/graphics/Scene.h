@@ -56,7 +56,7 @@ namespace graphics {
 
     public slots:
         void setShowRelationTrack(bool showRelationTrack);
-        void onProjectChanged(const project::SharedProject &p);
+        void onProjectChanged(const project::SharedProject &p, const project::SharedProject &c);
 
     signals:
         void showRelationTrackChanged(bool showRelationTrack);

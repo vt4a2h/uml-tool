@@ -26,6 +26,10 @@
 
 #include "BaseCommand.h"
 
+QT_BEGIN_NAMESPACE
+class QGraphicsScene;
+QT_END_NAMESPACE
+
 namespace commands {
 
     class MakeProjectCurrent : public BaseCommand
@@ -47,6 +51,8 @@ namespace commands {
 
         graphics::GraphicItems m_CurrentGraphicItems;
         graphics::GraphicItems m_PreviousGraphicItems;
+
+        QPointer<QGraphicsScene> m_Scene;
     };
 
 } // namespace commands
