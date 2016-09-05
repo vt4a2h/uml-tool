@@ -46,7 +46,8 @@ namespace helpers {
         common::ID genID() const;
 
     public slots:
-        void onCurrentProjectChanged(const project::SharedProject &p);
+        void onCurrentProjectChanged(const project::SharedProject &p,
+                                     const project::SharedProject &c);
 
     private:
         explicit GeneratorID(QObject *parent = 0);

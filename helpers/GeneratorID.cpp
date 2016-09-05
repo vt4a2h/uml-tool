@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "generatorid.h"
+#include "GeneratorID.h"
 
 #include <project/Project.h>
 
@@ -50,9 +50,10 @@ namespace helpers {
      * @brief GeneratorID::onCurrentProjectChanged
      * @param p
      */
-    void GeneratorID::onCurrentProjectChanged(const project::SharedProject &p)
+    void GeneratorID::onCurrentProjectChanged(const project::SharedProject &,
+                                              const project::SharedProject &c)
     {
-        m_CurrentProject = p;
+        m_CurrentProject = c;
     }
 
     /**

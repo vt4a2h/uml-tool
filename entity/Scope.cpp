@@ -43,7 +43,7 @@
 #include <utility/helpfunctions.h>
 
 #include <helpers/entityhelpres.h>
-#include <helpers/generatorid.h>
+#include <helpers/GeneratorID.h>
 
 namespace entity {
 

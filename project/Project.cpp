@@ -44,7 +44,7 @@
 
 #include <relationship/RelationFactory.h>
 
-#include <helpers/generatorid.h>
+#include <helpers/GeneratorID.h>
 
 #include "constants.h"
 

@@ -31,7 +31,7 @@
 
 #include <models/ApplicationModel.h>
 
-#include <helpers/generatorid.h>
+#include <helpers/GeneratorID.h>
 
 #include <entity/Type.h>
 #include <entity/EntityFactory.h>

@@ -50,7 +50,6 @@ SOURCES += \
     helpers/entityhelpres.cpp \
     entity/components/token.cpp \
     application/settings.cpp \
-    helpers/generatorid.cpp \
     entity/isectional.cpp \
     relationship/RelationFactory.cpp \
     entity/EntityFactory.cpp \
@@ -88,7 +87,8 @@ SOURCES += \
     commands/RemoveProject.cpp \
     commands/BaseCommand.cpp \
     commands/MakeProjectCurrent.cpp \
-    commands/CreateScope.cpp
+    commands/CreateScope.cpp \
+    helpers/GeneratorID.cpp
 
 HEADERS += \
     enums.h \
@@ -146,7 +146,6 @@ HEADERS += \
     qthelpers.h \
     gui/graphics/common.h \
     gui/graphics/graphics_types.h \
-    helpers/generatorid.h \
     common/ID.h \
     entity/itypeuser.h \
     common/BasicElement.h \
@@ -189,7 +188,8 @@ HEADERS += \
     commands/BaseCommand.h \
     commands/CommandsTypes.h \
     commands/MakeProjectCurrent.h \
-    commands/CreateScope.h
+    commands/CreateScope.h \
+    helpers/GeneratorID.h
 
 FORMS += \
     gui/about.ui \

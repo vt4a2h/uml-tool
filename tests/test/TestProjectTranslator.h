@@ -37,7 +37,7 @@
 #include <translation/code.h>
 #include <helpers/entityhelpres.h>
 
-#include <helpers/generatorid.h>
+#include <helpers/GeneratorID.h>
 
 #include <enums.h>
 #include <constants.h>

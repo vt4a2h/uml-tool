@@ -27,6 +27,7 @@
 #include <models/models_types.hpp>
 #include <project/project_types.hpp>
 #include <commands/CommandsTypes.h>
+#include <gui/graphics/graphics_types.h>
 
 class QSplitter;
 class QHBoxLayout;
@@ -43,7 +44,6 @@ namespace models {
     class ApplicationModel;
 }
 
-namespace graphics { class Scene; }
 namespace entity { class ID; }
 /**
  * @brief namespace gui
@@ -123,7 +123,7 @@ namespace gui {
                      bool visible = true);
 
         std::unique_ptr<Ui::MainWindow> ui;
-        std::unique_ptr<graphics::Scene> m_MainScene;
+        graphics::UniqueScene m_MainScene;
 
         QMenu *m_ProjectTreeMenu;
         QAction *m_ChangeProjectStatusAction;

@@ -51,7 +51,7 @@
 
 #include <translation/signaturemaker.h>
 
-#include <helpers/generatorid.h>
+#include <helpers/GeneratorID.h>
 
 #include "componentseditdelegate.h"
 #include "signatureeditdelegate.h"

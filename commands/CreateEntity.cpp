@@ -69,19 +69,14 @@ namespace commands {
      */
     void CreateEntity::undo()
     {
+        sanityCheck();
+
         // TODO: move to the RemoveEntity command (when it'll be created)
-        auto &&factory = entity::EntityFactory::instance();
+        m_Scene->removeItem(m_GraphicEntity);
+        m_Scope->removeType(m_Entity->id());
+        m_TreeModel->removeType(m_ProjectName, m_ScopeID, m_Entity->id());
 
-        if (auto &&scene = G_ASSERT(factory.scene()))
-            scene->removeItem(m_GraphicEntity);
-
-        if (auto &&db = G_ASSERT(factory.db()))
-            if (auto && scope = G_ASSERT(db->scope(m_ScopeID)))
-                scope->removeType(m_Entity->id());
-
-        if (auto &&tm = G_ASSERT(factory.treeModel()))
-            if (auto &&p = G_ASSERT(factory.project()))
-                tm->removeType(p->name(), m_ScopeID, m_Entity->id());
+        m_CleaningRequired = true;
     }
 
     /**
@@ -89,9 +84,8 @@ namespace commands {
      */
     void CreateEntity::redo()
     {
-        if (m_Done) {
-            // ERROR: investigate, why is empty?!
-        } else {
+        // FIXME: don't use factory to get scope, project, scene, etc.. Pass them instead.
+        if (!m_Done) {
             auto &&factory = entity::EntityFactory::instance();
 
             m_Entity = G_ASSERT(factory.make(m_KindOfType, m_Pos, m_ScopeID));
@@ -99,10 +93,22 @@ namespace commands {
             auto project = G_ASSERT(factory.project());
             m_GraphicEntity = G_ASSERT(G_ASSERT(project->database())->graphicsEntity(m_Entity->id()));
 
-            m_Done = true;
-        }
+            // Set aux, TODO eliminate {
+            m_Scope = G_ASSERT(G_ASSERT(factory.db())->scope(m_ScopeID));
+            m_Scene = G_ASSERT(factory.scene());
+            m_TreeModel = G_ASSERT(factory.treeModel());
+            m_ProjectName = project->name();
+            // }
 
-        m_CleaningRequired = false;
+            m_Done = true;
+        } else {
+            sanityCheck();
+
+            m_Scope->addExistsType(m_Entity);
+            m_Scene->addItem(m_GraphicEntity.data());
+            m_TreeModel->addType(m_Entity, m_Scope->id(), m_ProjectName);
+            m_CleaningRequired = false;
+        }
     }
 
     /**
@@ -112,6 +118,19 @@ namespace commands {
     {
         if (m_CleaningRequired && m_GraphicEntity)
             delete m_GraphicEntity;
+    }
+
+    /**
+     * @brief CreateEntity::sanityCheck
+     */
+    void CreateEntity::sanityCheck()
+    {
+        Q_ASSERT(m_Entity);
+        Q_ASSERT(m_GraphicEntity);
+        Q_ASSERT(m_Scope);
+        Q_ASSERT(m_Scene);
+        Q_ASSERT(m_TreeModel);
+        Q_ASSERT(!m_ProjectName.isEmpty());
     }
 
 } // namespace commands

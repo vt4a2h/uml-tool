@@ -56,7 +56,6 @@
 #include <entity/Type.h>
 
 #include <commands/CreateScope.h>
-#include <commands/CreateEntity.h>
 #include <commands/MakeProjectCurrent.h>
 
 #include "about.h"
@@ -495,8 +494,6 @@ namespace gui {
                 // Perform actions
             }
 
-            // FIXME: fix class entity number on adding entity by drag-and-drop
-            // FIXME: fix undo/redo for entity adding bu drag-and-drop
             // FIXME: investigate weird stack behaviour: command dissapeared on undo move object command
         }
     }

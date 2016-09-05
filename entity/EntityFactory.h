@@ -24,8 +24,6 @@
 
 #include <common/ElementsFactory.h>
 
-#include <commands/CreateEntity.h>
-
 #include "entity_types.hpp"
 
 #include <entity/Type.h>

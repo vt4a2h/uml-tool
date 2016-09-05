@@ -28,6 +28,7 @@
 
 QT_BEGIN_NAMESPACE
 class QGraphicsItem;
+class QGraphicsScene;
 QT_END_NAMESPACE
 
 namespace common { class ID; }
@@ -47,6 +48,10 @@ namespace graphics {
     using RelationVector = QVector<GraphicRelationPtr>;
 
     using GraphicItems = QList<QGraphicsItem*>;
+    using ScenePtr = QPointer<QGraphicsScene>;
+
+    class Scene;
+    using UniqueScene = std::unique_ptr<Scene>;
 
 } // namespace graphics
 

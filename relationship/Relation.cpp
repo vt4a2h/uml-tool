@@ -36,7 +36,7 @@
 
 #include <utility/helpfunctions.h>
 
-#include <helpers/generatorid.h>
+#include <helpers/GeneratorID.h>
 
 #include "qthelpers.h"
 

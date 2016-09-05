@@ -28,6 +28,8 @@
 
 #include <gui/graphics/graphics_types.h>
 
+#include <models/models_types.hpp>
+
 #include "BaseCommand.h"
 
 namespace commands {
@@ -43,6 +45,9 @@ namespace commands {
         void redo()    override;
         void cleanup() override;
 
+    public: // BaseCommand overridies
+        void sanityCheck() override;
+
     private:
         entity::KindOfType m_KindOfType;
         common::ID         m_ScopeID;
@@ -50,6 +55,12 @@ namespace commands {
 
         entity::SharedType  m_Entity;
         graphics::EntityPtr m_GraphicEntity;
+
+        // Aux
+        entity::SharedScope m_Scope;
+        graphics::ScenePtr m_Scene;
+        models::SharedTreeModel m_TreeModel;
+        QString m_ProjectName;
     };
 
 } // namespace commands

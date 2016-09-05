@@ -29,7 +29,7 @@
 #include <QTextStream>
 
 #include <utility/helpfunctions.h>
-#include <helpers/generatorid.h>
+#include <helpers/GeneratorID.h>
 
 #include "Scope.h"
 #include "enums.h"

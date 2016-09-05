@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include <helpers/generatorid.h>
+#include <helpers/GeneratorID.h>
 
 #include <entity/EntityFactory.h>
 
