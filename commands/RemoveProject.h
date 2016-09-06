@@ -24,7 +24,7 @@
 
 #include <models/ApplicationModel.h>
 
-#include <gui/graphics/graphics_types.h>
+#include <gui/graphics/GraphicsTypes.h>
 
 #include "BaseCommand.h"
 

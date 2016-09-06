@@ -27,7 +27,7 @@
 #include <models/models_types.hpp>
 #include <project/project_types.hpp>
 #include <commands/CommandsTypes.h>
-#include <gui/graphics/graphics_types.h>
+#include <gui/graphics/GraphicsTypes.h>
 
 class QSplitter;
 class QHBoxLayout;

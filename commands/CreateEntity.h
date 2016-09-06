@@ -26,7 +26,7 @@
 
 #include <entity/Type.h>
 
-#include <gui/graphics/graphics_types.h>
+#include <gui/graphics/GraphicsTypes.h>
 
 #include <models/models_types.hpp>
 

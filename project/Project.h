@@ -34,7 +34,7 @@
 
 #include <entity/entity_types.hpp>
 
-#include <gui/graphics/graphics_types.h>
+#include <gui/graphics/GraphicsTypes.h>
 
 #include "types.h"
 #include "project_types.hpp"

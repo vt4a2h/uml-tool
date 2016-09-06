@@ -177,8 +177,16 @@ namespace gui {
         if (path.isEmpty())
             return ;
 
-        auto newProject = std::make_shared<project::Project>();
+        // Deactivate current project
+        commands::SharedCommand deactivateCmd;
+        if (m_ApplicationModel->currentProject()) {
+            deactivateCmd = std::make_shared<commands::MakeProjectCurrent>("", m_ApplicationModel,
+                                                                           m_MainScene.get());
+            deactivateCmd->redo();
+        }
 
+        // Load new one
+        auto newProject = std::make_shared<project::Project>();
         newProject->load(path);
 
         if (newProject->hasErrors()) {
@@ -188,6 +196,10 @@ namespace gui {
                 , newProject->lastErrors().join("\n")
                 , QMessageBox::Ok
                 );
+
+            // Fallback to previous project
+            if (deactivateCmd)
+                deactivateCmd->undo();
         } else {
             newProject->setCommandsStack(m_CommandsStack);
             if (m_ApplicationModel->addProject(newProject))
@@ -284,7 +296,7 @@ namespace gui {
 
         auto newProject = m_ApplicationModel->makeProject(name, path);
         newProject->setCommandsStack(m_CommandsStack);
-        commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel).redo();
+        commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel, m_MainScene.get()).redo();
         newProject->save();
     }
 
@@ -473,7 +485,8 @@ namespace gui {
                 if (m_ApplicationModel->currentProject() == project)
                     name.clear();
 
-                auto cmd = std::make_unique<commands::MakeProjectCurrent>(name, m_ApplicationModel);
+                auto cmd = std::make_unique<commands::MakeProjectCurrent>(name, m_ApplicationModel,
+                                                                          m_MainScene.get());
                 m_CommandsStack->push(cmd.release());
             }
         }
@@ -487,15 +500,12 @@ namespace gui {
     {
         if (auto selectionModel = m_ProjectTreeView->selectionModel()) {
             // TODO: think about selection model (select only projects, or project and items)
-            // TODO: show/hide some menu items depends on selection
             // TODO: add command to remove project
             // TODO: intellectual remove (don't remove all sub-items if parent removed)
             for (auto && index : selectionModel->selectedIndexes()) {
                 // Perform actions
             }
-
-            // FIXME: investigate weird stack behaviour: command dissapeared on undo move object command
-        }
+         }
     }
 
     /**

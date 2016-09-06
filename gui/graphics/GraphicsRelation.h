@@ -26,7 +26,7 @@
 
 #include <relationship/relationship_types.hpp>
 
-#include "graphics_types.h"
+#include "GraphicsTypes.h"
 
 namespace graphics {
 

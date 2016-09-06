@@ -54,10 +54,12 @@ namespace commands {
      * @param model
      */
     MakeProjectCurrent::MakeProjectCurrent(const QString &projectName,
-                                           const models::SharedApplicationModel &model)
+                                           const models::SharedApplicationModel &model,
+                                           const graphics::ScenePtr &scene)
         : BaseCommand(!projectName.isEmpty() ? actCmdName(projectName) : inactCmdName(model))
         , m_AppModel(model)
         , m_CurrentProjectName(projectName)
+        , m_Scene(scene)
     {
     }
 
@@ -84,17 +86,10 @@ namespace commands {
             {
                 m_PreviousProjectName = p->name();
                 m_PreviousGraphicItems = p->database()->graphicsItems();
-
-                if (!m_PreviousGraphicItems.isEmpty())
-                    m_Scene = G_ASSERT(G_ASSERT(m_PreviousGraphicItems.first())->scene());
             }
 
-            if (auto p = m_AppModel->project(m_CurrentProjectName)) {
+            if (auto p = m_AppModel->project(m_CurrentProjectName))
                 m_CurrentGraphicItems = p->database()->graphicsItems();
-
-                if (!m_Scene && !m_CurrentGraphicItems.isEmpty())
-                    m_Scene = G_ASSERT(G_ASSERT(m_CurrentGraphicItems.first())->scene());
-            }
 
             m_Done = true;
         }

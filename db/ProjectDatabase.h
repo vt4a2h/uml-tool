@@ -28,7 +28,7 @@
 #include "db_types.hpp"
 
 #include <relationship/relationship_types.hpp>
-#include <gui/graphics/graphics_types.h>
+#include <gui/graphics/GraphicsTypes.h>
 
 namespace db {
 

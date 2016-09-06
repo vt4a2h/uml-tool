@@ -145,7 +145,6 @@ HEADERS += \
     entity/components/token.h \
     qthelpers.h \
     gui/graphics/common.h \
-    gui/graphics/graphics_types.h \
     common/ID.h \
     entity/itypeuser.h \
     common/BasicElement.h \
@@ -189,7 +188,8 @@ HEADERS += \
     commands/CommandsTypes.h \
     commands/MakeProjectCurrent.h \
     commands/CreateScope.h \
-    helpers/GeneratorID.h
+    helpers/GeneratorID.h \
+    gui/graphics/GraphicsTypes.h
 
 FORMS += \
     gui/about.ui \

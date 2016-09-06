@@ -23,6 +23,7 @@
 #pragma once
 
 #include <models/ApplicationModel.h>
+#include <gui/graphics/GraphicsTypes.h>
 
 #include "BaseCommand.h"
 
@@ -35,7 +36,8 @@ namespace commands {
     class MakeProjectCurrent : public BaseCommand
     {
     public:
-        MakeProjectCurrent(const QString &projectName, const models::SharedApplicationModel &model);
+        MakeProjectCurrent(const QString &projectName, const models::SharedApplicationModel &model,
+                           const graphics::ScenePtr &scene);
 
     public: // QUndoCommand overridies
         void undo() override;
@@ -52,7 +54,7 @@ namespace commands {
         graphics::GraphicItems m_CurrentGraphicItems;
         graphics::GraphicItems m_PreviousGraphicItems;
 
-        QPointer<QGraphicsScene> m_Scene;
+        graphics::ScenePtr m_Scene;
     };
 
 } // namespace commands
