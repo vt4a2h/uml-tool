@@ -59,7 +59,8 @@ protected:
         Q_ASSERT(errors.isEmpty());
 
         m_Project = std::make_shared<project::Project>("Foo Project", "fake path");
-        const_cast<helpers::GeneratorID&>(helpers::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
+        const_cast<helpers::GeneratorID&>(
+            helpers::GeneratorID::instance()).onCurrentProjectChanged(nullptr, m_Project);
         m_Project->setGlobalDatabase(m_GlobalDatabase);
 
         initFactory(entity::EntityFactory::instance());
@@ -78,7 +79,7 @@ protected:
     {
         auto &&ef = const_cast<common::ElementsFactory &>(factory);
         ef.setGlobalDatabase(m_GlobalDatabase);
-        ef.onProjectChanged(m_Project);
+        ef.onProjectChanged(nullptr, m_Project);
     }
 
 protected:

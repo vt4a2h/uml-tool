@@ -57,6 +57,7 @@
 
 #include <commands/CreateScope.h>
 #include <commands/MakeProjectCurrent.h>
+#include <commands/RemoveProject.h>
 
 #include "about.h"
 #include "newproject.h"
@@ -498,14 +499,18 @@ namespace gui {
      */
     void MainWindow::onRemoveActivated()
     {
-        if (auto selectionModel = m_ProjectTreeView->selectionModel()) {
-            // TODO: think about selection model (select only projects, or project and items)
-            // TODO: add command to remove project
-            // TODO: intellectual remove (don't remove all sub-items if parent removed)
-            for (auto && index : selectionModel->selectedIndexes()) {
-                // Perform actions
+        auto index = m_ProjectTreeView->indexAt(m_ProjectTreeView->mapFromGlobal(m_ProjectTreeMenu->pos()));
+        if (index.isValid()) {
+            QVariant data = index.data(models::ProjectTreeModel::SharedData);
+            if (data.canConvert<project::SharedProject>()) {
+                auto name = index.data(models::ProjectTreeModel::ID).toString();
+                if (auto project = m_ApplicationModel->project(name)) {
+                    auto cmd = std::make_unique<commands::RemoveProject>(
+                                   project, m_ApplicationModel, m_MainScene.get());
+                    m_CommandsStack->push(cmd.release());
+                }
             }
-         }
+        }
     }
 
     /**

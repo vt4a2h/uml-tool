@@ -54,9 +54,10 @@ namespace models {
 
                 case DisplayPart::Invalid:
                     return 0;
-            }
 
-            return 0;
+                default:
+                    return 0;
+            }
         }
     }
 

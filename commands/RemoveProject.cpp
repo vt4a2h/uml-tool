@@ -41,10 +41,12 @@ namespace commands {
      * @param m
      */
     RemoveProject::RemoveProject(const project::SharedProject &p,
-                                 const models::SharedApplicationModel &a)
+                                 const models::SharedApplicationModel &a,
+                                 const graphics::ScenePtr &scene)
         : BaseCommand(tr("Remove project \"") % G_ASSERT(p)->name() % "\"")
         , m_Project(p)
         , m_AppModel(G_ASSERT(a))
+        , m_Scene(G_ASSERT(scene))
     {
     }
 
@@ -53,11 +55,15 @@ namespace commands {
      */
     void RemoveProject::undo()
     {
+        // Restore project
         G_ASSERT(m_AppModel->addProject(m_Project));
-        for_each(m_GraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->addItem(i); });
 
+        // Recover project status
         if (m_WasCurrent)
             m_AppModel->setCurrentProject(m_Project->name());
+
+        // Add graphics components
+        for_each(m_GraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->addItem(i); });
     }
 
     /**
@@ -66,25 +72,23 @@ namespace commands {
     void RemoveProject::redo()
     {
         if (!m_Done) {
-            G_ASSERT(m_AppModel)->removeProject(G_ASSERT(m_Project)->name());
             m_GraphicItems = m_Project->database()->graphicsItems();
-
-            if (!m_GraphicItems.isEmpty())
-                m_Scene = G_ASSERT(G_ASSERT(m_GraphicItems.first())->scene());
-
             m_Done = true;
         }
 
         sanityCheck();
 
-        // Clean scene
-        for_each(m_GraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
-
+        // Reset current project
         if (m_AppModel->currentProject() == m_Project) {
-            // Reset current project
             m_AppModel->setCurrentProject("");
             m_WasCurrent = true;
         }
+
+        // Remove project itself
+        G_ASSERT(m_AppModel)->removeProject(G_ASSERT(m_Project)->name());
+
+        // Clean scene
+        for_each(m_GraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->removeItem(i); });
     }
 
     /**

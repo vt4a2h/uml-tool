@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 project(UmlTool)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -std=c++1y")
-set(CMAKE_CXX_COMPILER g++-5)
+set(CMAKE_CXX_COMPILER g++-6)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)

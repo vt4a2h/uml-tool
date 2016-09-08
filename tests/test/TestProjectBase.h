@@ -60,7 +60,7 @@ protected:
     {
         auto &&ef = const_cast<common::ElementsFactory &>(factory);
         ef.setGlobalDatabase(m_GlobalDb);
-        ef.onProjectChanged(m_Project);
+        ef.onProjectChanged(nullptr, m_Project);
         ef.setTreeModel(m_fakeTreeModel);
     }
 
@@ -69,7 +69,8 @@ protected:
         m_Project = pr;
 
         // Usually special slot is used for that
-        const_cast<helpers::GeneratorID&>(helpers::GeneratorID::instance()).onCurrentProjectChanged(m_Project);
+        const_cast<helpers::GeneratorID&>(
+            helpers::GeneratorID::instance()).onCurrentProjectChanged(nullptr, m_Project);
         m_ProjectDb = m_Project->database();
 
         m_ProjectScope = m_ProjectDb->scope(common::ID::projectScopeID());

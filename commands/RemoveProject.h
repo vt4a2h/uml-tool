@@ -37,7 +37,8 @@ namespace commands {
     class RemoveProject : public BaseCommand
     {
     public:
-        RemoveProject(const project::SharedProject &p, const models::SharedApplicationModel &a);
+        RemoveProject(const project::SharedProject &p, const models::SharedApplicationModel &a,
+                      const graphics::ScenePtr &scene);
 
     public: // QUndoCommand overridies
         void undo() override;
@@ -53,7 +54,7 @@ namespace commands {
         graphics::GraphicItems m_GraphicItems;
         bool m_WasCurrent = false;
 
-        QPointer<QGraphicsScene> m_Scene;
+        graphics::ScenePtr m_Scene;
     };
 
 } // namespace commands
