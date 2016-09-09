@@ -1,6 +1,6 @@
 *.user
 *.user*
-build*
+build
 *.zip
 html
 Doxyfile*
