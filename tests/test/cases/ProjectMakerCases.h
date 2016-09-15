@@ -23,6 +23,13 @@
 #pragma once
 
 #include "TestProjectMaker.h"
+
+#include <entity/Scope.h>
+#include <entity/Class.h>
+#include <entity/ExtendedType.h>
+#include <entity/TemplateClass.h>
+#include <entity/field.h>
+
 #include "helpers.h"
 
 TEST_F(ProjectMaker, MakeClass)

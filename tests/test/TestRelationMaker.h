@@ -20,10 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
-
-#include <gtest/gtest.h>
 
 #include <db/Database.h>
 #include <db/ProjectDatabase.h>

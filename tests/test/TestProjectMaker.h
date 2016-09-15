@@ -28,8 +28,10 @@
 #include <types.h>
 
 #include <db/Database.h>
+
 #include <generator/virtualdirectory.h>
 #include <generator/basiccppprojectgenerator.h>
+
 #include <helpers/entityhelpres.h>
 
 #include "TestProjectBase.h"

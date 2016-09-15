@@ -279,6 +279,15 @@ namespace models {
     }
 
     /**
+     * @brief Aux method for tests
+     * @param db
+     */
+    void ApplicationModel::setGlobalDatabse(const db::SharedDatabase &db)
+    {
+        m_GlobalDatabase = db;
+    }
+
+    /**
      * @brief ApplicationModal::treeModel
      * @return
      */

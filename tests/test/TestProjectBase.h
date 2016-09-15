@@ -33,6 +33,8 @@
 #include <entity/EntityFactory.h>
 #include <relationship/RelationFactory.h>
 
+#include <helpers/GeneratorID.h>
+
 class ProjectBase : public ::testing::Test
 {
 protected:

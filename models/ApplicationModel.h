@@ -68,6 +68,7 @@ namespace models {
         bool setCurrentProject(const QString &name);
 
         db::SharedDatabase globalDatabase() const;
+        void setGlobalDatabse(const db::SharedDatabase &db);
 
         SharedTreeModel treeModel() const;
 

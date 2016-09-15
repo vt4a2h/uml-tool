@@ -37,11 +37,11 @@ HEADERS += ../../enums.h \
     ../../constants.h \
     ../../entity/field.h \
     ../../qthelpers.h \
-    ../../models/applicationmodel.h \
+    ../../models/ApplicationModel.h \
     ../../models/projecttreemodel.h \
     ../../models/basictreeitem.h \
     ../../helpers/entityhelpres.h\
-    ../../helpers/generatorid.h\
+    ../../helpers/GeneratorID.h\
     ../../gui/graphics/GraphicsRelation.h \
     ../../gui/graphics/Entity.h \
     ../../relationship/Relation.h \
@@ -64,26 +64,28 @@ HEADERS += ../../enums.h \
     TestComponentsMaker.h \
     TestComponentsBase.h \
     TestClassComponents.h \
-    cases/projecttranslatortestcases.h \
-    cases/relationmakertestcases.h \
-    cases/depthsearchtestcases.h \
-    cases/filemakertestcases.h \
-    cases/filejsontestcases.h \
-    cases/projectmakertestcases.h \
-    cases/projecttestcases.h \
-    cases/typemakertestcases.h \
-    cases/icomponentstestcases.h \
-    cases/entitiestestcases.h \
-    cases/componentsmakercases.h \
-    cases/signaturemakercases.h \
-    cases/classcomponentscases.h \
-    cases/signatureparsercases.h \
     TestComponentSignatureParser.h \
     TestProjectBase.h \
     ../../db/ProjectDatabase.h \
     ../../db/Database.h \
     ../../common/BasicElement.h \
-    ../../common/ID.h
+    ../../common/ID.h \
+    cases/TypeMakerTestCases.h \
+    cases/SignatureParserCases.h \
+    cases/SignatureMakerCases.h \
+    cases/RelationMakerCases.h \
+    cases/ProjectTranslatorCases.h \
+    cases/ProjectCases.h \
+    cases/IComponentsCases.h \
+    cases/FileJsonCases.h \
+    cases/EntitiesCases.h \
+    cases/DepthSearchCases.h \
+    cases/ComponentsMakerCases.h \
+    cases/ClassComponentsCases.h \
+    cases/FileMakerCases.h \
+    TestCommands.h \
+    cases/CommandsCases.h \
+    cases/ProjectMakerCases.h
 
 SOURCES += main.cpp \
            ../../application/settings.cpp \
@@ -131,11 +133,11 @@ SOURCES += main.cpp \
            ../../entity/components/componentsmaker.cpp \
            ../../entity/components/componentsignatureparser.cpp \
            ../../translation/signaturemaker.cpp \
-           ../../models/applicationmodel.cpp \
+           ../../models/ApplicationModel.cpp \
            ../../models/projecttreemodel.cpp \
            ../../models/basictreeitem.cpp \
            ../../helpers/entityhelpres.cpp \
-           ../../helpers/generatorid.cpp \
+           ../../helpers/GeneratorID.cpp \
            ../../common/ElementsFactory.cpp \
            ../../commands/movegraphicobject.cpp \
            ../../commands/basecommand.cpp

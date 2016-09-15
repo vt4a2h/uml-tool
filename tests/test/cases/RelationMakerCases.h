@@ -24,6 +24,8 @@
 
 #include "TestRelationMaker.h"
 
+#include <entity/ExtendedType.h>
+
 TEST_F(RelationMaker, MultiplyAssociation)
 {
     auto multAssociation =

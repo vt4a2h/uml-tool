@@ -23,6 +23,7 @@
 #pragma once
 
 #include "TestProject.h"
+#include "constants.h"
 
 TEST_F(Project, LoadSaveProject)
 {

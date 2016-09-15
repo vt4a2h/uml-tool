@@ -24,6 +24,9 @@
 
 #include "TestJson.h"
 
+#include <entity/TemplateClass.h>
+#include <entity/ExtendedType.h>
+
 TEST_F(FileJson, TypeJson)
 {
     entity::SharedType type(std::make_shared<entity::Type>("stub_name", common::ID::nullID()));

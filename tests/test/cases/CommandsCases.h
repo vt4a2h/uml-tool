@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 03/11/2014.
+** Created 15/09/2016.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,26 +20,11 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include <gtest/gtest.h>
+#pragma once
 
-#include <cases/ProjectMakerCases.h>
-#include <cases/ProjectCases.h>
-#include <cases/ProjectTranslatorCases.h>
-#include <cases/RelationMakerCases.h>
-#include <cases/DepthSearchCases.h>
-#include <cases/FileMakerCases.h>
-#include <cases/FileJsonCases.h>
-#include <cases/TypeMakerTestCases.h>
-#include <cases/IComponentsCases.h>
-#include <cases/EntitiesCases.h>
-#include <cases/ClassComponentsCases.h>
-#include <cases/SignatureParserCases.h>
-#include <cases/ComponentsMakerCases.h>
-#include <cases/SignatureMakerCases.h>
-#include <cases/CommandsCases.h>
+#include "TestCommands.h"
 
-int main(int argc, char **argv)
+TEST_F(CommandsTester, CreateEntity)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+
 }
