@@ -65,6 +65,24 @@ namespace commands {
     }
 
     /**
+     * @brief Aux method for tests
+     * @return
+     */
+    entity::SharedType CreateEntity::entity() const
+    {
+        return m_Entity;
+    }
+
+    /**
+     * @brief Aux method for tests
+     * @return
+     */
+    graphics::EntityPtr CreateEntity::graphicsEntity() const
+    {
+        return m_GraphicEntity;
+    }
+
+    /**
      * @brief CreateEntity::undo
      */
     void CreateEntity::undo()

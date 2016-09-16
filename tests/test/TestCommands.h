@@ -22,7 +22,9 @@
 *****************************************************************************/
 #pragma once
 
-#include <QUndoStack>
+#include <QGraphicsScene>
+
+#include <entity/EntityFactory.h>
 
 #include <models/ApplicationModel.h>
 
@@ -39,16 +41,18 @@ protected:
 
     void SetUp() override
     {
-
+        const_cast<entity::EntityFactory&>(
+            entity::EntityFactory::instance()).onSceneChanged(m_Scene.get());
     }
 
     void TearDown() override
     {
-
+        const_cast<entity::EntityFactory&>(
+            entity::EntityFactory::instance()).onSceneChanged(nullptr);
     }
 
     models::SharedApplicationModel m_FakeAppModel =
             std::make_shared<models::ApplicationModel>();
 
-    QUndoStack m_UndoStack;
+    std::unique_ptr<QGraphicsScene> m_Scene = std::make_unique<QGraphicsScene>();
 };

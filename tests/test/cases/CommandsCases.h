@@ -24,7 +24,23 @@
 
 #include "TestCommands.h"
 
+#include <commands/CreateEntity.h>
+
 TEST_F(CommandsTester, CreateEntity)
 {
+    auto type = entity::KindOfType::Class;
+    auto scopeID = common::ID::globalScopeID();
+    auto pos = QPointF(10., 20.);
 
+    auto cmd = std::make_unique<commands::CreateEntity>(type, scopeID, pos);
+    cmd->redo();
+
+    auto entity = cmd->entity();
+    ASSERT_TRUE(!!entity);
+    ASSERT_EQ(entity->kindOfType(), type);
+    ASSERT_EQ(entity->scopeId(), scopeID);
+
+    auto graphicEntity = cmd->graphicsEntity();
+    ASSERT_TRUE(!!graphicEntity);
+    ASSERT_EQ(graphicEntity->pos(), pos);
 }

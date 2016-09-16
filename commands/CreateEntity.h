@@ -40,6 +40,9 @@ namespace commands {
         CreateEntity(entity::KindOfType entityType, const common::ID &scopeID, const QPointF &pos,
                      QUndoCommand *parent = nullptr);
 
+        entity::SharedType entity() const;
+        graphics::EntityPtr graphicsEntity() const;
+
     public: // QUndoCommand overridies
         void undo()    override;
         void redo()    override;
