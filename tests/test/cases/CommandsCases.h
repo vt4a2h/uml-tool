@@ -29,7 +29,7 @@
 TEST_F(CommandsTester, CreateEntity)
 {
     auto type = entity::KindOfType::Class;
-    auto scopeID = common::ID::globalScopeID();
+    auto scopeID = common::ID::projectScopeID();
     auto pos = QPointF(10., 20.);
 
     auto cmd = std::make_unique<commands::CreateEntity>(type, scopeID, pos);
