@@ -22,8 +22,6 @@
 *****************************************************************************/
 #pragma once
 
-#include <QGraphicsScene>
-
 #include <entity/EntityFactory.h>
 
 #include <models/ApplicationModel.h>
@@ -42,22 +40,12 @@ protected:
         m_FakeAppModel = std::make_shared<models::ApplicationModel>();
         m_FakeAppModel->setGlobalDatabse(m_GlobalDb);
         m_FakeAppModel->addProject(m_Project);
-
-        m_Scene = std::make_unique<QGraphicsScene>();
-
-        const_cast<entity::EntityFactory&>(
-            entity::EntityFactory::instance()).onSceneChanged(m_Scene.get());
     }
 
     void TearDown() override
     {
-        const_cast<entity::EntityFactory&>(
-            entity::EntityFactory::instance()).onSceneChanged(nullptr);
-
         m_FakeAppModel.reset();
-        m_Scene.reset();
     }
 
     models::SharedApplicationModel m_FakeAppModel;
-    std::unique_ptr<QGraphicsScene> m_Scene;
 };

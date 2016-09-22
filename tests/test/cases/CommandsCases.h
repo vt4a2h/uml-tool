@@ -39,8 +39,12 @@ TEST_F(CommandsTester, CreateEntity)
     ASSERT_TRUE(!!entity);
     ASSERT_EQ(entity->kindOfType(), type);
     ASSERT_EQ(entity->scopeId(), scopeID);
+    ASSERT_TRUE(!!m_ProjectDb->scope(scopeID)->type(entity->id()));
 
     auto graphicEntity = cmd->graphicsEntity();
-    ASSERT_TRUE(!!graphicEntity);
-    ASSERT_EQ(graphicEntity->pos(), pos);
+    ASSERT_FALSE(!!graphicEntity);
+
+    cmd->undo();
+    ASSERT_TRUE(!!entity);
+    ASSERT_FALSE(!!m_ProjectDb->scope(scopeID)->type(entity->id()));
 }

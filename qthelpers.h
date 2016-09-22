@@ -31,6 +31,10 @@
 // Guarded condition, assert in debug mode if condition is false
 #define G_ASSERT(c) qthelpers::detail::g_assert(c, Q_FUNC_INFO, #c, __FILE__, __LINE__)
 
+// Conditional G_ASSERT
+#define G_ASSERT_C(c, cond) qthelpers::detail::g_assert_c(c, !!cond, Q_FUNC_INFO, \
+                                                          #c, __FILE__, __LINE__)
+
 namespace qthelpers
 {
     namespace detail
@@ -45,6 +49,20 @@ namespace qthelpers
         #else
             Q_UNUSED(where); Q_UNUSED(what); Q_UNUSED(file); Q_UNUSED(line);
         #endif
+
+            return std::forward<Condition>(c);
+        }
+
+        template <class Condition>
+        inline decltype(auto) g_assert_c(Condition &&c, bool cond, const char *where,
+                                         const char *what, const char *file, int line)
+        {
+#ifdef QT_DEBUG
+            if (cond && !c)
+                qt_assert_x(where, what, file, line);
+#else
+            Q_UNUSED(where); Q_UNUSED(what); Q_UNUSED(file); Q_UNUSED(line);
+#endif
 
             return std::forward<Condition>(c);
         }

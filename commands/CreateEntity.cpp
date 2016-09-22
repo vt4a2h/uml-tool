@@ -90,7 +90,8 @@ namespace commands {
         sanityCheck();
 
         // TODO: move to the RemoveEntity command (when it'll be created)
-        m_Scene->removeItem(m_GraphicEntity);
+        if (m_GraphicEntity)
+            m_Scene->removeItem(m_GraphicEntity);
         m_Scope->removeType(m_Entity->id());
         m_TreeModel->removeType(m_ProjectName, m_ScopeID, m_Entity->id());
 
@@ -102,28 +103,31 @@ namespace commands {
      */
     void CreateEntity::redo()
     {
-        // FIXME: don't use factory to get scope, project, scene, etc.. Pass them instead.
         if (!m_Done) {
             auto &&factory = entity::EntityFactory::instance();
 
-            m_Entity = G_ASSERT(factory.make(m_KindOfType, m_Pos, m_ScopeID));
-
-            auto project = G_ASSERT(factory.project());
-            m_GraphicEntity = G_ASSERT(G_ASSERT(project->database())->graphicsEntity(m_Entity->id()));
-
+            // FIXME: don't use factory to get scope, project, scene, etc.. Pass them instead.
             // Set aux, TODO eliminate {
             m_Scope = G_ASSERT(G_ASSERT(factory.db())->scope(m_ScopeID));
-            m_Scene = G_ASSERT(factory.scene());
+            m_Scene = factory.scene();
             m_TreeModel = G_ASSERT(factory.treeModel());
+
+            auto project = G_ASSERT(factory.project());
             m_ProjectName = project->name();
             // }
+
+            m_Entity = G_ASSERT(factory.make(m_KindOfType, m_Pos, m_ScopeID));
+
+            m_GraphicEntity = G_ASSERT_C(G_ASSERT(project->database())->graphicsEntity(m_Entity->id()),
+                                         m_Scene);
 
             m_Done = true;
         } else {
             sanityCheck();
 
             m_Scope->addExistsType(m_Entity);
-            m_Scene->addItem(m_GraphicEntity.data());
+            if (m_Scene)
+                m_Scene->addItem(m_GraphicEntity.data());
             m_TreeModel->addType(m_Entity, m_Scope->id(), m_ProjectName);
             m_CleaningRequired = false;
         }
@@ -144,9 +148,8 @@ namespace commands {
     void CreateEntity::sanityCheck()
     {
         Q_ASSERT(m_Entity);
-        Q_ASSERT(m_GraphicEntity);
+        Q_ASSERT((m_Scene && m_GraphicEntity) || (!m_Scene && !m_GraphicEntity) );
         Q_ASSERT(m_Scope);
-        Q_ASSERT(m_Scene);
         Q_ASSERT(m_TreeModel);
         Q_ASSERT(!m_ProjectName.isEmpty());
     }

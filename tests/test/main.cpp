@@ -23,27 +23,24 @@
 #include <gtest/gtest.h>
 #include <QApplication>
 
-//#include <cases/ProjectMakerCases.h>
-//#include <cases/ProjectCases.h>
-//#include <cases/ProjectTranslatorCases.h>
-//#include <cases/RelationMakerCases.h>
-//#include <cases/DepthSearchCases.h>
-//#include <cases/FileMakerCases.h>
-//#include <cases/FileJsonCases.h>
-//#include <cases/TypeMakerTestCases.h>
-//#include <cases/IComponentsCases.h>
-//#include <cases/EntitiesCases.h>
-//#include <cases/ClassComponentsCases.h>
-//#include <cases/SignatureParserCases.h>
-//#include <cases/ComponentsMakerCases.h>
-//#include <cases/SignatureMakerCases.h>
+#include <cases/ProjectMakerCases.h>
+#include <cases/ProjectCases.h>
+#include <cases/ProjectTranslatorCases.h>
+#include <cases/RelationMakerCases.h>
+#include <cases/DepthSearchCases.h>
+#include <cases/FileMakerCases.h>
+#include <cases/FileJsonCases.h>
+#include <cases/TypeMakerTestCases.h>
+#include <cases/IComponentsCases.h>
+#include <cases/EntitiesCases.h>
+#include <cases/ClassComponentsCases.h>
+#include <cases/SignatureParserCases.h>
+#include <cases/ComponentsMakerCases.h>
+#include <cases/SignatureMakerCases.h>
 #include <cases/CommandsCases.h>
 
 int main(int argc, char **argv)
 {
-    // We need qapplication to create some classes
-    QApplication app(argc, argv);
-
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
