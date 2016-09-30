@@ -26,25 +26,30 @@
 
 #include <commands/CreateEntity.h>
 
-TEST_F(CommandsTester, CreateEntity)
+TEST_F(CommandsTester, CreateEntityCommand)
 {
-    auto type = entity::KindOfType::Class;
     auto scopeID = common::ID::projectScopeID();
     auto pos = QPointF(10., 20.);
 
-    auto cmd = std::make_unique<commands::CreateEntity>(type, scopeID, pos);
-    cmd->redo();
+    for (uint type = uint(entity::KindOfType::Type);
+         type <= uint(entity::KindOfType::TemplateClass);
+         ++type) {
+        auto kindOfType = entity::KindOfType(type);
 
-    auto entity = cmd->entity();
-    ASSERT_TRUE(!!entity);
-    ASSERT_EQ(entity->kindOfType(), type);
-    ASSERT_EQ(entity->scopeId(), scopeID);
-    ASSERT_TRUE(!!m_ProjectDb->scope(scopeID)->type(entity->id()));
+        auto cmd = std::make_unique<commands::CreateEntity>(kindOfType, scopeID, pos);
+        cmd->redo();
 
-    auto graphicEntity = cmd->graphicsEntity();
-    ASSERT_FALSE(!!graphicEntity);
+        auto entity = cmd->entity();
+        ASSERT_TRUE(!!entity);
+        ASSERT_EQ(entity->kindOfType(), kindOfType);
+        ASSERT_EQ(entity->scopeId(), scopeID);
+        ASSERT_TRUE(!!m_ProjectDb->scope(scopeID)->type(entity->id()));
 
-    cmd->undo();
-    ASSERT_TRUE(!!entity);
-    ASSERT_FALSE(!!m_ProjectDb->scope(scopeID)->type(entity->id()));
+        auto graphicEntity = cmd->graphicsEntity();
+        ASSERT_FALSE(!!graphicEntity);
+
+        cmd->undo();
+        ASSERT_TRUE(!!entity);
+        ASSERT_FALSE(!!m_ProjectDb->scope(scopeID)->type(entity->id()));
+    }
 }
