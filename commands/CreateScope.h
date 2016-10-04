@@ -43,6 +43,9 @@ namespace commands {
         void redo() override;
         void undo() override;
 
+        QString scopeName() const;
+        entity::SharedScope scope() const;
+
     private:
         QString m_ScopeName;
         entity::SharedScope m_NewScope;

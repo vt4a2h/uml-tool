@@ -66,4 +66,22 @@ namespace commands {
             m_Model.removeScope(m_NewScope->id());
     }
 
+    /**
+     * @brief CreateScope::scope
+     * @return
+     */
+    entity::SharedScope CreateScope::scope() const
+    {
+        return m_NewScope;
+    }
+
+    /**
+     * @brief CreateScope::scopeName
+     * @return
+     */
+    QString CreateScope::scopeName() const
+    {
+        return m_ScopeName;
+    }
+
 } // namespace commands

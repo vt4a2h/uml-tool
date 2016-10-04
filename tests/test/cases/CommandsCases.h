@@ -25,6 +25,7 @@
 #include "TestCommands.h"
 
 #include <commands/CreateEntity.h>
+#include <commands/CreateScope.h>
 
 TEST_F(CommandsTester, CreateEntityCommand)
 {
@@ -52,4 +53,24 @@ TEST_F(CommandsTester, CreateEntityCommand)
         ASSERT_TRUE(!!entity);
         ASSERT_FALSE(!!m_ProjectDb->scope(scopeID)->type(entity->id()));
     }
+}
+
+TEST_F(CommandsTester, CreateScopeCommand)
+{
+    QString scopeName = "Foo";
+
+    auto cmd = std::make_unique<commands::CreateScope>(scopeName, *m_FakeAppModel);
+
+    cmd->redo();
+    ASSERT_FALSE(cmd->scopeName().isEmpty());
+    ASSERT_TRUE(!!cmd->scope());
+
+    auto newScope = m_ProjectDb->scope(cmd->scope()->id());
+    ASSERT_EQ(newScope, cmd->scope());
+
+    cmd->undo();
+    ASSERT_FALSE(!!m_ProjectDb->scope(newScope->id()));
+
+    cmd->redo();
+    ASSERT_TRUE(!!m_ProjectDb->scope(newScope->id()));
 }

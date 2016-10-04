@@ -40,6 +40,7 @@ protected:
         m_FakeAppModel = std::make_shared<models::ApplicationModel>();
         m_FakeAppModel->setGlobalDatabse(m_GlobalDb);
         m_FakeAppModel->addProject(m_Project);
+        m_FakeAppModel->setCurrentProject(m_Project->name());
     }
 
     void TearDown() override

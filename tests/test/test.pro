@@ -50,6 +50,7 @@ HEADERS += ../../enums.h \
     ../../commands/movegraphicobject.h \
     ../../commands/basecommand.h \
     ../../commands/CreateEntity.h \
+    ../../commands/CreateScope.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -142,4 +143,5 @@ SOURCES += main.cpp \
            ../../common/ElementsFactory.cpp \
            ../../commands/movegraphicobject.cpp \
            ../../commands/basecommand.cpp \
-           ../../commands/CreateEntity.cpp
+           ../../commands/CreateEntity.cpp \
+           ../../commands/CreateScope.cpp
