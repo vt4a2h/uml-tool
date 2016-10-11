@@ -120,4 +120,22 @@ namespace commands {
                    Q_FUNC_INFO, "Invalid scene");
     }
 
+    /**
+     * @brief MakeProjectCurrent::previousProjectName
+     * @return
+     */
+    QString MakeProjectCurrent::previousProjectName() const
+    {
+        return m_PreviousProjectName;
+    }
+
+    /**
+     * @brief MakeProjectCurrent::currentProjectName
+     * @return
+     */
+    QString MakeProjectCurrent::currentProjectName() const
+    {
+        return m_CurrentProjectName;
+    }
+
 } // namespace commands

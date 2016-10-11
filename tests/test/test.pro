@@ -51,6 +51,7 @@ HEADERS += ../../enums.h \
     ../../commands/basecommand.h \
     ../../commands/CreateEntity.h \
     ../../commands/CreateScope.h \
+    ../../commands/MakeProjectCurrent.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -144,4 +145,5 @@ SOURCES += main.cpp \
            ../../commands/movegraphicobject.cpp \
            ../../commands/basecommand.cpp \
            ../../commands/CreateEntity.cpp \
-           ../../commands/CreateScope.cpp
+           ../../commands/CreateScope.cpp \
+           ../../commands/MakeProjectCurrent.cpp

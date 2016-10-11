@@ -26,6 +26,7 @@
 
 #include <commands/CreateEntity.h>
 #include <commands/CreateScope.h>
+#include <commands/MakeProjectCurrent.h>
 
 TEST_F(CommandsTester, CreateEntityCommand)
 {
@@ -73,4 +74,28 @@ TEST_F(CommandsTester, CreateScopeCommand)
 
     cmd->redo();
     ASSERT_TRUE(!!m_ProjectDb->scope(newScope->id()));
+}
+
+TEST_F(CommandsTester, MakeProjectCurrent)
+{
+    QString testProjectName = "Test Project";
+    auto testProject = m_FakeAppModel->makeProject(testProjectName, "");
+    auto oldCurrent = m_FakeAppModel->currentProject();
+    ASSERT_TRUE(!!oldCurrent);
+
+    ASSERT_FALSE(m_FakeAppModel->currentProject() == testProject);
+    auto cmd = std::make_unique<commands::MakeProjectCurrent>(
+                   testProjectName, m_FakeAppModel, graphics::ScenePtr());
+
+    cmd->redo();
+
+    ASSERT_EQ(testProject, m_FakeAppModel->currentProject());
+    ASSERT_EQ(oldCurrent->name(), cmd->previousProjectName());
+    ASSERT_EQ(testProjectName, cmd->currentProjectName());
+
+    cmd->undo();
+    ASSERT_EQ(m_FakeAppModel->project(cmd->previousProjectName()), m_FakeAppModel->currentProject());
+
+    cmd->redo();
+    ASSERT_EQ(testProject, m_FakeAppModel->currentProject());
 }

@@ -43,6 +43,9 @@ namespace commands {
         void undo() override;
         void redo() override;
 
+        QString currentProjectName() const;
+        QString previousProjectName() const;
+
     private:
         void sanityCheck() override;
 
