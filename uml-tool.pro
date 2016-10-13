@@ -42,7 +42,6 @@ SOURCES += \
     gui/componentseditdelegate.cpp \
     gui/signatureeditdelegate.cpp \
     models/componentsmodel.cpp \
-    commands/movegraphicobject.cpp \
     commands/renameentity.cpp \
     commands/movetypetootherscope.cpp \
     commands/removecomponentscommands.cpp \
@@ -88,7 +87,8 @@ SOURCES += \
     commands/BaseCommand.cpp \
     commands/MakeProjectCurrent.cpp \
     commands/CreateScope.cpp \
-    helpers/GeneratorID.cpp
+    helpers/GeneratorID.cpp \
+    commands/MoveGraphicObject.cpp
 
 HEADERS += \
     enums.h \
@@ -131,7 +131,6 @@ HEADERS += \
     gui/signatureeditdelegate.h \
     models/models_types.hpp \
     models/componentsmodel.h \
-    commands/movegraphicobject.h \
     commands/renameentity.h \
     commands/movetypetootherscope.h \
     commands/removecomponentscommands.h \
@@ -189,7 +188,8 @@ HEADERS += \
     commands/MakeProjectCurrent.h \
     commands/CreateScope.h \
     helpers/GeneratorID.h \
-    gui/graphics/GraphicsTypes.h
+    gui/graphics/GraphicsTypes.h \
+    commands/MoveGraphicObject.h
 
 FORMS += \
     gui/about.ui \

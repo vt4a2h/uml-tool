@@ -24,8 +24,6 @@
 
 #include <QGraphicsScene>
 
-#include <commands/movegraphicobject.h>
-
 #include <db/ProjectDatabase.h>
 
 #include <entity/Class.h>

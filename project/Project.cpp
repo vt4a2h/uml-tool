@@ -30,7 +30,7 @@
 
 #include <common/BasicElement.h>
 
-#include <commands/movegraphicobject.h>
+#include <commands/MoveGraphicObject.h>
 
 #include <entity/Type.h>
 #include <entity/Scope.h>

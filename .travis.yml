@@ -16,6 +16,11 @@ install:
    - sudo apt-get install -qq zlib1g-dev libudev-dev
    - sudo apt-get install -qq libboost-all-dev
    
+before_script:
+   - "export DISPLAY=:99.0"
+   - "sh -e /etc/init.d/xvfb start"
+   - sleep 3 # give xvfb some time to start
+   
 script:
    # build application
    - qmake uml-tool.pro -r -spec linux-g++ CONFIG+=release

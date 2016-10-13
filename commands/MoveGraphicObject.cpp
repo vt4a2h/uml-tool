@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "movegraphicobject.h"
+#include "MoveGraphicObject.h"
 
 #include <QGraphicsItem>
 

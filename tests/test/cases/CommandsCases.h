@@ -27,6 +27,7 @@
 #include <commands/CreateEntity.h>
 #include <commands/CreateScope.h>
 #include <commands/MakeProjectCurrent.h>
+#include <commands/MoveGraphicObject.h>
 
 TEST_F(CommandsTester, CreateEntityCommand)
 {
@@ -98,4 +99,24 @@ TEST_F(CommandsTester, MakeProjectCurrent)
 
     cmd->redo();
     ASSERT_EQ(testProject, m_FakeAppModel->currentProject());
+}
+
+TEST_F(CommandsTester, MoveGraphicObject)
+{
+    const QPointF initialPos {42., 123.};
+    const QPointF dstPoint   {100., 100.};
+    entity::SharedType someType = std::make_shared<entity::Type>();
+
+    graphics::Entity e(someType);
+    e.setPos(initialPos);
+    ASSERT_EQ(e.pos(), initialPos);
+
+    auto cmd =
+        std::make_unique<commands::MoveGraphicObject>(e, someType->name(), initialPos, dstPoint);
+
+    cmd->redo();
+    ASSERT_EQ(e.pos(), dstPoint);
+
+    cmd->undo();
+    ASSERT_EQ(e.pos(), initialPos);
 }

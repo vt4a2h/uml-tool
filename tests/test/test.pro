@@ -47,11 +47,11 @@ HEADERS += ../../enums.h \
     ../../relationship/Relation.h \
     ../../relationship/RelationFactory.h \
     ../../common/ElementsFactory.h \
-    ../../commands/movegraphicobject.h \
     ../../commands/basecommand.h \
     ../../commands/CreateEntity.h \
     ../../commands/CreateScope.h \
     ../../commands/MakeProjectCurrent.h \
+    ../../commands/MoveGraphicObject.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -88,7 +88,7 @@ HEADERS += ../../enums.h \
     cases/FileMakerCases.h \
     TestCommands.h \
     cases/CommandsCases.h \
-    cases/ProjectMakerCases.h
+    cases/ProjectMakerCases.h \
 
 SOURCES += main.cpp \
            ../../application/settings.cpp \
@@ -142,8 +142,8 @@ SOURCES += main.cpp \
            ../../helpers/entityhelpres.cpp \
            ../../helpers/GeneratorID.cpp \
            ../../common/ElementsFactory.cpp \
-           ../../commands/movegraphicobject.cpp \
            ../../commands/basecommand.cpp \
            ../../commands/CreateEntity.cpp \
            ../../commands/CreateScope.cpp \
-           ../../commands/MakeProjectCurrent.cpp
+           ../../commands/MakeProjectCurrent.cpp \
+           ../../commands/MoveGraphicObject.cpp
