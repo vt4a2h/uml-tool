@@ -44,6 +44,7 @@ HEADERS += ../../enums.h \
     ../../helpers/GeneratorID.h\
     ../../gui/graphics/GraphicsRelation.h \
     ../../gui/graphics/Entity.h \
+    ../../gui/graphics/Scene.h \
     ../../relationship/Relation.h \
     ../../relationship/RelationFactory.h \
     ../../common/ElementsFactory.h \
@@ -52,6 +53,7 @@ HEADERS += ../../enums.h \
     ../../commands/CreateScope.h \
     ../../commands/MakeProjectCurrent.h \
     ../../commands/MoveGraphicObject.h \
+    ../../commands/AddRelation.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -121,6 +123,7 @@ SOURCES += main.cpp \
            ../../relationship/RelationFactory.cpp \
            ../../gui/graphics/GraphicsRelation.cpp \
            ../../gui/graphics/Entity.cpp \
+           ../../gui/graphics/Scene.cpp \
            ../../entity/templateclassmethod.cpp \
            ../../entity/scope.cpp \
            ../../entity/EntityFactory.cpp \
@@ -146,4 +149,5 @@ SOURCES += main.cpp \
            ../../commands/CreateEntity.cpp \
            ../../commands/CreateScope.cpp \
            ../../commands/MakeProjectCurrent.cpp \
-           ../../commands/MoveGraphicObject.cpp
+           ../../commands/MoveGraphicObject.cpp \
+           ../../commands/AddRelation.cpp

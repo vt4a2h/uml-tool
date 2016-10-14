@@ -415,7 +415,8 @@ namespace project {
     {
         G_DISCONNECT(e, &graphics::Entity::xChanged, this, &project::Project::touch);
         G_DISCONNECT(e, &graphics::Entity::yChanged, this, &project::Project::touch);
-        G_DISCONNECT(e, SIGNAL(moved()));
+        // FIXME: use disconnect with qmetaobject
+        // G_DISCONNECT(e, SIGNAL(moved(QPointF,QPointF)));
     }
 
     /**

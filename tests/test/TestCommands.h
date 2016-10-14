@@ -22,9 +22,14 @@
 *****************************************************************************/
 #pragma once
 
+#include <QtGui/QGraphicsScene>
+
 #include <entity/EntityFactory.h>
 
 #include <models/ApplicationModel.h>
+
+#include <gui/graphics/GraphicsTypes.h>
+#include <gui/graphics/Scene.h>
 
 #include "TestProjectBase.h"
 
@@ -41,12 +46,18 @@ protected:
         m_FakeAppModel->setGlobalDatabse(m_GlobalDb);
         m_FakeAppModel->addProject(m_Project);
         m_FakeAppModel->setCurrentProject(m_Project->name());
+
+        m_Scene = std::make_unique<graphics::Scene>();
+        const_cast<entity::EntityFactory &>(
+            entity::EntityFactory::instance()).onSceneChanged(m_Scene.get());
     }
 
     void TearDown() override
     {
         m_FakeAppModel.reset();
+        m_Scene.reset();
     }
 
     models::SharedApplicationModel m_FakeAppModel;
+    graphics::UniqueScene m_Scene;
 };

@@ -49,11 +49,17 @@ TEST_F(CommandsTester, CreateEntityCommand)
         ASSERT_TRUE(!!m_ProjectDb->scope(scopeID)->type(entity->id()));
 
         auto graphicEntity = cmd->graphicsEntity();
-        ASSERT_FALSE(!!graphicEntity);
+        ASSERT_TRUE(!!graphicEntity);
+        ASSERT_EQ(graphicEntity->typeObject(), entity);
+        ASSERT_EQ(graphicEntity->id(), entity->id());
+        ASSERT_TRUE(!!m_ProjectDb->graphicsEntity(entity->id()));
+        ASSERT_EQ(m_ProjectDb->graphicsEntity(entity->id()), graphicEntity);
 
         cmd->undo();
         ASSERT_TRUE(!!entity);
         ASSERT_FALSE(!!m_ProjectDb->scope(scopeID)->type(entity->id()));
+        ASSERT_TRUE(!!graphicEntity);
+        ASSERT_FALSE(!!m_ProjectDb->graphicsEntity(entity->id()));
     }
 }
 

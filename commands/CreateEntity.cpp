@@ -90,8 +90,16 @@ namespace commands {
         sanityCheck();
 
         // TODO: move to the RemoveEntity command (when it'll be created)
-        if (m_GraphicEntity)
+        if (m_GraphicEntity && m_GraphicEntity)
+        {
             m_Scene->removeItem(m_GraphicEntity);
+
+            // TODO eliminate {
+            auto &&factory = entity::EntityFactory::instance();
+            auto project = G_ASSERT(factory.project());
+            // }
+            project->database()->unregisterGraphicsEntity(m_GraphicEntity);
+        }
         m_Scope->removeType(m_Entity->id());
         m_TreeModel->removeType(m_ProjectName, m_ScopeID, m_Entity->id());
 
@@ -103,8 +111,10 @@ namespace commands {
      */
     void CreateEntity::redo()
     {
+        auto &&factory = entity::EntityFactory::instance();
+        auto project = G_ASSERT(factory.project());
+
         if (!m_Done) {
-            auto &&factory = entity::EntityFactory::instance();
 
             // FIXME: don't use factory to get scope, project, scene, etc.. Pass them instead.
             // Set aux, TODO eliminate {
@@ -112,7 +122,6 @@ namespace commands {
             m_Scene = factory.scene();
             m_TreeModel = G_ASSERT(factory.treeModel());
 
-            auto project = G_ASSERT(factory.project());
             m_ProjectName = project->name();
             // }
 
@@ -126,8 +135,11 @@ namespace commands {
             sanityCheck();
 
             m_Scope->addExistsType(m_Entity);
-            if (m_Scene)
+            if (m_Scene && m_GraphicEntity)
+            {
                 m_Scene->addItem(m_GraphicEntity.data());
+                project->database()->registerGraphicsEntity(m_GraphicEntity);
+            }
             m_TreeModel->addType(m_Entity, m_Scope->id(), m_ProjectName);
             m_CleaningRequired = false;
         }
