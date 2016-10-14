@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include <QtGui/QGraphicsScene>
+#include <QGraphicsScene>
 
 #include <entity/EntityFactory.h>
 
