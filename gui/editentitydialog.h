@@ -24,7 +24,7 @@
 
 #include <QDialog>
 
-#include <project/project_types.hpp>
+#include <project/ProjectTypes.hpp>
 
 #include <entity/entity_types.hpp>
 

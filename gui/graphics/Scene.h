@@ -25,7 +25,7 @@
 #include <QGraphicsScene>
 #include <QPointer>
 
-#include <project/project_types.hpp>
+#include <project/ProjectTypes.hpp>
 
 #include "enums.h"
 

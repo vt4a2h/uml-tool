@@ -37,7 +37,7 @@
 #include <gui/graphics/GraphicsTypes.h>
 
 #include "types.h"
-#include "project_types.hpp"
+#include "ProjectTypes.hpp"
 
 class QUndoStack;
 
@@ -127,6 +127,8 @@ namespace project {
         db::SharedProjectDatabase m_Database;
 
         ErrorList m_Errors;
+
+        IDConnectionHash m_graphicsEntityConnections;
 
         commands::SharedCommandStack m_CommandsStack;
     };

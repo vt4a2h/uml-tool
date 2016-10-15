@@ -27,7 +27,7 @@
 
 #include <db/db_types.hpp>
 
-#include <project/project_types.hpp>
+#include <project/ProjectTypes.hpp>
 
 #include <models/models_types.hpp>
 

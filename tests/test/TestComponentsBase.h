@@ -27,7 +27,7 @@
 #include <entity/EntityFactory.h>
 
 #include <project/Project.h>
-#include <project/project_types.hpp>
+#include <project/ProjectTypes.hpp>
 
 #include <db/Database.h>
 #include <db/db_types.hpp>

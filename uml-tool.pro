@@ -135,7 +135,6 @@ HEADERS += \
     commands/movetypetootherscope.h \
     commands/removecomponentscommands.h \
     commands/addcomponentscommands.h \
-    project/project_types.hpp \
     application/settings.h \
     constants.h \
     helpers/entityhelpres.h \
@@ -189,7 +188,8 @@ HEADERS += \
     commands/CreateScope.h \
     helpers/GeneratorID.h \
     gui/graphics/GraphicsTypes.h \
-    commands/MoveGraphicObject.h
+    commands/MoveGraphicObject.h \
+    project/ProjectTypes.hpp
 
 FORMS += \
     gui/about.ui \

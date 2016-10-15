@@ -25,7 +25,7 @@
 #include <QMainWindow>
 
 #include <models/models_types.hpp>
-#include <project/project_types.hpp>
+#include <project/ProjectTypes.hpp>
 #include <commands/CommandsTypes.h>
 #include <gui/graphics/GraphicsTypes.h>
 

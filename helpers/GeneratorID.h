@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 
-#include <project/project_types.hpp>
+#include <project/ProjectTypes.hpp>
 
 #include <common/ID.h>
 
