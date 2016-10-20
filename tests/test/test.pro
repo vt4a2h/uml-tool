@@ -54,6 +54,7 @@ HEADERS += ../../enums.h \
     ../../commands/MakeProjectCurrent.h \
     ../../commands/MoveGraphicObject.h \
     ../../commands/AddRelation.h \
+    ../../commands/MoveTypeToAnotherScope.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -150,4 +151,5 @@ SOURCES += main.cpp \
            ../../commands/CreateScope.cpp \
            ../../commands/MakeProjectCurrent.cpp \
            ../../commands/MoveGraphicObject.cpp \
-           ../../commands/AddRelation.cpp
+           ../../commands/AddRelation.cpp \
+           ../../commands/MoveTypeToAnotherScope.cpp

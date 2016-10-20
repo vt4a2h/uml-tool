@@ -30,13 +30,13 @@
 
 namespace commands {
 
-    /// The MoveTypeToOtherScope class
-    class MoveTypeToOtherScope : public BaseCommand
+    /// The MoveTypeToAnotherScope class
+    class MoveTypeToAnotherScope : public BaseCommand
     {
     public:
-        MoveTypeToOtherScope(const entity::SharedType &type, const models::SharedApplicationModel &appModel,
-                             const entity::SharedScope &srcScope, const entity::SharedScope &dstScope,
-                             QUndoCommand *parent = nullptr);
+        MoveTypeToAnotherScope(const entity::SharedType &type, const models::SharedApplicationModel &appModel,
+                               const entity::SharedScope &srcScope, const entity::SharedScope &dstScope,
+                               QUndoCommand *parent = nullptr);
 
         void redo() override;
         void undo() override;

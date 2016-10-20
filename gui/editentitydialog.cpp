@@ -45,7 +45,7 @@
 #include <utility/helpfunctions.h>
 
 #include <commands/renameentity.h>
-#include <commands/movetypetootherscope.h>
+#include <commands/MoveTypeToAnotherScope.h>
 #include <commands/addcomponentscommands.h>
 #include <commands/removecomponentscommands.h>
 
@@ -326,7 +326,7 @@ namespace gui {
             Q_ASSERT(dstScope);
 
             Q_ASSERT(m_ApplicationModel);
-            auto cmd = std::make_unique<commands::MoveTypeToOtherScope>(m_Type, m_ApplicationModel, srcScope, dstScope);
+            auto cmd = std::make_unique<commands::MoveTypeToAnotherScope>(m_Type, m_ApplicationModel, srcScope, dstScope);
             stack->push(cmd.release());
         }
 

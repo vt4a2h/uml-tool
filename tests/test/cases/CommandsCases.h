@@ -28,6 +28,7 @@
 #include <commands/CreateScope.h>
 #include <commands/MakeProjectCurrent.h>
 #include <commands/MoveGraphicObject.h>
+#include <commands/MoveTypeToAnotherScope.h>
 
 TEST_F(CommandsTester, CreateEntityCommand)
 {
@@ -125,4 +126,29 @@ TEST_F(CommandsTester, MoveGraphicObject)
 
     cmd->undo();
     ASSERT_EQ(e.pos(), initialPos);
+}
+
+TEST_F(CommandsTester, MoveTypeToAnotherScope)
+{
+    auto firstScope = m_Project->database()->addScope("first");
+    ASSERT_TRUE(!!firstScope);
+
+    auto secondScope = m_Project->database()->addScope("second");
+    ASSERT_TRUE(!!secondScope);
+
+    auto type = firstScope->addType("SomeType");
+    ASSERT_TRUE(!!type);
+    ASSERT_TRUE(firstScope->containsType(type->id()));
+    ASSERT_FALSE(secondScope->containsType(type->id()));
+
+    auto cmd = std::make_unique<commands::MoveTypeToAnotherScope>(type, m_FakeAppModel, firstScope,
+                                                                secondScope);
+
+    cmd->redo();
+    ASSERT_FALSE(firstScope->containsType(type->id()));
+    ASSERT_TRUE(secondScope->containsType(type->id()));
+
+    cmd->undo();
+    ASSERT_TRUE(firstScope->containsType(type->id()));
+    ASSERT_FALSE(secondScope->containsType(type->id()));
 }

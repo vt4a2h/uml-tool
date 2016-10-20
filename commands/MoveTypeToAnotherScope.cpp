@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "movetypetootherscope.h"
+#include "MoveTypeToAnotherScope.h"
 
 #include <entity/Type.h>
 #include <entity/Scope.h>
@@ -37,11 +37,11 @@ namespace commands {
      * @param dstScope
      * @param parent
      */
-    MoveTypeToOtherScope::MoveTypeToOtherScope(const entity::SharedType &type,
-                                               const models::SharedApplicationModel &appModel,
-                                               const entity::SharedScope &srcScope,
-                                               const entity::SharedScope &dstScope,
-                                               QUndoCommand *parent)
+    MoveTypeToAnotherScope::MoveTypeToAnotherScope(const entity::SharedType &type,
+                                                   const models::SharedApplicationModel &appModel,
+                                                   const entity::SharedScope &srcScope,
+                                                   const entity::SharedScope &dstScope,
+                                                   QUndoCommand *parent)
         : BaseCommand(tr("Move \"%1\" from \"%2\" to \"%3\".").arg(type->name(), srcScope->name(), dstScope->name()),
                       parent)
         , m_Type(type)
@@ -54,7 +54,7 @@ namespace commands {
     /**
      * @brief MoveTypeToOtherScope::redo
      */
-    void MoveTypeToOtherScope::redo()
+    void MoveTypeToAnotherScope::redo()
     {
         m_Model->removeType(m_Model->currentProject()->name(), m_SrcScope->id(), m_Type->id());
         m_Model->addExistsType(m_Model->currentProject()->name(), m_DstScope->id(), m_Type);
@@ -63,9 +63,9 @@ namespace commands {
     /**
      * @brief MoveTypeToOtherScope::undo
      */
-    void MoveTypeToOtherScope::undo()
+    void MoveTypeToAnotherScope::undo()
     {
-        MoveTypeToOtherScope(m_Type, m_Model, m_DstScope, m_SrcScope).redo();
+        MoveTypeToAnotherScope(m_Type, m_Model, m_DstScope, m_SrcScope).redo();
     }
 
 } // namespace commands
