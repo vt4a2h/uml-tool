@@ -47,7 +47,7 @@
 #include <commands/renameentity.h>
 #include <commands/MoveTypeToAnotherScope.h>
 #include <commands/addcomponentscommands.h>
-#include <commands/removecomponentscommands.h>
+#include <commands/RemoveComponentsCommands.h>
 
 #include <translation/signaturemaker.h>
 

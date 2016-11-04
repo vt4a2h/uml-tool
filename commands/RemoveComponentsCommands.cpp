@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "removecomponentscommands.h"
+#include "RemoveComponentsCommands.h"
 
 #include "addcomponentscommands.h"
 

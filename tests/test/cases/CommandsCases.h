@@ -29,6 +29,7 @@
 #include <commands/MakeProjectCurrent.h>
 #include <commands/MoveGraphicObject.h>
 #include <commands/MoveTypeToAnotherScope.h>
+#include <commands/RemoveProject.h>
 
 TEST_F(CommandsTester, CreateEntityCommand)
 {
@@ -151,4 +152,23 @@ TEST_F(CommandsTester, MoveTypeToAnotherScope)
     cmd->undo();
     ASSERT_TRUE(firstScope->containsType(type->id()));
     ASSERT_FALSE(secondScope->containsType(type->id()));
+}
+
+TEST_F(CommandsTester, RemoveProject)
+{
+    auto createEntityCmd = std::make_unique<commands::CreateEntity>(
+        entity::KindOfType::Class, common::ID::projectScopeID(), QPointF(10, 20));
+    createEntityCmd->redo();
+
+    auto removeProject =
+        std::make_unique<commands::RemoveProject>(m_Project, m_FakeAppModel, m_Scene.get());
+
+    removeProject->redo();
+    ASSERT_FALSE(!!m_FakeAppModel->project(m_Project->name()));
+    ASSERT_FALSE(m_Scene->items().contains(createEntityCmd->graphicsEntity().data()));
+
+    removeProject->undo();
+    ASSERT_TRUE(!!m_FakeAppModel->project(m_Project->name()));
+    ASSERT_EQ(m_FakeAppModel->currentProject(), m_Project);
+    ASSERT_TRUE(m_Scene->items().contains(createEntityCmd->graphicsEntity().data()));
 }

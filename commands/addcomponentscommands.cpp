@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "addcomponentscommands.h"
 
-#include "removecomponentscommands.h"
+#include "RemoveComponentsCommands.h"
 
 namespace commands {
 

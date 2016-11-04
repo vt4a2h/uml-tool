@@ -71,7 +71,8 @@ namespace commands {
     class RemoveMethod : public RemoveComponentBaseCommand<entity::SharedMethod>
     {
     public:
-        RemoveMethod(const models::SharedClassComponentsModel &model, const entity::SharedMethod &method, int pos = -1,
+        RemoveMethod(const models::SharedClassComponentsModel &model,
+                     const entity::SharedMethod &method, int pos = -1,
                      QUndoCommand *parent = nullptr);
 
         void redo() override;
@@ -82,7 +83,8 @@ namespace commands {
     class RemoveField : public RemoveComponentBaseCommand<entity::SharedField>
     {
     public:
-        RemoveField(const models::SharedClassComponentsModel &model, const entity::SharedField &field, int pos = -1,
+        RemoveField(const models::SharedClassComponentsModel &model,
+                    const entity::SharedField &field, int pos = -1,
                      QUndoCommand *parent = nullptr);
 
         void redo() override;
