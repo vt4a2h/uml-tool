@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "editentitydialog.h"
+#include "EditEntityDialog.h"
 #include "ui_editentitydialog.h"
 
 #include <QMessageBox>
@@ -44,7 +44,7 @@
 
 #include <utility/helpfunctions.h>
 
-#include <commands/renameentity.h>
+#include <commands/RenameEntity.h>
 #include <commands/MoveTypeToAnotherScope.h>
 #include <commands/addcomponentscommands.h>
 #include <commands/RemoveComponentsCommands.h>

@@ -30,7 +30,7 @@
 
 #include <application/settings.h>
 
-#include <gui/editentitydialog.h>
+#include <gui/EditEntityDialog.h>
 
 #include <entity/Type.h>
 #include <entity/Enum.h>

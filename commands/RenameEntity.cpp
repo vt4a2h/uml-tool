@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 28/03/2015.
+** Created 22/04/2015.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,35 +20,57 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "BaseCommand.h"
+#include "RenameEntity.h"
 
-namespace commands {
+#include <common/BasicElement.h>
+
+#include "qthelpers.h"
+
+namespace commands
+{
 
     /**
-     * @brief BaseCommand::BaseCommand
+     * @brief RenameEntity::RenameEntity
+     * @param entity
+     * @param newName
      * @param parent
      */
-    BaseCommand::BaseCommand(BaseCommand::QUndoCommand *parent)
-        : BaseCommand(tr("no name"), parent)
+    RenameEntity::RenameEntity(const common::SharedBasicEntity &entity, const QString &newName,
+                               QUndoCommand *parent)
+        : BaseCommand(tr("Change name from \"%1\" to \"%2\".").arg(G_ASSERT(entity)->name(), newName), parent)
+        , m_Entity(entity)
+        , m_NewName(newName)
+        , m_OldName(entity->name())
     {
     }
 
     /**
-     * @brief BaseCommand::BaseCommand
-     * @param text
-     * @param parent
+     * @brief RenameEntity::redo
      */
-    BaseCommand::BaseCommand(const QString &text, BaseCommand::QUndoCommand *parent)
-        : QUndoCommand(text, parent)
+    void RenameEntity::redo()
     {
+        sanityCheck();
+
+        m_OldName = m_Entity->name();
+        m_Entity->setName(m_NewName);
     }
 
     /**
-     * @brief BaseCommand::~BaseCommand
+     * @brief RenameEntity::undo
      */
-    BaseCommand::~BaseCommand()
+    void RenameEntity::undo()
     {
-        cleanup();
+        m_Entity->setName(m_OldName);
+    }
+
+    /**
+     * @brief RenameEntity::sanityCheck
+     */
+    void RenameEntity::sanityCheck()
+    {
+        Q_ASSERT(m_Entity);
+        Q_ASSERT(!m_NewName.isEmpty());
     }
 
 } // namespace commands
+

@@ -30,6 +30,7 @@
 #include <commands/MoveGraphicObject.h>
 #include <commands/MoveTypeToAnotherScope.h>
 #include <commands/RemoveProject.h>
+#include <commands/RenameEntity.h>
 
 TEST_F(CommandsTester, CreateEntityCommand)
 {
@@ -171,4 +172,21 @@ TEST_F(CommandsTester, RemoveProject)
     ASSERT_TRUE(!!m_FakeAppModel->project(m_Project->name()));
     ASSERT_EQ(m_FakeAppModel->currentProject(), m_Project);
     ASSERT_TRUE(m_Scene->items().contains(createEntityCmd->graphicsEntity().data()));
+}
+
+TEST_F(CommandsTester, RenameEntity)
+{
+    QString defaultClassName = "Foo";
+    QString newClassName = "Bar";
+
+    auto c = m_ProjectScope->addType<entity::Class>(defaultClassName);
+    ASSERT_EQ(c->name(), defaultClassName);
+
+    auto renameEntityCommand = std::make_unique<commands::RenameEntity>(c, newClassName);
+
+    renameEntityCommand->redo();
+    ASSERT_EQ(c->name(), newClassName);
+
+    renameEntityCommand->undo();
+    ASSERT_EQ(c->name(), defaultClassName);
 }

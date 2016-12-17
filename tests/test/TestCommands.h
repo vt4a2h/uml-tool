@@ -25,6 +25,7 @@
 #include <QGraphicsScene>
 
 #include <entity/EntityFactory.h>
+#include <entity/Class.h>
 
 #include <models/ApplicationModel.h>
 

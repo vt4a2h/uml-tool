@@ -31,7 +31,7 @@
 #include <models/ApplicationModel.h>
 
 #include "graphics/Entity.h"
-#include "editentitydialog.h"
+#include "EditEntityDialog.h"
 #include "MainWindow.h"
 
 namespace gui {

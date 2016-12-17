@@ -20,47 +20,32 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "renameentity.h"
+#pragma once
 
-#include <common/BasicElement.h>
+#include <common/common_types.h>
+
+#include "BaseCommand.h"
 
 namespace commands
 {
 
-    /**
-     * @brief RenameEntity::RenameEntity
-     * @param entity
-     * @param newName
-     * @param parent
-     */
-    RenameEntity::RenameEntity(const common::SharedBasicEntity &entity, const QString &newName,
-                               QUndoCommand *parent)
-        : BaseCommand(tr("Change name from \"%1\" to \"%2\".").arg(entity->name(), newName), parent)
-        , m_Entity(entity)
-        , m_NewName(newName)
-        , m_OldName(entity ? entity->name() : "")
+    /// The RenameEntity class
+    class RenameEntity : public BaseCommand
     {
-    }
+    public:
+        RenameEntity(const common::SharedBasicEntity &entity, const QString &newName,
+                     QUndoCommand *parent = nullptr);
 
-    /**
-     * @brief RenameEntity::redo
-     */
-    void RenameEntity::redo()
-    {
-        Q_ASSERT(m_Entity);
-        Q_ASSERT(!m_NewName.isEmpty());
+        void redo() override;
+        void undo() override;
 
-        m_OldName = m_Entity->name();
-        m_Entity->setName(m_NewName);
-    }
+    protected:
+        void sanityCheck() override;
 
-    /**
-     * @brief RenameEntity::undo
-     */
-    void RenameEntity::undo()
-    {
-        m_Entity->setName(m_OldName);
-    }
+    private:
+        common::SharedBasicEntity m_Entity;
+        QString m_NewName;
+        QString m_OldName;
+    };
 
 } // namespace commands
-

@@ -35,14 +35,12 @@ SOURCES += \
     gui/about.cpp \
     gui/newproject.cpp \
     gui/addscope.cpp \
-    gui/editentitydialog.cpp \
     gui/scenefilter.cpp \
     gui/editmethoddialog.cpp \
     gui/chooseglobaldatabasedialog.cpp \
     gui/componentseditdelegate.cpp \
     gui/signatureeditdelegate.cpp \
     models/componentsmodel.cpp \
-    commands/renameentity.cpp \
     commands/addcomponentscommands.cpp \
     helpers/entityhelpres.cpp \
     entity/components/token.cpp \
@@ -88,7 +86,9 @@ SOURCES += \
     helpers/GeneratorID.cpp \
     commands/MoveGraphicObject.cpp \
     commands/MoveTypeToAnotherScope.cpp \
-    commands/RemoveComponentsCommands.cpp
+    commands/RemoveComponentsCommands.cpp \
+    commands/RenameEntity.cpp \
+    gui/EditEntityDialog.cpp
 
 HEADERS += \
     enums.h \
@@ -122,7 +122,6 @@ HEADERS += \
     gui/about.h \
     gui/newproject.h \
     gui/addscope.h \
-    gui/editentitydialog.h \
     gui/gui_types.hpp \
     gui/scenefilter.h \
     gui/editmethoddialog.h \
@@ -131,7 +130,6 @@ HEADERS += \
     gui/signatureeditdelegate.h \
     models/models_types.hpp \
     models/componentsmodel.h \
-    commands/renameentity.h \
     commands/addcomponentscommands.h \
     application/settings.h \
     constants.h \
@@ -189,7 +187,9 @@ HEADERS += \
     commands/MoveGraphicObject.h \
     project/ProjectTypes.hpp \
     commands/MoveTypeToAnotherScope.h \
-    commands/RemoveComponentsCommands.h
+    commands/RemoveComponentsCommands.h \
+    commands/RenameEntity.h \
+    gui/EditEntityDialog.h
 
 FORMS += \
     gui/about.ui \
