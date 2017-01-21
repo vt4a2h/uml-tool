@@ -58,8 +58,8 @@ namespace application {
         db->load(errors);
 
         if (!errors.isEmpty()) {
-            QMessageBox::warning(m_MainWindow.get(), tr("Problems with loading global database"), errors.join("\n"),
-                                 QMessageBox::Ok);
+            QMessageBox::warning(m_MainWindow.get(), tr("Problems with loading global database"),
+                                 errors.join("\n"), QMessageBox::Ok);
             db->clear();
             errors.clear();
 
@@ -73,8 +73,8 @@ namespace application {
                     db->load(errors);
 
                     if (!errors.isEmpty()) {
-                        QMessageBox::critical(m_MainWindow.get(), tr("Database reading error"), errors.join("\n"),
-                                              QMessageBox::Ok);
+                        QMessageBox::critical(m_MainWindow.get(), tr("Database reading error"),
+                                              errors.join("\n"), QMessageBox::Ok);
                         return false;
                     }
                 } else {
@@ -91,7 +91,8 @@ namespace application {
                 settings::setGlobalDbPath(db->path());
                 settings::setGlobalDbName(db->name());
             } else {
-                QMessageBox::information(m_MainWindow.get(), tr("Ohh"), tr("You cannot run application without database!"),
+                QMessageBox::information(m_MainWindow.get(), tr("Ohh"),
+                                         tr("You cannot run application without database!"),
                                          QMessageBox::Ok );
                 return false;
             }
@@ -119,10 +120,10 @@ namespace application {
     /**
      * @brief Application::Application
      */
-    Application::Application(QObject *parent)
-        : QObject(parent)
-        , m_ApplicationModel(std::make_shared<models::ApplicationModel>())
-        , m_MainWindow(std::make_unique<gui::MainWindow>(m_ApplicationModel))
+    Application::Application(models::SharedApplicationModel const& appModel,
+                             gui::UniqueMainWindow mainWindow)
+        : m_ApplicationModel(appModel)
+        , m_MainWindow(std::move(mainWindow))
     {
         G_CONNECT(m_ApplicationModel.get(), &models::ApplicationModel::currentProjectChanged,
                   &helpers::GeneratorID::instance(), &helpers::GeneratorID::onCurrentProjectChanged);
@@ -131,15 +132,6 @@ namespace application {
         setUpFactory(entity::EntityFactory::instance(), m_ApplicationModel, m_MainWindow->scene());
         setUpFactory(relationship::RelationFactory::instance(), m_ApplicationModel,
                      m_MainWindow->scene());
-
-        qRegisterMetaTypeStreamOperators<application::settings::TstType>("application::settings::TstType");
-    }
-
-    /**
-     * @brief Application::~Application
-     */
-    Application::~Application()
-    {
     }
 
 } // namespace application

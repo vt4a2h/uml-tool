@@ -34,8 +34,8 @@ namespace models {
      * @brief ApplicationModal::ApplicationModal
      * @param parent
      */
-    ApplicationModel::ApplicationModel(QObject *parent)
-        : QObject(parent)
+    ApplicationModel::ApplicationModel()
+        : QObject(nullptr)
         , m_GlobalDatabase(std::make_shared<db::Database>())
         , m_TreeModel(std::make_shared<ProjectTreeModel>())
     {

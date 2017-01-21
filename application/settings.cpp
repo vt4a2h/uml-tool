@@ -176,16 +176,6 @@ namespace application {
             write(elGroup, marker, color);
         }
 
-        TstType get(const QString &marker)
-        {
-            return read("tst", marker, TstType(-1, -1));
-        }
-
-        void set(const QString &marker, const TstType &color)
-        {
-            write("tst", marker, QVariant::fromValue(color));
-        }
-
     } // namespace settings
 
 } // namespace application

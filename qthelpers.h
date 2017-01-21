@@ -29,15 +29,15 @@
 #define G_DISCONNECT(arg, ...) G_ASSERT(QObject::disconnect(arg, ##__VA_ARGS__))
 
 // Guarded condition, assert in debug mode if condition is false
-#define G_ASSERT(c) qthelpers::detail::g_assert(c, Q_FUNC_INFO, #c, __FILE__, __LINE__)
+#define G_ASSERT(c) qthelpers::details::g_assert(c, Q_FUNC_INFO, #c, __FILE__, __LINE__)
 
 // Conditional G_ASSERT
-#define G_ASSERT_C(c, cond) qthelpers::detail::g_assert_c(c, !!cond, Q_FUNC_INFO, \
+#define G_ASSERT_C(c, cond) qthelpers::details::g_assert_c(c, !!cond, Q_FUNC_INFO, \
                                                           #c, __FILE__, __LINE__)
 
 namespace qthelpers
 {
-    namespace detail
+    namespace details
     {
         template <class Condition>
         inline decltype(auto) g_assert(Condition &&c, const char *where,

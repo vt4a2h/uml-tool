@@ -29,6 +29,7 @@ set(REL ${ROOT}/relationship)
 set(TRANSLATION ${ROOT}/translation)
 set(UTIL ${ROOT}/utility)
 set(COMMON ${ROOT}/common)
+set(BOOST_DI ${ROOT}/boost-di/include)
 
 file(GLOB APP_SRC ${APP}/*.cpp)
 file(GLOB CMD_SRC ${CMD}/*.cpp)
@@ -50,11 +51,31 @@ set(RESOURCES ${GUI}/main.qrc)
 
 include_directories(${Qt5Widgets_INCLUDES} ${Boost_INCLUDE_DIRS} ${ROOT} ${APP} ${CMD} ${DB} ${ENTITY}
                     ${ENTITY_COMPONENTS} ${GEN} ${GUI} ${GUI_GRAPHICS} ${HELPERS} ${MODELS}
-                    ${PROJECT} ${REL} ${TRANSLATION} ${UTIL} ${COMMON})
+                    ${PROJECT} ${REL} ${TRANSLATION} ${UTIL} ${COMMON} ${BOOST_DI})
 
 add_executable(uml-tool main.cpp ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${ENTITY_SRC}
                ${ENTITY_COMPONENTS_SRC} ${GEN_SRC} ${GUI_SRC} ${GUI_GRAPHICS_SRC} ${HELPERS_SRC}
                ${MODELS_SRC} ${PROJECT_SRC} ${REL_SRC} ${TRANSLATION_SRC} ${UTIL_SRC}
                ${COMMON_SRC} ${RESOURCES})
 target_link_libraries(uml-tool ${Boost_LIBRARIES})
+set_property(TARGET uml-tool PROPERTY CXX_STANDARD 14)
 qt5_use_modules(uml-tool Widgets Core)
+
+# TODO: move to the separate file
+#enable_testing()
+#find_package(GTest REQUIRED)
+
+#set(TEST ${ROOT}/tests/test)
+#set(TEST_CASES ${TEST}/cases)
+
+#include_directories(${TEST} ${TEST_CASES} ${GTEST_INCLUDE_DIRS})
+
+#add_executable(uml-tool-tests tests/test/main.cpp ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${ENTITY_SRC}
+#        ${ENTITY_COMPONENTS_SRC} ${GEN_SRC} ${GUI_SRC} ${GUI_GRAPHICS_SRC} ${HELPERS_SRC}
+#        ${MODELS_SRC} ${PROJECT_SRC} ${REL_SRC} ${TRANSLATION_SRC} ${UTIL_SRC}
+#        ${COMMON_SRC} ${RESOURCES})
+#target_link_libraries(uml-tool-tests ${GTEST_BOTH_LIBRARIES})
+#set_property(TARGET uml-tool-tests PROPERTY CXX_STANDARD 14)
+#qt5_use_modules(uml-tool-tests  Widgets Core)
+
+#add_test(AllTestsInUMLTool uml-tool-tests)

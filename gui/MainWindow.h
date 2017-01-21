@@ -71,8 +71,7 @@ namespace gui {
     public:
         Q_DISABLE_COPY(MainWindow)
 
-        explicit MainWindow(const models::SharedApplicationModel &applicationModel,
-                            QWidget *parent = 0);
+        explicit MainWindow(const models::SharedApplicationModel &applicationModel);
         ~MainWindow();
 
         QPointer<QGraphicsScene> scene() const;

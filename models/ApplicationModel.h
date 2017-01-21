@@ -42,7 +42,7 @@ namespace models {
         Q_OBJECT
 
     public:
-        explicit ApplicationModel(QObject *parent = 0);
+        explicit ApplicationModel();
         ~ApplicationModel();
 
         // TODO: move to some database class

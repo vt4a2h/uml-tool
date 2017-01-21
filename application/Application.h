@@ -20,13 +20,12 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
 
-#include <QObject>
+#include <QCoreApplication>
 
-#include <models/models_types.hpp>
 #include <gui/gui_types.hpp>
+#include <models/models_types.hpp>
 
 /**
  * @brief namespace application
@@ -36,16 +35,16 @@ namespace application {
     /**
      * @brief The Application class
      */
-    class Application : public QObject
+    class Application
     {
-        Q_OBJECT
+        Q_DECLARE_TR_FUNCTIONS(Application)
 
     public:
-        explicit Application(QObject *parent = nullptr);
-        ~Application();
+        Application(models::SharedApplicationModel const& appModel, gui::UniqueMainWindow mainWindow);
 
         bool run();
 
+    private:
         models::SharedApplicationModel m_ApplicationModel;
         gui::UniqueMainWindow m_MainWindow;
     };

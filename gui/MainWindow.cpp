@@ -87,9 +87,8 @@ namespace gui {
      * @brief MainWindow::MainWindow
      * @param parent
      */
-    MainWindow::MainWindow(const models::SharedApplicationModel &applicationModel, QWidget *parent)
-        : QMainWindow(parent)
-        , ui(std::make_unique<Ui::MainWindow>())
+    MainWindow::MainWindow(const models::SharedApplicationModel &applicationModel)
+        : ui(std::make_unique<Ui::MainWindow>())
         , m_MainScene(std::make_unique<graphics::Scene>())
         , m_ProjectTreeMenu(new QMenu(this))
         , m_ProjectTreeView(new QTreeView(this))
@@ -421,7 +420,6 @@ namespace gui {
     void MainWindow::writeSettings()
     {
         application::settings::writeMainWindowGeometry(geometry());
-        application::settings::set("tst", application::settings::TstType(100, 200));
     }
 
     /**
