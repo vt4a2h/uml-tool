@@ -60,22 +60,3 @@ add_executable(uml-tool main.cpp ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${ENTITY_SRC}
 target_link_libraries(uml-tool ${Boost_LIBRARIES})
 set_property(TARGET uml-tool PROPERTY CXX_STANDARD 14)
 qt5_use_modules(uml-tool Widgets Core)
-
-# TODO: move to the separate file
-#enable_testing()
-#find_package(GTest REQUIRED)
-
-#set(TEST ${ROOT}/tests/test)
-#set(TEST_CASES ${TEST}/cases)
-
-#include_directories(${TEST} ${TEST_CASES} ${GTEST_INCLUDE_DIRS})
-
-#add_executable(uml-tool-tests tests/test/main.cpp ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${ENTITY_SRC}
-#        ${ENTITY_COMPONENTS_SRC} ${GEN_SRC} ${GUI_SRC} ${GUI_GRAPHICS_SRC} ${HELPERS_SRC}
-#        ${MODELS_SRC} ${PROJECT_SRC} ${REL_SRC} ${TRANSLATION_SRC} ${UTIL_SRC}
-#        ${COMMON_SRC} ${RESOURCES})
-#target_link_libraries(uml-tool-tests ${GTEST_BOTH_LIBRARIES})
-#set_property(TARGET uml-tool-tests PROPERTY CXX_STANDARD 14)
-#qt5_use_modules(uml-tool-tests  Widgets Core)
-
-#add_test(AllTestsInUMLTool uml-tool-tests)
