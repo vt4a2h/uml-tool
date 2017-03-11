@@ -53,26 +53,29 @@
 namespace graphics {
 
     namespace {
-        constexpr qreal margin    = 2. ;
-        constexpr qreal lineIndentFactor = 2.;
-        constexpr qreal minimumHeight = 30.;
-        constexpr qreal lineHeight    = 20.;
-        constexpr qreal minimumWidth  = 120.;
-        constexpr qreal paddingPercent = 0.1;
+        constexpr qreal margin           = 2  ;
+        constexpr qreal lineIndentFactor = 2  ;
+        constexpr qreal minimumHeight    = 30 ;
+        constexpr qreal lineHeight       = 20 ;
+        constexpr qreal minimumWidth     = 120;
+        constexpr qreal paddingPercent   = 0.1;
+
         const QSizeF resizeCornerSize(12, 12);
         const Qt::CursorShape defaultCursorShape = Qt::ArrowCursor;
 
         /// Cuts too long text
         QString cutText(const QString &text, const QFontMetrics &fm, qreal frameWidth)
         {
+            static const QString rightSymbols("...");
+
             QString result(text);
             QSize textSize(fm.size(Qt::TextSingleLine, text));
             int maxTextWidth = frameWidth * (1 - paddingPercent);
             if (textSize.width() > maxTextWidth) {
                 int symbolsCount = maxTextWidth / (textSize.width() / result.count());
-                symbolsCount -= 3; // three dots
+                symbolsCount -= rightSymbols.count();
                 result.chop(result.count() - symbolsCount);
-                result.append("...");
+                result.append(rightSymbols);
             }
 
             return result;

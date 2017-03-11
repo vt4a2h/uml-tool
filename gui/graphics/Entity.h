@@ -30,7 +30,7 @@
 
 #include <project/ProjectTypes.hpp>
 
-#include "common.h"
+#include "Common.h"
 
 namespace gui
 {

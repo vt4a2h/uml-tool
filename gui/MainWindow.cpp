@@ -59,7 +59,7 @@
 #include <commands/MakeProjectCurrent.h>
 #include <commands/RemoveProject.h>
 
-#include "about.h"
+#include "About.h"
 #include "newproject.h"
 #include "addscope.h"
 #include "scenefilter.h"

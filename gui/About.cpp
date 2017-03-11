@@ -20,8 +20,9 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "about.h"
-#include "ui_about.h"
+#include "About.h"
+
+#include "ui_About.h"
 
 namespace gui {
 

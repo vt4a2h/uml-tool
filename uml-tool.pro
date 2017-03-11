@@ -32,7 +32,6 @@ SOURCES += \
     translation/projecttranslator.cpp \
     translation/signaturemaker.cpp \
     utility/helpfunctions.cpp \
-    gui/about.cpp \
     gui/newproject.cpp \
     gui/addscope.cpp \
     gui/scenefilter.cpp \
@@ -88,7 +87,8 @@ SOURCES += \
     commands/MoveTypeToAnotherScope.cpp \
     commands/RemoveComponentsCommands.cpp \
     commands/RenameEntity.cpp \
-    gui/EditEntityDialog.cpp
+    gui/EditEntityDialog.cpp \
+    gui/About.cpp
 
 HEADERS += \
     enums.h \
@@ -119,7 +119,6 @@ HEADERS += \
     translation/translator_types.hpp \
     translation/signaturemaker.h \
     utility/helpfunctions.h \
-    gui/about.h \
     gui/newproject.h \
     gui/addscope.h \
     gui/gui_types.hpp \
@@ -138,7 +137,6 @@ HEADERS += \
     entity/components/components_types.h \
     entity/components/token.h \
     qthelpers.h \
-    gui/graphics/common.h \
     common/ID.h \
     entity/itypeuser.h \
     common/BasicElement.h \
@@ -189,17 +187,19 @@ HEADERS += \
     commands/MoveTypeToAnotherScope.h \
     commands/RemoveComponentsCommands.h \
     commands/RenameEntity.h \
-    gui/EditEntityDialog.h
+    gui/EditEntityDialog.h \
+    gui/graphics/Common.h \
+    gui/About.h
 
 FORMS += \
-    gui/about.ui \
     gui/newproject.ui \
     gui/addscope.ui \
     gui/editentitydialog.ui \
     gui/editmethoddialog.ui \
     gui/chooseglobaldatabasedialog.ui \
     gui/elements.ui \
-    gui/MainWindow.ui
+    gui/MainWindow.ui \
+    gui/About.ui
 
 RESOURCES += \
     gui/main.qrc
