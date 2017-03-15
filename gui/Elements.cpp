@@ -40,7 +40,7 @@
 #include <entity/TemplateClass.h>
 #include <entity/ExtendedType.h>
 
-#include <application/settings.h>
+#include <application/Settings.h>
 
 #include "qthelpers.h"
 
@@ -65,7 +65,7 @@ namespace gui {
         p.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
         QColor color =
-            application::settings::elementColor(entity::kindOfTypeToString(kind));
+            App::Settings::elementColor(entity::kindOfTypeToString(kind));
         QLinearGradient gradient(elementSize.width() / 2, 0,
                                  elementSize.width() / 2, elementSize.height());
         gradient.setColorAt(0, color);

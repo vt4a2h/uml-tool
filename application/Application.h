@@ -30,7 +30,7 @@
 /**
  * @brief namespace application
  */
-namespace application {
+namespace App {
 
     /**
      * @brief The Application class

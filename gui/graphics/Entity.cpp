@@ -28,7 +28,7 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsScene>
 
-#include <application/settings.h>
+#include <application/Settings.h>
 
 #include <gui/EditEntityDialog.h>
 
@@ -442,7 +442,7 @@ namespace graphics {
      */
     QColor Entity::typeColor() const
     {
-        return application::settings::elementColor(
+        return App::Settings::elementColor(
                     entity::kindOfTypeToString(G_ASSERT(m_Type)->kindOfType()));
     }
 

@@ -37,6 +37,6 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName("QUml tools");
 
     auto injector = di::make_injector();
-    auto app = injector.create<application::Application>();
+    auto app = injector.create<App::Application>();
     return app.run() ? a.exec() : 0;
 }

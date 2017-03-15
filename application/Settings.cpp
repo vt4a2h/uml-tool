@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "settings.h"
+#include "Settings.h"
 
 #include <QVariant>
 #include <QDir>
@@ -35,7 +35,7 @@
 #include <entity/TemplateClass.h>
 #include <entity/ExtendedType.h>
 
-namespace application {
+namespace App {
 
     namespace {
 
@@ -67,6 +67,10 @@ namespace application {
             { entity::kindOfTypeToString(entity::KindOfType::ExtendedType) , {249, 181, 194} },
         };
 
+        const QString projGroup{"Project"};
+        const Setting<QStringList> rp{"recent-projects", QStringList()};
+        const Setting<int> rpCount{"recent-projects-count", 10};
+
         // Helpers
         template <class ValueType>
         inline ValueType read(const QString &prefix, const QString &key,
@@ -94,7 +98,7 @@ namespace application {
         }
     }
 
-    namespace settings {
+    namespace Settings {
 
         /**
          * @brief mainWindowGeometry
@@ -174,6 +178,42 @@ namespace application {
             Q_ASSERT(boost::range::find_if(elColors, [&](auto&& s) { return s.name == marker; })
                      != elColors.end());
             write(elGroup, marker, color);
+        }
+
+        /**
+         * @brief recentProjects
+         * @return
+         */
+        QStringList recentProjects()
+        {
+            return read(projGroup, rp.name, rp.defaultValue);
+        }
+
+        /**
+         * @brief saveRecentProjects
+         * @param projects
+         */
+        void saveRecentProjects(const QStringList &projects)
+        {
+            write(projGroup, rp.name, projects);
+        }
+
+        /**
+         * @brief recentProjectsCount
+         * @return
+         */
+        int recentProjectsMaxCount()
+        {
+            return read(projGroup, rpCount.name, rpCount.defaultValue);
+        }
+
+        /**
+         * @brief setRecentProjectsCount
+         * @param count
+         */
+        void setRecentProjectsMaxCount(int count)
+        {
+            write(projGroup, rpCount.name, count);
         }
 
     } // namespace settings

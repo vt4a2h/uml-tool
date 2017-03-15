@@ -43,7 +43,6 @@ SOURCES += \
     commands/addcomponentscommands.cpp \
     helpers/entityhelpres.cpp \
     entity/components/token.cpp \
-    application/settings.cpp \
     entity/isectional.cpp \
     relationship/RelationFactory.cpp \
     entity/EntityFactory.cpp \
@@ -88,7 +87,8 @@ SOURCES += \
     commands/RemoveComponentsCommands.cpp \
     commands/RenameEntity.cpp \
     gui/EditEntityDialog.cpp \
-    gui/About.cpp
+    gui/About.cpp \
+    application/Settings.cpp
 
 HEADERS += \
     enums.h \
@@ -130,7 +130,6 @@ HEADERS += \
     models/models_types.hpp \
     models/componentsmodel.h \
     commands/addcomponentscommands.h \
-    application/settings.h \
     constants.h \
     helpers/entityhelpres.h \
     entity/components/componentscommon.h \
@@ -189,7 +188,8 @@ HEADERS += \
     commands/RenameEntity.h \
     gui/EditEntityDialog.h \
     gui/graphics/Common.h \
-    gui/About.h
+    gui/About.h \
+    application/Settings.h
 
 FORMS += \
     gui/newproject.ui \

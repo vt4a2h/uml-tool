@@ -27,10 +27,10 @@
 #include <QPair>
 #include <QMetaType>
 
-namespace application {
+namespace App {
 
     /// Namespace settings (for now it's the easiest way to store/restore settings)
-    namespace settings {
+    namespace Settings {
 
         // Main window settings
         QRect mainWindowGeometry();
@@ -46,6 +46,14 @@ namespace application {
         // Elements
         QColor elementColor(const QString &marker);
         void setElementColor(const QString &marker, const QColor &color);
+
+        // Recent projects
+        QStringList recentProjects();
+        void saveRecentProjects(const QStringList &projects);
+
+        // Recent projects max count
+        int recentProjectsMaxCount();
+        void setRecentProjectsMaxCount(int count);
     }
 
 } // namespace application

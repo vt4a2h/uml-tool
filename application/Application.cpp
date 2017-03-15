@@ -38,10 +38,10 @@
 
 #include <relationship/RelationFactory.h>
 
-#include "settings.h"
+#include "Settings.h"
 #include "qthelpers.h"
 
-namespace application {
+namespace App {
 
     /**
      * @brief Application::run
@@ -51,8 +51,8 @@ namespace application {
         m_MainWindow->show();
 
         auto db = G_ASSERT(m_ApplicationModel->globalDatabase());
-        db->setPath(settings::globalDbPath());
-        db->setName(settings::globalDbName());
+        db->setPath(Settings::globalDbPath());
+        db->setName(Settings::globalDbName());
 
         QStringList errors;
         db->load(errors);
@@ -88,8 +88,8 @@ namespace application {
                     }
                 }
 
-                settings::setGlobalDbPath(db->path());
-                settings::setGlobalDbName(db->name());
+                Settings::setGlobalDbPath(db->path());
+                Settings::setGlobalDbName(db->name());
             } else {
                 QMessageBox::information(m_MainWindow.get(), tr("Ohh"),
                                          tr("You cannot run application without database!"),

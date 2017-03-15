@@ -43,7 +43,7 @@
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 
-#include <application/settings.h>
+#include <application/Settings.h>
 
 #include <models/ApplicationModel.h>
 #include <models/ProjectTreeModel.h>
@@ -79,6 +79,24 @@ namespace {
     const double consoleSizeFactor = 0.3;
 
     const QString titleTemplate = "%1Q-UML";
+
+    void fillRecentProjectsMenu(QMenu &menu, const QStringList &recentProjectsList)
+    {
+        menu.clear();
+        for (auto && p : recentProjectsList) {
+            menu.addSection(p);
+        }
+    }
+
+    void addRecentProject(QMenu &menu, const QString &projectName,
+                          QStringList recentProjectsList)
+    {
+        recentProjectsList.prepend(projectName);
+        if (recentProjectsList.count() > App::Settings::recentProjectsMaxCount())
+            recentProjectsList.removeLast();
+
+        fillRecentProjectsMenu(menu, recentProjectsList);
+    }
 }
 
 namespace gui {
@@ -203,7 +221,11 @@ namespace gui {
         } else {
             newProject->setCommandsStack(m_CommandsStack);
             if (m_ApplicationModel->addProject(newProject))
+            {
                 m_ApplicationModel->setCurrentProject(newProject->name());
+                addRecentProject(*m_RecentProjects, newProject->path(),
+                                 App::Settings::recentProjects());
+            }
             else
                 QMessageBox::information
                     ( this
@@ -298,6 +320,8 @@ namespace gui {
         newProject->setCommandsStack(m_CommandsStack);
         commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel, m_MainScene.get()).redo();
         newProject->save();
+
+        addRecentProject(*m_RecentProjects, newProject->path(), App::Settings::recentProjects());
     }
 
     /**
@@ -355,6 +379,12 @@ namespace gui {
         m_ConsoleOutput->setReadOnly(true);
         addDock(tr("Messages"), ui->actionMessagesDockWidget, Qt::BottomDockWidgetArea,
                 m_ConsoleOutput, false /*visible*/);
+
+        // Recent projects
+        m_RecentProjects = std::make_unique<QMenu>(tr("&Recent projects"));
+        ui->menuFile->insertMenu(ui->actionExit, m_RecentProjects.get());
+        ui->menuFile->insertSeparator(ui->actionExit);
+        fillRecentProjectsMenu(*m_RecentProjects, App::Settings::recentProjects());
     }
 
     /**
@@ -411,7 +441,7 @@ namespace gui {
      */
     void MainWindow::readSettings()
     {
-        setGeometry(application::settings::mainWindowGeometry());
+        setGeometry(App::Settings::mainWindowGeometry());
     }
 
     /**
@@ -419,7 +449,7 @@ namespace gui {
      */
     void MainWindow::writeSettings()
     {
-        application::settings::writeMainWindowGeometry(geometry());
+        App::Settings::writeMainWindowGeometry(geometry());
     }
 
     /**
