@@ -23,7 +23,7 @@
 
 #include "dependency.h"
 #include "enums.h"
-#include "constants.h"
+#include "Constants.h"
 
 #include <QJsonObject>
 

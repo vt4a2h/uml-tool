@@ -140,6 +140,7 @@ namespace gui {
         QList<QAction*> m_RelationActions;
 
         std::unique_ptr<QMenu> m_RecentProjects;
+        QPointer<QAction> m_ClearRecentProjects;
 
         models::SharedApplicationModel m_ApplicationModel;
         commands::SharedCommandStack m_CommandsStack;

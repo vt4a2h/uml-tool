@@ -63,7 +63,7 @@
 #include "newproject.h"
 #include "addscope.h"
 #include "scenefilter.h"
-#include "constants.h"
+#include "Constants.h"
 #include "Elements.h"
 #include "View.h"
 #include "qthelpers.h"
@@ -80,22 +80,36 @@ namespace {
 
     const QString titleTemplate = "%1Q-UML";
 
+    void clearRecentProjectsMenu(QMenu &menu, const QStringList &recentProjectsList)
+    {
+        for (auto && a : menu.actions()) {
+            if (recentProjectsList.contains(a->data().toString()))
+                menu.removeAction(a);
+        }
+    }
+
     void fillRecentProjectsMenu(QMenu &menu, const QStringList &recentProjectsList)
     {
-        menu.clear();
+        Q_ASSERT(recentProjectsList.count() < App::Settings::recentProjectsMaxCount());
+
+        clearRecentProjectsMenu(menu, recentProjectsList);
+
         for (auto && p : recentProjectsList) {
-            menu.addSection(p);
+            menu.addAction(p)->setData(p);
         }
     }
 
     void addRecentProject(QMenu &menu, const QString &projectName,
                           QStringList recentProjectsList)
     {
+        recentProjectsList.removeAll(projectName);
         recentProjectsList.prepend(projectName);
+
         if (recentProjectsList.count() > App::Settings::recentProjectsMaxCount())
             recentProjectsList.removeLast();
 
         fillRecentProjectsMenu(menu, recentProjectsList);
+        App::Settings::saveRecentProjects(recentProjectsList);
     }
 }
 
@@ -223,7 +237,7 @@ namespace gui {
             if (m_ApplicationModel->addProject(newProject))
             {
                 m_ApplicationModel->setCurrentProject(newProject->name());
-                addRecentProject(*m_RecentProjects, newProject->path(),
+                addRecentProject(*m_RecentProjects, newProject->fullPath(),
                                  App::Settings::recentProjects());
             }
             else
@@ -321,7 +335,7 @@ namespace gui {
         commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel, m_MainScene.get()).redo();
         newProject->save();
 
-        addRecentProject(*m_RecentProjects, newProject->path(), App::Settings::recentProjects());
+        addRecentProject(*m_RecentProjects, newProject->fullPath(), App::Settings::recentProjects());
     }
 
     /**
@@ -384,7 +398,13 @@ namespace gui {
         m_RecentProjects = std::make_unique<QMenu>(tr("&Recent projects"));
         ui->menuFile->insertMenu(ui->actionExit, m_RecentProjects.get());
         ui->menuFile->insertSeparator(ui->actionExit);
+
         fillRecentProjectsMenu(*m_RecentProjects, App::Settings::recentProjects());
+
+        m_RecentProjects->addSeparator();
+        m_ClearRecentProjects = m_RecentProjects->addAction(tr("C&lear"));
+        G_CONNECT(m_ClearRecentProjects, &QAction::triggered,
+                  [=] { clearRecentProjectsMenu(*m_RecentProjects, App::Settings::recentProjects()); });
     }
 
     /**

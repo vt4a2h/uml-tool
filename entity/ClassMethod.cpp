@@ -34,7 +34,7 @@
 #include "ExtendedType.h"
 #include "field.h"
 #include "enums.h"
-#include "constants.h"
+#include "Constants.h"
 
 namespace
 {

@@ -130,7 +130,6 @@ HEADERS += \
     models/models_types.hpp \
     models/componentsmodel.h \
     commands/addcomponentscommands.h \
-    constants.h \
     helpers/entityhelpres.h \
     entity/components/componentscommon.h \
     entity/components/components_types.h \
@@ -189,7 +188,8 @@ HEADERS += \
     gui/EditEntityDialog.h \
     gui/graphics/Common.h \
     gui/About.h \
-    application/Settings.h
+    application/Settings.h \
+    Constants.h
 
 FORMS += \
     gui/newproject.ui \
@@ -206,3 +206,6 @@ RESOURCES += \
 
 DISTFILES += \
     CMakeLists.txt
+
+DEFINES *= \
+    QT_USE_QSTRINGBUILDER

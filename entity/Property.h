@@ -31,7 +31,7 @@
 #include <db/db_types.hpp>
 
 #include "ClassMethod.h"
-#include "constants.h"
+#include "Constants.h"
 #include "itypeuser.h"
 #include "isectional.h"
 

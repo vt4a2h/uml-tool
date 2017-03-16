@@ -37,7 +37,7 @@
 #include <entity/Scope.h>
 #include <common/ID.h>
 
-#include "constants.h"
+#include "Constants.h"
 
 namespace db {
 

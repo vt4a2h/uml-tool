@@ -35,7 +35,7 @@
 #include "field.h"
 #include "ClassMethod.h"
 
-#include "constants.h"
+#include "Constants.h"
 #include "qthelpers.h"
 #include "enums.h"
 

@@ -33,7 +33,7 @@
 
 #include "Scope.h"
 #include "enums.h"
-#include "constants.h"
+#include "Constants.h"
 #include "GraphicEntityData.h"
 
 namespace entity {

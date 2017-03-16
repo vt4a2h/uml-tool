@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "TestClassComponents.h"
 
-#include "constants.h"
+#include "Constants.h"
 
 #define check_moving(type, name) \
     type name##1(*name);\

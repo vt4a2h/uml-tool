@@ -20,7 +20,6 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #include "Project.h"
 
 #include <QDir>
@@ -46,7 +45,7 @@
 
 #include <helpers/GeneratorID.h>
 
-#include "constants.h"
+#include "Constants.h"
 
 namespace project {
 
@@ -355,6 +354,15 @@ namespace project {
     }
 
     /**
+     * @brief Project::fullPath
+     * @return
+     */
+    QString Project::fullPath() const
+    {
+        return projectPath(path());
+    }
+
+    /**
      * @brief Project::setName
      * @param name
      */
@@ -447,8 +455,8 @@ namespace project {
      */
     QString Project::projectPath(const QString &basePath) const
     {
-        QChar sep = QDir(basePath).separator();
-        return basePath + sep + projectFileName() + "." + PROJECT_FILE_EXTENTION;
+        return QDir::toNativeSeparators(
+                   basePath + "/" + projectFileName() + "." + PROJECT_FILE_EXTENTION);
     }
 
     /**

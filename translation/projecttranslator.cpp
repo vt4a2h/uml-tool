@@ -43,7 +43,7 @@
 
 #include "enums.h"
 #include "templates.cpp"
-#include "constants.h"
+#include "Constants.h"
 #include "code.h"
 #include "signaturemaker.h"
 

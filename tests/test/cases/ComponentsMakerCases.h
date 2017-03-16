@@ -29,7 +29,7 @@
 
 #include <utility/helpfunctions.h>
 
-#include "constants.h"
+#include "Constants.h"
 
 #define check_errors(r)\
     ASSERT_TRUE(r.errorMessage.isEmpty())\

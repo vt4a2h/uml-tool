@@ -28,7 +28,7 @@
 
 #include <entity/Property.h>
 
-#include "constants.h"
+#include "Constants.h"
 
 #define test_copy_move(entType, obj) \
     auto newCopyType(std::make_unique<entity::entType>(*obj)); \

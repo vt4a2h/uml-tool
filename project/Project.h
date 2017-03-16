@@ -69,6 +69,8 @@ namespace project {
         QString name() const;
         QString path() const;
 
+        QString fullPath() const;
+
         void load(const QString &path); // don't forget install global database after load
 
         db::SharedProjectDatabase database() const;

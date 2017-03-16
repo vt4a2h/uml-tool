@@ -35,7 +35,7 @@
 
 #include "ExtendedType.h"
 #include "Type.h"
-#include "constants.h"
+#include "Constants.h"
 
 using namespace boost;
 

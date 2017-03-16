@@ -31,7 +31,7 @@
 #include <utility/helpfunctions.h>
 
 #include "enums.h"
-#include "constants.h"
+#include "Constants.h"
 
 using namespace boost;
 

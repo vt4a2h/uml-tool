@@ -32,7 +32,7 @@
 
 #include "field.h"
 #include "ExtendedType.h"
-#include "constants.h"
+#include "Constants.h"
 #include "enums.h"
 
 using namespace boost;

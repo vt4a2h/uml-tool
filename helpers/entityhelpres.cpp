@@ -28,7 +28,7 @@
 
 #include <entity/Scope.h>
 
-#include "constants.h"
+#include "Constants.h"
 
 using namespace boost;
 

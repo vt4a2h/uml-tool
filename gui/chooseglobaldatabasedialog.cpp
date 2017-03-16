@@ -26,7 +26,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-#include "constants.h"
+#include "Constants.h"
 
 namespace gui {
 
