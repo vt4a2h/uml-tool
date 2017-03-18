@@ -50,7 +50,7 @@
 
 TEST_F(Enteties, SimpleType)
 {
-    ASSERT_STREQ(_type->name().toStdString().c_str(), BASE_TYPE_NAME);
+    ASSERT_STREQ(_type->name().toStdString().c_str(), BASE_TYPE_NAME.toStdString().c_str());
     ASSERT_EQ(_type->scopeId(), common::ID::globalScopeID());
 
     _type->setName("some name");

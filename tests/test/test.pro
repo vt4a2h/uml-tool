@@ -34,7 +34,7 @@ HEADERS += ../../enums.h \
     ../../entity/GraphicEntityData.h \
     ../../entity/EntityFactory.h \
     ../../entity/Template.h \
-    ../../constants.h \
+    ../../Constants.h \
     ../../entity/field.h \
     ../../qthelpers.h \
     ../../models/ApplicationModel.h \
