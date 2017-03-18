@@ -82,34 +82,40 @@ namespace {
 
     void clearRecentProjectsMenu(QMenu &menu, const QStringList &recentProjectsList)
     {
-        for (auto && a : menu.actions()) {
+        // Clear menu
+        for (auto && a : menu.actions())
             if (recentProjectsList.contains(a->data().toString()))
                 menu.removeAction(a);
-        }
+
+        // Reset settings
+        App::Settings::saveRecentProjects({});
     }
 
-    void fillRecentProjectsMenu(QMenu &menu, const QStringList &recentProjectsList)
+    void addRecentProject(const QString &projectName)
     {
-        Q_ASSERT(recentProjectsList.count() < App::Settings::recentProjectsMaxCount());
-
-        clearRecentProjectsMenu(menu, recentProjectsList);
-
-        for (auto && p : recentProjectsList) {
-            menu.addAction(p)->setData(p);
-        }
-    }
-
-    void addRecentProject(QMenu &menu, const QString &projectName,
-                          QStringList recentProjectsList)
-    {
+        QStringList recentProjectsList = App::Settings::recentProjects();
         recentProjectsList.removeAll(projectName);
         recentProjectsList.prepend(projectName);
 
         if (recentProjectsList.count() > App::Settings::recentProjectsMaxCount())
             recentProjectsList.removeLast();
 
-        fillRecentProjectsMenu(menu, recentProjectsList);
         App::Settings::saveRecentProjects(recentProjectsList);
+    }
+
+    void rebuildRecentProjectMenu(QMenu & menu)
+    {
+        Q_ASSERT(App::Settings::recentProjects().count() < App::Settings::recentProjectsMaxCount());
+
+        menu.clear();
+
+        for (auto && p : App::Settings::recentProjects())
+            menu.addAction(p)->setData(p);
+
+        menu.addSeparator();
+        auto clearRecentProjects = menu.addAction(gui::MainWindow::tr("C&lear"));
+        G_CONNECT(clearRecentProjects, &QAction::triggered,
+                  [&] { clearRecentProjectsMenu(menu, App::Settings::recentProjects()); });
     }
 }
 
@@ -205,6 +211,9 @@ namespace gui {
         QString dir(QApplication::applicationDirPath()); // temporary
         QString filter(tr("Q-UML Project files (*.%1)").arg(PROJECT_FILE_EXTENTION));
 
+        // TODO: move to separate method
+        //       handle the situation when project is already exists
+        //       connect new method to the click to Recent projects menu
         QString path = QFileDialog::getOpenFileName(this, caption, dir, filter);
         if (path.isEmpty())
             return ;
@@ -237,8 +246,9 @@ namespace gui {
             if (m_ApplicationModel->addProject(newProject))
             {
                 m_ApplicationModel->setCurrentProject(newProject->name());
-                addRecentProject(*m_RecentProjects, newProject->fullPath(),
-                                 App::Settings::recentProjects());
+
+                addRecentProject(newProject->fullPath());
+                rebuildRecentProjectMenu(*m_RecentProjects);
             }
             else
                 QMessageBox::information
@@ -335,7 +345,8 @@ namespace gui {
         commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel, m_MainScene.get()).redo();
         newProject->save();
 
-        addRecentProject(*m_RecentProjects, newProject->fullPath(), App::Settings::recentProjects());
+        addRecentProject(newProject->fullPath());
+        rebuildRecentProjectMenu(*m_RecentProjects);
     }
 
     /**
@@ -398,13 +409,7 @@ namespace gui {
         m_RecentProjects = std::make_unique<QMenu>(tr("&Recent projects"));
         ui->menuFile->insertMenu(ui->actionExit, m_RecentProjects.get());
         ui->menuFile->insertSeparator(ui->actionExit);
-
-        fillRecentProjectsMenu(*m_RecentProjects, App::Settings::recentProjects());
-
-        m_RecentProjects->addSeparator();
-        m_ClearRecentProjects = m_RecentProjects->addAction(tr("C&lear"));
-        G_CONNECT(m_ClearRecentProjects, &QAction::triggered,
-                  [=] { clearRecentProjectsMenu(*m_RecentProjects, App::Settings::recentProjects()); });
+        rebuildRecentProjectMenu(*m_RecentProjects);
     }
 
     /**
