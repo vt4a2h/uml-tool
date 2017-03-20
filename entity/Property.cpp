@@ -205,7 +205,7 @@ namespace entity {
      */
     bool operator ==(const Property &lhs, const Property &rhs)
     {
-        using namespace utility;
+        using namespace Util;
 
         return static_cast<common::BasicElement const&>(lhs) ==
                static_cast<common::BasicElement const&>(rhs) &&
@@ -789,7 +789,7 @@ namespace entity {
      */
     void Property::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        using namespace utility;
+        using namespace Util;
 
         BasicElement::fromJson(src, errorList);
 

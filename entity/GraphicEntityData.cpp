@@ -79,18 +79,18 @@ namespace entity {
      */
     void GraphicEntityData::fromJson(const QJsonObject &src, ErrorList &errorList)
     {
-        utility::checkAndSet(src, heightMark, errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, heightMark, errorList, [&src, &errorList, this](){
             m_Height = src[heightMark].toDouble();
         });
-        utility::checkAndSet(src, widthMark, errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, widthMark, errorList, [&src, &errorList, this](){
             m_Width = src[widthMark].toDouble();
         });
 
         QPointF pos(0., 0.);
-        utility::checkAndSet(src, xMark, errorList, [&src, &pos](){
+        Util::checkAndSet(src, xMark, errorList, [&src, &pos](){
             pos.rx() = src[xMark].toDouble();
         });
-        utility::checkAndSet(src, yMark, errorList, [&src, &pos](){
+        Util::checkAndSet(src, yMark, errorList, [&src, &pos](){
             pos.ry() = src[yMark].toDouble();
         });
         setPos(pos);

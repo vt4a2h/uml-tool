@@ -83,7 +83,7 @@ namespace entity {
     bool operator ==(const Template &lhs, const Template &rhs)
     {
         return lhs.m_TemplateParameters == rhs.m_TemplateParameters &&
-               utility::sharedPtrEq(lhs.m_LocalDatabase, rhs.m_LocalDatabase);
+               Util::sharedPtrEq(lhs.m_LocalDatabase, rhs.m_LocalDatabase);
     }
 
     /**
@@ -226,16 +226,16 @@ namespace entity {
     {
         m_TemplateParameters.clear();
 
-        utility::checkAndSet(src, "Template parameters", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Template parameters", errorList, [&src, &errorList, this](){
             TemplateParameter parameter;
             QJsonObject obj;
             if (src["Template parameters"].isArray()) {
                 for (auto &&value : src["Template parameters"].toArray()) {
                     obj = value.toObject();
-                    utility::checkAndSet(obj, "Type common::ID", errorList, [&obj, &parameter, &errorList, this](){
+                    Util::checkAndSet(obj, "Type common::ID", errorList, [&obj, &parameter, &errorList, this](){
                         parameter.first.fromJson(obj["Type common::ID"], errorList);
                     });
-                    utility::checkAndSet(obj, "Default type common::ID", errorList, [&obj, &parameter, &errorList, this](){
+                    Util::checkAndSet(obj, "Default type common::ID", errorList, [&obj, &parameter, &errorList, this](){
                         parameter.second.fromJson(obj["Default type common::ID"], errorList);
                     });
                     m_TemplateParameters.append(parameter);
@@ -252,7 +252,7 @@ namespace entity {
 
         emit requestUsingAdditionalScopeSearcher(m_LocalDatabase);
 
-        utility::checkAndSet(src, "Local database", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Local database", errorList, [&src, &errorList, this](){
             m_LocalDatabase->fromJson(src["Local database"].toObject(), errorList);
         });
 

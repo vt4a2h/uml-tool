@@ -81,14 +81,13 @@ namespace models {
      */
     bool ApplicationModel::addProject(const project::SharedProject &pr)
     {
-        if (!m_Projects.contains(pr->name())) {
-            m_Projects[pr->name()] = pr;
-            pr->setGlobalDatabase(globalDatabase());
-            m_TreeModel->addProject(pr);
-            return true;
-        }
+        if (m_Projects.contains(pr->name()))
+            return false;
 
-        return false;
+        m_Projects[pr->name()] = pr;
+        pr->setGlobalDatabase(globalDatabase());
+        m_TreeModel->addProject(pr);
+        return true;
     }
 
     /**

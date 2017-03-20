@@ -115,7 +115,7 @@ namespace db {
         return lhs.m_Name == rhs.m_Name &&
                lhs.m_Path == rhs.m_Path &&
                lhs.m_ID   == rhs.m_ID   &&
-               utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes);
+               Util::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes);
     }
 
     /**
@@ -476,14 +476,14 @@ namespace db {
     {
         clear();
 
-        utility::checkAndSet(src, "Name", errorList, [&src, this](){
+        Util::checkAndSet(src, "Name", errorList, [&src, this](){
             m_Name = src["Name"].toString();
         });
-        utility::checkAndSet(src, "ID", errorList, [&, this](){
+        Util::checkAndSet(src, "ID", errorList, [&, this](){
             m_ID.fromJson(src["ID"], errorList);
         });
 
-        utility::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
             if (src["Scopes"].isArray()) {
                 for (auto &&val : src["Scopes"].toArray())
                     addScope()->fromJson(val.toObject(), errorList);
@@ -555,7 +555,7 @@ namespace db {
         m_ID    = src.m_ID;
         m_Valid = src.m_Valid;
 
-        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &entity::Scope::id);
+        Util::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &entity::Scope::id);
     }
 
     /**

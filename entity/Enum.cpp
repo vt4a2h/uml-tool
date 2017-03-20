@@ -109,7 +109,7 @@ namespace entity {
     void Enumerator::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         BasicElement::fromJson(src, errorList);
-        utility::checkAndSet(src, numberMark, errorList, [&src, this](){ m_Value = src[numberMark].toInt();  });
+        Util::checkAndSet(src, numberMark, errorList, [&src, this](){ m_Value = src[numberMark].toInt();  });
     }
 
     /**
@@ -281,11 +281,11 @@ namespace entity {
     {
         Type::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Enum type id",  errorList, [&, this](){ m_EnumTypeId.fromJson(src["Enum type id"], errorList); });
-        utility::checkAndSet(src, "Strong status", errorList, [&src, this](){ m_StrongStatus = src["Strong status"].toBool();  });
+        Util::checkAndSet(src, "Enum type id",  errorList, [&, this](){ m_EnumTypeId.fromJson(src["Enum type id"], errorList); });
+        Util::checkAndSet(src, "Strong status", errorList, [&src, this](){ m_StrongStatus = src["Strong status"].toBool();  });
 
         m_Elements.clear();
-        utility::checkAndSet(src, "Elements", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Elements", errorList, [&src, &errorList, this](){
             if (src["Elements"].isArray()) {
                 for (auto &&value : src["Elements"].toArray())
                     m_Elements.append(std::make_shared<Enumerator>(value.toObject(), errorList));
@@ -308,7 +308,7 @@ namespace entity {
         auto r = static_cast<const Enum&>(rhs);
         return m_EnumTypeId   == r.m_EnumTypeId   &&
                m_StrongStatus == r.m_StrongStatus &&
-               utility::seqSharedPointerEq(m_Elements, r.m_Elements);
+               Util::seqSharedPointerEq(m_Elements, r.m_Elements);
     }
 
     /**

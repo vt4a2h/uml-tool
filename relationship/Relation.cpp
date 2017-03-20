@@ -51,7 +51,7 @@ namespace relationship {
         void readNode(const SharedNode &node, const QString& mark, const QJsonObject &src,
                       QStringList &errorList, Relation &r)
         {
-            utility::checkAndSet(src, mark, errorList, [&](){
+            Util::checkAndSet(src, mark, errorList, [&](){
                 // Read node itself
                 auto jsonObject = src[mark].toObject();
                 node->fromJson(jsonObject, errorList);
@@ -308,7 +308,7 @@ namespace relationship {
     void Relation::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         common::BasicElement::fromJson(src, errorList);
-        utility::checkAndSet(src, relMark, errorList, [&src, this](){
+        Util::checkAndSet(src, relMark, errorList, [&src, this](){
             m_RelationType = static_cast<RelationType>(src[relMark].toInt());
         });
         readNode(m_HeadNode, headMark, src, errorList, *this);

@@ -93,7 +93,7 @@ namespace db {
     bool operator ==(const ProjectDatabase &lhs, const ProjectDatabase &rhs)
     {
         return static_cast<const Database &>(lhs).isEqual(rhs)               &&
-               utility::seqSharedPointerEq(lhs.m_Relations, rhs.m_Relations) &&
+               Util::seqSharedPointerEq(lhs.m_Relations, rhs.m_Relations) &&
                (lhs.m_GlobalDatabase == rhs.m_GlobalDatabase || *lhs.m_GlobalDatabase == *rhs.m_GlobalDatabase);
     }
 
@@ -324,7 +324,7 @@ namespace db {
     {
         Database::fromJson(src, errorList);
 
-        utility::checkAndSet(src, relationsMark, errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, relationsMark, errorList, [&src, &errorList, this](){
             if (src[relationsMark].isArray()) {
                 auto &&factory = relationship::RelationFactory::instance();
                 for (auto &&val: src[relationsMark].toArray())
@@ -405,7 +405,7 @@ namespace db {
     void ProjectDatabase::copyFrom(const ProjectDatabase &src)
     {
         m_GlobalDatabase = src.m_GlobalDatabase; // shallow copy. ok
-        utility::deepCopySharedPointerHash(src.m_Relations, m_Relations, &relationship::Relation::id);
+        Util::deepCopySharedPointerHash(src.m_Relations, m_Relations, &relationship::Relation::id);
     }
 
     /**

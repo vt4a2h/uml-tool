@@ -247,23 +247,23 @@ namespace entity {
     void ExtendedType::fromJson(const QJsonObject &src, QStringList &errorList)
     {
        Type::fromJson(src, errorList);
-       utility::checkAndSet(src, "Const status", errorList,
+       Util::checkAndSet(src, "Const status", errorList,
                             [&src, this](){ m_ConstStatus = src["Const status"].toBool(); });
-       utility::checkAndSet(src, "Type id", errorList,
+       Util::checkAndSet(src, "Type id", errorList,
                             [&src, &errorList, this](){ m_TypeId.fromJson(src["Type id"], errorList); });
-       utility::checkAndSet(src, "Use alias", errorList,
+       Util::checkAndSet(src, "Use alias", errorList,
                             [&src, this](){ m_UseAlias = src["Use alias"].toBool(); });
 
        m_PointersAndLinks.clear();
-       utility::checkAndSet(src, "Pointers and links", errorList, [&src, &errorList, this](){
+       Util::checkAndSet(src, "Pointers and links", errorList, [&src, &errorList, this](){
            if (src["Pointers and links"].isArray()) {
                Pl pl;
                QJsonObject obj;
                for (auto &&value : src["Pointers and links"].toArray()) {
                     obj = value.toObject();
-                    utility::checkAndSet(obj, "Pl", errorList,
+                    Util::checkAndSet(obj, "Pl", errorList,
                                          [&obj, &pl](){ pl.first = obj["Pl"].toString(); });
-                    utility::checkAndSet(obj, "Const pl status", errorList,
+                    Util::checkAndSet(obj, "Const pl status", errorList,
                                          [&obj, &pl](){ pl.second = obj["Const pl status"].toBool(); });
                     m_PointersAndLinks << pl;
                }
@@ -273,7 +273,7 @@ namespace entity {
        });
 
        m_TemplateParameters.clear();
-       utility::checkAndSet(src, "Template parameters", errorList, [&src, &errorList, this](){
+       Util::checkAndSet(src, "Template parameters", errorList, [&src, &errorList, this](){
            if (src["Template parameters"].isArray()) {
                for (auto &&value : src["Template parameters"].toArray()) {
                    common::ID tmp;

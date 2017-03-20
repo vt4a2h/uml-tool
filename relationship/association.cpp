@@ -192,10 +192,10 @@ namespace relationship {
     {
         Relation::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Get and set type ID", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Get and set type ID", errorList, [&src, &errorList, this](){
             m_GetSetTypeId.fromJson(src["Get and set type ID"], errorList);
         });
-        utility::checkAndSet(src, "Field type ID", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Field type ID", errorList, [&src, &errorList, this](){
             m_FieldTypeId.fromJson(src["Field type ID"], errorList);
         });
     }

@@ -284,24 +284,24 @@ namespace entity {
     {
         BasicElement::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Type ID", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Type ID", errorList, [&src, &errorList, this](){
             m_TypeId.fromJson(src["Type ID"], errorList);
         });
-        utility::checkAndSet(src, "Section", errorList, [&src, this](){
+        Util::checkAndSet(src, "Section", errorList, [&src, this](){
             m_Section = static_cast<Section>(src["Section"].toInt());
         });
-        utility::checkAndSet(src, "Prefix",  errorList, [&src, this](){
+        Util::checkAndSet(src, "Prefix",  errorList, [&src, this](){
             m_Prefix = src["Prefix"].toString();
         });
-        utility::checkAndSet(src, "Suffix",  errorList, [&src, this](){
+        Util::checkAndSet(src, "Suffix",  errorList, [&src, this](){
             m_Suffix = src["Suffix"].toString();
         });
-        utility::checkAndSet(src, "DefaultValue",  errorList, [&src, this](){
+        Util::checkAndSet(src, "DefaultValue",  errorList, [&src, this](){
             m_DefaultValue = src["DefaultValue"].toString();
         });
 
         m_Keywords.clear();
-        utility::checkAndSet(src, "Keywords", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Keywords", errorList, [&src, &errorList, this](){
             if (src["Keywords"].isArray()) {
                 for (auto &&value : src["Keywords"].toArray())
                     m_Keywords.insert(static_cast<FieldKeyword>(value.toInt()));

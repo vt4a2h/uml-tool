@@ -52,7 +52,7 @@
 #include <relationship/Relation.h>
 #include <entity/Scope.h>
 
-namespace utility {
+namespace Util {
 
     /**
      * @brief genId

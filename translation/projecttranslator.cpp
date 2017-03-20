@@ -132,7 +132,7 @@ namespace translation {
                                                             const db::SharedDatabase &classDatabase) const
     {
         checkDb();
-        auto t = utility::findType(id, localeDatabase, classDatabase, m_ProjectDatabase, m_GlobalDatabase);
+        auto t = Util::findType(id, localeDatabase, classDatabase, m_ProjectDatabase, m_GlobalDatabase);
         if (!t)
             return "";
 
@@ -189,7 +189,7 @@ namespace translation {
         // Generate fields
         if (!fields.isEmpty()) {
             if (needSection)
-                out.append(INDENT + utility::sectionToString(section) + ":\n");
+                out.append(INDENT + Util::sectionToString(section) + ":\n");
 
             generateFileds(fields, _class, localeDatabase, needSection ? DOUBLE_INDENT : INDENT, out);
         }
@@ -231,7 +231,7 @@ namespace translation {
     {
         QStringList fieldsList;
         for (auto &&field : fields) {
-            auto t = utility::findType(field->typeId(), localeDatabase,
+            auto t = Util::findType(field->typeId(), localeDatabase,
                                        m_GlobalDatabase, m_ProjectDatabase);
             if (!t) {
                 qDebug() << "Failed to find field with type:" << QString::number(field->typeId().value());
@@ -317,7 +317,7 @@ namespace translation {
     {
         if (!methods.isEmpty()) {
             if (needSection)
-                out.append(INDENT + utility::sectionToString(section) + marker);
+                out.append(INDENT + Util::sectionToString(section) + marker);
 
             generateMethods(methods, localeDatabase, needSection ? DOUBLE_INDENT : INDENT, out);
         }
@@ -352,7 +352,7 @@ namespace translation {
         QString typeName("");
         auto typeId(_enum->enumTypeId());
         if (typeId.isValid()) {
-            auto t = utility::findType(typeId, m_GlobalDatabase, m_ProjectDatabase);
+            auto t = Util::findType(typeId, m_GlobalDatabase, m_ProjectDatabase);
             if (t)  typeName.append(" : ").append(t->name());
         }
         result.replace("%type%", typeName);
@@ -406,7 +406,7 @@ namespace translation {
         if (!(options & NoLhs)) {
             QStringList lhsIdsList;
             for (auto &&lhsId : method->lhsIdentificators())
-                lhsIdsList << utility::methodLhsIdToString(lhsId);
+                lhsIdsList << Util::methodLhsIdToString(lhsId);
             if (!lhsIdsList.isEmpty())
                 lhsIds.append(lhsIdsList.join(" ")).append(" ");
         }
@@ -428,7 +428,7 @@ namespace translation {
             p->removeSuffix(); // TODO check why!
 
             TranslatorOptions newOptions((options & NoDefaultName) ? NoDefaultName : NoOptions);
-            auto t = utility::findType(p->typeId(), localeDatabase,
+            auto t = Util::findType(p->typeId(), localeDatabase,
                                        m_GlobalDatabase, m_ProjectDatabase);
             if (!t || method->scopeId() != t->scopeId() || !method->scopeId().isValid())
                newOptions |= WithNamespace;
@@ -440,7 +440,7 @@ namespace translation {
             parameters.append(parametersList.join(", "));
         result.replace("%parameters%", parameters);
 
-        QString rhsId(utility::methodRhsIdToString(method->rhsIdentificator()));
+        QString rhsId(Util::methodRhsIdToString(method->rhsIdentificator()));
         if (method->rhsIdentificator() != entity::RhsIdentificator::None)
             rhsId.prepend(" ");
         result.replace("%rhs_k%", rhsId);
@@ -553,8 +553,8 @@ namespace translation {
             QStringList parentsList;
             entity::SharedType t(nullptr);
             for (auto &&p : _class->parents()) {
-                t = utility::findType(p.first, templateDb, m_GlobalDatabase, m_ProjectDatabase);
-                QString parentName(utility::sectionToString(p.second) + QChar::Space);
+                t = Util::findType(p.first, templateDb, m_GlobalDatabase, m_ProjectDatabase);
+                QString parentName(Util::sectionToString(p.second) + QChar::Space);
 
                 QString typeName("unknown type");
                 if (t) {
@@ -688,7 +688,7 @@ namespace translation {
             --indentCount;
         }
 
-        QStringList scopesNames(utility::scopesNamesList(type,m_ProjectDatabase));
+        QStringList scopesNames(Util::scopesNamesList(type,m_ProjectDatabase));
         while (!scopesNames.isEmpty()) {
             addNamesapceHelper(code.toHeader, scopesNames, newIndent, SCOPE_TEMPLATE_HEADER);
             addNamesapceHelper(code.toSource, scopesNames, newIndent, SCOPE_TEMPLATE_SOURCE);
@@ -718,7 +718,7 @@ namespace translation {
         result.replace("%const%", extType->isConst() ? "const " : "");
 
         if (extType->typeId().isValid()) {
-            auto t = utility::findType(extType->typeId(), localeDatabase, classDatabase,
+            auto t = Util::findType(extType->typeId(), localeDatabase, classDatabase,
                                        m_ProjectDatabase,
                                        m_GlobalDatabase);
             result.replace("%name%", t ?
@@ -742,7 +742,7 @@ namespace translation {
             QStringList names;
             entity::SharedType t = nullptr;
             for (auto &&id : extType->templateParameters()) {
-                t = utility::findType(id, localeDatabase, classDatabase, m_ProjectDatabase,
+                t = Util::findType(id, localeDatabase, classDatabase, m_ProjectDatabase,
                                       m_GlobalDatabase);
                 if (t)
                     names << t->name();
@@ -780,7 +780,7 @@ namespace translation {
         QStringList keywords;
         if (!field->keywords().isEmpty())
             for (auto &&keyword : field->keywords())
-                keywords << utility::fieldKeywordToString(keyword);
+                keywords << Util::fieldKeywordToString(keyword);
         result.replace("%keywords%", keywords.isEmpty() ? "" : keywords.join(" ").append(" "));
 
         QString type = generateCodeForExtTypeOrType(field->typeId(), options,localeDatabase,
@@ -848,7 +848,7 @@ namespace translation {
     {
         QStringList scopesNames;
         auto id = type->scopeId();
-        entity::SharedScope scope = utility::findScope(id, localeDatabase, classDatabase,
+        entity::SharedScope scope = Util::findScope(id, localeDatabase, classDatabase,
                                                        m_ProjectDatabase, m_GlobalDatabase);
         do {
             if (!scope || id == common::ID::globalScopeID() ||
@@ -859,7 +859,7 @@ namespace translation {
                 scopesNames.prepend(scope->name());
 
             id = scope->scopeId();
-            scope = utility::findScope(id, localeDatabase, classDatabase,
+            scope = Util::findScope(id, localeDatabase, classDatabase,
                                        m_ProjectDatabase, m_GlobalDatabase);
         } while (true);
 

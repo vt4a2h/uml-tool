@@ -88,7 +88,7 @@ namespace project {
      * @brief Project::Project
      * @param src
      */
-    Project::Project(Project &&src)
+    Project::Project(Project &&src) noexcept
         : m_Name(std::move(src.m_Name))
         , m_Path(std::move(src.m_Path))
         , m_nextUniqueID(std::move(src.m_nextUniqueID))
@@ -109,7 +109,7 @@ namespace project {
      * @param lhs
      * @return
      */
-    Project &Project::operator =(Project &&lhs)
+    Project &Project::operator =(Project &&lhs) noexcept
     {
         if (this != &lhs) {
             m_Name = std::move(lhs.m_Name);
@@ -149,7 +149,7 @@ namespace project {
 
         m_Errors.clear();
 
-        if (!utility::readFromFile(*this, path))
+        if (!Util::readFromFile(*this, path))
             m_Errors << tr("Cannot read project file.");
 
         if (m_Path != path)
@@ -195,7 +195,7 @@ namespace project {
                     return;
                 }
 
-            if (!utility::writeToFile(*this, projectPath(m_Path)))
+            if (!Util::writeToFile(*this, projectPath(m_Path)))
                 m_Errors << tr("Cannot save project to file.");
 
             m_Database->setName(databaseFileName());
@@ -275,10 +275,10 @@ namespace project {
      */
     void Project::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Name", errorList, [&src, this](){
+        Util::checkAndSet(src, "Name", errorList, [&src, this](){
             m_Name = src["Name"].toString();
         });
-        utility::checkAndSet(src, "NextID", errorList, [&src, this](){
+        Util::checkAndSet(src, "NextID", errorList, [&src, this](){
             m_nextUniqueID = src["NextID"].toString().toULongLong();
         });
     }

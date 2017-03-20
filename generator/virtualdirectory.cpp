@@ -202,7 +202,7 @@ namespace generator {
      */
     void VirtualDirectory::copyFrom(const VirtualDirectory &src)
     {
-        utility::deepCopySharedPointerHash(src.m_Files, m_Files, &VirtualFileSystemAbstractItem::name);
+        Util::deepCopySharedPointerHash(src.m_Files, m_Files, &VirtualFileSystemAbstractItem::name);
     }
 
     /**

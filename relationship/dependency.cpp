@@ -125,10 +125,10 @@ namespace relationship {
     {
         Relation::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Method", errorList, [this, &src, &errorList](){
+        Util::checkAndSet(src, "Method", errorList, [this, &src, &errorList](){
             QJsonObject obj = src["Method"].toObject();
-            utility::checkAndSet(obj, "Type", errorList, [this, &obj, &errorList]{
-                m_Method = utility::makeMethod(static_cast<entity::ClassMethodType>(obj["Type"].toInt()));
+            Util::checkAndSet(obj, "Type", errorList, [this, &obj, &errorList]{
+                m_Method = Util::makeMethod(static_cast<entity::ClassMethodType>(obj["Type"].toInt()));
                 m_Method->fromJson(obj, errorList);
             });
         });

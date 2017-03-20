@@ -153,7 +153,7 @@ namespace entity {
                lhs.m_ReturnTypeId      == rhs.m_ReturnTypeId      &&
                lhs.m_RhsIdentificator  == rhs.m_RhsIdentificator  &&
                lhs.m_LhsIdentificators == rhs.m_LhsIdentificators &&
-               utility::seqSharedPointerEq(lhs.m_Parameters, rhs.m_Parameters);
+               Util::seqSharedPointerEq(lhs.m_Parameters, rhs.m_Parameters);
 
     }
 
@@ -412,30 +412,30 @@ namespace entity {
     {
         BasicElement::fromJson(src, errorList);
 
-        utility::checkAndSet(src, sectionMark, errorList, [&src, this](){
+        Util::checkAndSet(src, sectionMark, errorList, [&src, this](){
             m_Section = static_cast<Section>(src[sectionMark].toInt());
         });
-        utility::checkAndSet(src, typeMark, errorList, [&src, this](){
+        Util::checkAndSet(src, typeMark, errorList, [&src, this](){
             m_Type = static_cast<ClassMethodType>(src[typeMark].toInt());
         });
-        utility::checkAndSet(src, csMark, errorList, [&src, this](){
+        Util::checkAndSet(src, csMark, errorList, [&src, this](){
             m_ConstStatus = src[csMark].toBool();
         });
-        utility::checkAndSet(src, signalMark, errorList, [&src, this](){
+        Util::checkAndSet(src, signalMark, errorList, [&src, this](){
             m_SignalStatus = src[signalMark].toBool();
         });
-        utility::checkAndSet(src, slotMark, errorList, [&src, this](){
+        Util::checkAndSet(src, slotMark, errorList, [&src, this](){
             m_SlotStatus = src[slotMark].toBool();
         });
-        utility::checkAndSet(src, rtMark, errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, rtMark, errorList, [&src, &errorList, this](){
             m_ReturnTypeId.fromJson(src[rtMark], errorList);
         });
-        utility::checkAndSet(src, rhsiMark, errorList, [&src, this](){
+        Util::checkAndSet(src, rhsiMark, errorList, [&src, this](){
             m_RhsIdentificator = static_cast<RhsIdentificator>(src[rhsiMark].toInt());
         });
 
         m_Parameters.clear();
-        utility::checkAndSet(src, paramsMark, errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, paramsMark, errorList, [&src, &errorList, this](){
             if (src[paramsMark].isArray()) {
                 SharedField parameter;
                 for (auto &&value : src[paramsMark].toArray()) {
@@ -449,7 +449,7 @@ namespace entity {
         });
 
         m_LhsIdentificators.clear();
-        utility::checkAndSet(src, lhsMark, errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, lhsMark, errorList, [&src, &errorList, this](){
             if (src[lhsMark].isArray()) {
                 for (auto &&value : src[lhsMark].toArray())
                     m_LhsIdentificators.insert(static_cast<LhsIdentificator>(value.toInt()));
@@ -512,7 +512,7 @@ namespace entity {
         m_SignalStatus = src.m_SignalStatus;
         m_ReturnTypeId = src.m_ReturnTypeId;
 
-        utility::deepCopySharedPointerList(src.m_Parameters, m_Parameters);
+        Util::deepCopySharedPointerList(src.m_Parameters, m_Parameters);
 
         m_RhsIdentificator  = src.m_RhsIdentificator;
         m_LhsIdentificators = src.m_LhsIdentificators;

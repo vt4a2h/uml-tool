@@ -27,6 +27,8 @@
 #include <map>
 
 #include <boost/range/algorithm/equal.hpp>
+#include <boost/range/algorithm/find.hpp>
+#include <boost/range/algorithm/find_if.hpp>
 
 #include <QFile>
 #include <QTextStream>
@@ -71,7 +73,7 @@ namespace db {
     class Database;
 }
 
-namespace utility {
+namespace Util {
 
     // TODO: move something to helpers.h / cpp
 
@@ -221,6 +223,18 @@ namespace utility {
         }
 
         return false;
+    }
+
+    template <class Container, class Value>
+    bool contains(const Container &c, const Value &v)
+    {
+        return boost::range::find(c, v) != std::end(c);
+    }
+
+    template <class Container, class Pred>
+    bool contains_if(const Container &c, const Pred &p)
+    {
+        return boost::range::find_if(c, p) != std::end(c);
     }
 
     bool toBool(const QString &in, bool &ok);

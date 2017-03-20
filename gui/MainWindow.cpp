@@ -202,6 +202,49 @@ namespace gui {
         m_NewProjectDialog->show();
     }
 
+    // TODO: move to the separate command
+    void openProject(const QString & path, const models::SharedApplicationModel appModel,
+                     graphics::Scene &scene, const commands::SharedCommandStack &stack,
+                     QMainWindow & mv, QMenu & rp)
+    {
+        if (path.isEmpty())
+            return;
+
+        auto projects = appModel->projects();
+        auto it = range::find_if(projects, [&](auto &&p) { return p->fullPath() == path; });
+        auto newProject = it != std::end(projects) ? *it : nullptr;
+
+        if (!newProject) {
+            newProject = std::make_shared<project::Project>();
+            newProject->load(path);
+
+            if (newProject->hasErrors()) {
+                auto errors = newProject->lastErrors();
+                QMessageBox::critical
+                    ( &mv
+                    , QMainWindow::tr("Open project: %n error(s).", "", errors.count())
+                    , errors.join("\n")
+                    , QMessageBox::Ok
+                    );
+
+                return;
+            }
+        }
+
+        if (newProject != appModel->currentProject())
+            if (appModel->currentProject())
+                std::make_shared<commands::MakeProjectCurrent>("", appModel, &scene)->redo();
+
+        if (appModel->addProject(newProject))
+        {
+            appModel->setCurrentProject(newProject->name());
+            newProject->setCommandsStack(stack);
+        }
+
+        addRecentProject(newProject->fullPath());
+        rebuildRecentProjectMenu(rp);
+    }
+
     /**
      * @brief MainWindow::onOpenProject
      */
@@ -211,53 +254,8 @@ namespace gui {
         QString dir(QApplication::applicationDirPath()); // temporary
         QString filter(tr("Q-UML Project files (*.%1)").arg(PROJECT_FILE_EXTENTION));
 
-        // TODO: move to separate method
-        //       handle the situation when project is already exists
-        //       connect new method to the click to Recent projects menu
         QString path = QFileDialog::getOpenFileName(this, caption, dir, filter);
-        if (path.isEmpty())
-            return ;
-
-        // Deactivate current project
-        commands::SharedCommand deactivateCmd;
-        if (m_ApplicationModel->currentProject()) {
-            deactivateCmd = std::make_shared<commands::MakeProjectCurrent>("", m_ApplicationModel,
-                                                                           m_MainScene.get());
-            deactivateCmd->redo();
-        }
-
-        // Load new one
-        auto newProject = std::make_shared<project::Project>();
-        newProject->load(path);
-
-        if (newProject->hasErrors()) {
-            QMessageBox::critical
-                ( this
-                , tr("Open project error%1").arg(newProject->lastErrors().size() > 1 ? "s" : "")
-                , newProject->lastErrors().join("\n")
-                , QMessageBox::Ok
-                );
-
-            // Fallback to previous project
-            if (deactivateCmd)
-                deactivateCmd->undo();
-        } else {
-            newProject->setCommandsStack(m_CommandsStack);
-            if (m_ApplicationModel->addProject(newProject))
-            {
-                m_ApplicationModel->setCurrentProject(newProject->name());
-
-                addRecentProject(newProject->fullPath());
-                rebuildRecentProjectMenu(*m_RecentProjects);
-            }
-            else
-                QMessageBox::information
-                    ( this
-                    , tr("Q-UML - Information")
-                    , tr("Project \"%1\" already exists.").arg(newProject->name())
-                    , QMessageBox::Ok
-                    );
-        }
+        openProject(path, m_ApplicationModel, *m_MainScene, m_CommandsStack, *this, *m_RecentProjects);
     }
 
     /**

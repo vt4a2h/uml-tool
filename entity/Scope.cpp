@@ -119,9 +119,9 @@ namespace entity {
     {
         return static_cast<common::BasicElement const&>(lhs) ==
                static_cast<common::BasicElement const&>(rhs) &&
-               utility::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes) &&
-               utility::seqSharedPointerEq(lhs.m_Types, rhs.m_Types)   &&
-               utility::seqSharedPointerEq(lhs.m_TypesByName, rhs.m_TypesByName);
+               Util::seqSharedPointerEq(lhs.m_Scopes, rhs.m_Scopes) &&
+               Util::seqSharedPointerEq(lhs.m_Types, rhs.m_Types)   &&
+               Util::seqSharedPointerEq(lhs.m_TypesByName, rhs.m_TypesByName);
     }
 
     /**
@@ -337,7 +337,7 @@ namespace entity {
         BasicElement::fromJson(src, errorList);
 
         m_Scopes.clear();
-        utility::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
             if (src["Scopes"].isArray()) {
                 SharedScope scope;
                 for (auto &&val : src["Scopes"].toArray()) {
@@ -352,7 +352,7 @@ namespace entity {
 
         m_Types.clear();
         m_TypesByName.clear();
-        utility::checkAndSet(src, "Types", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Types", errorList, [&src, &errorList, this](){
             if (src["Types"].isArray()) {
                 auto const & factory = EntityFactory::instance();
                 for (auto &&val : src["Types"].toArray())
@@ -421,9 +421,9 @@ namespace entity {
      */
     void Scope::copyFrom(const Scope &src)
     {
-        utility::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &Scope::id);
-        utility::deepCopySharedPointerHash(src.m_Types,  m_Types, &Type::id);
-        utility::deepCopySharedPointerHash(src.m_TypesByName,  m_TypesByName, &Type::name);
+        Util::deepCopySharedPointerHash(src.m_Scopes, m_Scopes, &Scope::id);
+        Util::deepCopySharedPointerHash(src.m_Types,  m_Types, &Type::id);
+        Util::deepCopySharedPointerHash(src.m_TypesByName,  m_TypesByName, &Type::name);
     }
 
     /**

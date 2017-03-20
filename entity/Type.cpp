@@ -123,9 +123,9 @@ namespace entity {
     void Type::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         BasicElement::fromJson(src, errorList);
-        utility::checkAndSet(src, kindOfTypeMark, errorList,
+        Util::checkAndSet(src, kindOfTypeMark, errorList,
                              [&] { m_KindOfType = KindOfType(src[kindOfTypeMark].toInt()); });
-        utility::checkAndSet(src, graphicsDataMark, errorList,
+        Util::checkAndSet(src, graphicsDataMark, errorList,
         [&] {
             G_ASSERT(m_GraphicEntityData)->fromJson(src[graphicsDataMark].toObject(), errorList);
         });
@@ -149,7 +149,7 @@ namespace entity {
     {
         return rhs.hashType()   == this->hashType() &&
                rhs.m_KindOfType == m_KindOfType     &&
-               utility::sharedPtrEq(rhs.m_GraphicEntityData, m_GraphicEntityData) &&
+               Util::sharedPtrEq(rhs.m_GraphicEntityData, m_GraphicEntityData) &&
                ( withTypeid ? m_Id == rhs.m_Id : true );
     }
 

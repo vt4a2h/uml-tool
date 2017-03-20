@@ -109,7 +109,7 @@ namespace relationship {
     {
         Relation::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Section", errorList, [this, &src](){
+        Util::checkAndSet(src, "Section", errorList, [this, &src](){
             m_Section = static_cast<entity::Section>(src["Section"].toInt());
         });
     }

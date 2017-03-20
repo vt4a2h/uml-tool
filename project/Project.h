@@ -60,10 +60,10 @@ namespace project {
 
         explicit Project();
         Project(const QString &name, const QString &path);
-        Project(Project &&src);
+        Project(Project &&src) noexcept;
         ~Project();
 
-        Project& operator =(Project &&lhs);
+        Project& operator =(Project &&lhs) noexcept;
         friend bool operator ==(const Project &lhs, const Project &rhs);
 
         QString name() const;

@@ -181,7 +181,7 @@ namespace entity {
         Type::fromJson(src, errorList);
 
         m_Fields.clear();
-        utility::checkAndSet(src, "Fields", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Fields", errorList, [&src, &errorList, this](){
             if (src["Fields"].isArray()) {
                 SharedField f;
                 for (auto &&value : src["Fields"].toArray()) {
@@ -206,7 +206,7 @@ namespace entity {
             return false;
 
         auto r = static_cast<const Union &>(rhs);
-        return utility::seqSharedPointerEq(m_Fields, r.m_Fields);
+        return Util::seqSharedPointerEq(m_Fields, r.m_Fields);
     }
 
     /**
@@ -249,7 +249,7 @@ namespace entity {
      */
     void Union::copyFrom(const Union &src)
     {
-        utility::deepCopySharedPointerList(src.m_Fields, m_Fields);
+        Util::deepCopySharedPointerList(src.m_Fields, m_Fields);
     }
 
 } // namespace entity

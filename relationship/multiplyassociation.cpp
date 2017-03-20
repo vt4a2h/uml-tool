@@ -262,7 +262,7 @@ namespace relationship {
      */
     void MultiplyAssociation::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, "Conatiner ID", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Conatiner ID", errorList, [&src, &errorList, this](){
             m_ContainerTypeId.fromJson(src["Conatiner ID"], errorList);
             m_ContainerClass = findType(m_ContainerTypeId);
             Q_ASSERT_X(m_ContainerClass,
@@ -270,7 +270,7 @@ namespace relationship {
                        "container class is not found");
         });
 
-        utility::checkAndSet(src, "Key ID", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Key ID", errorList, [&src, &errorList, this](){
             m_KeyTypeId.fromJson(src["Key ID"], errorList);
         });
     }

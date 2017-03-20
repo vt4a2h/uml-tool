@@ -65,7 +65,7 @@ namespace components {
                 return;
 
             bool ok = false;
-            bool result = utility::toBool(name, ok);
+            bool result = Util::toBool(name, ok);
 
             if (ok)
                 (property.get()->*setMethod)(result);
@@ -83,7 +83,7 @@ namespace components {
                 return;
 
             bool ok = false;
-            bool result = utility::toBool(name, ok);
+            bool result = Util::toBool(name, ok);
 
             // set true or false if it bool (e.g. STORED bool), otherwise set just true (e.g. CONSTANT)
             (property.get()->*setMethod)(ok ? result : true);
@@ -319,7 +319,7 @@ namespace components {
         newField->setName(tokens[int(FieldGroupNames::Name)]->token());
         if (!tokens[int(FieldGroupNames::LhsKeywords)]->token().isEmpty()) {
             auto keyword =
-                utility::fieldKeywordFromString(tokens[int(FieldGroupNames::LhsKeywords)]->token());
+                Util::fieldKeywordFromString(tokens[int(FieldGroupNames::LhsKeywords)]->token());
             Q_ASSERT(keyword != entity::FieldKeyword::Invalid);
             newField->addKeyword(keyword);
         }
@@ -431,7 +431,7 @@ namespace components {
         auto lhsToken = tokens[int(MethodsGroupsNames::LhsKeywords)];
         Q_ASSERT(!lhsToken->isEmpty() && lhsToken->isSingle());
         for (auto &&w : lhsToken->token().split(QChar::Space, QString::SkipEmptyParts)) {
-            entity::LhsIdentificator id = utility::methodLhsIdFromString(w);
+            entity::LhsIdentificator id = Util::methodLhsIdFromString(w);
             Q_ASSERT(id != entity::LhsIdentificator::None);
             newMethod->addLhsIdentificator(id);
         }
@@ -495,7 +495,7 @@ namespace components {
 
         const QString &rhsToken = rhsArgument->token();
         if (!rhsToken.isEmpty()) {
-            entity::RhsIdentificator rhsId = utility::methodRhsIdFromString(rhsToken);
+            entity::RhsIdentificator rhsId = Util::methodRhsIdFromString(rhsToken);
             if (rhsId != entity::RhsIdentificator::None)
                 newMethod->setRhsIdentificator(rhsId);
             else

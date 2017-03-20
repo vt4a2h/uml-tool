@@ -681,24 +681,24 @@ namespace entity {
     {
         Type::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Kind", errorList, [&src, this](){
+        Util::checkAndSet(src, "Kind", errorList, [&src, this](){
             m_Kind = static_cast<Kind>(src["Kind"].toInt());
         });
-        utility::checkAndSet(src, "Final status", errorList, [&src, this](){
+        Util::checkAndSet(src, "Final status", errorList, [&src, this](){
             m_FinalStatus = src["Final status"].toBool();
         });
 
         m_Parents.clear();
-        utility::checkAndSet(src, "Parents", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Parents", errorList, [&src, &errorList, this](){
             Parent p;
             QJsonObject o;
             if (src["Parents"].isArray()) {
                 for (auto &&value : src["Parents"].toArray()) {
                     o = value.toObject();
-                    utility::checkAndSet(o, "Id", errorList, [&o, &p, this](){
+                    Util::checkAndSet(o, "Id", errorList, [&o, &p, this](){
                         p.first = o["Id"].toString().toULongLong();
                     });
-                    utility::checkAndSet(o, "Section", errorList, [&o, &p, this](){
+                    Util::checkAndSet(o, "Section", errorList, [&o, &p, this](){
                         p.second = static_cast<Section>(o["Section"].toInt());
                     });
                     m_Parents.append(p);
@@ -709,15 +709,15 @@ namespace entity {
         });
 
         m_Methods.clear();
-        utility::checkAndSet(src, "Methods", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Methods", errorList, [&src, &errorList, this](){
             if (src["Methods"].isArray()) {
                 SharedMethod method;
                 QJsonObject obj;
                 for (auto &&value : src["Methods"].toArray()) {
                     obj = value.toObject();
-                    utility::checkAndSet(obj, "Type", errorList,
+                    Util::checkAndSet(obj, "Type", errorList,
                                          [&obj, &errorList, &method, this](){
-                        method = utility::makeMethod(static_cast<ClassMethodType>(obj["Type"].toInt()));
+                        method = Util::makeMethod(static_cast<ClassMethodType>(obj["Type"].toInt()));
                         method->fromJson(obj, errorList);
                         m_Methods << method;
                     });
@@ -728,7 +728,7 @@ namespace entity {
         });
 
         m_Fields.clear();
-        utility::checkAndSet(src, "Fields", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Fields", errorList, [&src, &errorList, this](){
             if (src["Fields"].isArray()) {
                 SharedField field;
                 for (auto &&value : src["Fields"].toArray()) {
@@ -742,7 +742,7 @@ namespace entity {
         });
 
         m_Properties.clear();
-        utility::checkAndSet(src, "Properties", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Properties", errorList, [&src, &errorList, this](){
             if (src["Properties"].isArray()) {
                 SharedProperty property;
                 for (auto &&value : src["Properties"].toArray()) {
@@ -769,10 +769,10 @@ namespace entity {
         return m_Kind        == r.m_Kind           &&
                m_FinalStatus == r.m_FinalStatus    &&
                m_Parents     == r.m_Parents        &&
-               utility::seqSharedPointerEq(m_Methods, r.m_Methods) &&
-               utility::seqSharedPointerEq(m_Fields,  r.m_Fields)  &&
-               utility::seqSharedPointerEq(m_Properties, r.m_Properties) &&
-               utility::seqSharedPointerEq(optionalMethods(None), r.optionalMethods(None));
+               Util::seqSharedPointerEq(m_Methods, r.m_Methods) &&
+               Util::seqSharedPointerEq(m_Fields,  r.m_Fields)  &&
+               Util::seqSharedPointerEq(m_Properties, r.m_Properties) &&
+               Util::seqSharedPointerEq(optionalMethods(None), r.optionalMethods(None));
     }
 
     /**
@@ -807,9 +807,9 @@ namespace entity {
         m_FinalStatus = src.m_FinalStatus;
         m_Parents = src.m_Parents;
 
-        utility::deepCopySharedPointerList(src.m_Methods, m_Methods);
-        utility::deepCopySharedPointerList(src.m_Fields,  m_Fields );
-        utility::deepCopySharedPointerList(src.m_Properties, m_Properties);
+        Util::deepCopySharedPointerList(src.m_Methods, m_Methods);
+        Util::deepCopySharedPointerList(src.m_Fields,  m_Fields );
+        Util::deepCopySharedPointerList(src.m_Properties, m_Properties);
         m_OptionalMethods = src.m_OptionalMethods;
         m_OptionalFields = src.m_OptionalFields;
     }

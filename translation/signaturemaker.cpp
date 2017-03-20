@@ -309,7 +309,7 @@ namespace translation {
             QStringList kw;
             kw.reserve(keywords.size());
             for (auto &&keyword : keywords)
-                kw << utility::fieldKeywordToString(keyword);
+                kw << Util::fieldKeywordToString(keyword);
 
             result.prepend(QChar::Space).prepend(kw.join(QChar::Space));
         }
@@ -358,7 +358,7 @@ namespace translation {
 
         // Add rhs, e.g. default
         if (entity::RhsIdentificator::None != method->rhsIdentificator())
-            result.append(QChar::Space).append(utility::methodRhsIdToString(method->rhsIdentificator()));
+            result.append(QChar::Space).append(Util::methodRhsIdToString(method->rhsIdentificator()));
 
         // Add lhs, e.g. static
         auto lhsIds = method->lhsIdentificators();
@@ -366,7 +366,7 @@ namespace translation {
             QStringList lhsStrings;
             lhsStrings.reserve(lhsIds.count());
             for (auto &&id : lhsIds)
-                lhsStrings << utility::methodLhsIdToString(id);
+                lhsStrings << Util::methodLhsIdToString(id);
             result.prepend(QChar::Space).prepend(lhsStrings.join(QChar::Space));
         }
 
@@ -456,7 +456,7 @@ namespace translation {
      */
     entity::SharedScope SignatureMaker::findScope(const common::ID &scopeId) const
     {
-        return utility::findScope(scopeId, m_ProjectDatabase, m_GlobalDatabase);
+        return Util::findScope(scopeId, m_ProjectDatabase, m_GlobalDatabase);
     }
 
     /**
@@ -466,7 +466,7 @@ namespace translation {
      */
     entity::SharedType SignatureMaker::findType(const common::ID &typeId) const
     {
-        return utility::findType(typeId, m_ProjectDatabase, m_GlobalDatabase);
+        return Util::findType(typeId, m_ProjectDatabase, m_GlobalDatabase);
     }
 
 } // namespace translation

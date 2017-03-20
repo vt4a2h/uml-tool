@@ -86,7 +86,7 @@ namespace entity {
     {
         ClassMethod::fromJson(src, errorList);
 
-        utility::checkAndSet(src, "Template part", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Template part", errorList, [&src, &errorList, this](){
             Template::templateLoadFromJson(src["Template part"].toObject(), errorList);
         });
     }

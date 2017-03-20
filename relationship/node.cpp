@@ -66,7 +66,7 @@ namespace relationship {
      */
     bool operator ==(const Node &lhs, const Node &rhs)
     {
-        return utility::sharedPtrEq(lhs.m_Type, rhs.m_Type) &&
+        return Util::sharedPtrEq(lhs.m_Type, rhs.m_Type) &&
                lhs.m_Description  == rhs.m_Description &&
                lhs.m_Multiplicity == rhs.m_Multiplicity;
     }
@@ -93,10 +93,10 @@ namespace relationship {
      */
     void Node::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        utility::checkAndSet(src, descrMark, errorList, [&src, this](){
+        Util::checkAndSet(src, descrMark, errorList, [&src, this](){
             m_Description = src[descrMark].toString();
         });
-        utility::checkAndSet(src, multMark, errorList, [&src, this](){
+        Util::checkAndSet(src, multMark, errorList, [&src, this](){
             m_Multiplicity = static_cast<Multiplicity>(src[multMark].toInt());
         });
     }
@@ -107,7 +107,7 @@ namespace relationship {
      */
     void Node::writeToFile(const QString &fileName) const
     {
-        utility::writeToFile(*this, fileName);
+        Util::writeToFile(*this, fileName);
     }
 
     /**
@@ -117,7 +117,7 @@ namespace relationship {
      */
     bool Node::readFromFile(const QString &fileName)
     {
-       return utility::readFromFile(*this, fileName);
+       return Util::readFromFile(*this, fileName);
     }
 
     /**

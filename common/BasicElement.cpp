@@ -185,7 +185,7 @@ namespace common {
      */
     void BasicElement::writeToFile(const QString &fileName) const
     {
-        utility::writeToFile(*this, fileName);
+        Util::writeToFile(*this, fileName);
     }
 
     /**
@@ -195,7 +195,7 @@ namespace common {
      */
     bool BasicElement::readFromFile(const QString &fileName)
     {
-        return utility::readFromFile(*this, fileName);
+        return Util::readFromFile(*this, fileName);
     }
 
     /**
@@ -221,7 +221,7 @@ namespace common {
      */
     void BasicElement::fromJson(const QJsonObject &src, QStringList &errorList)
     {
-        using namespace utility;
+        using namespace Util;
 
         checkAndSet(src, nameMark, errorList, [&](){ setName(src[nameMark].toString()); });
         checkAndSet(src, idMark, errorList, [&](){

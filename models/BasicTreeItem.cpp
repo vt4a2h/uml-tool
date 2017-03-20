@@ -402,7 +402,7 @@ namespace models {
      */
     void BasicTreeItem::copyFrom(const BasicTreeItem &src)
     {
-        utility::deepCopyPointerList(src.m_Children, m_Children);
+        Util::deepCopyPointerList(src.m_Children, m_Children);
         m_Entity = src.m_Entity;
         m_Type   = src.m_Type;
         m_Parent = src.m_Parent;

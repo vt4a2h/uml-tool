@@ -67,7 +67,7 @@ namespace relationship {
     bool operator ==(const Realization &lhs, const Realization &rhs)
     {
         return static_cast<const Generalization&>(lhs).isEqual(rhs) &&
-               utility::seqSharedPointerEq(lhs.m_Methods, rhs.m_Methods);
+               Util::seqSharedPointerEq(lhs.m_Methods, rhs.m_Methods);
     }
 
     /**
@@ -114,7 +114,7 @@ namespace relationship {
         Generalization::fromJson(src, errorList);
 
         m_Methods.clear();
-        utility::checkAndSet(src, "Methods", errorList, [&src, &errorList, this](){
+        Util::checkAndSet(src, "Methods", errorList, [&src, &errorList, this](){
             if (src["Methods"].isArray()) {
                 entity::SharedMethod method;
                 for (auto &&value : src["Methods"].toArray()) {
