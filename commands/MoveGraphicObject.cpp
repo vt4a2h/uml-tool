@@ -24,7 +24,7 @@
 
 #include <QGraphicsItem>
 
-namespace commands {
+namespace Commands {
 
     /**
      * @brief MoveGraphicObject::MoveGraphicObject

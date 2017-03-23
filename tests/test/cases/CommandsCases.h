@@ -42,7 +42,7 @@ TEST_F(CommandsTester, CreateEntityCommand)
          ++type) {
         auto kindOfType = entity::KindOfType(type);
 
-        auto cmd = std::make_unique<commands::CreateEntity>(kindOfType, scopeID, pos);
+        auto cmd = std::make_unique<Commands::CreateEntity>(kindOfType, scopeID, pos);
         cmd->redo();
 
         auto entity = cmd->entity();
@@ -70,7 +70,7 @@ TEST_F(CommandsTester, CreateScopeCommand)
 {
     QString scopeName = "Foo";
 
-    auto cmd = std::make_unique<commands::CreateScope>(scopeName, *m_FakeAppModel);
+    auto cmd = std::make_unique<Commands::CreateScope>(scopeName, *m_FakeAppModel);
 
     cmd->redo();
     ASSERT_FALSE(cmd->scopeName().isEmpty());
@@ -94,7 +94,7 @@ TEST_F(CommandsTester, MakeProjectCurrent)
     ASSERT_TRUE(!!oldCurrent);
 
     ASSERT_FALSE(m_FakeAppModel->currentProject() == testProject);
-    auto cmd = std::make_unique<commands::MakeProjectCurrent>(
+    auto cmd = std::make_unique<Commands::MakeProjectCurrent>(
                    testProjectName, m_FakeAppModel, graphics::ScenePtr());
 
     cmd->redo();
@@ -121,7 +121,7 @@ TEST_F(CommandsTester, MoveGraphicObject)
     ASSERT_EQ(e.pos(), initialPos);
 
     auto cmd =
-        std::make_unique<commands::MoveGraphicObject>(e, someType->name(), initialPos, dstPoint);
+        std::make_unique<Commands::MoveGraphicObject>(e, someType->name(), initialPos, dstPoint);
 
     cmd->redo();
     ASSERT_EQ(e.pos(), dstPoint);
@@ -143,7 +143,7 @@ TEST_F(CommandsTester, MoveTypeToAnotherScope)
     ASSERT_TRUE(firstScope->containsType(type->id()));
     ASSERT_FALSE(secondScope->containsType(type->id()));
 
-    auto cmd = std::make_unique<commands::MoveTypeToAnotherScope>(type, m_FakeAppModel, firstScope,
+    auto cmd = std::make_unique<Commands::MoveTypeToAnotherScope>(type, m_FakeAppModel, firstScope,
                                                                 secondScope);
 
     cmd->redo();
@@ -157,12 +157,12 @@ TEST_F(CommandsTester, MoveTypeToAnotherScope)
 
 TEST_F(CommandsTester, RemoveProject)
 {
-    auto createEntityCmd = std::make_unique<commands::CreateEntity>(
+    auto createEntityCmd = std::make_unique<Commands::CreateEntity>(
         entity::KindOfType::Class, common::ID::projectScopeID(), QPointF(10, 20));
     createEntityCmd->redo();
 
     auto removeProject =
-        std::make_unique<commands::RemoveProject>(m_Project, m_FakeAppModel, m_Scene.get());
+        std::make_unique<Commands::RemoveProject>(m_Project, m_FakeAppModel, m_Scene.get());
 
     removeProject->redo();
     ASSERT_FALSE(!!m_FakeAppModel->project(m_Project->name()));
@@ -182,7 +182,7 @@ TEST_F(CommandsTester, RenameEntity)
     auto c = m_ProjectScope->addType<entity::Class>(defaultClassName);
     ASSERT_EQ(c->name(), defaultClassName);
 
-    auto renameEntityCommand = std::make_unique<commands::RenameEntity>(c, newClassName);
+    auto renameEntityCommand = std::make_unique<Commands::RenameEntity>(c, newClassName);
 
     renameEntityCommand->redo();
     ASSERT_EQ(c->name(), newClassName);

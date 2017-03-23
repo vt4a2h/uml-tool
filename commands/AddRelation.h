@@ -40,7 +40,7 @@ namespace graphics {
     class Relation;
 }
 
-namespace commands {
+namespace Commands {
 
     /// Add relation command
     class AddRelation : public BaseCommand

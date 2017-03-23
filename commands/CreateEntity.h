@@ -32,7 +32,7 @@
 
 #include "BaseCommand.h"
 
-namespace commands {
+namespace Commands {
 
     class CreateEntity : public BaseCommand
     {
@@ -46,10 +46,10 @@ namespace commands {
     public: // QUndoCommand overridies
         void undo()    override;
         void redo()    override;
-        void cleanup() override;
 
     public: // BaseCommand overridies
         void sanityCheck() override;
+        void cleanup() override;
 
     private:
         entity::KindOfType m_KindOfType;

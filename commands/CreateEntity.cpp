@@ -35,7 +35,7 @@
 
 #include "qthelpers.h"
 
-namespace commands {
+namespace Commands {
 
     namespace {
         const QMap<entity::KindOfType, QString> hashName = {

@@ -20,11 +20,11 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "addcomponentscommands.h"
+#include "AddComponentsCommands.h"
 
 #include "RemoveComponentsCommands.h"
 
-namespace commands {
+namespace Commands {
 
     /**
      * @brief AddMethod::AddMethod

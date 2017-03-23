@@ -29,7 +29,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
-namespace commands {
+namespace Commands {
 
     using namespace boost::range;
 

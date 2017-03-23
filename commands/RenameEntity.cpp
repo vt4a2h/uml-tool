@@ -26,7 +26,7 @@
 
 #include "qthelpers.h"
 
-namespace commands
+namespace Commands
 {
 
     /**

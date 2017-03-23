@@ -46,7 +46,7 @@
 
 #include <commands/RenameEntity.h>
 #include <commands/MoveTypeToAnotherScope.h>
-#include <commands/addcomponentscommands.h>
+#include <commands/AddComponentsCommands.h>
 #include <commands/RemoveComponentsCommands.h>
 
 #include <translation/signaturemaker.h>
@@ -115,17 +115,17 @@ namespace gui {
             {
                 { models::DisplayPart::Methods,
                   [](const models::SharedClassComponentsModel &model, QUndoStack * stack){
-                      stack->push(new commands::AddMethod(model));
+                      stack->push(new Commands::AddMethod(model));
                 } },
 
                 { models::DisplayPart::Fields,
                   [](const models::SharedClassComponentsModel &model, QUndoStack * stack){
-                      stack->push(new commands::AddField(model));
+                      stack->push(new Commands::AddField(model));
                 } },
 
                 { models::DisplayPart::Elements,
                   [](const models::SharedClassComponentsModel &model, QUndoStack * stack){
-                      stack->push(new commands::AddElement(model));
+                      stack->push(new Commands::AddElement(model));
                 } },
 
                 { models::DisplayPart::Properties,
@@ -310,7 +310,7 @@ namespace gui {
         // Check name
         QString newName = ui->leName->text();
         if (m_Type->name() != newName)
-            stack->push(std::make_unique<commands::RenameEntity>(m_Type, newName).release());
+            stack->push(std::make_unique<Commands::RenameEntity>(m_Type, newName).release());
 
         // Check scope
         auto scope = ui->cbScopes->currentData().value<entity::SharedScope>();
@@ -326,7 +326,7 @@ namespace gui {
             Q_ASSERT(dstScope);
 
             Q_ASSERT(m_ApplicationModel);
-            auto cmd = std::make_unique<commands::MoveTypeToAnotherScope>(m_Type, m_ApplicationModel, srcScope, dstScope);
+            auto cmd = std::make_unique<Commands::MoveTypeToAnotherScope>(m_Type, m_ApplicationModel, srcScope, dstScope);
             stack->push(cmd.release());
         }
 
@@ -470,15 +470,15 @@ namespace gui {
     {
         componentDeleters[models::DisplayPart::Elements] =
             [this](const QModelIndex &index){
-                addRemoveCommand<commands::RemoveElement, entity::SharedEnumarator>(m_ComponentsModel, index, m_CommandsStack.data());
+                addRemoveCommand<Commands::RemoveElement, entity::SharedEnumarator>(m_ComponentsModel, index, m_CommandsStack.data());
             };
         componentDeleters[models::DisplayPart::Fields] =
             [this](const QModelIndex &index){
-                addRemoveCommand<commands::RemoveField, entity::SharedField>(m_ComponentsModel, index, m_CommandsStack.data());
+                addRemoveCommand<Commands::RemoveField, entity::SharedField>(m_ComponentsModel, index, m_CommandsStack.data());
             };
         componentDeleters[models::DisplayPart::Methods] =
             [this](const QModelIndex &index){
-                addRemoveCommand<commands::RemoveMethod, entity::SharedMethod>(m_ComponentsModel, index, m_CommandsStack.data());
+                addRemoveCommand<Commands::RemoveMethod, entity::SharedMethod>(m_ComponentsModel, index, m_CommandsStack.data());
             };
         componentDeleters[models::DisplayPart::Properties] = [](const QModelIndex &){ /*Implement*/ };
     }

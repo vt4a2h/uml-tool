@@ -143,7 +143,7 @@ namespace gui {
         QPointer<QAction> m_ClearRecentProjects;
 
         models::SharedApplicationModel m_ApplicationModel;
-        commands::SharedCommandStack m_CommandsStack;
+        Commands::SharedCommandStack m_CommandsStack;
     };
 
 } // namespace gui

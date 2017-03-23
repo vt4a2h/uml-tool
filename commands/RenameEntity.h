@@ -26,7 +26,7 @@
 
 #include "BaseCommand.h"
 
-namespace commands
+namespace Commands
 {
 
     /// The RenameEntity class

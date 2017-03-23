@@ -28,7 +28,7 @@ QT_BEGIN_NAMESPACE
 class QUndoStack;
 QT_END_NAMESPACE
 
-namespace commands {
+namespace Commands {
 
     class BaseCommand;
     using UniqueCommand = std::unique_ptr<BaseCommand>;

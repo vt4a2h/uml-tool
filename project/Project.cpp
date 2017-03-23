@@ -412,7 +412,7 @@ namespace project {
                       if (!e)
                           return;
 
-                      auto cmd = std::make_unique<commands::MoveGraphicObject>(
+                      auto cmd = std::make_unique<Commands::MoveGraphicObject>(
                                      *e, G_ASSERT(e->typeObject())->name(), from, to);
                       G_ASSERT(commandsStack())->push(cmd.release());
         });
@@ -476,7 +476,7 @@ namespace project {
      * @brief Project::CommandsStack
      * @return
      */
-    commands::SharedCommandStack Project::commandsStack() const
+    Commands::SharedCommandStack Project::commandsStack() const
     {
         return m_CommandsStack;
     }
@@ -485,7 +485,7 @@ namespace project {
      * @brief Project::setCommandsStack
      * @param commandsStack
      */
-    void Project::setCommandsStack(const commands::SharedCommandStack &commandsStack)
+    void Project::setCommandsStack(const Commands::SharedCommandStack &commandsStack)
     {
         m_CommandsStack = commandsStack;
     }

@@ -27,7 +27,7 @@
 
 #include <models/ApplicationModel.h>
 
-namespace commands {
+namespace Commands {
 
     /**
      * @brief MoveTypeToOtherScope::MoveTypeToOtherScope

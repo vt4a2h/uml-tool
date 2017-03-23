@@ -26,7 +26,7 @@
 
 #include "Constants.h"
 
-namespace commands {
+namespace Commands {
 
     /**
      * @brief CreateScope::CreateScope

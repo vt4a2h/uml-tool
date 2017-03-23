@@ -203,8 +203,8 @@ namespace gui {
     }
 
     // TODO: move to the separate command
-    void openProject(const QString & path, const models::SharedApplicationModel appModel,
-                     graphics::Scene &scene, const commands::SharedCommandStack &stack,
+    void openProject(const QString & path, const models::SharedApplicationModel &appModel,
+                     graphics::Scene &scene, const Commands::SharedCommandStack &stack,
                      QMainWindow & mv, QMenu & rp)
     {
         if (path.isEmpty())
@@ -233,7 +233,7 @@ namespace gui {
 
         if (newProject != appModel->currentProject())
             if (appModel->currentProject())
-                std::make_shared<commands::MakeProjectCurrent>("", appModel, &scene)->redo();
+                std::make_shared<Commands::MakeProjectCurrent>("", appModel, &scene)->redo();
 
         if (appModel->addProject(newProject))
         {
@@ -299,7 +299,7 @@ namespace gui {
                 QString scopeName = m_AddScope->scopeName();
                 if (!scopeName.isEmpty())
                     if (auto stack = m_ApplicationModel->currentProject()->commandsStack())
-                        stack->push(std::make_unique<commands::CreateScope>(scopeName, *m_ApplicationModel).release());
+                        stack->push(std::make_unique<Commands::CreateScope>(scopeName, *m_ApplicationModel).release());
             }
         } else
             QMessageBox::information(this, tr("Information"), tr("No current project."), QMessageBox::Ok);
@@ -340,7 +340,7 @@ namespace gui {
 
         auto newProject = m_ApplicationModel->makeProject(name, path);
         newProject->setCommandsStack(m_CommandsStack);
-        commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel, m_MainScene.get()).redo();
+        Commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel, m_MainScene.get()).redo();
         newProject->save();
 
         addRecentProject(newProject->fullPath());
@@ -537,7 +537,7 @@ namespace gui {
                 if (m_ApplicationModel->currentProject() == project)
                     name.clear();
 
-                auto cmd = std::make_unique<commands::MakeProjectCurrent>(name, m_ApplicationModel,
+                auto cmd = std::make_unique<Commands::MakeProjectCurrent>(name, m_ApplicationModel,
                                                                           m_MainScene.get());
                 m_CommandsStack->push(cmd.release());
             }
@@ -556,7 +556,7 @@ namespace gui {
             if (data.canConvert<project::SharedProject>()) {
                 auto name = index.data(models::ProjectTreeModel::ID).toString();
                 if (auto project = m_ApplicationModel->project(name)) {
-                    auto cmd = std::make_unique<commands::RemoveProject>(
+                    auto cmd = std::make_unique<Commands::RemoveProject>(
                                    project, m_ApplicationModel, m_MainScene.get());
                     m_CommandsStack->push(cmd.release());
                 }

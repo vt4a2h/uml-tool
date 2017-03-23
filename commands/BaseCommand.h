@@ -25,7 +25,7 @@
 #include <QCoreApplication>
 #include <QUndoCommand>
 
-namespace commands {
+namespace Commands {
 
     /// The Base Command class
     class BaseCommand : public QUndoCommand

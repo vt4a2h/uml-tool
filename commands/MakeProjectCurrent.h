@@ -31,7 +31,7 @@ QT_BEGIN_NAMESPACE
 class QGraphicsScene;
 QT_END_NAMESPACE
 
-namespace commands {
+namespace Commands {
 
     class MakeProjectCurrent : public BaseCommand
     {

@@ -22,9 +22,9 @@
 *****************************************************************************/
 #include "RemoveComponentsCommands.h"
 
-#include "addcomponentscommands.h"
+#include "AddComponentsCommands.h"
 
-namespace commands {
+namespace Commands {
 
     /**
      * @brief RemoveMethod::RemoveMethod

@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "BaseCommand.h"
 
-namespace commands {
+namespace Commands {
 
     /**
      * @brief BaseCommand::BaseCommand

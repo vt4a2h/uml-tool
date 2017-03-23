@@ -38,7 +38,7 @@
 
 #include "qthelpers.h"
 
-namespace commands {
+namespace Commands {
 
     /**
      * @brief AddRelation::AddRelation

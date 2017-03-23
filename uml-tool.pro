@@ -40,7 +40,6 @@ SOURCES += \
     gui/componentseditdelegate.cpp \
     gui/signatureeditdelegate.cpp \
     models/componentsmodel.cpp \
-    commands/addcomponentscommands.cpp \
     helpers/entityhelpres.cpp \
     entity/components/token.cpp \
     entity/isectional.cpp \
@@ -88,7 +87,9 @@ SOURCES += \
     commands/RenameEntity.cpp \
     gui/EditEntityDialog.cpp \
     gui/About.cpp \
-    application/Settings.cpp
+    application/Settings.cpp \
+    commands/AddComponentsCommands.cpp \
+    commands/OpenProject.cpp
 
 HEADERS += \
     enums.h \
@@ -129,7 +130,6 @@ HEADERS += \
     gui/signatureeditdelegate.h \
     models/models_types.hpp \
     models/componentsmodel.h \
-    commands/addcomponentscommands.h \
     helpers/entityhelpres.h \
     entity/components/componentscommon.h \
     entity/components/components_types.h \
@@ -189,7 +189,9 @@ HEADERS += \
     gui/graphics/Common.h \
     gui/About.h \
     application/Settings.h \
-    Constants.h
+    Constants.h \
+    commands/AddComponentsCommands.h \
+    commands/OpenProject.h
 
 FORMS += \
     gui/newproject.ui \

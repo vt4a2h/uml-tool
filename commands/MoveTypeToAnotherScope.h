@@ -28,7 +28,7 @@
 
 #include "BaseCommand.h"
 
-namespace commands {
+namespace Commands {
 
     /// The MoveTypeToAnotherScope class
     class MoveTypeToAnotherScope : public BaseCommand

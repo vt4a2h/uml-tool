@@ -27,7 +27,7 @@
 
 class QGraphicsItem;
 
-namespace commands {
+namespace Commands {
 
     /// The MoveGraphicObject class
     class MoveGraphicObject : public BaseCommand

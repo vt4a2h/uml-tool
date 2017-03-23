@@ -31,7 +31,7 @@ namespace models {
 }
 
 /// namespace commands
-namespace commands {
+namespace Commands {
 
     /// The CreateScope class
     class CreateScope : public BaseCommand

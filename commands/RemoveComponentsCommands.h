@@ -29,7 +29,7 @@
 #include <models/componentsmodel.h>
 #include <models/models_types.hpp>
 
-namespace commands {
+namespace Commands {
 
     /// The RemoveComponentBaseCommand class
     template<class Component>

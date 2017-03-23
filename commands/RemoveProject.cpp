@@ -31,7 +31,7 @@
 #include <gui/graphics/GraphicsRelation.h>
 #include <gui/graphics/Entity.h>
 
-namespace commands {
+namespace Commands {
 
     using namespace boost::range;
 

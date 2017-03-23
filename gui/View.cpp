@@ -144,7 +144,7 @@ namespace gui {
 
             if (auto stack = pr->commandsStack()) {
                 auto pos = mapToScene(eventPos);
-                if (auto cmd = std::make_unique<commands::CreateEntity>(kindOfType, scope->id(), pos))
+                if (auto cmd = std::make_unique<Commands::CreateEntity>(kindOfType, scope->id(), pos))
                     stack->push(cmd.release());
             }
         } else {

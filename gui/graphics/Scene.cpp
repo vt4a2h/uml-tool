@@ -199,7 +199,7 @@ namespace graphics {
                 Q_ASSERT(m_activeRelationType != relationship::SimpleRelation);
 
                 // TODO: check From and To types, sometimes relation cannot be created
-                auto cmd = std::make_unique<commands::AddRelation>(m_activeRelationType,
+                auto cmd = std::make_unique<Commands::AddRelation>(m_activeRelationType,
                                                                    m_TrackFrom->id(),
                                                                    m_TrackTo->id());
                 pr()->commandsStack()->push(cmd.release());

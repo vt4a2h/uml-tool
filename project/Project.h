@@ -89,8 +89,8 @@ namespace project {
 
         common::ID genID();
 
-        commands::SharedCommandStack commandsStack() const;
-        void setCommandsStack(const commands::SharedCommandStack &commandsStack);
+        Commands::SharedCommandStack commandsStack() const;
+        void setCommandsStack(const Commands::SharedCommandStack &commandsStack);
 
     public slots:
         void setSaveStatus(bool newStatus);
@@ -132,7 +132,7 @@ namespace project {
 
         IDConnectionHash m_graphicsEntityConnections;
 
-        commands::SharedCommandStack m_CommandsStack;
+        Commands::SharedCommandStack m_CommandsStack;
     };
 
     /// Helper for project load. Should be in the header due to Qt Meta system limitation
