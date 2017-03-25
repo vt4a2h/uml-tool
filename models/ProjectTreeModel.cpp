@@ -240,7 +240,7 @@ namespace models {
      * @brief ProjectTreeModel::addProject
      * @param pr
      */
-    void ProjectTreeModel::addProject(const project::SharedProject &pr)
+    void ProjectTreeModel::addProject(const Projects::SharedProject &pr)
     {
         addProjectItem(pr);
     }
@@ -249,7 +249,7 @@ namespace models {
      * @brief ProjectTreeModel::removeProject
      * @param pr
      */
-    void ProjectTreeModel::removeProject(const project::SharedProject &pr)
+    void ProjectTreeModel::removeProject(const Projects::SharedProject &pr)
     {
         if (pr) {
             auto it = boost::range::find_if(
@@ -365,8 +365,8 @@ namespace models {
      * @param previous
      * @param current
      */
-    void ProjectTreeModel::onCurrentProjectChanged(const project::SharedProject &/*previous*/,
-                                                   const project::SharedProject &current)
+    void ProjectTreeModel::onCurrentProjectChanged(const Projects::SharedProject &/*previous*/,
+                                                   const Projects::SharedProject &current)
     {
         m_CurrentProject = current;
     }
@@ -375,7 +375,7 @@ namespace models {
      * @brief ProjectTreeModel::addProjectItem
      * @param pr
      */
-    void ProjectTreeModel::addProjectItem(const project::SharedProject &pr)
+    void ProjectTreeModel::addProjectItem(const Projects::SharedProject &pr)
     {
         beginInsertRows(QModelIndex(), rowCount(), rowCount() + 1);
         m_Projects << BasicTreeItem(QVariant::fromValue(pr), TreeItemType::ProjectItem);
@@ -403,7 +403,7 @@ namespace models {
             }
         }
 
-        connect(pr.get(), &project::Project::nameChanged, [=]{ update(projectItem); });
+        connect(pr.get(), &Projects::Project::nameChanged, [=]{ update(projectItem); });
     }
 
     /**
@@ -473,12 +473,12 @@ namespace models {
         emit dataChanged(topLeftIndex, bottomRightIndex);
     }
 
-    void ProjectTreeModel::observeItemChanging(const project::SharedProject &p,
+    void ProjectTreeModel::observeItemChanging(const Projects::SharedProject &p,
                                                common::BasicElement * entity, BasicTreeItem *item)
     {
         connect(entity, &common::BasicElement::nameChanged, [=]{ update(item); });
         connect(entity, &common::BasicElement::nameChanged,
-                G_ASSERT(p.get()), &project::Project::touch);
+                G_ASSERT(p.get()), &Projects::Project::touch);
     }
 
 } // namespace models

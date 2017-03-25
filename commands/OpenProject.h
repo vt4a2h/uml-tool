@@ -24,6 +24,7 @@
 
 #include <models/models_types.hpp>
 #include <gui/graphics/GraphicsTypes.h>
+#include <project/ProjectTypes.hpp>
 
 #include "BaseCommand.h"
 #include "CommandsTypes.h"
@@ -44,7 +45,7 @@ namespace Commands
     public:
         OpenProject(const QString &name, const QString &path,
                     const models::SharedApplicationModel &appModel,
-                    const Commands::SharedCommandStack &stack, graphics::Scene &scene,
+                    const Commands::SharedCommandStack &stack, const graphics::ScenePtr &scene,
                     QMainWindow &mv, QMenu &rp, QUndoCommand *parent = nullptr);
 
     public: // Types
@@ -57,23 +58,28 @@ namespace Commands
 
     public: // BaseCommand overridies
         void sanityCheck() override;
-        void cleanup() override;
 
         void setProjectAdder(const ProjectAdder &projectAdder);
         void setMenuRebuilder(const MenuRebuilder &menuRebuilder);
+
+        bool supressDialogs() const;
+        void setSupressDialogs(bool supressDialogs);
 
     private:
         QString                        m_ProjectPath;
         models::SharedApplicationModel m_AppModel;
         Commands::SharedCommandStack   m_CommandsStack;
-        graphics::Scene                &m_Scene;
+        graphics::ScenePtr             m_Scene;
         QMainWindow                    &m_MainWindow;
         QMenu                          &m_RecentProjectsMenu;
 
         SharedCommand m_MakeProjectCurrentCmd;
+        Projects::SharedProject m_Project;
 
-        ProjectAdder  m_ProjectAdder;
+        ProjectAdder  m_RecentProjectsAdder;
         MenuRebuilder m_MenuRebuilder;
+
+        bool m_SupressDialogs;
     };
 
 } // Commands

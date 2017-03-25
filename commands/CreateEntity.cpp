@@ -33,7 +33,7 @@
 #include <models/ProjectTreeModel.h>
 #include <project/Project.h>
 
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 namespace Commands {
 

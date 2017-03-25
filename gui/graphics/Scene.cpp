@@ -33,7 +33,7 @@
 #include <project/Project.h>
 
 #include "Entity.h"
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 namespace graphics {
 
@@ -246,7 +246,7 @@ namespace graphics {
      * @brief Scene::onProjectChanged
      * @param p
      */
-    void Scene::onProjectChanged(const project::SharedProject &, const project::SharedProject &c)
+    void Scene::onProjectChanged(const Projects::SharedProject &, const Projects::SharedProject &c)
     {
        m_Project = c;
     }
@@ -255,7 +255,7 @@ namespace graphics {
      * @brief Scene::pr
      * @return
      */
-    project::SharedProject Scene::pr() const
+    Projects::SharedProject Scene::pr() const
     {
         return m_Project.lock();
     }

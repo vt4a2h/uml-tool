@@ -54,8 +54,8 @@ namespace models {
 
         bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
-        void addProject(const project::SharedProject &pr);
-        void removeProject(const project::SharedProject &pr);
+        void addProject(const Projects::SharedProject &pr);
+        void removeProject(const Projects::SharedProject &pr);
 
         void addScope(const entity::SharedScope &scope, const QString &projectName);
         void removeScope(const common::ID &scopeId, const QString &projectName);
@@ -66,19 +66,19 @@ namespace models {
                         const common::ID &typeID);
 
     public slots:
-        void onCurrentProjectChanged(const project::SharedProject &previous,
-                                     const project::SharedProject &current);
+        void onCurrentProjectChanged(const Projects::SharedProject &previous,
+                                     const Projects::SharedProject &current);
 
     private:
-        void addProjectItem(const project::SharedProject &pr);
+        void addProjectItem(const Projects::SharedProject &pr);
         int indexOf(const BasicTreeItem *parent);
         BasicTreeItem *find(const QVariant &id);
         const BasicTreeItem *find(const QVariant &id) const;
         void update(BasicTreeItem *item);
-        void observeItemChanging(const project::SharedProject &p, common::BasicElement * entity, BasicTreeItem *item);
+        void observeItemChanging(const Projects::SharedProject &p, common::BasicElement * entity, BasicTreeItem *item);
 
         mutable QList<BasicTreeItem> m_Projects; // TODO: store as pointers
-        project::SharedProject m_CurrentProject;
+        Projects::SharedProject m_CurrentProject;
     };
 
 } // namespace models

@@ -30,7 +30,7 @@
 #include <entity/Class.h>
 #include <utility/helpfunctions.h>
 
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 namespace relationship {
 

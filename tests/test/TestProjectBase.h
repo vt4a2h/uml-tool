@@ -55,7 +55,7 @@ protected:
         m_GlobalScope = m_GlobalDb->scope(common::ID::globalScopeID());
         ASSERT_TRUE(!!m_GlobalScope);
 
-        setProject(std::make_shared<project::Project>());
+        setProject(std::make_shared<Projects::Project>());
     }
 
     void initFactory(const common::ElementsFactory &factory)
@@ -66,7 +66,7 @@ protected:
         ef.setTreeModel(m_fakeTreeModel);
     }
 
-    void setProject(const project::SharedProject &pr)
+    void setProject(const Projects::SharedProject &pr)
     {
         m_Project = pr;
 
@@ -86,7 +86,7 @@ protected:
 
     db::SharedDatabase m_GlobalDb;
 
-    project::SharedProject m_Project;
+    Projects::SharedProject m_Project;
     db::SharedProjectDatabase m_ProjectDb;
 
     entity::SharedScope m_GlobalScope;

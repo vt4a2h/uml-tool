@@ -24,7 +24,7 @@
 
 #include <common/BasicElement.h>
 
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 namespace Commands
 {

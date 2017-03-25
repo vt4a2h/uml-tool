@@ -58,7 +58,7 @@ protected:
         m_GlobalDatabase->load(errors);
         Q_ASSERT(errors.isEmpty());
 
-        m_Project = std::make_shared<project::Project>("Foo Project", "fake path");
+        m_Project = std::make_shared<Projects::Project>("Foo Project", "fake path");
         const_cast<helpers::GeneratorID&>(
             helpers::GeneratorID::instance()).onCurrentProjectChanged(nullptr, m_Project);
         m_Project->setGlobalDatabase(m_GlobalDatabase);
@@ -83,7 +83,7 @@ protected:
     }
 
 protected:
-    project::SharedProject m_Project;
+    Projects::SharedProject m_Project;
     db::SharedDatabase m_GlobalDatabase;
     models::SharedApplicationModel m_ApplicationModel;
 

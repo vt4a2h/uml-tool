@@ -36,7 +36,7 @@
 
 #include <utility/helpfunctions.h>
 
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 namespace Commands {
 

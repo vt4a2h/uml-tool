@@ -47,15 +47,15 @@ namespace gui {
         void dragLeaveEvent(QDragLeaveEvent *de) override;
 
     public slots:
-        void onCurrentProjectChanged(const project::SharedProject &previous,
-                                     const project::SharedProject &current);
+        void onCurrentProjectChanged(const Projects::SharedProject &previous,
+                                     const Projects::SharedProject &current);
 
     private:
-        project::SharedProject project() const;
+        Projects::SharedProject project() const;
         models::SharedApplicationModel appModel() const;
         void addElement(entity::KindOfType kindOfType, const QPoint &eventPos);
 
-        project::WeakProject m_Project;
+        Projects::WeakProject m_Project;
         models::WeakApplicationModel m_ApplicationModel;
     };
 

@@ -33,7 +33,7 @@
 #include <entity/field.h>
 #include <utility/helpfunctions.h>
 
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 namespace relationship {
 

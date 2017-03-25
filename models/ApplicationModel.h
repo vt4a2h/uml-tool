@@ -46,11 +46,11 @@ namespace models {
         ~ApplicationModel();
 
         // TODO: move to some database class
-        project::SharedProject makeProject();
-        project::SharedProject makeProject(const QString &name, const QString &path);
-        bool addProject(const project::SharedProject &pr);
-        project::SharedProject project(const QString &name) const;
-        project::ProjectsList projects() const;
+        Projects::SharedProject makeProject();
+        Projects::SharedProject makeProject(const QString &name, const QString &path);
+        bool addProject(const Projects::SharedProject &pr);
+        Projects::SharedProject project(const QString &name) const;
+        Projects::ProjectsList projects() const;
         bool removeProject(const QString &name);
         bool containsProject(const QString& name);
         // }
@@ -64,7 +64,7 @@ namespace models {
         void removeType(const QString &projectName, const common::ID &scopeID, const common::ID &typeID);
         // }
 
-        project::SharedProject currentProject() const;
+        Projects::SharedProject currentProject() const;
         bool setCurrentProject(const QString &name);
 
         db::SharedDatabase globalDatabase() const;
@@ -74,12 +74,12 @@ namespace models {
 
     signals:
         void scopeAdded(const entity::SharedScope &scope);
-        void currentProjectChanged(const project::SharedProject &previous,
-                                   const project::SharedProject &current);
+        void currentProjectChanged(const Projects::SharedProject &previous,
+                                   const Projects::SharedProject &current);
 
     private:
-        project::Projects m_Projects;
-        project::SharedProject m_CurrentProject;
+        Projects::Projects m_Projects;
+        Projects::SharedProject m_CurrentProject;
 
         db::SharedDatabase m_GlobalDatabase;
 

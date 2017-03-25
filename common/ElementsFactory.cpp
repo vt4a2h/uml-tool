@@ -63,8 +63,8 @@ namespace common {
      * @brief ElementsFactory::onProjectChanged
      * @param p
      */
-    void ElementsFactory::onProjectChanged(const project::SharedProject &,
-                                           const project::SharedProject &c)
+    void ElementsFactory::onProjectChanged(const Projects::SharedProject &,
+                                           const Projects::SharedProject &c)
     {
         m_Project = c;
     }
@@ -138,7 +138,7 @@ namespace common {
      * @brief ElementsFactory::project
      * @return
      */
-    project::SharedProject ElementsFactory::project() const
+    Projects::SharedProject ElementsFactory::project() const
     {
         return m_Project.lock();
     }

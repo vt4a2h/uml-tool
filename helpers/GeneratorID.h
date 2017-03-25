@@ -46,14 +46,14 @@ namespace helpers {
         common::ID genID() const;
 
     public slots:
-        void onCurrentProjectChanged(const project::SharedProject &p,
-                                     const project::SharedProject &c);
+        void onCurrentProjectChanged(const Projects::SharedProject &p,
+                                     const Projects::SharedProject &c);
 
     private:
         explicit GeneratorID(QObject *parent = 0);
-        project::SharedProject project() const;
+        Projects::SharedProject project() const;
 
-        project::WeakProject m_CurrentProject;
+        Projects::WeakProject m_CurrentProject;
     };
 
 } // helpers

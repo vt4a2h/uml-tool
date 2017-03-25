@@ -91,7 +91,7 @@ namespace gui
         entity::SharedType  m_Type;
         entity::SharedScope m_Scope;
 
-        project::SharedProject m_Project;
+        Projects::SharedProject m_Project;
 
         models::SharedApplicationModel m_ApplicationModel;
         models::SharedClassComponentsModel m_ComponentsModel;

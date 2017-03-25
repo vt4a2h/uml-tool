@@ -39,7 +39,7 @@
 #include <relationship/RelationFactory.h>
 
 #include "Settings.h"
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 namespace App {
 

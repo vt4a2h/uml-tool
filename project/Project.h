@@ -44,7 +44,7 @@ class QUndoStack;
 /**
  * @brief project
  */
-namespace project {
+namespace Projects {
 
     /**
      * @brief The Project class

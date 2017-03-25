@@ -29,7 +29,7 @@
 
 #include "TestProjectBase.h"
 
-class Project : public ProjectBase
+class Projects : public ProjectBase
 {
 protected:
     virtual void SetUp() override

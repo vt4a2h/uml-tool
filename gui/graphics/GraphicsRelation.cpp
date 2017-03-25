@@ -29,7 +29,7 @@
 #include <relationship/Relation.h>
 
 #include "Entity.h"
-#include "qthelpers.h"
+#include "QtHelpers.h"
 #include "enums.h"
 
 namespace graphics {

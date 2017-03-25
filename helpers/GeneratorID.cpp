@@ -50,8 +50,8 @@ namespace helpers {
      * @brief GeneratorID::onCurrentProjectChanged
      * @param p
      */
-    void GeneratorID::onCurrentProjectChanged(const project::SharedProject &,
-                                              const project::SharedProject &c)
+    void GeneratorID::onCurrentProjectChanged(const Projects::SharedProject &,
+                                              const Projects::SharedProject &c)
     {
         m_CurrentProject = c;
     }
@@ -69,7 +69,7 @@ namespace helpers {
      * @brief GeneratorID::project
      * @return
      */
-    project::SharedProject GeneratorID::project() const
+    Projects::SharedProject GeneratorID::project() const
     {
         return m_CurrentProject.lock();
     }

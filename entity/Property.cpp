@@ -36,7 +36,7 @@
 #include "ClassMethod.h"
 
 #include "Constants.h"
-#include "qthelpers.h"
+#include "QtHelpers.h"
 #include "enums.h"
 
 namespace {

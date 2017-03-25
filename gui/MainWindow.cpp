@@ -66,7 +66,7 @@
 #include "Constants.h"
 #include "Elements.h"
 #include "View.h"
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 using namespace boost;
 
@@ -207,15 +207,12 @@ namespace gui {
                      graphics::Scene &scene, const Commands::SharedCommandStack &stack,
                      QMainWindow & mv, QMenu & rp)
     {
-        if (path.isEmpty())
-            return;
-
         auto projects = appModel->projects();
         auto it = range::find_if(projects, [&](auto &&p) { return p->fullPath() == path; });
         auto newProject = it != std::end(projects) ? *it : nullptr;
 
         if (!newProject) {
-            newProject = std::make_shared<project::Project>();
+            newProject = std::make_shared<Projects::Project>();
             newProject->load(path);
 
             if (newProject->hasErrors()) {
@@ -255,7 +252,8 @@ namespace gui {
         QString filter(tr("Q-UML Project files (*.%1)").arg(PROJECT_FILE_EXTENTION));
 
         QString path = QFileDialog::getOpenFileName(this, caption, dir, filter);
-        openProject(path, m_ApplicationModel, *m_MainScene, m_CommandsStack, *this, *m_RecentProjects);
+        if (!path.isEmpty())
+            openProject(path, m_ApplicationModel, *m_MainScene, m_CommandsStack, *this, *m_RecentProjects);
     }
 
     /**
@@ -312,7 +310,7 @@ namespace gui {
      */
     void MainWindow::createNewProject(const QString &name, const QString &path)
     {
-        if (project::SharedProject currentProject = m_ApplicationModel->currentProject()) {
+        if (Projects::SharedProject currentProject = m_ApplicationModel->currentProject()) {
             if (!currentProject->isSaved()) {
                 int result =
                     QMessageBox::question
@@ -513,10 +511,10 @@ namespace gui {
     {
         QModelIndex index = m_ProjectTreeView->indexAt(p);
         QVariant data = index.data(models::ProjectTreeModel::SharedData);
-        if (index.isValid() && data.canConvert<project::SharedProject>())
+        if (index.isValid() && data.canConvert<Projects::SharedProject>())
         {
             bool isCurrentProject =
-                data.value<project::SharedProject>() == m_ApplicationModel->currentProject();
+                data.value<Projects::SharedProject>() == m_ApplicationModel->currentProject();
             m_ChangeProjectStatusAction->setText(isCurrentProject ? tr("Deactivate") : tr("Activate"));
             m_ProjectTreeMenu->exec(m_ProjectTreeView->mapToGlobal(p));
         }
@@ -529,7 +527,7 @@ namespace gui {
     {
         QModelIndex index = m_ProjectTreeView->selectionModel()->currentIndex();
         QVariant data = index.data(models::ProjectTreeModel::SharedData);
-        if (index.isValid() && data.canConvert<project::SharedProject>()) {
+        if (index.isValid() && data.canConvert<Projects::SharedProject>()) {
             auto name = index.data(models::ProjectTreeModel::ID).toString();
             if (auto project = m_ApplicationModel->project(name))
             {
@@ -553,7 +551,7 @@ namespace gui {
         auto index = m_ProjectTreeView->indexAt(m_ProjectTreeView->mapFromGlobal(m_ProjectTreeMenu->pos()));
         if (index.isValid()) {
             QVariant data = index.data(models::ProjectTreeModel::SharedData);
-            if (data.canConvert<project::SharedProject>()) {
+            if (data.canConvert<Projects::SharedProject>()) {
                 auto name = index.data(models::ProjectTreeModel::ID).toString();
                 if (auto project = m_ApplicationModel->project(name)) {
                     auto cmd = std::make_unique<Commands::RemoveProject>(
@@ -604,18 +602,18 @@ namespace gui {
      * @param previous
      * @param current
      */
-    void MainWindow::onCurrentProjectChanged(const project::SharedProject &previous,
-                                             const project::SharedProject &current)
+    void MainWindow::onCurrentProjectChanged(const Projects::SharedProject &previous,
+                                             const Projects::SharedProject &current)
     {
         if (previous)
         {
-            G_DISCONNECT(previous.get(), &project::Project::saved, this, &MainWindow::update);
-            G_DISCONNECT(previous.get(), &project::Project::modified, this, &MainWindow::update);
+            G_DISCONNECT(previous.get(), &Projects::Project::saved, this, &MainWindow::update);
+            G_DISCONNECT(previous.get(), &Projects::Project::modified, this, &MainWindow::update);
         }
 
         if (current) {
-            G_CONNECT(current.get(), &project::Project::saved, this, &MainWindow::update);
-            G_CONNECT(current.get(), &project::Project::modified, this, &MainWindow::update);
+            G_CONNECT(current.get(), &Projects::Project::saved, this, &MainWindow::update);
+            G_CONNECT(current.get(), &Projects::Project::modified, this, &MainWindow::update);
         }
 
         update();

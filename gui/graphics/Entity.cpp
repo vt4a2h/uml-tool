@@ -48,7 +48,7 @@
 #include <entity/GraphicEntityData.h>
 
 #include "Constants.h"
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 namespace graphics {
 

@@ -33,7 +33,7 @@
 #include <models/ApplicationModel.h>
 
 #include "Elements.h"
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 namespace gui {
 
@@ -107,8 +107,8 @@ namespace gui {
      * @brief View::onCurrentProjectChanged
      * @param p
      */
-    void View::onCurrentProjectChanged(const project::SharedProject &,
-                                       const project::SharedProject &current)
+    void View::onCurrentProjectChanged(const Projects::SharedProject &,
+                                       const Projects::SharedProject &current)
     {
         m_Project = current;
     }
@@ -117,7 +117,7 @@ namespace gui {
      * @brief View::project
      * @return
      */
-    project::SharedProject View::project() const
+    Projects::SharedProject View::project() const
     {
         return m_Project.lock();
     }

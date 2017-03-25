@@ -54,7 +54,7 @@ namespace models {
      * @brief ApplicationModel::makeProject
      * @return
      */
-    project::SharedProject ApplicationModel::makeProject()
+    Projects::SharedProject ApplicationModel::makeProject()
     {
         auto project = makeProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH);
         return project;
@@ -66,9 +66,9 @@ namespace models {
      * @param path
      * @return
      */
-    project::SharedProject ApplicationModel::makeProject(const QString &name, const QString &path)
+    Projects::SharedProject ApplicationModel::makeProject(const QString &name, const QString &path)
     {
-        auto newProject(std::make_shared<project::Project>(name, path));
+        auto newProject(std::make_shared<Projects::Project>(name, path));
         newProject->setGlobalDatabase(globalDatabase());
         m_TreeModel->addProject(newProject);
         return *m_Projects.insert(newProject->name(), newProject);
@@ -79,9 +79,9 @@ namespace models {
      * @param pr
      * @return
      */
-    bool ApplicationModel::addProject(const project::SharedProject &pr)
+    bool ApplicationModel::addProject(const Projects::SharedProject &pr)
     {
-        if (m_Projects.contains(pr->name()))
+        if (!pr || m_Projects.contains(pr->name()))
             return false;
 
         m_Projects[pr->name()] = pr;
@@ -95,7 +95,7 @@ namespace models {
      * @param id
      * @return
      */
-    project::SharedProject ApplicationModel::project(const QString &name) const
+    Projects::SharedProject ApplicationModel::project(const QString &name) const
     {
         return m_Projects[name];
     }
@@ -104,7 +104,7 @@ namespace models {
      * @brief ApplicationModal::projects
      * @return
      */
-    project::ProjectsList ApplicationModel::projects() const
+    Projects::ProjectsList ApplicationModel::projects() const
     {
         return m_Projects.values().toVector();
     }
@@ -197,7 +197,7 @@ namespace models {
                 if (auto &&scope = db->scope(scopeID)) {
                     scope->addExistsType(type);
                     connect(type.get(), &common::BasicElement::nameChanged,
-                            m_CurrentProject.get(), &project::Project::touch);
+                            m_CurrentProject.get(), &Projects::Project::touch);
                     // todo: connect scope id change to project touch
                 }
 
@@ -225,7 +225,7 @@ namespace models {
      * @brief ApplicationModal::currentProject
      * @return
      */
-    project::SharedProject ApplicationModel::currentProject() const
+    Projects::SharedProject ApplicationModel::currentProject() const
     {
         return m_CurrentProject;
     }

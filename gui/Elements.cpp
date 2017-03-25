@@ -42,7 +42,7 @@
 
 #include <application/Settings.h>
 
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 namespace gui {
 

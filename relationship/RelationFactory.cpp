@@ -42,7 +42,7 @@
 #include "association.h"
 #include "dependency.h"
 #include "realization.h"
-#include "qthelpers.h"
+#include "QtHelpers.h"
 
 namespace relationship {
 

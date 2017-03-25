@@ -40,7 +40,7 @@ namespace Commands {
      * @param p
      * @param m
      */
-    RemoveProject::RemoveProject(const project::SharedProject &p,
+    RemoveProject::RemoveProject(const Projects::SharedProject &p,
                                  const models::SharedApplicationModel &a,
                                  const graphics::ScenePtr &scene)
         : BaseCommand(tr("Remove project \"") % G_ASSERT(p)->name() % "\"")

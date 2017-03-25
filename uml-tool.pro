@@ -134,7 +134,6 @@ HEADERS += \
     entity/components/componentscommon.h \
     entity/components/components_types.h \
     entity/components/token.h \
-    qthelpers.h \
     common/ID.h \
     entity/itypeuser.h \
     common/BasicElement.h \
@@ -191,7 +190,8 @@ HEADERS += \
     application/Settings.h \
     Constants.h \
     commands/AddComponentsCommands.h \
-    commands/OpenProject.h
+    commands/OpenProject.h \
+    QtHelpers.h
 
 FORMS += \
     gui/newproject.ui \

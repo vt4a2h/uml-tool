@@ -62,14 +62,14 @@ namespace common {
 
         QPointer<QGraphicsScene> scene() const;
         db::SharedDatabase db() const;
-        project::SharedProject project() const;
+        Projects::SharedProject project() const;
 
         models::SharedTreeModel treeModel() const;
         void setTreeModel(const models::WeakTreeModel &treeModel);
 
     public slots:
         void onSceneChanged(const QPointer<QGraphicsScene> &scene);
-        void onProjectChanged(const project::SharedProject &p, const project::SharedProject &c);
+        void onProjectChanged(const Projects::SharedProject &p, const Projects::SharedProject &c);
         void addAdditionaScopeSearcher(const db::SharedScopeSearcher &s);
         void removeAdditionaScopeSearcher(const db::SharedScopeSearcher &s);
 
@@ -78,7 +78,7 @@ namespace common {
 
     private:
         QPointer<QGraphicsScene> m_Scene;
-        project::WeakProject m_Project;
+        Projects::WeakProject m_Project;
         db::WeakDatabase m_GlobalDatabase;
         db::WeakScopeSearchers m_AdditionalScopeSearchers;
         models::WeakTreeModel m_TreeModel;

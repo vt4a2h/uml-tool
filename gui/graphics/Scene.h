@@ -56,14 +56,14 @@ namespace graphics {
 
     public slots:
         void setShowRelationTrack(bool showRelationTrack);
-        void onProjectChanged(const project::SharedProject &p, const project::SharedProject &c);
+        void onProjectChanged(const Projects::SharedProject &p, const Projects::SharedProject &c);
 
     signals:
         void showRelationTrackChanged(bool showRelationTrack);
         void relationCompleted();
 
     private:
-        project::SharedProject pr() const;
+        Projects::SharedProject pr() const;
 
         bool m_ShowRelationTrack;
         bool m_TrackRelationIsActive;
@@ -74,7 +74,7 @@ namespace graphics {
 
         QGraphicsLineItem * m_RelationTrackLine;
 
-        project::WeakProject m_Project;
+        Projects::WeakProject m_Project;
     };
 
 } // namespace grphics

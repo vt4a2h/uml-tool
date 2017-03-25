@@ -37,7 +37,7 @@ namespace Commands {
     class RemoveProject : public BaseCommand
     {
     public:
-        RemoveProject(const project::SharedProject &p, const models::SharedApplicationModel &a,
+        RemoveProject(const Projects::SharedProject &p, const models::SharedApplicationModel &a,
                       const graphics::ScenePtr &scene);
 
     public: // QUndoCommand overridies
@@ -48,7 +48,7 @@ namespace Commands {
         void sanityCheck() override;
 
     private: // Data
-        project::SharedProject m_Project;
+        Projects::SharedProject m_Project;
         models::SharedApplicationModel m_AppModel;
 
         graphics::GraphicItems m_GraphicItems;

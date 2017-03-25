@@ -100,8 +100,8 @@ namespace gui {
         void updateWindowState();
 
         void onRelationActionToggled(bool checked);
-        void onCurrentProjectChanged(const project::SharedProject &previous,
-                                     const project::SharedProject &current);
+        void onCurrentProjectChanged(const Projects::SharedProject &previous,
+                                     const Projects::SharedProject &current);
         void onRelationCompleted();
 
     private:

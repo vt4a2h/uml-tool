@@ -47,7 +47,7 @@
 
 #include "Constants.h"
 
-namespace project {
+namespace Projects {
 
     namespace {
 
@@ -405,8 +405,8 @@ namespace project {
         if (!e)
             return;
 
-        G_CONNECT(e, &graphics::Entity::xChanged, this, &project::Project::touch);
-        G_CONNECT(e, &graphics::Entity::yChanged, this, &project::Project::touch);
+        G_CONNECT(e, &graphics::Entity::xChanged, this, &Project::Project::touch);
+        G_CONNECT(e, &graphics::Entity::yChanged, this, &Project::Project::touch);
         m_graphicsEntityConnections[e->id()] = G_CONNECT(e.data(), &graphics::Entity::moved,
                   [this, e = e](const QPointF &from, const QPointF &to) {
                       if (!e)
@@ -424,8 +424,8 @@ namespace project {
      */
     void Project::onGraphicsEntityUnregistred(const graphics::EntityPtr &e)
     {
-        G_DISCONNECT(e, &graphics::Entity::xChanged, this, &project::Project::touch);
-        G_DISCONNECT(e, &graphics::Entity::yChanged, this, &project::Project::touch);
+        G_DISCONNECT(e, &graphics::Entity::xChanged, this, &Project::Project::touch);
+        G_DISCONNECT(e, &graphics::Entity::yChanged, this, &Project::Project::touch);
         G_DISCONNECT(m_graphicsEntityConnections.take(e->id()));
         Q_ASSERT(m_graphicsEntityConnections.find(e->id()) == std::end(m_graphicsEntityConnections));
     }

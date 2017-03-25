@@ -252,7 +252,7 @@ namespace models {
     namespace {
         QMap<TreeItemType, std::function<QVariant(const QVariant&)>> nameGetters = {
               {TreeItemType::ProjectItem,
-               [](const QVariant &item){ return item.value<project::SharedProject>()->name(); }},
+               [](const QVariant &item){ return item.value<Projects::SharedProject>()->name(); }},
               {TreeItemType::ScopeItem,
                [](const QVariant &item){
                     auto s = item.value<entity::SharedScope>();
@@ -272,7 +272,7 @@ namespace models {
               {TreeItemType::ProjectItem,
                [](const QVariant &item){
                     // Project name must be unique. It's used as ID.
-                    return QVariant::fromValue(item.value<project::SharedProject>()->name()); }},
+                    return QVariant::fromValue(item.value<Projects::SharedProject>()->name()); }},
               {TreeItemType::ScopeItem,
                [](const QVariant &item){
                     return QVariant::fromValue(item.value<entity::SharedScope>()->id()); }},

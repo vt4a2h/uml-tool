@@ -32,7 +32,7 @@
 #include <helpers/entityhelpres.h>
 
 #include "entity_types.hpp"
-#include "qthelpers.h"
+#include "QtHelpers.h"
 #include "itypeuser.h"
 
 namespace entity {

@@ -80,10 +80,8 @@ namespace Commands {
      */
     void MakeProjectCurrent::redo()
     {
-        if (!m_Done)
-        {
-            if (auto p = m_AppModel->currentProject())
-            {
+        if (!m_Done) {
+            if (auto p = m_AppModel->currentProject()) {
                 m_PreviousProjectName = p->name();
                 m_PreviousGraphicItems = p->database()->graphicsItems();
             }

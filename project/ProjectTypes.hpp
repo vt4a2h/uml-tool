@@ -29,7 +29,7 @@
 
 #include <common/ID.h>
 
-namespace project {
+namespace Projects {
     class Project;
     using SharedProject = std::shared_ptr<Project>;
     using WeakProject = std::weak_ptr<Project>;
@@ -39,4 +39,4 @@ namespace project {
     using IDConnectionHash = QHash<common::ID, QMetaObject::Connection>;
 }
 
-Q_DECLARE_METATYPE(project::SharedProject)
+Q_DECLARE_METATYPE(Projects::SharedProject)
