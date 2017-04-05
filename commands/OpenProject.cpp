@@ -99,7 +99,7 @@ namespace Commands
 
         if (m_Project != m_AppModel->currentProject() && !m_MakeProjectCurrentCmd)
             m_MakeProjectCurrentCmd =
-                std::make_shared<Commands::MakeProjectCurrent>("", m_AppModel, m_Scene);
+                std::make_shared<Commands::MakeProjectCurrent>(m_Project->name(), m_AppModel, m_Scene);
 
         if (m_MakeProjectCurrentCmd)
             m_MakeProjectCurrentCmd->redo();

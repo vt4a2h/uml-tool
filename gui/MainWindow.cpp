@@ -58,6 +58,7 @@
 #include <commands/CreateScope.h>
 #include <commands/MakeProjectCurrent.h>
 #include <commands/RemoveProject.h>
+#include <commands/OpenProject.h>
 
 #include "About.h"
 #include "newproject.h"
@@ -202,46 +203,6 @@ namespace gui {
         m_NewProjectDialog->show();
     }
 
-    // TODO: move to the separate command
-    void openProject(const QString & path, const models::SharedApplicationModel &appModel,
-                     graphics::Scene &scene, const Commands::SharedCommandStack &stack,
-                     QMainWindow & mv, QMenu & rp)
-    {
-        auto projects = appModel->projects();
-        auto it = range::find_if(projects, [&](auto &&p) { return p->fullPath() == path; });
-        auto newProject = it != std::end(projects) ? *it : nullptr;
-
-        if (!newProject) {
-            newProject = std::make_shared<Projects::Project>();
-            newProject->load(path);
-
-            if (newProject->hasErrors()) {
-                auto errors = newProject->lastErrors();
-                QMessageBox::critical
-                    ( &mv
-                    , QMainWindow::tr("Open project: %n error(s).", "", errors.count())
-                    , errors.join("\n")
-                    , QMessageBox::Ok
-                    );
-
-                return;
-            }
-        }
-
-        if (newProject != appModel->currentProject())
-            if (appModel->currentProject())
-                std::make_shared<Commands::MakeProjectCurrent>("", appModel, &scene)->redo();
-
-        if (appModel->addProject(newProject))
-        {
-            appModel->setCurrentProject(newProject->name());
-            newProject->setCommandsStack(stack);
-        }
-
-        addRecentProject(newProject->fullPath());
-        rebuildRecentProjectMenu(rp);
-    }
-
     /**
      * @brief MainWindow::onOpenProject
      */
@@ -252,8 +213,15 @@ namespace gui {
         QString filter(tr("Q-UML Project files (*.%1)").arg(PROJECT_FILE_EXTENTION));
 
         QString path = QFileDialog::getOpenFileName(this, caption, dir, filter);
-        if (!path.isEmpty())
-            openProject(path, m_ApplicationModel, *m_MainScene, m_CommandsStack, *this, *m_RecentProjects);
+        if (!path.isEmpty()) {
+            auto cmd = std::make_unique<Commands::OpenProject>(tr("Open new project"), path,
+                                                               m_ApplicationModel, m_CommandsStack,
+                                                               m_MainScene.get(), *this,
+                                                               *m_RecentProjects);
+            cmd->setProjectAdder(addRecentProject);
+            cmd->setMenuRebuilder(rebuildRecentProjectMenu);
+            m_CommandsStack->push(cmd.release());
+        }
     }
 
     /**
