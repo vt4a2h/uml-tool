@@ -25,7 +25,7 @@
 #include "TestProject.h"
 #include "Constants.h"
 
-TEST_F(Projects, LoadSaveProject)
+TEST_F(TestProjects, LoadSaveProject)
 {
     m_Project->database()->addScope("foo")->addType("bar");
     m_Project->save();
@@ -35,7 +35,7 @@ TEST_F(Projects, LoadSaveProject)
 
     auto oldProject = m_Project;
 
-    setProject(std::make_shared<Projects::Projects>("no name here ", "no path here"));
+    setProject(std::make_shared<Projects::Project>("no name here ", "no path here"));
     m_Project->load(rootPath_ + sep_ + oldProject->name().toLower().replace(" ", "_") +
                     "." + PROJECT_FILE_EXTENTION);
 

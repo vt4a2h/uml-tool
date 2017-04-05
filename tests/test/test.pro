@@ -36,7 +36,7 @@ HEADERS += ../../enums.h \
     ../../entity/Template.h \
     ../../Constants.h \
     ../../entity/field.h \
-    ../../qthelpers.h \
+    ../../QtHelpers.h \
     ../../models/ApplicationModel.h \
     ../../models/projecttreemodel.h \
     ../../models/basictreeitem.h \
