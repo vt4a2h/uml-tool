@@ -23,6 +23,9 @@
 #pragma once
 
 #include <QGraphicsScene>
+#include <QMainWindow>
+#include <QMenu>
+#include <QDir>
 
 #include <entity/EntityFactory.h>
 #include <entity/Class.h>
@@ -31,6 +34,8 @@
 
 #include <gui/graphics/GraphicsTypes.h>
 #include <gui/graphics/Scene.h>
+
+#include <commands/CommandsTypes.h>
 
 #include "TestProjectBase.h"
 
@@ -49,6 +54,8 @@ protected:
         m_FakeAppModel->setCurrentProject(m_Project->name());
 
         m_Scene = std::make_unique<graphics::Scene>();
+        m_CommandsStack = std::make_shared<QUndoStack>();
+
         const_cast<entity::EntityFactory &>(
             entity::EntityFactory::instance()).onSceneChanged(m_Scene.get());
     }
@@ -56,9 +63,16 @@ protected:
     void TearDown() override
     {
         m_FakeAppModel.reset();
+        m_CommandsStack.reset();
         m_Scene.reset();
+
+        m_RecentProjectsMenu.clear();
     }
 
     models::SharedApplicationModel m_FakeAppModel;
+    Commands::SharedCommandStack m_CommandsStack;
     graphics::UniqueScene m_Scene;
+
+    QMainWindow m_MainWindow;
+    QMenu m_RecentProjectsMenu;
 };

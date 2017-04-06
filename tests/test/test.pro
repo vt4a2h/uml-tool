@@ -57,6 +57,7 @@ HEADERS += ../../enums.h \
     ../../commands/MoveTypeToAnotherScope.h \
     ../../commands/RemoveProject.h \
     ../../commands/RenameEntity.h \
+    ../../commands/OpenProject.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -156,4 +157,5 @@ SOURCES += main.cpp \
            ../../commands/AddRelation.cpp \
            ../../commands/MoveTypeToAnotherScope.cpp \
            ../../commands/RemoveProject.cpp \
-           ../../commands/RenameEntity.cpp
+           ../../commands/RenameEntity.cpp \
+           ../../commands/OpenProject.cpp

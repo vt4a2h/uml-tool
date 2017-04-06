@@ -31,6 +31,7 @@
 #include <commands/MoveTypeToAnotherScope.h>
 #include <commands/RemoveProject.h>
 #include <commands/RenameEntity.h>
+#include <commands/OpenProject.h>
 
 TEST_F(CommandsTester, CreateEntityCommand)
 {
@@ -189,4 +190,35 @@ TEST_F(CommandsTester, RenameEntity)
 
     renameEntityCommand->undo();
     ASSERT_EQ(c->name(), defaultClassName);
+}
+
+TEST_F(CommandsTester, OpenProject)
+{
+    // TODO: reorganize tests (create project in "setup" method and release in "tear down")
+    auto tstProject = std::make_shared<Projects::Project>("MyTstProject", QDir::currentPath());
+    tstProject->setGlobalDatabase(m_GlobalDb);
+    tstProject->save();
+
+    auto currentProject = m_FakeAppModel->currentProject();
+
+    auto cmd = std::make_shared<Commands::OpenProject>("Open new project", tstProject->fullPath(),
+                                                       m_FakeAppModel, m_CommandsStack, m_Scene.get(),
+                                                       m_MainWindow, m_RecentProjectsMenu);
+    cmd->setSupressDialogs(true);
+
+    // TODO: Stubs, add proper tests {
+    cmd->setProjectAdder([](const QString&){});
+    cmd->setMenuRebuilder([](QMenu &){});
+    // }
+
+    cmd->redo();
+
+    auto newCurrentProject = m_FakeAppModel->currentProject();
+    ASSERT_TRUE(!!newCurrentProject);
+    ASSERT_NE(currentProject, newCurrentProject);
+    ASSERT_EQ(newCurrentProject->fullPath(), tstProject->fullPath());
+
+    cmd->undo();
+
+    ASSERT_EQ(m_FakeAppModel->currentProject(), currentProject);
 }
