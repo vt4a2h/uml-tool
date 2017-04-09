@@ -104,6 +104,9 @@ namespace gui {
                                      const Projects::SharedProject &current);
         void onRelationCompleted();
 
+        void onRecentProjectAdded(const QString &path);
+        void onRecentProjectRemoved(const QString &path);
+
     private:
         bool maybeExit();
         void closeEvent(QCloseEvent *ev) override;
@@ -120,6 +123,9 @@ namespace gui {
 
         void addDock(const QString &name, QAction * action, Qt::DockWidgetArea area, QWidget * widget,
                      bool visible = true);
+
+        void openProject(const QString &path);
+        void rebuildRecentProjectMenu();
 
         std::unique_ptr<Ui::MainWindow> ui;
         graphics::UniqueScene m_MainScene;

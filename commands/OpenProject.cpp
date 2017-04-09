@@ -61,8 +61,6 @@ namespace Commands
      */
     void OpenProject::redo()
     {
-        sanityCheck();
-
         if (!m_Done) {
             auto projects = m_AppModel->projects();
             auto it = range::find_if(projects, [&](auto &&p) { return p->fullPath() == m_ProjectPath; });
@@ -104,8 +102,7 @@ namespace Commands
         if (m_MakeProjectCurrentCmd)
             m_MakeProjectCurrentCmd->redo();
 
-        m_RecentProjectsAdder(m_Project->fullPath());
-        m_MenuRebuilder(m_RecentProjectsMenu);
+        emit recentProjectAdded(m_Project->fullPath());
     }
 
     /**
@@ -113,8 +110,6 @@ namespace Commands
      */
     void OpenProject::undo()
     {
-        sanityCheck();
-
         if (!m_Project)
             return;
 
@@ -122,33 +117,7 @@ namespace Commands
             m_MakeProjectCurrentCmd->undo();
 
         m_AppModel->removeProject(m_Project->name());
-    }
-
-    /**
-     * @brief OpenProject::sanityCheck
-     */
-    void OpenProject::sanityCheck()
-    {
-        Q_ASSERT(m_RecentProjectsAdder && m_MenuRebuilder);
-        Q_ASSERT(!m_ProjectPath.isEmpty());
-    }
-
-    /**
-     * @brief OpenProject::setProjectAdder
-     * @param ProjectAdder
-     */
-    void OpenProject::setProjectAdder(const ProjectAdder &projectAdder)
-    {
-        m_RecentProjectsAdder = projectAdder;
-    }
-
-    /**
-     * @brief OpenProject::setMenuRebuilder
-     * @param MenuRebuilder
-     */
-    void OpenProject::setMenuRebuilder(const MenuRebuilder &menuRebuilder)
-    {
-        m_MenuRebuilder = menuRebuilder;
+        emit recentProjectRemoved(m_Project->fullPath());
     }
 
     /**

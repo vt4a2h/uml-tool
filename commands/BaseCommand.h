@@ -28,7 +28,7 @@
 namespace Commands {
 
     /// The Base Command class
-    class BaseCommand : public QUndoCommand
+    class BaseCommand : public QObject, public QUndoCommand
     {
         Q_DECLARE_TR_FUNCTIONS(BaseCommand)
 

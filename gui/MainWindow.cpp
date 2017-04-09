@@ -95,7 +95,7 @@ namespace {
     void addRecentProject(const QString &projectName)
     {
         QStringList recentProjectsList = App::Settings::recentProjects();
-        recentProjectsList.removeAll(projectName);
+        recentProjectsList.removeOne(projectName);
         recentProjectsList.prepend(projectName);
 
         if (recentProjectsList.count() > App::Settings::recentProjectsMaxCount())
@@ -104,23 +104,16 @@ namespace {
         App::Settings::saveRecentProjects(recentProjectsList);
     }
 
-    void rebuildRecentProjectMenu(QMenu & menu)
+    void removeRecentProject(const QString &projectName)
     {
-        Q_ASSERT(App::Settings::recentProjects().count() < App::Settings::recentProjectsMaxCount());
-
-        menu.clear();
-
-        for (auto && p : App::Settings::recentProjects())
-            menu.addAction(p)->setData(p);
-
-        menu.addSeparator();
-        auto clearRecentProjects = menu.addAction(gui::MainWindow::tr("C&lear"));
-        G_CONNECT(clearRecentProjects, &QAction::triggered,
-                  [&] { clearRecentProjectsMenu(menu, App::Settings::recentProjects()); });
+        QStringList recentProjectsList = App::Settings::recentProjects();
+        G_ASSERT(recentProjectsList.removeOne(projectName));
+        App::Settings::saveRecentProjects(recentProjectsList);
     }
 }
 
 namespace gui {
+
 
     /**
      * @brief MainWindow::MainWindow
@@ -206,6 +199,40 @@ namespace gui {
     /**
      * @brief MainWindow::onOpenProject
      */
+    void MainWindow::openProject(const QString &path)
+    {
+        auto cmd = std::make_unique<Commands::OpenProject>(tr("Open new project"), path,
+                                                           m_ApplicationModel, m_CommandsStack,
+                                                           m_MainScene.get(), *this,
+                                                           *m_RecentProjects);
+        G_CONNECT(cmd.get(), &Commands::OpenProject::recentProjectAdded,
+                  this, &MainWindow::onRecentProjectAdded);
+        G_CONNECT(cmd.get(), &Commands::OpenProject::recentProjectRemoved,
+                  this, &MainWindow::onRecentProjectRemoved);
+        m_CommandsStack->push(cmd.release());
+    }
+
+    /**
+     * @brief MainWindow::rebuildRecentProjectMenu
+     */
+    void MainWindow::rebuildRecentProjectMenu()
+    {
+        Q_ASSERT(App::Settings::recentProjects().count() < App::Settings::recentProjectsMaxCount());
+
+        m_RecentProjects->clear();
+
+        for (auto && p : App::Settings::recentProjects()) {
+            auto action = m_RecentProjects->addAction(p);
+            action->setData(p);
+            G_CONNECT(action, &QAction::triggered, [this, path = p](){ openProject(path); });
+        }
+
+        m_RecentProjects->addSeparator();
+        auto clearRecentProjects = m_RecentProjects->addAction(gui::MainWindow::tr("C&lear"));
+        G_CONNECT(clearRecentProjects, &QAction::triggered,
+                  [&] { clearRecentProjectsMenu(*m_RecentProjects, App::Settings::recentProjects()); });
+    }
+
     void MainWindow::onOpenProject()
     {
         QString caption(tr("Selet project file"));
@@ -214,13 +241,7 @@ namespace gui {
 
         QString path = QFileDialog::getOpenFileName(this, caption, dir, filter);
         if (!path.isEmpty()) {
-            auto cmd = std::make_unique<Commands::OpenProject>(tr("Open new project"), path,
-                                                               m_ApplicationModel, m_CommandsStack,
-                                                               m_MainScene.get(), *this,
-                                                               *m_RecentProjects);
-            cmd->setProjectAdder(addRecentProject);
-            cmd->setMenuRebuilder(rebuildRecentProjectMenu);
-            m_CommandsStack->push(cmd.release());
+            openProject(path);
         }
     }
 
@@ -310,7 +331,7 @@ namespace gui {
         newProject->save();
 
         addRecentProject(newProject->fullPath());
-        rebuildRecentProjectMenu(*m_RecentProjects);
+        rebuildRecentProjectMenu();
     }
 
     /**
@@ -371,9 +392,11 @@ namespace gui {
 
         // Recent projects
         m_RecentProjects = std::make_unique<QMenu>(tr("&Recent projects"));
+        rebuildRecentProjectMenu();
+
+        // Set action exit
         ui->menuFile->insertMenu(ui->actionExit, m_RecentProjects.get());
         ui->menuFile->insertSeparator(ui->actionExit);
-        rebuildRecentProjectMenu(*m_RecentProjects);
     }
 
     /**
@@ -593,6 +616,25 @@ namespace gui {
     void MainWindow::onRelationCompleted()
     {
         range::for_each(m_RelationActions, [](auto &&a){ a->setChecked(false); });
+    }
+
+    /**
+     * @brief MainWindow::onRecentProjectRemoved
+     * @param path
+     */
+    void MainWindow::onRecentProjectRemoved(const QString &path)
+    {
+        removeRecentProject(path);
+        rebuildRecentProjectMenu();
+    }
+
+    /**
+     * @brief MainWindow::onRecentProjectAdded
+     */
+    void MainWindow::onRecentProjectAdded(const QString &path)
+    {
+        addRecentProject(path);
+        rebuildRecentProjectMenu();
     }
 
     /**

@@ -42,6 +42,8 @@ namespace Commands
      */
     class OpenProject : public BaseCommand
     {
+        Q_OBJECT
+
     public:
         OpenProject(const QString &name, const QString &path,
                     const models::SharedApplicationModel &appModel,
@@ -57,13 +59,12 @@ namespace Commands
         void redo()    override;
 
     public: // BaseCommand overridies
-        void sanityCheck() override;
-
-        void setProjectAdder(const ProjectAdder &projectAdder);
-        void setMenuRebuilder(const MenuRebuilder &menuRebuilder);
-
         bool supressDialogs() const;
         void setSupressDialogs(bool supressDialogs);
+
+    signals:
+        void recentProjectAdded(const QString &);
+        void recentProjectRemoved(const QString &);
 
     private:
         QString                        m_ProjectPath;
@@ -75,9 +76,6 @@ namespace Commands
 
         SharedCommand m_MakeProjectCurrentCmd;
         Projects::SharedProject m_Project;
-
-        ProjectAdder  m_RecentProjectsAdder;
-        MenuRebuilder m_MenuRebuilder;
 
         bool m_SupressDialogs;
     };

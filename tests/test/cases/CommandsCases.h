@@ -206,11 +206,6 @@ TEST_F(CommandsTester, OpenProject)
                                                        m_MainWindow, m_RecentProjectsMenu);
     cmd->setSupressDialogs(true);
 
-    // TODO: Stubs, add proper tests {
-    cmd->setProjectAdder([](const QString&){});
-    cmd->setMenuRebuilder([](QMenu &){});
-    // }
-
     cmd->redo();
 
     auto newCurrentProject = m_FakeAppModel->currentProject();
