@@ -42,6 +42,17 @@ namespace Commands
 
     using namespace boost::range;
 
+    /**
+     * @brief OpenProject::OpenProject
+     * @param name
+     * @param path
+     * @param appModel
+     * @param stack
+     * @param scene
+     * @param mv
+     * @param rp
+     * @param parent
+     */
     OpenProject::OpenProject(const QString &name, const QString &path,
                              const models::SharedApplicationModel &appModel,
                              const Commands::SharedCommandStack &stack,

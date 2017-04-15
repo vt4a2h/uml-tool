@@ -26,6 +26,7 @@
 #include <QDir>
 #include <QSettings>
 #include <QtGlobal>
+#include <QApplication>
 
 #include <boost/range/algorithm/find_if.hpp>
 
@@ -70,6 +71,7 @@ namespace App {
         const QString projGroup{"Project"};
         const Setting<QStringList> rp{"recent-projects", QStringList()};
         const Setting<int> rpCount{"recent-projects-count", 10};
+        const Setting<QString> projectDir{"last-open-project-dir", QApplication::applicationDirPath()};
 
         // Helpers
         template <class ValueType>
@@ -214,6 +216,24 @@ namespace App {
         void setRecentProjectsMaxCount(int count)
         {
             write(projGroup, rpCount.name, count);
+        }
+
+        /**
+         * @brief lastOpenProjectDir
+         * @return
+         */
+        QString lastOpenProjectDir()
+        {
+            return read(projGroup, projectDir.name, QApplication::applicationDirPath());
+        }
+
+        /**
+         * @brief setLastOpenProjectDir
+         * @param path
+         */
+        void setLastOpenProjectDir(const QString &path)
+        {
+            write(projGroup, projectDir.name, path);
         }
 
     } // namespace settings

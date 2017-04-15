@@ -236,12 +236,15 @@ namespace gui {
     void MainWindow::onOpenProject()
     {
         QString caption(tr("Selet project file"));
-        QString dir(QApplication::applicationDirPath()); // temporary
         QString filter(tr("Q-UML Project files (*.%1)").arg(PROJECT_FILE_EXTENTION));
 
-        QString path = QFileDialog::getOpenFileName(this, caption, dir, filter);
+        QString dirPath = App::Settings::lastOpenProjectDir();
+        Q_ASSERT(!dirPath.isEmpty());
+
+        QString path = QFileDialog::getOpenFileName(this, caption, dirPath, filter);
         if (!path.isEmpty()) {
             openProject(path);
+            App::Settings::setLastOpenProjectDir(QFileInfo(path).dir().absolutePath());
         }
     }
 

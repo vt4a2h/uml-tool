@@ -54,6 +54,10 @@ namespace App {
         // Recent projects max count
         int recentProjectsMaxCount();
         void setRecentProjectsMaxCount(int count);
+
+        // Last open project directory
+        QString lastOpenProjectDir();
+        void setLastOpenProjectDir(const QString &path);
     }
 
 } // namespace application
