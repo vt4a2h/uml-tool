@@ -78,6 +78,8 @@ namespace Commands
         Projects::SharedProject m_Project;
 
         bool m_SupressDialogs;
+        bool m_commandFailed;
+        bool m_UpdateRecentProjectsMenu;
     };
 
 } // Commands

@@ -33,12 +33,14 @@
 
 #include <project/Project.h>
 
+#include <application/Settings.h>
+
 #include "QtHelpers.h"
 
 namespace Commands
 {
 
-    using namespace boost;
+    using namespace boost::range;
 
     OpenProject::OpenProject(const QString &name, const QString &path,
                              const models::SharedApplicationModel &appModel,
@@ -53,6 +55,8 @@ namespace Commands
         , m_MainWindow(mv)
         , m_RecentProjectsMenu(rp)
         , m_SupressDialogs(false)
+        , m_commandFailed(false)
+        , m_UpdateRecentProjectsMenu(false)
     {
     }
 
@@ -63,7 +67,7 @@ namespace Commands
     {
         if (!m_Done) {
             auto projects = m_AppModel->projects();
-            auto it = range::find_if(projects, [&](auto &&p) { return p->fullPath() == m_ProjectPath; });
+            auto it = find_if(projects, [&](auto &&p) { return p->fullPath() == m_ProjectPath; });
             m_Project = it != std::end(projects) ? *it : nullptr;
 
             if (!m_Project) {
@@ -89,6 +93,8 @@ namespace Commands
                     );
             }
 
+            m_commandFailed = true;
+
             return;
         }
 
@@ -102,7 +108,10 @@ namespace Commands
         if (m_MakeProjectCurrentCmd)
             m_MakeProjectCurrentCmd->redo();
 
-        emit recentProjectAdded(m_Project->fullPath());
+        if (!App::Settings::recentProjects().contains(m_Project->fullPath())) {
+            m_UpdateRecentProjectsMenu = true;
+            emit recentProjectAdded(m_Project->fullPath());
+        }
     }
 
     /**
@@ -110,14 +119,16 @@ namespace Commands
      */
     void OpenProject::undo()
     {
-        if (!m_Project)
+        if (!m_Project || m_commandFailed)
             return;
 
         if (m_MakeProjectCurrentCmd)
             m_MakeProjectCurrentCmd->undo();
 
         m_AppModel->removeProject(m_Project->name());
-        emit recentProjectRemoved(m_Project->fullPath());
+
+        if (m_UpdateRecentProjectsMenu)
+            emit recentProjectRemoved(m_Project->fullPath());
     }
 
     /**
