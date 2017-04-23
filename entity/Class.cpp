@@ -648,7 +648,7 @@ namespace entity {
         QJsonArray parents;
         QJsonObject parent;
         for (auto &&p: m_Parents) {
-            parent.insert("Id", QString::number(p.first.value()));
+            parent.insert("Id", p.first.toJson());
             parent.insert("Section", p.second);
             parents.append(parent);
         }
@@ -695,8 +695,8 @@ namespace entity {
             if (src["Parents"].isArray()) {
                 for (auto &&value : src["Parents"].toArray()) {
                     o = value.toObject();
-                    Util::checkAndSet(o, "Id", errorList, [&o, &p, this](){
-                        p.first = o["Id"].toString().toULongLong();
+                    Util::checkAndSet(o, "Id", errorList, [&o, &p, &errorList, this](){
+                        p.first.fromJson(o["Id"], errorList);
                     });
                     Util::checkAndSet(o, "Section", errorList, [&o, &p, this](){
                         p.second = static_cast<Section>(o["Section"].toInt());

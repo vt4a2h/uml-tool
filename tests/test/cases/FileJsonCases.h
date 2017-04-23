@@ -43,9 +43,9 @@ TEST_F(FileJson, ExtendedTypeJson)
     type->addLinkStatus();
     type->addPointerStatus(true);
     type->addTemplateParameter(common::ID::firstFreeID());
-    type->addTemplateParameter(common::ID::firstFreeID().value() + 1);
+    type->addTemplateParameter(common::ID::firstFreeID() + 1);
     type->setConstStatus(true);
-    type->setId(common::ID::firstFreeID().value() + 2);
+    type->setId(common::ID::firstFreeID() + 2);
     type->writeToFile(m_JsonFileName);
 
     auto type_comp(std::make_shared<entity::ExtendedType>());

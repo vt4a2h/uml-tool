@@ -42,7 +42,7 @@ TEST_F(ProjectTranslatorTest, Type)
 TEST_F(ProjectTranslatorTest, ExtendedType)
 {
     auto type = std::make_shared<entity::ExtendedType>();
-    type->setId(common::ID::firstFreeID().value() + 6);
+    type->setId(common::ID::firstFreeID() + 6);
     m_ProjectScope->addExistsType(type);
     type->setTypeId(m_int->id());
 
@@ -78,7 +78,7 @@ TEST_F(ProjectTranslatorTest, ExtendedType)
 
     futureResult = "vector<int>";
     auto vector = std::make_shared<entity::Type>("vector", m_GlobalScope->id(),
-                                                 common::ID::firstFreeID().value() + 7);
+                                                 common::ID::firstFreeID() + 7);
     m_GlobalScope->addExistsType(vector);
     type->setTypeId(vector->id());
     type->addTemplateParameter(m_int->id());
@@ -94,7 +94,7 @@ TEST_F(ProjectTranslatorTest, ExtendedType)
     futureResult = "std::set<int>";
     m_ProjectScope->removeType(type->id());
     type = std::make_shared<entity::ExtendedType>();
-    type->setId(common::ID::firstFreeID().value() + 8);
+    type->setId(common::ID::firstFreeID() + 8);
     m_ProjectScope->addExistsType(type);
 
     auto stdScope = std::make_shared<entity::Scope>("std");
@@ -102,7 +102,7 @@ TEST_F(ProjectTranslatorTest, ExtendedType)
     m_GlobalScope->addExistsChildScope(stdScope);
 
     auto set = std::make_shared<entity::Type>("set", stdScope->id(),
-                                              common::ID::firstFreeID().value() + 9);
+                                              common::ID::firstFreeID() + 9);
     stdScope->addExistsType(set);
     type->setTypeId(set->id());
     type->addTemplateParameter(m_int->id());
@@ -156,21 +156,21 @@ TEST_F(ProjectTranslatorTest, ClassMethod)
 
     futureResult = "ps::Foo *getFoo(const QString &id) const";
     auto ps = std::make_shared<entity::Scope>("ps");
-    ps->setId(common::ID::firstFreeID().value() + 4);
+    ps->setId(common::ID::firstFreeID() + 4);
     m_ProjectDb->addExistsScope(ps);
 
     auto foo = ps->addExistsType(
                    std::make_shared<entity::Type>(
                        "Foo", common::ID::globalScopeID(),
-                       common::ID::firstFreeID().value() + 4));
+                       common::ID::firstFreeID() + 4));
     auto fooExt = std::make_shared<entity::ExtendedType>();
-    fooExt->setId(common::ID::firstFreeID().value() + 5);
+    fooExt->setId(common::ID::firstFreeID() + 5);
     ps->addExistsType(fooExt);
     fooExt->addPointerStatus();
     fooExt->setTypeId(foo->id());
 
     auto qstrExt = std::make_shared<entity::ExtendedType>();
-    qstrExt->setId(common::ID::firstFreeID().value() + 7);
+    qstrExt->setId(common::ID::firstFreeID() + 7);
     m_GlobalScope->addExistsType(qstrExt);
     qstrExt->addLinkStatus();
     qstrExt->setTypeId(m_qstring->id());

@@ -122,7 +122,7 @@ namespace Projects {
         QString m_Name;
         QString m_Path;
 
-        common::ID::ValueType m_nextUniqueID;
+        common::ID m_nextUniqueID;
 
         bool m_SaveStatus;
 

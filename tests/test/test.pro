@@ -95,6 +95,7 @@ HEADERS += ../../enums.h \
     TestCommands.h \
     cases/CommandsCases.h \
     cases/ProjectMakerCases.h \
+    cases/ID.h
 
 SOURCES += main.cpp \
            ../../application/settings.cpp \

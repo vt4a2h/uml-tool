@@ -60,7 +60,7 @@ namespace gui {
      */
     const components::ComponentsMaker &SignatureEditDelegate::maker() const
     {
-        return *m_ComponentsMaker.get();
+        return *m_ComponentsMaker;
     }
 
     /**
@@ -69,7 +69,7 @@ namespace gui {
      */
     components::ComponentsMaker &SignatureEditDelegate::maker()
     {
-        return *m_ComponentsMaker.get();
+        return *m_ComponentsMaker;
     }
 
     /**

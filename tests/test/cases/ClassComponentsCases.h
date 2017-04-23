@@ -105,8 +105,8 @@ TEST_F(ClassComponents, Property)
     ASSERT_EQ(property->name(), DEFAULT_NAME);
     ASSERT_EQ(property->typeId(), common::ID::nullID());
 
-    property->setTypeId(common::ID::firstFreeID().value() + 1);
-    ASSERT_EQ(property->typeId(), common::ID::firstFreeID().value() + 1);
+    property->setTypeId(common::ID::firstFreeID() + 1);
+    ASSERT_EQ(property->typeId(), common::ID::firstFreeID() + 1);
 
     ASSERT_TRUE(!!property->field());
     ASSERT_EQ(property->field()->section(), entity::Private);
@@ -132,8 +132,8 @@ TEST_F(ClassComponents, Property)
     ASSERT_EQ(property->hashType(), entity::Property::staticHashType());
     ASSERT_EQ(property->marker(), entity::Property::staticMarker());
 
-    property->setId(common::ID::firstFreeID().value() + 2);
-    ASSERT_EQ(property->id(), common::ID::firstFreeID().value() + 2);
+    property->setId(common::ID::firstFreeID() + 2);
+    ASSERT_EQ(property->id(), common::ID::firstFreeID() + 2);
 
     // Check moving
     check_moving(entity::Property, property)

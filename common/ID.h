@@ -25,6 +25,7 @@
 #include <QtGlobal>
 #include <QJsonValue>
 #include <QMetaType>
+#include <QCoreApplication>
 
 #include <boost/operators.hpp>
 
@@ -33,24 +34,32 @@
 namespace common
 {
 
-    // TODO: add tests
     /// ID for all objects
     class ID : public boost::equality_comparable<ID>
              , public boost::less_than_comparable<ID>
     {
+        Q_DECLARE_TR_FUNCTIONS(ID)
+
     public:
         using ValueType = quint64;
 
         ID();
-        ID(quint64 value);
-        ID(ID const&) = default;
-        ID(ID &&) = default;
+        explicit ID(quint64 value);
+        ID(ID const&);
+        ID(ID &&) noexcept;
 
-        ID &operator =(ID const&) = default;
-        ID &operator =(ID &&) = default;
+        ID &operator =(ID const&);
+        ID &operator =(ID &&) noexcept;
+
+        ~ID() = default;
 
         friend bool operator ==(const ID &lhs, const ID &rhs);
         friend bool operator < (const ID &lhs, const ID &rhs);
+
+        friend ID operator +(const ID &lhs, const ID &rhs);
+        friend ID operator +(const ID &lhs, int val);
+
+        ID operator ++(int);
 
         bool isValid() const;
 
@@ -62,6 +71,8 @@ namespace common
 
         QJsonValue toJson() const;
         void fromJson(const QJsonValue &in, ErrorList & errors);
+
+        friend void swap(ID & lsh, ID & rhs);
 
     public: // Constants
         static ID nullID();

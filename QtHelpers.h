@@ -32,7 +32,7 @@
 #define G_ASSERT(c) qthelpers::details::g_assert(c, Q_FUNC_INFO, #c, __FILE__, __LINE__)
 
 // Conditional G_ASSERT
-#define G_ASSERT_C(c, cond) qthelpers::details::g_assert_c(c, !!cond, Q_FUNC_INFO, \
+#define G_ASSERT_C(c, cond) qthelpers::details::g_assert_c(c, !!(cond), Q_FUNC_INFO, \
                                                           #c, __FILE__, __LINE__)
 
 namespace qthelpers

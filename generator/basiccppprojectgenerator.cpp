@@ -143,7 +143,7 @@ namespace generator {
      */
     void BasicCppProjectGenerator::addProfile()
     {
-        // TODO: add different strateges for different project types
+        // TODO: add different strategies for different project types
         QString name(m_ProjectName.remove(" ").toLower());
         name.append(".pro");
 

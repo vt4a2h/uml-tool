@@ -54,7 +54,7 @@ TEST_F(Enteties, SimpleType)
     ASSERT_EQ(_type->scopeId(), common::ID::globalScopeID());
 
     _type->setName("some name");
-    _type->setId(common::ID::firstFreeID().value() + 1);
+    _type->setId(common::ID::firstFreeID() + 1);
     _type->setScopeId(common::ID::globalScopeID());
 
     test_copy_move(Type, _type)
@@ -88,8 +88,8 @@ TEST_F(Enteties, ExtendedType)
     _extendedType->setConstStatus(false);
     ASSERT_FALSE(_extendedType->isConst());
 
-    const common::ID par1 = common::ID::firstFreeID().value() + 1;
-    const common::ID par2 = par1.value() + 1;
+    const common::ID par1 = common::ID::firstFreeID() + 1;
+    const common::ID par2 = par1 + 1;
 
     _extendedType->addTemplateParameter(par1);
     ASSERT_TRUE(_extendedType->containsTemplateParameter(par1));
@@ -113,7 +113,7 @@ TEST_F(Enteties, Class)
     ASSERT_EQ(_class->kind(), entity::ClassType);
 
     // Parents test
-    const common::ID parentID = common::ID::firstFreeID().value() + 1;
+    const common::ID parentID = common::ID::firstFreeID() + 1;
     auto parent = _class->addParent(parentID, entity::Private);
     auto parents = _class->parents();
 
@@ -128,7 +128,7 @@ TEST_F(Enteties, Class)
     ASSERT_TRUE(_class->parents().isEmpty());
 
     _class->addParent(parentID, entity::Private);
-    _class->addParent(parentID.value() + 42, entity::Private);
+    _class->addParent(parentID + 42, entity::Private);
     ASSERT_EQ(_class->parents().count(), 2);
 
     // Methods test (some parts covered in IComponents tests)
@@ -239,7 +239,7 @@ TEST_F(Enteties, OptionaClassFields)
     ASSERT_TRUE(_class->optionalFields(entity::Private).isEmpty());
 
     // FIXME: set appropriate type
-    entity::SharedProperty p = _class->addProperty("p0", -1);
+    entity::SharedProperty p = _class->addProperty("p0", common::ID::nullID());
     ASSERT_FALSE(_class->optionalFields(entity::Private).isEmpty());
     ASSERT_EQ(_class->optionalFields(entity::Private)[0], p->field());
 
@@ -251,7 +251,7 @@ TEST_F(Enteties, OptionaClassFields)
 
     // Check a few fields
     // FIXME: set appropriate type
-    auto p1 = _class->addProperty("p1", -1);
+    auto p1 = _class->addProperty("p1", common::ID::nullID());
     ASSERT_EQ(entity::FieldsList({p1->field(), p->field()}).toList().toSet(),
               _class->optionalFields(entity::Private).toList().toSet());
 }
@@ -290,8 +290,8 @@ TEST_F(Enteties, Enum)
 TEST_F(Enteties, TemplateClass)
 {
     ASSERT_TRUE(_templateClass->templateParameters().empty());
-    auto p = _templateClass->addTemplateParameter(common::ID::firstFreeID().value() + 1);
-    auto p1 = _templateClass->addTemplateParameter(common::ID::firstFreeID().value() + 2);
+    auto p = _templateClass->addTemplateParameter(common::ID::firstFreeID() + 1);
+    auto p1 = _templateClass->addTemplateParameter(common::ID::firstFreeID() + 2);
     ASSERT_EQ(_templateClass->getTemplateParameter(p.first), p);
     ASSERT_FALSE(_templateClass->templateParameters().empty());
     ASSERT_TRUE(_templateClass->contains(p.first));

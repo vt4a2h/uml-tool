@@ -263,7 +263,7 @@ namespace Projects {
         QJsonObject result;
 
         result.insert("Name", m_Name);
-        result.insert("NextID", QString::number(m_nextUniqueID));
+        result.insert("NextID", m_nextUniqueID.toJson());
 
         return result;
     }
@@ -278,8 +278,8 @@ namespace Projects {
         Util::checkAndSet(src, "Name", errorList, [&src, this](){
             m_Name = src["Name"].toString();
         });
-        Util::checkAndSet(src, "NextID", errorList, [&src, this](){
-            m_nextUniqueID = src["NextID"].toString().toULongLong();
+        Util::checkAndSet(src, "NextID", errorList, [&, this](){
+            m_nextUniqueID.fromJson(src["NextID"], errorList);
         });
     }
 

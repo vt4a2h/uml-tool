@@ -22,6 +22,8 @@
 *****************************************************************************/
 #include "ID.h"
 
+#include <utility>
+
 #include <QHash>
 #include <QMetaType>
 
@@ -47,6 +49,37 @@ namespace common
         static bool comparators = QMetaType::registerComparators<common::ID>();
         Q_UNUSED(type);
         Q_UNUSED(comparators);
+    }
+
+    /**
+     * @brief common::ID::operator +
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    ID operator+(const ID &lhs, const ID &rhs)
+    {
+        return ID(lhs.m_value + rhs.m_value);
+    }
+
+    /**
+     * @brief ID::operator ++
+     * @return
+     */
+    ID ID::operator ++(int)
+    {
+        return ID(m_value++);
+    }
+
+    /**
+     * @brief operator +
+     * @param lhs
+     * @param val
+     * @return
+     */
+    ID operator +(const ID &lhs, int val)
+    {
+        return ID(lhs.m_value + val);
     }
 
     /**
@@ -77,7 +110,7 @@ namespace common
      */
     bool ID::isValid() const
     {
-        return m_value != nullID();
+        return *this != nullID();
     }
 
     /**
@@ -107,7 +140,7 @@ namespace common
      */
     ID ID::nullID()
     {
-        return 0;
+        return ID(0);
     }
 
     /**
@@ -117,7 +150,7 @@ namespace common
      */
     ID ID::firstFreeID()
     {
-        return 4097;
+        return ID(4097);
     }
 
     /**
@@ -126,7 +159,7 @@ namespace common
      */
     ID ID::firstNonConstID()
     {
-        return 500;
+        return ID(500);
     }
 
     /**
@@ -135,7 +168,7 @@ namespace common
      */
     ID ID::globalScopeID()
     {
-        return nullID().value() + 1;
+        return ID(nullID().value() + 1);
     }
 
     /**
@@ -144,7 +177,7 @@ namespace common
      */
     ID ID::stdScopeID()
     {
-        return globalScopeID().value() + 1;
+        return ID(globalScopeID().value() + 1);
     }
 
     /**
@@ -153,7 +186,7 @@ namespace common
      */
     ID ID::globalDatabaseID()
     {
-        return stdScopeID().value() + 1;
+        return ID(stdScopeID().value() + 1);
     }
 
     /**
@@ -162,7 +195,7 @@ namespace common
      */
     ID ID::localTemplateScopeID()
     {
-        return globalDatabaseID().value() + 1;
+        return ID(globalDatabaseID().value() + 1);
     }
 
     /**
@@ -171,7 +204,7 @@ namespace common
      */
     ID ID::projectScopeID()
     {
-        return localTemplateScopeID().value() + 1;
+        return ID(localTemplateScopeID().value() + 1);
     }
 
     /**
@@ -211,15 +244,26 @@ namespace common
     {
         QString result = in.toString();
         if (result.isEmpty()) {
-            errors << "Wrong entity ID";
+            errors << tr("Wrong entity ID");
             return;
         }
 
         bool ok = false;
         m_value = result.toULongLong(&ok);
         if (!ok)
-            errors << "Cannot convert value to the appropriate type.";
+            errors << tr("Cannot convert value to the appropriate type.");
     }
+
+    void swap(ID & lsh, ID & rhs)
+    {
+        std::swap(lsh.m_value, rhs.m_value);
+    }
+
+    ID::ID(ID const &) = default;
+    ID &ID::operator=(ID const &) = default;
+
+    ID::ID(ID &&) noexcept = default;
+    ID &ID::operator=(ID &&) noexcept = default;
 
     /**
      * @brief qHash

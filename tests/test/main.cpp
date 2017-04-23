@@ -38,6 +38,7 @@
 #include <cases/ComponentsMakerCases.h>
 #include <cases/SignatureMakerCases.h>
 #include <cases/CommandsCases.h>
+#include <cases/ID.h>
 
 int main(int argc, char **argv)
 {
