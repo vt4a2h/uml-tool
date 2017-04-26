@@ -34,4 +34,4 @@ addons:
     branch_pattern: coverity_scan
     
 script:
-    echo done
+    - echo done
