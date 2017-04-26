@@ -32,3 +32,6 @@ addons:
     build_command_prepend: "qmake uml-tool.pro -r -spec linux-g++ CONFIG+=release"
     build_command: "make -j4"
     branch_pattern: coverity_scan
+    
+script:
+    echo done
