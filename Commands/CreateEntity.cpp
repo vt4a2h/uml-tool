@@ -26,14 +26,11 @@
 
 #include <db/ProjectDatabase.h>
 
-#include <entity/Type.h>
 #include <entity/EntityFactory.h>
 #include <entity/Scope.h>
 
 #include <models/ProjectTreeModel.h>
 #include <project/Project.h>
-
-#include "QtHelpers.h"
 
 namespace Commands {
 
@@ -90,7 +87,7 @@ namespace Commands {
         sanityCheck();
 
         // TODO: move to the RemoveEntity command (when it'll be created)
-        if (m_GraphicEntity && m_GraphicEntity)
+        if (m_Scene && m_GraphicEntity)
         {
             m_Scene->removeItem(m_GraphicEntity);
 
@@ -160,7 +157,7 @@ namespace Commands {
     void CreateEntity::sanityCheck()
     {
         Q_ASSERT(m_Entity);
-        Q_ASSERT((m_Scene && m_GraphicEntity) || (!m_Scene && !m_GraphicEntity) );
+        Q_ASSERT((m_Scene && m_GraphicEntity) || (!m_Scene && !m_GraphicEntity));
         Q_ASSERT(m_Scope);
         Q_ASSERT(m_TreeModel);
         Q_ASSERT(!m_ProjectName.isEmpty());

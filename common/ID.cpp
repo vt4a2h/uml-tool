@@ -22,10 +22,7 @@
 *****************************************************************************/
 #include "ID.h"
 
-#include <utility>
-
 #include <QHash>
-#include <QMetaType>
 
 namespace common
 {

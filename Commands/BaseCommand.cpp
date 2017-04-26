@@ -29,7 +29,7 @@ namespace Commands {
      * @param parent
      */
     BaseCommand::BaseCommand(BaseCommand::QUndoCommand *parent)
-        : BaseCommand(tr("no name"), parent)
+        : BaseCommand(tr("No name"), parent)
     {
     }
 

@@ -39,7 +39,7 @@ namespace Commands {
         MakeProjectCurrent(const QString &projectName, const models::SharedApplicationModel &model,
                            const graphics::ScenePtr &scene);
 
-    public: // QUndoCommand overridies
+    public: // QUndoCommand overrides
         void undo() override;
         void redo() override;
 

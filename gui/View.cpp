@@ -29,7 +29,7 @@
 
 #include <project/Project.h>
 #include <db/ProjectDatabase.h>
-#include <commands/CreateEntity.h>
+#include <Commands/CreateEntity.h>
 #include <models/ApplicationModel.h>
 
 #include "Elements.h"

@@ -22,8 +22,6 @@
 *****************************************************************************/
 #include "OpenProject.h"
 
-#include <functional>
-
 #include <boost/range/algorithm/find_if.hpp>
 
 #include <QMessageBox>
@@ -31,11 +29,7 @@
 
 #include <commands/MakeProjectCurrent.h>
 
-#include <project/Project.h>
-
 #include <application/Settings.h>
-
-#include "QtHelpers.h"
 
 namespace Commands
 {
@@ -65,7 +59,7 @@ namespace Commands
         , m_Scene(scene)
         , m_MainWindow(mv)
         , m_RecentProjectsMenu(rp)
-        , m_SupressDialogs(false)
+        , m_SuppressDialogs(false)
         , m_commandFailed(false)
         , m_UpdateRecentProjectsMenu(false)
     {
@@ -94,7 +88,7 @@ namespace Commands
             return;
 
         if (m_Project->hasErrors()) {
-            if (!m_SupressDialogs) {
+            if (!m_SuppressDialogs) {
                 auto errors = m_Project->lastErrors();
                 QMessageBox::critical
                     ( &m_MainWindow
@@ -143,21 +137,21 @@ namespace Commands
     }
 
     /**
-     * @brief OpenProject::supressDialogs
+     * @brief OpenProject::suppressDialogs
      * @return
      */
-    bool OpenProject::supressDialogs() const
+    bool OpenProject::suppressDialogs() const
     {
-        return m_SupressDialogs;
+        return m_SuppressDialogs;
     }
 
     /**
-     * @brief OpenProject::setSupressDialogs
-     * @param supressDialogs
+     * @brief OpenProject::setSuppressDialogs
+     * @param suppressDialogs
      */
-    void OpenProject::setSupressDialogs(bool supressDialogs)
+    void OpenProject::setSuppressDialogs(bool suppressDialogs)
     {
-        m_SupressDialogs = supressDialogs;
+        m_SuppressDialogs = suppressDialogs;
     }
 
 } // Commands

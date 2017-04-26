@@ -26,7 +26,7 @@
 
 #include <models/models_types.hpp>
 #include <project/ProjectTypes.hpp>
-#include <commands/CommandsTypes.h>
+#include <Commands/CommandsTypes.h>
 #include <gui/graphics/GraphicsTypes.h>
 
 class QSplitter;

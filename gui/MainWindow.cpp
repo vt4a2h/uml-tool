@@ -55,10 +55,10 @@
 
 #include <entity/Type.h>
 
-#include <commands/CreateScope.h>
-#include <commands/MakeProjectCurrent.h>
-#include <commands/RemoveProject.h>
-#include <commands/OpenProject.h>
+#include <Commands/CreateScope.h>
+#include <Commands/MakeProjectCurrent.h>
+#include <Commands/RemoveProject.h>
+#include <Commands/OpenProject.h>
 
 #include "About.h"
 #include "newproject.h"

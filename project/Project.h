@@ -28,7 +28,7 @@
 #include <common/ID.h>
 #include <common/SharedFromThis.h>
 
-#include <commands/CommandsTypes.h>
+#include <Commands/CommandsTypes.h>
 
 #include <db/db_types.hpp>
 

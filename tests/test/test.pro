@@ -48,16 +48,16 @@ HEADERS += ../../enums.h \
     ../../relationship/Relation.h \
     ../../relationship/RelationFactory.h \
     ../../common/ElementsFactory.h \
-    ../../commands/basecommand.h \
-    ../../commands/CreateEntity.h \
-    ../../commands/CreateScope.h \
-    ../../commands/MakeProjectCurrent.h \
-    ../../commands/MoveGraphicObject.h \
-    ../../commands/AddRelation.h \
-    ../../commands/MoveTypeToAnotherScope.h \
-    ../../commands/RemoveProject.h \
-    ../../commands/RenameEntity.h \
-    ../../commands/OpenProject.h \
+    ../../Commands/basecommand.h \
+    ../../Commands/CreateEntity.h \
+    ../../Commands/CreateScope.h \
+    ../../Commands/MakeProjectCurrent.h \
+    ../../Commands/MoveGraphicObject.h \
+    ../../Commands/AddRelation.h \
+    ../../Commands/MoveTypeToAnotherScope.h \
+    ../../Commands/RemoveProject.h \
+    ../../Commands/RenameEntity.h \
+    ../../Commands/OpenProject.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -150,13 +150,13 @@ SOURCES += main.cpp \
            ../../helpers/entityhelpres.cpp \
            ../../helpers/GeneratorID.cpp \
            ../../common/ElementsFactory.cpp \
-           ../../commands/basecommand.cpp \
-           ../../commands/CreateEntity.cpp \
-           ../../commands/CreateScope.cpp \
-           ../../commands/MakeProjectCurrent.cpp \
-           ../../commands/MoveGraphicObject.cpp \
-           ../../commands/AddRelation.cpp \
-           ../../commands/MoveTypeToAnotherScope.cpp \
-           ../../commands/RemoveProject.cpp \
-           ../../commands/RenameEntity.cpp \
-           ../../commands/OpenProject.cpp
+           ../../Commands/basecommand.cpp \
+           ../../Commands/CreateEntity.cpp \
+           ../../Commands/CreateScope.cpp \
+           ../../Commands/MakeProjectCurrent.cpp \
+           ../../Commands/MoveGraphicObject.cpp \
+           ../../Commands/AddRelation.cpp \
+           ../../Commands/MoveTypeToAnotherScope.cpp \
+           ../../Commands/RemoveProject.cpp \
+           ../../Commands/RenameEntity.cpp \
+           ../../Commands/OpenProject.cpp

@@ -37,7 +37,7 @@ namespace Commands
      */
     RenameEntity::RenameEntity(const common::SharedBasicEntity &entity, const QString &newName,
                                QUndoCommand *parent)
-        : BaseCommand(tr("Change name from \"%1\" to \"%2\".").arg(G_ASSERT(entity)->name(), newName), parent)
+        : BaseCommand(tr(R"(Change name from "%1" to "%2".)").arg(G_ASSERT(entity)->name(), newName), parent)
         , m_Entity(entity)
         , m_NewName(newName)
         , m_OldName(entity->name())

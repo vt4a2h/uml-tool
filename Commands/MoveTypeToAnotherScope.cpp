@@ -42,7 +42,7 @@ namespace Commands {
                                                    const entity::SharedScope &srcScope,
                                                    const entity::SharedScope &dstScope,
                                                    QUndoCommand *parent)
-        : BaseCommand(tr("Move \"%1\" from \"%2\" to \"%3\".").arg(type->name(), srcScope->name(), dstScope->name()),
+        : BaseCommand(tr(R"(Move "%1" from "%2" to "%3".)").arg(type->name(), srcScope->name(), dstScope->name()),
                       parent)
         , m_Type(type)
         , m_SrcScope(srcScope)

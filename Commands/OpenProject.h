@@ -54,13 +54,13 @@ namespace Commands
         using ProjectAdder  = std::function<void(const QString& /*Project name*/)>;
         using MenuRebuilder = std::function<void(QMenu& /*Recent projects menu*/)>;
 
-    public: // QUndoCommand overridies
+    public: // QUndoCommand overrides
         void undo()    override;
         void redo()    override;
 
-    public: // BaseCommand overridies
-        bool supressDialogs() const;
-        void setSupressDialogs(bool supressDialogs);
+    public: // BaseCommand overrides
+        bool suppressDialogs() const;
+        void setSuppressDialogs(bool suppressDialogs);
 
     signals:
         void recentProjectAdded(const QString &);
@@ -77,7 +77,7 @@ namespace Commands
         SharedCommand m_MakeProjectCurrentCmd;
         Projects::SharedProject m_Project;
 
-        bool m_SupressDialogs;
+        bool m_SuppressDialogs;
         bool m_commandFailed;
         bool m_UpdateRecentProjectsMenu;
     };

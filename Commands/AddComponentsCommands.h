@@ -81,8 +81,8 @@ namespace Commands {
     class AddMethod : public AddComponentBaseCommand<entity::SharedMethod>
     {
     public:
-        AddMethod(const models::SharedClassComponentsModel &model, const entity::SharedMethod &method = nullptr,
-                  int pos = -1, QUndoCommand *parent = nullptr);
+        explicit AddMethod(const models::SharedClassComponentsModel &model, const entity::SharedMethod &method = nullptr,
+                           int pos = -1, QUndoCommand *parent = nullptr);
 
         void redo() override;
         void undo() override;
@@ -92,8 +92,8 @@ namespace Commands {
     class AddField : public AddComponentBaseCommand<entity::SharedField>
     {
     public:
-        AddField(const models::SharedClassComponentsModel &model, const entity::SharedField &field = nullptr,
-                  int pos = -1, QUndoCommand *parent = nullptr);
+        explicit AddField(const models::SharedClassComponentsModel &model, const entity::SharedField &field = nullptr,
+                          int pos = -1, QUndoCommand *parent = nullptr);
 
         void redo() override;
         void undo() override;
@@ -103,8 +103,8 @@ namespace Commands {
     class AddElement : public AddComponentBaseCommand<entity::SharedEnumarator>
     {
     public:
-        AddElement(const models::SharedClassComponentsModel &model, const entity::SharedEnumarator &element = nullptr,
-                  int pos = -1, QUndoCommand *parent = nullptr);
+        explicit AddElement(const models::SharedClassComponentsModel &model, const entity::SharedEnumarator &element = nullptr,
+                            int pos = -1, QUndoCommand *parent = nullptr);
 
         void redo() override;
         void undo() override;

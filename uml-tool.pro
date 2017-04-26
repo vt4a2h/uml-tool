@@ -47,7 +47,7 @@ SOURCES += \
     entity/EntityFactory.cpp \
     db/ProjectDatabase.cpp \
     common/ElementsFactory.cpp \
-    commands/CreateEntity.cpp \
+    Commands/CreateEntity.cpp \
     gui/graphics/Entity.cpp \
     models/ProjectTreeModel.cpp \
     project/Project.cpp \
@@ -59,7 +59,7 @@ SOURCES += \
     entity/Class.cpp \
     entity/TemplateClass.cpp \
     gui/View.cpp \
-    commands/AddRelation.cpp \
+    Commands/AddRelation.cpp \
     relationship/Relation.cpp \
     db/Database.cpp \
     gui/graphics/GraphicsRelation.cpp \
@@ -76,20 +76,20 @@ SOURCES += \
     entity/TemplateClassMethod.cpp \
     models/ApplicationModel.cpp \
     models/BasicTreeItem.cpp \
-    commands/RemoveProject.cpp \
-    commands/BaseCommand.cpp \
-    commands/MakeProjectCurrent.cpp \
-    commands/CreateScope.cpp \
+    Commands/RemoveProject.cpp \
+    Commands/BaseCommand.cpp \
+    Commands/MakeProjectCurrent.cpp \
+    Commands/CreateScope.cpp \
     helpers/GeneratorID.cpp \
-    commands/MoveGraphicObject.cpp \
-    commands/MoveTypeToAnotherScope.cpp \
-    commands/RemoveComponentsCommands.cpp \
-    commands/RenameEntity.cpp \
+    Commands/MoveGraphicObject.cpp \
+    Commands/MoveTypeToAnotherScope.cpp \
+    Commands/RemoveComponentsCommands.cpp \
+    Commands/RenameEntity.cpp \
     gui/EditEntityDialog.cpp \
     gui/About.cpp \
     application/Settings.cpp \
-    commands/AddComponentsCommands.cpp \
-    commands/OpenProject.cpp
+    Commands/AddComponentsCommands.cpp \
+    Commands/OpenProject.cpp
 
 HEADERS += \
     enums.h \
@@ -143,7 +143,7 @@ HEADERS += \
     relationship/RelationFactory.h \
     entity/EntityFactory.h \
     common/ElementsFactory.h \
-    commands/CreateEntity.h \
+    Commands/CreateEntity.h \
     gui/graphics/Entity.h \
     models/ProjectTreeModel.h \
     project/Project.h \
@@ -155,7 +155,7 @@ HEADERS += \
     entity/Class.h \
     entity/TemplateClass.h \
     gui/View.h \
-    commands/AddRelation.h \
+    Commands/AddRelation.h \
     relationship/Relation.h \
     gui/graphics/GraphicsRelation.h \
     gui/graphics/Scene.h \
@@ -172,25 +172,25 @@ HEADERS += \
     entity/TemplateClassMethod.h \
     models/ApplicationModel.h \
     models/BasicTreeItem.h \
-    commands/RemoveProject.h \
-    commands/BaseCommand.h \
-    commands/CommandsTypes.h \
-    commands/MakeProjectCurrent.h \
-    commands/CreateScope.h \
+    Commands/RemoveProject.h \
+    Commands/BaseCommand.h \
+    Commands/CommandsTypes.h \
+    Commands/MakeProjectCurrent.h \
+    Commands/CreateScope.h \
     helpers/GeneratorID.h \
     gui/graphics/GraphicsTypes.h \
-    commands/MoveGraphicObject.h \
+    Commands/MoveGraphicObject.h \
     project/ProjectTypes.hpp \
-    commands/MoveTypeToAnotherScope.h \
-    commands/RemoveComponentsCommands.h \
-    commands/RenameEntity.h \
+    Commands/MoveTypeToAnotherScope.h \
+    Commands/RemoveComponentsCommands.h \
+    Commands/RenameEntity.h \
     gui/EditEntityDialog.h \
     gui/graphics/Common.h \
     gui/About.h \
     application/Settings.h \
     Constants.h \
-    commands/AddComponentsCommands.h \
-    commands/OpenProject.h \
+    Commands/AddComponentsCommands.h \
+    Commands/OpenProject.h \
     QtHelpers.h
 
 FORMS += \

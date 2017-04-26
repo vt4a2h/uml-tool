@@ -24,14 +24,14 @@
 
 #include "TestCommands.h"
 
-#include <commands/CreateEntity.h>
-#include <commands/CreateScope.h>
-#include <commands/MakeProjectCurrent.h>
-#include <commands/MoveGraphicObject.h>
-#include <commands/MoveTypeToAnotherScope.h>
-#include <commands/RemoveProject.h>
-#include <commands/RenameEntity.h>
-#include <commands/OpenProject.h>
+#include <Commands/CreateEntity.h>
+#include <Commands/CreateScope.h>
+#include <Commands/MakeProjectCurrent.h>
+#include <Commands/MoveGraphicObject.h>
+#include <Commands/MoveTypeToAnotherScope.h>
+#include <Commands/RemoveProject.h>
+#include <Commands/RenameEntity.h>
+#include <Commands/OpenProject.h>
 
 TEST_F(CommandsTester, CreateEntityCommand)
 {
@@ -204,7 +204,7 @@ TEST_F(CommandsTester, OpenProject)
     auto cmd = std::make_shared<Commands::OpenProject>("Open new project", tstProject->fullPath(),
                                                        m_FakeAppModel, m_CommandsStack, m_Scene.get(),
                                                        m_MainWindow, m_RecentProjectsMenu);
-    cmd->setSupressDialogs(true);
+    cmd->setSuppressDialogs(true);
 
     cmd->redo();
 

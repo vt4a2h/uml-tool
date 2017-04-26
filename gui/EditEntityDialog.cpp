@@ -44,10 +44,10 @@
 
 #include <utility/helpfunctions.h>
 
-#include <commands/RenameEntity.h>
-#include <commands/MoveTypeToAnotherScope.h>
-#include <commands/AddComponentsCommands.h>
-#include <commands/RemoveComponentsCommands.h>
+#include <Commands/RenameEntity.h>
+#include <Commands/MoveTypeToAnotherScope.h>
+#include <Commands/AddComponentsCommands.h>
+#include <Commands/RemoveComponentsCommands.h>
 
 #include <translation/signaturemaker.h>
 

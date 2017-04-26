@@ -35,7 +35,7 @@
 #include <gui/graphics/GraphicsTypes.h>
 #include <gui/graphics/Scene.h>
 
-#include <commands/CommandsTypes.h>
+#include <Commands/CommandsTypes.h>
 
 #include "TestProjectBase.h"
 
