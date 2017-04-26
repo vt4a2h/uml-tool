@@ -2,9 +2,16 @@ language: cpp
 dist: trusty
 compiler: gcc
 
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "HqvhraBS6R33xMQBcqjc+lvJTXutiH+2hGXOhwqBGiv258PUJ9n6eyBX7SLv4ZfJDUkgqEvjCQxMxKTx8B59VrT/GOlBT5HJoQQZ+LXrknuaOHhVmtLCUWouPopV3vyUXIoief54eQs4gpEfYwrXUYSz8wT0vzmTZ7A2xUzI3yJHd2ntrv4Z1Od/Z8DyguQj5xJHnLtW89UXunIULax8t4HhDV0r8vDdeU0zfSzelSLrBP8TI/+NwCgGhB8B/+3BuldRxsPhAOHCErZwkxQgJagx0GQTp8v2qyiWIN8Xupb5kVdvYCvG454CDWsdlM2Ep6ZrXoGkPXC/ecP4+6uU6XGZoDt72iR6O81k8TADb1+H4KwsTBWJbGVf0POJY6doAqDMsIf1RHlMrBeS+PVH/pC/L5xnxV4aQX4QizebvmEKrwlY8Z8XoTY+u8FROgvcom8y0eoAqSZ1H4M9HPOuCFNEJYbT/Up9U7/rhVMWEwGbNrWPIC1y2R+PhVpbbY7YpoN6uEev47j1ggIARx3itHGM1JiDbKDAvRUKObWO9S+qK+X1s+TkNgPRZ5di6qqDvwUtCj3outSr5rdjnewNpAP/Hu/Dg3ynR59v0DbwdEWzjG9loNBP2fV86PeGJOyzHXsLRBTbCTlcCarqMED/AUh3ILJoHyoXpnwyRAigpJM="
+
 before_install:
    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
    - sudo apt-get update -qq
+   - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
    
 install:
    - sudo apt-get install -qq gcc-6 g++-6
@@ -15,28 +22,13 @@ install:
    - sudo apt-get install -qq qt5-default qt5-qmake qtbase5-dev-tools qtchooser qttools5-dev qtbase5-dev libgles2-mesa-dev libqt5gui5 libqt5serialport5-dev libqt5printsupport5 libqt5widgets5 libgles2-mesa libgl1-mesa-dev libgl1-mesa-glx libglapi-mesa libegl1-mesa-dev libpango-1.0-0
    - sudo apt-get install -qq zlib1g-dev libudev-dev
    - sudo apt-get install -qq libboost-all-dev
-   
-before_script:
-   - "export DISPLAY=:99.0"
-   - "sh -e /etc/init.d/xvfb start"
-   - sleep 3 # give xvfb some time to start
-   
-script:
-   # build application
-   - qmake uml-tool.pro -r -spec linux-g++ CONFIG+=release
-   - make -j4
-   
-   # get and build gtest
-   - ./build_scripts/gtest.sh
-   
-   # build and run tests
-   - cd tests/test
-   - qmake test.pro -r -spec linux-g++ CONFIG+=release WITH_COV=TRUE LIBS+=/usr/lib/gcc/x86_64-linux-gnu/6/libstdc++.so
-   - make -j4
-   - ./test --gtest_shuffle
-   - cd ../../
-   - lcov --directory . --capture --output-file coverage.info
-   - lcov --remove coverage.info 'tests/*' '/usr/*' --output-file coverage.info
-   - lcov --list coverage.info
-   - coveralls-lcov --repo-token W5rWWqj02gOXKImGoV7l5jrWCWGe9jrtQ coverage.info
-   
+
+addons:
+  coverity_scan:
+    project:
+      name: "vt4a2h/uml-tool"
+      description: "Build submitted via Travis CI"
+    notification_email: vt4a2h@gmail.com
+    build_command_prepend: "qmake uml-tool.pro -r -spec linux-g++ CONFIG+=release"
+    build_command: "make -j4"
+    branch_pattern: coverity_scan
