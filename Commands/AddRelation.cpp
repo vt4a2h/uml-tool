@@ -61,7 +61,7 @@ namespace Commands {
     AddRelation::~AddRelation()
     {
         if (!m_GraphicRelation.isNull()) {
-            auto &&factory = relationship::RelationFactory::instance();
+            const auto & factory = relationship::RelationFactory::instance();
             if (auto &&scene = G_ASSERT(factory.scene())) {
                 if (!scene->items().contains(m_GraphicRelation.data()))
                     delete m_GraphicRelation.data();
@@ -76,16 +76,16 @@ namespace Commands {
     {
         Q_ASSERT(m_Tail.isValid() && m_Head.isValid());
 
-        auto &&factory = relationship::RelationFactory::instance();
+        const auto & factory = relationship::RelationFactory::instance();
 
         if (m_Done) {
-            if (auto &&pr = factory.project()) {
-                if (auto &&projectDb = pr->database()) {
+            if (auto pr = factory.project()) {
+                if (auto projectDb = pr->database()) {
                     Q_ASSERT(!projectDb->containsRelation(m_Relation->id()));
                     projectDb->addRelation(m_Relation);
                 }
 
-                if (auto &&scene = factory.scene()) {
+                if (auto scene = factory.scene()) {
                     Q_ASSERT(!m_GraphicRelation.isNull());
                     scene->addItem(G_ASSERT(m_GraphicRelation.data()));
                 }
@@ -95,8 +95,8 @@ namespace Commands {
         } else {
             m_Relation = G_ASSERT(factory.make(m_Type, m_Tail, m_Head));
 
-            if (auto &&pr = factory.project())
-                if (auto &&projectDb = pr->database())
+            if (auto pr = factory.project())
+                if (auto projectDb = pr->database())
                     m_GraphicRelation = G_ASSERT(projectDb->graphicRelation(m_Relation->id()));
         }
     }
@@ -106,12 +106,12 @@ namespace Commands {
      */
     void AddRelation::undo()
     {
-        auto &&factory = relationship::RelationFactory::instance();
-        if (auto &&pr = factory.project()) {
-            if (auto &&projectDb = pr->database())
+        const auto & factory = relationship::RelationFactory::instance();
+        if (auto pr = factory.project()) {
+            if (auto projectDb = pr->database())
                 projectDb->removeRelation(m_Relation->id());
 
-            if (auto &&scene = factory.scene())
+            if (auto scene = factory.scene())
                 scene->removeItem(m_GraphicRelation.data());
 
             // TODO: remove also from tree model when it'll be supported
