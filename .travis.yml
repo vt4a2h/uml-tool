@@ -22,6 +22,7 @@ install:
    - sudo apt-get install -qq qt5-default qt5-qmake qtbase5-dev-tools qtchooser qttools5-dev qtbase5-dev libgles2-mesa-dev libqt5gui5 libqt5serialport5-dev libqt5printsupport5 libqt5widgets5 libgles2-mesa libgl1-mesa-dev libgl1-mesa-glx libglapi-mesa libegl1-mesa-dev libpango-1.0-0
    - sudo apt-get install -qq zlib1g-dev libudev-dev
    - sudo apt-get install -qq libboost-all-dev
+   - sudo apt-get install tree
 
 addons:
   coverity_scan:
@@ -29,7 +30,7 @@ addons:
       name: "vt4a2h/uml-tool"
       description: "Build submitted via Travis CI"
     notification_email: vt4a2h@gmail.com
-    build_command_prepend: "ls -la; ./cov-analysis-linux*/bin/cov-configure --comptype gcc --compiler /usr/bin/g++-6; qmake uml-tool.pro -r -spec linux-g++ CONFIG+=release"
+    build_command_prepend: "tree /tmp/coverity-scan-analysis; /tmp/coverity-scan-analysis/cov-analysis-linux*/bin/cov-configure --comptype gcc --compiler /usr/bin/g++-6; qmake uml-tool.pro -r -spec linux-g++ CONFIG+=release"
     build_command: "make -j4"
     branch_pattern: coverity_scan
     
