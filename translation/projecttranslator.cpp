@@ -67,8 +67,8 @@ namespace {
         }
     }
 
-    template <class T>
-    void addTranslator(auto&& map, auto&& this_, auto f)
+    template <class T, class Map, class Self, class Func>
+    void addTranslator(Map &map, Self * this_, Func f)
     {
         using namespace std::placeholders;
         map[T::staticHashType()] =

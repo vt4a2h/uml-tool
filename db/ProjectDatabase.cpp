@@ -115,6 +115,7 @@ namespace db {
      * @param rhs
      * @return
      */
+    // coverity[pass_by_value]
     ProjectDatabase &ProjectDatabase::operator =(ProjectDatabase rhs)
     {
         moveFrom(rhs);
