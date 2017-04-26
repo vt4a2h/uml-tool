@@ -29,7 +29,7 @@ addons:
       name: "vt4a2h/uml-tool"
       description: "Build submitted via Travis CI"
     notification_email: vt4a2h@gmail.com
-    build_command_prepend: "qmake uml-tool.pro -r -spec linux-g++ CONFIG+=release"
+    build_command_prepend: "./cov-configure --comptype gcc --compiler /usr/bin/g++-6; qmake uml-tool.pro -r -spec linux-g++ CONFIG+=release"
     build_command: "make -j4"
     branch_pattern: coverity_scan
     
