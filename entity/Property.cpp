@@ -69,8 +69,9 @@ namespace {
     const QString constantMark = "Constant";
     const QString finalMark = "Final";
 
-    void readOptional(const QJsonValue &val, auto *object, auto make, auto get, auto del,
-                      ErrorList &errors, auto... args)
+    template <class Object, class Maker, class Getter, class Deleter, class ...Args>
+    void readOptional(const QJsonValue &val, Object object, Maker make, Getter get, Deleter del,
+                      ErrorList &errors, Args... args)
     {
         if (val.isObject()) {
             (object->*make)(args...);
