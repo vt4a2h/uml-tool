@@ -27,7 +27,7 @@
 #include <QMessageBox>
 #include <QMainWindow>
 
-#include <commands/MakeProjectCurrent.h>
+#include <Commands/MakeProjectCurrent.h>
 
 #include <application/Settings.h>
 
