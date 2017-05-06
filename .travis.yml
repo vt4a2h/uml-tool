@@ -30,7 +30,7 @@ script:
    - ./build_scripts/gtest.sh
    
    # build and run tests
-   - cd tests/test
+   - cd Tests/test
    - qmake test.pro -r -spec linux-g++ CONFIG+=release WITH_COV=TRUE LIBS+=/usr/lib/gcc/x86_64-linux-gnu/6/libstdc++.so
    - make -j4
    - ./test --gtest_shuffle
