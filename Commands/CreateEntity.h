@@ -24,11 +24,11 @@
 
 #include <QPointF>
 
-#include <entity/Type.h>
+#include <Entity/Type.h>
 
-#include <gui/graphics/GraphicsTypes.h>
+#include <GUI/graphics/GraphicsTypes.h>
 
-#include <models/models_types.hpp>
+#include <Models/models_types.hpp>
 
 #include "BaseCommand.h"
 
@@ -37,11 +37,11 @@ namespace Commands {
     class CreateEntity : public BaseCommand
     {
     public:
-        CreateEntity(entity::KindOfType entityType, const common::ID &scopeID, const QPointF &pos,
+        CreateEntity(Entity::KindOfType entityType, const Common::ID &scopeID, const QPointF &pos,
                      QUndoCommand *parent = nullptr);
 
-        entity::SharedType entity() const;
-        graphics::EntityPtr graphicsEntity() const;
+        Entity::SharedType entity() const;
+        Graphics::EntityPtr graphicsEntity() const;
 
     public: // QUndoCommand overridies
         void undo()    override;
@@ -52,18 +52,18 @@ namespace Commands {
         void cleanup() override;
 
     private:
-        entity::KindOfType m_KindOfType;
-        common::ID         m_ScopeID;
+        Entity::KindOfType m_KindOfType;
+        Common::ID         m_ScopeID;
         QPointF            m_Pos;
 
-        entity::SharedType  m_Entity;
-        graphics::EntityPtr m_GraphicEntity;
+        Entity::SharedType  m_Entity;
+        Graphics::EntityPtr m_GraphicEntity;
 
         // Aux
-        entity::SharedScope m_Scope;
-        graphics::ScenePtr m_Scene;
-        models::SharedTreeModel m_TreeModel;
+        Entity::SharedScope m_Scope;
+        Graphics::ScenePtr m_Scene;
+        Models::SharedTreeModel m_TreeModel;
         QString m_ProjectName;
     };
 
-} // namespace commands
+} // namespace Commands

@@ -22,10 +22,10 @@
 *****************************************************************************/
 #include "MoveTypeToAnotherScope.h"
 
-#include <entity/Type.h>
-#include <entity/Scope.h>
+#include <Entity/Type.h>
+#include <Entity/Scope.h>
 
-#include <models/ApplicationModel.h>
+#include <Models/ApplicationModel.h>
 
 namespace Commands {
 
@@ -37,10 +37,10 @@ namespace Commands {
      * @param dstScope
      * @param parent
      */
-    MoveTypeToAnotherScope::MoveTypeToAnotherScope(const entity::SharedType &type,
-                                                   const models::SharedApplicationModel &appModel,
-                                                   const entity::SharedScope &srcScope,
-                                                   const entity::SharedScope &dstScope,
+    MoveTypeToAnotherScope::MoveTypeToAnotherScope(const Entity::SharedType &type,
+                                                   const Models::SharedApplicationModel &appModel,
+                                                   const Entity::SharedScope &srcScope,
+                                                   const Entity::SharedScope &dstScope,
                                                    QUndoCommand *parent)
         : BaseCommand(tr(R"(Move "%1" from "%2" to "%3".)").arg(type->name(), srcScope->name(), dstScope->name()),
                       parent)
@@ -68,4 +68,4 @@ namespace Commands {
         MoveTypeToAnotherScope(m_Type, m_Model, m_DstScope, m_SrcScope).redo();
     }
 
-} // namespace commands
+} // namespace Commands

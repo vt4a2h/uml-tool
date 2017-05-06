@@ -36,5 +36,5 @@ namespace Commands {
 
     using SharedCommandStack = std::shared_ptr<QUndoStack>;
 
-} // namespace commands
+} // namespace Commands
 

@@ -24,32 +24,32 @@
 
 #include "BaseCommand.h"
 
-#include <entity/entity_types.hpp>
+#include <Entity/entity_types.hpp>
 
-namespace models {
+namespace Models {
     class ApplicationModel;
 }
 
-/// namespace commands
+/// namespace Commands
 namespace Commands {
 
     /// The CreateScope class
     class CreateScope : public BaseCommand
     {
     public:
-        CreateScope(const QString &name, models::ApplicationModel &model,
+        CreateScope(const QString &name, Models::ApplicationModel &model,
                     QUndoCommand *parent = nullptr);
 
         void redo() override;
         void undo() override;
 
         QString scopeName() const;
-        entity::SharedScope scope() const;
+        Entity::SharedScope scope() const;
 
     private:
         QString m_ScopeName;
-        entity::SharedScope m_NewScope;
-        models::ApplicationModel &m_Model;
+        Entity::SharedScope m_NewScope;
+        Models::ApplicationModel &m_Model;
     };
 
-} // namespace commands
+} // namespace Commands

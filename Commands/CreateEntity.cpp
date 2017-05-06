@@ -24,24 +24,24 @@
 
 #include <QGraphicsScene>
 
-#include <db/ProjectDatabase.h>
+#include <DB/ProjectDatabase.h>
 
-#include <entity/EntityFactory.h>
-#include <entity/Scope.h>
+#include <Entity/EntityFactory.h>
+#include <Entity/Scope.h>
 
-#include <models/ProjectTreeModel.h>
-#include <project/Project.h>
+#include <Models/ProjectTreeModel.h>
+#include <Project/Project.h>
 
 namespace Commands {
 
     namespace {
-        const QMap<entity::KindOfType, QString> hashName = {
-            { entity::KindOfType::Type         , BaseCommand::tr("type")           },
-            { entity::KindOfType::Class        , BaseCommand::tr("class")          },
-            { entity::KindOfType::Enum         , BaseCommand::tr("enum")           },
-            { entity::KindOfType::Union        , BaseCommand::tr("union")          },
-            { entity::KindOfType::ExtendedType , BaseCommand::tr("type alias")     },
-            { entity::KindOfType::TemplateClass, BaseCommand::tr("template class") },
+        const QMap<Entity::KindOfType, QString> hashName = {
+            { Entity::KindOfType::Type         , BaseCommand::tr("type")           },
+            { Entity::KindOfType::Class        , BaseCommand::tr("class")          },
+            { Entity::KindOfType::Enum         , BaseCommand::tr("enum")           },
+            { Entity::KindOfType::Union        , BaseCommand::tr("union")          },
+            { Entity::KindOfType::ExtendedType , BaseCommand::tr("type alias")     },
+            { Entity::KindOfType::TemplateClass, BaseCommand::tr("template class") },
         };
     }
 
@@ -52,7 +52,7 @@ namespace Commands {
      * @param pos
      * @param parent
      */
-    CreateEntity::CreateEntity(entity::KindOfType entityType, const common::ID &scopeID,
+    CreateEntity::CreateEntity(Entity::KindOfType entityType, const Common::ID &scopeID,
                                const QPointF &pos, QUndoCommand *parent)
         : BaseCommand(tr("Add %1").arg(hashName[entityType]), parent)
         , m_KindOfType(entityType)
@@ -65,7 +65,7 @@ namespace Commands {
      * @brief Aux method for tests
      * @return
      */
-    entity::SharedType CreateEntity::entity() const
+    Entity::SharedType CreateEntity::entity() const
     {
         return m_Entity;
     }
@@ -74,7 +74,7 @@ namespace Commands {
      * @brief Aux method for tests
      * @return
      */
-    graphics::EntityPtr CreateEntity::graphicsEntity() const
+    Graphics::EntityPtr CreateEntity::graphicsEntity() const
     {
         return m_GraphicEntity;
     }
@@ -92,7 +92,7 @@ namespace Commands {
             m_Scene->removeItem(m_GraphicEntity);
 
             // TODO eliminate {
-            auto &&factory = entity::EntityFactory::instance();
+            auto &&factory = Entity::EntityFactory::instance();
             auto project = G_ASSERT(factory.project());
             // }
             project->database()->unregisterGraphicsEntity(m_GraphicEntity);
@@ -108,7 +108,7 @@ namespace Commands {
      */
     void CreateEntity::redo()
     {
-        auto &&factory = entity::EntityFactory::instance();
+        auto &&factory = Entity::EntityFactory::instance();
         auto project = G_ASSERT(factory.project());
 
         if (!m_Done) {
@@ -163,6 +163,6 @@ namespace Commands {
         Q_ASSERT(!m_ProjectName.isEmpty());
     }
 
-} // namespace commands
+} // namespace Commands
 
 

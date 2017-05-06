@@ -22,9 +22,9 @@
 *****************************************************************************/
 #include <QApplication>
 
-#include <application/Application.h>
-#include <gui/MainWindow.h>
-#include <models/ApplicationModel.h>
+#include <Application/Application.h>
+#include <GUI/MainWindow.h>
+#include <Models/ApplicationModel.h>
 
 #include "boost-di/include/boost/di.hpp"
 

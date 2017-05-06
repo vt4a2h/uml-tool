@@ -29,7 +29,7 @@
 
 #include <Commands/MakeProjectCurrent.h>
 
-#include <application/Settings.h>
+#include <Application/Settings.h>
 
 namespace Commands
 {
@@ -48,9 +48,9 @@ namespace Commands
      * @param parent
      */
     OpenProject::OpenProject(const QString &name, const QString &path,
-                             const models::SharedApplicationModel &appModel,
+                             const Models::SharedApplicationModel &appModel,
                              const Commands::SharedCommandStack &stack,
-                             const graphics::ScenePtr &scene,
+                             const Graphics::ScenePtr &scene,
                              QMainWindow &mv, QMenu &rp, QUndoCommand *parent)
         : BaseCommand(name, parent)
         , m_ProjectPath(path)

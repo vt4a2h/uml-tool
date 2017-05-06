@@ -26,8 +26,8 @@
 
 #include "BaseCommand.h"
 
-#include <models/componentsmodel.h>
-#include <models/models_types.hpp>
+#include <Models/componentsmodel.h>
+#include <Models/models_types.hpp>
 
 namespace Commands {
 
@@ -36,7 +36,7 @@ namespace Commands {
     class AddComponentBaseCommand : public BaseCommand
     {
     public:
-        AddComponentBaseCommand(const QString &name, const models::SharedClassComponentsModel &model,
+        AddComponentBaseCommand(const QString &name, const Models::SharedClassComponentsModel &model,
                                 const Component &component = nullptr, int pos = -1, QUndoCommand *parent = nullptr)
             : BaseCommand(name, parent)
             , m_Model(model)
@@ -51,7 +51,7 @@ namespace Commands {
             if (m_Done) {
                 Q_ASSERT(m_Component);
 
-                entity::SharedComponents tmp;
+                Entity::SharedComponents tmp;
 
                 if (m_Model->components() != m_Components)
                 {
@@ -71,17 +71,17 @@ namespace Commands {
             }
         }
 
-        models::SharedClassComponentsModel m_Model;
-        entity::SharedComponents m_Components;
+        Models::SharedClassComponentsModel m_Model;
+        Entity::SharedComponents m_Components;
         Component m_Component;
         int m_Pos;
     };
 
     /// The AddMethod class
-    class AddMethod : public AddComponentBaseCommand<entity::SharedMethod>
+    class AddMethod : public AddComponentBaseCommand<Entity::SharedMethod>
     {
     public:
-        explicit AddMethod(const models::SharedClassComponentsModel &model, const entity::SharedMethod &method = nullptr,
+        explicit AddMethod(const Models::SharedClassComponentsModel &model, const Entity::SharedMethod &method = nullptr,
                            int pos = -1, QUndoCommand *parent = nullptr);
 
         void redo() override;
@@ -89,10 +89,10 @@ namespace Commands {
     };
 
     /// The AddField class
-    class AddField : public AddComponentBaseCommand<entity::SharedField>
+    class AddField : public AddComponentBaseCommand<Entity::SharedField>
     {
     public:
-        explicit AddField(const models::SharedClassComponentsModel &model, const entity::SharedField &field = nullptr,
+        explicit AddField(const Models::SharedClassComponentsModel &model, const Entity::SharedField &field = nullptr,
                           int pos = -1, QUndoCommand *parent = nullptr);
 
         void redo() override;
@@ -100,15 +100,15 @@ namespace Commands {
     };
 
     /// The AddElement class
-    class AddElement : public AddComponentBaseCommand<entity::SharedEnumarator>
+    class AddElement : public AddComponentBaseCommand<Entity::SharedEnumarator>
     {
     public:
-        explicit AddElement(const models::SharedClassComponentsModel &model, const entity::SharedEnumarator &element = nullptr,
+        explicit AddElement(const Models::SharedClassComponentsModel &model, const Entity::SharedEnumarator &element = nullptr,
                             int pos = -1, QUndoCommand *parent = nullptr);
 
         void redo() override;
         void undo() override;
     };
 
-} // namespace commands
+} // namespace Commands
 

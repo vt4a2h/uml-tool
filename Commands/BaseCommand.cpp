@@ -51,4 +51,4 @@ namespace Commands {
         cleanup();
     }
 
-} // namespace commands
+} // namespace Commands

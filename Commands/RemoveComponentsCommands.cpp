@@ -33,9 +33,9 @@ namespace Commands {
      * @param pos
      * @param parent
      */
-    RemoveMethod::RemoveMethod(const models::SharedClassComponentsModel &model, const entity::SharedMethod &method,
+    RemoveMethod::RemoveMethod(const Models::SharedClassComponentsModel &model, const Entity::SharedMethod &method,
                                int pos, QUndoCommand *parent)
-        : RemoveComponentBaseCommand<entity::SharedMethod>(tr("Remove method"), model, method, pos, parent)
+        : RemoveComponentBaseCommand<Entity::SharedMethod>(tr("Remove method"), model, method, pos, parent)
     {}
 
     /**
@@ -61,9 +61,9 @@ namespace Commands {
      * @param pos
      * @param parent
      */
-    RemoveField::RemoveField(const models::SharedClassComponentsModel &model, const entity::SharedField &field, int pos,
+    RemoveField::RemoveField(const Models::SharedClassComponentsModel &model, const Entity::SharedField &field, int pos,
                              QUndoCommand *parent)
-        : RemoveComponentBaseCommand<entity::SharedField>(tr("Remove field"), model, field, pos, parent)
+        : RemoveComponentBaseCommand<Entity::SharedField>(tr("Remove field"), model, field, pos, parent)
     {}
 
     /**
@@ -89,9 +89,9 @@ namespace Commands {
      * @param pos
      * @param parent
      */
-    RemoveElement::RemoveElement(const models::SharedClassComponentsModel &model, const entity::SharedEnumarator &element,
+    RemoveElement::RemoveElement(const Models::SharedClassComponentsModel &model, const Entity::SharedEnumarator &element,
                                  int pos, QUndoCommand *parent)
-        : RemoveComponentBaseCommand<entity::SharedEnumarator>(tr("Remove element"), model, element, pos, parent)
+        : RemoveComponentBaseCommand<Entity::SharedEnumarator>(tr("Remove element"), model, element, pos, parent)
     {}
 
     /**
@@ -110,4 +110,4 @@ namespace Commands {
         AddElement(m_Model, m_Component, m_Pos).redo();
     }
 
-} // commands
+} // Commands

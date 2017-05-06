@@ -28,8 +28,8 @@
 #include <QGraphicsScene>
 #include <QStringBuilder>
 
-#include <gui/graphics/GraphicsRelation.h>
-#include <gui/graphics/Entity.h>
+#include <GUI/graphics/GraphicsRelation.h>
+#include <GUI/graphics/Entity.h>
 
 namespace Commands {
 
@@ -41,8 +41,8 @@ namespace Commands {
      * @param m
      */
     RemoveProject::RemoveProject(const Projects::SharedProject &p,
-                                 const models::SharedApplicationModel &a,
-                                 const graphics::ScenePtr &scene)
+                                 const Models::SharedApplicationModel &a,
+                                 const Graphics::ScenePtr &scene)
         : BaseCommand(tr("Remove project \"") % G_ASSERT(p)->name() % "\"")
         , m_Project(p)
         , m_AppModel(G_ASSERT(a))
@@ -103,4 +103,4 @@ namespace Commands {
                    Q_FUNC_INFO, "Invalid scene");
     }
 
-} // namespace commands
+} // namespace Commands

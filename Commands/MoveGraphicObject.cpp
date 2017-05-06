@@ -59,4 +59,4 @@ namespace Commands {
         m_Object.setPos(m_From);
     }
 
-} // namespace commands
+} // namespace Commands

@@ -33,9 +33,9 @@ namespace Commands {
      * @param pos
      * @param parent
      */
-    AddMethod::AddMethod(const models::SharedClassComponentsModel &model, const entity::SharedMethod &method,
+    AddMethod::AddMethod(const Models::SharedClassComponentsModel &model, const Entity::SharedMethod &method,
                          int pos, QUndoCommand *parent)
-        : AddComponentBaseCommand<entity::SharedMethod>(tr("Add new method"), model, method, pos, parent)
+        : AddComponentBaseCommand<Entity::SharedMethod>(tr("Add new method"), model, method, pos, parent)
     {}
 
     /**
@@ -61,9 +61,9 @@ namespace Commands {
      * @param pos
      * @param parent
      */
-    AddField::AddField(const models::SharedClassComponentsModel &model, const entity::SharedField &field, int pos,
+    AddField::AddField(const Models::SharedClassComponentsModel &model, const Entity::SharedField &field, int pos,
                        QUndoCommand *parent)
-        : AddComponentBaseCommand<entity::SharedField>(tr("Add new field"), model, field, pos, parent)
+        : AddComponentBaseCommand<Entity::SharedField>(tr("Add new field"), model, field, pos, parent)
     {}
 
     /**
@@ -89,9 +89,9 @@ namespace Commands {
      * @param pos
      * @param parent
      */
-    AddElement::AddElement(const models::SharedClassComponentsModel &model, const entity::SharedEnumarator &element,
+    AddElement::AddElement(const Models::SharedClassComponentsModel &model, const Entity::SharedEnumarator &element,
                            int pos, QUndoCommand *parent)
-        : AddComponentBaseCommand<entity::SharedEnumarator>(tr("Add new element"), model, element, pos, parent)
+        : AddComponentBaseCommand<Entity::SharedEnumarator>(tr("Add new element"), model, element, pos, parent)
     {}
 
     /**
@@ -110,5 +110,5 @@ namespace Commands {
         RemoveElement(m_Model, m_Component).redo();
     }
 
-} // namespace commands
+} // namespace Commands
 

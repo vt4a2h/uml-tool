@@ -22,9 +22,9 @@
 *****************************************************************************/
 #pragma once
 
-#include <models/ApplicationModel.h>
+#include <Models/ApplicationModel.h>
 
-#include <gui/graphics/GraphicsTypes.h>
+#include <GUI/graphics/GraphicsTypes.h>
 
 #include "BaseCommand.h"
 
@@ -37,8 +37,8 @@ namespace Commands {
     class RemoveProject : public BaseCommand
     {
     public:
-        RemoveProject(const Projects::SharedProject &p, const models::SharedApplicationModel &a,
-                      const graphics::ScenePtr &scene);
+        RemoveProject(const Projects::SharedProject &p, const Models::SharedApplicationModel &a,
+                      const Graphics::ScenePtr &scene);
 
     public: // QUndoCommand overridies
         void undo() override;
@@ -49,12 +49,12 @@ namespace Commands {
 
     private: // Data
         Projects::SharedProject m_Project;
-        models::SharedApplicationModel m_AppModel;
+        Models::SharedApplicationModel m_AppModel;
 
-        graphics::GraphicItems m_GraphicItems;
+        Graphics::GraphicItems m_GraphicItems;
         bool m_WasCurrent = false;
 
-        graphics::ScenePtr m_Scene;
+        Graphics::ScenePtr m_Scene;
     };
 
-} // namespace commands
+} // namespace Commands

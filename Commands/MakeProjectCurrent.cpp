@@ -40,7 +40,7 @@ namespace Commands {
             return BaseCommand::tr("Activate project \"") % projectName % "\"";
         }
 
-        inline QString inactCmdName(const models::SharedApplicationModel &model)
+        inline QString inactCmdName(const Models::SharedApplicationModel &model)
         {
             return BaseCommand::tr("Deactivate project \"")  %
                    G_ASSERT(model->currentProject())->name() % "\"";
@@ -54,8 +54,8 @@ namespace Commands {
      * @param model
      */
     MakeProjectCurrent::MakeProjectCurrent(const QString &projectName,
-                                           const models::SharedApplicationModel &model,
-                                           const graphics::ScenePtr &scene)
+                                           const Models::SharedApplicationModel &model,
+                                           const Graphics::ScenePtr &scene)
         : BaseCommand(!projectName.isEmpty() ? actCmdName(projectName) : inactCmdName(model))
         , m_AppModel(model)
         , m_CurrentProjectName(projectName)
@@ -136,4 +136,4 @@ namespace Commands {
         return m_CurrentProjectName;
     }
 
-} // namespace commands
+} // namespace Commands
