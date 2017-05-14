@@ -24,17 +24,17 @@
 
 #include <QGraphicsScene>
 
-#include <db/ProjectDatabase.h>
+#include <DB/ProjectDatabase.h>
 
-#include <gui/graphics/Entity.h>
-#include <gui/graphics/GraphicsRelation.h>
+#include <GUI/graphics/Entity.h>
+#include <GUI/graphics/GraphicsRelation.h>
 
-#include <relationship/Relation.h>
-#include <relationship/RelationFactory.h>
+#include <Relationship/Relation.h>
+#include <Relationship/RelationFactory.h>
 
-#include <project/Project.h>
+#include <Project/Project.h>
 
-#include <utility/helpfunctions.h>
+#include <Utility/helpfunctions.h>
 
 #include "QtHelpers.h"
 
@@ -45,8 +45,8 @@ namespace Commands {
      * @param from
      * @param to
      */
-    AddRelation::AddRelation(relationship::RelationType relType, const common::ID &tail,
-                             const common::ID &head)
+    AddRelation::AddRelation(Relationship::RelationType relType, const Common::ID &tail,
+                             const Common::ID &head)
         : BaseCommand(tr("Add relation"))
         , m_Type(relType)
         , m_Tail(tail)
@@ -61,7 +61,7 @@ namespace Commands {
     AddRelation::~AddRelation()
     {
         if (!m_GraphicRelation.isNull()) {
-            const auto & factory = relationship::RelationFactory::instance();
+            const auto & factory = Relationship::RelationFactory::instance();
             if (auto &&scene = G_ASSERT(factory.scene())) {
                 if (!scene->items().contains(m_GraphicRelation.data()))
                     delete m_GraphicRelation.data();
@@ -76,7 +76,7 @@ namespace Commands {
     {
         Q_ASSERT(m_Tail.isValid() && m_Head.isValid());
 
-        const auto & factory = relationship::RelationFactory::instance();
+        const auto & factory = Relationship::RelationFactory::instance();
 
         if (m_Done) {
             if (auto pr = factory.project()) {
@@ -106,7 +106,7 @@ namespace Commands {
      */
     void AddRelation::undo()
     {
-        const auto & factory = relationship::RelationFactory::instance();
+        const auto & factory = Relationship::RelationFactory::instance();
         if (auto pr = factory.project()) {
             if (auto projectDb = pr->database())
                 projectDb->removeRelation(m_Relation->id());
@@ -122,10 +122,10 @@ namespace Commands {
      * @brief AddRelation::relation
      * @return
      */
-    relationship::SharedRelation AddRelation::relation() const
+    Relationship::SharedRelation AddRelation::relation() const
     {
         return m_Relation;
     }
 
-} // namespace commands
+} // namespace Commands
 

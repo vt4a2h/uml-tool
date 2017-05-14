@@ -45,4 +45,4 @@ namespace Commands {
         QPointF m_To;
     };
 
-} // // namespace commands
+} // // namespace Commands

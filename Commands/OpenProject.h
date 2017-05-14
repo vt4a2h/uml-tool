@@ -22,9 +22,9 @@
 *****************************************************************************/
 #pragma once
 
-#include <models/models_types.hpp>
-#include <gui/graphics/GraphicsTypes.h>
-#include <project/ProjectTypes.hpp>
+#include <Models/models_types.hpp>
+#include <GUI/graphics/GraphicsTypes.h>
+#include <Project/ProjectTypes.hpp>
 
 #include "BaseCommand.h"
 #include "CommandsTypes.h"
@@ -46,8 +46,8 @@ namespace Commands
 
     public:
         OpenProject(const QString &name, const QString &path,
-                    const models::SharedApplicationModel &appModel,
-                    const Commands::SharedCommandStack &stack, const graphics::ScenePtr &scene,
+                    const Models::SharedApplicationModel &appModel,
+                    const Commands::SharedCommandStack &stack, const Graphics::ScenePtr &scene,
                     QMainWindow &mv, QMenu &rp, QUndoCommand *parent = nullptr);
 
     public: // Types
@@ -68,9 +68,9 @@ namespace Commands
 
     private:
         QString                        m_ProjectPath;
-        models::SharedApplicationModel m_AppModel;
+        Models::SharedApplicationModel m_AppModel;
         Commands::SharedCommandStack   m_CommandsStack;
-        graphics::ScenePtr             m_Scene;
+        Graphics::ScenePtr             m_Scene;
         QMainWindow                    &m_MainWindow;
         QMenu                          &m_RecentProjectsMenu;
 

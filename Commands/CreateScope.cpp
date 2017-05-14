@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "CreateScope.h"
 
-#include <models/ApplicationModel.h>
+#include <Models/ApplicationModel.h>
 
 namespace Commands {
 
@@ -32,7 +32,7 @@ namespace Commands {
      * @param model
      * @param parent
      */
-    CreateScope::CreateScope(const QString &name, models::ApplicationModel &model,
+    CreateScope::CreateScope(const QString &name, Models::ApplicationModel &model,
                              QUndoCommand *parent)
         : BaseCommand(tr("Create scope \"%1\"").arg(name), parent)
         , m_ScopeName(name)
@@ -68,7 +68,7 @@ namespace Commands {
      * @brief CreateScope::scope
      * @return
      */
-    entity::SharedScope CreateScope::scope() const
+    Entity::SharedScope CreateScope::scope() const
     {
         return m_NewScope;
     }
@@ -82,4 +82,4 @@ namespace Commands {
         return m_ScopeName;
     }
 
-} // namespace commands
+} // namespace Commands

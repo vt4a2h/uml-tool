@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "RenameEntity.h"
 
-#include <common/BasicElement.h>
+#include <Common/BasicElement.h>
 
 #include "QtHelpers.h"
 
@@ -35,7 +35,7 @@ namespace Commands
      * @param newName
      * @param parent
      */
-    RenameEntity::RenameEntity(const common::SharedBasicEntity &entity, const QString &newName,
+    RenameEntity::RenameEntity(const Common::SharedBasicEntity &entity, const QString &newName,
                                QUndoCommand *parent)
         : BaseCommand(tr(R"(Change name from "%1" to "%2".)").arg(G_ASSERT(entity)->name(), newName), parent)
         , m_Entity(entity)
@@ -72,5 +72,5 @@ namespace Commands
         Q_ASSERT(!m_NewName.isEmpty());
     }
 
-} // namespace commands
+} // namespace Commands
 

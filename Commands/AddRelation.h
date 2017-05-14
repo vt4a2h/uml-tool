@@ -22,21 +22,21 @@
 *****************************************************************************/
 #pragma once
 
-#include <gui/graphics/GraphicsTypes.h>
+#include <GUI/graphics/GraphicsTypes.h>
 
-#include <db/db_types.hpp>
+#include <DB/db_types.hpp>
 
-#include <entity/entity_types.hpp>
+#include <Entity/entity_types.hpp>
 
-#include <relationship/relationship_types.hpp>
+#include <Relationship/relationship_types.hpp>
 
 #include "BaseCommand.h"
 #include "enums.h"
 
 class QGraphicsScene;
 
-namespace graphics {
-    class Entity;
+namespace Graphics {
+    class GraphisEntity;
     class Relation;
 }
 
@@ -46,25 +46,25 @@ namespace Commands {
     class AddRelation : public BaseCommand
     {
     public:
-        AddRelation(relationship::RelationType relType, const common::ID &tail,
-                    const common::ID &head);
+        AddRelation(Relationship::RelationType relType, const Common::ID &tail,
+                    const Common::ID &head);
 
         ~AddRelation();
 
-        relationship::SharedRelation relation() const;
+        Relationship::SharedRelation relation() const;
 
     public: // QUndoCommand overrides
         void redo() override;
         void undo() override;
 
     private:
-        relationship::RelationType m_Type;
+        Relationship::RelationType m_Type;
 
-        common::ID m_Tail;
-        common::ID m_Head;
+        Common::ID m_Tail;
+        Common::ID m_Head;
 
-        graphics::GraphicRelationPtr m_GraphicRelation;
-        relationship::SharedRelation m_Relation;
+        Graphics::GraphicRelationPtr m_GraphicRelation;
+        Relationship::SharedRelation m_Relation;
     };
 
-} // namespace commands
+} // namespace Commands

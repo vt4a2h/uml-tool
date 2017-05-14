@@ -22,9 +22,9 @@
 *****************************************************************************/
 #pragma once
 
-#include <entity/entity_types.hpp>
+#include <Entity/entity_types.hpp>
 
-#include <models/models_types.hpp>
+#include <Models/models_types.hpp>
 
 #include "BaseCommand.h"
 
@@ -34,20 +34,20 @@ namespace Commands {
     class MoveTypeToAnotherScope : public BaseCommand
     {
     public:
-        MoveTypeToAnotherScope(const entity::SharedType &type, const models::SharedApplicationModel &appModel,
-                               const entity::SharedScope &srcScope, const entity::SharedScope &dstScope,
+        MoveTypeToAnotherScope(const Entity::SharedType &type, const Models::SharedApplicationModel &appModel,
+                               const Entity::SharedScope &srcScope, const Entity::SharedScope &dstScope,
                                QUndoCommand *parent = nullptr);
 
         void redo() override;
         void undo() override;
 
     private:
-        entity::SharedType m_Type;
+        Entity::SharedType m_Type;
 
-        entity::SharedScope m_SrcScope;
-        entity::SharedScope m_DstScope;
+        Entity::SharedScope m_SrcScope;
+        Entity::SharedScope m_DstScope;
 
-        models::SharedApplicationModel m_Model;
+        Models::SharedApplicationModel m_Model;
     };
 
-} // namespace commands
+} // namespace Commands
