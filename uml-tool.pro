@@ -32,7 +32,6 @@ SOURCES += \
     Translation/projecttranslator.cpp \
     Translation/signaturemaker.cpp \
     Utility/helpfunctions.cpp \
-    GUI/newproject.cpp \
     GUI/addscope.cpp \
     GUI/scenefilter.cpp \
     GUI/editmethoddialog.cpp \
@@ -89,7 +88,8 @@ SOURCES += \
     GUI/About.cpp \
     Application/Settings.cpp \
     Commands/AddComponentsCommands.cpp \
-    Commands/OpenProject.cpp
+    Commands/OpenProject.cpp \
+    GUI/NewProject.cpp
 
 HEADERS += \
     enums.h \
@@ -120,7 +120,6 @@ HEADERS += \
     Translation/translator_types.hpp \
     Translation/signaturemaker.h \
     Utility/helpfunctions.h \
-    GUI/newproject.h \
     GUI/addscope.h \
     GUI/gui_types.hpp \
     GUI/scenefilter.h \
@@ -191,17 +190,18 @@ HEADERS += \
     Constants.h \
     Commands/AddComponentsCommands.h \
     Commands/OpenProject.h \
-    QtHelpers.h
+    QtHelpers.h \
+    GUI/NewProject.h
 
 FORMS += \
-    GUI/newproject.ui \
     GUI/addscope.ui \
     GUI/editentitydialog.ui \
     GUI/editmethoddialog.ui \
     GUI/chooseglobaldatabasedialog.ui \
     GUI/elements.ui \
     GUI/MainWindow.ui \
-    GUI/About.ui
+    GUI/About.ui \
+    GUI/NewProject.ui
 
 RESOURCES += \
     GUI/main.qrc

@@ -20,12 +20,13 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "newproject.h"
-#include "ui_newproject.h"
+#include "NewProject.h"
+#include "ui_NewProject.h"
 
-#include <QFileInfo>
 #include <QFileDialog>
 #include <QMessageBox>
+
+#include <Application/Settings.h>
 
 namespace GUI {
 
@@ -52,23 +53,17 @@ namespace GUI {
      */
     void NewProjectDialog::on_btnCreateProject_clicked()
     {
-        QString path = ui->editProjectPath->text();
-        QString name = ui->editProjectName->text().simplified().replace( " ", "_" );
+        QFileInfo path(ui->editProjectPath->text());
+        QString name = ui->editProjectName->text().simplified().replace(QChar::Space, "_");
 
-        if (!QFileInfo(path).exists()) {
-            // TODO: ask about creation path
-            QMessageBox::warning(this, tr( "Invalid path" ), tr("Directory is not exists."), QMessageBox::Ok);
+        if (!checkName(name) || !checkPath(path))
             return;
-        }
 
-        if (name.isEmpty()) {
-            QMessageBox::warning(this, tr( "Invalid name" ), tr("Name is empty."), QMessageBox::Ok);
-            return;
-        }
+        emit newProject(name, path.absoluteFilePath());
+        App::Settings::setLastNewProjectDir(path.absoluteFilePath());
 
-        emit newProject(name, path);
         clear();
-        reject();
+        accept();
     }
 
     /**
@@ -76,10 +71,13 @@ namespace GUI {
      */
     void NewProjectDialog::on_btnChooseDirectory_clicked()
     {
-        QString result = QFileDialog::getExistingDirectory(this, tr("Choose project directory"));
+        QString result = QFileDialog::getExistingDirectory(this, tr("Choose project directory"),
+                                                           App::Settings::lastNewProjectDir());
 
-        if (!result.isEmpty())
+        if (!result.isEmpty()) {
             ui->editProjectPath->setText(result);
+            App::Settings::setLastNewProjectDir(result);
+        }
 
         ui->editProjectPath->setFocus();
     }
@@ -91,6 +89,44 @@ namespace GUI {
     {
         ui->editProjectName->clear();
         ui->editProjectPath->clear();
+    }
+
+    /**
+     * @brief NewProjectDialog::checkPath
+     * @param path
+     * @return
+     */
+    bool NewProjectDialog::checkPath(const QFileInfo &path)
+    {
+        if (!path.exists()) {
+            if (QMessageBox::question(this, tr("Invalid path"),
+                                      tr("The path \"%1\" is not exists.\nDo you want to create it?")
+                                      .arg(path.absoluteFilePath()),
+                                      QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+                QDir().mkdir(path.absoluteFilePath());
+            }
+        }
+
+        if (!path.exists()) {
+            QMessageBox::warning(this, tr("Invalid path"), tr("Directory is not exists."),
+                                 QMessageBox::Ok);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @brief NewProjectDialog::checkName
+     * @param name
+     * @return
+     */
+    bool NewProjectDialog::checkName(const QString &name)
+    {
+        if (name.isEmpty())
+            QMessageBox::warning(this, tr( "Invalid name" ), tr("Name is empty."), QMessageBox::Ok);
+
+        return !name.isEmpty();
     }
 
 } // namespace gui

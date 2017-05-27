@@ -61,7 +61,7 @@
 #include <Commands/OpenProject.h>
 
 #include "About.h"
-#include "newproject.h"
+#include "NewProject.h"
 #include "addscope.h"
 #include "scenefilter.h"
 #include "Constants.h"
