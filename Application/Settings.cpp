@@ -71,7 +71,10 @@ namespace App {
         const QString projGroup{"Project"};
         const Setting<QStringList> rp{"recent-projects", QStringList()};
         const Setting<int> rpCount{"recent-projects-count", 10};
-        const Setting<QString> projectDir{"last-open-project-dir", QApplication::applicationDirPath()};
+        const Setting<QString> openProjectDir{"last-open-project-dir",
+                                              QApplication::applicationDirPath()};
+        const Setting<QString> newProjectDir{"last-new-project-dir",
+                                              QApplication::applicationDirPath()};
 
         // Helpers
         template <class ValueType>
@@ -224,7 +227,7 @@ namespace App {
          */
         QString lastOpenProjectDir()
         {
-            return read(projGroup, projectDir.name, QApplication::applicationDirPath());
+            return read(projGroup, openProjectDir.name, QApplication::applicationDirPath());
         }
 
         /**
@@ -233,7 +236,25 @@ namespace App {
          */
         void setLastOpenProjectDir(const QString &path)
         {
-            write(projGroup, projectDir.name, path);
+            write(projGroup, openProjectDir.name, path);
+        }
+
+        /**
+         * @brief lastNewProjectDir
+         * @return
+         */
+        QString lastNewProjectDir()
+        {
+            return read(projGroup, newProjectDir.name, QApplication::applicationDirPath());
+        }
+
+        /**
+         * @brief setLastNewProjectDir
+         * @param path
+         */
+        void setLastNewProjectDir(const QString &path)
+        {
+            write(projGroup, newProjectDir.name, path);
         }
 
     } // namespace settings

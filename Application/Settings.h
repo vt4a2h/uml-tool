@@ -58,6 +58,10 @@ namespace App {
         // Last open project directory
         QString lastOpenProjectDir();
         void setLastOpenProjectDir(const QString &path);
+
+        // Last new peoject directory
+        QString lastNewProjectDir();
+        void setLastNewProjectDir(const QString &path);
     }
 
 } // namespace application

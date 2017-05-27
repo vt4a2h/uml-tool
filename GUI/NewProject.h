@@ -23,6 +23,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QFileInfo>
 
 namespace GUI {
 
@@ -52,6 +53,8 @@ namespace GUI {
 
     private:
         void clear();
+        bool checkPath(const QFileInfo &path);
+        bool checkName(const QString   &name);
 
         QScopedPointer<Ui::NewProject> ui;
     };
