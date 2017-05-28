@@ -36,7 +36,7 @@
 #include <Entity/Components/componentsmaker.h>
 
 #include <Models/ApplicationModel.h>
-#include <Models/componentsmodel.h>
+#include <Models/ComponentsModel.h>
 
 #include <Project/Project.h>
 

@@ -25,7 +25,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 
-#include <Models/componentsmodel.h>
+#include <Models/ComponentsModel.h>
 
 #include <Entity/Components/componentsmaker.h>
 #include <Entity/Components/componentsignatureparser.h>

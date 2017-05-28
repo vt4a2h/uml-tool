@@ -24,7 +24,7 @@
 
 #include <Entity/entity_types.hpp>
 
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 
 #include "BaseCommand.h"
 

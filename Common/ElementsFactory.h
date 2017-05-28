@@ -29,7 +29,7 @@
 
 #include <Project/ProjectTypes.hpp>
 
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 
 #include <Entity/entity_types.hpp>
 

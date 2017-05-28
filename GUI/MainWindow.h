@@ -24,11 +24,12 @@
 
 #include <QMainWindow>
 
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 #include <Project/ProjectTypes.hpp>
 #include <Commands/CommandsTypes.h>
 #include <GUI/graphics/GraphicsTypes.h>
 
+QT_BEGIN_NAMESPACE
 class QSplitter;
 class QHBoxLayout;
 class QVBoxLayout;
@@ -38,10 +39,13 @@ class QTextEdit;
 class QGraphicsScene;
 class QUndoView;
 class QUndoCommand;
+class QTableView;
+QT_END_NAMESPACE
 
 namespace Models {
     class ProjectTreeModel;
     class ApplicationModel;
+    class MessagesModel;
 }
 
 namespace Entity { class ID; }
@@ -135,13 +139,15 @@ namespace GUI {
 
         QTreeView      *m_ProjectTreeView;
         View           *m_MainView;
-        QTextEdit      *m_ConsoleOutput;
         QUndoView      *m_UndoView;
         Elements       *m_Elements;
 
         About            *m_AboutWidget;
         NewProjectDialog *m_NewProjectDialog;
         AddScope         *m_AddScope;
+
+        QTableView                             *m_MessagesView;
+        std::unique_ptr<Models::MessagesModel>  m_MessagesModel;
 
         QList<QAction*> m_RelationActions;
 

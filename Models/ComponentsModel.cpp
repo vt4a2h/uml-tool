@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "componentsmodel.h"
+#include "ComponentsModel.h"
 
 #include <type_traits>
 

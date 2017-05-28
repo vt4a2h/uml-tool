@@ -28,7 +28,7 @@
 
 #include <GUI/graphics/GraphicsTypes.h>
 
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 
 #include "BaseCommand.h"
 

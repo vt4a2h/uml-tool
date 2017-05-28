@@ -32,7 +32,7 @@
 
 #include <Common/ID.h>
 
-#include "models_types.hpp"
+#include "ModelsTypes.hpp"
 
 /// Namespace models
 namespace Models {

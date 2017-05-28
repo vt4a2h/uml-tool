@@ -25,7 +25,7 @@
 #include <QCoreApplication>
 
 #include <GUI/gui_types.hpp>
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 
 /**
  * @brief namespace application

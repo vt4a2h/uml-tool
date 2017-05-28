@@ -25,7 +25,7 @@
 #include <QObject>
 #include <QPointer>
 
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 
 class QGraphicsScene;
 class QMenu;

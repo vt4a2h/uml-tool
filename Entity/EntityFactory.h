@@ -30,7 +30,7 @@
 
 #include <GUI/graphics/Entity.h>
 
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 
 
 class QGraphicsScene;

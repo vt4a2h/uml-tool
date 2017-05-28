@@ -27,8 +27,8 @@
 #include <Entity/entity_types.hpp>
 #include <Common/common_types.h>
 
-#include <Models/models_types.hpp>
-#include <Models/componentsmodel.h>
+#include <Models/ModelsTypes.hpp>
+#include <Models/ComponentsModel.h>
 
 #include <Entity/Components/components_types.h>
 

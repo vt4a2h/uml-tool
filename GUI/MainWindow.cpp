@@ -39,6 +39,7 @@
 #include <QPointer>
 #include <QMimeData>
 #include <QDebug>
+#include <QTableView>
 
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/for_each.hpp>
@@ -47,6 +48,7 @@
 
 #include <Models/ApplicationModel.h>
 #include <Models/ProjectTreeModel.h>
+#include <Models/MessagesModel.h>
 
 #include <Project/Project.h>
 
@@ -125,12 +127,13 @@ namespace GUI {
         , m_ProjectTreeMenu(new QMenu(this))
         , m_ProjectTreeView(new QTreeView(this))
         , m_MainView(new View(applicationModel, this))
-        , m_ConsoleOutput(new QTextEdit(this))
         , m_UndoView(new QUndoView(this))
         , m_Elements(new Elements(this))
         , m_AboutWidget(new About(this))
         , m_NewProjectDialog(new NewProjectDialog(this))
         , m_AddScope(new AddScope(this))
+        , m_MessagesView(new QTableView(this))
+        , m_MessagesModel(std::make_unique<Models::MessagesModel>(this))
         , m_ApplicationModel(applicationModel)
         , m_CommandsStack(std::make_shared<QUndoStack>())
     {
@@ -389,9 +392,21 @@ namespace GUI {
                 false /*visible*/);
 
         // Messages
-        m_ConsoleOutput->setReadOnly(true);
+        m_MessagesView->setModel(m_MessagesModel.get());
+        m_MessagesView->verticalHeader()->hide();
+        m_MessagesView->horizontalHeader()->hide();
+        m_MessagesView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+        m_MessagesView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+        m_MessagesView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+        // TODO: remove after finish testing
+//        m_MessagesModel->addMessage(Models::MessageType::Warning, "foo\n ewrwe\ngrgrg\nreger\ngfrg");
+//        m_MessagesModel->addMessage(Models::MessageType::Error, "bar");
+//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
+//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
+//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
         addDock(tr("Messages"), ui->actionMessagesDockWidget, Qt::BottomDockWidgetArea,
-                m_ConsoleOutput, false /*visible*/);
+                m_MessagesView, true /*visible*/);
 
         // Recent projects
         m_RecentProjects = std::make_unique<QMenu>(tr("&Recent projects"));
@@ -414,7 +429,7 @@ namespace GUI {
         ui->actionAddAggregation->setData(int(Relationship::AggregationRelation));
         ui->actionAddComposition->setData(int(Relationship::CompositionRelation));
 
-        m_RelationActions << ui->actionAddAssociation << ui->actionAddDependency
+        m_RelationActions << ui->actionAddAssociation    << ui->actionAddDependency
                           << ui->actionAddGeneralization << ui->actionAddAggregation
                           << ui->actionAddComposition;
     }

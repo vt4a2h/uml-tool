@@ -25,7 +25,7 @@
 #include <QPair>
 #include <QDebug>
 
-#include <Models/componentsmodel.h>
+#include <Models/ComponentsModel.h>
 #include <Entity/Components/token.h>
 
 #include "TestComponentSignatureParser.h"

@@ -28,7 +28,7 @@
 
 #include <boost/range/algorithm/find_if.hpp>
 
-#include <Models/componentsmodel.h>
+#include <Models/ComponentsModel.h>
 
 #include <Utility/helpfunctions.h>
 
