@@ -99,7 +99,7 @@ namespace Models {
                 return m_Messages[index.row()].text;
 
             case static_cast<int>(ColumnType::Date):
-                 return m_Messages[index.row()].date.toString("hh:mm:s\ndd/MM/yyyy");
+                 return m_Messages[index.row()].date.toString("hh:mm:s (dd/MM/yyyy)");
 
             default:
                 return QVariant();

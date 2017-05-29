@@ -40,6 +40,7 @@ class QGraphicsScene;
 class QUndoView;
 class QUndoCommand;
 class QTableView;
+class QToolButton;
 QT_END_NAMESPACE
 
 namespace Models {
@@ -125,11 +126,14 @@ namespace GUI {
 
         void makeMenu();
 
-        void addDock(const QString &name, QAction * action, Qt::DockWidgetArea area, QWidget * widget,
-                     bool visible = true);
+        QDockWidget * addDock(const QString &name, QAction * action, Qt::DockWidgetArea area,
+                              QWidget * widget, bool visible = true);
 
         void openProject(const QString &path);
         void rebuildRecentProjectMenu();
+
+        void configureMessagesPanel();
+        void configureStatusBar();
 
         std::unique_ptr<Ui::MainWindow> ui;
         Graphics::UniqueScene m_MainScene;
@@ -147,6 +151,7 @@ namespace GUI {
         AddScope         *m_AddScope;
 
         QTableView                             *m_MessagesView;
+        QDockWidget                            *m_MessagesDock;
         std::unique_ptr<Models::MessagesModel>  m_MessagesModel;
 
         QList<QAction*> m_RelationActions;

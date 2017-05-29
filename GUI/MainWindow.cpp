@@ -40,6 +40,7 @@
 #include <QMimeData>
 #include <QDebug>
 #include <QTableView>
+#include <QToolButton>
 
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/for_each.hpp>
@@ -82,6 +83,8 @@ namespace {
     const double consoleSizeFactor = 0.3;
 
     const QString titleTemplate = "%1Q-UML";
+
+    const QSize toolBarButtonSize(16, 16);
 
     void clearRecentProjectsMenu(QMenu &menu, const QStringList &recentProjectsList)
     {
@@ -234,6 +237,43 @@ namespace GUI {
         auto clearRecentProjects = m_RecentProjects->addAction(GUI::MainWindow::tr("C&lear"));
         G_CONNECT(clearRecentProjects, &QAction::triggered,
                   [&] { clearRecentProjectsMenu(*m_RecentProjects, App::Settings::recentProjects()); });
+    }
+
+    /**
+     * @brief MainWindow::configureMessagesPanel
+     */
+    void MainWindow::configureMessagesPanel()
+    {
+        m_MessagesView->setModel(m_MessagesModel.get());
+        m_MessagesView->verticalHeader()->hide();
+        m_MessagesView->horizontalHeader()->hide();
+        m_MessagesView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+        m_MessagesView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+        m_MessagesView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+        // TODO: remove after finish testing
+//        m_MessagesModel->addMessage(Models::MessageType::Warning, "foo");
+//        m_MessagesModel->addMessage(Models::MessageType::Error, "bar");
+//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
+//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
+//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
+        m_MessagesDock = addDock(tr("Messages"), ui->actionMessagesDockWidget,
+                                 Qt::BottomDockWidgetArea, m_MessagesView, false /*visible*/);
+    }
+
+    /**
+     * @brief MainWindow::configureStatusBar
+     */
+    void MainWindow::configureStatusBar()
+    {
+        QToolButton * tb = new QToolButton(this);
+        ui->statusBar->addPermanentWidget(tb);
+        tb->setIcon(QIcon(":/icons/pic/icon_message.png"));
+        tb->resize(toolBarButtonSize);
+        tb->setFocusPolicy(Qt::NoFocus);
+
+        auto action = [this](){ m_MessagesDock->setVisible(!m_MessagesDock->isVisible()); };
+        connect(tb, &QToolButton::clicked, action);
     }
 
     void MainWindow::onOpenProject()
@@ -392,21 +432,10 @@ namespace GUI {
                 false /*visible*/);
 
         // Messages
-        m_MessagesView->setModel(m_MessagesModel.get());
-        m_MessagesView->verticalHeader()->hide();
-        m_MessagesView->horizontalHeader()->hide();
-        m_MessagesView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-        m_MessagesView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
-        m_MessagesView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+        configureMessagesPanel();
 
-        // TODO: remove after finish testing
-//        m_MessagesModel->addMessage(Models::MessageType::Warning, "foo\n ewrwe\ngrgrg\nreger\ngfrg");
-//        m_MessagesModel->addMessage(Models::MessageType::Error, "bar");
-//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
-//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
-//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
-        addDock(tr("Messages"), ui->actionMessagesDockWidget, Qt::BottomDockWidgetArea,
-                m_MessagesView, true /*visible*/);
+        // Status bar
+        configureStatusBar();
 
         // Recent projects
         m_RecentProjects = std::make_unique<QMenu>(tr("&Recent projects"));
@@ -489,7 +518,7 @@ namespace GUI {
      * @param widget
      * @param visible
      */
-    void MainWindow::addDock(const QString &name, QAction * action, Qt::DockWidgetArea area,
+    QDockWidget * MainWindow::addDock(const QString &name, QAction * action, Qt::DockWidgetArea area,
                              QWidget *widget, bool visible)
     {
         QDockWidget * wgt = new QDockWidget(name, this);
@@ -500,6 +529,7 @@ namespace GUI {
         connect(wgt, &QDockWidget::visibilityChanged, action, &QAction::setChecked);
 
         wgt->setVisible(visible);
+        return wgt;
     }
 
     /**
