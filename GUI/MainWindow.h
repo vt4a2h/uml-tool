@@ -46,7 +46,6 @@ QT_END_NAMESPACE
 namespace Models {
     class ProjectTreeModel;
     class ApplicationModel;
-    class MessagesModel;
 }
 
 namespace Entity { class ID; }
@@ -82,6 +81,8 @@ namespace GUI {
         QPointer<QGraphicsScene> scene() const;
 
         void update();
+
+        Models::SharedMessenger messenger() const;
 
     public slots:
         void onCreateScope();
@@ -150,9 +151,9 @@ namespace GUI {
         NewProjectDialog *m_NewProjectDialog;
         AddScope         *m_AddScope;
 
-        QTableView                             *m_MessagesView;
-        QDockWidget                            *m_MessagesDock;
-        std::unique_ptr<Models::MessagesModel>  m_MessagesModel;
+        QTableView                  *m_MessagesView;
+        QDockWidget                 *m_MessagesDock;
+        Models::SharedMessagesModel  m_MessagesModel;
 
         QList<QAction*> m_RelationActions;
 

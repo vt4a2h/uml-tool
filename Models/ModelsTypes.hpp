@@ -42,4 +42,13 @@ namespace Models {
     class ComponentsModel;
     using UniqueClassComponentsModel = std::unique_ptr<ComponentsModel>;
     using SharedClassComponentsModel = std::shared_ptr<ComponentsModel>;
+
+    class MessagesModel;
+    using SharedMessagesModel = std::shared_ptr<MessagesModel>;
+
+    struct Message;
+    using Messages = QVector<Message>;
+
+    class IMessenger;
+    using SharedMessenger = std::shared_ptr<IMessenger>;
 }

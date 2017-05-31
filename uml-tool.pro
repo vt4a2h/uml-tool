@@ -193,7 +193,8 @@ HEADERS += \
     GUI/NewProject.h \
     Models/ModelsTypes.hpp \
     Models/ComponentsModel.h \
-    Models/MessagesModel.h
+    Models/MessagesModel.h \
+    Models/IMessenger.h
 
 FORMS += \
     GUI/addscope.ui \

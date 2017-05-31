@@ -136,7 +136,7 @@ namespace GUI {
         , m_NewProjectDialog(new NewProjectDialog(this))
         , m_AddScope(new AddScope(this))
         , m_MessagesView(new QTableView(this))
-        , m_MessagesModel(std::make_unique<Models::MessagesModel>(this))
+        , m_MessagesModel(std::make_shared<Models::MessagesModel>())
         , m_ApplicationModel(applicationModel)
         , m_CommandsStack(std::make_shared<QUndoStack>())
     {
@@ -175,6 +175,15 @@ namespace GUI {
         makeTitle();
         updateWindowState();
         m_ProjectTreeView->update();
+    }
+
+    /**
+     * @brief MainWindow::messenger
+     * @return
+     */
+    Models::SharedMessenger MainWindow::messenger() const
+    {
+       return m_MessagesModel;
     }
 
     /**
@@ -252,11 +261,6 @@ namespace GUI {
         m_MessagesView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
         // TODO: remove after finish testing
-//        m_MessagesModel->addMessage(Models::MessageType::Warning, "foo");
-//        m_MessagesModel->addMessage(Models::MessageType::Error, "bar");
-//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
-//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
-//        m_MessagesModel->addMessage(Models::MessageType::Information, "baz");
         m_MessagesDock = addDock(tr("Messages"), ui->actionMessagesDockWidget,
                                  Qt::BottomDockWidgetArea, m_MessagesView, false /*visible*/);
     }

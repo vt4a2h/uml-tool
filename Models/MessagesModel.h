@@ -26,29 +26,26 @@
 #include <QDateTime>
 #include <QPixmap>
 
-namespace Models {
+#include "IMessenger.h"
 
-    /**
-     * @brief The MessageType enum
-     */
-    enum class MessageType
-    {
-        Information,
-        Warning,
-        Error,
-    };
+namespace Models {
 
     /**
      * @brief The MessagesModel class
      */
-    class MessagesModel : public QAbstractTableModel
+    class MessagesModel : public QAbstractTableModel, public IMessenger
     {
         Q_OBJECT
 
     public:
         explicit MessagesModel(QObject * parent = nullptr);
 
-        void addMessage(MessageType type, const QString &text);
+    public slots: // IMessenger overrides
+        void addMessage(MessageType type, const QString &summary,
+                        const QString &description = QString()) override;
+
+    public: // IMessenger overrides
+        Messages messages() const override;
 
     public: // QAbstractItemModel overrides
         int rowCount(const QModelIndex &parent) const override;
@@ -62,14 +59,6 @@ namespace Models {
         QVariant processBackgroundRole(const QModelIndex &index) const;
 
     private: // Types
-        struct Message
-        {
-            MessageType type;
-            QString     text;
-            QDateTime   date;
-        };
-        using Messages = QVector<Message>;
-
         enum class ColumnType : int
         {
             Text,

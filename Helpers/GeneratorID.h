@@ -28,6 +28,8 @@
 
 #include <Common/ID.h>
 
+#include "QtHelpers.h"
+
 namespace Helpers {
 
     /// Generator ID for current project items (entities, relations, bases etc.)
@@ -36,10 +38,7 @@ namespace Helpers {
         Q_OBJECT
 
     public:
-        GeneratorID(const GeneratorID &) = delete;
-        GeneratorID(GeneratorID &&) = delete;
-        GeneratorID& operator =(const GeneratorID&) = delete;
-        GeneratorID& operator =(GeneratorID&&) = delete;
+        SINGLETON(GeneratorID)
 
         static const GeneratorID &instance();
 

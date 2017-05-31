@@ -30,6 +30,7 @@
 #include <GUI/chooseglobaldatabasedialog.h>
 
 #include <Models/ApplicationModel.h>
+#include <Models/MessagesModel.h>
 
 #include <Helpers/GeneratorID.h>
 
@@ -49,6 +50,7 @@ namespace App {
     bool Application::run()
     {
         m_MainWindow->show();
+        auto messenger = m_MainWindow->messenger();
 
         auto db = G_ASSERT(m_ApplicationModel->globalDatabase());
         db->setPath(Settings::globalDbPath());
@@ -58,8 +60,9 @@ namespace App {
         db->load(errors);
 
         if (!errors.isEmpty()) {
-            QMessageBox::warning(m_MainWindow.get(), tr("Problems with loading global database"),
-                                 errors.join("\n"), QMessageBox::Ok);
+            messenger->addMessage(Models::MessageType::Warning,
+                                  tr("Problems with loading global database"),
+                                  errors.join("\n"));
             db->clear();
             errors.clear();
 
@@ -73,17 +76,17 @@ namespace App {
                     db->load(errors);
 
                     if (!errors.isEmpty()) {
-                        QMessageBox::critical(m_MainWindow.get(), tr("Database reading error"),
-                                              errors.join("\n"), QMessageBox::Ok);
+                        messenger->addMessage(Models::MessageType::Error,
+                                              tr("Database reading error"),
+                                              errors.join("\n"));
                         return false;
                     }
                 } else {
                     // Create new database
                     if (!db->save()) {
-                        QMessageBox::critical(m_MainWindow.get(),
+                        messenger->addMessage(Models::MessageType::Error,
                                               tr("Database creating error"),
-                                              tr("Cannot create new database: %1.").arg(db->fullPath()),
-                                              QMessageBox::Ok);
+                                              tr("Cannot create new database: %1").arg(db->fullPath()));
                         return false;
                     }
                 }
@@ -91,9 +94,9 @@ namespace App {
                 Settings::setGlobalDbPath(db->path());
                 Settings::setGlobalDbName(db->name());
             } else {
-                QMessageBox::information(m_MainWindow.get(), tr("Ohh"),
-                                         tr("You cannot run application without database!"),
-                                         QMessageBox::Ok );
+                messenger->addMessage(Models::MessageType::Information,
+                                      tr("Ohh"),
+                                      tr("Application without database won't be working properly!"));
                 return false;
             }
         }

@@ -41,6 +41,12 @@ namespace Models {
         {MessageType::Error      , QBrush(QColor(255, 130, 130)) },
     };
 
+    static const QString messageWithDescriptionTemplate    = "<b>%1<b>\n<i>%2</i>";
+    static const QString messageWithoutDescriptionTemplate = "<b>%1<b>";
+
+    static const QString dateWithDescriptionTemplate    = "%1\n%2";
+    static const QString dateWithoutDescriptionTemplate = "%1 (%2)";
+
     MessagesModel::MessagesModel(QObject * parent)
         : QAbstractTableModel(parent)
         , m_CachedIcons {
@@ -51,23 +57,55 @@ namespace Models {
     {
     }
 
-    void MessagesModel::addMessage(MessageType type, const QString &text)
+    /**
+     * @brief MessagesModel::addMessage
+     * @param type
+     * @param text
+     */
+    void MessagesModel::addMessage(MessageType type, const QString &summary,
+                                   const QString &description)
     {
+        if (summary.isEmpty() && description.isEmpty())
+            return;
+
         beginInsertRows(QModelIndex(), rowCount(QModelIndex()), rowCount(QModelIndex()));
-        m_Messages.push_back({type, text, QDateTime::currentDateTime()});
+        m_Messages.push_back({type, summary, description, QDateTime::currentDateTime()});
         endInsertRows();
     }
 
+    /**
+     * @brief MessagesModel::messages
+     * @return
+     */
+    Messages MessagesModel::messages() const
+    {
+        return m_Messages;
+    }
+
+    /**
+     * @brief MessagesModel::rowCount
+     * @return
+     */
     int MessagesModel::rowCount(const QModelIndex &/*parent*/) const
     {
         return m_Messages.count();
     }
 
+    /**
+     * @brief MessagesModel::columnCount
+     * @return
+     */
     int MessagesModel::columnCount(const QModelIndex &/*parent*/) const
     {
         return static_cast<int>(ColumnType::EnumSize);
     }
 
+    /**
+     * @brief MessagesModel::data
+     * @param index
+     * @param role
+     * @return
+     */
     QVariant MessagesModel::data(const QModelIndex &index, int role) const
     {
         if (!index.isValid())
@@ -92,20 +130,44 @@ namespace Models {
         return QVariant();
     }
 
+    /**
+     * @brief MessagesModel::processDisplayRole
+     * @param index
+     * @return
+     */
     QVariant MessagesModel::processDisplayRole(const QModelIndex &index) const
     {
         switch (index.column()) {
             case static_cast<int>(ColumnType::Text):
-                return m_Messages[index.row()].text;
+            {
+                auto message = m_Messages[index.row()];
+                return (message.description.isEmpty()
+                           ? messageWithoutDescriptionTemplate
+                           : messageWithDescriptionTemplate).arg(message.summary, message.description);
+            }
 
             case static_cast<int>(ColumnType::Date):
-                 return m_Messages[index.row()].date.toString("hh:mm:s (dd/MM/yyyy)");
+            {
+                 auto message = m_Messages[index.row()];
+                 auto date = message.date;
+                 auto timeStr = date.toString("hh:mm:s");
+                 auto dateStr = date.toString("dd/MM/yyyy");
+
+                 return (message.description.isEmpty()
+                            ? dateWithoutDescriptionTemplate
+                            : dateWithDescriptionTemplate).arg(timeStr, dateStr);
+            }
 
             default:
                 return QVariant();
         }
     }
 
+    /**
+     * @brief MessagesModel::processDecorationRole
+     * @param index
+     * @return
+     */
     QVariant MessagesModel::processDecorationRole(const QModelIndex &index) const
     {
         Q_ASSERT(m_Messages.count() - 1 >= index.row());
@@ -113,12 +175,22 @@ namespace Models {
                     m_CachedIcons[m_Messages[index.row()].type] : QVariant();
     }
 
+    /**
+     * @brief MessagesModel::processTextAligmentRole
+     * @param index
+     * @return
+     */
     QVariant MessagesModel::processTextAligmentRole(const QModelIndex &index) const
     {
         return index.column() == static_cast<int>(ColumnType::Text) ? Qt::AlignVertical_Mask
                                                                     : Qt::AlignVCenter;
     }
 
+    /**
+     * @brief MessagesModel::processBackgroundRole
+     * @param index
+     * @return
+     */
     QVariant MessagesModel::processBackgroundRole(const QModelIndex &index) const
     {
         return brushes[m_Messages[index.row()].type];

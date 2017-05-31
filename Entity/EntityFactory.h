@@ -25,6 +25,7 @@
 #include <Common/ElementsFactory.h>
 
 #include "entity_types.hpp"
+#include "QtHelpers.h"
 
 #include <Entity/Type.h>
 
@@ -41,10 +42,7 @@ namespace Entity {
     class EntityFactory : public Common::ElementsFactory
     {
     public:
-        EntityFactory(const EntityFactory &) = delete;
-        EntityFactory(EntityFactory &&) = delete;
-        EntityFactory& operator =(const EntityFactory&) = delete;
-        EntityFactory& operator =(EntityFactory&&) = delete;
+        SINGLETON(EntityFactory)
 
         static const EntityFactory &instance();
 
