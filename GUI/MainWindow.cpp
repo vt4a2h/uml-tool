@@ -71,6 +71,7 @@
 #include "Elements.h"
 #include "View.h"
 #include "QtHelpers.h"
+#include "HtmlDelegate.h"
 
 using namespace boost;
 
@@ -114,6 +115,12 @@ namespace {
         QStringList recentProjectsList = App::Settings::recentProjects();
         G_ASSERT(recentProjectsList.removeOne(projectName));
         App::Settings::saveRecentProjects(recentProjectsList);
+    }
+
+    void setActionState(QAction & action, bool state, const QString &tooltip)
+    {
+        action.setEnabled(state);
+        action.setToolTip(tooltip);
     }
 }
 
@@ -260,7 +267,8 @@ namespace GUI {
         m_MessagesView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
         m_MessagesView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-        // TODO: remove after finish testing
+        m_MessagesView->setItemDelegateForColumn(0, new HtmlDelegate(this));
+
         m_MessagesDock = addDock(tr("Messages"), ui->actionMessagesDockWidget,
                                  Qt::BottomDockWidgetArea, m_MessagesView, false /*visible*/);
     }
@@ -624,6 +632,14 @@ namespace GUI {
         m_MainView->setEnabled(state);
 
         boost::range::for_each(m_RelationActions, [&](auto &&a){ a->setEnabled(state); });
+
+        bool validDb = m_ApplicationModel->globalDatabase() &&
+                       m_ApplicationModel->globalDatabase()->valid();
+        setActionState(*ui->actionNewProject, validDb, validDb ? tr("Create new project")
+                                                              : tr("Global database is not set"));
+        setActionState(*ui->actionOpenProject, validDb, validDb ? tr("Open existing project")
+                                                               : tr("Global database is not set"));
+        m_RecentProjects->setEnabled(validDb);
     }
 
     /**

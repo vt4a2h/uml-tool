@@ -90,7 +90,8 @@ SOURCES += \
     Commands/OpenProject.cpp \
     GUI/NewProject.cpp \
     Models/ComponentsModel.cpp \
-    Models/MessagesModel.cpp
+    Models/MessagesModel.cpp \
+    GUI/HtmlDelegate.cpp
 
 HEADERS += \
     enums.h \
@@ -194,7 +195,8 @@ HEADERS += \
     Models/ModelsTypes.hpp \
     Models/ComponentsModel.h \
     Models/MessagesModel.h \
-    Models/IMessenger.h
+    Models/IMessenger.h \
+    GUI/HtmlDelegate.h
 
 FORMS += \
     GUI/addscope.ui \

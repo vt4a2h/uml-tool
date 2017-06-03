@@ -94,7 +94,7 @@ namespace App {
                 Settings::setGlobalDbPath(db->path());
                 Settings::setGlobalDbName(db->name());
             } else {
-                messenger->addMessage(Models::MessageType::Information,
+                messenger->addMessage(Models::MessageType::Error,
                                       tr("Ohh"),
                                       tr("Application without database won't be working properly!"));
                 return false;

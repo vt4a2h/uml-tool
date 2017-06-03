@@ -41,8 +41,18 @@ namespace Models {
         {MessageType::Error      , QBrush(QColor(255, 130, 130)) },
     };
 
-    static const QString messageWithDescriptionTemplate    = "<b>%1<b>\n<i>%2</i>";
-    static const QString messageWithoutDescriptionTemplate = "<b>%1<b>";
+    static QString toHtml(const QString &in)
+    {
+        return in.toHtmlEscaped().replace("\n", "<br>");
+    }
+
+    static const Message &messageForIndex(const Messages &messages, int index)
+    {
+        return *(messages.crbegin() + index);
+    }
+
+    static const QString messageWithDescriptionTemplate    = "<b>%1</b><br><i>%2</i>";
+    static const QString messageWithoutDescriptionTemplate = "<b>%1</b>";
 
     static const QString dateWithDescriptionTemplate    = "%1\n%2";
     static const QString dateWithoutDescriptionTemplate = "%1 (%2)";
@@ -69,7 +79,7 @@ namespace Models {
             return;
 
         beginInsertRows(QModelIndex(), rowCount(QModelIndex()), rowCount(QModelIndex()));
-        m_Messages.push_back({type, summary, description, QDateTime::currentDateTime()});
+        m_Messages.append({type, toHtml(summary), toHtml(description), QDateTime::currentDateTime()});
         endInsertRows();
     }
 
@@ -140,7 +150,7 @@ namespace Models {
         switch (index.column()) {
             case static_cast<int>(ColumnType::Text):
             {
-                auto message = m_Messages[index.row()];
+                const auto &message = messageForIndex(m_Messages, index.row());
                 return (message.description.isEmpty()
                            ? messageWithoutDescriptionTemplate
                            : messageWithDescriptionTemplate).arg(message.summary, message.description);
@@ -148,8 +158,8 @@ namespace Models {
 
             case static_cast<int>(ColumnType::Date):
             {
-                 auto message = m_Messages[index.row()];
-                 auto date = message.date;
+                 const auto &message = messageForIndex(m_Messages, index.row());
+                 const auto &date = message.date;
                  auto timeStr = date.toString("hh:mm:s");
                  auto dateStr = date.toString("dd/MM/yyyy");
 
@@ -172,7 +182,7 @@ namespace Models {
     {
         Q_ASSERT(m_Messages.count() - 1 >= index.row());
         return index.column() == static_cast<int>(ColumnType::Text) ?
-                    m_CachedIcons[m_Messages[index.row()].type] : QVariant();
+                    m_CachedIcons[messageForIndex(m_Messages, index.row()).type] : QVariant();
     }
 
     /**
@@ -193,7 +203,7 @@ namespace Models {
      */
     QVariant MessagesModel::processBackgroundRole(const QModelIndex &index) const
     {
-        return brushes[m_Messages[index.row()].type];
+        return brushes[messageForIndex(m_Messages, index.row()).type];
     }
 
 } // namespace Models
