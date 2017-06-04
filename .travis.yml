@@ -10,6 +10,7 @@ env:
 
 before_install:
    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+   - sudo add-apt-repository -y ppa:beineri/opt-qt59-trusty
    - sudo apt-get update -qq
    - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
    
@@ -19,7 +20,9 @@ install:
    - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-6 90
    - sudo apt-get install -qq lcov
    - gem install coveralls-lcov
-   - sudo apt-get install -qq qt5-default qt5-qmake qtbase5-dev-tools qtchooser qttools5-dev qtbase5-dev libgles2-mesa-dev libqt5gui5 libqt5serialport5-dev libqt5printsupport5 libqt5widgets5 libgles2-mesa libgl1-mesa-dev libgl1-mesa-glx libglapi-mesa libegl1-mesa-dev libpango-1.0-0
+   - sudo apt-get install -qq qt59base
+   #qt5-default qt5-qmake qtbase5-dev-tools qtchooser qttools5-dev qtbase5-dev
+   - sudo apt-get install -qq libgles2-mesa-dev libqt5gui5 libqt5serialport5-dev libqt5printsupport5 libqt5widgets5 libgles2-mesa libgl1-mesa-dev libgl1-mesa-glx libglapi-mesa libegl1-mesa-dev libpango-1.0-0
    - sudo apt-get install -qq zlib1g-dev libudev-dev
    - sudo apt-get install -qq libboost-all-dev
 

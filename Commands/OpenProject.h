@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 #include <GUI/graphics/GraphicsTypes.h>
 #include <Project/ProjectTypes.hpp>
 

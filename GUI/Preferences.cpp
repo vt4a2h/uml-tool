@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 17/01/2016.
+** Created 04.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,39 +20,28 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#pragma once
+#include "Preferences.h"
 
-#include <QtCore/QObject>
+#include "ui_Preferences.h"
 
-#include <Project/ProjectTypes.hpp>
+namespace GUI {
 
-#include <Common/ID.h>
-
-#include "QtHelpers.h"
-
-namespace Helpers {
-
-    /// Generator ID for current project items (entities, relations, bases etc.)
-    class GeneratorID : public QObject
+    /**
+     * @brief Preferences::Preferences
+     * @param parent
+     */
+    Preferences::Preferences(QWidget *parent)
+        : QWidget(parent)
+        , ui(new Ui::Preferences)
     {
-        Q_OBJECT
+        ui->setupUi(this);
+    }
 
-    public:
-        SINGLETON(GeneratorID)
+    /**
+     * @brief Preferences::~Preferences
+     */
+    Preferences::~Preferences()
+    {
+    }
 
-        static const GeneratorID &instance();
-
-        Common::ID genID() const;
-
-    public slots:
-        void onCurrentProjectChanged(const Projects::SharedProject &p,
-                                     const Projects::SharedProject &c);
-
-    private:
-        explicit GeneratorID(QObject *parent = 0);
-        Projects::SharedProject project() const;
-
-        Projects::WeakProject m_CurrentProject;
-    };
-
-} // helpers
+} // namespace GUI

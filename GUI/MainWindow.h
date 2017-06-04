@@ -24,11 +24,12 @@
 
 #include <QMainWindow>
 
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 #include <Project/ProjectTypes.hpp>
 #include <Commands/CommandsTypes.h>
 #include <GUI/graphics/GraphicsTypes.h>
 
+QT_BEGIN_NAMESPACE
 class QSplitter;
 class QHBoxLayout;
 class QVBoxLayout;
@@ -38,6 +39,9 @@ class QTextEdit;
 class QGraphicsScene;
 class QUndoView;
 class QUndoCommand;
+class QTableView;
+class QToolButton;
+QT_END_NAMESPACE
 
 namespace Models {
     class ProjectTreeModel;
@@ -77,6 +81,8 @@ namespace GUI {
         QPointer<QGraphicsScene> scene() const;
 
         void update();
+
+        Models::SharedMessenger messenger() const;
 
     public slots:
         void onCreateScope();
@@ -121,11 +127,14 @@ namespace GUI {
 
         void makeMenu();
 
-        void addDock(const QString &name, QAction * action, Qt::DockWidgetArea area, QWidget * widget,
-                     bool visible = true);
+        QDockWidget * addDock(const QString &name, QAction * action, Qt::DockWidgetArea area,
+                              QWidget * widget, bool visible = true);
 
         void openProject(const QString &path);
         void rebuildRecentProjectMenu();
+
+        void configureMessagesPanel();
+        void configureStatusBar();
 
         std::unique_ptr<Ui::MainWindow> ui;
         Graphics::UniqueScene m_MainScene;
@@ -135,13 +144,16 @@ namespace GUI {
 
         QTreeView      *m_ProjectTreeView;
         View           *m_MainView;
-        QTextEdit      *m_ConsoleOutput;
         QUndoView      *m_UndoView;
         Elements       *m_Elements;
 
         About            *m_AboutWidget;
         NewProjectDialog *m_NewProjectDialog;
         AddScope         *m_AddScope;
+
+        QTableView                  *m_MessagesView;
+        QDockWidget                 *m_MessagesDock;
+        Models::SharedMessagesModel  m_MessagesModel;
 
         QList<QAction*> m_RelationActions;
 

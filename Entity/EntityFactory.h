@@ -25,12 +25,13 @@
 #include <Common/ElementsFactory.h>
 
 #include "entity_types.hpp"
+#include "QtHelpers.h"
 
 #include <Entity/Type.h>
 
 #include <GUI/graphics/Entity.h>
 
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 
 
 class QGraphicsScene;
@@ -41,10 +42,7 @@ namespace Entity {
     class EntityFactory : public Common::ElementsFactory
     {
     public:
-        EntityFactory(const EntityFactory &) = delete;
-        EntityFactory(EntityFactory &&) = delete;
-        EntityFactory& operator =(const EntityFactory&) = delete;
-        EntityFactory& operator =(EntityFactory&&) = delete;
+        SINGLETON(EntityFactory)
 
         static const EntityFactory &instance();
 

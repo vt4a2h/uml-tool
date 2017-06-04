@@ -414,7 +414,7 @@ namespace DB {
                 errorList << errorMessage.errorString();
             }
         } else {
-            errorList << QObject::tr("Can't load database: %1.").arg(f.fileName());
+            errorList << QObject::tr("Cannot load database: %1.").arg(f.fileName());
         }
 
         m_Valid = errorList.isEmpty();

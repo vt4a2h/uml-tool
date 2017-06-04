@@ -24,6 +24,12 @@
 
 #include <QObject>
 
+#define SINGLETON(ClassName) \
+    ClassName(const ClassName &) = delete; \
+    ClassName(ClassName &&) = delete; \
+    ClassName& operator =(const ClassName&) = delete; \
+    ClassName& operator =(ClassName&&) = delete;
+
 // Guarded connect/disconnect, assert in debug mode if action failed
 #define G_CONNECT(arg, ...) G_ASSERT(QObject::connect(arg, ##__VA_ARGS__))
 #define G_DISCONNECT(arg, ...) G_ASSERT(QObject::disconnect(arg, ##__VA_ARGS__))

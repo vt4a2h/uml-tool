@@ -27,7 +27,7 @@
 
 #include <Common/common_types.h>
 
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 
 #include <Entity/entity_types.hpp>
 

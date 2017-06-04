@@ -33,10 +33,11 @@ namespace di = boost::di;
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QApplication::setOrganizationName("QUml");
-    QApplication::setApplicationName("QUml tools");
+    QApplication::setApplicationName("Q-UML");
 
     auto injector = di::make_injector();
     auto app = injector.create<App::Application>();
-    return app.run() ? a.exec() : 0;
+    app.run();
+
+    return a.exec();
 }

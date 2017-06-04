@@ -115,6 +115,7 @@
    <addaction name="actionAddAggregation"/>
    <addaction name="actionAddComposition"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
    <property name="text">
     <string>&amp;Exit</string>

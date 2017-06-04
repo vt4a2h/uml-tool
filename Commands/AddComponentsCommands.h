@@ -26,8 +26,8 @@
 
 #include "BaseCommand.h"
 
-#include <Models/componentsmodel.h>
-#include <Models/models_types.hpp>
+#include <Models/ComponentsModel.h>
+#include <Models/ModelsTypes.hpp>
 
 namespace Commands {
 

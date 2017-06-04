@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 24/03/2016.
+** Created 30.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,34 +22,40 @@
 *****************************************************************************/
 #pragma once
 
-#include <Relationship/relationship_types.hpp>
-#include <Entity/entity_types.hpp>
+#include <QString>
+#include <QDateTime>
 
-#include <Common/ElementsFactory.h>
+#include "ModelsTypes.hpp"
 
-#include "enums.h"
-#include "QtHelpers.h"
+namespace Models {
 
-class QGraphicsScene;
-
-namespace Relationship {
-
-    /// Relation maker
-    class RelationFactory : public Common::ElementsFactory
+    /**
+     * @brief The MessageType enum
+     */
+    enum class MessageType
     {
-        Q_OBJECT
-
-    public:
-        SINGLETON(RelationFactory)
-
-        static const RelationFactory &instance();
-
-        SharedRelation make(RelationType relType, const Common::ID &tail,
-                            const Common::ID &head,CreationOptions options = RelationCommon) const;
-        SharedRelation make(const QJsonObject &src, ErrorList &errors,
-                            CreationOptions options = RelationCommon) const;
-    private:
-        explicit RelationFactory(QObject * parent = nullptr);
+        Information,
+        Warning,
+        Error,
     };
 
-} // namespace relationship
+    /**
+     * @brief The Message struct
+     */
+    struct Message
+    {
+        MessageType type;
+        QString     summary;
+        QString     description;
+        QDateTime   date;
+    };
+
+    /// Interface for messaging
+    class IMessenger
+    {
+    public:
+        virtual void addMessage(MessageType type, const QString &summary, const QString &description) = 0;
+        virtual Messages messages() const = 0;
+    };
+
+} // namespace Models

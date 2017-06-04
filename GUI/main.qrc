@@ -24,6 +24,10 @@
         <file>pic/icon_composition.png</file>
         <file>pic/icon_dependency.png</file>
         <file>pic/icon_generalization.png</file>
+        <file>pic/icon_warning.png</file>
+        <file>pic/icon_error.png</file>
+        <file>pic/icon_information.png</file>
+        <file>pic/icon_message.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>pic/main.png</file>

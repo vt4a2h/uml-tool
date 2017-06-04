@@ -38,7 +38,6 @@ SOURCES += \
     GUI/chooseglobaldatabasedialog.cpp \
     GUI/componentseditdelegate.cpp \
     GUI/signatureeditdelegate.cpp \
-    Models/componentsmodel.cpp \
     Helpers/entityhelpres.cpp \
     Entity/Components/token.cpp \
     Entity/isectional.cpp \
@@ -89,7 +88,11 @@ SOURCES += \
     Application/Settings.cpp \
     Commands/AddComponentsCommands.cpp \
     Commands/OpenProject.cpp \
-    GUI/NewProject.cpp
+    GUI/NewProject.cpp \
+    Models/ComponentsModel.cpp \
+    Models/MessagesModel.cpp \
+    GUI/HtmlDelegate.cpp \
+    GUI/Preferences.cpp
 
 HEADERS += \
     enums.h \
@@ -127,8 +130,6 @@ HEADERS += \
     GUI/chooseglobaldatabasedialog.h \
     GUI/componentseditdelegate.h \
     GUI/signatureeditdelegate.h \
-    Models/models_types.hpp \
-    Models/componentsmodel.h \
     Helpers/entityhelpres.h \
     Entity/Components/componentscommon.h \
     Entity/Components/components_types.h \
@@ -191,7 +192,13 @@ HEADERS += \
     Commands/AddComponentsCommands.h \
     Commands/OpenProject.h \
     QtHelpers.h \
-    GUI/NewProject.h
+    GUI/NewProject.h \
+    Models/ModelsTypes.hpp \
+    Models/ComponentsModel.h \
+    Models/MessagesModel.h \
+    Models/IMessenger.h \
+    GUI/HtmlDelegate.h \
+    GUI/Preferences.h
 
 FORMS += \
     GUI/addscope.ui \
@@ -201,7 +208,8 @@ FORMS += \
     GUI/elements.ui \
     GUI/MainWindow.ui \
     GUI/About.ui \
-    GUI/NewProject.ui
+    GUI/NewProject.ui \
+    GUI/Preferences.ui
 
 RESOURCES += \
     GUI/main.qrc

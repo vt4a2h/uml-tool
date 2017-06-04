@@ -39,6 +39,8 @@
 #include <QPointer>
 #include <QMimeData>
 #include <QDebug>
+#include <QTableView>
+#include <QToolButton>
 
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/for_each.hpp>
@@ -47,6 +49,7 @@
 
 #include <Models/ApplicationModel.h>
 #include <Models/ProjectTreeModel.h>
+#include <Models/MessagesModel.h>
 
 #include <Project/Project.h>
 
@@ -68,6 +71,7 @@
 #include "Elements.h"
 #include "View.h"
 #include "QtHelpers.h"
+#include "HtmlDelegate.h"
 
 using namespace boost;
 
@@ -80,6 +84,8 @@ namespace {
     const double consoleSizeFactor = 0.3;
 
     const QString titleTemplate = "%1Q-UML";
+
+    const QSize toolBarButtonSize(16, 16);
 
     void clearRecentProjectsMenu(QMenu &menu, const QStringList &recentProjectsList)
     {
@@ -110,6 +116,12 @@ namespace {
         G_ASSERT(recentProjectsList.removeOne(projectName));
         App::Settings::saveRecentProjects(recentProjectsList);
     }
+
+    void setActionState(QAction & action, bool state, const QString &tooltip)
+    {
+        action.setEnabled(state);
+        action.setToolTip(tooltip);
+    }
 }
 
 namespace GUI {
@@ -125,12 +137,13 @@ namespace GUI {
         , m_ProjectTreeMenu(new QMenu(this))
         , m_ProjectTreeView(new QTreeView(this))
         , m_MainView(new View(applicationModel, this))
-        , m_ConsoleOutput(new QTextEdit(this))
         , m_UndoView(new QUndoView(this))
         , m_Elements(new Elements(this))
         , m_AboutWidget(new About(this))
         , m_NewProjectDialog(new NewProjectDialog(this))
         , m_AddScope(new AddScope(this))
+        , m_MessagesView(new QTableView(this))
+        , m_MessagesModel(std::make_shared<Models::MessagesModel>())
         , m_ApplicationModel(applicationModel)
         , m_CommandsStack(std::make_shared<QUndoStack>())
     {
@@ -169,6 +182,15 @@ namespace GUI {
         makeTitle();
         updateWindowState();
         m_ProjectTreeView->update();
+    }
+
+    /**
+     * @brief MainWindow::messenger
+     * @return
+     */
+    Models::SharedMessenger MainWindow::messenger() const
+    {
+       return m_MessagesModel;
     }
 
     /**
@@ -231,6 +253,39 @@ namespace GUI {
         auto clearRecentProjects = m_RecentProjects->addAction(GUI::MainWindow::tr("C&lear"));
         G_CONNECT(clearRecentProjects, &QAction::triggered,
                   [&] { clearRecentProjectsMenu(*m_RecentProjects, App::Settings::recentProjects()); });
+    }
+
+    /**
+     * @brief MainWindow::configureMessagesPanel
+     */
+    void MainWindow::configureMessagesPanel()
+    {
+        m_MessagesView->setModel(m_MessagesModel.get());
+        m_MessagesView->verticalHeader()->hide();
+        m_MessagesView->horizontalHeader()->hide();
+        m_MessagesView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+        m_MessagesView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+        m_MessagesView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+        m_MessagesView->setItemDelegateForColumn(0, new HtmlDelegate(this));
+
+        m_MessagesDock = addDock(tr("Messages"), ui->actionMessagesDockWidget,
+                                 Qt::BottomDockWidgetArea, m_MessagesView, false /*visible*/);
+    }
+
+    /**
+     * @brief MainWindow::configureStatusBar
+     */
+    void MainWindow::configureStatusBar()
+    {
+        QToolButton * tb = new QToolButton(this);
+        ui->statusBar->addPermanentWidget(tb);
+        tb->setIcon(QIcon(":/icons/pic/icon_message.png"));
+        tb->resize(toolBarButtonSize);
+        tb->setFocusPolicy(Qt::NoFocus);
+
+        auto action = [this](){ m_MessagesDock->setVisible(!m_MessagesDock->isVisible()); };
+        connect(tb, &QToolButton::clicked, action);
     }
 
     void MainWindow::onOpenProject()
@@ -389,9 +444,10 @@ namespace GUI {
                 false /*visible*/);
 
         // Messages
-        m_ConsoleOutput->setReadOnly(true);
-        addDock(tr("Messages"), ui->actionMessagesDockWidget, Qt::BottomDockWidgetArea,
-                m_ConsoleOutput, false /*visible*/);
+        configureMessagesPanel();
+
+        // Status bar
+        configureStatusBar();
 
         // Recent projects
         m_RecentProjects = std::make_unique<QMenu>(tr("&Recent projects"));
@@ -414,7 +470,7 @@ namespace GUI {
         ui->actionAddAggregation->setData(int(Relationship::AggregationRelation));
         ui->actionAddComposition->setData(int(Relationship::CompositionRelation));
 
-        m_RelationActions << ui->actionAddAssociation << ui->actionAddDependency
+        m_RelationActions << ui->actionAddAssociation    << ui->actionAddDependency
                           << ui->actionAddGeneralization << ui->actionAddAggregation
                           << ui->actionAddComposition;
     }
@@ -474,7 +530,7 @@ namespace GUI {
      * @param widget
      * @param visible
      */
-    void MainWindow::addDock(const QString &name, QAction * action, Qt::DockWidgetArea area,
+    QDockWidget * MainWindow::addDock(const QString &name, QAction * action, Qt::DockWidgetArea area,
                              QWidget *widget, bool visible)
     {
         QDockWidget * wgt = new QDockWidget(name, this);
@@ -485,6 +541,7 @@ namespace GUI {
         connect(wgt, &QDockWidget::visibilityChanged, action, &QAction::setChecked);
 
         wgt->setVisible(visible);
+        return wgt;
     }
 
     /**
@@ -575,6 +632,14 @@ namespace GUI {
         m_MainView->setEnabled(state);
 
         boost::range::for_each(m_RelationActions, [&](auto &&a){ a->setEnabled(state); });
+
+        bool validDb = m_ApplicationModel->globalDatabase() &&
+                       m_ApplicationModel->globalDatabase()->valid();
+        setActionState(*ui->actionNewProject, validDb, validDb ? tr("Create new project")
+                                                              : tr("Global database is not set"));
+        setActionState(*ui->actionOpenProject, validDb, validDb ? tr("Open existing project")
+                                                               : tr("Global database is not set"));
+        m_RecentProjects->setEnabled(validDb);
     }
 
     /**

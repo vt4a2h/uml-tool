@@ -33,7 +33,7 @@
 #include <DB/db_types.hpp>
 
 #include <Models/ApplicationModel.h>
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 
 #include <GUI/gui_types.hpp>
 

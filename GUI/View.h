@@ -25,7 +25,7 @@
 #include <QGraphicsView>
 
 #include <Project/ProjectTypes.hpp>
-#include <Models/models_types.hpp>
+#include <Models/ModelsTypes.hpp>
 
 namespace Models { class ApplicationModel; }
 namespace Entity { enum class KindOfType : int; }

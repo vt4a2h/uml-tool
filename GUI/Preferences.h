@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 24/03/2016.
+** Created 04.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,34 +22,27 @@
 *****************************************************************************/
 #pragma once
 
-#include <Relationship/relationship_types.hpp>
-#include <Entity/entity_types.hpp>
+#include <QWidget>
 
-#include <Common/ElementsFactory.h>
+namespace GUI {
 
-#include "enums.h"
-#include "QtHelpers.h"
+    namespace Ui {
+        class Preferences;
+    }
 
-class QGraphicsScene;
-
-namespace Relationship {
-
-    /// Relation maker
-    class RelationFactory : public Common::ElementsFactory
+    class Preferences : public QWidget
     {
         Q_OBJECT
 
     public:
-        SINGLETON(RelationFactory)
+        Q_DISABLE_COPY(Preferences)
 
-        static const RelationFactory &instance();
+        explicit Preferences(QWidget *parent = 0);
+        ~Preferences();
 
-        SharedRelation make(RelationType relType, const Common::ID &tail,
-                            const Common::ID &head,CreationOptions options = RelationCommon) const;
-        SharedRelation make(const QJsonObject &src, ErrorList &errors,
-                            CreationOptions options = RelationCommon) const;
     private:
-        explicit RelationFactory(QObject * parent = nullptr);
+        QScopedPointer<Ui::Preferences> ui;
     };
 
-} // namespace relationship
+} // namespace GUI
+
