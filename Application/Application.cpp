@@ -86,7 +86,7 @@ namespace App {
                     if (!db->save()) {
                         messenger->addMessage(Models::MessageType::Error,
                                               tr("Database creating error"),
-                                              tr("Cannot create new database: %1").arg(db->fullPath()));
+                                              tr("Cannot create new database: %1.").arg(db->fullPath()));
                         return false;
                     }
                 }
@@ -95,8 +95,9 @@ namespace App {
                 Settings::setGlobalDbName(db->name());
             } else {
                 messenger->addMessage(Models::MessageType::Error,
-                                      tr("Ohh"),
-                                      tr("Application without database won't be working properly!"));
+                                      tr("Global database is not set"),
+                                      tr("You cannot create a new project or open an existing one.\n"
+                                         "Try specifying new database in Preferences, please."));
                 return false;
             }
         }

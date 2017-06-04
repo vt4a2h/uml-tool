@@ -91,7 +91,8 @@ SOURCES += \
     GUI/NewProject.cpp \
     Models/ComponentsModel.cpp \
     Models/MessagesModel.cpp \
-    GUI/HtmlDelegate.cpp
+    GUI/HtmlDelegate.cpp \
+    GUI/Preferences.cpp
 
 HEADERS += \
     enums.h \
@@ -196,7 +197,8 @@ HEADERS += \
     Models/ComponentsModel.h \
     Models/MessagesModel.h \
     Models/IMessenger.h \
-    GUI/HtmlDelegate.h
+    GUI/HtmlDelegate.h \
+    GUI/Preferences.h
 
 FORMS += \
     GUI/addscope.ui \
@@ -206,7 +208,8 @@ FORMS += \
     GUI/elements.ui \
     GUI/MainWindow.ui \
     GUI/About.ui \
-    GUI/NewProject.ui
+    GUI/NewProject.ui \
+    GUI/Preferences.ui
 
 RESOURCES += \
     GUI/main.qrc
