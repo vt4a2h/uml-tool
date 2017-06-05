@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include <QWidget>
+#include <QDialog>
 
 namespace GUI {
 
@@ -30,7 +30,10 @@ namespace GUI {
         class Preferences;
     }
 
-    class Preferences : public QWidget
+    /**
+     * @brief The Preferences class
+     */
+    class Preferences : public QDialog
     {
         Q_OBJECT
 
@@ -39,6 +42,9 @@ namespace GUI {
 
         explicit Preferences(QWidget *parent = 0);
         ~Preferences();
+
+    signals:
+        void preferencesChanged();
 
     private:
         QScopedPointer<Ui::Preferences> ui;

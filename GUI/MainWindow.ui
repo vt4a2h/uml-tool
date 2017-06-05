@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -60,6 +60,7 @@
     <addaction name="actionOpenProject"/>
     <addaction name="actionSaveProject"/>
     <addaction name="actionCloseProject"/>
+    <addaction name="actionPreferences"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -260,7 +261,7 @@
      <normaloff>:/icons/pic/icon_association.png</normaloff>:/icons/pic/icon_association.png</iconset>
    </property>
    <property name="text">
-    <string>Add association</string>
+    <string>&amp;Add association</string>
    </property>
    <property name="toolTip">
     <string>Add association relation</string>
@@ -275,7 +276,7 @@
      <normaloff>:/icons/pic/icon_dependency.png</normaloff>:/icons/pic/icon_dependency.png</iconset>
    </property>
    <property name="text">
-    <string>Add dependency</string>
+    <string>Add &amp;dependency</string>
    </property>
    <property name="toolTip">
     <string>Add dependency relation</string>
@@ -290,7 +291,7 @@
      <normaloff>:/icons/pic/icon_generalization.png</normaloff>:/icons/pic/icon_generalization.png</iconset>
    </property>
    <property name="text">
-    <string>Add generalization</string>
+    <string>Add &amp;generalization</string>
    </property>
    <property name="toolTip">
     <string>Add generalization relation</string>
@@ -305,7 +306,7 @@
      <normaloff>:/icons/pic/icon_aggregation.png</normaloff>:/icons/pic/icon_aggregation.png</iconset>
    </property>
    <property name="text">
-    <string>Add aggregation</string>
+    <string>Add aggr&amp;egation</string>
    </property>
    <property name="toolTip">
     <string>Add aggregation relation</string>
@@ -320,7 +321,7 @@
      <normaloff>:/icons/pic/icon_composition.png</normaloff>:/icons/pic/icon_composition.png</iconset>
    </property>
    <property name="text">
-    <string>Add composition</string>
+    <string>Add c&amp;omposition</string>
    </property>
    <property name="toolTip">
     <string>Add composition relation</string>
@@ -337,48 +338,24 @@
     <string>Ctrl+Shift+X</string>
    </property>
   </action>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>&amp;Preferences</string>
+   </property>
+   <property name="toolTip">
+    <string>Display Preferences</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="main.qrc"/>
  </resources>
  <connections>
   <connection>
-   <sender>actionAbout</sender>
-   <signal>triggered()</signal>
-   <receiver>GUI::MainWindow</receiver>
-   <slot>onAbout()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionExit</sender>
    <signal>triggered()</signal>
    <receiver>GUI::MainWindow</receiver>
    <slot>onExit()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionNewProject</sender>
-   <signal>triggered()</signal>
-   <receiver>GUI::MainWindow</receiver>
-   <slot>onNewProject()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>

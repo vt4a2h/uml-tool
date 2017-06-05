@@ -31,7 +31,7 @@ namespace GUI {
      * @param parent
      */
     Preferences::Preferences(QWidget *parent)
-        : QWidget(parent)
+        : QDialog(parent)
         , ui(new Ui::Preferences)
     {
         ui->setupUi(this);

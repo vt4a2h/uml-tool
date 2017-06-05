@@ -60,6 +60,7 @@ namespace GUI {
     class ChooseGlobalDatabaseDialog;
     class Elements;
     class View;
+    class Preferences;
 
     namespace Ui {
         class MainWindow;
@@ -80,17 +81,14 @@ namespace GUI {
 
         QPointer<QGraphicsScene> scene() const;
 
-        void update();
-
         Models::SharedMessenger messenger() const;
 
     public slots:
         void onCreateScope();
+        void update();
 
     private slots:
         void onExit();
-        void onAbout();
-        void onNewProject();
         void onOpenProject();
         void onSaveProject();
         void onCloseProject();
@@ -150,6 +148,7 @@ namespace GUI {
         About            *m_AboutWidget;
         NewProjectDialog *m_NewProjectDialog;
         AddScope         *m_AddScope;
+        Preferences      *m_Preferences;
 
         QTableView                  *m_MessagesView;
         QDockWidget                 *m_MessagesDock;

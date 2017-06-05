@@ -72,6 +72,7 @@
 #include "View.h"
 #include "QtHelpers.h"
 #include "HtmlDelegate.h"
+#include "Preferences.h"
 
 using namespace boost;
 
@@ -142,6 +143,7 @@ namespace GUI {
         , m_AboutWidget(new About(this))
         , m_NewProjectDialog(new NewProjectDialog(this))
         , m_AddScope(new AddScope(this))
+        , m_Preferences(new Preferences(this))
         , m_MessagesView(new QTableView(this))
         , m_MessagesModel(std::make_shared<Models::MessagesModel>())
         , m_ApplicationModel(applicationModel)
@@ -200,22 +202,6 @@ namespace GUI {
     {
         if (maybeExit())
             close();
-    }
-
-    /**
-     * @brief MainWindow::onAbout
-     */
-    void MainWindow::onAbout()
-    {
-        m_AboutWidget->show();
-    }
-
-    /**
-     * @brief MainWindow::onNewProject
-     */
-    void MainWindow::onNewProject()
-    {
-        m_NewProjectDialog->show();
     }
 
     /**
@@ -505,6 +491,12 @@ namespace GUI {
             G_CONNECT(a, &QAction::toggled, this, &MainWindow::onRelationActionToggled);
             G_CONNECT(a, &QAction::toggled, m_MainScene.get(), &Graphics::Scene::setShowRelationTrack);
         }
+
+        G_CONNECT(m_Preferences, &Preferences::preferencesChanged, this, &MainWindow::update);
+
+        G_CONNECT(ui->actionPreferences, &QAction::triggered, m_Preferences, &QWidget::show);
+        G_CONNECT(ui->actionAbout, &QAction::triggered, m_AboutWidget, &QWidget::show);
+        G_CONNECT(ui->actionNewProject, &QAction::triggered, m_NewProjectDialog, &QWidget::show);
     }
 
     /**
