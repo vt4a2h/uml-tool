@@ -531,6 +531,24 @@ namespace DB {
     }
 
     /**
+     * @brief Database::mkPath
+     * @param path
+     * @param name
+     * @return
+     */
+    QString Database::mkPath(const QString &path, const QString &name)
+    {
+        return QDir::toNativeSeparators(
+                   QString("%1%2%3.%4").arg(
+                        path,
+                        path.isEmpty() || path.endsWith(QDir::separator()) ? "" : "/",
+                        name.toLower(),
+                        DEFAULT_DATABASE_EXTENSION
+                   )
+               );
+    }
+
+    /**
      * @brief Database::moveFrom
      * @param src
      */
@@ -564,14 +582,7 @@ namespace DB {
      */
     QString Database::makeFullPath() const
     {
-        return QDir::toNativeSeparators(
-                   QString("%1%2%3.%4").arg(
-                        m_Path,
-                        m_Path.isEmpty() || m_Path.endsWith(QDir::separator()) ? "" : "/",
-                        m_Name.toLower(),
-                        DEFAULT_DATABASE_EXTENSION
-                   )
-               );
+        return mkPath(m_Path, m_Name);
     }
 
     /**

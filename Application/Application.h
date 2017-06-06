@@ -44,6 +44,8 @@ namespace App {
 
         bool run();
 
+        bool updateGlobalDBParameters(const QString &path, const QString &name);
+
     private:
         Models::SharedApplicationModel m_ApplicationModel;
         GUI::UniqueMainWindow m_MainWindow;

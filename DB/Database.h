@@ -91,6 +91,8 @@ namespace DB {
 
         bool valid() const;
 
+        static QString mkPath(const QString &path, const QString &name);
+
     public: // ITypeSearcher overrides
         Entity::SharedType typeByID(const Common::ID &typeId) const override;
         Entity::SharedType typeByName(const QString &name) const override;

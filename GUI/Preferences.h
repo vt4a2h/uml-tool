@@ -46,8 +46,17 @@ namespace GUI {
     signals:
         void preferencesChanged();
 
+    protected: // QWidget overrides
+        void showEvent(QShowEvent *event) override;
+
+    private:
+        void init();
+        void applyChanges();
+        void chooseNewGlobalDatabase();
+
     private:
         QScopedPointer<Ui::Preferences> ui;
+
     };
 
 } // namespace GUI

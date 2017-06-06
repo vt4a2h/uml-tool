@@ -67,32 +67,8 @@ namespace App {
             errors.clear();
 
             GUI::ChooseGlobalDatabaseDialog dlg(db->name(), db->path(), m_MainWindow.get());
-            if (dlg.exec() == QDialog::Accepted)
-            {
-                db->setName(dlg.name());
-                db->setPath(dlg.path());
-
-                if (QFile::exists(db->fullPath())) {
-                    db->load(errors);
-
-                    if (!errors.isEmpty()) {
-                        messenger->addMessage(Models::MessageType::Error,
-                                              tr("Database reading error"),
-                                              errors.join("\n"));
-                        return false;
-                    }
-                } else {
-                    // Create new database
-                    if (!db->save()) {
-                        messenger->addMessage(Models::MessageType::Error,
-                                              tr("Database creating error"),
-                                              tr("Cannot create new database: %1.").arg(db->fullPath()));
-                        return false;
-                    }
-                }
-
-                Settings::setGlobalDbPath(db->path());
-                Settings::setGlobalDbName(db->name());
+            if (dlg.exec() == QDialog::Accepted) {
+                return updateGlobalDBParameters(dlg.path(), dlg.name());
             } else {
                 messenger->addMessage(Models::MessageType::Error,
                                       tr("Global database is not set"),
@@ -101,6 +77,49 @@ namespace App {
                 return false;
             }
         }
+
+        return true;
+    }
+
+    /**
+     * @brief Application::updateGlobalDBParameters
+     * @param path
+     * @param name
+     */
+    bool Application::updateGlobalDBParameters(const QString &path, const QString &name)
+    {
+        auto db = G_ASSERT(m_ApplicationModel->globalDatabase());
+        auto messenger = m_MainWindow->messenger();
+
+        db->setPath(path);
+        db->setName(name);
+
+        if (QFile::exists(db->fullPath())) {
+            QStringList errors;
+            db->load(errors);
+
+            if (!errors.isEmpty()) {
+                messenger->addMessage(Models::MessageType::Error,
+                                      tr("Database reading error"),
+                                      errors.join("\n"));
+                return false;
+            }
+        } else {
+            // Create new database
+            if (!db->save()) {
+                messenger->addMessage(Models::MessageType::Error,
+                                      tr("Database creating error"),
+                                      tr("Cannot create new database: %1.").arg(db->fullPath()));
+                return false;
+            }
+        }
+
+        Settings::setGlobalDbPath(db->path());
+        Settings::setGlobalDbName(db->name());
+
+        messenger->addMessage(Models::MessageType::Information,
+                              tr("Global database changed"),
+                              tr("New application database has been specified."));
 
         return true;
     }
