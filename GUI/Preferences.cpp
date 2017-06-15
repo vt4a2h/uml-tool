@@ -23,11 +23,14 @@
 #include "Preferences.h"
 #include "ui_Preferences.h"
 
+#include <QFileDialog>
+
 #include <Application/Settings.h>
 
 #include <DB/Database.h>
 
 #include "QtHelpers.h"
+#include "Constants.h"
 
 namespace GUI {
 
@@ -68,7 +71,8 @@ namespace GUI {
      */
     void Preferences::applyChanges()
     {
-
+        // TODO: change db settings
+        // TODO: ask about closing projects first
     }
 
     /**
@@ -76,7 +80,14 @@ namespace GUI {
      */
     void Preferences::chooseNewGlobalDatabase()
     {
+        auto result = QFileDialog::getOpenFileName(
+                          this, tr("Choose new application database"),
+                          App::Settings::globalDbPath(),
+                          tr("Q-UML Project files (*.%1)").arg(DATABASE_FILE_EXTENTION)
+                      );
 
+        if (!result.isEmpty() && result.endsWith(DATABASE_FILE_EXTENTION))
+            ui->leGlobalDb->setText(result);
     }
 
     /**
@@ -86,7 +97,6 @@ namespace GUI {
     void Preferences::showEvent(QShowEvent *event)
     {
         init();
-
         QDialog::showEvent(event);
     }
 
