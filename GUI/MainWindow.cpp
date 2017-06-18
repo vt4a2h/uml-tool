@@ -143,7 +143,7 @@ namespace GUI {
         , m_AboutWidget(new About(this))
         , m_NewProjectDialog(new NewProjectDialog(this))
         , m_AddScope(new AddScope(this))
-        , m_Preferences(new Preferences(this))
+        , m_Preferences(new Preferences(applicationModel, this))
         , m_MessagesView(new QTableView(this))
         , m_MessagesModel(std::make_shared<Models::MessagesModel>())
         , m_ApplicationModel(applicationModel)
@@ -493,6 +493,8 @@ namespace GUI {
         }
 
         G_CONNECT(m_Preferences, &Preferences::preferencesChanged, this, &MainWindow::update);
+        G_CONNECT(m_Preferences, &Preferences::globalDatabaseChanged,
+                  this, &MainWindow::globalDatabaseChanged); // TODO: fix, add updater by anouther way
 
         G_CONNECT(ui->actionPreferences, &QAction::triggered, m_Preferences, &QWidget::show);
         G_CONNECT(ui->actionAbout, &QAction::triggered, m_AboutWidget, &QWidget::show);

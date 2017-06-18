@@ -25,7 +25,7 @@
 
 #include <QString>
 
-#include <DB/db_types.hpp>
+#include <DB/DBTypes.hpp>
 
 #include <Common/meta.h>
 #include <Common/BasicElement.h>

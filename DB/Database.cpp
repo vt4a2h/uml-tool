@@ -549,6 +549,18 @@ namespace DB {
     }
 
     /**
+     * @brief Database::splitPath
+     * @param fullPath
+     * @return
+     */
+    Database::PathName Database::splitPath(const QString &fullPath)
+    {
+        static const QString pattern("^(.*)(?:/|\\\\)(\\w+).%1$");
+        QRegExp re(pattern.arg(DEFAULT_DATABASE_EXTENSION));
+        return re.exactMatch(fullPath) ? PathName{re.cap(1), re.cap(2)} : PathName();
+    }
+
+    /**
      * @brief Database::moveFrom
      * @param src
      */

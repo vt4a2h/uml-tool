@@ -24,10 +24,13 @@
 #include "ui_Preferences.h"
 
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include <Application/Settings.h>
 
 #include <DB/Database.h>
+
+#include <Models/ApplicationModel.h>
 
 #include "QtHelpers.h"
 #include "Constants.h"
@@ -38,9 +41,10 @@ namespace GUI {
      * @brief Preferences::Preferences
      * @param parent
      */
-    Preferences::Preferences(QWidget *parent)
+    Preferences::Preferences(const Models::SharedApplicationModel &appModel, QWidget *parent)
         : QDialog(parent)
         , ui(new Ui::Preferences)
+        , m_AppModel(G_ASSERT(appModel))
     {
         ui->setupUi(this);
         G_CONNECT(ui->pbApply   , &QPushButton::clicked, [this]{ applyChanges();            });
@@ -71,8 +75,9 @@ namespace GUI {
      */
     void Preferences::applyChanges()
     {
-        // TODO: change db settings
-        // TODO: ask about closing projects first
+        bool changed = applyGeneralSettings(); // Add other sections through || operator
+        if (changed)
+            emit preferencesChanged();
     }
 
     /**
@@ -88,6 +93,32 @@ namespace GUI {
 
         if (!result.isEmpty() && result.endsWith(DATABASE_FILE_EXTENTION))
             ui->leGlobalDb->setText(result);
+    }
+
+    /**
+     * @brief Preferences::applyGeneralSettings
+     */
+    bool Preferences::applyGeneralSettings()
+    {
+        bool changed = false;
+
+        // Application database
+        auto db = G_ASSERT(m_AppModel->globalDatabase());
+        if (db->fullPath() != ui->leGlobalDb->text()) {
+            auto projects = m_AppModel->projects();
+            if (!projects.isEmpty()) {
+                QMessageBox::warning(this, tr("Some projects are opened"),
+                                     tr("You cannot change global database if there are "
+                                        "one or more projects opened.\nTry closing them "
+                                        "and change application database after that, please."),
+                                     QMessageBox::Ok);
+            } else {
+                auto splittedPath = DB::Database::splitPath(ui->leGlobalDb->text());
+                emit globalDatabaseChanged(splittedPath.first, splittedPath.second);
+            }
+        }
+
+        return changed;
     }
 
     /**

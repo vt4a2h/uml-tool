@@ -111,6 +111,9 @@ namespace GUI {
         void onRecentProjectAdded(const QString &path);
         void onRecentProjectRemoved(const QString &path);
 
+    signals:
+        void globalDatabaseChanged(const QString &path, const QString &name);
+
     private:
         bool maybeExit();
         void closeEvent(QCloseEvent *ev) override;

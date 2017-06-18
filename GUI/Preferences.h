@@ -24,6 +24,8 @@
 
 #include <QDialog>
 
+#include "Models/ModelsTypes.hpp"
+
 namespace GUI {
 
     namespace Ui {
@@ -40,11 +42,12 @@ namespace GUI {
     public:
         Q_DISABLE_COPY(Preferences)
 
-        explicit Preferences(QWidget *parent = 0);
+        explicit Preferences(const Models::SharedApplicationModel &appModel, QWidget *parent = 0);
         ~Preferences();
 
     signals:
         void preferencesChanged();
+        void globalDatabaseChanged(const QString &path, const QString &name);
 
     protected: // QWidget overrides
         void showEvent(QShowEvent *event) override;
@@ -54,9 +57,11 @@ namespace GUI {
         void applyChanges();
         void chooseNewGlobalDatabase();
 
+        bool applyGeneralSettings();
+
     private:
         QScopedPointer<Ui::Preferences> ui;
-
+        Models::SharedApplicationModel m_AppModel;
     };
 
 } // namespace GUI

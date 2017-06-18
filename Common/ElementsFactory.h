@@ -25,7 +25,7 @@
 #include <QObject>
 #include <QPointer>
 
-#include <DB/db_types.hpp>
+#include <DB/DBTypes.hpp>
 
 #include <Project/ProjectTypes.hpp>
 

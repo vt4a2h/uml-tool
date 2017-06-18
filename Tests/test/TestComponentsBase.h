@@ -30,7 +30,7 @@
 #include <Project/ProjectTypes.hpp>
 
 #include <DB/Database.h>
-#include <DB/db_types.hpp>
+#include <DB/DbTypes.hpp>
 
 #include <Models/ApplicationModel.h>
 #include <Models/ModelsTypes.hpp>

@@ -40,7 +40,7 @@ namespace App {
         Q_DECLARE_TR_FUNCTIONS(Application)
 
     public:
-        Application(Models::SharedApplicationModel const& appModel, GUI::UniqueMainWindow mainWindow);
+        Application(const Models::SharedApplicationModel &appModel, GUI::UniqueMainWindow mainWindow);
 
         bool run();
 

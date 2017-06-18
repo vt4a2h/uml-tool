@@ -143,7 +143,7 @@ namespace App {
     /**
      * @brief Application::Application
      */
-    Application::Application(Models::SharedApplicationModel const& appModel,
+    Application::Application(const Models::SharedApplicationModel &appModel,
                              GUI::UniqueMainWindow mainWindow)
         : m_ApplicationModel(appModel)
         , m_MainWindow(std::move(mainWindow))
