@@ -494,7 +494,7 @@ namespace GUI {
 
         G_CONNECT(m_Preferences, &Preferences::preferencesChanged, this, &MainWindow::update);
         G_CONNECT(m_Preferences, &Preferences::globalDatabaseChanged,
-                  this, &MainWindow::globalDatabaseChanged); // TODO: fix, add updater by anouther way
+                  this, &MainWindow::globalDatabaseChanged);
 
         G_CONNECT(ui->actionPreferences, &QAction::triggered, m_Preferences, &QWidget::show);
         G_CONNECT(ui->actionAbout, &QAction::triggered, m_AboutWidget, &QWidget::show);

@@ -106,15 +106,21 @@ namespace GUI {
         auto db = G_ASSERT(m_AppModel->globalDatabase());
         if (db->fullPath() != ui->leGlobalDb->text()) {
             auto projects = m_AppModel->projects();
-            if (!projects.isEmpty()) {
+            if (!projects.isEmpty())
                 QMessageBox::warning(this, tr("Some projects are opened"),
                                      tr("You cannot change global database if there are "
                                         "one or more projects opened.\nTry closing them "
                                         "and change application database after that, please."),
                                      QMessageBox::Ok);
-            } else {
+            else {
                 auto splittedPath = DB::Database::splitPath(ui->leGlobalDb->text());
-                emit globalDatabaseChanged(splittedPath.first, splittedPath.second);
+
+                // To avoid double change
+                db->setPath(splittedPath.path);
+                db->setName(splittedPath.name);
+
+                emit globalDatabaseChanged(splittedPath.path, splittedPath.name);
+                changed = true;
             }
         }
 

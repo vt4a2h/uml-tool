@@ -92,7 +92,8 @@ namespace DB {
         bool valid() const;
 
         static QString mkPath(const QString &path, const QString &name);
-        using PathName = QPair<QString, QString>;
+
+        struct PathName { QString path; QString name; };
         static PathName splitPath(const QString &fullPath);
 
     public: // ITypeSearcher overrides

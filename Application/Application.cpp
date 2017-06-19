@@ -88,6 +88,9 @@ namespace App {
      */
     bool Application::updateGlobalDBParameters(const QString &path, const QString &name)
     {
+        if (path.isEmpty() || name.isEmpty())
+            return false;
+
         auto db = G_ASSERT(m_ApplicationModel->globalDatabase());
         auto messenger = m_MainWindow->messenger();
 
@@ -119,7 +122,7 @@ namespace App {
 
         messenger->addMessage(Models::MessageType::Information,
                               tr("Global database changed"),
-                              tr("New application database has been specified."));
+                              tr("New application database has been set."));
 
         return true;
     }
@@ -150,11 +153,21 @@ namespace App {
     {
         G_CONNECT(m_ApplicationModel.get(), &Models::ApplicationModel::currentProjectChanged,
                   &Helpers::GeneratorID::instance(), &Helpers::GeneratorID::onCurrentProjectChanged);
+        G_CONNECT(m_MainWindow.get(), &GUI::MainWindow::globalDatabaseChanged,
+                  this, &Application::updateGlobalDBParameters);
 
         // Set up factories
         setUpFactory(Entity::EntityFactory::instance(), m_ApplicationModel, m_MainWindow->scene());
         setUpFactory(Relationship::RelationFactory::instance(), m_ApplicationModel,
                      m_MainWindow->scene());
+    }
+
+    /**
+     * @brief Application::~Application
+     */
+    Application::~Application()
+    {
+
     }
 
 } // namespace application

@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 03/11/2014.
+** Created 19.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,30 +20,30 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+#pragma once
+
 #include <gtest/gtest.h>
-#include <QApplication>
 
-#include <cases/ProjectMakerCases.h>
-#include <cases/ProjectCases.h>
-#include <cases/ProjectTranslatorCases.h>
-#include <cases/RelationMakerCases.h>
-#include <cases/DepthSearchCases.h>
-#include <cases/FileMakerCases.h>
-#include <cases/FileJsonCases.h>
-#include <cases/TypeMakerTestCases.h>
-#include <cases/IComponentsCases.h>
-#include <cases/EntitiesCases.h>
-#include <cases/ClassComponentsCases.h>
-#include <cases/SignatureParserCases.h>
-#include <cases/ComponentsMakerCases.h>
-#include <cases/SignatureMakerCases.h>
-#include <cases/CommandsCases.h>
-#include <cases/ID.h>
-#include <cases/HelpersCases.h>
+#include <DB/Database.h>
 
-int main(int argc, char **argv)
+#include "Constants.h"
+
+TEST(DBPath, TestSplit)
 {
-    QApplication app(argc, argv);
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    QString pathTemplate("/foo/bar/baz.%1");
+    auto splittedPath = DB::Database::splitPath(pathTemplate.arg(DATABASE_FILE_EXTENTION));
+
+    ASSERT_EQ(splittedPath.name, "baz");
+    ASSERT_EQ(splittedPath.path, "/foo/bar");
+
+    splittedPath = DB::Database::splitPath("fewfevdew.rbrb.wedw\\\\];[");
+    ASSERT_EQ(splittedPath.name, "");
+    ASSERT_EQ(splittedPath.path, "");
+}
+
+TEST(DBPath, TestJoin)
+{
+    auto path = DB::Database::mkPath("/foo/bar", "baz");
+
+    ASSERT_EQ(path, QString("/foo/bar/baz.%1").arg(DATABASE_FILE_EXTENTION));
 }

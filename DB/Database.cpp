@@ -477,7 +477,14 @@ namespace DB {
         clear();
 
         Util::checkAndSet(src, "Name", errorList, [&src, this](){
+            auto fileName = m_Name;
+            Q_ASSERT(!fileName.isEmpty());
+
             m_Name = src["Name"].toString();
+
+            // In case if file was renamed we should set new database name regardless of the read value
+            if (fileName != m_Name)
+                m_Name = fileName;
         });
         Util::checkAndSet(src, "ID", errorList, [&, this](){
             m_ID.fromJson(src["ID"], errorList);

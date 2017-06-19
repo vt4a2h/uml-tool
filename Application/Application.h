@@ -35,15 +35,17 @@ namespace App {
     /**
      * @brief The Application class
      */
-    class Application
+    class Application : public QObject
     {
-        Q_DECLARE_TR_FUNCTIONS(Application)
+        Q_OBJECT
 
     public:
         Application(const Models::SharedApplicationModel &appModel, GUI::UniqueMainWindow mainWindow);
+        ~Application();
 
         bool run();
 
+    public slots:
         bool updateGlobalDBParameters(const QString &path, const QString &name);
 
     private:
