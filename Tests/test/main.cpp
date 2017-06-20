@@ -39,6 +39,7 @@
 #include <cases/SignatureMakerCases.h>
 #include <cases/CommandsCases.h>
 #include <cases/ID.h>
+#include <cases/HelpersCases.h>
 
 int main(int argc, char **argv)
 {

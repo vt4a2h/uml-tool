@@ -32,7 +32,7 @@
 #include "ITypeSearcher.h"
 #include "IScopeSearcher.h"
 #include "types.h"
-#include "db_types.hpp"
+#include "DBTypes.hpp"
 
 /**
  *  @brief namespace db
@@ -90,6 +90,11 @@ namespace DB {
         void setId(const Common::ID &ID);
 
         bool valid() const;
+
+        static QString mkPath(const QString &path, const QString &name);
+
+        struct PathName { QString path; QString name; };
+        static PathName splitPath(const QString &fullPath);
 
     public: // ITypeSearcher overrides
         Entity::SharedType typeByID(const Common::ID &typeId) const override;

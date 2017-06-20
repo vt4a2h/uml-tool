@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName("Q-UML");
 
     auto injector = di::make_injector();
-    auto app = injector.create<App::Application>();
-    app.run();
+    std::unique_ptr<App::Application> app(injector.create<App::Application*>());
+    app->run();
 
     return a.exec();
 }

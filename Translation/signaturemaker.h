@@ -33,7 +33,7 @@
 
 #include <Project/ProjectTypes.hpp>
 
-#include <DB/db_types.hpp>
+#include <DB/DBTypes.hpp>
 
 namespace Translation {
 

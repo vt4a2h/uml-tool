@@ -27,7 +27,7 @@
 
 #include <QHash>
 
-#include <DB/db_types.hpp>
+#include <DB/DBTypes.hpp>
 #include <Entity/entity_types.hpp>
 #include <Common/common_types.h>
 

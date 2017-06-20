@@ -28,7 +28,7 @@
 #include <Common/meta.h>
 #include <Common/SharedFromThis.h>
 
-#include <DB/db_types.hpp>
+#include <DB/DBTypes.hpp>
 
 #include "ClassMethod.h"
 #include "Constants.h"

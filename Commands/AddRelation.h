@@ -24,7 +24,7 @@
 
 #include <GUI/graphics/GraphicsTypes.h>
 
-#include <DB/db_types.hpp>
+#include <DB/DBTypes.hpp>
 
 #include <Entity/entity_types.hpp>
 

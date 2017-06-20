@@ -99,7 +99,6 @@ HEADERS += \
     types.h \
     DB/Database.h \
     DB/ProjectDatabase.h \
-    DB/db_types.hpp \
     Entity/field.h \
     Entity/Components/componentsignatureparser.h \
     Entity/Components/icomponents.h \
@@ -198,7 +197,8 @@ HEADERS += \
     Models/MessagesModel.h \
     Models/IMessenger.h \
     GUI/HtmlDelegate.h \
-    GUI/Preferences.h
+    GUI/Preferences.h \
+    DB/DBTypes.hpp
 
 FORMS += \
     GUI/addscope.ui \

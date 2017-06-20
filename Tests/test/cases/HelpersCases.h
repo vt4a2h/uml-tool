@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 04.
+** Created 19.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,47 +22,28 @@
 *****************************************************************************/
 #pragma once
 
-#include <QDialog>
+#include <gtest/gtest.h>
 
-#include "Models/ModelsTypes.hpp"
+#include <DB/Database.h>
 
-namespace GUI {
+#include "Constants.h"
 
-    namespace Ui {
-        class Preferences;
-    }
+TEST(DBPath, TestSplit)
+{
+    QString pathTemplate("/foo/bar/baz.%1");
+    auto splittedPath = DB::Database::splitPath(pathTemplate.arg(DATABASE_FILE_EXTENTION));
 
-    /**
-     * @brief The Preferences class
-     */
-    class Preferences : public QDialog
-    {
-        Q_OBJECT
+    ASSERT_EQ(splittedPath.name, "baz");
+    ASSERT_EQ(splittedPath.path, "/foo/bar");
 
-    public:
-        Q_DISABLE_COPY(Preferences)
+    splittedPath = DB::Database::splitPath("fewfevdew.rbrb.wedw\\\\];[");
+    ASSERT_EQ(splittedPath.name, "");
+    ASSERT_EQ(splittedPath.path, "");
+}
 
-        explicit Preferences(const Models::SharedApplicationModel &appModel, QWidget *parent = 0);
-        ~Preferences();
+TEST(DBPath, TestJoin)
+{
+    auto path = DB::Database::mkPath("/foo/bar", "baz");
 
-    signals:
-        void preferencesChanged();
-        void globalDatabaseChanged(const QString &path, const QString &name);
-
-    protected: // QWidget overrides
-        void showEvent(QShowEvent *event) override;
-
-    private:
-        void init();
-        void applyChanges();
-        void chooseNewGlobalDatabase();
-
-        bool applyGeneralSettings();
-
-    private:
-        QScopedPointer<Ui::Preferences> ui;
-        Models::SharedApplicationModel m_AppModel;
-    };
-
-} // namespace GUI
-
+    ASSERT_EQ(path, QString("/foo/bar/baz.%1").arg(DATABASE_FILE_EXTENTION));
+}

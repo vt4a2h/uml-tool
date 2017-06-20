@@ -477,7 +477,14 @@ namespace DB {
         clear();
 
         Util::checkAndSet(src, "Name", errorList, [&src, this](){
+            auto fileName = m_Name;
+            Q_ASSERT(!fileName.isEmpty());
+
             m_Name = src["Name"].toString();
+
+            // In case if file was renamed we should set new database name regardless of the read value
+            if (fileName != m_Name)
+                m_Name = fileName;
         });
         Util::checkAndSet(src, "ID", errorList, [&, this](){
             m_ID.fromJson(src["ID"], errorList);
@@ -531,6 +538,36 @@ namespace DB {
     }
 
     /**
+     * @brief Database::mkPath
+     * @param path
+     * @param name
+     * @return
+     */
+    QString Database::mkPath(const QString &path, const QString &name)
+    {
+        return QDir::toNativeSeparators(
+                   QString("%1%2%3.%4").arg(
+                        path,
+                        path.isEmpty() || path.endsWith(QDir::separator()) ? "" : "/",
+                        name.toLower(),
+                        DEFAULT_DATABASE_EXTENSION
+                   )
+               );
+    }
+
+    /**
+     * @brief Database::splitPath
+     * @param fullPath
+     * @return
+     */
+    Database::PathName Database::splitPath(const QString &fullPath)
+    {
+        static const QString pattern("^(.*)(?:/|\\\\)(\\w+).%1$");
+        QRegExp re(pattern.arg(DEFAULT_DATABASE_EXTENSION));
+        return re.exactMatch(fullPath) ? PathName{re.cap(1), re.cap(2)} : PathName();
+    }
+
+    /**
      * @brief Database::moveFrom
      * @param src
      */
@@ -564,14 +601,7 @@ namespace DB {
      */
     QString Database::makeFullPath() const
     {
-        return QDir::toNativeSeparators(
-                   QString("%1%2%3.%4").arg(
-                        m_Path,
-                        m_Path.isEmpty() || m_Path.endsWith(QDir::separator()) ? "" : "/",
-                        m_Name.toLower(),
-                        DEFAULT_DATABASE_EXTENSION
-                   )
-               );
+        return mkPath(m_Path, m_Name);
     }
 
     /**

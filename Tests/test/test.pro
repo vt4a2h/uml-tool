@@ -79,6 +79,7 @@ HEADERS += ../../enums.h \
     ../../DB/Database.h \
     ../../Common/BasicElement.h \
     ../../Common/ID.h \
+    ../../DB/DBTypes.hpp \
     cases/TypeMakerTestCases.h \
     cases/SignatureParserCases.h \
     cases/SignatureMakerCases.h \
@@ -95,7 +96,8 @@ HEADERS += ../../enums.h \
     TestCommands.h \
     cases/CommandsCases.h \
     cases/ProjectMakerCases.h \
-    cases/ID.h
+    cases/ID.h \
+    cases/HelpersCases.h
 
 SOURCES += main.cpp \
            ../../Application/settings.cpp \
