@@ -59,6 +59,7 @@ namespace Models {
 
     MessagesModel::MessagesModel(QObject * parent)
         : QAbstractTableModel(parent)
+        , m_UnreadMessagesCount(0)
         , m_CachedIcons {
               {MessageType::Information, scaledIcon(":/icons/pic/icon_information.png")},
               {MessageType::Warning    , scaledIcon(":/icons/pic/icon_warning.png")    },
@@ -81,6 +82,9 @@ namespace Models {
         beginInsertRows(QModelIndex(), rowCount(QModelIndex()), rowCount(QModelIndex()));
         m_Messages.append({type, toHtml(summary), toHtml(description), QDateTime::currentDateTime()});
         endInsertRows();
+
+        ++m_UnreadMessagesCount;
+        emit newMessageAdded();
     }
 
     /**
@@ -138,6 +142,23 @@ namespace Models {
         }
 
         return QVariant();
+    }
+
+    /**
+     * @brief MessagesModel::unreadMessagesCount
+     * @return
+     */
+    uint MessagesModel::unreadMessagesCount() const
+    {
+        return m_UnreadMessagesCount;
+    }
+
+    /**
+     * @brief MessagesModel::markAllMessagesRead
+     */
+    void MessagesModel::markAllMessagesRead()
+    {
+       m_UnreadMessagesCount = 0;
     }
 
     /**

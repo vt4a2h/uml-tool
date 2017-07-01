@@ -111,6 +111,8 @@ namespace GUI {
         void onRecentProjectAdded(const QString &path);
         void onRecentProjectRemoved(const QString &path);
 
+        void onNewMessageAdded();
+
     signals:
         void globalDatabaseChanged(const QString &path, const QString &name);
 
@@ -156,6 +158,8 @@ namespace GUI {
         QTableView                  *m_MessagesView;
         QDockWidget                 *m_MessagesDock;
         Models::SharedMessagesModel  m_MessagesModel;
+
+        QPointer<QToolButton> m_MessagesButton;
 
         QList<QAction*> m_RelationActions;
 

@@ -123,10 +123,43 @@ namespace {
         action.setEnabled(state);
         action.setToolTip(tooltip);
     }
+
+    class MessageButton : public QToolButton
+    {
+    public:
+        using QToolButton::QToolButton;
+
+    protected:
+        void paintEvent(QPaintEvent *ev) override
+        {
+            QToolButton::paintEvent(ev);
+
+            QPainter painter;
+            painter.begin(this);
+            painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform |
+                                   QPainter::TextAntialiasing | QPainter::HighQualityAntialiasing);
+
+            QPixmap p(":/icons/pic/icon_message.png");
+            auto rect = ev->rect();
+            rect.setWidth(rect.width() - padding());
+            rect.setHeight(rect.height() - padding());
+            rect.setTopLeft({rect.topLeft().x() + padding(), rect.topLeft().y() + padding()});
+            painter.drawPixmap(rect, p);
+
+            painter.setPen(Qt::red);
+            painter.setFont(QFont("Arial", 10));
+            painter.drawText(rect, Qt::AlignVCenter | Qt::AlignHCenter, "1");
+            painter.end();
+
+            ev->accept();
+        }
+
+    private:
+        static int padding() { return 4; }
+    };
 }
 
 namespace GUI {
-
 
     /**
      * @brief MainWindow::MainWindow
@@ -192,7 +225,7 @@ namespace GUI {
      */
     Models::SharedMessenger MainWindow::messenger() const
     {
-       return m_MessagesModel;
+        return m_MessagesModel;
     }
 
     /**
@@ -264,14 +297,14 @@ namespace GUI {
      */
     void MainWindow::configureStatusBar()
     {
-        QToolButton * tb = new QToolButton(this);
-        ui->statusBar->addPermanentWidget(tb);
-        tb->setIcon(QIcon(":/icons/pic/icon_message.png"));
-        tb->resize(toolBarButtonSize);
-        tb->setFocusPolicy(Qt::NoFocus);
+        m_MessagesButton = new MessageButton(this);
+        ui->statusBar->addPermanentWidget(m_MessagesButton);
+//        m_MessagesButton->setIcon(QIcon(":/icons/pic/icon_message.png"));
+        m_MessagesButton->resize(toolBarButtonSize);
+        m_MessagesButton->setFocusPolicy(Qt::NoFocus);
 
         auto action = [this](){ m_MessagesDock->setVisible(!m_MessagesDock->isVisible()); };
-        connect(tb, &QToolButton::clicked, action);
+        connect(m_MessagesButton, &QToolButton::clicked, action);
     }
 
     void MainWindow::onOpenProject()
@@ -499,6 +532,9 @@ namespace GUI {
         G_CONNECT(ui->actionPreferences, &QAction::triggered, m_Preferences, &QWidget::show);
         G_CONNECT(ui->actionAbout, &QAction::triggered, m_AboutWidget, &QWidget::show);
         G_CONNECT(ui->actionNewProject, &QAction::triggered, m_NewProjectDialog, &QWidget::show);
+
+        G_CONNECT(m_MessagesModel.get(), &Models::MessagesModel::newMessageAdded,
+                  this, &MainWindow::onNewMessageAdded);
     }
 
     /**
@@ -688,6 +724,17 @@ namespace GUI {
     {
         removeRecentProject(path);
         rebuildRecentProjectMenu();
+    }
+
+    /**
+     * @brief MainWindow::onNewMessageAdded
+     */
+    void MainWindow::onNewMessageAdded()
+    {
+        if (!m_MessagesView->isVisible()) {
+
+            // TODO: fix inactive qpainter
+        }
     }
 
     /**
