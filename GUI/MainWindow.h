@@ -111,8 +111,6 @@ namespace GUI {
         void onRecentProjectAdded(const QString &path);
         void onRecentProjectRemoved(const QString &path);
 
-        void onNewMessageAdded();
-
     signals:
         void globalDatabaseChanged(const QString &path, const QString &name);
 

@@ -83,7 +83,8 @@ namespace Models {
         m_Messages.append({type, toHtml(summary), toHtml(description), QDateTime::currentDateTime()});
         endInsertRows();
 
-        ++m_UnreadMessagesCount;
+        if ((m_IsViewing && !m_IsViewing()) || !m_IsViewing)
+            ++m_UnreadMessagesCount;
         emit newMessageAdded();
     }
 
@@ -158,7 +159,16 @@ namespace Models {
      */
     void MessagesModel::markAllMessagesRead()
     {
-       m_UnreadMessagesCount = 0;
+        m_UnreadMessagesCount = 0;
+    }
+
+    /**
+     * @brief MessagesModel::setViewStatusFunction
+     * @param f
+     */
+    void MessagesModel::setViewStatusFunction(ViewStatusFunc f)
+    {
+        m_IsViewing = f;
     }
 
     /**

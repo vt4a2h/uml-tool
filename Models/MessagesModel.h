@@ -22,6 +22,8 @@
 *****************************************************************************/
 #pragma once
 
+#include <functional>
+
 #include <QAbstractItemModel>
 #include <QDateTime>
 #include <QPixmap>
@@ -37,8 +39,23 @@ namespace Models {
     {
         Q_OBJECT
 
+    public: // Types
+        using ViewStatusFunc = std::function<bool()>;
+
     public:
         explicit MessagesModel(QObject * parent = nullptr);
+        void markAllMessagesRead();
+
+        void setViewStatusFunction(ViewStatusFunc f);
+
+    public: // IMessenger overrides
+        Messages messages() const override;
+        uint unreadMessagesCount() const override;
+
+    public: // QAbstractItemModel overrides
+        int rowCount(const QModelIndex &parent) const override;
+        int columnCount(const QModelIndex &parent) const override;
+        QVariant data(const QModelIndex &index, int role) const override;
 
     public slots: // IMessenger overrides
         void addMessage(MessageType type, const QString &summary,
@@ -46,18 +63,6 @@ namespace Models {
 
     signals:
         void newMessageAdded(); // Extend if needed
-
-    public: // IMessenger overrides
-        Messages messages() const override;
-
-    public: // QAbstractItemModel overrides
-        int rowCount(const QModelIndex &parent) const override;
-        int columnCount(const QModelIndex &parent) const override;
-        QVariant data(const QModelIndex &index, int role) const override;
-
-    public: // own
-        uint unreadMessagesCount() const;
-        void markAllMessagesRead();
 
     private: // Methods
         QVariant processDisplayRole(const QModelIndex &index) const;
@@ -79,6 +84,8 @@ namespace Models {
 
         // Cannot be static, because required qApp created
         QHash<MessageType, QPixmap> m_CachedIcons;
+
+        ViewStatusFunc m_IsViewing;
     };
 
     inline uint qHash(MessageType t)

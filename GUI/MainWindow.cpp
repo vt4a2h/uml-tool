@@ -127,7 +127,10 @@ namespace {
     class MessageButton : public QToolButton
     {
     public:
-        using QToolButton::QToolButton;
+        MessageButton(QWidget * parent, Models::IMessenger const& messenger)
+            : QToolButton(parent)
+            , m_Messenger(messenger)
+        {}
 
     protected:
         void paintEvent(QPaintEvent *ev) override
@@ -144,17 +147,25 @@ namespace {
             rect.setWidth(rect.width() - padding());
             rect.setHeight(rect.height() - padding());
             rect.setTopLeft({rect.topLeft().x() + padding(), rect.topLeft().y() + padding()});
-            painter.drawPixmap(rect, p);
+            painter.drawPixmap(rect, p.scaled(rect.size(),Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-            painter.setPen(Qt::red);
-            painter.setFont(QFont("Arial", 10));
-            painter.drawText(rect, Qt::AlignVCenter | Qt::AlignHCenter, "1");
-            painter.end();
+            auto unreadMessagesCount = m_Messenger.unreadMessagesCount();
+            if (unreadMessagesCount != 0)
+            {
+                painter.setPen(Qt::white);
+                painter.drawText(rect, Qt::AlignCenter,
+                                 unreadMessagesCount > 99 ? QString("99+")
+                                                          : QString::number(unreadMessagesCount));
+                painter.end();
+            }
 
             ev->accept();
         }
 
-    private:
+    private: // Data
+        Models::IMessenger const& m_Messenger;
+
+    private: // Methods
         static int padding() { return 4; }
     };
 }
@@ -290,6 +301,14 @@ namespace GUI {
 
         m_MessagesDock = addDock(tr("Messages"), ui->actionMessagesDockWidget,
                                  Qt::BottomDockWidgetArea, m_MessagesView, false /*visible*/);
+        G_CONNECT(m_MessagesDock, &QDockWidget::visibilityChanged,
+                  [this](bool v){
+                      if (v) {
+                          m_MessagesModel->markAllMessagesRead();
+                          m_MessagesButton->update();
+                      }
+                   });
+        m_MessagesModel->setViewStatusFunction([this]{ return m_MessagesDock->isVisible(); });
     }
 
     /**
@@ -297,9 +316,8 @@ namespace GUI {
      */
     void MainWindow::configureStatusBar()
     {
-        m_MessagesButton = new MessageButton(this);
+        m_MessagesButton = new MessageButton(this, *m_MessagesModel);
         ui->statusBar->addPermanentWidget(m_MessagesButton);
-//        m_MessagesButton->setIcon(QIcon(":/icons/pic/icon_message.png"));
         m_MessagesButton->resize(toolBarButtonSize);
         m_MessagesButton->setFocusPolicy(Qt::NoFocus);
 
@@ -532,9 +550,6 @@ namespace GUI {
         G_CONNECT(ui->actionPreferences, &QAction::triggered, m_Preferences, &QWidget::show);
         G_CONNECT(ui->actionAbout, &QAction::triggered, m_AboutWidget, &QWidget::show);
         G_CONNECT(ui->actionNewProject, &QAction::triggered, m_NewProjectDialog, &QWidget::show);
-
-        G_CONNECT(m_MessagesModel.get(), &Models::MessagesModel::newMessageAdded,
-                  this, &MainWindow::onNewMessageAdded);
     }
 
     /**
@@ -724,17 +739,6 @@ namespace GUI {
     {
         removeRecentProject(path);
         rebuildRecentProjectMenu();
-    }
-
-    /**
-     * @brief MainWindow::onNewMessageAdded
-     */
-    void MainWindow::onNewMessageAdded()
-    {
-        if (!m_MessagesView->isVisible()) {
-
-            // TODO: fix inactive qpainter
-        }
     }
 
     /**
