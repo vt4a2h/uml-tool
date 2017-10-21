@@ -1,9 +1,17 @@
-cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
+
+if(UNIX AND NOT APPLE)
+    set(CMAKE_C_COMPILER gcc-7)
+    set(CMAKE_CXX_COMPILER g++-7)
+else()
+    message(FATAL_ERROR "Unsupported system")
+endif(UNIX AND NOT APPLE)
 
 project(UmlTool)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -std=c++1y")
-set(CMAKE_CXX_COMPILER g++-6)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -Wall -Wextra -std=c++1z")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -DNDEBUG")
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -24,7 +32,7 @@ set(GUI ${ROOT}/GUI)
 set(GUI_GRAPHICS ${GUI}/graphics)
 set(HELPERS ${ROOT}/Helpers)
 set(MODELS ${ROOT}/Models)
-set(PROJECT ${ROOT}/project)
+set(PROJECT ${ROOT}/Project)
 set(REL ${ROOT}/Relationship)
 set(TRANSLATION ${ROOT}/Translation)
 set(UTIL ${ROOT}/Utility)
@@ -57,6 +65,10 @@ add_executable(uml-tool main.cpp ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${ENTITY_SRC}
                ${ENTITY_COMPONENTS_SRC} ${GEN_SRC} ${GUI_SRC} ${GUI_GRAPHICS_SRC} ${HELPERS_SRC}
                ${MODELS_SRC} ${PROJECT_SRC} ${REL_SRC} ${TRANSLATION_SRC} ${UTIL_SRC}
                ${COMMON_SRC} ${RESOURCES})
+
 target_link_libraries(uml-tool ${Boost_LIBRARIES})
-set_property(TARGET uml-tool PROPERTY CXX_STANDARD 14)
+
+set_property(TARGET uml-tool PROPERTY CXX_STANDARD 17)
+set_property(TARGET uml-tool PROPERTY CXX_EXTENSIONS OFF)
+
 qt5_use_modules(uml-tool Widgets Core)

@@ -22,7 +22,8 @@
 *****************************************************************************/
 #include "GraphicsRelation.h"
 
-#include <math.h>
+#include <cmath>
+#include <functional>
 
 #include <QPainter>
 

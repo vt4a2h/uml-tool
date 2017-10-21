@@ -22,19 +22,18 @@
 *****************************************************************************/
 #include "EntityFactory.h"
 
+#include <functional>
+
 #include <QGraphicsScene>
 
 #include <DB/ProjectDatabase.h>
-
 #include <Entity/Class.h>
 #include <Entity/ExtendedType.h>
 #include <Entity/Union.h>
 #include <Entity/Enum.h>
 #include <Entity/TemplateClass.h>
-#include <Entity/Scope.h>
 
 #include <Models/ProjectTreeModel.h>
-
 #include <Project/Project.h>
 
 namespace Entity {

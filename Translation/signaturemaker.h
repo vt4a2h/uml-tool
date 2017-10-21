@@ -22,6 +22,8 @@
 *****************************************************************************/
 #pragma once
 
+#include <functional>
+
 #include <QCoreApplication>
 #include <QMap>
 

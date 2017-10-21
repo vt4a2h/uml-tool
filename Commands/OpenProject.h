@@ -22,6 +22,8 @@
 *****************************************************************************/
 #pragma once
 
+#include <functional>
+
 #include <Models/ModelsTypes.hpp>
 #include <GUI/graphics/GraphicsTypes.h>
 #include <Project/ProjectTypes.hpp>

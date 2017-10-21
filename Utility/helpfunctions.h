@@ -25,6 +25,7 @@
 
 #include <memory>
 #include <map>
+#include <functional>
 
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/find.hpp>
@@ -43,11 +44,6 @@
 class QString;
 class QJsonObject;
 class QStringList;
-
-namespace std {
-    template<class T>
-    class function;
-}
 
 namespace Entity {
     class Type;
@@ -163,14 +159,11 @@ namespace Util {
     template <class Hash, class KeyGetter>
     void deepCopySharedPointerHash(const Hash &src, Hash &dst, KeyGetter keyGetter)
     {
-        Hash tmpHash;
-        tmpHash.reserve(src.size());
+        dst.reserve(src.size());
 
         using ValueType = typename Hash::mapped_type::element_type;
         for (auto &&value : src)
-            tmpHash.insert(std::bind(keyGetter, value.get())(), std::make_shared<ValueType>(*value));
-
-        dst = std::move(tmpHash);
+            dst.insert((*value.*keyGetter)(), std::make_shared<ValueType>(*value));
     }
 
     template <class Key, class Value>
