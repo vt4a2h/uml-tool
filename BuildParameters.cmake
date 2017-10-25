@@ -10,7 +10,4 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5Widgets REQUIRED)
 find_package(Boost 1.59.0 REQUIRED)
 
-set(ROOT ${CMAKE_SOURCE_DIR})
-include(FilesList.cmake)
-
 add_definitions(-DQT_USE_QSTRINGBUILDER)

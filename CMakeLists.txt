@@ -7,6 +7,9 @@ project(UmlTool)
 
 include(BuildParameters.cmake)
 
+set(ROOT ${CMAKE_SOURCE_DIR})
+include(FilesList.cmake)
+
 set(RESOURCES ${GUI}/main.qrc)
 
 include_directories(${Qt5Widgets_INCLUDES} ${Boost_INCLUDE_DIRS} ${APP} ${CMD} ${DB} ${ENTITY}
