@@ -1,30 +1,11 @@
 cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
 
-if(UNIX AND NOT APPLE)
-    set(CMAKE_C_COMPILER gcc-7)
-    set(CMAKE_CXX_COMPILER g++-7)
-else()
-    message(FATAL_ERROR "Unsupported system")
-endif(UNIX AND NOT APPLE)
+# Should be set above project name definition
+include(BuildToolset.cmake)
 
 project(UmlTool)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -Wall -Wextra -std=c++1z")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -DNDEBUG")
-
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-find_package(Qt5Widgets REQUIRED)
-find_package(Boost 1.59.0 REQUIRED)
-
-set(ROOT ${CMAKE_SOURCE_DIR})
-include(FilesList.cmake)
-
-add_definitions(-DQT_USE_QSTRINGBUILDER)
+include(BuildParameters.cmake)
 
 set(RESOURCES ${GUI}/main.qrc)
 
@@ -43,7 +24,7 @@ add_executable(uml-tool ${FREE_SRC} ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${ENTITY_SRC
 
 target_link_libraries(uml-tool ${Boost_LIBRARIES})
 
-set_property(TARGET uml-tool PROPERTY CXX_STANDARD 17)
-set_property(TARGET uml-tool PROPERTY CXX_EXTENSIONS OFF)
+include(CommonFunctions.cmake)
+setCommonTargetProperties(uml-tool)
 
 qt5_use_modules(uml-tool Widgets Core)
