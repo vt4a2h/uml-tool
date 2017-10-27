@@ -104,7 +104,7 @@ set(GEN_HEADERS
     ${GEN}/virtualfile.h
     ${GEN}/virtualfilesystemabstractitem.h
     ${GEN}/generator_types.hpp)
-set(GEN_SOURCES
+set(GEN_SRC
     ${GEN}/abstractprojectgenerator.cpp
     ${GEN}/basiccppprojectgenerator.cpp
     ${GEN}/virtualdirectory.cpp

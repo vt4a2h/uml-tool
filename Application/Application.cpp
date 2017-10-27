@@ -34,13 +34,11 @@
 
 #include <Helpers/GeneratorID.h>
 
-#include <Entity/Type.h>
 #include <Entity/EntityFactory.h>
 
 #include <Relationship/RelationFactory.h>
 
 #include "Settings.h"
-#include "QtHelpers.h"
 
 namespace App {
 

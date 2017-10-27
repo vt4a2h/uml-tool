@@ -31,3 +31,5 @@ include(CommonFunctions.cmake)
 setCommonTargetProperties(uml-tool)
 
 qt5_use_modules(uml-tool Widgets Core)
+
+add_subdirectory(Tests)

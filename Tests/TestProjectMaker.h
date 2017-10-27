@@ -20,8 +20,11 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-
 #pragma once
+
+#ifndef TEST_ROOT
+Test root should be defined!
+#endif
 
 #include <gtest/gtest.h>
 
@@ -60,5 +63,5 @@ protected:
     // file section
     QString rootPath_     = QDir::current().path();
     QChar   sep_          = QDir(rootPath_).separator();
-    QString testDataPath_ = QString("..%1test_data%1").arg(sep_);
+    QString testDataPath_ = QString(TEST_ROOT "%1data%1").arg(sep_);
 };
