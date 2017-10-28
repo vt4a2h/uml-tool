@@ -13,7 +13,9 @@ CMakeScripts
 Makefile
 cmake_install.cmake
 install_manifest.txt
-build*
+build
+cmake-build*
+build-*
 
 #Clion
 .idea

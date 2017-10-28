@@ -27,8 +27,9 @@ before_script:
 script:
    - source /opt/qt59/bin/qt59-env.sh
 
-   # Get and build gtest
+   # Get and build required libs. TODO: change to conan.io packages
    - ./build_scripts/gtest.sh
+   - ./build_scripts/cmake.sh
 
    # Build application
    - rm -rf build && mkdir build && cd build

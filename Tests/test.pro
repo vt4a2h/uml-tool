@@ -75,6 +75,7 @@ HEADERS += ../../enums.h \
     TestClassComponents.h \
     TestComponentSignatureParser.h \
     TestProjectBase.h \
+    TestCommands.h \
     ../../DB/ProjectDatabase.h \
     ../../DB/Database.h \
     ../../Common/BasicElement.h \
@@ -93,7 +94,6 @@ HEADERS += ../../enums.h \
     cases/ComponentsMakerCases.h \
     cases/ClassComponentsCases.h \
     cases/FileMakerCases.h \
-    TestCommands.h \
     cases/CommandsCases.h \
     cases/ProjectMakerCases.h \
     cases/ID.h \
