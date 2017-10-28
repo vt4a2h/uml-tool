@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
 
 project(UmlToolTests)
 
-add_definitions(-DTEST_ROOT="${ROOT}/Tests")
+add_definitions(-DTEST_ROOT="${ROOT}/Tests" -DDB_PATH="${ROOT}")
 
 include(${ROOT}/BuildToolset.cmake)
 include(${ROOT}/BuildParameters.cmake)

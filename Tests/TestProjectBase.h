@@ -22,6 +22,10 @@
 *****************************************************************************/
 #pragma once
 
+#ifndef DB_PATH
+Database path should be defined.
+#endif
+
 #include <gtest/gtest.h>
 
 #include <DB/ProjectDatabase.h>
@@ -43,7 +47,7 @@ protected:
 
     void init()
     {
-        m_GlobalDb = std::make_shared<DB::Database>("global", "../../");
+        m_GlobalDb = std::make_shared<DB::Database>("global", DB_PATH"/");
 
         initFactory(Entity::EntityFactory::instance());
         initFactory(Relationship::RelationFactory::instance());

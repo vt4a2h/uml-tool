@@ -33,7 +33,7 @@
 
 #define check_errors(r)\
     ASSERT_TRUE(r.errorMessage.isEmpty())\
-        << "There are some message: " << r.errorMessage.toStdString();
+        << "Messages: " << r.errorMessage.toStdString();
 
 #define tst_Common(name_, match) \
     const auto &name_ = property->name_(); \

@@ -22,6 +22,10 @@
 *****************************************************************************/
 #pragma once
 
+#ifndef DB_PATH
+Database path should be defined.
+#endif
+
 #include <Helpers/GeneratorID.h>
 
 #include <Entity/EntityFactory.h>
@@ -37,7 +41,7 @@
 
 #include <GUI/gui_types.hpp>
 
-const QString globalDbPath = "../../";
+const QString globalDbPath = DB_PATH"/";
 const QString globalDbName = "global";
 
 class ComponentsBase
