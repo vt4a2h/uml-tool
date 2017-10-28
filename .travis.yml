@@ -11,7 +11,7 @@ install:
    - sudo apt-get install -qq gcc-7 g++-7
    - sudo apt-get install -qq cmake
    - sudo apt-get install -qq ggcov
-   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-6 90
+   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 90
    - sudo apt-get install -qq lcov
    - gem install coveralls-lcov
    - sudo apt-get install -qq qt59base
