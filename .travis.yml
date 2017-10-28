@@ -27,7 +27,7 @@ before_script:
 script:
    - source /opt/qt59/bin/qt59-env.sh
 
-   # Get and build required libs. TODO: change to conan.io packages
+   # Get and build required libs/apps. TODO: change to conan.io packages
    - ./build_scripts/gtest.sh
    - ./build_scripts/cmake.sh
 
@@ -36,6 +36,9 @@ script:
    - cmake -DCMAKE_BUILD_TYPE=Release -DCOLLECT_COVERAGE=True ..
    - cmake --build . --target uml-tool -- -j4
    - cmake --build . --target tests -- -j4
+
+   # Run tests
+   - ./Tests/tests --gtest_shuffle
 
    # Collect coverage
    - cd ../

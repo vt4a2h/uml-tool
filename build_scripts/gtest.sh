@@ -9,8 +9,8 @@ CXX_FLAGS="-std=c++1z -Ofast"
 C=gcc-7
 C_FLAGS="-std=c1x -Ofast"
 
-cmake ../googletest/ -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_C_COMPILER=$C -DCMAKE_C_FLAGS=$C_FLAGS -DCMAKE_CXX_FLAGS=$CXX_FLAGS
-make -j4
-sudo make install
+cmake ../googletest/ -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_C_COMPILER=$C -DCMAKE_C_FLAGS=$C_FLAGS -DCMAKE_CXX_FLAGS=$CXX_FLAGS &> /dev/null
+make -j4 &> /dev/null
+sudo make install &> /dev/null
 
 cd ..
