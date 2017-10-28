@@ -31,8 +31,7 @@ script:
    - ./build_scripts/gtest.sh
 
    # Build application
-   - mkdir build
-   - cd build
+   - rm -rf build && mkdir build && cd build
    - cmake -DCMAKE_BUILD_TYPE=Release -DCOLLECT_COVERAGE=True ..
    - cmake --build . --target uml-tool -- -j4
    - cmake --build . --target tests -- -j4
