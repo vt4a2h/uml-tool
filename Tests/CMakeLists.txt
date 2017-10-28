@@ -68,7 +68,7 @@ add_executable(tests ${ROOT}/Tests/main.cpp ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${EN
                ${HELPERS_HEADERS} ${MODELS_HEADERS} ${PROJECT_HEADERS} ${REL_HEADERS} ${TRANSLATION_HEADERS}
                ${UTIL_HEADERS} ${COMMON_HEADERS})
 
-target_link_libraries(tests ${Boost_LIBRARIES} ${GTEST_BOTH_LIBRARIES})
+target_link_libraries(tests ${Boost_LIBRARIES} ${GTEST_LIBRARIES} pthread)
 
 include(${ROOT}/CommonFunctions.cmake)
 setCommonTargetProperties(tests)
