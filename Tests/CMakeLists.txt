@@ -7,6 +7,11 @@ add_definitions(-DTEST_ROOT="${ROOT}/Tests")
 include(${ROOT}/BuildToolset.cmake)
 include(${ROOT}/BuildParameters.cmake)
 
+if (COLLECT_COVERAGE)
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lstdc++ --coverage")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g --coverage")
+endif(COLLECT_COVERAGE)
+
 enable_testing()
 find_package(GTest REQUIRED)
 
