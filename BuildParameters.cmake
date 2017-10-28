@@ -8,6 +8,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Qt5Widgets REQUIRED)
-find_package(Boost 1.59.0 REQUIRED)
+find_package(Boost 1.54.0 REQUIRED)
 
 add_definitions(-DQT_USE_QSTRINGBUILDER)
