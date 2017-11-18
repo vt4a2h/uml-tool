@@ -1,3 +1,6 @@
 [submodule "boost-di"]
 	path = boost-di
 	url = git://github.com/boost-experimental/di.git
+[submodule "uml-tool-dependencies"]
+	path = uml-tool-dependencies
+	url = https://github.com/vt4a2h/uml-tool-dependencies.git
