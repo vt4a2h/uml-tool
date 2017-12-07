@@ -418,6 +418,8 @@ namespace DB {
         }
 
         m_Valid = errorList.isEmpty();
+
+        emit loaded();
     }
 
     /**

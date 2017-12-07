@@ -107,6 +107,9 @@ namespace DB {
     public slots:
         void onScopeIDChanged(const Common::ID &oldID, const Common::ID &newID);
 
+    signals:
+        void loaded();
+
     protected:
         Entity::SharedScope depthScopeSearch(const Common::ID &id) const;
         virtual void copyFrom(const Database &src);

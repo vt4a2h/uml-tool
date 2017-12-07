@@ -47,9 +47,6 @@ namespace App {
      */
     bool Application::run()
     {
-        m_MainWindow->show();
-        auto messenger = m_MainWindow->messenger();
-
         auto db = G_ASSERT(m_ApplicationModel->globalDatabase());
         db->setPath(Settings::globalDbPath());
         db->setName(Settings::globalDbName());
@@ -57,7 +54,10 @@ namespace App {
         QStringList errors;
         db->load(errors);
 
+        m_MainWindow->show();
+
         if (!errors.isEmpty()) {
+            auto messenger = m_MainWindow->messenger();
             messenger->addMessage(Models::MessageType::Warning,
                                   tr("Problems with loading global database"),
                                   errors.join("\n"));

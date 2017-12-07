@@ -525,6 +525,8 @@ namespace GUI {
                   this, &MainWindow::onCurrentProjectChanged);
         G_CONNECT(m_ApplicationModel.get(), &Models::ApplicationModel::currentProjectChanged,
                   m_MainScene.get(), &Graphics::Scene::onProjectChanged);
+        G_CONNECT(m_ApplicationModel->globalDatabase().get(), &DB::Database::loaded,
+                  this, &MainWindow::updateWindowState);
         G_CONNECT(m_MainScene.get(), &Graphics::Scene::relationCompleted,
                   this, &MainWindow::onRelationCompleted);
 

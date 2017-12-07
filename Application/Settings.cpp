@@ -22,6 +22,8 @@
 *****************************************************************************/
 #include "Settings.h"
 
+#include <functional>
+
 #include <QVariant>
 #include <QDir>
 #include <QSettings>
@@ -44,37 +46,48 @@ namespace App {
         struct Setting
         {
             QString name;
-            Value defaultValue;
+            std::function<Value()> defaultValue;
         };
+
+        template <class Value>
+        std::function<Value()> wrappDefault(Value && v)
+        {
+            return [=]() -> Value { return v; };
+        }
 
         // Constants
         const QString organization = "Q-UML";
         const QString app = "uml-tool";
 
         const QString mwGroup = "MainWindow";
-        const Setting<QRect> mwRect {"main-window-rect", QRect(0, 0, 1024, 768)};
+        const Setting<QRect> mwRect {"main-window-rect", wrappDefault(QRect(0, 0, 1024, 768))};
 
         const QString dbGroup = "DB";
-        const Setting<QString> dbName {"global-db-name", "global"};
-        const Setting<QString> dbPath {"global-db-path", QDir::currentPath()};
+        const Setting<QString> dbName {"global-db-name", wrappDefault("global")};
+        const Setting<QString> dbPath {"global-db-path", wrappDefault(QDir::currentPath())};
 
         const QString elGroup = "Elements";
         const QVector<Setting<QColor>> elColors =
         {
-            { Entity::kindOfTypeToString(Entity::KindOfType::Class)        , {245, 224, 119} },
-            { Entity::kindOfTypeToString(Entity::KindOfType::Enum)         , {83 , 185, 86 } },
-            { Entity::kindOfTypeToString(Entity::KindOfType::Union)        , {144, 199, 229} },
-            { Entity::kindOfTypeToString(Entity::KindOfType::TemplateClass), {152, 131, 190} },
-            { Entity::kindOfTypeToString(Entity::KindOfType::ExtendedType) , {249, 181, 194} },
+            { Entity::kindOfTypeToString(Entity::KindOfType::Class)        ,
+              wrappDefault(QColor(245, 224, 119)) },
+            { Entity::kindOfTypeToString(Entity::KindOfType::Enum)         ,
+              wrappDefault(QColor(83 , 185, 86)) },
+            { Entity::kindOfTypeToString(Entity::KindOfType::Union)        ,
+              wrappDefault(QColor(144, 199, 229)) },
+            { Entity::kindOfTypeToString(Entity::KindOfType::TemplateClass),
+              wrappDefault(QColor(152, 131, 190)) },
+            { Entity::kindOfTypeToString(Entity::KindOfType::ExtendedType) ,
+              wrappDefault(QColor(249, 181, 194)) },
         };
 
         const QString projGroup{"Project"};
-        const Setting<QStringList> rp{"recent-projects", QStringList()};
-        const Setting<int> rpCount{"recent-projects-count", 10};
+        const Setting<QStringList> rp{"recent-projects", wrappDefault(QStringList())};
+        const Setting<int> rpCount{"recent-projects-count", wrappDefault(10)};
         const Setting<QString> openProjectDir{"last-open-project-dir",
-                                              QApplication::applicationDirPath()};
+                                              [] { return QApplication::applicationDirPath(); }};
         const Setting<QString> newProjectDir{"last-new-project-dir",
-                                              QApplication::applicationDirPath()};
+                                              [] { return QApplication::applicationDirPath(); }};
 
         // Helpers
         template <class ValueType>
@@ -111,7 +124,7 @@ namespace App {
          */
         QRect mainWindowGeometry()
         {
-            return read(mwGroup, mwRect.name, mwRect.defaultValue);
+            return read(mwGroup, mwRect.name, mwRect.defaultValue());
         }
 
         /**
@@ -129,7 +142,7 @@ namespace App {
          */
         QString globalDbPath()
         {
-            return read(dbGroup, dbPath.name, dbPath.defaultValue);
+            return read(dbGroup, dbPath.name, dbPath.defaultValue());
         }
 
         /**
@@ -147,7 +160,7 @@ namespace App {
          */
         QString globalDbName()
         {
-            return read(dbGroup, dbName.name, dbName.defaultValue);
+            return read(dbGroup, dbName.name, dbName.defaultValue());
         }
 
         /**
@@ -168,7 +181,7 @@ namespace App {
         {
             auto it = boost::range::find_if(elColors, [&](auto&& s) { return s.name == marker; });
             if (it != elColors.end())
-                return read(elGroup, it->name, it->defaultValue);
+                return read(elGroup, it->name, it->defaultValue());
 
             return Qt::white;
         }
@@ -191,7 +204,7 @@ namespace App {
          */
         QStringList recentProjects()
         {
-            return read(projGroup, rp.name, rp.defaultValue);
+            return read(projGroup, rp.name, rp.defaultValue());
         }
 
         /**
@@ -209,7 +222,7 @@ namespace App {
          */
         int recentProjectsMaxCount()
         {
-            return read(projGroup, rpCount.name, rpCount.defaultValue);
+            return read(projGroup, rpCount.name, rpCount.defaultValue());
         }
 
         /**
@@ -227,7 +240,7 @@ namespace App {
          */
         QString lastOpenProjectDir()
         {
-            return read(projGroup, openProjectDir.name, QApplication::applicationDirPath());
+            return read(projGroup, openProjectDir.name, openProjectDir.defaultValue());
         }
 
         /**
@@ -245,7 +258,7 @@ namespace App {
          */
         QString lastNewProjectDir()
         {
-            return read(projGroup, newProjectDir.name, QApplication::applicationDirPath());
+            return read(projGroup, newProjectDir.name, newProjectDir.defaultValue());
         }
 
         /**
