@@ -83,9 +83,11 @@ namespace Graphics {
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
         void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
         void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
         QPolygonF resizeCorner() const;
         QRectF resizeCornerRect() const;
+        QRectF headerRect() const;
 
         qreal width() const;
         void setWidth(qreal newWidth);

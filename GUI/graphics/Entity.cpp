@@ -371,6 +371,20 @@ namespace Graphics {
     }
 
     /**
+     * @brief GraphisEntity::mouseDoubleClickEvent
+     * @param event
+     */
+    void GraphisEntity::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event)
+    {
+        auto rect = headerRect();
+        if (rect.contains(event->pos())) {
+            qDebug() << "We're in.";
+        }
+
+        QGraphicsItem::mouseDoubleClickEvent(event);
+    }
+
+    /**
      * @brief Entity::resizeCornerSize
      * @return
      */
@@ -389,6 +403,15 @@ namespace Graphics {
         return QRectF(width() / 2  - resizeCornerSize.width(),
                       height() / 2 - resizeCornerSize.height(),
                       resizeCornerSize.width(), resizeCornerSize.height());
+    }
+
+    /**
+     * @brief GraphisEntity::headerRect
+     * @return
+     */
+    QRectF GraphisEntity::headerRect() const
+    {
+        return {-width() / 2, -height() / 2, width(), minimumHeight};
     }
 
     /**
@@ -477,7 +500,7 @@ namespace Graphics {
         QLinearGradient gradient(0, -height() / 2, 0, -height() / 2 + minimumHeight );
         gradient.setColorAt(0, color);
         gradient.setColorAt(1, Qt::white);
-        QRectF headerRect(-width() / 2, -height() / 2, width(), minimumHeight);
+        QRectF headerRect = this->headerRect();
         painter->fillRect(headerRect, QBrush(gradient));
 
         // Draw frame
