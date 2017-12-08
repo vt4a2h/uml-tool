@@ -88,7 +88,8 @@ SOURCES += \
     Models/ComponentsModel.cpp \
     Models/MessagesModel.cpp \
     GUI/HtmlDelegate.cpp \
-    GUI/Preferences.cpp
+    GUI/Preferences.cpp \
+    GUI/graphics/HeaderEditorEventFilter.cpp
 
 HEADERS += \
     enums.h \
@@ -194,7 +195,8 @@ HEADERS += \
     Models/IMessenger.h \
     GUI/HtmlDelegate.h \
     GUI/Preferences.h \
-    DB/DBTypes.hpp
+    DB/DBTypes.hpp \
+    GUI/graphics/HeaderEditorEventFilter.h
 
 FORMS += \
     GUI/addscope.ui \

@@ -25,12 +25,18 @@
 #include <memory>
 
 #include <QGraphicsObject>
+#include <QPointer>
 
 #include <Entity/entity_types.hpp>
 
 #include <Project/ProjectTypes.hpp>
 
 #include "Common.h"
+
+QT_BEGIN_NAMESPACE
+class QGraphicsProxyWidget;
+class QLineEdit;
+QT_END_NAMESPACE
 
 namespace GUI
 {
@@ -99,6 +105,9 @@ namespace Graphics {
 
         QColor typeColor() const;
 
+        QGraphicsProxyWidget *nameEditor();
+        QLineEdit *nameEditorWgt();
+
         void connect(bool connect = true);
 
         void drawHeader(QPainter * painter);
@@ -111,6 +120,8 @@ namespace Graphics {
         QPointF m_LastPos;
         bool m_ResizeMode;
         bool m_selectedToConnect;
+
+        QPointer<QGraphicsProxyWidget> m_NameEditor;
     };
 
 } // grpahics

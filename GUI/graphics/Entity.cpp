@@ -27,6 +27,10 @@
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsScene>
+#include <QLineEdit>
+#include <QGraphicsProxyWidget>
+#include <QHBoxLayout>
+#include <QToolButton>
 
 #include <Application/Settings.h>
 
@@ -49,6 +53,7 @@
 
 #include "Constants.h"
 #include "QtHelpers.h"
+#include "HeaderEditorEventFilter.h"
 
 namespace Graphics {
 
@@ -131,6 +136,18 @@ namespace Graphics {
             }
 
             painter->restore();
+        }
+
+
+        QGraphicsProxyWidget * makeHeaderEditor(QGraphicsScene & scene, QObject * parent)
+        {
+            auto le = new QLineEdit;
+            le->setAlignment(Qt::AlignCenter);
+
+            auto filter = new HeaderEditorEventFilter(*le, parent);
+            le->installEventFilter(filter);
+
+            return scene.addWidget(le);
         }
     }
 
@@ -378,7 +395,14 @@ namespace Graphics {
     {
         auto rect = headerRect();
         if (rect.contains(event->pos())) {
-            qDebug() << "We're in.";
+            auto wgt = nameEditor();
+            wgt->setPos(mapToParent(rect.topLeft()));
+            wgt->resize(rect.width(), rect.height());
+
+            nameEditorWgt()->setText(m_Type->name());
+            nameEditorWgt()->setFocus();
+
+            wgt->show();
         }
 
         QGraphicsItem::mouseDoubleClickEvent(event);
@@ -467,6 +491,25 @@ namespace Graphics {
     {
         return App::Settings::elementColor(
                     Entity::kindOfTypeToString(G_ASSERT(m_Type)->kindOfType()));
+    }
+
+    /**
+     * @brief GraphisEntity::nameEditor
+     * @return
+     */
+    QGraphicsProxyWidget *GraphisEntity::nameEditor()
+    {
+        if (!m_NameEditor) {
+            m_NameEditor = makeHeaderEditor(*G_ASSERT(scene()), this);
+            m_NameEditor->setVisible(false);
+        }
+
+        return m_NameEditor.data();
+    }
+
+    QLineEdit *GraphisEntity::nameEditorWgt()
+    {
+        return qobject_cast<QLineEdit*>(nameEditor()->widget());
     }
 
     void GraphisEntity::connect(bool connect)
