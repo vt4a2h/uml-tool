@@ -50,6 +50,12 @@ namespace Models {
         {
             return parent->makeChild(item, type);
         }
+
+
+        BasicTreeItem * itemForIndex(const QModelIndex & index)
+        {
+            return static_cast<BasicTreeItem*>(index.internalPointer());
+        }
     }
 
     /**
@@ -118,13 +124,54 @@ namespace Models {
     }
 
     /**
+     * @brief ProjectTreeModel::setData
+     * @param index
+     * @param value
+     * @param role
+     * @return
+     */
+    bool ProjectTreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
+    {
+        if (index.isValid() && role == Qt::EditRole) {
+            BasicTreeItem * item = G_ASSERT(itemForIndex(index));
+
+            // Only for types now
+            // TODO: extend
+            Q_ASSERT(item->type() == TreeItemType::TypeItem);
+            Q_ASSERT(item->entity().canConvert<Entity::SharedType>());
+
+            Q_ASSERT(value.canConvert<QString>());
+            QString newName = value.toString();
+
+            Entity::SharedType type = G_ASSERT(item->entity().value<Entity::SharedType>());
+            if (type->name() != newName) {
+                type->setName(newName);
+                emit dataChanged(index, index);
+                return true;
+            }
+        }
+
+        return QAbstractItemModel::setData(index, value, role);
+    }
+
+    /**
      * @brief ProjectTreeModel::flags
      * @param index
      * @return
      */
     Qt::ItemFlags ProjectTreeModel::flags(const QModelIndex &index) const
     {
-        return index.isValid() ? QAbstractItemModel::flags(index) : Qt::NoItemFlags;
+        if (!index.isValid())
+            return Qt::NoItemFlags;
+
+        auto flags = QAbstractItemModel::flags(index);
+
+        // Only types are editable now
+        // TODO: extend
+        if (auto item = itemForIndex(index); item && item->type() == TreeItemType::TypeItem)
+            flags |= Qt::ItemIsEditable;
+
+        return flags;
     }
 
     /**
