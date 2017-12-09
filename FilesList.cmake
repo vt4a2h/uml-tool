@@ -150,11 +150,13 @@ set(GUI_GRAPHICS_HEADERS
     ${GUI_GRAPHICS}/GraphicsRelation.h
     ${GUI_GRAPHICS}/Scene.h
     ${GUI_GRAPHICS}/GraphicsTypes.h
-    ${GUI_GRAPHICS}/Common.h)
+    ${GUI_GRAPHICS}/Common.h
+    ${GUI_GRAPHICS}/HeaderEditorEventFilter.cpp)
 set(GUI_GRAPHICS_SRC
     ${GUI_GRAPHICS}/Entity.cpp
     ${GUI_GRAPHICS}/GraphicsRelation.cpp
-    ${GUI_GRAPHICS}/Scene.cpp)
+    ${GUI_GRAPHICS}/Scene.cpp
+    ${GUI_GRAPHICS}/HeaderEditorEventFilter.cpp)
 
 set(HELPERS ${ROOT}/Helpers)
 set(HELPERS_HEADERS

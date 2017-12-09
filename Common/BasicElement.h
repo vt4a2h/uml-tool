@@ -49,7 +49,6 @@ namespace Common {
         virtual void setScopeId(const Common::ID &id);
 
         virtual QString name() const;
-        void setName(const QString &name);
 
         void writeToFile(const QString &fileName) const;
         bool readFromFile(const QString &fileName);
@@ -66,6 +65,9 @@ namespace Common {
     signals:
         void nameChanged(const QString &oldName, const QString &newName);
         void idChanged(const Common::ID &oldID, const Common::ID &newID);
+
+    public slots:
+        void setName(const QString &name);
 
     public:
         BasicElement &operator =(const BasicElement &rhs);

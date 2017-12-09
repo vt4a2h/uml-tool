@@ -28,28 +28,68 @@
 
 namespace Graphics {
 
+    /**
+     * @brief HeaderEditorEventFilter::HeaderEditorEventFilter
+     * @param le
+     * @param parent
+     */
     HeaderEditorEventFilter::HeaderEditorEventFilter(QLineEdit & le, QObject *parent)
         : QObject(parent)
         , m_Edit(le)
     {
     }
 
+    /**
+     * @brief HeaderEditorEventFilter::handleKeyPressEvent
+     * @param event
+     */
+    void HeaderEditorEventFilter::handleKeyPressEvent(const QEvent *event)
+    {
+        auto *ev = static_cast<const QKeyEvent *>(event);
+        switch (ev->key()) {
+            case Qt::Key_Enter:
+            case Qt::Key_Return:
+                if (!m_Edit.text().isEmpty())
+                    emit nameChanged(m_Edit.text());
+                [[fallthrough]];
+
+            case Qt::Key_Escape:
+                m_Edit.hide();
+
+            default: ;
+        }
+    }
+
+    /**
+     * @brief HeaderEditorEventFilter::handleFocusOutEvent
+     * @param event
+     */
+    void HeaderEditorEventFilter::handleFocusOutEvent(const QEvent *event)
+    {
+        Q_UNUSED(event);
+        m_Edit.hide();
+    }
+
+    /**
+     * @brief HeaderEditorEventFilter::eventFilter
+     * @param watched
+     * @param event
+     * @return
+     */
     bool HeaderEditorEventFilter::eventFilter(QObject *watched, QEvent *event)
     {
         Q_ASSERT(watched == &m_Edit);
 
-        if (event->type() == QEvent::KeyRelease) {
-            auto * ke = static_cast<QKeyEvent *>(event);
-            switch (ke->key()) {
-                case Qt::Key_Enter:
-                case Qt::Key_Return:
-                    emit nameChanged(m_Edit.text());
-                    [[fallthrough]];
-                case Qt::Key_Escape:
-                    m_Edit.hide();
+        switch (event->type()) {
+            case QEvent::KeyRelease:
+                handleKeyPressEvent(event);
+                break;
 
-                default: ;
-            }
+            case QEvent::FocusOut:
+                handleFocusOutEvent(event);
+                break;
+
+            default: ;
         }
 
         return QObject::eventFilter(watched, event);

@@ -43,6 +43,10 @@ namespace Graphics {
         void nameChanged(const QString &);
 
     private:
+        void handleKeyPressEvent(const QEvent *event);
+        void handleFocusOutEvent(const QEvent *event);
+
+    private:
         QLineEdit & m_Edit;
     };
 

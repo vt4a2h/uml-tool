@@ -60,7 +60,7 @@ namespace Graphics {
     namespace {
         constexpr qreal margin           = 2  ;
         constexpr qreal lineIndentFactor = 2  ;
-        constexpr qreal minimumHeight    = 30 ;
+        constexpr qreal minimumHeight    = 34 ;
         constexpr qreal lineHeight       = 20 ;
         constexpr qreal minimumWidth     = 120;
         constexpr qreal paddingPercent   = 0.1;
@@ -139,12 +139,14 @@ namespace Graphics {
         }
 
 
-        QGraphicsProxyWidget * makeHeaderEditor(QGraphicsScene & scene, QObject * parent)
+        QGraphicsProxyWidget * makeHeaderEditor(QGraphicsScene & scene, QObject & parent,
+                                                const Entity::Type & type)
         {
             auto le = new QLineEdit;
             le->setAlignment(Qt::AlignCenter);
 
-            auto filter = new HeaderEditorEventFilter(*le, parent);
+            auto filter = new HeaderEditorEventFilter(*le, &parent);
+            G_CONNECT(filter, &HeaderEditorEventFilter::nameChanged, &type, &Entity::Type::setName);
             le->installEventFilter(filter);
 
             return scene.addWidget(le);
@@ -393,11 +395,18 @@ namespace Graphics {
      */
     void GraphisEntity::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event)
     {
+        static const qreal padding = 1.;
+
         auto rect = headerRect();
         if (rect.contains(event->pos())) {
             auto wgt = nameEditor();
-            wgt->setPos(mapToParent(rect.topLeft()));
-            wgt->resize(rect.width(), rect.height());
+
+            auto topLeft = rect.topLeft();
+            topLeft.rx() += padding;
+            topLeft.ry() += padding;
+            wgt->setPos(mapToParent(topLeft));
+
+            wgt->resize(rect.width() - padding, rect.height() - padding);
 
             nameEditorWgt()->setText(m_Type->name());
             nameEditorWgt()->setFocus();
@@ -500,7 +509,7 @@ namespace Graphics {
     QGraphicsProxyWidget *GraphisEntity::nameEditor()
     {
         if (!m_NameEditor) {
-            m_NameEditor = makeHeaderEditor(*G_ASSERT(scene()), this);
+            m_NameEditor = makeHeaderEditor(*G_ASSERT(scene()), *this, *typeObject());
             m_NameEditor->setVisible(false);
         }
 
