@@ -123,6 +123,27 @@ namespace Models {
         return result;
     }
 
+    template<class UnderlyingType>
+    bool setDataImpl(const BasicTreeItem & item, const QVariant & value,
+                     std::function<void()> postFunc)
+    {
+        Q_ASSERT(item.entity().canConvert<UnderlyingType>());
+
+        Q_ASSERT(value.canConvert<QString>());
+        QString newName = value.toString();
+
+        UnderlyingType type = G_ASSERT(item.entity().value<UnderlyingType>());
+        if (type->name() != newName && !newName.isEmpty()) {
+            type->setName(newName);
+
+            postFunc();
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @brief ProjectTreeModel::setData
      * @param index
@@ -135,19 +156,17 @@ namespace Models {
         if (index.isValid() && role == Qt::EditRole) {
             BasicTreeItem * item = G_ASSERT(itemForIndex(index));
 
-            // Only for types now
             // TODO: extend
-            Q_ASSERT(item->type() == TreeItemType::TypeItem);
-            Q_ASSERT(item->entity().canConvert<Entity::SharedType>());
+            switch (item->type()) {
+                case TreeItemType::TypeItem:
+                    return setDataImpl<Entity::SharedType>(
+                              *item, value, [&]{ emit dataChanged(index, index); });
 
-            Q_ASSERT(value.canConvert<QString>());
-            QString newName = value.toString();
+                case TreeItemType::ProjectItem:
+                    return setDataImpl<Projects::SharedProject>(
+                              *item, value, [&]{ emit dataChanged(index, index); });
 
-            Entity::SharedType type = G_ASSERT(item->entity().value<Entity::SharedType>());
-            if (type->name() != newName) {
-                type->setName(newName);
-                emit dataChanged(index, index);
-                return true;
+            default: ;
             }
         }
 
@@ -166,9 +185,11 @@ namespace Models {
 
         auto flags = QAbstractItemModel::flags(index);
 
-        // Only types are editable now
         // TODO: extend
-        if (auto item = itemForIndex(index); item && item->type() == TreeItemType::TypeItem)
+        static const QSet<TreeItemType> editingTypes = {
+            TreeItemType::TypeItem, TreeItemType::ProjectItem
+        };
+        if (auto item = itemForIndex(index); item && editingTypes.contains(item->type()))
             flags |= Qt::ItemIsEditable;
 
         return flags;

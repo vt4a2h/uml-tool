@@ -29,6 +29,7 @@
 #include <QMap>
 #include <QVariant>
 #include <QCoreApplication>
+#include <functional>
 
 #include <Common/ID.h>
 
@@ -47,6 +48,8 @@ namespace Models {
         MethodItem,  ///< MethodItem
         RelationItem ///< RelationItem
     };
+
+    inline uint qHash(const TreeItemType & t) { return ::qHash(int(t)); }
 
     /// The BasicTreeItem class
     class BasicTreeItem : public QObject
@@ -78,6 +81,7 @@ namespace Models {
         int columnCount() const;
 
         QVariant name() const;
+
         QString iconPath() const;
 
         QVariant entity() const;
