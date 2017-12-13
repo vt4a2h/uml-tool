@@ -162,9 +162,9 @@ namespace Models {
                     return setDataImpl<Entity::SharedType>(
                               *item, value, [&]{ emit dataChanged(index, index); });
 
-                case TreeItemType::ProjectItem:
-                    return setDataImpl<Projects::SharedProject>(
-                              *item, value, [&]{ emit dataChanged(index, index); });
+//                case TreeItemType::ProjectItem:
+//                    return setDataImpl<Projects::SharedProject>(
+//                              *item, value, [&]{ emit dataChanged(index, index); });
 
             default: ;
             }
@@ -187,7 +187,7 @@ namespace Models {
 
         // TODO: extend
         static const QSet<TreeItemType> editingTypes = {
-            TreeItemType::TypeItem, TreeItemType::ProjectItem
+            TreeItemType::TypeItem/*, TreeItemType::ProjectItem*/
         };
         if (auto item = itemForIndex(index); item && editingTypes.contains(item->type()))
             flags |= Qt::ItemIsEditable;
