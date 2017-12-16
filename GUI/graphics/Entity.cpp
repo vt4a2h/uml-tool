@@ -58,12 +58,14 @@
 namespace Graphics {
 
     namespace {
-        constexpr qreal margin           = 2  ;
-        constexpr qreal lineIndentFactor = 2  ;
-        constexpr qreal minimumHeight    = 34 ;
-        constexpr qreal lineHeight       = 20 ;
+        constexpr qreal margin           =   2;
+        constexpr qreal lineIndentFactor =   2;
+        constexpr qreal minimumHeight    =  34;
+        constexpr qreal lineHeight       =  20;
         constexpr qreal minimumWidth     = 120;
         constexpr qreal paddingPercent   = 0.1;
+        constexpr qreal regularPenWidth  =   1;
+        constexpr qreal selectedPenWidth =   2;
 
         const QSizeF resizeCornerSize(12, 12);
         const Qt::CursorShape defaultCursorShape = Qt::ArrowCursor;
@@ -444,7 +446,12 @@ namespace Graphics {
      */
     QRectF GraphisEntity::headerRect() const
     {
-        return {-width() / 2, -height() / 2, width(), minimumHeight};
+        return {-width() / 2., -height() / 2., width(), minimumHeight};
+    }
+
+    QPen GraphisEntity::currentPen() const
+    {
+        return QPen(typeColor(), isSelected() ? selectedPenWidth : regularPenWidth);
     }
 
     /**
@@ -556,7 +563,7 @@ namespace Graphics {
         painter->fillRect(headerRect, QBrush(gradient));
 
         // Draw frame
-        painter->setPen(color);
+        painter->setPen(currentPen());
         painter->drawRect(headerRect);
 
         // Add element name
@@ -576,11 +583,10 @@ namespace Graphics {
     {
         painter->save();
 
-        QColor color = typeColor();
         QRectF rect(frameRect());
         painter->fillRect(rect, Qt::white);
 
-        painter->setPen(color);
+        painter->setPen(currentPen());
         painter->drawRect(rect);
 
         painter->restore();
@@ -596,7 +602,7 @@ namespace Graphics {
 
         painter->setRenderHint(QPainter::Antialiasing);
 
-        painter->setPen(typeColor());
+        painter->setPen(currentPen());
 
         QRectF rect(resizeCornerRect());
         QPointF bottomLeft(rect.bottomLeft());

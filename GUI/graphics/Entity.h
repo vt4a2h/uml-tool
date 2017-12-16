@@ -95,6 +95,8 @@ namespace Graphics {
         QRectF resizeCornerRect() const;
         QRectF headerRect() const;
 
+        QPen currentPen() const;
+
         qreal width() const;
         void setWidth(qreal newWidth);
 
