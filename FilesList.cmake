@@ -127,7 +127,8 @@ set(GUI_HEADERS
     ${GUI}/About.h
     ${GUI}/NewProject.h
     ${GUI}/HtmlDelegate.h
-    ${GUI}/Preferences.h)
+    ${GUI}/Preferences.h
+    ${GUI}/EntityProperties.h)
 set(GUI_SRC
     ${GUI}/addscope.cpp
     ${GUI}/scenefilter.cpp
@@ -142,7 +143,8 @@ set(GUI_SRC
     ${GUI}/About.cpp
     ${GUI}/NewProject.cpp
     ${GUI}/HtmlDelegate.cpp
-    ${GUI}/Preferences.cpp)
+    ${GUI}/Preferences.cpp
+    ${GUI}/EntityProperties.cpp)
 
 set(GUI_GRAPHICS ${GUI}/graphics)
 set(GUI_GRAPHICS_HEADERS
