@@ -73,6 +73,7 @@
 #include "QtHelpers.h"
 #include "HtmlDelegate.h"
 #include "Preferences.h"
+#include "EntityProperties.h"
 
 using namespace boost;
 
@@ -184,6 +185,7 @@ namespace GUI {
         , m_MainView(new View(applicationModel, this))
         , m_UndoView(new QUndoView(this))
         , m_Elements(new Elements(this))
+        , m_EntityProperties(new EntityProperties(this))
         , m_AboutWidget(new About(this))
         , m_NewProjectDialog(new NewProjectDialog(this))
         , m_AddScope(new AddScope(this))
@@ -479,6 +481,10 @@ namespace GUI {
         // Commands
         addDock(tr("Commands"), ui->actionCommandsDockWidget, Qt::LeftDockWidgetArea, m_UndoView,
                 false /*visible*/);
+
+        // Entity properties
+        addDock(tr("Properties"), ui->actionProperties, Qt::RightDockWidgetArea, m_EntityProperties,
+                true /*visible*/);
 
         // Messages
         configureMessagesPanel();

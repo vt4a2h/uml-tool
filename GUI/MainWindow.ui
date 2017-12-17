@@ -48,7 +48,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>30</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -91,6 +91,7 @@
     <addaction name="actionCommandsDockWidget"/>
     <addaction name="actionMessagesDockWidget"/>
     <addaction name="actionElementsDockWidget"/>
+    <addaction name="actionProperties"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -344,6 +345,17 @@
    </property>
    <property name="toolTip">
     <string>Display Preferences</string>
+   </property>
+  </action>
+  <action name="actionProperties">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>P&amp;roperties</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
    </property>
   </action>
  </widget>

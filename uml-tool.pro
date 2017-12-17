@@ -89,7 +89,8 @@ SOURCES += \
     Models/MessagesModel.cpp \
     GUI/HtmlDelegate.cpp \
     GUI/Preferences.cpp \
-    GUI/graphics/HeaderEditorEventFilter.cpp
+    GUI/graphics/HeaderEditorEventFilter.cpp \
+    GUI/EntityProperties.cpp
 
 HEADERS += \
     enums.h \
@@ -196,7 +197,8 @@ HEADERS += \
     GUI/HtmlDelegate.h \
     GUI/Preferences.h \
     DB/DBTypes.hpp \
-    GUI/graphics/HeaderEditorEventFilter.h
+    GUI/graphics/HeaderEditorEventFilter.h \
+    GUI/EntityProperties.h
 
 FORMS += \
     GUI/addscope.ui \
@@ -207,7 +209,8 @@ FORMS += \
     GUI/MainWindow.ui \
     GUI/About.ui \
     GUI/NewProject.ui \
-    GUI/Preferences.ui
+    GUI/Preferences.ui \
+    GUI/EntityProperties.ui
 
 RESOURCES += \
     GUI/main.qrc

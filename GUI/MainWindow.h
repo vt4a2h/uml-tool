@@ -61,6 +61,7 @@ namespace GUI {
     class Elements;
     class View;
     class Preferences;
+    class EntityProperties;
 
     namespace Ui {
         class MainWindow;
@@ -143,10 +144,11 @@ namespace GUI {
         QMenu *m_ProjectTreeMenu;
         QAction *m_ChangeProjectStatusAction;
 
-        QTreeView      *m_ProjectTreeView;
-        View           *m_MainView;
-        QUndoView      *m_UndoView;
-        Elements       *m_Elements;
+        QTreeView        *m_ProjectTreeView;
+        View             *m_MainView;
+        QUndoView        *m_UndoView;
+        Elements         *m_Elements;
+        EntityProperties *m_EntityProperties;
 
         About            *m_AboutWidget;
         NewProjectDialog *m_NewProjectDialog;
