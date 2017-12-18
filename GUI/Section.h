@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 17.
+** Created 18.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,27 +20,42 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "EntityProperties.h"
-#include "ui_EntityProperties.h"
+#pragma once
 
-#include "Section.h"
+#include <QWidget>
 
 namespace GUI {
 
-    EntityProperties::EntityProperties(QWidget *parent)
-        : QWidget(parent)
-        , m_ui(new Ui::EntityProperties)
-    {
-        m_ui->setupUi(this);
-
-        auto tstSection = new Section("Tst section name", this);
-        m_ui->vl->addWidget(tstSection);
-        auto tstSection1 = new Section("Tst section name 1", this);
-        m_ui->vl->addWidget(tstSection1);
+    namespace Ui {
+        class Section;
     }
 
-    EntityProperties::~EntityProperties()
+    class Section : public QWidget
     {
-    }
+        Q_OBJECT
+
+    public:
+        explicit Section(const QString & sectionName, QWidget *parent = 0);
+        ~Section();
+
+        QString sectionName() const;
+        void setSectionName(const QString &sectionName);
+
+    protected:
+        void mouseReleaseEvent(QMouseEvent *event) override;
+
+    private: // Types
+        enum State { Opened, Closed };
+
+    private: // Methods
+        void setState(State state);
+
+    private:
+        QScopedPointer<Ui::Section> m_ui;
+
+        State m_State;
+        QString m_SectionName;
+    };
+
 
 } // namespace GUI

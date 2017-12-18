@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 17.
+** Created 18.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,27 +20,48 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "EntityProperties.h"
-#include "ui_EntityProperties.h"
-
 #include "Section.h"
+#include "ui_Section.h"
 
 namespace GUI {
 
-    EntityProperties::EntityProperties(QWidget *parent)
+    Section::Section(const QString & sectionName, QWidget *parent)
         : QWidget(parent)
-        , m_ui(new Ui::EntityProperties)
+        , m_ui(new Ui::Section)
+        , m_State(Opened)
+        , m_SectionName(sectionName)
     {
         m_ui->setupUi(this);
-
-        auto tstSection = new Section("Tst section name", this);
-        m_ui->vl->addWidget(tstSection);
-        auto tstSection1 = new Section("Tst section name 1", this);
-        m_ui->vl->addWidget(tstSection1);
+        setState(Opened);
     }
 
-    EntityProperties::~EntityProperties()
+    void Section::mouseReleaseEvent(QMouseEvent *event)
+    {
+        setState(m_State == Opened ? Closed : Opened);
+        QWidget::mouseReleaseEvent(event);
+    }
+
+    void Section::setState(State state)
+    {
+        m_State = state;
+        m_ui->tbText->setVisible(m_State == Opened ? true : false);
+        m_ui->lblSectionName->setText((m_State == Opened ? "▼" : "►") + m_SectionName);
+    }
+
+    QString Section::sectionName() const
+    {
+        return m_SectionName;
+    }
+
+    void Section::setSectionName(const QString &sectionName)
+    {
+        m_SectionName = sectionName;
+    }
+
+    Section::~Section()
     {
     }
 
 } // namespace GUI
+
+
