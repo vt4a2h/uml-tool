@@ -25,14 +25,18 @@
 
 namespace GUI {
 
-    Section::Section(const QString & sectionName, QWidget *parent)
+    Section::Section(const QString &sectionName, const QString &help, QWidget *parent)
         : QWidget(parent)
         , m_ui(new Ui::Section)
         , m_State(Opened)
         , m_SectionName(sectionName)
     {
         m_ui->setupUi(this);
+
+        setVisible(false);
+
         setState(Opened);
+        setSectionHelp(help);
     }
 
     void Section::mouseReleaseEvent(QMouseEvent *event)
@@ -46,6 +50,17 @@ namespace GUI {
         m_State = state;
         m_ui->tbText->setVisible(m_State == Opened ? true : false);
         m_ui->lblSectionName->setText((m_State == Opened ? "▼" : "►") + m_SectionName);
+    }
+
+    QString Section::sectionHelp() const
+    {
+        return m_SectionHelp;
+    }
+
+    void Section::setSectionHelp(const QString &sectionHelp)
+    {
+        m_SectionHelp = sectionHelp;
+        m_ui->tbText->setToolTip("<p>" + m_SectionHelp + "</p>");
     }
 
     QString Section::sectionName() const

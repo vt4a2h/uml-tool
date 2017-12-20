@@ -23,24 +23,79 @@
 #include "EntityProperties.h"
 #include "ui_EntityProperties.h"
 
+#include <Entity/Type.h>
+#include <Entity/Enum.h>
+
 #include "Section.h"
 
+#include <QDebug>
+
 namespace GUI {
+
+    static const QString enumDeclarationHelp =
+        QT_TRANSLATE_NOOP("EntityProperties",
+                          "Enter enum declaration in the following format:<br>"
+                          "enum-key<sub>opt</sub> identifier type<sub>opt</sub><br>"
+                          "For example: class Foo int");
+    static const QString enumEnumeratorsHelp =
+        QT_TRANSLATE_NOOP("EntityProperties",
+                          "Enter enumerators in the following format:<br>"
+                          "enumerator constexpr<br>"
+                          "enumerator constexpr<br>"
+                          "..."
+                          "enumerator constexpr<br><br>"
+                          "For example:<br>"
+                          "a 1<br>"
+                          "b 2<br>");
 
     EntityProperties::EntityProperties(QWidget *parent)
         : QWidget(parent)
         , m_ui(new Ui::EntityProperties)
+        , m_EnumDeclaration(new Section(tr("Declaration"), enumDeclarationHelp, this))
+        , m_EnumElements(new Section(tr("Enumerators"), enumEnumeratorsHelp,this))
     {
         m_ui->setupUi(this);
 
-        auto tstSection = new Section("Tst section name", this);
-        m_ui->vl->addWidget(tstSection);
-        auto tstSection1 = new Section("Tst section name 1", this);
-        m_ui->vl->addWidget(tstSection1);
+        init();
     }
 
     EntityProperties::~EntityProperties()
     {
+    }
+
+    void EntityProperties::onSelectedElementsChanged(const Entity::TypesList &types)
+    {
+        for (auto && w : m_AllSections)
+            w->setVisible(false);
+
+        if (!types.isEmpty() && types.size() == 1)
+            changeState(types[0], types[0]);
+        else
+            setDisabled(true);
+    }
+
+    void EntityProperties::changeState(const Entity::SharedType &type,
+                                       const Entity::SharedComponents &components)
+    {
+        setEnabled(true);
+        switch (type->kindOfType()) {
+            case Entity::KindOfType::Enum:
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    void EntityProperties::init()
+    {
+        // Add enum sections
+        m_ui->vl->addWidget(m_EnumDeclaration.data());
+        m_ui->vl->addWidget(m_EnumElements.data());
+        m_EnumWidgets << m_EnumDeclaration.data() << m_EnumElements.data();
+
+        m_AllSections << m_EnumWidgets;
     }
 
 } // namespace GUI

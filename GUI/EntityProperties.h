@@ -23,8 +23,13 @@
 #pragma once
 
 #include <QWidget>
+#include <QPointer>
+
+#include <Entity/entity_types.hpp>
 
 namespace GUI {
+
+    class Section;
 
     namespace Ui {
         class EntityProperties;
@@ -41,8 +46,24 @@ namespace GUI {
         explicit EntityProperties(QWidget *parent = 0);
         ~EntityProperties();
 
-    private:
+    public slots:
+        void onSelectedElementsChanged(const Entity::TypesList &types);
+
+    private: // Methods
+        void changeState(const Entity::SharedType &type, const Entity::SharedComponents &components);
+        void init();
+
+    private: // Types
+        using SectionsList = QList<QPointer<QWidget>>;
+
+    private: // Data
         QScopedPointer<Ui::EntityProperties> m_ui;
+
+        QScopedPointer<Section> m_EnumDeclaration;
+        QScopedPointer<Section> m_EnumElements;
+        SectionsList m_EnumWidgets;
+
+        SectionsList m_AllSections;
     };
 
 } // namespace GUI

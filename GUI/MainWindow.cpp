@@ -558,6 +558,9 @@ namespace GUI {
         G_CONNECT(ui->actionPreferences, &QAction::triggered, m_Preferences, &QWidget::show);
         G_CONNECT(ui->actionAbout, &QAction::triggered, m_AboutWidget, &QWidget::show);
         G_CONNECT(ui->actionNewProject, &QAction::triggered, m_NewProjectDialog, &QWidget::show);
+
+        G_CONNECT(m_MainScene.get(), &Graphics::Scene::selectedItemsChanged,
+                  m_EntityProperties, &EntityProperties::onSelectedElementsChanged);
     }
 
     /**

@@ -27,6 +27,8 @@
 
 #include <Project/ProjectTypes.hpp>
 
+#include <Entity/entity_types.hpp>
+
 #include "enums.h"
 
 namespace Graphics {
@@ -61,10 +63,16 @@ namespace Graphics {
     signals:
         void showRelationTrackChanged(bool showRelationTrack);
         void relationCompleted();
+        void selectedItemsChanged(const Entity::TypesList &types);
 
-    private:
+    private slots:
+        void onSelectionChanged();
+
+    private: // Methods
         Projects::SharedProject pr() const;
+        void makeConnections();
 
+    private: // Data
         bool m_ShowRelationTrack;
         bool m_TrackRelationIsActive;
         QPointer<GraphisEntity> m_TrackFrom;

@@ -35,11 +35,14 @@ namespace GUI {
         Q_OBJECT
 
     public:
-        explicit Section(const QString & sectionName, QWidget *parent = 0);
+        explicit Section(const QString &sectionName, const QString &help, QWidget *parent = 0);
         ~Section();
 
         QString sectionName() const;
         void setSectionName(const QString &sectionName);
+
+        QString sectionHelp() const;
+        void setSectionHelp(const QString &sectionHelp);
 
     protected:
         void mouseReleaseEvent(QMouseEvent *event) override;
@@ -55,6 +58,7 @@ namespace GUI {
 
         State m_State;
         QString m_SectionName;
+        QString m_SectionHelp;
     };
 
 

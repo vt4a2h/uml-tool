@@ -89,6 +89,7 @@ namespace Graphics {
         , m_activeRelationType(Relationship::SimpleRelation)
     {
         initTrackLine();
+        makeConnections();
     }
 
     /**
@@ -248,7 +249,20 @@ namespace Graphics {
      */
     void Scene::onProjectChanged(const Projects::SharedProject &, const Projects::SharedProject &c)
     {
-       m_Project = c;
+        m_Project = c;
+    }
+
+    /**
+     * @brief Scene::onSelectionChanged
+     */
+    void Scene::onSelectionChanged()
+    {
+        Entity::TypesList items;
+        for (auto && item : selectedItems())
+            if (auto ge = qgraphicsitem_cast<GraphisEntity*>(item))
+                items.push_back(ge->typeObject());
+
+        emit selectedItemsChanged(items);
     }
 
     /**
@@ -258,6 +272,14 @@ namespace Graphics {
     Projects::SharedProject Scene::pr() const
     {
         return m_Project.lock();
+    }
+
+    /**
+     * @brief Scene::makeConnections
+     */
+    void Scene::makeConnections()
+    {
+        G_CONNECT(this, &QGraphicsScene::selectionChanged, this, &Scene::onSelectionChanged);
     }
 
 } // namespace graphics
