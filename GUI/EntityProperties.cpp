@@ -42,7 +42,7 @@ namespace GUI {
                           "Enter enumerators in the following format:<br>"
                           "enumerator constexpr<br>"
                           "enumerator constexpr<br>"
-                          "..."
+                          "...<br>"
                           "enumerator constexpr<br><br>"
                           "For example:<br>"
                           "a 1<br>"
@@ -69,18 +69,25 @@ namespace GUI {
             w->setVisible(false);
 
         if (!types.isEmpty() && types.size() == 1)
-            changeState(types[0], types[0]);
+            changeState(types[0]);
         else
             setDisabled(true);
     }
 
-    void EntityProperties::changeState(const Entity::SharedType &type,
-                                       const Entity::SharedComponents &components)
+    void EntityProperties::changeState(const Entity::SharedType &type)
     {
         setEnabled(true);
+
         switch (type->kindOfType()) {
             case Entity::KindOfType::Enum:
-
+            {
+                for (auto &&w : m_EnumWidgets)
+                    w->setVisible(true);
+                auto e = std::static_pointer_cast<Entity::Enum>(type);
+                m_EnumDeclaration->setText(e->name());
+                for (auto &&enumerator : e->enumerators())
+                    m_EnumElements->setText(enumerator->name() + " " + QString::number(enumerator->value()));
+            }
                 break;
 
             default:

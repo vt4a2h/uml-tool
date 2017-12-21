@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 17.
+** Created 21.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,48 +22,31 @@
 *****************************************************************************/
 #pragma once
 
+#include <QStringList>
 #include <QWidget>
 #include <QPointer>
+#include <QLayout>
 
 #include <Entity/entity_types.hpp>
 
 namespace GUI {
 
-    class Section;
-
-    namespace Ui {
-        class EntityProperties;
-    }
-
-    /**
-     * @brief The EntityProperties class
-     */
-    class EntityProperties : public QWidget
+    /// Display Entities properties in \c Sections added to the specific layout
+    class IPropertiesDisplayer
     {
-        Q_OBJECT
-
     public:
-        explicit EntityProperties(QWidget *parent = 0);
-        ~EntityProperties();
+        /// Sections will be added to the \c sectionsLayout
+        IPropertiesDisplayer(QLayout & sectionsLayout) {}
+        virtual ~IPropertiesDisplayer() {}
 
-    public slots:
-        void onSelectedElementsChanged(const Entity::TypesList &types);
+        /// Display properties
+        virtual bool activate() = 0;
 
-    private: // Methods
-        void changeState(const Entity::SharedType &type);
-        void init();
+        /// Hide properties
+        virtual bool deactivate() = 0;
 
-    private: // Types
-        using SectionsList = QList<QPointer<QWidget>>;
-
-    private: // Data
-        QScopedPointer<Ui::EntityProperties> m_ui;
-
-        QScopedPointer<Section> m_EnumDeclaration;
-        QScopedPointer<Section> m_EnumElements;
-        SectionsList m_EnumWidgets;
-
-        SectionsList m_AllSections;
-    };
+        /// Set object for diaplying properties
+        virtual void setEntity(const Entity::SharedType &type) = 0;
+    }
 
 } // namespace GUI

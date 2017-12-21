@@ -44,6 +44,9 @@ namespace GUI {
         QString sectionHelp() const;
         void setSectionHelp(const QString &sectionHelp);
 
+        QString text() const;
+        void setText(const QString &text);
+
     protected:
         void mouseReleaseEvent(QMouseEvent *event) override;
 

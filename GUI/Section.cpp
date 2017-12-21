@@ -25,6 +25,12 @@
 
 namespace GUI {
 
+    /**
+     * @brief Section::Section
+     * @param sectionName
+     * @param help
+     * @param parent
+     */
     Section::Section(const QString &sectionName, const QString &help, QWidget *parent)
         : QWidget(parent)
         , m_ui(new Ui::Section)
@@ -39,12 +45,20 @@ namespace GUI {
         setSectionHelp(help);
     }
 
+    /**
+     * @brief Section::mouseReleaseEvent
+     * @param event
+     */
     void Section::mouseReleaseEvent(QMouseEvent *event)
     {
         setState(m_State == Opened ? Closed : Opened);
         QWidget::mouseReleaseEvent(event);
     }
 
+    /**
+     * @brief Section::setState
+     * @param state
+     */
     void Section::setState(State state)
     {
         m_State = state;
@@ -52,27 +66,64 @@ namespace GUI {
         m_ui->lblSectionName->setText((m_State == Opened ? "▼" : "►") + m_SectionName);
     }
 
+    /**
+     * @brief Section::sectionHelp
+     * @return
+     */
     QString Section::sectionHelp() const
     {
         return m_SectionHelp;
     }
 
+    /**
+     * @brief Section::setSectionHelp
+     * @param sectionHelp
+     */
     void Section::setSectionHelp(const QString &sectionHelp)
     {
         m_SectionHelp = sectionHelp;
         m_ui->tbText->setToolTip("<p>" + m_SectionHelp + "</p>");
     }
 
+    /**
+     * @brief Section::text
+     * @return
+     */
+    QString Section::text() const
+    {
+        return m_ui->tbText->toPlainText();
+    }
+
+    /**
+     * @brief Section::setText
+     * @param text
+     */
+    void Section::setText(const QString &text)
+    {
+        m_ui->tbText->setPlainText(text);
+    }
+
+    /**
+     * @brief Section::sectionName
+     * @return
+     */
     QString Section::sectionName() const
     {
         return m_SectionName;
     }
 
+    /**
+     * @brief Section::setSectionName
+     * @param sectionName
+     */
     void Section::setSectionName(const QString &sectionName)
     {
         m_SectionName = sectionName;
     }
 
+    /**
+     * @brief Section::~Section
+     */
     Section::~Section()
     {
     }

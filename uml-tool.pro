@@ -200,7 +200,8 @@ HEADERS += \
     DB/DBTypes.hpp \
     GUI/graphics/HeaderEditorEventFilter.h \
     GUI/EntityProperties.h \
-    GUI/Section.h
+    GUI/Section.h \
+    GUI/IPropertiesDisplayer.hpp
 
 FORMS += \
     GUI/addscope.ui \
