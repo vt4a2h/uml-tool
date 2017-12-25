@@ -91,7 +91,9 @@ SOURCES += \
     GUI/Preferences.cpp \
     GUI/graphics/HeaderEditorEventFilter.cpp \
     GUI/EntityProperties.cpp \
-    GUI/Section.cpp
+    GUI/Section.cpp \
+    GUI/PropertiesHandlerBase.cpp \
+    GUI/EnumPropertiesHandler.cpp
 
 HEADERS += \
     enums.h \
@@ -201,7 +203,10 @@ HEADERS += \
     GUI/graphics/HeaderEditorEventFilter.h \
     GUI/EntityProperties.h \
     GUI/Section.h \
-    GUI/IPropertiesDisplayer.hpp
+    GUI/IPropertiesHandler.hpp \
+    GUI/EnumPropertiesHandler.hpp \
+    GUI/PropertiesHandlerBase.hpp \
+    Entity/ITextable.hpp
 
 FORMS += \
     GUI/addscope.ui \

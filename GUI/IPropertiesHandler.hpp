@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 10/05/2015.
+** Created 21.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,15 +22,30 @@
 *****************************************************************************/
 #pragma once
 
-#include <memory>
+#include <QPointer>
+
+#include <Entity/entity_types.hpp>
+
+QT_BEGIN_NAMESPACE
+class QLayout;
+QT_END_NAMESPACE
 
 namespace GUI {
-    class MainWindow;
-    using UniqueMainWindow = std::unique_ptr<MainWindow>;
 
-    class SignatureEditDelegate;
-    using UniqueSignatureEditDelegate = std::unique_ptr<SignatureEditDelegate>;
+    /// Handle Entities properties in \c Sections added to the specific layout
+    class IPropertiesHandler
+    {
+    public: // Methods
+        virtual ~IPropertiesHandler() {}
 
-    class IPropertiesHandler;
-    using SharedPropHandler = std::shared_ptr<IPropertiesHandler>;
-}
+        /// Display properties
+        virtual bool activate() = 0;
+
+        /// Hide properties
+        virtual bool deactivate() = 0;
+
+        /// Set object for diaplying properties
+        virtual void setEntity(const Entity::SharedType &type) = 0;
+    };
+
+} // namespace GUI

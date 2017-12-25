@@ -67,6 +67,52 @@ namespace GUI {
     }
 
     /**
+     * @brief Section::setChangesAcceptor
+     * @param changesAcceptor
+     */
+    void Section::setChangesAcceptor(const ChangesAcceptor &changesAcceptor)
+    {
+        m_ChangesAcceptor = changesAcceptor;
+    }
+
+    /**
+     * @brief Section::changesAcceptor
+     * @return
+     */
+    Section::ChangesAcceptor Section::changesAcceptor() const
+    {
+        return m_ChangesAcceptor;
+    }
+
+    /**
+     * @brief Section::updateText
+     */
+    void Section::updateText()
+    {
+       if (m_TextSetter)
+           m_ui->tbText->setPlainText(m_TextSetter());
+       else
+           m_ui->tbText->clear();
+    }
+
+    /**
+     * @brief Section::setTextSetter
+     * @param textSetter
+     */
+    void Section::setTextSetter(const TextSetter &textSetter)
+    {
+        m_TextSetter = textSetter;
+    }
+
+    /**
+     * @brief Section::textSetter
+     */
+    Section::TextSetter Section::textSetter() const
+    {
+        return m_TextSetter;
+    }
+
+    /**
      * @brief Section::sectionHelp
      * @return
      */
@@ -83,24 +129,6 @@ namespace GUI {
     {
         m_SectionHelp = sectionHelp;
         m_ui->tbText->setToolTip("<p>" + m_SectionHelp + "</p>");
-    }
-
-    /**
-     * @brief Section::text
-     * @return
-     */
-    QString Section::text() const
-    {
-        return m_ui->tbText->toPlainText();
-    }
-
-    /**
-     * @brief Section::setText
-     * @param text
-     */
-    void Section::setText(const QString &text)
-    {
-        m_ui->tbText->setPlainText(text);
     }
 
     /**

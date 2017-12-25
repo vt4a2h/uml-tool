@@ -22,6 +22,8 @@
 *****************************************************************************/
 #pragma once
 
+#include <functional>
+
 #include <QWidget>
 
 namespace GUI {
@@ -34,6 +36,10 @@ namespace GUI {
     {
         Q_OBJECT
 
+    public: // Types
+        using TextSetter = std::function<QString()>;
+        using ChangesAcceptor = std::function<bool(QString)>;
+
     public:
         explicit Section(const QString &sectionName, const QString &help, QWidget *parent = 0);
         ~Section();
@@ -44,8 +50,13 @@ namespace GUI {
         QString sectionHelp() const;
         void setSectionHelp(const QString &sectionHelp);
 
-        QString text() const;
-        void setText(const QString &text);
+        void setTextSetter(const TextSetter &textSetter);
+        TextSetter textSetter() const;
+
+        void setChangesAcceptor(const ChangesAcceptor &changesAcceptor);
+        ChangesAcceptor changesAcceptor() const;
+
+        void updateText();
 
     protected:
         void mouseReleaseEvent(QMouseEvent *event) override;
@@ -62,6 +73,9 @@ namespace GUI {
         State m_State;
         QString m_SectionName;
         QString m_SectionHelp;
+
+        TextSetter m_TextSetter;
+        ChangesAcceptor m_ChangesAcceptor;
     };
 
 

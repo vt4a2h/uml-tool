@@ -26,10 +26,14 @@
 #include <QPointer>
 
 #include <Entity/entity_types.hpp>
+#include <Entity/Type.h>
+
+#include "gui_types.hpp"
 
 namespace GUI {
 
     class Section;
+    class IPropertiesHandler;
 
     namespace Ui {
         class EntityProperties;
@@ -49,21 +53,16 @@ namespace GUI {
     public slots:
         void onSelectedElementsChanged(const Entity::TypesList &types);
 
-    private: // Methods
-        void changeState(const Entity::SharedType &type);
-        void init();
-
     private: // Types
-        using SectionsList = QList<QPointer<QWidget>>;
+        using HandlersByType = QHash<Entity::KindOfType, SharedPropHandler>;
 
     private: // Data
         QScopedPointer<Ui::EntityProperties> m_ui;
 
-        QScopedPointer<Section> m_EnumDeclaration;
-        QScopedPointer<Section> m_EnumElements;
-        SectionsList m_EnumWidgets;
+        HandlersByType m_PropHandlersByType;
+        SharedPropHandler m_ActiveHandler;
 
-        SectionsList m_AllSections;
+//        SectionsList m_AllSections;
     };
 
 } // namespace GUI

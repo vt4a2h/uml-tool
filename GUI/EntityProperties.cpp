@@ -27,36 +27,21 @@
 #include <Entity/Enum.h>
 
 #include "Section.h"
+#include "EnumPropertiesHandler.hpp"
+
+#include "QtHelpers.h"
 
 #include <QDebug>
 
 namespace GUI {
 
-    static const QString enumDeclarationHelp =
-        QT_TRANSLATE_NOOP("EntityProperties",
-                          "Enter enum declaration in the following format:<br>"
-                          "enum-key<sub>opt</sub> identifier type<sub>opt</sub><br>"
-                          "For example: class Foo int");
-    static const QString enumEnumeratorsHelp =
-        QT_TRANSLATE_NOOP("EntityProperties",
-                          "Enter enumerators in the following format:<br>"
-                          "enumerator constexpr<br>"
-                          "enumerator constexpr<br>"
-                          "...<br>"
-                          "enumerator constexpr<br><br>"
-                          "For example:<br>"
-                          "a 1<br>"
-                          "b 2<br>");
-
     EntityProperties::EntityProperties(QWidget *parent)
         : QWidget(parent)
         , m_ui(new Ui::EntityProperties)
-        , m_EnumDeclaration(new Section(tr("Declaration"), enumDeclarationHelp, this))
-        , m_EnumElements(new Section(tr("Enumerators"), enumEnumeratorsHelp,this))
     {
         m_ui->setupUi(this);
 
-        init();
+        m_PropHandlersByType[Entity::KindOfType::Enum] = std::make_shared<EnumPropHandler>(*m_ui->vl);
     }
 
     EntityProperties::~EntityProperties()
@@ -65,44 +50,21 @@ namespace GUI {
 
     void EntityProperties::onSelectedElementsChanged(const Entity::TypesList &types)
     {
-        for (auto && w : m_AllSections)
-            w->setVisible(false);
-
-        if (!types.isEmpty() && types.size() == 1)
-            changeState(types[0]);
-        else
-            setDisabled(true);
-    }
-
-    void EntityProperties::changeState(const Entity::SharedType &type)
-    {
-        setEnabled(true);
-
-        switch (type->kindOfType()) {
-            case Entity::KindOfType::Enum:
-            {
-                for (auto &&w : m_EnumWidgets)
-                    w->setVisible(true);
-                auto e = std::static_pointer_cast<Entity::Enum>(type);
-                m_EnumDeclaration->setText(e->name());
-                for (auto &&enumerator : e->enumerators())
-                    m_EnumElements->setText(enumerator->name() + " " + QString::number(enumerator->value()));
-            }
-                break;
-
-            default:
-                break;
+        if (m_ActiveHandler) {
+            m_ActiveHandler->deactivate();
+            m_ActiveHandler.reset();
         }
-    }
 
-    void EntityProperties::init()
-    {
-        // Add enum sections
-        m_ui->vl->addWidget(m_EnumDeclaration.data());
-        m_ui->vl->addWidget(m_EnumElements.data());
-        m_EnumWidgets << m_EnumDeclaration.data() << m_EnumElements.data();
+        if (types.size() == 1) {
+            auto type = types[0];
+            auto it = m_PropHandlersByType.find(type->kindOfType());
+            if (it != std::end(m_PropHandlersByType)) {
+                (*it)->setEntity(type);
+                G_ASSERT((*it)->activate());
 
-        m_AllSections << m_EnumWidgets;
+                m_ActiveHandler = *it;
+            }
+        }
     }
 
 } // namespace GUI

@@ -230,4 +230,24 @@ namespace Entity {
         }
     }
 
+    /**
+     * @brief Type::toString
+     * @return
+     */
+    QString Type::toString() const
+    {
+        return QString::null;
+    }
+
+    /**
+     * @brief Type::fromString
+     * @param text
+     * @return
+     */
+    bool Type::fromString(const QString &text) const
+    {
+        Q_UNUSED(text);
+        return false;
+    }
+
 } // namespace entity

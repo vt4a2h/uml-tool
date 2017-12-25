@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 21.
+** Created 24.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,31 +22,41 @@
 *****************************************************************************/
 #pragma once
 
-#include <QStringList>
-#include <QWidget>
-#include <QPointer>
-#include <QLayout>
+#include <QCoreApplication>
 
-#include <Entity/entity_types.hpp>
+#include "IPropertiesHandler.hpp"
 
 namespace GUI {
 
-    /// Display Entities properties in \c Sections added to the specific layout
-    class IPropertiesDisplayer
+    class Section;
+
+    class PropertiesHandlerBase : public IPropertiesHandler
     {
+        Q_DECLARE_TR_FUNCTIONS(PropertiesHandlerBase)
+
+    public: // Types
+        using SectionPtr   = QPointer<Section>;
+        using SectionsList = QList<SectionPtr>;
+
     public:
-        /// Sections will be added to the \c sectionsLayout
-        IPropertiesDisplayer(QLayout & sectionsLayout) {}
-        virtual ~IPropertiesDisplayer() {}
+        PropertiesHandlerBase(QLayout & sectionsLayout);
 
-        /// Display properties
-        virtual bool activate() = 0;
+    public: // IPropertiesHandler interface
+        bool activate() override;
+        bool deactivate() override;
+        void setEntity(const Entity::SharedType &type) override;
 
-        /// Hide properties
-        virtual bool deactivate() = 0;
+    protected: // Metods
+        QLayout &layout();
 
-        /// Set object for diaplying properties
-        virtual void setEntity(const Entity::SharedType &type) = 0;
-    }
+        SectionsList sections() const;
+        SectionPtr addSection(const QString &name, const QString &description);
+
+        virtual Entity::SharedType entity() const;
+
+    private: // Data
+        QLayout &m_MainLayout;
+        SectionsList m_Sections;
+    };
 
 } // namespace GUI

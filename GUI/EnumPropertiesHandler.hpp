@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 10/05/2015.
+** Created 24.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,15 +22,26 @@
 *****************************************************************************/
 #pragma once
 
-#include <memory>
+#include "PropertiesHandlerBase.hpp"
 
 namespace GUI {
-    class MainWindow;
-    using UniqueMainWindow = std::unique_ptr<MainWindow>;
 
-    class SignatureEditDelegate;
-    using UniqueSignatureEditDelegate = std::unique_ptr<SignatureEditDelegate>;
+    class EnumPropHandler : public PropertiesHandlerBase
+    {
+    public:
+        using PropertiesHandlerBase::PropertiesHandlerBase;
 
-    class IPropertiesHandler;
-    using SharedPropHandler = std::shared_ptr<IPropertiesHandler>;
-}
+    public: // IPropertiesHandler interface
+        void setEntity(const Entity::SharedType &type) override;
+
+    protected: // PropertiesHandlerBase interface
+        Entity::SharedType entity() const override;
+
+    private: // Data
+        QPointer<Section> m_EnumDeclaration;
+        QPointer<Section> m_EnumElements;
+
+        Entity::SharedEnum m_Enum;
+    };
+
+} // namespace GUI

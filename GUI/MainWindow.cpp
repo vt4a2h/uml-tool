@@ -200,9 +200,6 @@ namespace GUI {
         setUpWidgets();
         configure();
         makeConnections();
-
-        m_MainScene->installEventFilter(new SceneFilter(m_ApplicationModel, m_MainScene.get(),
-                                                        this, this));
         update();
     }
 

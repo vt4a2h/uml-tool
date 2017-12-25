@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 10/05/2015.
+** Created 25.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,15 +22,21 @@
 *****************************************************************************/
 #pragma once
 
-#include <memory>
+#include <QString>
 
-namespace GUI {
-    class MainWindow;
-    using UniqueMainWindow = std::unique_ptr<MainWindow>;
+namespace Entity {
 
-    class SignatureEditDelegate;
-    using UniqueSignatureEditDelegate = std::unique_ptr<SignatureEditDelegate>;
+    /// Used to convert to/from simple text representation used in properties sections
+    class ITextable
+    {
+    public:
+        virtual ~ITextable() {}
 
-    class IPropertiesHandler;
-    using SharedPropHandler = std::shared_ptr<IPropertiesHandler>;
-}
+        /// \return text representation or QString::null if failed
+        virtual QString toString() const = 0;
+
+        /// \return true for success, false for fail
+        virtual bool fromString(const QString &text) const = 0;
+    };
+
+} // namespace Entity

@@ -130,7 +130,7 @@ set(GUI_HEADERS
     ${GUI}/Preferences.h
     ${GUI}/EntityProperties.h
     ${GUI}/Section.h
-    ${GUI}/IPropertiesDisplayer.hpp)
+    ${GUI}/IPropertiesHandler.hpp)
 set(GUI_SRC
     ${GUI}/addscope.cpp
     ${GUI}/scenefilter.cpp
