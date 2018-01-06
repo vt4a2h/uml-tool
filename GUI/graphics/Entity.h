@@ -27,7 +27,7 @@
 #include <QGraphicsObject>
 #include <QPointer>
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 #include <Project/ProjectTypes.hpp>
 

@@ -24,7 +24,7 @@
 
 #include <QHash>
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 #include <Common/ID.h>
 #include <Common/SharedFromThis.h>

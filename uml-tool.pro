@@ -104,7 +104,6 @@ HEADERS += \
     Entity/Components/componentsignatureparser.h \
     Entity/Components/icomponents.h \
     Entity/Components/componentsmaker.h \
-    Entity/entity_types.hpp \
     Generator/abstractprojectgenerator.h \
     Generator/basiccppprojectgenerator.h \
     Generator/virtualdirectory.h \
@@ -206,7 +205,8 @@ HEADERS += \
     GUI/IPropertiesHandler.hpp \
     GUI/EnumPropertiesHandler.hpp \
     GUI/PropertiesHandlerBase.hpp \
-    Entity/ITextable.hpp
+    Models/ISectionDataModel.hpp \
+    Entity/EntityTypes.hpp
 
 FORMS += \
     GUI/addscope.ui \

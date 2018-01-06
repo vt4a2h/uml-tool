@@ -30,7 +30,7 @@
 #include <Common/meta.h>
 #include <Common/BasicElement.h>
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 #include "relationship_types.hpp"
 

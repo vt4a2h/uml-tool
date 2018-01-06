@@ -30,7 +30,7 @@
 #include <Entity/Union.h>
 #include <Entity/Class.h>
 #include <Entity/TemplateClass.h>
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 #include "TestProjectBase.h"
 

@@ -51,4 +51,7 @@ namespace Models {
 
     class IMessenger;
     using SharedMessenger = std::shared_ptr<IMessenger>;
+
+    class ISectionalDataModel;
+    using SharedSectionalDataModel = std::shared_ptr<ISectionalDataModel>;
 }

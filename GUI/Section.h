@@ -26,22 +26,22 @@
 
 #include <QWidget>
 
+#include <Models/ModelsTypes.hpp>
+
 namespace GUI {
 
     namespace Ui {
         class Section;
     }
 
+    /// Displays one section with some data (e.g. all fields/methods/properties/etc.)
     class Section : public QWidget
     {
         Q_OBJECT
 
-    public: // Types
-        using TextSetter = std::function<QString()>;
-        using ChangesAcceptor = std::function<bool(QString)>;
-
     public:
-        explicit Section(const QString &sectionName, const QString &help, QWidget *parent = 0);
+        explicit Section(const QString &sectionName, const QString &help,
+                         const Models::SharedSectionalDataModel &model, QWidget *parent = 0);
         ~Section();
 
         QString sectionName() const;
@@ -49,12 +49,6 @@ namespace GUI {
 
         QString sectionHelp() const;
         void setSectionHelp(const QString &sectionHelp);
-
-        void setTextSetter(const TextSetter &textSetter);
-        TextSetter textSetter() const;
-
-        void setChangesAcceptor(const ChangesAcceptor &changesAcceptor);
-        ChangesAcceptor changesAcceptor() const;
 
         void updateText();
 
@@ -74,8 +68,7 @@ namespace GUI {
         QString m_SectionName;
         QString m_SectionHelp;
 
-        TextSetter m_TextSetter;
-        ChangesAcceptor m_ChangesAcceptor;
+        Models::SharedSectionalDataModel m_Model;
     };
 
 

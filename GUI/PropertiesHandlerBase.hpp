@@ -24,6 +24,8 @@
 
 #include <QCoreApplication>
 
+#include <Models/ModelsTypes.hpp>
+
 #include "IPropertiesHandler.hpp"
 
 namespace GUI {
@@ -50,7 +52,8 @@ namespace GUI {
         QLayout &layout();
 
         SectionsList sections() const;
-        SectionPtr addSection(const QString &name, const QString &description);
+        SectionPtr addSection(const QString &name, const QString &description,
+                              const Models::SharedSectionalDataModel &model);
 
         virtual Entity::SharedType entity() const;
 

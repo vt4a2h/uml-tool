@@ -26,7 +26,7 @@
 
 #include <QAbstractTableModel>
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 #include <GUI/gui_types.hpp>
 #include <Translation/translator_types.hpp>
 

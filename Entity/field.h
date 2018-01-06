@@ -29,7 +29,7 @@
 #include <Common/BasicElement.h>
 #include <Common/meta.h>
 
-#include "entity_types.hpp"
+#include "EntityTypes.hpp"
 #include "isectional.h"
 
 class QJsonObject;

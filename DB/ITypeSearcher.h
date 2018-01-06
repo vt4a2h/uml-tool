@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 #include <DB/DBTypes.hpp>
 
 namespace DB {

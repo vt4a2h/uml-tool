@@ -44,14 +44,18 @@ static const QString enumEnumeratorsHelp =
 
 namespace GUI {
 
+    /**
+     * @brief EnumPropHandler::setEntity
+     * @param type
+     */
     void EnumPropHandler::setEntity(const Entity::SharedType &type)
     {
         if (type && type->kindOfType() == Entity::KindOfType::Enum) {
             m_Enum = std::static_pointer_cast<Entity::Enum>(type);
 
             if (sections().isEmpty()) {
-                m_EnumDeclaration = addSection(tr("Declaration"), enumDeclarationHelp);
-                m_EnumElements    = addSection(tr("Enumerators"), enumEnumeratorsHelp);
+                m_EnumDeclaration = addSection(tr("Declaration"), enumDeclarationHelp, nullptr /*stub*/);
+                m_EnumElements    = addSection(tr("Enumerators"), enumEnumeratorsHelp, nullptr /*stub*/);
             }
 
 

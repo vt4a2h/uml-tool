@@ -29,8 +29,7 @@
 
 #include <Entity/Components/icomponents.h>
 
-#include "entity_types.hpp"
-#include "ITextable.hpp"
+#include "EntityTypes.hpp"
 
 class QJsonObject;
 
@@ -55,7 +54,7 @@ namespace Entity {
     /**
      * @brief The Type class
      */
-    class Type : public Common::BasicElement, public IComponents, public ITextable
+    class Type : public Common::BasicElement, public IComponents
     {
     public:
         Type();
@@ -79,10 +78,6 @@ namespace Entity {
         void setGraphicEntityData(const SharedGraphicEntityData &graphicEntityData);
 
         friend void swap(Type &lhs, Type &rhs) noexcept;
-
-    public: // ITextable implementation
-        QString toString() const override;
-        bool fromString(const QString &text) const override;
 
     public: // BasicEntity implementation
         QJsonObject toJson() const override;

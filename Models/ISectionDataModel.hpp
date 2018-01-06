@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2017 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2018 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 25.
+** Created 07-01-2018.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -24,19 +24,23 @@
 
 #include <QString>
 
-namespace Entity {
+namespace Models {
 
-    /// Used to convert to/from simple text representation used in properties sections
-    class ITextable
+    /// Date model for properties section
+    class ISectionalDataModel
     {
     public:
-        virtual ~ITextable() {}
+        virtual ~ISectionalDataModel() {}
 
-        /// \return text representation or QString::null if failed
-        virtual QString toString() const = 0;
+        /// Get text representation of data source
+        virtual QString toText() const = 0;
 
-        /// \return true for success, false for fail
-        virtual bool fromString(const QString &text) const = 0;
+        /// Update data source based on \p text
+        /** Returns false if failed (you can check \p lastErrors() for details) **/
+        virtual bool fromText(const QString &text) = 0;
+
+        /// Returns human readable errors description
+        virtual QStringList lastErrors() const = 0;
     };
 
-} // namespace Entity
+} // Models

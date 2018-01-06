@@ -32,7 +32,7 @@
 
 #include <DB/DBTypes.hpp>
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 #include <GUI/graphics/GraphicsTypes.h>
 

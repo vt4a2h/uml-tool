@@ -38,7 +38,7 @@
 #include <Entity/Class.h>
 #include <Entity/field.h>
 #include <Entity/ClassMethod.h>
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 #include <Relationship/Relation.h>
 #include <Relationship/relationship_types.hpp>

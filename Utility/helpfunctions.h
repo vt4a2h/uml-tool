@@ -37,7 +37,7 @@
 #include <QJsonObject>
 
 #include <DB/DBTypes.hpp>
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 #include "types.h"
 

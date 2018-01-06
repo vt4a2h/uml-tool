@@ -25,7 +25,7 @@
 #include <QWidget>
 #include <QPointer>
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 #include <Entity/Type.h>
 
 #include "gui_types.hpp"

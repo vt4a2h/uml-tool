@@ -27,7 +27,7 @@
 
 #include <Common/ID.h>
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 class QJsonObject;
 

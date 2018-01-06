@@ -31,11 +31,13 @@ namespace GUI {
      * @param help
      * @param parent
      */
-    Section::Section(const QString &sectionName, const QString &help, QWidget *parent)
+    Section::Section(const QString &sectionName, const QString &help,
+                     const Models::SharedSectionalDataModel &model, QWidget *parent)
         : QWidget(parent)
         , m_ui(new Ui::Section)
         , m_State(Opened)
         , m_SectionName(sectionName)
+        , m_Model(model)
     {
         m_ui->setupUi(this);
 
@@ -67,49 +69,10 @@ namespace GUI {
     }
 
     /**
-     * @brief Section::setChangesAcceptor
-     * @param changesAcceptor
-     */
-    void Section::setChangesAcceptor(const ChangesAcceptor &changesAcceptor)
-    {
-        m_ChangesAcceptor = changesAcceptor;
-    }
-
-    /**
-     * @brief Section::changesAcceptor
-     * @return
-     */
-    Section::ChangesAcceptor Section::changesAcceptor() const
-    {
-        return m_ChangesAcceptor;
-    }
-
-    /**
      * @brief Section::updateText
      */
     void Section::updateText()
     {
-       if (m_TextSetter)
-           m_ui->tbText->setPlainText(m_TextSetter());
-       else
-           m_ui->tbText->clear();
-    }
-
-    /**
-     * @brief Section::setTextSetter
-     * @param textSetter
-     */
-    void Section::setTextSetter(const TextSetter &textSetter)
-    {
-        m_TextSetter = textSetter;
-    }
-
-    /**
-     * @brief Section::textSetter
-     */
-    Section::TextSetter Section::textSetter() const
-    {
-        return m_TextSetter;
     }
 
     /**

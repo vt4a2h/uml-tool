@@ -28,24 +28,44 @@
 
 namespace GUI {
 
+    /**
+     * @brief PropertiesHandlerBase::PropertiesHandlerBase
+     * @param sectionsLayout
+     */
     PropertiesHandlerBase::PropertiesHandlerBase(QLayout &sectionsLayout)
         : m_MainLayout(sectionsLayout)
     {
     }
 
+    /**
+     * @brief PropertiesHandlerBase::layout
+     * @return
+     */
     QLayout &PropertiesHandlerBase::layout()
     {
         return m_MainLayout;
     }
 
+    /**
+     * @brief PropertiesHandlerBase::sections
+     * @return
+     */
     PropertiesHandlerBase::SectionsList PropertiesHandlerBase::sections() const
     {
         return m_Sections;
     }
 
-    PropertiesHandlerBase::SectionPtr PropertiesHandlerBase::addSection(const QString &name, const QString &description)
+    /**
+     * @brief PropertiesHandlerBase::addSection
+     * @param name
+     * @param description
+     * @param model
+     * @return
+     */
+    PropertiesHandlerBase::SectionPtr PropertiesHandlerBase::addSection(
+        const QString &name, const QString &description, const Models::SharedSectionalDataModel &model)
     {
-        auto section = new Section(name, description);
+        auto section = new Section(name, description, model);
 
         layout().addWidget(section);
         m_Sections.append(section);
@@ -53,11 +73,19 @@ namespace GUI {
         return section;
     }
 
+    /**
+     * @brief PropertiesHandlerBase::entity
+     * @return
+     */
     Entity::SharedType PropertiesHandlerBase::entity() const
     {
         return nullptr;
     }
 
+    /**
+     * @brief PropertiesHandlerBase::activate
+     * @return
+     */
     bool PropertiesHandlerBase::activate()
     {
         if (!entity() || m_Sections.isEmpty())
@@ -71,6 +99,10 @@ namespace GUI {
         return true;
     }
 
+    /**
+     * @brief PropertiesHandlerBase::deactivate
+     * @return
+     */
     bool PropertiesHandlerBase::deactivate()
     {
         setEntity(nullptr);
@@ -83,6 +115,9 @@ namespace GUI {
         return true;
     }
 
+    /**
+     * @brief PropertiesHandlerBase::setEntity
+     */
     void PropertiesHandlerBase::setEntity(const Entity::SharedType &/*type*/)
     {
     }

@@ -27,7 +27,7 @@
 
 #include <Project/ProjectTypes.hpp>
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 #include "enums.h"
 

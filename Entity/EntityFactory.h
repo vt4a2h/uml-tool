@@ -24,7 +24,7 @@
 
 #include <Common/ElementsFactory.h>
 
-#include "entity_types.hpp"
+#include "EntityTypes.hpp"
 #include "QtHelpers.h"
 
 #include <Entity/Type.h>

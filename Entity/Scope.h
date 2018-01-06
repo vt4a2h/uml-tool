@@ -31,7 +31,7 @@
 
 #include <Helpers/entityhelpres.h>
 
-#include "entity_types.hpp"
+#include "EntityTypes.hpp"
 #include "QtHelpers.h"
 #include "itypeuser.h"
 

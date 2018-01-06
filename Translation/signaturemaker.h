@@ -31,7 +31,7 @@
 
 #include <Models/ModelsTypes.hpp>
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 #include <Project/ProjectTypes.hpp>
 

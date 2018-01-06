@@ -24,7 +24,7 @@
 
 #include <QPointer>
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 QT_BEGIN_NAMESPACE
 class QLayout;

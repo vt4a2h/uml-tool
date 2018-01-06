@@ -23,7 +23,7 @@
 #pragma once
 
 #include <Relationship/relationship_types.hpp>
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 #include <Common/ElementsFactory.h>
 

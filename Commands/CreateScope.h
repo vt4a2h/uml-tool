@@ -24,7 +24,7 @@
 
 #include "BaseCommand.h"
 
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 
 namespace Models {
     class ApplicationModel;

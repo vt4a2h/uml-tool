@@ -28,7 +28,7 @@
 #include <QHash>
 
 #include <DB/DBTypes.hpp>
-#include <Entity/entity_types.hpp>
+#include <Entity/EntityTypes.hpp>
 #include <Common/common_types.h>
 
 namespace Translation {
