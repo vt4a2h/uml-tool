@@ -93,7 +93,8 @@ SOURCES += \
     GUI/EntityProperties.cpp \
     GUI/Section.cpp \
     GUI/PropertiesHandlerBase.cpp \
-    GUI/EnumPropertiesHandler.cpp
+    GUI/EnumPropertiesHandler.cpp \
+    Models/EnumNameModel.cpp
 
 HEADERS += \
     enums.h \
@@ -206,7 +207,8 @@ HEADERS += \
     GUI/EnumPropertiesHandler.hpp \
     GUI/PropertiesHandlerBase.hpp \
     Models/ISectionDataModel.hpp \
-    Entity/EntityTypes.hpp
+    Entity/EntityTypes.hpp \
+    Models/EnumNameModel.hpp
 
 FORMS += \
     GUI/addscope.ui \

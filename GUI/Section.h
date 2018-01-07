@@ -50,8 +50,6 @@ namespace GUI {
         QString sectionHelp() const;
         void setSectionHelp(const QString &sectionHelp);
 
-        void updateText();
-
     protected:
         void mouseReleaseEvent(QMouseEvent *event) override;
 

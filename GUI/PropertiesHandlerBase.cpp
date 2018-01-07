@@ -93,7 +93,6 @@ namespace GUI {
 
         for (auto && s : sections()) {
             s->setVisible(true);
-            s->updateText();
         }
 
         return true;
@@ -109,7 +108,6 @@ namespace GUI {
 
         for (auto && s : sections()) {
             s->setVisible(false);
-            s->updateText();
         }
 
         return true;

@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-CONFIG += console core gui thread c++14
+CONFIG += console core gui thread c++1z
 CONFIG -= app_bundle
 
 QT += widgets
@@ -8,10 +8,6 @@ QT += widgets
 LIBS += -lgtest -lpthread
 
 linux-g++ {
-    message(********** Building with gcc 6 **********)
-    QMAKE_CXX = g++-6
-    QMAKE_CXXFLAGS *= -std=gnu++1y
-
     equals(WITH_COV, "TRUE") {
         message(********** Collecting test coverage **********)
         QMAKE_CXX = gcc-6
@@ -21,9 +17,11 @@ linux-g++ {
     }
 }
 
-INCLUDEPATH += ../../
+INCLUDEPATH += ../
 
-HEADERS += ../enums.h \
+HEADERS += \
+    ../enums.h \
+    ../types.h \
     ../Application/settings.h \
     ../Project/project.h \
     ../Entity/property.h \

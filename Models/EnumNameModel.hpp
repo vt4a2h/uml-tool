@@ -22,13 +22,27 @@
 *****************************************************************************/
 #pragma once
 
-#include <QAbstractTableModel>
+#include <Entity/EntityTypes.hpp>
+
+#include "ISectionDataModel.hpp"
 
 namespace Models {
 
-    /// Date model for properties section
-    class ISectionalDataModel : public QAbstractTableModel
+    class EnumNameModel : public ISectionalDataModel
     {
+    public:
+        EnumNameModel(const Entity::SharedEnum &_enum);
+
+    public: // QAbstractItemModel interface
+        int rowCount(const QModelIndex &parent) const override;
+        int columnCount(const QModelIndex &parent) const override;
+        QVariant data(const QModelIndex &index, int role) const override;
+
+    private: // Methods
+        QVariant processDisplayRole(const QModelIndex & index) const;
+
+    private: // Data
+        Entity::SharedEnum m_Enum;
     };
 
-} // Models
+} // namespace Models

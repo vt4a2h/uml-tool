@@ -64,15 +64,8 @@ namespace GUI {
     void Section::setState(State state)
     {
         m_State = state;
-        m_ui->tbText->setVisible(m_State == Opened ? true : false);
+        m_ui->tvView->setVisible(m_State == Opened ? true : false);
         m_ui->lblSectionName->setText((m_State == Opened ? "▼" : "►") + m_SectionName);
-    }
-
-    /**
-     * @brief Section::updateText
-     */
-    void Section::updateText()
-    {
     }
 
     /**
@@ -91,7 +84,7 @@ namespace GUI {
     void Section::setSectionHelp(const QString &sectionHelp)
     {
         m_SectionHelp = sectionHelp;
-        m_ui->tbText->setToolTip("<p>" + m_SectionHelp + "</p>");
+        m_ui->tvView->setToolTip("<p>" + m_SectionHelp + "</p>");
     }
 
     /**
