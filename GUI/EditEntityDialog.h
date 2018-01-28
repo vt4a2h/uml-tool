@@ -30,7 +30,7 @@
 
 #include <Models/ModelsTypes.hpp>
 
-#include "gui_types.hpp"
+#include "GuiTypes.hpp"
 
 class QListWidgetItem;
 class QUndoStack;

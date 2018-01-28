@@ -23,6 +23,7 @@
 #include "PropertiesHandlerBase.hpp"
 
 #include <QtGui/QLayout>
+#include <QtGui/QSpacerItem>
 
 #include "Section.h"
 

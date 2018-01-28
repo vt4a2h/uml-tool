@@ -24,7 +24,7 @@
 
 #include <QCoreApplication>
 
-#include <GUI/gui_types.hpp>
+#include <GUI/GuiTypes.hpp>
 #include <Models/ModelsTypes.hpp>
 
 /**

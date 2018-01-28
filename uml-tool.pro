@@ -124,7 +124,6 @@ HEADERS += \
     Translation/signaturemaker.h \
     Utility/helpfunctions.h \
     GUI/addscope.h \
-    GUI/gui_types.hpp \
     GUI/scenefilter.h \
     GUI/editmethoddialog.h \
     GUI/chooseglobaldatabasedialog.h \
@@ -208,7 +207,8 @@ HEADERS += \
     GUI/PropertiesHandlerBase.hpp \
     Models/ISectionDataModel.hpp \
     Entity/EntityTypes.hpp \
-    Models/EnumNameModel.hpp
+    Models/EnumNameModel.hpp \
+    GUI/GuiTypes.hpp
 
 FORMS += \
     GUI/addscope.ui \

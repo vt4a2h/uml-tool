@@ -59,7 +59,7 @@ namespace Models {
     {
         Q_ASSERT(index.isValid() && m_Enum);
 
-        if (index.row() != 1 || index.column() != 1)
+        if (index.row() != 0 || index.column() != 0)
             return QVariant();
 
         // TODO: use converter class to generate enum name

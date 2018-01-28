@@ -27,7 +27,7 @@
 #include <Models/ComponentsModel.h>
 #include <Entity/Components/components_types.h>
 
-#include "gui_types.hpp"
+#include "GuiTypes.hpp"
 
 namespace Components { class ComponentsMaker; }
 

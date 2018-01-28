@@ -39,7 +39,7 @@ Database path should be defined.
 #include <Models/ApplicationModel.h>
 #include <Models/ModelsTypes.hpp>
 
-#include <GUI/gui_types.hpp>
+#include <GUI/GuiTypes.hpp>
 
 const QString globalDbPath = DB_PATH"/";
 const QString globalDbName = "global";

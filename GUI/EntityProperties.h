@@ -28,7 +28,7 @@
 #include <Entity/EntityTypes.hpp>
 #include <Entity/Type.h>
 
-#include "gui_types.hpp"
+#include "GuiTypes.hpp"
 
 namespace GUI {
 

@@ -23,6 +23,8 @@
 #include "Section.h"
 #include "ui_Section.h"
 
+#include <Models/ISectionDataModel.hpp>
+
 namespace GUI {
 
     /**
@@ -45,6 +47,8 @@ namespace GUI {
 
         setState(Opened);
         setSectionHelp(help);
+
+        m_ui->tvView->setModel(m_Model.get());
     }
 
     /**
