@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2018 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 29/05/2016.
+** Created 20 .
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,26 +22,32 @@
 *****************************************************************************/
 #pragma once
 
-#include <Common/CommonTypes.hpp>
-#include <Entity/EntityTypes.hpp>
+#include <QObject>
+#include <QString>
+
 #include <DB/DBTypes.hpp>
+#include <Common/CommonTypes.hpp>
 
-namespace DB {
+namespace Models
+{
 
-    /// Auxiliary class for looking up scopes
-    class IScopeSearcher
+    /// Convert basic objects from text and vice versa
+    class SectionalTextConverter : public QObject
     {
-    public:
-        /// Search scope
-        virtual Entity::SharedScope scope(const Common::ID &id, bool searchInDepth = false) const = 0;
+        Q_OBJECT
 
-        /// All scopes from the first nesting level
-        virtual Entity::ScopesList scopes() const = 0;
+    public:
+        explicit SectionalTextConverter(QObject *parent = nullptr);
+
+        QString toString(Common::BasicElement const & element) const noexcept;
+        QStringList fromString(QString const & s, Common::BasicElement & element) const noexcept;
+
+    public slots:
+        void registerTypeSearcher(DB::SharedTypeSearcher const & typeSearcher);
+        void unregisterTypeSearcher(DB::SharedTypeSearcher const & typeSearcher);
+
+    private:
+        DB::WeakTypeSearchers m_TypeSearchers;
     };
 
-    inline bool operator ==(const WeakScopeSearcher &lhs, const WeakScopeSearcher &rhs)
-    {
-        return lhs.lock() == rhs.lock();
-    }
-
-} // namespace db
+} // namespace Models

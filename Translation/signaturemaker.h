@@ -27,7 +27,7 @@
 #include <QCoreApplication>
 #include <QMap>
 
-#include <Common/common_types.h>
+#include <Common/CommonTypes.hpp>
 
 #include <Models/ModelsTypes.hpp>
 

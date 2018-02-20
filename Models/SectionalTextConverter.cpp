@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2018 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 29/05/2016.
+** Created 20 .
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,28 +20,35 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#pragma once
+#include "SectionalTextConverter.hpp"
 
-#include <Common/CommonTypes.hpp>
-#include <Entity/EntityTypes.hpp>
-#include <DB/DBTypes.hpp>
+namespace Models
+{
 
-namespace DB {
-
-    /// Auxiliary class for looking up scopes
-    class IScopeSearcher
+    SectionalTextConverter::SectionalTextConverter(QObject *parent)
+        : QObject(parent)
     {
-    public:
-        /// Search scope
-        virtual Entity::SharedScope scope(const Common::ID &id, bool searchInDepth = false) const = 0;
-
-        /// All scopes from the first nesting level
-        virtual Entity::ScopesList scopes() const = 0;
-    };
-
-    inline bool operator ==(const WeakScopeSearcher &lhs, const WeakScopeSearcher &rhs)
-    {
-        return lhs.lock() == rhs.lock();
     }
 
-} // namespace db
+    QString SectionalTextConverter::toString(Common::BasicElement const & element) const
+    {
+
+    }
+
+    QStringList SectionalTextConverter::fromString(QString const & s,
+                                                   Common::BasicElement & element) const
+    {
+
+    }
+
+    void SectionalTextConverter::registerTypeSearcher(DB::SharedTypeSearcher const & typeSearcher)
+    {
+
+    }
+
+    void SectionalTextConverter::unregisterTypeSearcher(DB::SharedTypeSearcher const & typeSearcher)
+    {
+
+    }
+
+} // namespace Models

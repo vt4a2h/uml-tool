@@ -26,7 +26,7 @@
 
 #include <Entity/EntityTypes.hpp>
 #include <Project/ProjectTypes.hpp>
-#include <Common/common_types.h>
+#include <Common/CommonTypes.hpp>
 
 #include "BasicTreeItem.h"
 

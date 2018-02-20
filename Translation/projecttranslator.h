@@ -29,7 +29,7 @@
 
 #include <DB/DBTypes.hpp>
 #include <Entity/EntityTypes.hpp>
-#include <Common/common_types.h>
+#include <Common/CommonTypes.hpp>
 
 namespace Translation {
 

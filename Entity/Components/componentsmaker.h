@@ -25,7 +25,7 @@
 #include <QCoreApplication>
 
 #include <Entity/EntityTypes.hpp>
-#include <Common/common_types.h>
+#include <Common/CommonTypes.hpp>
 
 #include <Models/ModelsTypes.hpp>
 #include <Models/ComponentsModel.h>

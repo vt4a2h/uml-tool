@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include <Common/common_types.h>
+#include <Common/CommonTypes.hpp>
 
 #include "BaseCommand.h"
 

@@ -94,7 +94,8 @@ SOURCES += \
     GUI/Section.cpp \
     GUI/PropertiesHandlerBase.cpp \
     GUI/EnumPropertiesHandler.cpp \
-    Models/EnumNameModel.cpp
+    Models/EnumNameModel.cpp \
+    Models/SectionalTextConverter.cpp
 
 HEADERS += \
     enums.h \
@@ -137,7 +138,6 @@ HEADERS += \
     Entity/itypeuser.h \
     Common/BasicElement.h \
     Entity/isectional.h \
-    Common/common_types.h \
     Common/meta.h \
     Relationship/RelationFactory.h \
     Entity/EntityFactory.h \
@@ -208,7 +208,9 @@ HEADERS += \
     Models/ISectionDataModel.hpp \
     Entity/EntityTypes.hpp \
     Models/EnumNameModel.hpp \
-    GUI/GuiTypes.hpp
+    GUI/GuiTypes.hpp \
+    Models/SectionalTextConverter.hpp \
+    Common/CommonTypes.hpp
 
 FORMS += \
     GUI/addscope.ui \
