@@ -28,6 +28,8 @@
 #include <DB/DBTypes.hpp>
 #include <Common/CommonTypes.hpp>
 
+#include "ModelsTypes.hpp"
+
 namespace Models
 {
 
@@ -37,10 +39,22 @@ namespace Models
         Q_OBJECT
 
     public:
-        explicit SectionalTextConverter(QObject *parent = nullptr);
+        /// Creates an object
+        /** \p messenger is used for diagnostic messages. Cannot be null */
+        explicit SectionalTextConverter(SharedMessenger const & messenger);
 
+        /// Convert element to the text representation
+        /**
+         *  Each component starts with a new line. For example (enum):
+         *
+         *  class Foo int
+         *  a 1
+         *  b 2
+         *
+         *  For scoped enum with two int elements.
+         */
         QString toString(Common::BasicElement const & element) const noexcept;
-        QStringList fromString(QString const & s, Common::BasicElement & element) const noexcept;
+        void fromString(QString const & s, Common::BasicElement & element) const noexcept;
 
     public slots:
         void registerTypeSearcher(DB::SharedTypeSearcher const & typeSearcher);
@@ -48,6 +62,7 @@ namespace Models
 
     private:
         DB::WeakTypeSearchers m_TypeSearchers;
+        SharedMessenger m_Messenger;
     };
 
 } // namespace Models
