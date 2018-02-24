@@ -25,6 +25,14 @@
 #include <functional>
 #include <optional>
 
+#include <boost/range/algorithm/transform.hpp>
+#include <boost/range/algorithm/find.hpp>
+#include <boost/range/algorithm_ext/erase.hpp>
+#include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/phoenix_core.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
+
+#include <DB/ITypeSearcher.h>
 #include <Common/BasicElement.h>
 
 #include <Entity/Enum.h>
@@ -34,6 +42,8 @@
 
 namespace Models
 {
+
+    using namespace boost;
 
     /**
      * @brief SectionalTextConverter::SectionalTextConverter
@@ -51,17 +61,57 @@ namespace Models
         return static_cast<T const &>(elem);
     }
 
+    static DB::SharedTypeSearchers lockTS(DB::WeakTypeSearchers const & ts)
+    {
+        DB::SharedTypeSearchers result;
+        result.reserve(ts.size());
+
+        range::transform(ts, std::back_inserter(result), [](auto && t) { return t.lock(); });
+
+        return result;
+    }
+
+    static Entity::SharedType typeByID(Common::ID const & id, DB::SharedTypeSearchers const & ts)
+    {
+        for (auto && s : ts)
+            if (auto t = s->typeByID(id))
+                return t;
+
+        return nullptr;
+    }
 
     static QString enumToString(Common::BasicElement const & elem, DB::WeakTypeSearchers const & ts)
     {
+        auto lockedTS = lockTS(ts);
+        if (lockedTS.isEmpty())
+            return QString::null;
+
         auto e = to<Entity::Enum>(elem);
+
+        QString result;
+
+        if (e.isStrong())
+            result.append("class ");
+
+        result.append(e.name());
+
+        if (auto id = e.enumTypeId(); id.isValid())
+            if (auto type = typeByID(id, lockedTS))
+                result.append(" ").append(type->name());
+
+        result.append("\n");
+
+        for (auto && enumerator : e.enumerators())
+            result.append(QString("%1 %2\n").arg(enumerator->name()).arg(enumerator->value()));
+
+        return result;
     }
 
     using ToStringConverter =
         std::function<QString(Common::BasicElement const&, DB::WeakTypeSearchers const &)>;
     static const QHash<size_t, ToStringConverter> toStrConvById =
     {
-        { Entity::Enum::staticHashType(), &enumToString },
+        {Entity::Enum::staticHashType(), &enumToString},
     };
 
     /**
@@ -80,6 +130,19 @@ namespace Models
         return QString::null;
     }
 
+    static void enumFromString(QString const & in, Common::BasicElement & e,
+                               DB::WeakTypeSearchers const &ts, IMessenger const & messenger)
+    {
+
+    }
+
+    using FromStringConverter = std::function<void(QString const &, Common::BasicElement &,
+                                              DB::WeakTypeSearchers const &, IMessenger const &)>;
+    static const QHash<size_t, FromStringConverter> fromStrConvById =
+    {
+        {Entity::Enum::staticHashType(), &enumFromString},
+    };
+
     /**
      * @brief SectionalTextConverter::fromString
      * @param s
@@ -89,7 +152,11 @@ namespace Models
     void SectionalTextConverter::fromString(QString const & s,
                                             Common::BasicElement & element) const noexcept
     {
-
+        if (auto it = fromStrConvById.find(element.hashType()); it != fromStrConvById.end())
+            (*it)(s, element, m_TypeSearchers, *m_Messenger);
+        else
+            m_Messenger->addMessage(MessageType::Error, tr("Cannot get string representation"),
+                                    tr("There is no an appropriate converter"));
     }
 
     /**
@@ -98,7 +165,8 @@ namespace Models
      */
     void SectionalTextConverter::registerTypeSearcher(DB::SharedTypeSearcher const & typeSearcher)
     {
-
+        if (auto it = range::find(m_TypeSearchers, typeSearcher); it == m_TypeSearchers.end())
+            m_TypeSearchers << typeSearcher;
     }
 
     /**
@@ -107,7 +175,7 @@ namespace Models
      */
     void SectionalTextConverter::unregisterTypeSearcher(DB::SharedTypeSearcher const & typeSearcher)
     {
-
+        range::remove_erase(m_TypeSearchers, typeSearcher);
     }
 
 } // namespace Models

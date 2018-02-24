@@ -47,6 +47,7 @@ namespace DB {
     using SharedTypeSearcher = std::shared_ptr<ITypeSearcher>;
     using WeakTypeSearcher = std::weak_ptr<ITypeSearcher>;
     using WeakTypeSearchers = QVector<WeakTypeSearcher>;
+    using SharedTypeSearchers = QVector<SharedTypeSearcher>;
 
     class IScopeSearcher;
     using SharedScopeSearcher = std::shared_ptr<IScopeSearcher>;
