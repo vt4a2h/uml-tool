@@ -95,7 +95,8 @@ HEADERS += \
     cases/CommandsCases.h \
     cases/ProjectMakerCases.h \
     cases/ID.h \
-    cases/HelpersCases.h
+    cases/HelpersCases.h \
+    Arguments.hpp
 
 SOURCES += main.cpp \
            ../Application/settings.cpp \
@@ -159,4 +160,5 @@ SOURCES += main.cpp \
            ../Commands/MoveTypeToAnotherScope.cpp \
            ../Commands/RemoveProject.cpp \
            ../Commands/RenameEntity.cpp \
-           ../Commands/OpenProject.cpp
+           ../Commands/OpenProject.cpp \
+    Arguments.cpp
