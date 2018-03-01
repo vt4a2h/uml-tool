@@ -24,7 +24,7 @@
 
 #include <QCommandLineParser>
 
-namespace Test
+namespace Testing
 {
 
     Arguments::Arguments()
@@ -36,33 +36,36 @@ namespace Test
         return m_rootPath;
     }
 
-    Arguments const & Arguments::instance()
+    Arguments & Arguments::instance()
     {
         static Arguments args;
         return args;
     }
 
-    void Arguments::parseArguments(int argc, char **argv)
+    void Arguments::parse()
     {
         QCommandLineParser parser;
         parser.setApplicationDescription("Unit tests");
         parser.addHelpOption();
 
+        static const QString rootOptionName = "r";
+        static const QString dbOptionName   = "d";
         parser.addOptions({
-            {{"r", "test_root"}, "Set tests root path. Have to be specified"},
-            {{"d", "db_path"  }, "Set main database path. Have to be specified"},
+            {{rootOptionName, "test_root"}, "Set tests root path. Have to be specified"   },
+            {{dbOptionName  , "db_path"  }, "Set main database path. Have to be specified"},
         });
 
-        QStringList arguments;
-        for (int i = 0; i < argc; ++i)
-        {
-            arguments << QString::fromUtf8(argv[i]);
-        }
-
-        if (!parser.parse(arguments))
+        if (!parser.parse(qApp->arguments()))
             parser.showHelp();
 
+        auto tmpRootPath = parser.value(rootOptionName);
+        auto tmpDbPath   = parser.value(dbOptionName);
 
+        if (tmpRootPath.isEmpty() || tmpDbPath.isEmpty())
+            parser.showHelp();
+
+        m_rootPath = tmpRootPath;
+        m_dbPath   = tmpDbPath;
     }
 
     QString Arguments::dbPath() const
@@ -70,4 +73,4 @@ namespace Test
         return m_dbPath;
     }
 
-} // namespace Test
+} // namespace Testing

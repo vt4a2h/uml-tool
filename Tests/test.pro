@@ -7,15 +7,16 @@ QT += widgets
 
 LIBS += -lgtest -lpthread
 
-linux-g++ {
-    equals(WITH_COV, "TRUE") {
-        message(********** Collecting test coverage **********)
-        QMAKE_CXX = gcc-6
-        QMAKE_LINK = gcc-6
-        QMAKE_LFLAGS *= -lstdc++ --coverage
-        QMAKE_CXXFLAGS *= -std=gnu++1y -g --coverage
-    }
-}
+# TODO: set in a build script!
+#linux-g++ {
+#    equals(WITH_COV, "TRUE") {
+#        message(********** Collecting test coverage **********)
+#        QMAKE_CXX = gcc-6
+#        QMAKE_LINK = gcc-6
+#        QMAKE_LFLAGS *= -lstdc++ --coverage
+#        QMAKE_CXXFLAGS *= -std=gnu++1y -g --coverage
+#    }
+#}
 
 INCLUDEPATH += ../
 
@@ -43,6 +44,7 @@ HEADERS += \
     ../GUI/graphics/GraphicsRelation.h \
     ../GUI/graphics/Entity.h \
     ../GUI/graphics/Scene.h \
+    ../GUI/graphics/HeaderEditorEventFilter.h \
     ../Relationship/Relation.h \
     ../Relationship/RelationFactory.h \
     ../Common/ElementsFactory.h \
@@ -130,6 +132,7 @@ SOURCES += main.cpp \
            ../GUI/graphics/GraphicsRelation.cpp \
            ../GUI/graphics/Entity.cpp \
            ../GUI/graphics/Scene.cpp \
+           ../GUI/graphics/HeaderEditorEventFilter.cpp \
            ../Entity/templateclassmethod.cpp \
            ../Entity/scope.cpp \
            ../Entity/EntityFactory.cpp \

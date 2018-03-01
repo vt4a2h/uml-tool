@@ -41,9 +41,13 @@
 #include <cases/ID.h>
 #include <cases/HelpersCases.h>
 
+#include "Arguments.hpp"
+
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    Testing::Arguments::instance().parse();
+
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

@@ -22,9 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#ifndef DB_PATH
-Database path should be defined.
-#endif
+#include  <QDir>
 
 #include <Helpers/GeneratorID.h>
 
@@ -41,8 +39,9 @@ Database path should be defined.
 
 #include <GUI/GuiTypes.hpp>
 
-const QString globalDbPath = DB_PATH"/";
-const QString globalDbName = "global";
+#include "Arguments.hpp"
+
+static const QString globalDbName = "global";
 
 class ComponentsBase
 {
@@ -53,7 +52,7 @@ protected:
     {
         m_ApplicationModel = std::make_shared<Models::ApplicationModel>();
         m_GlobalDatabase = m_ApplicationModel->globalDatabase();
-        m_GlobalDatabase->setPath(globalDbPath);
+        m_GlobalDatabase->setPath(Testing::Arguments::instance().dbPath() + QDir::separator());
         m_GlobalDatabase->setName(globalDbName);
 
         initFactory(Entity::EntityFactory::instance());

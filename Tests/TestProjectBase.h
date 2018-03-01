@@ -22,11 +22,9 @@
 *****************************************************************************/
 #pragma once
 
-#ifndef DB_PATH
-Database path should be defined.
-#endif
-
 #include <gtest/gtest.h>
+
+#include <QDir>
 
 #include <DB/ProjectDatabase.h>
 #include <DB/Database.h>
@@ -39,6 +37,8 @@ Database path should be defined.
 
 #include <Helpers/GeneratorID.h>
 
+#include "Arguments.hpp"
+
 class ProjectBase : public ::testing::Test
 {
 protected:
@@ -47,7 +47,9 @@ protected:
 
     void init()
     {
-        m_GlobalDb = std::make_shared<DB::Database>("global", DB_PATH"/");
+        m_GlobalDb = std::make_shared<DB::Database>(
+            "global", Testing::Arguments::instance().dbPath() + QDir::separator()
+        );
 
         initFactory(Entity::EntityFactory::instance());
         initFactory(Relationship::RelationFactory::instance());

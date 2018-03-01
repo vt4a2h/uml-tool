@@ -24,15 +24,15 @@
 
 #include <QString>
 
-namespace Test
+namespace Testing
 {
 
     class Arguments
     {
     public:
-        static Arguments const & instance();
+        static Arguments &instance();
 
-        void parseArguments(int argc, char **argv);
+        void parse();
 
         QString dbPath() const;
         QString rootPath() const;
@@ -44,6 +44,4 @@ namespace Test
         QString m_rootPath;
     };
 
-} // namespace Test
-
-#endif // ARGUMENTS_HPP
+} // namespace Testing

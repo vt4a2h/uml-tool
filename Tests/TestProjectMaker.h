@@ -22,10 +22,6 @@
 *****************************************************************************/
 #pragma once
 
-#ifndef TEST_ROOT
-Test root should be defined!
-#endif
-
 #include <gtest/gtest.h>
 
 #include <types.h>
@@ -38,6 +34,7 @@ Test root should be defined!
 #include <Helpers/entityhelpres.h>
 
 #include "TestProjectBase.h"
+#include "Arguments.hpp"
 
 class ProjectMaker : public ProjectBase
 {
@@ -63,5 +60,5 @@ protected:
     // file section
     QString rootPath_     = QDir::current().path();
     QChar   sep_          = QDir(rootPath_).separator();
-    QString testDataPath_ = QString(TEST_ROOT "%1data%1").arg(sep_);
+    QString testDataPath_ = QString("%1%2data%2").arg(Testing::Arguments::instance().rootPath(), sep_);
 };
