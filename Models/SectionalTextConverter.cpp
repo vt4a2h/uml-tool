@@ -20,6 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
+
 #include "SectionalTextConverter.hpp"
 
 #include <functional>
@@ -133,7 +134,7 @@ namespace Models
     static void enumFromString(QString const & in, Common::BasicElement & e,
                                DB::WeakTypeSearchers const &ts, IMessenger const & messenger)
     {
-
+//        using
     }
 
     using FromStringConverter = std::function<void(QString const &, Common::BasicElement &,
@@ -155,7 +156,7 @@ namespace Models
         if (auto it = fromStrConvById.find(element.hashType()); it != fromStrConvById.end())
             (*it)(s, element, m_TypeSearchers, *m_Messenger);
         else
-            m_Messenger->addMessage(MessageType::Error, tr("Cannot get string representation"),
+            m_Messenger->addMessage(MessageType::Error, tr("Cannot convert the type from string"),
                                     tr("There is no an appropriate converter"));
     }
 

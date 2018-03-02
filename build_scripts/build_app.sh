@@ -54,7 +54,7 @@ fi
 
 # Test
 if [ ! -z ${TEST} ]; then
-   ${TESTS_BIN} --gtest_shuffle
+   ${TESTS_BIN} --test_root ${ROOT}/Tests --db_path ${ROOT} --gtest_shuffle
 fi
 
 # Collect coverage

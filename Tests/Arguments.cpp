@@ -51,8 +51,8 @@ namespace Testing
         static const QString rootOptionName = "r";
         static const QString dbOptionName   = "d";
         parser.addOptions({
-            {{rootOptionName, "test_root"}, "Set tests root path. Have to be specified"   },
-            {{dbOptionName  , "db_path"  }, "Set main database path. Have to be specified"},
+            {{rootOptionName, "test_root"}, "Set tests root path. Have to be specified"   , "root"},
+            {{dbOptionName  , "db_path"  }, "Set main database path. Have to be specified", "db"  },
         });
 
         if (!parser.parse(qApp->arguments()))

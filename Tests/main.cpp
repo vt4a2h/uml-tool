@@ -46,6 +46,9 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+    QApplication::setApplicationName("uml-tool-tests");
+    QApplication::setApplicationVersion("1.0");
+
     Testing::Arguments::instance().parse();
 
     ::testing::InitGoogleTest(&argc, argv);
