@@ -22,8 +22,8 @@
 *****************************************************************************/
 #include "PropertiesHandlerBase.hpp"
 
-#include <QtGui/QLayout>
-#include <QtGui/QSpacerItem>
+#include <QLayout>
+#include <QSpacerItem>
 
 #include "Section.h"
 
