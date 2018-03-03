@@ -49,7 +49,7 @@ set(DB_SRC
 set(ENTITY ${ROOT}/Entity)
 set(ENTITY_HEADERS
     ${ENTITY}/field.h
-    ${ENTITY}/entity_types.hpp
+    ${ENTITY}/EntityTypes.hpp
     ${ENTITY}/itypeuser.h
     ${ENTITY}/isectional.h
     ${ENTITY}/EntityFactory.h
@@ -114,7 +114,7 @@ set(GEN_SRC
 set(GUI ${ROOT}/GUI)
 set(GUI_HEADERS
     ${GUI}/addscope.h
-    ${GUI}/gui_types.hpp
+    ${GUI}/GuiTypes.hpp
     ${GUI}/scenefilter.h
     ${GUI}/editmethoddialog.h
     ${GUI}/chooseglobaldatabasedialog.h
@@ -129,6 +129,9 @@ set(GUI_HEADERS
     ${GUI}/HtmlDelegate.h
     ${GUI}/Preferences.h
     ${GUI}/EntityProperties.h
+    ${GUI}/PropertiesHandlerBase.hpp
+    ${GUI}/IPropertiesHandler.hpp
+    ${GUI}/EnumPropertiesHandler.hpp
     ${GUI}/Section.h
     ${GUI}/IPropertiesHandler.hpp)
 set(GUI_SRC
@@ -147,7 +150,9 @@ set(GUI_SRC
     ${GUI}/HtmlDelegate.cpp
     ${GUI}/Preferences.cpp
     ${GUI}/EntityProperties.cpp
-    ${GUI}/Section.h)
+    ${GUI}/PropertiesHandlerBase.cpp
+    ${GUI}/EnumPropertiesHandler.cpp
+    ${GUI}/Section.cpp)
 
 set(GUI_GRAPHICS ${GUI}/graphics)
 set(GUI_GRAPHICS_HEADERS
@@ -179,12 +184,17 @@ set(MODELS_HEADERS
     ${MODELS}/ModelsTypes.hpp
     ${MODELS}/ComponentsModel.h
     ${MODELS}/MessagesModel.h
+    ${MODELS}/SectionalTextConverter.hpp
+    ${MODELS}/ISectionalDataModel.hpp
+    ${MODELS}/EnumNameModel.hpp
     ${MODELS}/IMessenger.h)
 set(MODELS_SRC
     ${MODELS}/ProjectTreeModel.cpp
     ${MODELS}/ApplicationModel.cpp
     ${MODELS}/BasicTreeItem.cpp
     ${MODELS}/ComponentsModel.cpp
+    ${MODELS}/SectionalTextConverter.cpp
+    ${MODELS}/EnumNameModel.cpp
     ${MODELS}/MessagesModel.cpp)
 
 set(PROJECT ${ROOT}/Project)
@@ -236,7 +246,7 @@ set(COMMON ${ROOT}/Common)
 set(COMMON_HEADERS
     ${COMMON}/ID.h
     ${COMMON}/BasicElement.h
-    ${COMMON}/common_types.h
+    ${COMMON}/CommonTypes.hpp
     ${COMMON}/meta.h
     ${COMMON}/ElementsFactory.h
     ${COMMON}/SharedFromThis.h)

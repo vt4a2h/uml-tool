@@ -28,7 +28,7 @@ do
 done
 
 if [ -z ${PARENT_DIR} ] || [ ! -d ${PARENT_DIR} ]; then
-   echo "No build directory specified"
+   echo "No parent directory specified"
    exit -1
 fi
 
@@ -54,7 +54,7 @@ fi
 
 # Test
 if [ ! -z ${TEST} ]; then
-   ${TESTS_BIN} --test_root ${ROOT}/Tests --db_path ${ROOT} --gtest_shuffle
+   ${TESTS_BIN} --gtest_shuffle --test_root ${PARENT_DIR}/Tests --db_path ${PARENT_DIR}
 fi
 
 # Collect coverage

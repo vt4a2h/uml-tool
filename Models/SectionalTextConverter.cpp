@@ -29,9 +29,9 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm_ext/erase.hpp>
-#include <boost/spirit/include/qi.hpp>
-#include <boost/spirit/include/phoenix_core.hpp>
-#include <boost/spirit/include/phoenix_operator.hpp>
+//#include <boost/spirit/include/qi.hpp>
+//#include <boost/spirit/include/phoenix_core.hpp>
+//#include <boost/spirit/include/phoenix_operator.hpp>
 
 #include <DB/ITypeSearcher.h>
 #include <Common/BasicElement.h>

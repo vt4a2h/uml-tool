@@ -205,12 +205,12 @@ HEADERS += \
     GUI/IPropertiesHandler.hpp \
     GUI/EnumPropertiesHandler.hpp \
     GUI/PropertiesHandlerBase.hpp \
-    Models/ISectionDataModel.hpp \
     Entity/EntityTypes.hpp \
     Models/EnumNameModel.hpp \
     GUI/GuiTypes.hpp \
     Models/SectionalTextConverter.hpp \
-    Common/CommonTypes.hpp
+    Common/CommonTypes.hpp \
+    Models/ISectionalDataModel.hpp
 
 FORMS += \
     GUI/addscope.ui \

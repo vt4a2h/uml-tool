@@ -33,7 +33,12 @@ set(TEST_HEADERS
     ${ROOT}/Tests/TestClassComponents.h
     ${ROOT}/Tests/TestComponentSignatureParser.h
     ${ROOT}/Tests/TestProjectBase.h
+    ${ROOT}/Tests/Arguments.hpp
     ${ROOT}/Tests/TestCommands.h)
+    
+set(TEST_SOURCES
+    ${ROOT}/Tests/main.cpp
+    ${ROOT}/Tests/Arguments.cpp)
 
 set(CASES_DIR ${ROOT}/Tests/cases)
 set(CASES_HEADERS
@@ -57,7 +62,7 @@ set(CASES_HEADERS
 
 include_directories(${Qt5Widgets_INCLUDES} ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CASES_DIR} ${GTEST_INCLUDE_DIRS})
 
-add_executable(tests ${ROOT}/Tests/main.cpp ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${ENTITY_SRC}
+add_executable(tests ${TEST_SOURCES} ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${ENTITY_SRC}
                ${ENTITY_COMPONNTS_SRC} ${GEN_SRC} ${GUI_SRC} ${GUI_GRAPHICS_SRC} ${HELPERS_SRC}
                ${MODELS_SRC} ${PROJECT_SRC} ${REL_SRC} ${TRANSLATION_SRC} ${UTIL_SRC}
                ${COMMON_SRC}

@@ -53,6 +53,7 @@ namespace Testing
         parser.addOptions({
             {{rootOptionName, "test_root"}, "Set tests root path. Have to be specified"   , "root"},
             {{dbOptionName  , "db_path"  }, "Set main database path. Have to be specified", "db"  },
+            {"gtest_shuffle", "Shuffle tests"},
         });
 
         if (!parser.parse(qApp->arguments()))

@@ -24,7 +24,7 @@
 
 #include <Entity/EntityTypes.hpp>
 
-#include "ISectionDataModel.hpp"
+#include "ISectionalDataModel.hpp"
 
 namespace Models {
 

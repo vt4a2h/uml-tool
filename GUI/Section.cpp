@@ -23,7 +23,7 @@
 #include "Section.h"
 #include "ui_Section.h"
 
-#include <Models/ISectionDataModel.hpp>
+#include <Models/ISectionalDataModel.hpp>
 
 namespace GUI {
 
