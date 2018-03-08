@@ -40,6 +40,7 @@
 #include <cases/CommandsCases.h>
 #include <cases/ID.h>
 #include <cases/HelpersCases.h>
+#include <cases/SectionalTextConverterCases.h>
 
 #include "Arguments.hpp"
 

@@ -39,6 +39,7 @@ HEADERS += \
     ../Models/ApplicationModel.h \
     ../Models/projecttreemodel.h \
     ../Models/basictreeitem.h \
+    ../Models/SectionalTextConverter.hpp \
     ../Helpers/entityhelpres.h\
     ../Helpers/GeneratorID.h\
     ../GUI/graphics/GraphicsRelation.h \
@@ -98,7 +99,9 @@ HEADERS += \
     cases/ProjectMakerCases.h \
     cases/ID.h \
     cases/HelpersCases.h \
-    Arguments.hpp
+    Arguments.hpp \
+    TestSectionalTextConverter.hpp \
+    cases/SectionalTextConverterCases.h
 
 SOURCES += main.cpp \
            ../Application/settings.cpp \
@@ -151,6 +154,7 @@ SOURCES += main.cpp \
            ../Models/ApplicationModel.cpp \
            ../Models/projecttreemodel.cpp \
            ../Models/basictreeitem.cpp \
+           ../Models/SectionalTextConverter.cpp \
            ../Helpers/entityhelpres.cpp \
            ../Helpers/GeneratorID.cpp \
            ../Common/ElementsFactory.cpp \

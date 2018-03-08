@@ -87,7 +87,7 @@ namespace Models
         if (lockedTS.isEmpty())
             return QString::null;
 
-        auto e = to<Entity::Enum>(elem);
+        auto const & e = to<Entity::Enum>(elem);
 
         QString result;
 

@@ -54,4 +54,7 @@ namespace Models {
 
     class ISectionalDataModel;
     using SharedSectionalDataModel = std::shared_ptr<ISectionalDataModel>;
+
+    class SectionalTextConverter;
+    using SharedSectionalTextConverter = std::shared_ptr<SectionalTextConverter>;
 }
