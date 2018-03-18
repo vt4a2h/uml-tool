@@ -22,11 +22,42 @@
 *****************************************************************************/
 #pragma once
 
+#include <Entity/Enum.h>
+
 #include "TestSectionalTextConverter.hpp"
 
 using namespace Testing;
 
-TEST_F(SectionalTextConverter, Enum)
+TEST_F(SectionalTextConverter, EnumToStrting_Success)
+{
+    Entity::Enum e("Foo", Common::ID::projectScopeID());
+    QString result = m_Converter->toString(e);
+    ASSERT_EQ(result.toStdString(), "enum Foo\n");
+    ASSERT_TRUE(m_Messenger->messages().empty());
+
+    e.setStrongStatus(true);
+    result = m_Converter->toString(e);
+    ASSERT_EQ(result.toStdString(), "enum class Foo\n");
+    ASSERT_TRUE(m_Messenger->messages().empty());
+
+    e.setEnumTypeId(m_GlobalDb->typeByName("int")->id());
+    result = m_Converter->toString(e);
+    ASSERT_EQ(result.toStdString(), "enum class Foo int\n");
+
+    e.addElement("element1")->setValue(2);
+    e.addElement("element2")->setValue(5);
+    result = m_Converter->toString(e);
+    ASSERT_EQ(result.toStdString(), "enum class Foo int\n"
+                                    "element1 2\n"
+                                    "element2 5\n");
+}
+
+TEST_F(SectionalTextConverter, EnumToStrting_Fail)
+{
+
+}
+
+TEST_F(SectionalTextConverter, EnumFromString)
 {
 
 }

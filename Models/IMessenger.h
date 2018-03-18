@@ -54,7 +54,8 @@ namespace Models {
     class IMessenger
     {
     public:
-        virtual void addMessage(MessageType type, const QString &summary, const QString &description) = 0;
+        virtual void addMessage(MessageType type, const QString &summary,
+                                const QString &description = QString::null) = 0;
         virtual Messages messages() const = 0;
         virtual uint unreadMessagesCount() const = 0;
     };

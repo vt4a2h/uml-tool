@@ -72,7 +72,7 @@ namespace Testing
             m_Converter->registerTypeSearcher(m_ProjectDb);
         }
 
-    private:
+    protected:
         Models::SharedMessenger m_Messenger;
         Models::SharedSectionalTextConverter m_Converter;
     };

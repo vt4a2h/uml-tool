@@ -47,7 +47,7 @@ namespace Models
         /**
          *  Each component starts with a new line. For example (enum):
          *
-         *  class Foo int
+         *  enum class Foo int
          *  a 1
          *  b 2
          *

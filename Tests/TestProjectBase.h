@@ -35,6 +35,8 @@
 #include <Entity/EntityFactory.h>
 #include <Relationship/RelationFactory.h>
 
+#include <Models/ProjectTreeModel.h>
+
 #include <Helpers/GeneratorID.h>
 
 #include "Arguments.hpp"

@@ -50,38 +50,39 @@ namespace Models
      * @brief SectionalTextConverter::SectionalTextConverter
      * @param parent
      */
-    SectionalTextConverter::SectionalTextConverter(SharedMessenger const & messenger)
+    SectionalTextConverter::SectionalTextConverter(SharedMessenger const &messenger)
         : m_Messenger(G_ASSERT(messenger))
     {
     }
 
     template <class T>
-    T const & to(Common::BasicElement const & elem)
+    T const & to(Common::BasicElement const &elem)
     {
         Q_ASSERT(T::staticHashType() == elem.hashType());
         return static_cast<T const &>(elem);
     }
 
-    static DB::SharedTypeSearchers lockTS(DB::WeakTypeSearchers const & ts)
+    static DB::SharedTypeSearchers lockTS(DB::WeakTypeSearchers const &ts)
     {
         DB::SharedTypeSearchers result;
         result.reserve(ts.size());
 
-        range::transform(ts, std::back_inserter(result), [](auto && t) { return t.lock(); });
+        range::transform(ts, std::back_inserter(result), [](auto &&t) { return t.lock(); });
 
         return result;
     }
 
-    static Entity::SharedType typeByID(Common::ID const & id, DB::SharedTypeSearchers const & ts)
+    static Entity::SharedType typeByID(Common::ID const &id, DB::SharedTypeSearchers const &ts)
     {
-        for (auto && s : ts)
+        for (auto &&s : ts)
             if (auto t = s->typeByID(id))
                 return t;
 
         return nullptr;
     }
 
-    static QString enumToString(Common::BasicElement const & elem, DB::WeakTypeSearchers const & ts)
+    static QString enumToString(Common::BasicElement const &elem, DB::WeakTypeSearchers const &ts,
+                                Models::IMessenger &messenger)
     {
         auto lockedTS = lockTS(ts);
         if (lockedTS.isEmpty())
@@ -89,27 +90,46 @@ namespace Models
 
         auto const & e = to<Entity::Enum>(elem);
 
-        QString result;
+        QString result("enum");
 
         if (e.isStrong())
-            result.append("class ");
+            result.append(" class");
 
-        result.append(e.name());
+        if (e.name().isEmpty()) {
+            messenger.addMessage(Models::MessageType::Error, "Enum name is empty");
+            return QString::null;
+        }
+        result.append(" " + e.name());
 
-        if (auto id = e.enumTypeId(); id.isValid())
-            if (auto type = typeByID(id, lockedTS))
+        if (auto id = e.enumTypeId(); id.isValid()) {
+            if (auto type = typeByID(id, lockedTS)) {
                 result.append(" ").append(type->name());
+            } else {
+                messenger.addMessage(Models::MessageType::Error, "Wrong type ID",
+                                     "Cannot find the following type id: " + id.toString());
+                return QString::null;
+            }
+        }
 
         result.append("\n");
 
-        for (auto && enumerator : e.enumerators())
+        for (auto && enumerator : e.enumerators()) {
+            QString name = enumerator->name();
+            if (name.isEmpty()) {
+                messenger.addMessage(Models::MessageType::Error, "Enumerator name is empty");
+                return QString::null;
+            }
+
             result.append(QString("%1 %2\n").arg(enumerator->name()).arg(enumerator->value()));
+        }
 
         return result;
     }
 
     using ToStringConverter =
-        std::function<QString(Common::BasicElement const&, DB::WeakTypeSearchers const &)>;
+        std::function<QString(Common::BasicElement const&,
+                      DB::WeakTypeSearchers const&,
+                      Models::IMessenger &messenger)>;
     static const QHash<size_t, ToStringConverter> toStrConvById =
     {
         {Entity::Enum::staticHashType(), &enumToString},
@@ -120,10 +140,10 @@ namespace Models
      * @param element
      * @return
      */
-    QString SectionalTextConverter::toString(Common::BasicElement const & element) const noexcept
+    QString SectionalTextConverter::toString(Common::BasicElement const& element) const noexcept
     {
         if (auto it = toStrConvById.find(element.hashType()); it != toStrConvById.end())
-            return (*it)(element, m_TypeSearchers);
+            return (*it)(element, m_TypeSearchers, *m_Messenger);
         else
             m_Messenger->addMessage(MessageType::Error, tr("Cannot get string representation"),
                                     tr("There is no an appropriate converter"));
@@ -131,14 +151,14 @@ namespace Models
         return QString::null;
     }
 
-    static void enumFromString(QString const & in, Common::BasicElement & e,
-                               DB::WeakTypeSearchers const &ts, IMessenger const & messenger)
+    static void enumFromString(QString const& in, Common::BasicElement &e,
+                               DB::WeakTypeSearchers const& ts, IMessenger const& messenger)
     {
 //        using
     }
 
-    using FromStringConverter = std::function<void(QString const &, Common::BasicElement &,
-                                              DB::WeakTypeSearchers const &, IMessenger const &)>;
+    using FromStringConverter = std::function<void(QString const&, Common::BasicElement &,
+                                              DB::WeakTypeSearchers const&, IMessenger const&)>;
     static const QHash<size_t, FromStringConverter> fromStrConvById =
     {
         {Entity::Enum::staticHashType(), &enumFromString},
@@ -150,7 +170,7 @@ namespace Models
      * @param element
      * @return
      */
-    void SectionalTextConverter::fromString(QString const & s,
+    void SectionalTextConverter::fromString(QString const& s,
                                             Common::BasicElement & element) const noexcept
     {
         if (auto it = fromStrConvById.find(element.hashType()); it != fromStrConvById.end())
@@ -164,7 +184,7 @@ namespace Models
      * @brief SectionalTextConverter::registerTypeSearcher
      * @param typeSearcher
      */
-    void SectionalTextConverter::registerTypeSearcher(DB::SharedTypeSearcher const & typeSearcher)
+    void SectionalTextConverter::registerTypeSearcher(DB::SharedTypeSearcher const& typeSearcher)
     {
         if (auto it = range::find(m_TypeSearchers, typeSearcher); it == m_TypeSearchers.end())
             m_TypeSearchers << typeSearcher;
@@ -174,7 +194,7 @@ namespace Models
      * @brief SectionalTextConverter::unregisterTypeSearcher
      * @param typeSearcher
      */
-    void SectionalTextConverter::unregisterTypeSearcher(DB::SharedTypeSearcher const & typeSearcher)
+    void SectionalTextConverter::unregisterTypeSearcher(DB::SharedTypeSearcher const& typeSearcher)
     {
         range::remove_erase(m_TypeSearchers, typeSearcher);
     }
