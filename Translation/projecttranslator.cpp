@@ -359,8 +359,13 @@ namespace Translation {
 
         QStringList values;
         if (options & GenerateNumbers) {
-            for (auto &&v : _enum->enumerators())
-                values << QString("%1 = %2").arg(v->name(), QString::number(v->value()));
+            for (auto &&enumerator : _enum->enumerators()) {
+                QString strVal = enumerator->name();
+                if (auto v = enumerator->value(); v)
+                    strVal.append(QString("= %1").arg(v.value()));
+
+                values << strVal;
+            }
         } else {
             for (auto &&v : _enum->enumerators())
                 values << v->name();

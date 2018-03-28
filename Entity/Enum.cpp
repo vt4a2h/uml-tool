@@ -41,18 +41,17 @@ using namespace boost;
 
 namespace Entity {
 
-    namespace {
-        const QString newElementName = Enumerator::tr("newElement");
-        const QString nameMark   = "Name";
-        const QString numberMark = "Number";
-        const QString defaultName = Enum::tr("Enumeration");
-    }
+    static const QString newElementName = Enumerator::tr("newElement");
+    static const QString nameMark       = "Name";
+    static const QString numberMark     = "Number";
+    static const QString defaultName    = Enum::tr("Enumeration");
+    static const int nulloptValue = std::numeric_limits<int>::max();
 
     /**
      * @brief Element::Element
      */
     Enumerator::Enumerator()
-        : Enumerator("Enumeration", 0)
+        : Enumerator(defaultName)
     {}
 
     /**
@@ -60,7 +59,7 @@ namespace Entity {
      * @param name
      * @param value
      */
-    Enumerator::Enumerator(const QString &name, int value)
+    Enumerator::Enumerator(const QString &name, OptionalInt value)
         : BasicElement(name)
         , m_Value(value)
     {}
@@ -96,7 +95,7 @@ namespace Entity {
     QJsonObject Enumerator::toJson() const
     {
         QJsonObject result = BasicElement::toJson();
-        result.insert(numberMark, m_Value);
+        result.insert(numberMark, m_Value.value_or(nulloptValue));
 
         return result;
     }
@@ -109,23 +108,29 @@ namespace Entity {
     void Enumerator::fromJson(const QJsonObject &src, QStringList &errorList)
     {
         BasicElement::fromJson(src, errorList);
-        Util::checkAndSet(src, numberMark, errorList, [&src, this](){ m_Value = src[numberMark].toInt();  });
+        Util::checkAndSet(src, numberMark, errorList, [&src, this](){
+            auto val = src[numberMark].toInt();
+            if (val == nulloptValue)
+                m_Value.reset();
+            else
+                m_Value = val;
+        });
     }
 
     /**
-     * @brief Element::value
+     * @brief Enumerator::value
      * @return
      */
-    int Enumerator::value() const
+    Enumerator::OptionalInt Enumerator::value() const
     {
         return m_Value;
     }
 
     /**
-     * @brief Element::setValue
+     * @brief Enumerator::setValue
      * @param value
      */
-    void Enumerator::setValue(int value)
+    void Enumerator::setValue(const OptionalInt &value)
     {
         m_Value = value;
     }
@@ -187,7 +192,7 @@ namespace Entity {
      */
     SharedEnumarator Enum::addElement(const QString &name)
     {
-        auto element = std::make_shared<Enumerator>(name, m_Elements.size());
+        auto element = std::make_shared<Enumerator>(name);
         m_Elements << element;
         return element;
     }

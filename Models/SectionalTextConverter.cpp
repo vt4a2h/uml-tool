@@ -120,7 +120,10 @@ namespace Models
                 return QString::null;
             }
 
-            result.append(QString("%1 %2\n").arg(enumerator->name()).arg(enumerator->value()));
+            result.append(enumerator->name());
+            if (auto val = enumerator->value(); val)
+                result.append(QString(" %1").arg(val.value()));
+            result.append("\n");
         }
 
         return result;
