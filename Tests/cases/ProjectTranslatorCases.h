@@ -259,29 +259,34 @@ TEST_F(ProjectTranslatorTest, Enum)
 {
     auto fooEnum = m_ProjectScope->addType<Entity::Enum>("Foo");
 
-    QString futureResult("enum Foo {};");
+    QString expected("enum Foo {};");
     auto code(m_Translator->translate(fooEnum));
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(expected, code.toHeader);
 
-    futureResult = "enum class Foo {};";
+    expected = "enum class Foo {};";
     fooEnum->setStrongStatus(true);
     code = m_Translator->translate(fooEnum);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(expected, code.toHeader);
 
-    futureResult = "enum class Foo : int {};";
+    expected = "enum class Foo : int {};";
     fooEnum->setEnumTypeId(m_int->id());
     code = m_Translator->translate(fooEnum);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(expected, code.toHeader);
 
-    futureResult = "enum class Foo : int {bar, baz};";
+    expected = "enum class Foo : int {bar, baz};";
     fooEnum->addElement("bar");
-    fooEnum->addElement("baz");
+    auto baz = fooEnum->addElement("baz");
     code = m_Translator->translate(fooEnum);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(expected, code.toHeader);
 
-    futureResult = "enum class Foo : int {bar = 0, baz = 1};";
+    expected = "enum class Foo : int {bar, baz};";
     code = m_Translator->translate(fooEnum, Translation::ProjectTranslator::GenerateNumbers);
-    ASSERT_EQ(futureResult, code.toHeader);
+    ASSERT_EQ(expected, code.toHeader);
+
+    baz->setValue(3);
+    expected = "enum class Foo : int {bar, baz = 3};";
+    code = m_Translator->translate(fooEnum, Translation::ProjectTranslator::GenerateNumbers);
+    ASSERT_EQ(expected, code.toHeader);
 }
 
 TEST_F(ProjectTranslatorTest, Union)

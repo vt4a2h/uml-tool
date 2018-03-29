@@ -362,7 +362,7 @@ namespace Translation {
             for (auto &&enumerator : _enum->enumerators()) {
                 QString strVal = enumerator->name();
                 if (auto v = enumerator->value(); v)
-                    strVal.append(QString("= %1").arg(v.value()));
+                    strVal.append(QString(" = %1").arg(v.value()));
 
                 values << strVal;
             }
