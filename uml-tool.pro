@@ -4,7 +4,7 @@ CONFIG += core gui c++1z
 
 QT += widgets
 
-QMAKE_CXXFLAGS *= -Wextra -Wall
+QMAKE_CXXFLAGS *= -pedantic -Wextra -Wall
 
 SOURCES += \
     main.cpp \

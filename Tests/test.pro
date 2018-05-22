@@ -3,6 +3,8 @@ TEMPLATE = app
 CONFIG += console core gui thread c++1z
 CONFIG -= app_bundle
 
+QMAKE_CXXFLAGS *= -pedantic -Wextra -Wall
+
 QT += widgets
 
 LIBS += -lgtest -lpthread

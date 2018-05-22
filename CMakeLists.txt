@@ -32,4 +32,6 @@ setCommonTargetProperties(uml-tool)
 
 qt5_use_modules(uml-tool Widgets Core)
 
-add_subdirectory(Tests)
+if(BUILD_TESTING)
+    add_subdirectory(Tests)
+endif(BUILD_TESTING)

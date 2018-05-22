@@ -38,8 +38,13 @@ CMAKE_BIN=${PARENT_DIR}/uml-tool-dependencies/cmake/linux/bin/cmake
 TESTS_BIN=${PARENT_DIR}/build/Tests/tests
 
 CONFIG_PARAMS="-DCMAKE_BUILD_TYPE=Release"
+
 if [ ! -z ${COV} ]; then
    CONFIG_PARAMS="${CONFIG_PARAMS} -DCOLLECT_COVERAGE=True"
+fi
+
+if [ ! -z ${TEST} ]; then
+   CONFIG_PARAMS="${CONFIG_PARAMS} -DBUILD_TESTING=True"
 fi
 
 # Cleanup

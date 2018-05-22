@@ -76,5 +76,6 @@ add_executable(tests ${TEST_SOURCES} ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${ENTITY_SR
 target_link_libraries(tests ${Boost_LIBRARIES} ${GTEST_LIBRARIES} pthread)
 
 include(${ROOT}/CommonFunctions.cmake)
+
 setCommonTargetProperties(tests)
 qt5_use_modules(tests Widgets Core)
