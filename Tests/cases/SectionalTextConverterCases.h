@@ -50,6 +50,17 @@ TEST_F(SectionalTextConverter, EnumToStrting_Success)
     ASSERT_EQ(result.toStdString(), "enum class Foo int\n"
                                     "element1 2\n"
                                     "element2 5\n");
+
+    e.removeEnumerator("element1");
+    e.removeEnumerator("element2");
+    ASSERT_TRUE(e.enumerators().isEmpty());
+
+    e.addElement("e1");
+    e.addElement("e2");
+    result = m_Converter->toString(e);
+    ASSERT_EQ(result.toStdString(), "enum class Foo int\n"
+                                    "e1\n"
+                                    "e2\n");
 }
 
 TEST_F(SectionalTextConverter, EnumToStrting_Fail)
