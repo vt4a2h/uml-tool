@@ -212,6 +212,9 @@ HEADERS += \
     Common/CommonTypes.hpp \
     Models/ISectionalDataModel.hpp
 
+INCLUDEPATH += range-v3/include \
+               boost-di/include
+
 FORMS += \
     GUI/addscope.ui \
     GUI/editentitydialog.ui \

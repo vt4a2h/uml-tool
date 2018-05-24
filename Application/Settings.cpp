@@ -30,7 +30,7 @@
 #include <QtGlobal>
 #include <QApplication>
 
-#include <boost/range/algorithm/find_if.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 
 #include <Entity/Class.h>
 #include <Entity/Enum.h>
@@ -38,9 +38,11 @@
 #include <Entity/TemplateClass.h>
 #include <Entity/ExtendedType.h>
 
-namespace App {
+namespace App
+{
 
-    namespace {
+    namespace
+    {
 
         template <class Value>
         struct Setting
@@ -116,7 +118,8 @@ namespace App {
         }
     }
 
-    namespace Settings {
+    namespace Settings
+    {
 
         /**
          * @brief mainWindowGeometry
@@ -179,7 +182,7 @@ namespace App {
          */
         QColor elementColor(const QString &marker)
         {
-            auto it = boost::range::find_if(elColors, [&](auto&& s) { return s.name == marker; });
+            auto it = ranges::find_if(elColors, [&](auto&& s) { return s.name == marker; });
             if (it != elColors.end())
                 return read(elGroup, it->name, it->defaultValue());
 
@@ -193,7 +196,7 @@ namespace App {
          */
         void setElementColor(const QString &marker, const QColor &color)
         {
-            Q_ASSERT(boost::range::find_if(elColors, [&](auto&& s) { return s.name == marker; })
+            Q_ASSERT(ranges::find_if(elColors, [&](auto&& s) { return s.name == marker; })
                      != elColors.end());
             write(elGroup, marker, color);
         }

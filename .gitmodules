@@ -4,3 +4,6 @@
 [submodule "uml-tool-dependencies"]
 	path = uml-tool-dependencies
 	url = https://github.com/vt4a2h/uml-tool-dependencies.git
+[submodule "range-v3"]
+	path = range-v3
+	url = https://github.com/ericniebler/range-v3.git

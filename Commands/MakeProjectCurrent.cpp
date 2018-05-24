@@ -22,18 +22,18 @@
 *****************************************************************************/
 #include "MakeProjectCurrent.h"
 
-#include <boost/range/algorithm/equal.hpp>
-#include <boost/range/algorithm/for_each.hpp>
+#include <range/v3/algorithm/equal.hpp>
+#include <range/v3/algorithm/for_each.hpp>
 
 #include <QStringBuilder>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
-namespace Commands {
+namespace Commands
+{
 
-    using namespace boost::range;
-
-    namespace {
+    namespace
+    {
 
         inline QString actCmdName(const QString &projectName)
         {
@@ -70,9 +70,9 @@ namespace Commands {
     {
         sanityCheck();
 
-        for_each(m_CurrentGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
+        ranges::for_each(m_CurrentGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
         G_ASSERT(m_AppModel->setCurrentProject(m_PreviousProjectName));
-        for_each(m_PreviousGraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->addItem(i); });
+        ranges::for_each(m_PreviousGraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->addItem(i); });
     }
 
     /**
@@ -94,9 +94,9 @@ namespace Commands {
 
         sanityCheck();
 
-        for_each(m_PreviousGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
+        ranges::for_each(m_PreviousGraphicItems, [](auto &&i) { G_ASSERT(i->scene())->removeItem(i); });
         G_ASSERT(m_AppModel->setCurrentProject(m_CurrentProjectName));
-        for_each(m_CurrentGraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->addItem(i); });
+        ranges::for_each(m_CurrentGraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->addItem(i); });
     }
 
     /**
@@ -105,11 +105,11 @@ namespace Commands {
     void MakeProjectCurrent::sanityCheck()
     {
         if (auto p = m_AppModel->project(m_CurrentProjectName))
-            Q_ASSERT_X(equal(p->database()->graphicsItems(), m_CurrentGraphicItems),
+            Q_ASSERT_X(ranges::equal(p->database()->graphicsItems(), m_CurrentGraphicItems),
                        Q_FUNC_INFO, "Current project is in the inconsistent state.");
 
         if (auto p = m_AppModel->project(m_PreviousProjectName))
-            Q_ASSERT_X(equal(p->database()->graphicsItems(), m_PreviousGraphicItems),
+            Q_ASSERT_X(ranges::equal(p->database()->graphicsItems(), m_PreviousGraphicItems),
                        Q_FUNC_INFO, "Previous project is in the inconsistent state.");
 
         Q_ASSERT_X(!m_Scene.isNull() ||

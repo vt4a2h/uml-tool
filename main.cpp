@@ -26,7 +26,7 @@
 #include <GUI/MainWindow.h>
 #include <Models/ApplicationModel.h>
 
-#include "boost-di/include/boost/di.hpp"
+#include <boost/di.hpp>
 
 namespace di = boost::di;
 

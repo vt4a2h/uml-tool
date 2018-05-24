@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "OpenProject.h"
 
-#include <boost/range/algorithm/find_if.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 
 #include <QMessageBox>
 #include <QMainWindow>
@@ -33,8 +33,6 @@
 
 namespace Commands
 {
-
-    using namespace boost::range;
 
     /**
      * @brief OpenProject::OpenProject
@@ -72,7 +70,7 @@ namespace Commands
     {
         if (!m_Done) {
             auto projects = m_AppModel->projects();
-            auto it = find_if(projects, [&](auto &&p) { return p->fullPath() == m_ProjectPath; });
+            auto it = ranges::find_if(projects, [&](auto &&p) { return p->fullPath() == m_ProjectPath; });
             m_Project = it != std::end(projects) ? *it : nullptr;
 
             if (!m_Project) {
@@ -154,4 +152,4 @@ namespace Commands
         m_SuppressDialogs = suppressDialogs;
     }
 
-} // Commands
+} // namespace Commands
