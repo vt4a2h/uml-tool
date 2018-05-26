@@ -31,6 +31,7 @@
 #include <QApplication>
 
 #include <range/v3/algorithm/find_if.hpp>
+#include <range/v3/algorithm/any_of.hpp>
 
 #include <Entity/Class.h>
 #include <Entity/Enum.h>
@@ -196,8 +197,7 @@ namespace App
          */
         void setElementColor(const QString &marker, const QColor &color)
         {
-            Q_ASSERT(ranges::find_if(elColors, [&](auto&& s) { return s.name == marker; })
-                     != elColors.end());
+            Q_ASSERT(ranges::any_of(elColors, [&](auto&& s) { return s.name == marker; }));
             write(elGroup, marker, color);
         }
 

@@ -23,7 +23,7 @@
 
 #include "ProjectDatabase.h"
 
-#include <boost/range/algorithm/transform.hpp>
+#include <range/v3/algorithm/transform.hpp>
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -271,10 +271,10 @@ namespace DB {
     {
         Graphics::GraphicItems result;
         result.reserve(m_GraphicsEntities.size() + m_GraphicsRelations.size());
-        boost::range::transform(m_GraphicsEntities, std::back_inserter(result),
-                                [](auto &&e) { return e.data(); });
-        boost::range::transform(m_GraphicsRelations, std::back_inserter(result),
-                                [](auto &&e) { return e.data(); });
+        ranges::transform(m_GraphicsEntities, ranges::back_inserter(result),
+                          [](auto &&e) { return e.data(); });
+        ranges::transform(m_GraphicsRelations, ranges::back_inserter(result),
+                          [](auto &&e) { return e.data(); });
 
         return result;
     }

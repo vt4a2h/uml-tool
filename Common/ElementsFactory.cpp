@@ -22,15 +22,10 @@
 *****************************************************************************/
 #include "ElementsFactory.h"
 
-#include <boost/range/algorithm/find.hpp>
-#include <boost/range/algorithm_ext/erase.hpp>
-
 #include <DB/ProjectDatabase.h>
 #include <Project/Project.h>
 
 namespace Common {
-
-    using namespace boost;
 
     /**
      * @brief ElementsFactory::ElementsFactory
@@ -75,7 +70,7 @@ namespace Common {
      */
     void ElementsFactory::addAdditionaScopeSearcher(const DB::SharedScopeSearcher &s)
     {
-        Q_ASSERT(range::find(m_AdditionalScopeSearchers, s) == m_AdditionalScopeSearchers.end());
+        Q_ASSERT(!m_AdditionalScopeSearchers.contains(s));
         m_AdditionalScopeSearchers << s;
     }
 
@@ -85,8 +80,8 @@ namespace Common {
      */
     void ElementsFactory::removeAdditionaScopeSearcher(const DB::SharedScopeSearcher &s)
     {
-        Q_ASSERT(range::find(m_AdditionalScopeSearchers, s) != m_AdditionalScopeSearchers.end());
-        range::remove_erase(m_AdditionalScopeSearchers, s);
+        Q_ASSERT(m_AdditionalScopeSearchers.contains(s));
+        m_AdditionalScopeSearchers.remove(m_AdditionalScopeSearchers.indexOf(s));
     }
 
     /**

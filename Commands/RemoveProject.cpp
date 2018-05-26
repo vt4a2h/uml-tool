@@ -22,8 +22,8 @@
 *****************************************************************************/
 #include "RemoveProject.h"
 
-#include <boost/range/algorithm/for_each.hpp>
-#include <boost/range/algorithm/equal.hpp>
+#include <range/v3/algorithm/for_each.hpp>
+#include <range/v3/algorithm/equal.hpp>
 
 #include <QGraphicsScene>
 #include <QStringBuilder>
@@ -33,9 +33,7 @@
 
 namespace Commands {
 
-    using namespace boost::range;
-
-    /**
+   /**
      * @brief RemoveProject::RemoveProject
      * @param p
      * @param m
@@ -63,7 +61,7 @@ namespace Commands {
             m_AppModel->setCurrentProject(m_Project->name());
 
         // Add graphics components
-        for_each(m_GraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->addItem(i); });
+        ranges::for_each(m_GraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->addItem(i); });
     }
 
     /**
@@ -88,7 +86,7 @@ namespace Commands {
         G_ASSERT(m_AppModel)->removeProject(G_ASSERT(m_Project)->name());
 
         // Clean scene
-        for_each(m_GraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->removeItem(i); });
+        ranges::for_each(m_GraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->removeItem(i); });
     }
 
     /**
@@ -96,7 +94,7 @@ namespace Commands {
      */
     void RemoveProject::sanityCheck()
     {
-        Q_ASSERT_X(equal(m_Project->database()->graphicsItems(), m_GraphicItems),
+        Q_ASSERT_X(ranges::equal(m_Project->database()->graphicsItems(), m_GraphicItems),
                    Q_FUNC_INFO, "Project is in the inconsistent state.");
 
         Q_ASSERT_X(!m_Scene.isNull() || (m_Scene.isNull() && m_GraphicItems.isEmpty()),
