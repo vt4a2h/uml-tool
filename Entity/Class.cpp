@@ -27,12 +27,10 @@
 #include <QJsonArray>
 #include <QStringList>
 
-#include <boost/range/adaptor/filtered.hpp>
-#include <boost/range/adaptor/transformed.hpp>
-#include <boost/range/algorithm/copy.hpp>
-#include <boost/range/algorithm/find_if.hpp>
-#include <boost/range/algorithm/find.hpp>
-#include <boost/range/algorithm_ext/erase.hpp>
+#include <range/v3/algorithm/copy_if.hpp>
+#include <range/v3/algorithm/find_if.hpp>
+#include <range/v3/view/transform.hpp>
+#include <range/v3/action/remove_if.hpp>
 
 #include <Utility/helpfunctions.h>
 
@@ -46,16 +44,16 @@
 
 #include "QtHelpers.h"
 
-using namespace boost;
-
-namespace {
+namespace
+{
     const QString newMethodName = Entity::Class::tr("newMethod");
     const QString newFieldName  = Entity::Class::tr("newField");
     const QString newPropertyName = Entity::Class::tr("newProperty");
     const QString defaultName = Entity::Class::tr("Class");
 }
 
-namespace Entity {
+namespace Entity
+{
 
     /**
      * @brief Class::Class
@@ -137,7 +135,7 @@ namespace Entity {
      */
     Parent Class::parent(const Common::ID &typeId) const
     {
-        auto it = range::find_if(m_Parents, [&](auto &&parent){ return parent.first == typeId; });
+        auto it = ranges::find_if(m_Parents, [&](auto &&parent){ return parent.first == typeId; });
         return it != m_Parents.cend() ? *it : Parent();
     }
 
@@ -148,7 +146,7 @@ namespace Entity {
      */
     bool Class::containsParent(const Common::ID &typeId)
     {
-        return range::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; }) != m_Parents.end();
+        return Util::contains_if(m_Parents, [&](const Parent &p) { return p.first == typeId; });
     }
 
     /**
@@ -157,7 +155,7 @@ namespace Entity {
      */
     void Class::removeParent(const Common::ID &typeId)
     {
-        auto it = range::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; });
+        auto it = ranges::find_if(m_Parents, [&](const Parent &p) { return p.first == typeId; });
         if (it != m_Parents.end())
             m_Parents.erase(it);
     }
@@ -294,7 +292,7 @@ namespace Entity {
      */
     bool Class::containsMethods(Section section) const
     {
-        return cend(m_Methods) != range::find_if(m_Methods, [&](auto &&method){ return method->section() == section; });
+        return Util::contains_if(m_Methods, [&](auto &&method){ return method->section() == section; });
     }
 
     /**
@@ -305,8 +303,8 @@ namespace Entity {
     MethodsList Class::methods(Section s) const
     {
         MethodsList result;
-        range::copy(m_Methods | adaptors::filtered([&](auto &&m){ return m->section() == s || s == All; }),
-                    std::back_inserter(result));
+        ranges::copy_if(m_Methods, ranges::back_inserter(result),
+                        [&](auto &&m){ return m->section() == s || s == All; });
 
         return result;
     }
@@ -316,17 +314,14 @@ namespace Entity {
         template <class ContainerShared, class Container>
         ContainerShared optionalEntites(const Container &c, Section s)
         {
-            using namespace adaptors;
-
             ContainerShared result;
 
             for (auto &&entities : c)
-                range::copy(entities
-                            | filtered([&](auto &&e){ return e.lock() && (e.lock()->section() == s || s == All); })
-                            | transformed([](auto &&e){ return e.lock(); }),
-                            std::back_inserter(result));
+                ranges::copy_if(entities | ranges::view::transform([](auto &&e){ return e.lock(); }),
+                                ranges::back_inserter(result),
+                                [&](auto &&e){ return e && (e->section() == s || s == All); });
 
-            return std::move(result);
+            return result;
         }
     }
 
@@ -400,7 +395,7 @@ namespace Entity {
      */
     SharedField Class::getField(const QString &name) const
     {
-        auto it = range::find_if(m_Fields, [&name](const SharedField &f){ return f->name() == name; });
+        auto it = ranges::find_if(m_Fields, [&name](const SharedField &f){ return f->name() == name; });
         return it != m_Fields.end() ? *it : SharedField();
     }
 
@@ -520,7 +515,7 @@ namespace Entity {
      */
     ConstSharedProperty Class::property(const QString &name) const
     {
-        auto it = range::find_if(m_Properties, [&](auto &&prop){ return prop->name() == name; });
+        auto it = ranges::find_if(m_Properties, [&](auto &&prop){ return prop->name() == name; });
         return it != m_Properties.end() ? *it : SharedProperty();
     }
 
@@ -578,8 +573,7 @@ namespace Entity {
      */
     bool Class::containsFields(Section section) const
     {
-        return range::find_if(m_Fields, [&](auto &&f){ return f->section() == section; }) !=
-               cend(m_Fields);
+        return Util::contains_if(m_Fields, [&](auto &&f){ return f->section() == section; });
     }
 
     /**
@@ -820,7 +814,7 @@ namespace Entity {
         inline void addOptionalEntity(Container &c, const Entity::SharedProperty &p, const EntityType &e)
         {
             if (e) {
-                Q_ASSERT(range::find(c[G_ASSERT(p)], e) == std::cend(c[G_ASSERT(p)]));
+                Q_ASSERT(Util::contains(c[G_ASSERT(p)], e));
                 c[p].push_back(e);
             }
         }
@@ -829,11 +823,12 @@ namespace Entity {
         inline void removeOptionalEntity(Container &c, const Entity::SharedProperty &p, const EntityType &e)
         {
             if (G_ASSERT(e)) {
-                Q_ASSERT(range::find(c[G_ASSERT(p)], e) != std::cend(c[G_ASSERT(p)]));
-                range::remove_erase(c[p], e);
+                Q_ASSERT(Util::contains(c[G_ASSERT(p)], e));
+                auto &vec = c[p];
+                vec.remove(vec.indexOf(e));
 
                 // Also remove possible NULL pointers
-                range::remove_erase_if(c[p], [](auto &&p){ return !p.lock(); });
+                vec.erase(ranges::remove_if(vec, [](auto &&p){ return !p.lock(); }));
             }
         }
     }

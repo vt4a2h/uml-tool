@@ -31,13 +31,14 @@
 #include <QApplication>
 
 #include <range/v3/algorithm/find_if.hpp>
-#include <range/v3/algorithm/any_of.hpp>
 
 #include <Entity/Class.h>
 #include <Entity/Enum.h>
 #include <Entity/Union.h>
 #include <Entity/TemplateClass.h>
 #include <Entity/ExtendedType.h>
+
+#include <Utility/helpfunctions.h>
 
 namespace App
 {
@@ -197,7 +198,7 @@ namespace App
          */
         void setElementColor(const QString &marker, const QColor &color)
         {
-            Q_ASSERT(ranges::any_of(elColors, [&](auto&& s) { return s.name == marker; }));
+            Q_ASSERT(Util::contains_if(elColors, [&](auto&& s) { return s.name == marker; }));
             write(elGroup, marker, color);
         }
 

@@ -24,8 +24,8 @@
 
 #include <functional>
 
-#include <boost/range/numeric.hpp>
-#include <boost/range/algorithm/find_if.hpp>
+#include <range/v3/algorithm/find_if.hpp>
+#include <range/v3/numeric/accumulate.hpp>
 
 #include <QHash>
 #include <QIcon>
@@ -191,7 +191,7 @@ namespace Models {
      */
     BasicTreeItem *BasicTreeItem::itemById(const QVariant &id) const
     {
-        auto it = boost::range::find_if(m_Children, [&](auto &&item){ return item->id() == id; });
+        auto it = ranges::find_if(m_Children, [&](auto &&item){ return item->id() == id; });
         return it != m_Children.end() ? *it : nullptr;
     }
 
@@ -235,7 +235,7 @@ namespace Models {
      */
     int BasicTreeItem::childCount(bool recursive) const
     {
-        return recursive ? boost::accumulate(m_Children, m_Children.count(),
+        return recursive ? ranges::accumulate(m_Children, m_Children.count(),
                                              [](int r, auto &&c) { return r + c->childCount(true); })
                          : m_Children.count();
     }

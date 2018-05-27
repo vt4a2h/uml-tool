@@ -26,12 +26,7 @@
 #include <functional>
 #include <optional>
 
-#include <boost/range/algorithm/transform.hpp>
-#include <boost/range/algorithm/find.hpp>
-#include <boost/range/algorithm_ext/erase.hpp>
-//#include <boost/spirit/include/qi.hpp>
-//#include <boost/spirit/include/phoenix_core.hpp>
-//#include <boost/spirit/include/phoenix_operator.hpp>
+#include <range/v3/algorithm/transform.hpp>
 
 #include <DB/ITypeSearcher.h>
 #include <Common/BasicElement.h>
@@ -43,8 +38,6 @@
 
 namespace Models
 {
-
-    using namespace boost;
 
     /**
      * @brief SectionalTextConverter::SectionalTextConverter
@@ -67,7 +60,7 @@ namespace Models
         DB::SharedTypeSearchers result;
         result.reserve(ts.size());
 
-        range::transform(ts, std::back_inserter(result), [](auto &&t) { return t.lock(); });
+        ranges::transform(ts, ranges::back_inserter(result), [](auto &&t) { return t.lock(); });
 
         return result;
     }
@@ -189,7 +182,7 @@ namespace Models
      */
     void SectionalTextConverter::registerTypeSearcher(DB::SharedTypeSearcher const& typeSearcher)
     {
-        if (auto it = range::find(m_TypeSearchers, typeSearcher); it == m_TypeSearchers.end())
+        if (auto it = qFind(m_TypeSearchers, typeSearcher); it == m_TypeSearchers.end())
             m_TypeSearchers << typeSearcher;
     }
 
@@ -199,7 +192,7 @@ namespace Models
      */
     void SectionalTextConverter::unregisterTypeSearcher(DB::SharedTypeSearcher const& typeSearcher)
     {
-        range::remove_erase(m_TypeSearchers, typeSearcher);
+        m_TypeSearchers.remove(m_TypeSearchers.indexOf(typeSearcher));
     }
 
 } // namespace Models

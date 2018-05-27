@@ -26,7 +26,7 @@
 #include <QJsonArray>
 #include <QStringList>
 
-#include <boost/range/algorithm/find_if.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 
 #include <Utility/helpfunctions.h>
 
@@ -34,8 +34,6 @@
 #include "ExtendedType.h"
 #include "Constants.h"
 #include "enums.h"
-
-using namespace boost;
 
 namespace Entity {
 
@@ -106,7 +104,7 @@ namespace Entity {
      */
     SharedField Union::getField(const QString &name) const
     {
-        auto it = range::find_if(m_Fields, [&](auto &&f) {return f->name() == name;});
+        auto it = ranges::find_if(m_Fields, [&](auto &&f) {return f->name() == name;});
         return it != m_Fields.cend() ? *it : SharedField();
     }
 

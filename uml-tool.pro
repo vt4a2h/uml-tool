@@ -212,8 +212,10 @@ HEADERS += \
     Common/CommonTypes.hpp \
     Models/ISectionalDataModel.hpp
 
-INCLUDEPATH += range-v3/include \
-               boost-di/include
+INCLUDEPATH *= $$PWD/boost-di/include $$PWD/range-v3/include
+
+# Suppress warnings
+unix: QMAKE_CXXFLAGS *= -isystem $$PWD/range-v3/include
 
 FORMS += \
     GUI/addscope.ui \

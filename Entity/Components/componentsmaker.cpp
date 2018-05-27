@@ -22,7 +22,7 @@
 *****************************************************************************/
 #include "componentsmaker.h"
 
-#include <boost/range/algorithm/find_if.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 
 #include <Entity/field.h>
 #include <Entity/Scope.h>
@@ -39,8 +39,6 @@
 #include "enums.h"
 #include "componentscommon.h"
 #include "Constants.h"
-
-using namespace boost;
 
 namespace Components {
 
@@ -219,12 +217,12 @@ namespace Components {
         } else {
             // First of all check in all scopes of global database
             const Entity::ScopesList &scopes = m_Model->globalDatabase()->scopes();
-            range::find_if(scopes, [&](auto scope){ type = scope->type(typeName); return !!type; });
+            ranges::find_if(scopes, [&](auto scope){ type = scope->type(typeName); return !!type; });
 
             // If not found, try to check project database
             if (!type) {
                 auto db = m_Model->currentProject()->database();
-                range::find_if(db->scopes(), [&](auto scope){ type = scope->type(typeName); return !!type; });
+                ranges::find_if(db->scopes(), [&](auto scope){ type = scope->type(typeName); return !!type; });
             }
         }
 
@@ -279,7 +277,7 @@ namespace Components {
             // TODO: add namespaces, * and const
             for (auto &&name : arguments) {
                 Entity::SharedType t;
-                range::find_if(scopes, [&](auto &&sc){ t = sc->type(name); return !!t; });
+                ranges::find_if(scopes, [&](auto &&sc){ t = sc->type(name); return !!t; });
                 if (t)
                     extType->addTemplateParameter(t->id());
                 else
@@ -289,7 +287,7 @@ namespace Components {
 
         if (extType->isConst() || !extType->templateParameters().isEmpty() || !extType->pl().isEmpty()) {
             const Entity::TypesList &types = m_Scope->types();
-            auto it = range::find_if(types, [=](const Entity::SharedType &type) {
+            auto it = ranges::find_if(types, [=](const Entity::SharedType &type) {
                                                   return extType->isEqual(*type, false);
                                               });
             if (it == cend(types))

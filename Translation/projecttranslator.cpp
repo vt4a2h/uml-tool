@@ -25,8 +25,6 @@
 #include <QRegularExpression>
 #include <QDebug>
 
-#include <boost/range/algorithm/find_if.hpp>
-
 #include <DB/Database.h>
 #include <DB/ProjectDatabase.h>
 #include <Entity/Enum.h>
@@ -46,8 +44,6 @@
 #include "Constants.h"
 #include "code.h"
 #include "signaturemaker.h"
-
-using namespace boost;
 
 namespace {
 
@@ -296,9 +292,8 @@ namespace Translation {
            return false;
 
         Entity::FieldsList fields(m->parameters());
-        auto it = range::find_if(fields,
-                                 [&](auto &&f) { return classDatabase->typeByID(f->typeId()); });
-        return it != fields.end() || classDatabase->typeByID(m->returnTypeId());
+        return Util::contains_if(fields, [&](auto &&f) { return !!classDatabase->typeByID(f->typeId()); }) ||
+               !!classDatabase->typeByID(m->returnTypeId());
     }
 
     /**
@@ -520,8 +515,7 @@ namespace Translation {
 
         // Add q_object
         auto allMethods = _class->allMethods(Entity::All);
-        bool addQObject = range::find_if(allMethods, [](auto m){ return m->isSlot() || m->isSignal(); })
-                          != boost::end(allMethods);
+        bool addQObject = Util::contains_if(allMethods, [](auto m){ return m->isSlot() || m->isSignal(); });
         toHeader.replace("%qobject%", addQObject ? "\nQ_OBJECT\n" : "");
 
         // Add properties

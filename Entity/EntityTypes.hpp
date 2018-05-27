@@ -44,7 +44,7 @@ namespace Entity {
     using WeakMethod   = std::weak_ptr<ClassMethod>;
     using Methods      = QMultiHash<QString, SharedMethod>;
     using MethodsList  = QVector<SharedMethod>;
-    using WeakMethodsList = std::vector<WeakMethod>;
+    using WeakMethodsList = QVector<WeakMethod>;
     using WeakMethodsMap = QMap<SharedProperty, WeakMethodsList>;
 
     class Field;

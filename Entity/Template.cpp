@@ -29,15 +29,13 @@
 #include <QJsonArray>
 #include <QStringList>
 
-#include <boost/range/algorithm/find_if.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 
 #include <Utility/helpfunctions.h>
 
 #include "ExtendedType.h"
 #include "Type.h"
 #include "Constants.h"
-
-using namespace boost;
 
 namespace Entity {
 
@@ -93,7 +91,7 @@ namespace Entity {
      */
     TemplateParameter Template::getTemplateParameter(const Common::ID &typeId) const
     {
-        auto it = range::find_if(m_TemplateParameters, [&typeId](auto &&p) { return p.first == typeId; });
+        auto it = ranges::find_if(m_TemplateParameters, [&typeId](auto &&p) { return p.first == typeId; });
         return it != m_TemplateParameters.cend() ? *it : TemplateParameter(Common::ID::nullID(), Common::ID::nullID());
     }
 

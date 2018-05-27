@@ -27,7 +27,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-#include <boost/range/algorithm/find_if.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 
 #include <Utility/helpfunctions.h>
 
@@ -49,8 +49,6 @@ namespace
     const QString paramsMark  = "Parameters";
     const QString lhsMark = "Lhs identificators";
 }
-
-using namespace boost;
 
 namespace Entity {
 
@@ -311,7 +309,7 @@ namespace Entity {
     SharedField ClassMethod::getParameter(const QString &name) const
     {
         Q_ASSERT(!name.isEmpty());
-        auto it = range::find_if(m_Parameters, [&name](auto &f){ return f->name() == name; });
+        auto it = ranges::find_if(m_Parameters, [&name](auto &f){ return f->name() == name; });
         return it != m_Parameters.end() ? *it : SharedField();
     }
 

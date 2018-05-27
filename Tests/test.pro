@@ -20,7 +20,7 @@ LIBS += -lgtest -lpthread
 #    }
 #}
 
-INCLUDEPATH += ../
+INCLUDEPATH += $$PWD/../
 
 HEADERS += \
     ../enums.h \

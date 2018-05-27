@@ -27,9 +27,8 @@
 #include <map>
 #include <functional>
 
-#include <boost/range/algorithm/equal.hpp>
-#include <boost/range/algorithm/find.hpp>
-#include <boost/range/algorithm/find_if.hpp>
+#include <range/v3/algorithm/equal.hpp>
+#include <range/v3/algorithm/any_of.hpp>
 
 #include <QFile>
 #include <QTextStream>
@@ -152,7 +151,7 @@ namespace Util {
         if (lhs.size() != rhs.size())
             return false;
 
-        return boost::range::equal(lhs, rhs, [](auto &&r, auto &&l){ return sharedPtrEq(l, r); });
+        return ranges::equal(lhs, rhs, [](auto &&r, auto &&l){ return sharedPtrEq(l, r); });
     }
 
     // NOTE: maybe problems with unique id's
@@ -221,13 +220,13 @@ namespace Util {
     template <class Container, class Value>
     bool contains(const Container &c, const Value &v)
     {
-        return boost::range::find(c, v) != std::end(c);
+        return qFind(c, v) != std::end(c);
     }
 
     template <class Container, class Pred>
     bool contains_if(const Container &c, const Pred &p)
     {
-        return boost::range::find_if(c, p) != std::end(c);
+        return ranges::any_of(c, p);
     }
 
     bool toBool(const QString &in, bool &ok);

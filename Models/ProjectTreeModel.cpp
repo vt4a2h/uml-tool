@@ -26,7 +26,7 @@
 #include <QFont>
 #include <QDebug>
 
-#include <boost/range/algorithm/find_if.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 
 #include <Project/Project.h>
 
@@ -39,8 +39,6 @@
 #include <DB/ProjectDatabase.h>
 
 #include <Utility/helpfunctions.h>
-
-using namespace boost;
 
 namespace Models {
 
@@ -320,8 +318,8 @@ namespace Models {
     void ProjectTreeModel::removeProject(const Projects::SharedProject &pr)
     {
         if (pr) {
-            auto it = boost::range::find_if(
-                          m_Projects, [&](auto &&p) { return p.id().toString() == pr->name(); });
+            auto it = ranges::find_if(
+                m_Projects, [&](auto &&p) { return p.id().toString() == pr->name(); });
             if (it != m_Projects.end()) {
                 auto index = m_Projects.indexOf(*it);
                 beginRemoveRows(QModelIndex(), index, index);
@@ -501,7 +499,7 @@ namespace Models {
      */
     const BasicTreeItem *ProjectTreeModel::find(const QVariant &id) const
     {
-        auto projectIt = range::find_if(m_Projects, [&](auto &&item){ return item.id() == id; });
+        auto projectIt = ranges::find_if(m_Projects, [&](auto &&item){ return item.id() == id; });
         return projectIt != m_Projects.cend() ? &*projectIt : nullptr;
     }
 

@@ -24,13 +24,11 @@
 
 #include <QStringList>
 
-#include <boost/range/algorithm/find_if.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 
 #include <Entity/Scope.h>
 
 #include "Constants.h"
-
-using namespace boost;
 
 namespace Entity {
 
@@ -39,7 +37,7 @@ namespace Entity {
         if (scopesNames.empty())
             return nullptr;
 
-        auto it = range::find_if(scopes, [&](auto &&scope){ return scope->name() == scopesNames.first(); });
+        auto it = ranges::find_if(scopes, [&](auto &&scope){ return scope->name() == scopesNames.first(); });
         if (it != cend(scopes)) {
             if (scopesNames.count() == 1) {
                 return *it;

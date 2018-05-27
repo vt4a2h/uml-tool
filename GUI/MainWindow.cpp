@@ -42,8 +42,7 @@
 #include <QTableView>
 #include <QToolButton>
 
-#include <boost/range/algorithm/find_if.hpp>
-#include <boost/range/algorithm/for_each.hpp>
+#include <range/v3/algorithm/for_each.hpp>
 
 #include <Application/Settings.h>
 
@@ -74,8 +73,6 @@
 #include "HtmlDelegate.h"
 #include "Preferences.h"
 #include "EntityProperties.h"
-
-using namespace boost;
 
 namespace {
     const int treeViewIndent = 20;
@@ -684,7 +681,7 @@ namespace GUI {
         m_ProjectTreeView->setEnabled(!m_ApplicationModel->projects().isEmpty());
         m_MainView->setEnabled(state);
 
-        boost::range::for_each(m_RelationActions, [&](auto &&a){ a->setEnabled(state); });
+        ranges::for_each(m_RelationActions, [&](auto &&a){ a->setEnabled(state); });
 
         bool validDb = m_ApplicationModel->globalDatabase() &&
                        m_ApplicationModel->globalDatabase()->valid();
@@ -736,7 +733,7 @@ namespace GUI {
      */
     void MainWindow::onRelationCompleted()
     {
-        range::for_each(m_RelationActions, [](auto &&a){ a->setChecked(false); });
+        ranges::for_each(m_RelationActions, [](auto &&a){ a->setChecked(false); });
     }
 
     /**

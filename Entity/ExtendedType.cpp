@@ -26,14 +26,10 @@
 #include <QJsonArray>
 #include <QStringList>
 
-#include <boost/range/algorithm/find_if.hpp>
-
 #include <Utility/helpfunctions.h>
 
 #include "enums.h"
 #include "Constants.h"
-
-using namespace boost;
 
 namespace {
     const QString defaultName = Entity::ExtendedType::tr("Alias");
@@ -79,8 +75,7 @@ namespace Entity {
      */
     bool ExtendedType::isLink() const
     {
-        return range::find_if(m_PointersAndLinks, [](auto &&pl){ return pl.first == "&"; }) !=
-               m_PointersAndLinks.end();
+        return Util::contains_if(m_PointersAndLinks, [](auto &&pl){ return pl.first == "&"; });
     }
 
     /**
@@ -107,8 +102,7 @@ namespace Entity {
      */
     bool ExtendedType::isPointer() const
     {
-        return range::find_if(m_PointersAndLinks, [](auto &&pl){ return pl.first == "*"; }) !=
-               m_PointersAndLinks.end();
+        return Util::contains_if(m_PointersAndLinks, [](auto &&pl){ return pl.first == "*"; });
     }
 
     /**
