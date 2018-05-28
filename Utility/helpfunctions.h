@@ -224,9 +224,21 @@ namespace Util {
     }
 
     template <class Container, class Pred>
-    bool contains_if(const Container &c, const Pred &p)
+    bool contains_if(const Container &c, Pred p)
     {
         return ranges::any_of(c, p);
+    }
+
+    template <class Container, class Val>
+    void remove_erase(Container &c, const Val &v)
+    {
+        c.erase(std::remove(std::begin(c), std::end(c), v), std::end(c));
+    }
+
+    template <class Container, class Pred>
+    void remove_erase_if(Container &c, Pred p)
+    {
+        c.erase(std::remove_if(std::begin(c), std::end(c), p), std::end(c));;
     }
 
     bool toBool(const QString &in, bool &ok);

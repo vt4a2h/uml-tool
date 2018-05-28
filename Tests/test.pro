@@ -20,47 +20,50 @@ LIBS += -lgtest -lpthread
 #    }
 #}
 
-INCLUDEPATH += $$PWD/../
+INCLUDEPATH *= $$PWD/../ $$PWD/../boost-di/include $$PWD/../range-v3/include
+
+# Suppress warnings
+unix: QMAKE_CXXFLAGS *= -isystem $$PWD/../range-v3/include
 
 HEADERS += \
-    ../enums.h \
-    ../types.h \
-    ../Application/settings.h \
-    ../Project/project.h \
-    ../Entity/property.h \
-    ../Entity/class.h \
-    ../Entity/scope.h \
-    ../Entity/isectional.h \
-    ../Entity/Components/icomponents.h \
-    ../Entity/GraphicEntityData.h \
-    ../Entity/EntityFactory.h \
-    ../Entity/Template.h \
-    ../Constants.h \
-    ../Entity/field.h \
-    ../QtHelpers.h \
-    ../Models/ApplicationModel.h \
-    ../Models/projecttreemodel.h \
-    ../Models/basictreeitem.h \
-    ../Models/SectionalTextConverter.hpp \
-    ../Helpers/entityhelpres.h\
-    ../Helpers/GeneratorID.h\
-    ../GUI/graphics/GraphicsRelation.h \
-    ../GUI/graphics/Entity.h \
-    ../GUI/graphics/Scene.h \
-    ../GUI/graphics/HeaderEditorEventFilter.h \
-    ../Relationship/Relation.h \
-    ../Relationship/RelationFactory.h \
-    ../Common/ElementsFactory.h \
-    ../Commands/basecommand.h \
-    ../Commands/CreateEntity.h \
-    ../Commands/CreateScope.h \
-    ../Commands/MakeProjectCurrent.h \
-    ../Commands/MoveGraphicObject.h \
-    ../Commands/AddRelation.h \
-    ../Commands/MoveTypeToAnotherScope.h \
-    ../Commands/RemoveProject.h \
-    ../Commands/RenameEntity.h \
-    ../Commands/OpenProject.h \
+    $$PWD/../enums.h \
+    $$PWD/../types.h \
+    $$PWD/../Application/settings.h \
+    $$PWD/../Project/project.h \
+    $$PWD/../Entity/property.h \
+    $$PWD/../Entity/class.h \
+    $$PWD/../Entity/scope.h \
+    $$PWD/../Entity/isectional.h \
+    $$PWD/../Entity/Components/icomponents.h \
+    $$PWD/../Entity/GraphicEntityData.h \
+    $$PWD/../Entity/EntityFactory.h \
+    $$PWD/../Entity/Template.h \
+    $$PWD/../Constants.h \
+    $$PWD/../Entity/field.h \
+    $$PWD/../QtHelpers.h \
+    $$PWD/../Models/ApplicationModel.h \
+    $$PWD/../Models/projecttreemodel.h \
+    $$PWD/../Models/basictreeitem.h \
+    $$PWD/../Models/SectionalTextConverter.hpp \
+    $$PWD/../Helpers/entityhelpres.h\
+    $$PWD/../Helpers/GeneratorID.h\
+    $$PWD/../GUI/graphics/GraphicsRelation.h \
+    $$PWD/../GUI/graphics/Entity.h \
+    $$PWD/../GUI/graphics/Scene.h \
+    $$PWD/../GUI/graphics/HeaderEditorEventFilter.h \
+    $$PWD/../Relationship/Relation.h \
+    $$PWD/../Relationship/RelationFactory.h \
+    $$PWD/../Common/ElementsFactory.h \
+    $$PWD/../Commands/basecommand.h \
+    $$PWD/../Commands/CreateEntity.h \
+    $$PWD/../Commands/CreateScope.h \
+    $$PWD/../Commands/MakeProjectCurrent.h \
+    $$PWD/../Commands/MoveGraphicObject.h \
+    $$PWD/../Commands/AddRelation.h \
+    $$PWD/../Commands/MoveTypeToAnotherScope.h \
+    $$PWD/../Commands/RemoveProject.h \
+    $$PWD/../Commands/RenameEntity.h \
+    $$PWD/../Commands/OpenProject.h \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -78,11 +81,11 @@ HEADERS += \
     TestClassComponents.h \
     TestComponentSignatureParser.h \
     TestProjectBase.h \
-    ../DB/ProjectDatabase.h \
-    ../DB/Database.h \
-    ../Common/BasicElement.h \
-    ../Common/ID.h \
-    ../DB/DBTypes.hpp \
+    $$PWD/../DB/ProjectDatabase.h \
+    $$PWD/../DB/Database.h \
+    $$PWD/../Common/BasicElement.h \
+    $$PWD/../Common/ID.h \
+    $$PWD/../DB/DBTypes.hpp \
     cases/TypeMakerTestCases.h \
     cases/SignatureParserCases.h \
     cases/SignatureMakerCases.h \
@@ -106,68 +109,68 @@ HEADERS += \
     cases/SectionalTextConverterCases.h
 
 SOURCES += main.cpp \
-           ../Application/settings.cpp \
-           ../Common/basicelement.cpp \
-           ../Entity/type.cpp \
-           ../Entity/Components/icomponents.cpp \
-           ../Entity/Components/token.cpp \
-           ../Entity/class.cpp \
-           ../Entity/enum.cpp \
-           ../Entity/field.cpp \
-           ../Entity/union.cpp \
-           ../Entity/classmethod.cpp \
-           ../Entity/TemplateClass.cpp \
-           ../Entity/extendedtype.cpp\
-           ../Entity/Template.cpp \
-           ../Entity/property.cpp \
-           ../Entity/GraphicEntityData.cpp \
-           ../Common/id.cpp \
-           ../Entity/isectional.cpp \
-           ../Utility/helpfunctions.cpp \
-           ../DB/database.cpp \
-           ../DB/ProjectDatabase.cpp \
-           ../Relationship/Relation.cpp \
-           ../Relationship/node.cpp \
-           ../Relationship/generalization.cpp \
-           ../Relationship/dependency.cpp \
-           ../Relationship/association.cpp \
-           ../Relationship/realization.cpp \
-           ../Relationship/multiplyassociation.cpp \
-           ../Relationship/RelationFactory.cpp \
-           ../GUI/graphics/GraphicsRelation.cpp \
-           ../GUI/graphics/Entity.cpp \
-           ../GUI/graphics/Scene.cpp \
-           ../GUI/graphics/HeaderEditorEventFilter.cpp \
-           ../Entity/templateclassmethod.cpp \
-           ../Entity/scope.cpp \
-           ../Entity/EntityFactory.cpp \
-           ../Translation/projecttranslator.cpp \
-           ../templates.cpp \
-           ../Generator/virtualfile.cpp \
-           ../Generator/virtualdirectory.cpp \
-           ../Generator/virtualfilesystemabstractitem.cpp \
-           ../Generator/abstractprojectgenerator.cpp \
-           ../Generator/basiccppprojectgenerator.cpp \
-           ../Project/project.cpp \
-           ../Translation/code.cpp \
-           ../Entity/Components/componentsmaker.cpp \
-           ../Entity/Components/componentsignatureparser.cpp \
-           ../Translation/signaturemaker.cpp \
-           ../Models/ApplicationModel.cpp \
-           ../Models/projecttreemodel.cpp \
-           ../Models/basictreeitem.cpp \
-           ../Models/SectionalTextConverter.cpp \
-           ../Helpers/entityhelpres.cpp \
-           ../Helpers/GeneratorID.cpp \
-           ../Common/ElementsFactory.cpp \
-           ../Commands/basecommand.cpp \
-           ../Commands/CreateEntity.cpp \
-           ../Commands/CreateScope.cpp \
-           ../Commands/MakeProjectCurrent.cpp \
-           ../Commands/MoveGraphicObject.cpp \
-           ../Commands/AddRelation.cpp \
-           ../Commands/MoveTypeToAnotherScope.cpp \
-           ../Commands/RemoveProject.cpp \
-           ../Commands/RenameEntity.cpp \
-           ../Commands/OpenProject.cpp \
-    Arguments.cpp
+           $$PWD/../Application/settings.cpp \
+           $$PWD/../Common/basicelement.cpp \
+           $$PWD/../Entity/type.cpp \
+           $$PWD/../Entity/Components/icomponents.cpp \
+           $$PWD/../Entity/Components/token.cpp \
+           $$PWD/../Entity/class.cpp \
+           $$PWD/../Entity/enum.cpp \
+           $$PWD/../Entity/field.cpp \
+           $$PWD/../Entity/union.cpp \
+           $$PWD/../Entity/classmethod.cpp \
+           $$PWD/../Entity/TemplateClass.cpp \
+           $$PWD/../Entity/extendedtype.cpp\
+           $$PWD/../Entity/Template.cpp \
+           $$PWD/../Entity/property.cpp \
+           $$PWD/../Entity/GraphicEntityData.cpp \
+           $$PWD/../Common/id.cpp \
+           $$PWD/../Entity/isectional.cpp \
+           $$PWD/../Utility/helpfunctions.cpp \
+           $$PWD/../DB/database.cpp \
+           $$PWD/../DB/ProjectDatabase.cpp \
+           $$PWD/../Relationship/Relation.cpp \
+           $$PWD/../Relationship/node.cpp \
+           $$PWD/../Relationship/generalization.cpp \
+           $$PWD/../Relationship/dependency.cpp \
+           $$PWD/../Relationship/association.cpp \
+           $$PWD/../Relationship/realization.cpp \
+           $$PWD/../Relationship/multiplyassociation.cpp \
+           $$PWD/../Relationship/RelationFactory.cpp \
+           $$PWD/../GUI/graphics/GraphicsRelation.cpp \
+           $$PWD/../GUI/graphics/Entity.cpp \
+           $$PWD/../GUI/graphics/Scene.cpp \
+           $$PWD/../GUI/graphics/HeaderEditorEventFilter.cpp \
+           $$PWD/../Entity/templateclassmethod.cpp \
+           $$PWD/../Entity/scope.cpp \
+           $$PWD/../Entity/EntityFactory.cpp \
+           $$PWD/../Translation/projecttranslator.cpp \
+           $$PWD/../templates.cpp \
+           $$PWD/../Generator/virtualfile.cpp \
+           $$PWD/../Generator/virtualdirectory.cpp \
+           $$PWD/../Generator/virtualfilesystemabstractitem.cpp \
+           $$PWD/../Generator/abstractprojectgenerator.cpp \
+           $$PWD/../Generator/basiccppprojectgenerator.cpp \
+           $$PWD/../Project/project.cpp \
+           $$PWD/../Translation/code.cpp \
+           $$PWD/../Entity/Components/componentsmaker.cpp \
+           $$PWD/../Entity/Components/componentsignatureparser.cpp \
+           $$PWD/../Translation/signaturemaker.cpp \
+           $$PWD/../Models/ApplicationModel.cpp \
+           $$PWD/../Models/projecttreemodel.cpp \
+           $$PWD/../Models/basictreeitem.cpp \
+           $$PWD/../Models/SectionalTextConverter.cpp \
+           $$PWD/../Helpers/entityhelpres.cpp \
+           $$PWD/../Helpers/GeneratorID.cpp \
+           $$PWD/../Common/ElementsFactory.cpp \
+           $$PWD/../Commands/basecommand.cpp \
+           $$PWD/../Commands/CreateEntity.cpp \
+           $$PWD/../Commands/CreateScope.cpp \
+           $$PWD/../Commands/MakeProjectCurrent.cpp \
+           $$PWD/../Commands/MoveGraphicObject.cpp \
+           $$PWD/../Commands/AddRelation.cpp \
+           $$PWD/../Commands/MoveTypeToAnotherScope.cpp \
+           $$PWD/../Commands/RemoveProject.cpp \
+           $$PWD/../Commands/RenameEntity.cpp \
+           $$PWD/../Commands/OpenProject.cpp \
+           Arguments.cpp

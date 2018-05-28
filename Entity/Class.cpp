@@ -30,7 +30,6 @@
 #include <range/v3/algorithm/copy_if.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/action/remove_if.hpp>
 
 #include <Utility/helpfunctions.h>
 
@@ -814,7 +813,7 @@ namespace Entity
         inline void addOptionalEntity(Container &c, const Entity::SharedProperty &p, const EntityType &e)
         {
             if (e) {
-                Q_ASSERT(Util::contains(c[G_ASSERT(p)], e));
+                Q_ASSERT(!Util::contains(c[G_ASSERT(p)], e));
                 c[p].push_back(e);
             }
         }
@@ -828,7 +827,7 @@ namespace Entity
                 vec.remove(vec.indexOf(e));
 
                 // Also remove possible NULL pointers
-                vec.erase(ranges::remove_if(vec, [](auto &&p){ return !p.lock(); }));
+                Util::remove_erase_if(vec, [](auto &&p){ return !p.lock(); });
             }
         }
     }

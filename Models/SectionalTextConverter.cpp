@@ -182,7 +182,7 @@ namespace Models
      */
     void SectionalTextConverter::registerTypeSearcher(DB::SharedTypeSearcher const& typeSearcher)
     {
-        if (auto it = qFind(m_TypeSearchers, typeSearcher); it == m_TypeSearchers.end())
+        if (!m_TypeSearchers.contains(typeSearcher))
             m_TypeSearchers << typeSearcher;
     }
 
