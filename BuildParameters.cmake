@@ -10,4 +10,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5Widgets REQUIRED)
 find_package(Boost 1.54.0 REQUIRED)
 
+include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/range-v3/include ${CMAKE_SOURCE_DIR}/boost-di/include)
+
 add_definitions(-DQT_USE_QSTRINGBUILDER)

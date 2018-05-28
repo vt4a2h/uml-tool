@@ -235,3 +235,10 @@ RESOURCES += \
 
 DEFINES *= \
     QT_USE_QSTRINGBUILDER
+
+DISTFILES += \
+    BuildParameters.cmake \
+    BuildToolset.cmake \
+    FilesList.cmake \
+    Tests/CMakeLists.txt \
+    CMakeLists.txt
