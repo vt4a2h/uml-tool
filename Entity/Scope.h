@@ -47,12 +47,12 @@ namespace Entity {
         Q_OBJECT
 
     public:
-        Scope(Scope &&src);
+        Scope(Scope &&src) noexcept;
         Scope(const Scope &src);
         Scope(const QString &scopeName = "", const Common::ID &parentScopeID = Common::ID::nullID());
 
         Scope &operator =(const Scope &rhs);
-        Scope &operator =(Scope &&rhs);
+        Scope &operator =(Scope &&rhs) noexcept;
 
         friend bool operator ==(const Scope &lhs, const Scope &rhs);
 
@@ -92,7 +92,7 @@ namespace Entity {
 
     private:
         void copyFrom(const Scope &src);
-        void moveFrom(Scope &&src);
+        void moveFrom(Scope &&src) noexcept;
 
         void connectType(Type * t);
         void connectTemplate(Template *t);

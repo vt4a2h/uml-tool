@@ -40,11 +40,11 @@ namespace Generator {
     public:
         VirtualDirectory();
         VirtualDirectory(const VirtualDirectory &src);
-        VirtualDirectory(VirtualDirectory &&src);
+        VirtualDirectory(VirtualDirectory &&src) noexcept;
         VirtualDirectory(const QString &path);
 
         VirtualDirectory &operator =(VirtualDirectory rhs);
-        VirtualDirectory &operator =(VirtualDirectory &&rhs);
+        VirtualDirectory &operator =(VirtualDirectory &&rhs) noexcept;
 
         SharedVirtualFile addFile(const QString &fileName);
         SharedVirtualFile getFile(const QString &fileName);
@@ -62,7 +62,7 @@ namespace Generator {
         bool remove() const override;
 
     protected:
-        void moveFrom(VirtualDirectory &src);
+        void moveFrom(VirtualDirectory &&src) noexcept;
         void copyFrom(const VirtualDirectory &src);
 
     private:

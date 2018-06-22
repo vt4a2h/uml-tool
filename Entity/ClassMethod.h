@@ -51,16 +51,18 @@ namespace Entity {
     /**
      * @brief The ClassMethod class
      */
-    class ClassMethod : public Common::BasicElement, public ISectional
+    class ClassMethod
+        : public Common::BasicElement
+        , public ISectional
     {
     public:
         ClassMethod();
-        ClassMethod(ClassMethod &&src);
+        ClassMethod(ClassMethod &&src) noexcept;
         ClassMethod(const ClassMethod &src);
         ClassMethod(const QString &name);
         virtual ~ClassMethod();
 
-        ClassMethod &operator =(ClassMethod &&rhs);
+        ClassMethod &operator =(ClassMethod &&rhs) noexcept;
         ClassMethod &operator =(const ClassMethod &rhs);
 
         friend bool operator ==(const ClassMethod &lhs, const ClassMethod &rhs);
@@ -108,7 +110,7 @@ namespace Entity {
         void setSection(Section section) override;
 
     protected:
-        virtual void moveFrom(ClassMethod &&src);
+        virtual void moveFrom(ClassMethod &&src) noexcept;
         virtual void copyFrom(const ClassMethod &src);
 
         ClassMethodType m_Type;

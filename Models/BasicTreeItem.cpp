@@ -86,7 +86,7 @@ namespace Models {
      */
     BasicTreeItem::BasicTreeItem(BasicTreeItem &&src)
     {
-        moveFrom(src);
+        moveFrom(std::move(src));
     }
 
     /**
@@ -126,7 +126,7 @@ namespace Models {
      */
     BasicTreeItem &BasicTreeItem::operator =(BasicTreeItem rhs)
     {
-        moveFrom(rhs);
+        moveFrom(std::move(rhs));
 
         return *this;
     }
@@ -139,7 +139,7 @@ namespace Models {
     BasicTreeItem &BasicTreeItem::operator =(BasicTreeItem &&rhs)
     {
         if (this != &rhs)
-            moveFrom(rhs);
+            moveFrom(std::move(rhs));
 
         return *this;
     }
@@ -388,7 +388,7 @@ namespace Models {
      * @brief BasicTreeItem::moveFrom
      * @param src
      */
-    void BasicTreeItem::moveFrom(BasicTreeItem &src)
+    void BasicTreeItem::moveFrom(BasicTreeItem &&src) noexcept
     {
         m_Children = std::move(src.m_Children);
         m_Entity   = std::move(src.m_Entity);

@@ -43,16 +43,18 @@ namespace Entity {
     /**
      * @brief The Field class
      */
-    class Field : public Common::BasicElement, public ISectional
+    class Field
+        : public Common::BasicElement
+        , public ISectional
     {
     public:
         Field();
         Field(const Field &src);
-        Field(Field &&src);
+        Field(Field &&src) noexcept;
         Field(const QString &name, const Common::ID &typeId);
         Field(const QString &name, const Common::ID &typeId, const QString &prefix, Section section);
 
-        Field &operator =(Field &&rhs);
+        Field &operator =(Field &&rhs) noexcept;
         Field &operator =(const Field &rhs);
         friend bool operator== (const Field &lhs, const Field &rhs);
 
@@ -90,7 +92,7 @@ namespace Entity {
 
     private:
         void copyFrom(const Field &src);
-        void moveFrom(Field &&src);
+        void moveFrom(Field &&src) noexcept;
 
         Common::ID m_TypeId;
         Section m_Section;

@@ -54,7 +54,9 @@ namespace Entity {
     /**
      * @brief The Type class
      */
-    class Type : public Common::BasicElement, public IComponents
+    class Type
+        : public Common::BasicElement
+        , public IComponents
     {
     public:
         Type();

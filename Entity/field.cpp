@@ -56,7 +56,7 @@ namespace Entity {
      * @brief Field::Field
      * @param src
      */
-    Field::Field(Field &&src)
+    Field::Field(Field &&src) noexcept
         : BasicElement(std::move(src))
     {
         moveFrom(std::move(src));
@@ -93,7 +93,7 @@ namespace Entity {
      * @param rhs
      * @return
      */
-    Field &Field::operator =(Field &&rhs)
+    Field &Field::operator =(Field &&rhs) noexcept
     {
         if (this != &rhs) {
             static_cast<BasicElement*>(this)->operator =(std::forward<Field>(rhs));
@@ -330,7 +330,7 @@ namespace Entity {
      * @brief Field::moveFrom
      * @param src
      */
-    void Field::moveFrom(Field &&src)
+    void Field::moveFrom(Field &&src) noexcept
     {
         m_TypeId = std::move(src.m_TypeId);
         m_Section = std::move(src.m_Section);

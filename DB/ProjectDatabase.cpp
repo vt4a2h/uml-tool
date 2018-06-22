@@ -415,7 +415,7 @@ namespace DB {
      */
     void ProjectDatabase::moveFrom(ProjectDatabase &src)
     {
-        Database::moveFrom(src);
+        Database::moveFrom(std::move(src));
         m_GlobalDatabase = std::move(src.m_GlobalDatabase);
         m_Relations = src.m_Relations;
     }

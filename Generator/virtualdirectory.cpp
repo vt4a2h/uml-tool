@@ -48,10 +48,10 @@ namespace Generator {
      * @brief VirtualDirectory::VirtualDirectory
      * @param src
      */
-    VirtualDirectory::VirtualDirectory(VirtualDirectory &&src)
+    VirtualDirectory::VirtualDirectory(VirtualDirectory &&src) noexcept
         : VirtualFileSystemAbstractItem(src)
     {
-        moveFrom(src);
+        moveFrom(std::move(src));
     }
 
     /**
@@ -71,7 +71,7 @@ namespace Generator {
     VirtualDirectory &VirtualDirectory::operator =(VirtualDirectory rhs)
     {
         VirtualFileSystemAbstractItem::operator =(rhs);
-        moveFrom(rhs);
+        moveFrom(std::move(rhs));
 
         return *this;
     }
@@ -81,11 +81,11 @@ namespace Generator {
      * @param rhs
      * @return
      */
-    VirtualDirectory &VirtualDirectory::operator =(VirtualDirectory &&rhs)
+    VirtualDirectory &VirtualDirectory::operator =(VirtualDirectory &&rhs) noexcept
     {
         if (this != &rhs) {
             VirtualFileSystemAbstractItem::operator =(rhs);
-            moveFrom(rhs);
+            moveFrom(std::move(rhs));
         }
 
         return *this;
@@ -191,7 +191,7 @@ namespace Generator {
      * @brief VirtualDirectory::moveFrom
      * @param src
      */
-    void VirtualDirectory::moveFrom(VirtualDirectory &src)
+    void VirtualDirectory::moveFrom(VirtualDirectory &&src) noexcept
     {
         m_Files = std::move(src.m_Files);
     }

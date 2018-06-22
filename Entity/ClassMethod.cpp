@@ -64,7 +64,7 @@ namespace Entity {
      * @brief ClassMethod::ClassMethod
      * @param src
      */
-    ClassMethod::ClassMethod(ClassMethod &&src)
+    ClassMethod::ClassMethod(ClassMethod &&src) noexcept
         : BasicElement(std::move(src))
     {
         moveFrom(std::move(src));
@@ -109,7 +109,7 @@ namespace Entity {
      * @param rhs
      * @return
      */
-    ClassMethod &ClassMethod::operator =(ClassMethod &&rhs)
+    ClassMethod &ClassMethod::operator =(ClassMethod &&rhs) noexcept
     {
         if (this != &rhs) {
             static_cast<BasicElement*>(this)->operator =(std::forward<ClassMethod>(rhs));
@@ -480,7 +480,7 @@ namespace Entity {
      * @brief ClassMethod::moveFrom
      * @param src
      */
-    void ClassMethod::moveFrom(ClassMethod &&src)
+    void ClassMethod::moveFrom(ClassMethod &&src) noexcept
     {
         m_Type = std::move(src.m_Type);
 

@@ -51,7 +51,7 @@ namespace Entity {
      * @brief Scope::Scope
      * @param src
      */
-    Scope::Scope(Scope &&src)
+    Scope::Scope(Scope &&src) noexcept
         : BasicElement(std::move(src))
     {
         moveFrom(std::move(src));
@@ -99,7 +99,7 @@ namespace Entity {
      * @param rhs
      * @return
      */
-    Scope &Scope::operator =(Scope &&rhs)
+    Scope &Scope::operator =(Scope &&rhs) noexcept
     {
         if (this != &rhs) {
             BasicElement::operator =(std::move(rhs));
@@ -430,7 +430,7 @@ namespace Entity {
      * @brief Scope::moveFrom
      * @param src
      */
-    void Scope::moveFrom(Scope &&src)
+    void Scope::moveFrom(Scope &&src) noexcept
     {
         m_Scopes      = std::move(src.m_Scopes);
         m_Types       = std::move(src.m_Types );

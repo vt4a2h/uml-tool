@@ -45,9 +45,9 @@ namespace DB {
      * @brief Database::Database
      * @param src
      */
-    Database::Database(Database &&src)
+    Database::Database(Database &&src) noexcept
     {
-        moveFrom(src);
+        moveFrom(std::move(src));
     }
 
     /**
@@ -85,10 +85,10 @@ namespace DB {
      * @param rhs
      * @return
      */
-    Database &Database::operator =(Database &&rhs)
+    Database &Database::operator =(Database &&rhs) noexcept
     {
         if (this != &rhs)
-            moveFrom(rhs);
+            moveFrom(std::move(rhs));
 
         return *this;
     }
@@ -100,7 +100,7 @@ namespace DB {
      */
     Database &Database::operator =(Database rhs)
     {
-        moveFrom(rhs);
+        moveFrom(std::move(rhs));
         return *this;
     }
 
@@ -573,7 +573,7 @@ namespace DB {
      * @brief Database::moveFrom
      * @param src
      */
-    void Database::moveFrom(Database &src)
+    void Database::moveFrom(Database &&src) noexcept
     {
         m_Name  = std::move(src.m_Name);
         m_Path  = std::move(src.m_Path);

@@ -234,9 +234,7 @@ namespace GUI {
     /**
      * @brief EditEntityDialog::~EditEntityDialog
      */
-    EditEntityDialog::~EditEntityDialog()
-    {
-    }
+    EditEntityDialog::~EditEntityDialog() = default;
 
     /**
      * @brief EditEntityDialog::setData

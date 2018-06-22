@@ -45,7 +45,7 @@ namespace Graphics {
         {
         public:
             void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-                       QWidget *widget = nullptr)
+                       QWidget *widget = nullptr) override
             {
                 painter->setRenderHint(QPainter::Antialiasing);
                 setPen(Qt::DashLine);
@@ -54,7 +54,7 @@ namespace Graphics {
             }
 
             enum { Type = UserType + int(ElementType::Relation) };
-            int type() const { return Type; }
+            int type() const override { return Type; }
         };
 
         inline GraphisEntity * entElem(const Scene * scene, const QPointF &pos)
@@ -87,6 +87,7 @@ namespace Graphics {
         , m_TrackFrom(nullptr)
         , m_TrackTo(nullptr)
         , m_activeRelationType(Relationship::SimpleRelation)
+        , m_RelationTrackLine(nullptr)
     {
         initTrackLine();
         makeConnections();
@@ -95,9 +96,7 @@ namespace Graphics {
     /**
      * @brief Scene::~Scene
      */
-    Scene::~Scene()
-    {
-    }
+    Scene::~Scene() = default;
 
     /**
      * @brief Create new tracking line object. Usefull if scene was cleared.

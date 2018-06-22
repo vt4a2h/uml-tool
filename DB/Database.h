@@ -51,12 +51,12 @@ namespace DB {
         Q_OBJECT
 
     public:
-        Database(Database &&src);
+        Database(Database &&src) noexcept;
         Database(const Database &src);
         Database(const QString &name = "", const QString &path = "");
         virtual ~Database();
 
-        Database &operator =(Database &&rhs);
+        Database &operator =(Database &&rhs) noexcept;
         Database &operator =(Database rhs);
 
         friend bool operator ==(const Database &lhs, const Database &rhs);
@@ -113,7 +113,7 @@ namespace DB {
     protected:
         Entity::SharedScope depthScopeSearch(const Common::ID &id) const;
         virtual void copyFrom(const Database &src);
-        virtual void moveFrom(Database &src);
+        virtual void moveFrom(Database &&src) noexcept;
 
         QString    m_Name ;
         QString    m_Path ;

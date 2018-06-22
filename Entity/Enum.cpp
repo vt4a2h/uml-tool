@@ -311,7 +311,17 @@ namespace Entity {
         auto r = static_cast<const Enum&>(rhs);
         return m_EnumTypeId   == r.m_EnumTypeId   &&
                m_StrongStatus == r.m_StrongStatus &&
-               Util::seqSharedPointerEq(m_Elements, r.m_Elements);
+                Util::seqSharedPointerEq(m_Elements, r.m_Elements);
+    }
+
+    void swap(Enum &lhs, Enum &rhs) noexcept
+    {
+        using std::swap;
+
+        swap(static_cast<Type&>(lhs), static_cast<Type&>(rhs));
+        swap(lhs.m_Elements, rhs.m_Elements);
+        swap(lhs.m_EnumTypeId, rhs.m_EnumTypeId);
+        swap(lhs.m_StrongStatus, rhs.m_StrongStatus);
     }
 
     /**

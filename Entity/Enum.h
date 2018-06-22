@@ -34,7 +34,9 @@ namespace Entity {
     class ID;
 
     /// The Variable class
-    class Enumerator : public Common::BasicElement, public ISectional
+    class Enumerator
+        : public Common::BasicElement
+        , public ISectional
     {
     public: // Types
         using OptionalInt = std::optional<int>;
@@ -88,6 +90,8 @@ namespace Entity {
         void setEnumTypeId(const Common::ID &enumTypeId);
 
         bool isEqual(const Type &rhs, bool withTypeid = true) const override;
+
+        friend void swap(Enum &lhs, Enum &rhs) noexcept;
 
     public: // IComponents implmentaion
         SharedEnumarator addNewEnumerator() override;

@@ -28,10 +28,16 @@
 
 #include <range/v3/algorithm/transform.hpp>
 
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QDebug>
+
 #include <DB/ITypeSearcher.h>
 #include <Common/BasicElement.h>
 
 #include <Entity/Enum.h>
+
+#include <Utility/helpfunctions.h>
 
 #include "IMessenger.h"
 #include "QtHelpers.h"
@@ -147,14 +153,68 @@ namespace Models
         return QString::null;
     }
 
-    static void enumFromString(QString const& in, Common::BasicElement &e,
-                               DB::WeakTypeSearchers const& ts, IMessenger const& messenger)
+    template <class DstElem>
+    DstElem & to(Common::BasicElement & e)
     {
-//        using
+        Q_ASSERT(e.hashType() == DstElem::staticHashType());
+        return static_cast<DstElem&>(e);
+    }
+
+    static Entity::SharedType typeByName(QStringRef const& name, DB::WeakTypeSearchers const& searchers)
+    {
+        for (auto && weakSearcher: searchers)
+            if (auto searcher = weakSearcher.lock())
+                if (auto type = searcher->typeByName(name.toString()))
+                    return type;
+
+        return {};
+    }
+
+    static void enumFromString(QString const& in, Common::BasicElement &e,
+                               DB::WeakTypeSearchers const& ts, IMessenger &messenger)
+    {
+        static const QString scopedGroup = "isScoped";
+        static const QString nameGroup   = "name";
+        static const QString typeGroup   = "type";
+
+        static const QString headerPattern =
+            "^enum(?:\\s+(?<" + scopedGroup + ">class))?"
+            "\\s+(?<" + nameGroup + ">\\w+)"
+            "(?:\\s+(?<" + typeGroup + ">\\w+))"
+            "[\\r\\n]*?$";
+
+        auto lines = in.splitRef(QChar::LineSeparator, QString::SkipEmptyParts);
+        if (lines.isEmpty())
+            messenger.addMessage(MessageType::Error,
+                                 SectionalTextConverter::tr("Cannot get enum from this string"),
+                                 SectionalTextConverter::tr("The string is empty"));
+
+        auto header = lines[0];
+        QRegularExpression headerRe(headerPattern);
+        if (auto reMatch = headerRe.match(header); reMatch.hasMatch()) {
+            auto & srcEnum = to<Entity::Enum>(e);
+
+            Entity::Enum dstEnum(srcEnum);
+            dstEnum.setStrongStatus(!reMatch.capturedRef(scopedGroup).isEmpty());
+            dstEnum.setName(reMatch.captured(nameGroup));
+            if (auto type = typeByName(reMatch.capturedRef(typeGroup), ts))
+                dstEnum.setEnumTypeId(type->id());
+            else {
+                messenger.addMessage(MessageType::Error,
+                                     SectionalTextConverter::tr("Wrong type"));
+                return;
+            }
+
+            swap(srcEnum, dstEnum);
+        } else {
+            messenger.addMessage(MessageType::Error,
+                                 SectionalTextConverter::tr("Cannot read enum header"));
+            return;
+        }
     }
 
     using FromStringConverter = std::function<void(QString const&, Common::BasicElement &,
-                                              DB::WeakTypeSearchers const&, IMessenger const&)>;
+                                              DB::WeakTypeSearchers const&, IMessenger &)>;
     static const QHash<size_t, FromStringConverter> fromStrConvById =
     {
         {Entity::Enum::staticHashType(), &enumFromString},
@@ -167,7 +227,7 @@ namespace Models
      * @return
      */
     void SectionalTextConverter::fromString(QString const& s,
-                                            Common::BasicElement & element) const noexcept
+                                            Common::BasicElement &element) const noexcept
     {
         if (auto it = fromStrConvById.find(element.hashType()); it != fromStrConvById.end())
             (*it)(s, element, m_TypeSearchers, *m_Messenger);

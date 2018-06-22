@@ -1,23 +1,23 @@
 /*****************************************************************************
-** 
+**
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
 ** Created 29/10/2014.
 **
 ** This file is part of Q-UML (UML tool for Qt).
-** 
+**
 ** Q-UML is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
 ** the Free Software Foundation, either version 3 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** Q-UML is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU Lesser General Public License for more details.
 
 ** You should have received a copy of the GNU Lesser General Public License
-** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>. 
+** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
 
@@ -39,9 +39,9 @@ namespace Generator {
      * @brief VirtualFileSystemAbstractItem::VirtualFileSystemAbstractItem
      * @param src
      */
-    VirtualFileSystemAbstractItem::VirtualFileSystemAbstractItem(VirtualFileSystemAbstractItem &&src)
+    VirtualFileSystemAbstractItem::VirtualFileSystemAbstractItem(VirtualFileSystemAbstractItem &&src) noexcept
     {
-        moveFrom(src);
+        moveFrom(std::move(src));
     }
 
     /**
@@ -75,10 +75,10 @@ namespace Generator {
      * @param rhs
      * @return
      */
-    VirtualFileSystemAbstractItem &VirtualFileSystemAbstractItem::operator =(VirtualFileSystemAbstractItem &&rhs)
+    VirtualFileSystemAbstractItem &VirtualFileSystemAbstractItem::operator =(VirtualFileSystemAbstractItem &&rhs) noexcept
     {
         if (this != &rhs)
-            moveFrom(rhs);
+            moveFrom(std::move(rhs));
 
         return *this;
     }
@@ -90,7 +90,7 @@ namespace Generator {
      */
     VirtualFileSystemAbstractItem &VirtualFileSystemAbstractItem::operator =(VirtualFileSystemAbstractItem rhs)
     {
-        moveFrom(rhs);
+        moveFrom(std::move(rhs));
 
         return *this;
     }
@@ -199,7 +199,7 @@ namespace Generator {
      * @brief VirtualFileSystemAbstractItem::moveFrom
      * @param src
      */
-    void VirtualFileSystemAbstractItem::moveFrom(VirtualFileSystemAbstractItem &src)
+    void VirtualFileSystemAbstractItem::moveFrom(VirtualFileSystemAbstractItem &&src) noexcept
     {
         m_FileInfo  = std::move(src.m_FileInfo);
         m_ErrorList = std::move(src.m_ErrorList);

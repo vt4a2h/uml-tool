@@ -100,7 +100,7 @@ namespace Models {
         const static int maxColumnCount = 1;
 
     private:
-        void moveFrom(BasicTreeItem &src);
+        void moveFrom(BasicTreeItem &&src) noexcept;
         void copyFrom(const BasicTreeItem &src);
 
         ChildItems m_Children;
