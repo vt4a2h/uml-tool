@@ -155,6 +155,16 @@ namespace Models {
     }
 
     /**
+     * @brief MessagesModel::clean
+     */
+    void MessagesModel::clear()
+    {
+        beginResetModel();
+        m_Messages.clear();
+        endResetModel();
+    }
+
+    /**
      * @brief MessagesModel::markAllMessagesRead
      */
     void MessagesModel::markAllMessagesRead()
@@ -235,6 +245,14 @@ namespace Models {
     QVariant MessagesModel::processBackgroundRole(const QModelIndex &index) const
     {
         return brushes[messageForIndex(m_Messages, index.row()).type];
+    }
+
+    /**
+     * @brief MessagesModel::resetInternalData
+     */
+    void MessagesModel::resetInternalData()
+    {
+       clear();
     }
 
 } // namespace Models

@@ -51,6 +51,7 @@ namespace Models {
     public: // IMessenger overrides
         Messages messages() const override;
         uint unreadMessagesCount() const override;
+        void clear() override;
 
     public: // QAbstractItemModel overrides
         int rowCount(const QModelIndex &parent) const override;
@@ -77,6 +78,9 @@ namespace Models {
             Date,
             EnumSize, // Keep last
         };
+
+    private slots:
+        void resetInternalData();
 
     private: // Data
         Messages m_Messages;

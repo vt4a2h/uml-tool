@@ -70,10 +70,12 @@ TEST_F(SectionalTextConverter, EnumToStrting_Fail)
 
 }
 
-TEST_F(SectionalTextConverter, EnumFromString)
+TEST_F(SectionalTextConverter, EnumFromString_Full_Success)
 {
     Entity::Enum enum_;
     m_Converter->fromString("enum class Foo int", enum_);
+
+    ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
 
     ASSERT_TRUE(enum_.isStrong());
     ASSERT_EQ(enum_.name().toStdString(), "Foo");
@@ -81,4 +83,33 @@ TEST_F(SectionalTextConverter, EnumFromString)
     auto type = Util::findType(enum_.enumTypeId(), m_GlobalDb, m_ProjectDb);
     ASSERT_TRUE(!!type);
     ASSERT_EQ(type->name().toStdString(), "int");
+}
+
+TEST_F(SectionalTextConverter, EnumFromString_Base_Success)
+{
+    Entity::Enum enum_;
+    m_Converter->fromString("enum Foo", enum_);
+
+    ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
+
+    ASSERT_FALSE(enum_.isStrong());
+    ASSERT_EQ(enum_.name().toStdString(), "Foo");
+    ASSERT_EQ(enum_.enumTypeId(), Common::ID::nullID());
+}
+
+TEST_F(SectionalTextConverter, EnumFromString_Fail)
+{
+    Entity::Enum enum_;
+
+    m_Converter->fromString("enum", enum_);
+    ASSERT_TRUE(m_Messenger->unreadMessagesCount() > 0);
+    m_Messenger->clear();
+
+    m_Converter->fromString("enum ewfe efew", enum_);
+    ASSERT_TRUE(m_Messenger->unreadMessagesCount() > 0);
+    m_Messenger->clear();
+
+    m_Converter->fromString("enum\n\r ewfe efew ewrw e\n", enum_);
+    ASSERT_TRUE(m_Messenger->unreadMessagesCount() > 0);
+    m_Messenger->clear();
 }

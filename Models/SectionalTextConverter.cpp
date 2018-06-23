@@ -180,7 +180,7 @@ namespace Models
         static const QString headerPattern =
             "^enum(?:\\s+(?<" + scopedGroup + ">class))?"
             "\\s+(?<" + nameGroup + ">\\w+)"
-            "(?:\\s+(?<" + typeGroup + ">\\w+))"
+            "(?:\\s+(?<" + typeGroup + ">\\w+))?"
             "[\\r\\n]*?$";
 
         auto lines = in.splitRef(QChar::LineSeparator, QString::SkipEmptyParts);
@@ -197,9 +197,11 @@ namespace Models
             Entity::Enum dstEnum(srcEnum);
             dstEnum.setStrongStatus(!reMatch.capturedRef(scopedGroup).isEmpty());
             dstEnum.setName(reMatch.captured(nameGroup));
-            if (auto type = typeByName(reMatch.capturedRef(typeGroup), ts))
+
+            auto typeNameRef = reMatch.capturedRef(typeGroup);
+            if (auto type = typeByName(typeNameRef, ts))
                 dstEnum.setEnumTypeId(type->id());
-            else {
+            else if(!typeNameRef.isEmpty()) {
                 messenger.addMessage(MessageType::Error,
                                      SectionalTextConverter::tr("Wrong type"));
                 return;

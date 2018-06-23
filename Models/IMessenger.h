@@ -60,6 +60,7 @@ namespace Models {
                                 const QString &description = QString::null) = 0;
         virtual Messages messages() const = 0;
         virtual uint unreadMessagesCount() const = 0;
+        virtual void clear() = 0;
     };
 
 } // namespace Models

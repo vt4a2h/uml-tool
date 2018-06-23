@@ -55,6 +55,11 @@ namespace Testing
             return m_Messages.count();
         }
 
+        void clear() override
+        {
+            m_Messages.clear();
+        }
+
     private:
         Models::Messages m_Messages;
     };
