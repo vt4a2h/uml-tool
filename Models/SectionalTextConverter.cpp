@@ -45,6 +45,26 @@
 namespace Models
 {
 
+    class ConvException : public std::exception
+    {
+        Q_DECLARE_TR_FUNCTIONS(ConvException)
+
+    public:
+        ConvException(QString const& shortMsg, QString const& descr = QString::null)
+            : m_ShortMsg(shortMsg)
+            , m_Descr(descr)
+        {}
+
+        void writeMsg(IMessenger &messenger) const
+        {
+            messenger.addMessage(MessageType::Error, m_ShortMsg, m_Descr);
+        }
+
+    private:
+        QString m_ShortMsg;
+        QString m_Descr;
+    };
+
     /**
      * @brief SectionalTextConverter::SectionalTextConverter
      * @param parent
@@ -144,11 +164,17 @@ namespace Models
      */
     QString SectionalTextConverter::toString(Common::BasicElement const& element) const noexcept
     {
-        if (auto it = toStrConvById.find(element.hashType()); it != toStrConvById.end())
-            return (*it)(element, m_TypeSearchers, *m_Messenger);
-        else
-            m_Messenger->addMessage(MessageType::Error, tr("Cannot get string representation"),
-                                    tr("There is no an appropriate converter"));
+        try {
+            if (auto it = toStrConvById.find(element.hashType()); it != toStrConvById.end())
+                return (*it)(element, m_TypeSearchers, *m_Messenger);
+            else
+                m_Messenger->addMessage(MessageType::Error, tr("Cannot get string representation"),
+                                        tr("There is no an appropriate converter"));
+        } catch (ConvException const& e) {
+            e.writeMsg(*m_Messenger);
+        } catch (...) {
+            m_Messenger->addMessage(MessageType::Error, tr("Unexpected error"));
+        }
 
         return QString::null;
     }
@@ -171,7 +197,7 @@ namespace Models
     }
 
     static void enumFromString(QString const& in, Common::BasicElement &e,
-                               DB::WeakTypeSearchers const& ts, IMessenger &messenger)
+                               DB::WeakTypeSearchers const& ts)
     {
         static const QString scopedGroup = "isScoped";
         static const QString nameGroup   = "name";
@@ -185,9 +211,8 @@ namespace Models
 
         auto lines = in.splitRef(QChar::LineSeparator, QString::SkipEmptyParts);
         if (lines.isEmpty())
-            messenger.addMessage(MessageType::Error,
-                                 SectionalTextConverter::tr("Cannot get enum from this string"),
-                                 SectionalTextConverter::tr("The string is empty"));
+            throw ConvException(ConvException::tr("Cannot get enum from this string"),
+                                ConvException::tr("The string is empty"));
 
         auto header = lines[0];
         QRegularExpression headerRe(headerPattern);
@@ -201,22 +226,16 @@ namespace Models
             auto typeNameRef = reMatch.capturedRef(typeGroup);
             if (auto type = typeByName(typeNameRef, ts))
                 dstEnum.setEnumTypeId(type->id());
-            else if(!typeNameRef.isEmpty()) {
-                messenger.addMessage(MessageType::Error,
-                                     SectionalTextConverter::tr("Wrong type"));
-                return;
-            }
+            else if(!typeNameRef.isEmpty())
+                throw ConvException(ConvException::tr("Wrong type"));
 
             swap(srcEnum, dstEnum);
-        } else {
-            messenger.addMessage(MessageType::Error,
-                                 SectionalTextConverter::tr("Cannot read enum header"));
-            return;
-        }
+        } else
+            throw ConvException(ConvException::tr("Cannot read enum header"));
     }
 
     using FromStringConverter = std::function<void(QString const&, Common::BasicElement &,
-                                              DB::WeakTypeSearchers const&, IMessenger &)>;
+                                              DB::WeakTypeSearchers const&)>;
     static const QHash<size_t, FromStringConverter> fromStrConvById =
     {
         {Entity::Enum::staticHashType(), &enumFromString},
@@ -231,11 +250,17 @@ namespace Models
     void SectionalTextConverter::fromString(QString const& s,
                                             Common::BasicElement &element) const noexcept
     {
-        if (auto it = fromStrConvById.find(element.hashType()); it != fromStrConvById.end())
-            (*it)(s, element, m_TypeSearchers, *m_Messenger);
-        else
-            m_Messenger->addMessage(MessageType::Error, tr("Cannot convert the type from string"),
-                                    tr("There is no an appropriate converter"));
+        try {
+            if (auto it = fromStrConvById.find(element.hashType()); it != fromStrConvById.end())
+                (*it)(s, element, m_TypeSearchers);
+            else
+                m_Messenger->addMessage(MessageType::Error, tr("Cannot convert the type from string"),
+                                        tr("There is no an appropriate converter"));
+        } catch (ConvException const& e) {
+            e.writeMsg(*m_Messenger);
+        } catch (...) {
+            m_Messenger->addMessage(MessageType::Error, tr("Unexpected error"));
+        }
     }
 
     /**
