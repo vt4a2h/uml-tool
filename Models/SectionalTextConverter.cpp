@@ -186,14 +186,17 @@ namespace Models
         return static_cast<DstElem&>(e);
     }
 
-    static Entity::SharedType typeByName(QStringRef const& name, DB::WeakTypeSearchers const& searchers)
+    static Common::ID typeIDByName(QStringRef const& name, DB::WeakTypeSearchers const& searchers)
     {
+        if (name.isEmpty())
+            return Common::ID::nullID();
+
         for (auto && weakSearcher: searchers)
             if (auto searcher = weakSearcher.lock())
                 if (auto type = searcher->typeByName(name.toString()))
-                    return type;
+                    return type->id();
 
-        return {};
+        throw ConvException(ConvException::tr("Wrong type"));
     }
 
     static void enumFromString(QString const& in, Common::BasicElement &e,
@@ -202,6 +205,7 @@ namespace Models
         static const QString scopedGroup = "isScoped";
         static const QString nameGroup   = "name";
         static const QString typeGroup   = "type";
+        static const QString valueGroup  = "value";
 
         static const QString headerPattern =
             "^enum(?:\\s+(?<" + scopedGroup + ">class))?"
@@ -209,25 +213,43 @@ namespace Models
             "(?:\\s+(?<" + typeGroup + ">\\w+))?"
             "[\\r\\n]*?$";
 
-        auto lines = in.splitRef(QChar::LineSeparator, QString::SkipEmptyParts);
+        static const QString enumeratorPattern =
+            "^(?<" + nameGroup + ">\\w+)"
+            "(?:\\s+?<" + valueGroup + ">\\d+)?[\\r\\n]*?$";
+        // TODO: extend to accept oct and hex (start with 0 or 0x)
+
+        auto lines = in.splitRef("\n", QString::SkipEmptyParts);
         if (lines.isEmpty())
             throw ConvException(ConvException::tr("Cannot get enum from this string"),
                                 ConvException::tr("The string is empty"));
 
         auto header = lines[0];
+        lines.pop_front();
+
         QRegularExpression headerRe(headerPattern);
-        if (auto reMatch = headerRe.match(header); reMatch.hasMatch()) {
+        if (auto headerReMach = headerRe.match(header); headerReMach.hasMatch()) {
             auto & srcEnum = to<Entity::Enum>(e);
 
             Entity::Enum dstEnum(srcEnum);
-            dstEnum.setStrongStatus(!reMatch.capturedRef(scopedGroup).isEmpty());
-            dstEnum.setName(reMatch.captured(nameGroup));
+            dstEnum.setStrongStatus(!headerReMach.capturedRef(scopedGroup).isEmpty());
+            dstEnum.setName(headerReMach.captured(nameGroup));
 
-            auto typeNameRef = reMatch.capturedRef(typeGroup);
-            if (auto type = typeByName(typeNameRef, ts))
-                dstEnum.setEnumTypeId(type->id());
-            else if(!typeNameRef.isEmpty())
-                throw ConvException(ConvException::tr("Wrong type"));
+            auto typeNameRef = headerReMach.capturedRef(typeGroup);
+            dstEnum.setEnumTypeId(typeIDByName(typeNameRef, ts));
+
+            for (auto &&enumeratorLine : lines) {
+                QRegularExpression enumeratorRe(enumeratorPattern);
+                if (auto enumeratorReMach = enumeratorRe.match(enumeratorLine);
+                    enumeratorReMach.hasMatch()) {
+
+                    Entity::Enumerator enumerator;
+                    enumerator.setName(enumeratorReMach.captured(nameGroup));
+
+                    if (auto valueRef = enumeratorReMach.captured(valueGroup); !valueRef.isEmpty())
+                        enumerator.setValue(valueRef.toInt());
+                } else
+                    throw ConvException(ConvException::tr("Cannot read enumerator"));
+            }
 
             swap(srcEnum, dstEnum);
         } else

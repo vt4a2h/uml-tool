@@ -83,6 +83,10 @@ TEST_F(SectionalTextConverter, EnumFromString_Full_Success)
     auto type = Util::findType(enum_.enumTypeId(), m_GlobalDb, m_ProjectDb);
     ASSERT_TRUE(!!type);
     ASSERT_EQ(type->name().toStdString(), "int");
+
+    m_Converter->fromString("enum class Foo int\n"
+                            "foo1", enum_);
+    ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
 }
 
 TEST_F(SectionalTextConverter, EnumFromString_Base_Success)
