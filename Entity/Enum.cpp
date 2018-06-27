@@ -43,7 +43,7 @@ namespace Entity {
     static const QString nameMark       = "Name";
     static const QString numberMark     = "Number";
     static const QString defaultName    = Enum::tr("Enumeration");
-    static const int nulloptValue = std::numeric_limits<int>::max();
+    static const QString nulloptValue   = QString::null;
 
     /**
      * @brief Element::Element
@@ -57,7 +57,7 @@ namespace Entity {
      * @param name
      * @param value
      */
-    Enumerator::Enumerator(const QString &name, OptionalInt value)
+    Enumerator::Enumerator(const QString &name, OptionalValue value)
         : BasicElement(name)
         , m_Value(value)
     {}
@@ -68,7 +68,7 @@ namespace Entity {
      */
     Enumerator::Enumerator(const QJsonObject &src, QStringList &errorList)
         : BasicElement(src, errorList)
-        , m_Value(0)
+        , m_Value({0, Dec})
     {
         fromJson(src, errorList);
     }
@@ -93,7 +93,7 @@ namespace Entity {
     QJsonObject Enumerator::toJson() const
     {
         QJsonObject result = BasicElement::toJson();
-        result.insert(numberMark, m_Value.value_or(nulloptValue));
+        result.insert(numberMark, m_Value ? valToString(m_Value.value()) : nulloptValue);
 
         return result;
     }
@@ -107,11 +107,11 @@ namespace Entity {
     {
         BasicElement::fromJson(src, errorList);
         Util::checkAndSet(src, numberMark, errorList, [&src, this](){
-            auto val = src[numberMark].toInt();
+            auto val = src[numberMark].toString(QString::null);
             if (val == nulloptValue)
                 m_Value.reset();
             else
-                m_Value = val;
+                m_Value = valFromString(val);
         });
     }
 
@@ -119,7 +119,7 @@ namespace Entity {
      * @brief Enumerator::value
      * @return
      */
-    Enumerator::OptionalInt Enumerator::value() const
+    Enumerator::OptionalValue Enumerator::value() const
     {
         return m_Value;
     }
@@ -128,9 +128,46 @@ namespace Entity {
      * @brief Enumerator::setValue
      * @param value
      */
-    void Enumerator::setValue(const OptionalInt &value)
+    void Enumerator::setValue(const OptionalValue &value)
     {
         m_Value = value;
+    }
+
+    /**
+     * @brief Enumerator::enumeratorValToString
+     * @param v
+     * @return
+     */
+    QString Enumerator::valToString(Enumerator::Value const& v)
+    {
+        QString prefix;
+        switch (v.second) {
+            case Oct:
+                prefix = "0";
+                break;
+
+            case Hex:
+                prefix = "0x";
+                break;
+
+            default: ;
+        }
+
+        return prefix + QString::number(v.first, v.second);
+    }
+
+    Enumerator::Value Enumerator::valFromString(QString s)
+    {
+        ValueBase base = Dec;
+        if (s.startsWith("0")) {
+            s.remove(0, 1);
+            base = Oct;
+        } else if (s.startsWith("0x")) {
+            s.remove(0, 2);
+            base = Hex;
+        }
+
+        return {s.toInt(nullptr, base), base};
     }
 
     /**

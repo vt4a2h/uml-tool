@@ -39,11 +39,14 @@ namespace Entity {
         , public ISectional
     {
     public: // Types
-        using OptionalInt = std::optional<int>;
+        enum ValueBase { Dec = 10, Oct = 8, Hex = 16 };
+
+        using Value = std::pair<int, ValueBase>;
+        using OptionalValue = std::optional<Value>;
 
     public:
         Enumerator();
-        Enumerator(const QString &name, OptionalInt value = std::nullopt);
+        Enumerator(const QString &name, OptionalValue value = std::nullopt);
         Enumerator(const QJsonObject &src, QStringList &errorList);
         Enumerator(Enumerator &&) noexcept = default;
         Enumerator(const Enumerator &) = default;
@@ -52,8 +55,11 @@ namespace Entity {
         Enumerator& operator= (const Enumerator &) = default;
         friend bool operator ==(const Enumerator &lhs, const Enumerator &rhs);
 
-        OptionalInt value() const;
-        void setValue(const OptionalInt &value);
+        OptionalValue value() const;
+        void setValue(const OptionalValue &value);
+
+        static QString valToString(Value const& v);
+        static Value valFromString(QString s);
 
     public: // BasicEntity implementation
         QJsonObject toJson() const override;
@@ -62,7 +68,7 @@ namespace Entity {
         add_meta(Enumerator)
 
     private:
-        OptionalInt m_Value;
+        OptionalValue m_Value;
     };
 
     /// The Enum class

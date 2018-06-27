@@ -140,8 +140,8 @@ namespace Models
             }
 
             result.append(enumerator->name());
-            if (auto val = enumerator->value(); val)
-                result.append(QString(" %1").arg(val.value()));
+            if (auto val = enumerator->value())
+                result.append(QString(" %1").arg(Entity::Enumerator::valToString(val.value())));
             result.append("\n");
         }
 
@@ -199,13 +199,38 @@ namespace Models
         throw ConvException(ConvException::tr("Wrong type"));
     }
 
+    static auto baseFromStr(QStringRef baseRef)
+    {
+        if (baseRef.isEmpty())
+            return Entity::Enumerator::Dec;
+
+        if (baseRef == QStringLiteral("0"))
+            return Entity::Enumerator::Oct;
+
+        return Entity::Enumerator::Hex;
+    }
+
+    static auto enumValueFromStr(QStringRef valueRef, QStringRef baseRef)
+    {
+        Entity::Enumerator::OptionalValue result;
+
+        if (!valueRef.isEmpty()) {
+            auto base = baseFromStr(baseRef);
+            auto value = valueRef.toInt(nullptr, base);
+            result.value() = {value, base};
+        }
+
+        return result;
+    }
+
     static void enumFromString(QString const& in, Common::BasicElement &e,
                                DB::WeakTypeSearchers const& ts)
     {
         static const QString scopedGroup = "isScoped";
-        static const QString nameGroup   = "name";
-        static const QString typeGroup   = "type";
-        static const QString valueGroup  = "value";
+        static const QString nameGroup   = "name"    ;
+        static const QString typeGroup   = "type"    ;
+        static const QString valueGroup  = "value"   ;
+        static const QString nsGroup     = "ns"      ;
 
         static const QString headerPattern =
             "^enum(?:\\s+(?<" + scopedGroup + ">class))?"
@@ -215,8 +240,7 @@ namespace Models
 
         static const QString enumeratorPattern =
             "^(?<" + nameGroup + ">\\w+)"
-            "(?:\\s+?<" + valueGroup + ">\\d+)?[\\r\\n]*?$";
-        // TODO: extend to accept oct and hex (start with 0 or 0x)
+            "(?:\\s+?<" + nsGroup + ">(?:0 | 0x)<" + valueGroup + ">\\d+)?[\\r\\n]*?$";
 
         auto lines = in.splitRef("\n", QString::SkipEmptyParts);
         if (lines.isEmpty())
@@ -239,14 +263,12 @@ namespace Models
 
             for (auto &&enumeratorLine : lines) {
                 QRegularExpression enumeratorRe(enumeratorPattern);
-                if (auto enumeratorReMach = enumeratorRe.match(enumeratorLine);
-                    enumeratorReMach.hasMatch()) {
+                auto enumeratorReMach = enumeratorRe.match(enumeratorLine);
+                if (enumeratorReMach.hasMatch()) {
+                    auto enumerator = dstEnum.addElement(enumeratorReMach.captured(nameGroup));
 
-                    Entity::Enumerator enumerator;
-                    enumerator.setName(enumeratorReMach.captured(nameGroup));
-
-                    if (auto valueRef = enumeratorReMach.captured(valueGroup); !valueRef.isEmpty())
-                        enumerator.setValue(valueRef.toInt());
+                    if (auto valueRef = enumeratorReMach.capturedRef(valueGroup); !valueRef.isEmpty())
+                        enumerator->setValue(enumValueFromStr(valueRef, enumeratorReMach.capturedRef(nsGroup)));
                 } else
                     throw ConvException(ConvException::tr("Cannot read enumerator"));
             }
