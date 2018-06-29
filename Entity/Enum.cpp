@@ -134,6 +134,15 @@ namespace Entity {
     }
 
     /**
+     * @brief Enumerator::setValue
+     * @param value
+     */
+    void Enumerator::setValue(int value)
+    {
+        setValue(std::make_pair(value, Dec)) ;
+    }
+
+    /**
      * @brief Enumerator::enumeratorValToString
      * @param v
      * @return
@@ -327,7 +336,7 @@ namespace Entity {
         m_Elements.clear();
         Util::checkAndSet(src, "Elements", errorList, [&src, &errorList, this](){
             if (src["Elements"].isArray()) {
-                for (auto &&value : src["Elements"].toArray())
+                for (auto value : src["Elements"].toArray())
                     m_Elements.append(std::make_shared<Enumerator>(value.toObject(), errorList));
             } else {
                 errorList << "Error: \"Elements\" is not array";

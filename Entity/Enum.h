@@ -57,6 +57,7 @@ namespace Entity {
 
         OptionalValue value() const;
         void setValue(const OptionalValue &value);
+        void setValue(int value);
 
         static QString valToString(Value const& v);
         static Value valFromString(QString s);

@@ -32,61 +32,42 @@ using namespace Testing;
 
 TEST_F(SectionalTextConverter, EnumToStrting_Success)
 {
-//    Entity::Enum e("Foo", Common::ID::projectScopeID());
-//    QString result = m_Converter->toString(e);
-//    ASSERT_EQ(result.toStdString(), "enum Foo\n");
-//    ASSERT_TRUE(m_Messenger->messages().empty());
+    Entity::Enum e("Foo", Common::ID::projectScopeID());
+    QString result = m_Converter->toString(e);
+    ASSERT_EQ(result.toStdString(), "enum Foo\n");
+    ASSERT_TRUE(m_Messenger->messages().empty());
 
-//    e.setStrongStatus(true);
-//    result = m_Converter->toString(e);
-//    ASSERT_EQ(result.toStdString(), "enum class Foo\n");
-//    ASSERT_TRUE(m_Messenger->messages().empty());
+    e.setStrongStatus(true);
+    result = m_Converter->toString(e);
+    ASSERT_EQ(result.toStdString(), "enum class Foo\n");
+    ASSERT_TRUE(m_Messenger->messages().empty());
 
-//    e.setEnumTypeId(m_GlobalDb->typeByName("int")->id());
-//    result = m_Converter->toString(e);
-//    ASSERT_EQ(result.toStdString(), "enum class Foo int\n");
+    e.setEnumTypeId(m_GlobalDb->typeByName("int")->id());
+    result = m_Converter->toString(e);
+    ASSERT_EQ(result.toStdString(), "enum class Foo int\n");
 
-//    e.addElement("element1")->setValue(2);
-//    e.addElement("element2")->setValue(5);
-//    result = m_Converter->toString(e);
-//    ASSERT_EQ(result.toStdString(), "enum class Foo int\n"
-//                                    "element1 2\n"
-//                                    "element2 5\n");
+    e.addElement("element1")->setValue(2);
+    e.addElement("element2")->setValue(5);
+    result = m_Converter->toString(e);
+    ASSERT_EQ(result.toStdString(), "enum class Foo int\n"
+                                    "element1 2\n"
+                                    "element2 5\n");
 
-//    e.removeEnumerator("element1");
-//    e.removeEnumerator("element2");
-//    ASSERT_TRUE(e.enumerators().isEmpty());
+    e.removeEnumerator("element1");
+    e.removeEnumerator("element2");
+    ASSERT_TRUE(e.enumerators().isEmpty());
 
-//    e.addElement("e1");
-//    e.addElement("e2");
-//    result = m_Converter->toString(e);
-//    ASSERT_EQ(result.toStdString(), "enum class Foo int\n"
-//                                    "e1\n"
-//                                    "e2\n");
+    e.addElement("e1");
+    e.addElement("e2");
+    result = m_Converter->toString(e);
+    ASSERT_EQ(result.toStdString(), "enum class Foo int\n"
+                                    "e1\n"
+                                    "e2\n");
 }
 
 TEST_F(SectionalTextConverter, EnumToStrting_Fail)
 {
 
-}
-
-TEST_F(SectionalTextConverter, EnumFromString_Full_Success)
-{
-    Entity::Enum enum_;
-    m_Converter->fromString("enum class Foo int", enum_);
-
-    ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
-
-    ASSERT_TRUE(enum_.isStrong());
-    ASSERT_EQ(enum_.name().toStdString(), "Foo");
-
-    auto type = Util::findType(enum_.enumTypeId(), m_GlobalDb, m_ProjectDb);
-    ASSERT_TRUE(!!type);
-    ASSERT_EQ(type->name().toStdString(), "int");
-
-    m_Converter->fromString("enum class Foo int\n"
-                            "foo1", enum_);
-    ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
 }
 
 TEST_F(SectionalTextConverter, EnumFromString_Base_Success)
@@ -99,6 +80,79 @@ TEST_F(SectionalTextConverter, EnumFromString_Base_Success)
     ASSERT_FALSE(enum_.isStrong());
     ASSERT_EQ(enum_.name().toStdString(), "Foo");
     ASSERT_EQ(enum_.enumTypeId(), Common::ID::nullID());
+}
+
+TEST_F(SectionalTextConverter, EnumFromString_Scoped_Success)
+{
+    Entity::Enum enum_;
+    m_Converter->fromString("enum class Foo int", enum_);
+
+    ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
+
+    ASSERT_TRUE(enum_.isStrong());
+    ASSERT_EQ(enum_.name().toStdString(), "Foo");
+
+    auto type = Util::findType(enum_.enumTypeId(), m_GlobalDb, m_ProjectDb);
+    ASSERT_TRUE(!!type);
+    ASSERT_EQ(type->name().toStdString(), "int");
+}
+
+TEST_F(SectionalTextConverter, EnumFromString_WithEnumerators_Success)
+{
+    static constexpr int enumeratorsCount = 3;
+    const std::array<QString, enumeratorsCount> enumeratorNames = {"foo1", "foo2", "foo3"};
+
+    QString enumStr = "enum class Foo int\n";
+    for (auto &&en: enumeratorNames)
+        enumStr += en + "\n";
+
+    Entity::Enum enum_;
+    m_Converter->fromString(enumStr, enum_);
+    ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
+
+    auto enumerators = enum_.enumerators();
+    ASSERT_EQ(enumerators.count(), enumeratorsCount);
+
+    for (auto &&e: enumerators)
+        ASSERT_FALSE(!!e->value());
+
+    for (size_t i = 0; i < enumeratorNames.size(); ++i)
+        ASSERT_EQ(enumeratorNames[i].toStdString(), enumerators[int(i)]->name().toStdString());
+}
+
+TEST_F(SectionalTextConverter, EnumFromString_WithEnumeratorsAndValues_Success)
+{
+    static constexpr int enumeratorsCount = 3;
+    const std::array<QString, enumeratorsCount> enumeratorNames = {"foo1 10", "foo2 015", "foo3 0xFF"};
+
+    using Expected = std::tuple<QString, int, Entity::Enumerator::ValueBase>;
+    std::array<Expected, enumeratorsCount> expected = {
+        std::make_tuple(QString("foo1"), 10, Entity::Enumerator::Dec),
+        std::make_tuple(QString("foo2"), 13, Entity::Enumerator::Oct),
+        std::make_tuple(QString("foo3"), 255, Entity::Enumerator::Hex),
+    };
+
+    QString enumStr = "enum class Foo int\n";
+    for (auto &&en: enumeratorNames)
+        enumStr += en + "\n";
+
+    Entity::Enum enum_;
+    m_Converter->fromString(enumStr, enum_);
+    ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
+
+    auto enumerators = enum_.enumerators();
+    ASSERT_EQ(enumerators.count(), enumeratorsCount);
+
+    for (auto &&e: enumerators)
+        ASSERT_TRUE(!!e->value());
+
+    for (size_t i = 0; i < enumeratorNames.size(); ++i) {
+        auto const& [name, value, base] = expected[i];
+
+        ASSERT_EQ(enumerators[i]->name().toStdString(), name.toStdString());
+        ASSERT_EQ(enumerators[i]->value()->first, value);
+        ASSERT_EQ(enumerators[i]->value()->second, base);
+    }
 }
 
 TEST_F(SectionalTextConverter, EnumFromString_Fail)
@@ -114,6 +168,10 @@ TEST_F(SectionalTextConverter, EnumFromString_Fail)
     m_Messenger->clear();
 
     m_Converter->fromString("enum\n\r ewfe efew ewrw e\n", enum_);
+    ASSERT_TRUE(m_Messenger->unreadMessagesCount() > 0);
+    m_Messenger->clear();
+
+    m_Converter->fromString("enum Foo\n32 a\ngwgew ewfew", enum_);
     ASSERT_TRUE(m_Messenger->unreadMessagesCount() > 0);
     m_Messenger->clear();
 }

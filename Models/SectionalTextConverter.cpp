@@ -27,6 +27,7 @@
 #include <optional>
 
 #include <range/v3/algorithm/transform.hpp>
+#include <range/v3/view/slice.hpp>
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
@@ -44,6 +45,7 @@
 
 namespace Models
 {
+    using namespace boost;
 
     class ConvException : public std::exception
     {
@@ -216,21 +218,49 @@ namespace Models
 
         if (!valueRef.isEmpty()) {
             auto base = baseFromStr(baseRef);
-            auto value = valueRef.toInt(nullptr, base);
-            result.value() = {value, base};
+
+            bool convRes = false;
+            auto value = valueRef.toInt(&convRes, base);
+            if (!convRes)
+                throw ConvException(ConvException::tr("Cannot convert enumerator value: %1")
+                                    .arg(valueRef.toString()));
+
+            result = std::make_pair(value, base);
         }
 
         return result;
     }
 
-    static void enumFromString(QString const& in, Common::BasicElement &e,
-                               DB::WeakTypeSearchers const& ts)
+    template<class Collection>
+    void readEnumerators(Collection const& lines, Entity::Enum &dstEnum)
+    {
+        static const QString nameGroup   = "name" ;
+        static const QString valueGroup  = "value";
+        static const QString nsGroup     = "ns"   ;
+
+        static const QString enumeratorPattern =
+            "^(?<" + nameGroup + ">\\w+)"
+            "(?:\\s+(?<" + nsGroup + ">(?:0|0x))?(?<" + valueGroup + ">[0-9A-Fa-f]+))?[\\r\\n]*?$";
+
+        for (auto &&enumeratorLine: lines) {
+            QRegularExpression enumeratorRe(enumeratorPattern);
+            auto enumeratorReMach = enumeratorRe.match(enumeratorLine);
+            if (enumeratorReMach.hasMatch()) {
+                auto enumerator = dstEnum.addElement(enumeratorReMach.captured(nameGroup));
+
+                if (auto valueRef = enumeratorReMach.capturedRef(valueGroup); !valueRef.isEmpty())
+                    enumerator->setValue(
+                        enumValueFromStr(valueRef, enumeratorReMach.capturedRef(nsGroup)));
+            } else
+                throw ConvException(ConvException::tr("Cannot read enumerator"));
+        }
+    }
+
+    void readEnumHeader(QStringRef header, DB::WeakTypeSearchers const& ts, Entity::Enum &dstEnum)
     {
         static const QString scopedGroup = "isScoped";
         static const QString nameGroup   = "name"    ;
         static const QString typeGroup   = "type"    ;
-        static const QString valueGroup  = "value"   ;
-        static const QString nsGroup     = "ns"      ;
 
         static const QString headerPattern =
             "^enum(?:\\s+(?<" + scopedGroup + ">class))?"
@@ -238,44 +268,33 @@ namespace Models
             "(?:\\s+(?<" + typeGroup + ">\\w+))?"
             "[\\r\\n]*?$";
 
-        static const QString enumeratorPattern =
-            "^(?<" + nameGroup + ">\\w+)"
-            "(?:\\s+?<" + nsGroup + ">(?:0 | 0x)<" + valueGroup + ">\\d+)?[\\r\\n]*?$";
-
-        auto lines = in.splitRef("\n", QString::SkipEmptyParts);
-        if (lines.isEmpty())
-            throw ConvException(ConvException::tr("Cannot get enum from this string"),
-                                ConvException::tr("The string is empty"));
-
-        auto header = lines[0];
-        lines.pop_front();
-
         QRegularExpression headerRe(headerPattern);
         if (auto headerReMach = headerRe.match(header); headerReMach.hasMatch()) {
-            auto & srcEnum = to<Entity::Enum>(e);
-
-            Entity::Enum dstEnum(srcEnum);
             dstEnum.setStrongStatus(!headerReMach.capturedRef(scopedGroup).isEmpty());
             dstEnum.setName(headerReMach.captured(nameGroup));
 
             auto typeNameRef = headerReMach.capturedRef(typeGroup);
             dstEnum.setEnumTypeId(typeIDByName(typeNameRef, ts));
-
-            for (auto &&enumeratorLine : lines) {
-                QRegularExpression enumeratorRe(enumeratorPattern);
-                auto enumeratorReMach = enumeratorRe.match(enumeratorLine);
-                if (enumeratorReMach.hasMatch()) {
-                    auto enumerator = dstEnum.addElement(enumeratorReMach.captured(nameGroup));
-
-                    if (auto valueRef = enumeratorReMach.capturedRef(valueGroup); !valueRef.isEmpty())
-                        enumerator->setValue(enumValueFromStr(valueRef, enumeratorReMach.capturedRef(nsGroup)));
-                } else
-                    throw ConvException(ConvException::tr("Cannot read enumerator"));
-            }
-
-            swap(srcEnum, dstEnum);
         } else
             throw ConvException(ConvException::tr("Cannot read enum header"));
+    }
+
+    static void enumFromString(QString const& in, Common::BasicElement &e,
+                               DB::WeakTypeSearchers const& ts)
+    {
+        auto lines = in.splitRef("\n", QString::SkipEmptyParts);
+        if (lines.isEmpty())
+            throw ConvException(ConvException::tr("Cannot get enum from this string"),
+                                ConvException::tr("The string is empty"));
+
+        Entity::Enum tmpEnum;
+
+        readEnumHeader(lines[0], ts, tmpEnum);
+
+        if (lines.length() > 1)
+            readEnumerators(lines | ranges::view::slice(1, lines.length()), tmpEnum);
+
+        swap(to<Entity::Enum>(e), tmpEnum);
     }
 
     using FromStringConverter = std::function<void(QString const&, Common::BasicElement &,
