@@ -330,8 +330,10 @@ namespace Entity {
     {
         Type::fromJson(src, errorList);
 
-        Util::checkAndSet(src, "Enum type id",  errorList, [&, this](){ m_EnumTypeId.fromJson(src["Enum type id"], errorList); });
-        Util::checkAndSet(src, "Strong status", errorList, [&src, this](){ m_StrongStatus = src["Strong status"].toBool();  });
+        Util::checkAndSet(src, "Enum type id",  errorList,
+                          [&, this](){ m_EnumTypeId.fromJson(src["Enum type id"], errorList); });
+        Util::checkAndSet(src, "Strong status", errorList,
+                          [&src, this](){ m_StrongStatus = src["Strong status"].toBool();  });
 
         m_Elements.clear();
         Util::checkAndSet(src, "Elements", errorList, [&src, &errorList, this](){
@@ -357,7 +359,7 @@ namespace Entity {
         auto r = static_cast<const Enum&>(rhs);
         return m_EnumTypeId   == r.m_EnumTypeId   &&
                m_StrongStatus == r.m_StrongStatus &&
-                Util::seqSharedPointerEq(m_Elements, r.m_Elements);
+               Util::seqSharedPointerEq(m_Elements, r.m_Elements);
     }
 
     void swap(Enum &lhs, Enum &rhs) noexcept

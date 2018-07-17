@@ -64,9 +64,9 @@ namespace GUI {
      * @return
      */
     PropertiesHandlerBase::SectionPtr PropertiesHandlerBase::addSection(
-        const QString &name, const QString &description, const Models::SharedSectionalDataModel &model)
+        const QString &name, const QString &description)
     {
-        auto section = new Section(name, description, model);
+        auto section = new Section(name, description);
 
         layout().addWidget(section);
         m_Sections.append(section);

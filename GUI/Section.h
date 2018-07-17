@@ -40,9 +40,8 @@ namespace GUI {
         Q_OBJECT
 
     public:
-        explicit Section(const QString &sectionName, const QString &help,
-                         const Models::SharedSectionalDataModel &model, QWidget *parent = 0);
-        ~Section();
+        explicit Section(const QString &sectionName, const QString &help, QWidget *parent = nullptr);
+        ~Section() override;
 
         QString sectionName() const;
         void setSectionName(const QString &sectionName);
@@ -65,8 +64,6 @@ namespace GUI {
         State m_State;
         QString m_SectionName;
         QString m_SectionHelp;
-
-        Models::SharedSectionalDataModel m_Model;
     };
 
 

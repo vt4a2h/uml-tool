@@ -24,8 +24,6 @@
 
 #include <Entity/Enum.h>
 
-#include <Models/EnumNameModel.hpp>
-
 #include "Section.h"
 
 static const QString enumDeclarationHelp =
@@ -54,14 +52,8 @@ namespace GUI {
     {
         if (type && type->kindOfType() == Entity::KindOfType::Enum) {
             m_Enum = std::static_pointer_cast<Entity::Enum>(type);
-
-            if (sections().isEmpty()) {
-                m_EnumDeclaration = addSection(tr("Declaration"), enumDeclarationHelp,
-                                               std::make_shared<Models::EnumNameModel>(m_Enum));
-                m_EnumElements    = addSection(tr("Enumerators"), enumEnumeratorsHelp, nullptr /*stub*/);
-            }
-
-
+            if (sections().isEmpty())
+                m_EnumDeclaration = addSection(tr("Declaration"), enumDeclarationHelp);
         } else
             m_Enum.reset();
     }

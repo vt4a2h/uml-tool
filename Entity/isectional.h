@@ -32,6 +32,8 @@ namespace Entity {
     public:
         virtual Section section() const;
         virtual void setSection(Section section);
+
+        virtual ~ISectional() = default;
     };
 
 } // namespace entity

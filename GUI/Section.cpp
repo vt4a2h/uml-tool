@@ -23,8 +23,6 @@
 #include "Section.h"
 #include "ui_Section.h"
 
-#include <Models/ISectionalDataModel.hpp>
-
 namespace GUI {
 
     /**
@@ -33,13 +31,11 @@ namespace GUI {
      * @param help
      * @param parent
      */
-    Section::Section(const QString &sectionName, const QString &help,
-                     const Models::SharedSectionalDataModel &model, QWidget *parent)
+    Section::Section(const QString &sectionName, const QString &help, QWidget *parent)
         : QWidget(parent)
         , m_ui(new Ui::Section)
         , m_State(Opened)
         , m_SectionName(sectionName)
-        , m_Model(model)
     {
         m_ui->setupUi(this);
 
@@ -47,8 +43,6 @@ namespace GUI {
 
         setState(Opened);
         setSectionHelp(help);
-
-        m_ui->tvView->setModel(m_Model.get());
     }
 
     /**
@@ -68,7 +62,7 @@ namespace GUI {
     void Section::setState(State state)
     {
         m_State = state;
-        m_ui->tvView->setVisible(m_State == Opened ? true : false);
+        m_ui->pteEditor->setVisible(m_State == Opened ? true : false);
         m_ui->lblSectionName->setText((m_State == Opened ? "▼" : "►") + m_SectionName);
     }
 
@@ -88,7 +82,7 @@ namespace GUI {
     void Section::setSectionHelp(const QString &sectionHelp)
     {
         m_SectionHelp = sectionHelp;
-        m_ui->tvView->setToolTip("<p>" + m_SectionHelp + "</p>");
+        m_ui->pteEditor->setToolTip("<p>" + m_SectionHelp + "</p>");
     }
 
     /**

@@ -36,7 +36,7 @@ namespace GUI {
     class IPropertiesHandler
     {
     public: // Methods
-        virtual ~IPropertiesHandler() {}
+        virtual ~IPropertiesHandler() = default;
 
         /// Display properties
         virtual bool activate() = 0;

@@ -47,7 +47,7 @@ namespace GUI {
         Q_OBJECT
 
     public:
-        explicit EntityProperties(QWidget *parent = 0);
+        explicit EntityProperties(QWidget *parent = nullptr);
         ~EntityProperties();
 
     public slots:

@@ -52,8 +52,7 @@ namespace GUI {
         QLayout &layout();
 
         SectionsList sections() const;
-        SectionPtr addSection(const QString &name, const QString &description,
-                              const Models::SharedSectionalDataModel &model);
+        SectionPtr addSection(const QString &name, const QString &description);
 
         virtual Entity::SharedType entity() const;
 
