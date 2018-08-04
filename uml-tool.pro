@@ -92,9 +92,8 @@ SOURCES += \
     GUI/graphics/HeaderEditorEventFilter.cpp \
     GUI/EntityProperties.cpp \
     GUI/Section.cpp \
-    GUI/PropertiesHandlerBase.cpp \
-    GUI/EnumPropertiesHandler.cpp \
-    Models/SectionalTextConverter.cpp
+    Models/SectionalTextConverter.cpp \
+    GUI/PropertiesHandlerBase.cpp
 
 HEADERS += \
     enums.h \
@@ -202,12 +201,11 @@ HEADERS += \
     GUI/EntityProperties.h \
     GUI/Section.h \
     GUI/IPropertiesHandler.hpp \
-    GUI/EnumPropertiesHandler.hpp \
-    GUI/PropertiesHandlerBase.hpp \
     Entity/EntityTypes.hpp \
     GUI/GuiTypes.hpp \
     Models/SectionalTextConverter.hpp \
-    Common/CommonTypes.hpp
+    Common/CommonTypes.hpp \
+    GUI/PropertiesHandlerBase.hpp
 
 INCLUDEPATH *= $$PWD/boost-di/include $$PWD/range-v3/include
 
