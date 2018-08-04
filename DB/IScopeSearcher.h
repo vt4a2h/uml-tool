@@ -32,6 +32,8 @@ namespace DB {
     class IScopeSearcher
     {
     public:
+        virtual ~IScopeSearcher() = default;
+
         /// Search scope
         virtual Entity::SharedScope scope(const Common::ID &id, bool searchInDepth = false) const = 0;
 

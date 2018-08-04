@@ -83,7 +83,7 @@ namespace Models
         return static_cast<T const &>(elem);
     }
 
-    static DB::SharedTypeSearchers lockTS(DB::WeakTypeSearchers const &ts)
+    static DB::SharedTypeSearchers lockTS(DB::WeakTypeSearchersSet const &ts)
     {
         DB::SharedTypeSearchers result;
         result.reserve(ts.size());
@@ -102,7 +102,7 @@ namespace Models
         return nullptr;
     }
 
-    static QString enumToString(Common::BasicElement const &elem, DB::WeakTypeSearchers const &ts,
+    static QString enumToString(Common::BasicElement const &elem, DB::WeakTypeSearchersSet const &ts,
                                 Models::IMessenger &messenger)
     {
         auto lockedTS = lockTS(ts);
@@ -152,7 +152,7 @@ namespace Models
 
     using ToStringConverter =
         std::function<QString(Common::BasicElement const&,
-                      DB::WeakTypeSearchers const&,
+                      DB::WeakTypeSearchersSet const&,
                       Models::IMessenger &messenger)>;
     static const QHash<size_t, ToStringConverter> toStrConvById =
     {
@@ -188,7 +188,7 @@ namespace Models
         return static_cast<DstElem&>(e);
     }
 
-    static Common::ID typeIDByName(QStringRef const& name, DB::WeakTypeSearchers const& searchers)
+    static Common::ID typeIDByName(QStringRef const& name, DB::WeakTypeSearchersSet const& searchers)
     {
         if (name.isEmpty())
             return Common::ID::nullID();
@@ -256,7 +256,7 @@ namespace Models
         }
     }
 
-    void readEnumHeader(QStringRef header, DB::WeakTypeSearchers const& ts, Entity::Enum &dstEnum)
+    void readEnumHeader(QStringRef header, DB::WeakTypeSearchersSet const& ts, Entity::Enum &dstEnum)
     {
         static const QString scopedGroup = "isScoped";
         static const QString nameGroup   = "name"    ;
@@ -280,7 +280,7 @@ namespace Models
     }
 
     static void enumFromString(QString const& in, Common::BasicElement &e,
-                               DB::WeakTypeSearchers const& ts)
+                               DB::WeakTypeSearchersSet const& ts)
     {
         auto lines = in.splitRef("\n", QString::SkipEmptyParts);
         if (lines.isEmpty())
@@ -298,7 +298,7 @@ namespace Models
     }
 
     using FromStringConverter = std::function<void(QString const&, Common::BasicElement &,
-                                              DB::WeakTypeSearchers const&)>;
+                                              DB::WeakTypeSearchersSet const&)>;
     static const QHash<size_t, FromStringConverter> fromStrConvById =
     {
         {Entity::Enum::staticHashType(), &enumFromString},
@@ -332,8 +332,7 @@ namespace Models
      */
     void SectionalTextConverter::registerTypeSearcher(DB::SharedTypeSearcher const& typeSearcher)
     {
-        if (!m_TypeSearchers.contains(typeSearcher))
-            m_TypeSearchers << typeSearcher;
+        m_TypeSearchers << typeSearcher;
     }
 
     /**
@@ -342,7 +341,7 @@ namespace Models
      */
     void SectionalTextConverter::unregisterTypeSearcher(DB::SharedTypeSearcher const& typeSearcher)
     {
-        m_TypeSearchers.remove(m_TypeSearchers.indexOf(typeSearcher));
+        m_TypeSearchers.remove(typeSearcher);
     }
 
 } // namespace Models

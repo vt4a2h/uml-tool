@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QSet>
 
 #include <DB/DBTypes.hpp>
 #include <Common/CommonTypes.hpp>
@@ -61,7 +62,7 @@ namespace Models
         void unregisterTypeSearcher(DB::SharedTypeSearcher const & typeSearcher);
 
     private:
-        DB::WeakTypeSearchers m_TypeSearchers;
+        DB::WeakTypeSearchersSet m_TypeSearchers;
         SharedMessenger m_Messenger;
     };
 

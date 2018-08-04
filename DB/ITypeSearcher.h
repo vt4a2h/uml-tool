@@ -31,6 +31,8 @@ namespace DB {
     class ITypeSearcher
     {
     public:
+        virtual ~ITypeSearcher() = default;
+
         virtual Entity::SharedType typeByID(const Common::ID &typeId) const = 0;
         virtual Entity::SharedType typeByName(const QString &name) const = 0;
     };
@@ -39,5 +41,8 @@ namespace DB {
     {
         return lhs.lock() == rhs.lock();
     }
+
+    inline uint qHash(const SharedTypeSearcher &e) { return ::qHash(e.get());  }
+    inline uint qHash(const WeakTypeSearcher &e)   { return   qHash(e.lock()); }
 
 } // namespace db
