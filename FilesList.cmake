@@ -131,7 +131,6 @@ set(GUI_HEADERS
     ${GUI}/EntityProperties.h
     ${GUI}/PropertiesHandlerBase.hpp
     ${GUI}/IPropertiesHandler.hpp
-    ${GUI}/EnumPropertiesHandler.hpp
     ${GUI}/Section.h
     ${GUI}/IPropertiesHandler.hpp)
 set(GUI_SRC
@@ -151,7 +150,6 @@ set(GUI_SRC
     ${GUI}/Preferences.cpp
     ${GUI}/EntityProperties.cpp
     ${GUI}/PropertiesHandlerBase.cpp
-    ${GUI}/EnumPropertiesHandler.cpp
     ${GUI}/Section.cpp)
 
 set(GUI_GRAPHICS ${GUI}/graphics)
@@ -185,8 +183,6 @@ set(MODELS_HEADERS
     ${MODELS}/ComponentsModel.h
     ${MODELS}/MessagesModel.h
     ${MODELS}/SectionalTextConverter.hpp
-    ${MODELS}/ISectionalDataModel.hpp
-    ${MODELS}/EnumNameModel.hpp
     ${MODELS}/IMessenger.h)
 set(MODELS_SRC
     ${MODELS}/ProjectTreeModel.cpp
@@ -194,7 +190,6 @@ set(MODELS_SRC
     ${MODELS}/BasicTreeItem.cpp
     ${MODELS}/ComponentsModel.cpp
     ${MODELS}/SectionalTextConverter.cpp
-    ${MODELS}/EnumNameModel.cpp
     ${MODELS}/MessagesModel.cpp)
 
 set(PROJECT ${ROOT}/Project)
