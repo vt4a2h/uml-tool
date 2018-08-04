@@ -26,8 +26,7 @@
 #include <Entity/Type.h>
 #include <Entity/Enum.h>
 
-#include "Section.h"
-#include "EnumPropertiesHandler.hpp"
+#include "PropertiesHandlerBase.hpp"
 
 #include "QtHelpers.h"
 
@@ -41,7 +40,7 @@ namespace GUI {
     {
         m_ui->setupUi(this);
 
-        m_PropHandlersByType[Entity::KindOfType::Enum] = std::make_shared<EnumPropHandler>(*m_ui->vl);
+        m_handler = std::make_shared<PropertiesHandlerBase>(*m_ui->vl);
     }
 
     EntityProperties::~EntityProperties()
@@ -50,21 +49,8 @@ namespace GUI {
 
     void EntityProperties::onSelectedElementsChanged(const Entity::TypesList &types)
     {
-        if (m_ActiveHandler) {
-            m_ActiveHandler->deactivate();
-            m_ActiveHandler.reset();
-        }
-
-        if (types.size() == 1) {
-            auto type = types[0];
-            auto it = m_PropHandlersByType.find(type->kindOfType());
-            if (it != std::end(m_PropHandlersByType)) {
-                (*it)->setEntity(type);
-                G_ASSERT((*it)->activate());
-
-                m_ActiveHandler = *it;
-            }
-        }
+        if (types.size() == 1)
+            m_handler->setEntity(types.first());
     }
 
 } // namespace GUI

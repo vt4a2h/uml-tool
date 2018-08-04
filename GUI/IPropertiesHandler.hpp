@@ -46,6 +46,12 @@ namespace GUI {
 
         /// Set object for diaplying properties
         virtual void setEntity(const Entity::SharedType &type) = 0;
+
+        /// Check if current changes are saved
+        virtual bool isSaved() const = 0;
+
+        /// Save current changes
+        virtual void save() = 0;
     };
 
 } // namespace GUI

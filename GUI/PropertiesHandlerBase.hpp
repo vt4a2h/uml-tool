@@ -24,7 +24,7 @@
 
 #include <QCoreApplication>
 
-#include <Models/ModelsTypes.hpp>
+#include <Entity/Type.h>
 
 #include "IPropertiesHandler.hpp"
 
@@ -32,13 +32,12 @@ namespace GUI {
 
     class Section;
 
-    class PropertiesHandlerBase : public IPropertiesHandler
+    class PropertiesHandlerBase : public QObject, public IPropertiesHandler
     {
-        Q_DECLARE_TR_FUNCTIONS(PropertiesHandlerBase)
+        Q_OBJECT
 
     public: // Types
         using SectionPtr   = QPointer<Section>;
-        using SectionsList = QList<SectionPtr>;
 
     public:
         PropertiesHandlerBase(QLayout & sectionsLayout);
@@ -46,19 +45,32 @@ namespace GUI {
     public: // IPropertiesHandler interface
         bool activate() override;
         bool deactivate() override;
-        void setEntity(const Entity::SharedType &type) override;
+
+        void setEntity(const Entity::SharedType &entity) override;
+
+        /// Check if current changes are saved
+        bool isSaved() const override;
+
+        /// Save current changes
+        void save() override;
 
     protected: // Metods
         QLayout &layout();
 
-        SectionsList sections() const;
-        SectionPtr addSection(const QString &name, const QString &description);
+        SectionPtr currentSection();
+        void setCurrentSection(SectionPtr section);
 
-        virtual Entity::SharedType entity() const;
+        SectionPtr addSection(const QString &name, const QString &description,
+                              Entity::KindOfType type);
+
+        Entity::SharedType entity() const;
 
     private: // Data
         QLayout &m_MainLayout;
-        SectionsList m_Sections;
+
+        QHash<Entity::KindOfType, SectionPtr> m_SectionsByType;
+
+        Entity::SharedType m_Entity;
     };
 
 } // namespace GUI

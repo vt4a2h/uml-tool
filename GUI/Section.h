@@ -52,16 +52,18 @@ namespace GUI {
     protected:
         void mouseReleaseEvent(QMouseEvent *event) override;
 
-    private: // Types
-        enum State { Opened, Closed };
-
     private: // Methods
-        void setState(State state);
+        bool folded() const;
+        void setFolded(bool folded);
+
+        bool modified() const;
+        void setModified(bool modified);
 
     private:
         QScopedPointer<Ui::Section> m_ui;
 
-        State m_State;
+        bool m_Folded;
+        bool m_Modified;
         QString m_SectionName;
         QString m_SectionHelp;
     };

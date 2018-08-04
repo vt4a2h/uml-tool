@@ -34,14 +34,14 @@ namespace GUI {
     Section::Section(const QString &sectionName, const QString &help, QWidget *parent)
         : QWidget(parent)
         , m_ui(new Ui::Section)
-        , m_State(Opened)
+        , m_Folded(false)
         , m_SectionName(sectionName)
     {
         m_ui->setupUi(this);
 
         setVisible(false);
 
-        setState(Opened);
+        setFolded(false);
         setSectionHelp(help);
     }
 
@@ -51,19 +51,46 @@ namespace GUI {
      */
     void Section::mouseReleaseEvent(QMouseEvent *event)
     {
-        setState(m_State == Opened ? Closed : Opened);
+        setFolded(!folded());
         QWidget::mouseReleaseEvent(event);
     }
 
     /**
-     * @brief Section::setState
-     * @param state
+     * @brief Section::setFolded
+     * @param folded
      */
-    void Section::setState(State state)
+    void Section::setFolded(bool folded)
     {
-        m_State = state;
-        m_ui->pteEditor->setVisible(m_State == Opened ? true : false);
-        m_ui->lblSectionName->setText((m_State == Opened ? "▼" : "►") + m_SectionName);
+        m_Folded = folded;
+        m_ui->pteEditor->setVisible(!m_Folded);
+        m_ui->lblSectionName->setText((this->folded() ? "►" : "▼") + m_SectionName);
+    }
+
+    /**
+     * @brief Section::folded
+     * @return
+     */
+    bool Section::folded() const
+    {
+        return m_Folded;
+    }
+
+    /**
+     * @brief Section::modified
+     * @return
+     */
+    bool Section::modified() const
+    {
+        return m_Modified;
+    }
+
+    /**
+     * @brief Section::setModified
+     * @param Modified
+     */
+    void Section::setModified(bool modified)
+    {
+        m_Modified = modified;
     }
 
     /**

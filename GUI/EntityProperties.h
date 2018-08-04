@@ -53,16 +53,10 @@ namespace GUI {
     public slots:
         void onSelectedElementsChanged(const Entity::TypesList &types);
 
-    private: // Types
-        using HandlersByType = QHash<Entity::KindOfType, SharedPropHandler>;
-
     private: // Data
         QScopedPointer<Ui::EntityProperties> m_ui;
 
-        HandlersByType m_PropHandlersByType;
-        SharedPropHandler m_ActiveHandler;
-
-//        SectionsList m_AllSections;
+        SharedPropHandler m_handler;
     };
 
 } // namespace GUI

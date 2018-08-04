@@ -24,8 +24,41 @@
 
 #include <QLayout>
 #include <QSpacerItem>
+#include <QHash>
+
+#include <Entity/Type.h>
 
 #include "Section.h"
+
+namespace {
+
+    struct EntityDate
+    {
+        QString sectionName;
+        QString description;
+    };
+
+    static const EntityDate enumDate =
+    {
+        QT_TRANSLATE_NOOP("Enum declaration", "Enum declaration"),
+        QT_TRANSLATE_NOOP("Enum declaration",
+                          "Enter enum declaration in the following format:<br>"
+                          "enum-key<sub>opt</sub> identifier type<sub>opt</sub><br>"
+                          "enumerator constexpr<br>"
+                          "enumerator constexpr<br>"
+                          "...<br>"
+                          "enumerator constexpr<br><br>"
+                          "For example:<br>"
+                          "class Foo int<br>"
+                          "a 1<br>"
+                          "b 2")
+    };
+
+    static const QHash<Entity::KindOfType, EntityDate> dateByType =
+    {
+        { Entity::KindOfType::Enum, enumDate },
+    };
+}
 
 namespace GUI {
 
@@ -48,12 +81,20 @@ namespace GUI {
     }
 
     /**
-     * @brief PropertiesHandlerBase::sections
+     * @brief PropertiesHandlerBase::section
      * @return
      */
-    PropertiesHandlerBase::SectionsList PropertiesHandlerBase::sections() const
+    PropertiesHandlerBase::SectionPtr PropertiesHandlerBase::currentSection()
     {
-        return m_Sections;
+        if (auto e = entity(); e) {
+            auto sectionIt = m_SectionsByType.find(e->kindOfType());
+            if (sectionIt != std::end(m_SectionsByType))
+                return *sectionIt;
+            else if (auto dateIt = dateByType.find(e->kindOfType()); dateIt != std::end(dateByType))
+                return addSection(dateIt->sectionName, dateIt->description, e->kindOfType());
+        }
+
+        return nullptr;
     }
 
     /**
@@ -63,15 +104,16 @@ namespace GUI {
      * @param model
      * @return
      */
-    PropertiesHandlerBase::SectionPtr PropertiesHandlerBase::addSection(
-        const QString &name, const QString &description)
+    PropertiesHandlerBase::SectionPtr PropertiesHandlerBase::addSection(const QString &name, const QString &description, Entity::KindOfType type)
     {
-        auto section = new Section(name, description);
+        if (auto it = m_SectionsByType.find(type); it != std::end(m_SectionsByType))
+            return *it;
 
-        layout().addWidget(section);
-        m_Sections.append(section);
+        auto newSectionIt = m_SectionsByType.insert(type, new Section(name, description));
 
-        return section;
+        layout().addWidget(newSectionIt->data());
+
+        return *newSectionIt;
     }
 
     /**
@@ -80,7 +122,7 @@ namespace GUI {
      */
     Entity::SharedType PropertiesHandlerBase::entity() const
     {
-        return nullptr;
+        return m_Entity;
     }
 
     /**
@@ -89,12 +131,10 @@ namespace GUI {
      */
     bool PropertiesHandlerBase::activate()
     {
-        if (!entity() || m_Sections.isEmpty())
+        if (!entity() || !currentSection())
             return false;
 
-        for (auto && s : sections()) {
-            s->setVisible(true);
-        }
+        currentSection()->setVisible(true);
 
         return true;
     }
@@ -105,11 +145,10 @@ namespace GUI {
      */
     bool PropertiesHandlerBase::deactivate()
     {
-        setEntity(nullptr);
+        if (currentSection())
+            currentSection()->setVisible(false);
 
-        for (auto && s : sections()) {
-            s->setVisible(false);
-        }
+        m_Entity = nullptr;
 
         return true;
     }
@@ -117,8 +156,30 @@ namespace GUI {
     /**
      * @brief PropertiesHandlerBase::setEntity
      */
-    void PropertiesHandlerBase::setEntity(const Entity::SharedType &/*type*/)
+    void PropertiesHandlerBase::setEntity(const Entity::SharedType &entity)
     {
+        deactivate();
+
+        m_Entity = entity;
+
+        activate();
+    }
+
+    /**
+     * @brief PropertiesHandlerBase::isSaved
+     * @return
+     */
+    bool PropertiesHandlerBase::isSaved() const
+    {
+        return true;
+    }
+
+    /**
+     * @brief PropertiesHandlerBase::save
+     */
+    void PropertiesHandlerBase::save()
+    {
+
     }
 
 } // namespace GUI
