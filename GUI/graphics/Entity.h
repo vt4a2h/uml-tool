@@ -91,6 +91,9 @@ namespace Graphics {
         void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
         void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
+        Entity::GraphicEntityData &ged();
+        const Entity::GraphicEntityData &ged() const;
+
         QPolygonF resizeCorner() const;
         QRectF resizeCornerRect() const;
         QRectF headerRect() const;

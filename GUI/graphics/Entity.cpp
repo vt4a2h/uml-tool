@@ -420,6 +420,24 @@ namespace Graphics {
     }
 
     /**
+     * @brief GraphisEntity::ged
+     * @return
+     */
+    Entity::GraphicEntityData &GraphisEntity::ged()
+    {
+       return *G_ASSERT(G_ASSERT(m_Type)->graphicEntityData());
+    }
+
+    /**
+     * @brief GraphisEntity::ged
+     * @return
+     */
+    const Entity::GraphicEntityData &GraphisEntity::ged() const
+    {
+        return *G_ASSERT(G_ASSERT(m_Type)->graphicEntityData());
+    }
+
+    /**
      * @brief Entity::resizeCornerSize
      * @return
      */
@@ -460,7 +478,7 @@ namespace Graphics {
      */
     qreal GraphisEntity::width() const
     {
-        return G_ASSERT(G_ASSERT(m_Type)->graphicEntityData())->width();
+        return ged().width();
     }
 
     /**
@@ -469,7 +487,7 @@ namespace Graphics {
      */
     void GraphisEntity::setWidth(qreal newWidth)
     {
-        G_ASSERT(G_ASSERT(m_Type)->graphicEntityData())->setWidth(newWidth);
+        ged().setWidth(newWidth);
     }
 
     /**
@@ -478,7 +496,7 @@ namespace Graphics {
      */
     qreal GraphisEntity::height() const
     {
-        return G_ASSERT(G_ASSERT(m_Type)->graphicEntityData())->height();
+        return ged().height();
     }
 
     /**
@@ -487,7 +505,7 @@ namespace Graphics {
      */
     void GraphisEntity::setHeight(qreal newHeight)
     {
-        G_ASSERT(G_ASSERT(m_Type)->graphicEntityData())->setHeight(newHeight);
+        ged().setHeight(newHeight);
     }
 
     /**
@@ -496,7 +514,7 @@ namespace Graphics {
      */
     QPointF GraphisEntity::dataPos() const
     {
-        return G_ASSERT(G_ASSERT(m_Type)->graphicEntityData())->pos();
+        return ged().pos();
     }
 
     /**
@@ -530,7 +548,7 @@ namespace Graphics {
 
     void GraphisEntity::connect(bool connect)
     {
-        auto *data = G_ASSERT(m_Type->graphicEntityData()).get();
+        auto *data = &ged();
 
         if (connect) {
             G_CONNECT(G_ASSERT(m_Type.get()), &Common::BasicElement::nameChanged,
