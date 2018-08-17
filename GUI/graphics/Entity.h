@@ -53,7 +53,7 @@ namespace Graphics {
 
     public:
         GraphisEntity(const Entity::SharedType &type, QGraphicsItem *parent = nullptr);
-        ~GraphisEntity();
+        ~GraphisEntity() override;
 
         QRectF boundingRect() const override;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,

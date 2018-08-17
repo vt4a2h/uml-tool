@@ -41,6 +41,7 @@
 #include <QDebug>
 #include <QTableView>
 #include <QToolButton>
+#include <QHeaderView>
 
 #include <range/v3/algorithm/for_each.hpp>
 

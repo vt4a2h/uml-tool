@@ -23,6 +23,8 @@
 #include "addscope.h"
 #include "ui_addscope.h"
 
+#include <QRegExpValidator>
+
 namespace {
     const QString defaultWidgetName = GUI::AddScope::tr("Create new scope");
 }
