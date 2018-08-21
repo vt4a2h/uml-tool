@@ -27,6 +27,8 @@
 
 #include <Models/SectionalTextConverter.hpp>
 
+#include "QtHelpers.h"
+
 namespace GUI {
 
     /**
@@ -35,20 +37,23 @@ namespace GUI {
      * @param help
      * @param parent
      */
-    Section::Section(const QString &sectionName, const QString &help,
-                     Models::SectionalTextConverter &converter, QWidget *parent)
+    Section::Section(const QString &sectionName, const QString &help, QWidget *parent)
         : QWidget(parent)
         , m_ui(new Ui::Section)
         , m_Folded(false)
         , m_SectionName(sectionName)
-        , m_Converter(converter)
     {
         m_ui->setupUi(this);
 
         setVisible(false);
-
         setFolded(false);
+
         setSectionHelp(help);
+
+        m_ui->pteEditor->addAction(m_ui->actionSave);
+        G_CONNECT(m_ui->actionSave, &QAction::triggered,
+                  [this]{ emit saved(m_ui->pteEditor->toPlainText()); });
+        G_CONNECT(m_ui->pteEditor, &QPlainTextEdit::textChanged, [this]{ setModified(true); });
     }
 
     /**
@@ -108,40 +113,14 @@ namespace GUI {
     }
 
     /**
-     * @brief Section::entity
-     * @return
+     * @brief Section::updateText
+     * @param newText
      */
-    Entity::SharedType Section::entity() const
+    void Section::updateText(const QString &newText)
     {
-        return m_Entity;
-    }
-
-    /**
-     * @brief Section::setEntity
-     * @param entity
-     */
-    void Section::setEntity(const Entity::SharedType &entity)
-    {
-        m_Entity = entity;
-        m_ui->pteEditor->setPlainText(m_Converter.toString(*m_Entity));
-    }
-    
-    /**
-     * @brief Section::converter
-     * @return
-     */
-    const Models::SectionalTextConverter &Section::converter() const
-    {
-        return m_Converter;
-    }
-
-    /**
-     * @brief Section::converter
-     * @return
-     */
-    Models::SectionalTextConverter &Section::converter()
-    {
-        return m_Converter;
+       QSignalBlocker blocker(m_ui->pteEditor); // TODO: make scoped
+       m_ui->pteEditor->setPlainText(newText);
+       blocker.unblock();
     }
     
     /**

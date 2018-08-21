@@ -30,6 +30,7 @@
 #include <Models/SectionalTextConverter.hpp>
 
 #include "Section.h"
+#include "QtHelpers.h"
 
 namespace {
 
@@ -113,7 +114,7 @@ namespace GUI {
         if (auto it = m_SectionsByType.find(type); it != std::end(m_SectionsByType))
             return *it;
 
-        auto newSectionIt = m_SectionsByType.insert(type, new Section(name, description, m_Converter));
+        auto newSectionIt = m_SectionsByType.insert(type, new Section(name, description));
 
         layout().addWidget(newSectionIt->data());
 
@@ -139,8 +140,12 @@ namespace GUI {
             return false;
 
         currentSection()->setVisible(true);
-        currentSection()->setEntity(m_Entity);
-
+        currentSection()->updateText(m_Converter.toString(*m_Entity));
+        m_SaveConnection =
+            G_CONNECT(currentSection(), &Section::saved,
+                      [this](auto &&text) {
+                          currentSection()->setModified(!m_Converter.fromString(text, *m_Entity));
+                          /*TODO: update scene on saved action and mark project as changed*/});
         return true;
     }
 
@@ -152,6 +157,8 @@ namespace GUI {
     {
         if (currentSection())
             currentSection()->setVisible(false);
+
+        disconnect(m_SaveConnection);
 
         m_Entity = nullptr;
 

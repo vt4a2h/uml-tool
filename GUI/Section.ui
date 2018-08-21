@@ -66,6 +66,14 @@
     <widget class="QPlainTextEdit" name="pteEditor"/>
    </item>
   </layout>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

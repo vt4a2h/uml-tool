@@ -55,7 +55,7 @@ namespace Models
          *  For scoped enum with two int elements.
          */
         QString toString(const Entity::Type &element) const noexcept;
-        void fromString(QString const & s, Entity::Type & element) const noexcept;
+        bool fromString(QString const & s, Entity::Type & element) const noexcept;
 
     public slots:
         void registerTypeSearcher(DB::SharedTypeSearcher const & typeSearcher);

@@ -72,6 +72,8 @@ namespace GUI {
         QHash<Entity::KindOfType, SectionPtr> m_SectionsByType;
 
         Entity::SharedType m_Entity;
+
+        QMetaObject::Connection m_SaveConnection;
     };
 
 } // namespace GUI

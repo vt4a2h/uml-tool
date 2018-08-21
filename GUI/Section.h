@@ -42,8 +42,7 @@ namespace GUI {
         Q_OBJECT
 
     public:
-        explicit Section(const QString &sectionName, const QString &help,
-                         Models::SectionalTextConverter &converter, QWidget *parent = nullptr);
+        explicit Section(const QString &sectionName, const QString &help, QWidget *parent = nullptr);
         ~Section() override;
 
         QString sectionName() const;
@@ -58,8 +57,12 @@ namespace GUI {
         Entity::SharedType entity() const;
         void setEntity(const Entity::SharedType &entity);
 
+    signals:
+        void saved(const QString &newText);
+
     public slots:
         void setModified(bool modified);
+        void updateText(const QString &newText);
 
     protected:
         void mouseReleaseEvent(QMouseEvent *event) override;
@@ -77,9 +80,6 @@ namespace GUI {
         bool m_Modified;
         QString m_SectionName;
         QString m_SectionHelp;
-
-        Models::SectionalTextConverter &m_Converter;
-        Entity::SharedType m_Entity;
     };
 
 

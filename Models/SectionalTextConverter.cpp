@@ -310,13 +310,16 @@ namespace Models
      * @param element
      * @return
      */
-    void SectionalTextConverter::fromString(QString const& s,
+    bool SectionalTextConverter::fromString(QString const& s,
                                             Entity::Type &element) const noexcept
     {
+        bool success = false;
+
         try {
-            if (auto it = fromStrConvById.find(element.hashType()); it != fromStrConvById.end())
+            if (auto it = fromStrConvById.find(element.hashType()); it != fromStrConvById.end()) {
                 (*it)(s, element, m_TypeSearchers);
-            else
+                success = true;
+            } else
                 m_Messenger->addMessage(MessageType::Error, tr("Cannot convert the type from string"),
                                         tr("There is no an appropriate converter"));
         } catch (ConvException const& e) {
@@ -324,6 +327,8 @@ namespace Models
         } catch (...) {
             m_Messenger->addMessage(MessageType::Error, tr("Unexpected error"));
         }
+
+        return success;
     }
 
     /**
