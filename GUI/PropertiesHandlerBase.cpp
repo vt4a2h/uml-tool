@@ -27,6 +27,7 @@
 #include <QHash>
 
 #include <Entity/Type.h>
+#include <Models/SectionalTextConverter.hpp>
 
 #include "Section.h"
 
@@ -66,8 +67,10 @@ namespace GUI {
      * @brief PropertiesHandlerBase::PropertiesHandlerBase
      * @param sectionsLayout
      */
-    PropertiesHandlerBase::PropertiesHandlerBase(QLayout &sectionsLayout)
+    PropertiesHandlerBase::PropertiesHandlerBase(QLayout &sectionsLayout,
+                                                 Models::SectionalTextConverter &converter)
         : m_MainLayout(sectionsLayout)
+        , m_Converter(converter)
     {
     }
 
@@ -104,12 +107,13 @@ namespace GUI {
      * @param model
      * @return
      */
-    PropertiesHandlerBase::SectionPtr PropertiesHandlerBase::addSection(const QString &name, const QString &description, Entity::KindOfType type)
+    PropertiesHandlerBase::SectionPtr PropertiesHandlerBase::addSection(
+        const QString &name, const QString &description, Entity::KindOfType type)
     {
         if (auto it = m_SectionsByType.find(type); it != std::end(m_SectionsByType))
             return *it;
 
-        auto newSectionIt = m_SectionsByType.insert(type, new Section(name, description));
+        auto newSectionIt = m_SectionsByType.insert(type, new Section(name, description, m_Converter));
 
         layout().addWidget(newSectionIt->data());
 
@@ -135,6 +139,7 @@ namespace GUI {
             return false;
 
         currentSection()->setVisible(true);
+        currentSection()->setEntity(m_Entity);
 
         return true;
     }

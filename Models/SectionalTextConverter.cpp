@@ -77,7 +77,7 @@ namespace Models
     }
 
     template <class T>
-    T const & to(Common::BasicElement const &elem)
+    T const & to(Entity::Type const &elem)
     {
         Q_ASSERT(T::staticHashType() == elem.hashType());
         return static_cast<T const &>(elem);
@@ -102,7 +102,7 @@ namespace Models
         return nullptr;
     }
 
-    static QString enumToString(Common::BasicElement const &elem, DB::WeakTypeSearchersSet const &ts,
+    static QString enumToString(Entity::Type const &elem, DB::WeakTypeSearchersSet const &ts,
                                 Models::IMessenger &messenger)
     {
         auto lockedTS = lockTS(ts);
@@ -151,7 +151,7 @@ namespace Models
     }
 
     using ToStringConverter =
-        std::function<QString(Common::BasicElement const&,
+        std::function<QString(Entity::Type const&,
                       DB::WeakTypeSearchersSet const&,
                       Models::IMessenger &messenger)>;
     static const QHash<size_t, ToStringConverter> toStrConvById =
@@ -164,7 +164,7 @@ namespace Models
      * @param element
      * @return
      */
-    QString SectionalTextConverter::toString(Common::BasicElement const& element) const noexcept
+    QString SectionalTextConverter::toString(Entity::Type const& element) const noexcept
     {
         try {
             if (auto it = toStrConvById.find(element.hashType()); it != toStrConvById.end())
@@ -182,7 +182,7 @@ namespace Models
     }
 
     template <class DstElem>
-    DstElem & to(Common::BasicElement & e)
+    DstElem & to(Entity::Type & e)
     {
         Q_ASSERT(e.hashType() == DstElem::staticHashType());
         return static_cast<DstElem&>(e);
@@ -279,7 +279,7 @@ namespace Models
             throw ConvException(ConvException::tr("Cannot read enum header"));
     }
 
-    static void enumFromString(QString const& in, Common::BasicElement &e,
+    static void enumFromString(QString const& in, Entity::Type &e,
                                DB::WeakTypeSearchersSet const& ts)
     {
         auto lines = in.splitRef("\n", QString::SkipEmptyParts);
@@ -297,7 +297,7 @@ namespace Models
         swap(to<Entity::Enum>(e), tmpEnum);
     }
 
-    using FromStringConverter = std::function<void(QString const&, Common::BasicElement &,
+    using FromStringConverter = std::function<void(QString const&, Entity::Type &,
                                               DB::WeakTypeSearchersSet const&)>;
     static const QHash<size_t, FromStringConverter> fromStrConvById =
     {
@@ -311,7 +311,7 @@ namespace Models
      * @return
      */
     void SectionalTextConverter::fromString(QString const& s,
-                                            Common::BasicElement &element) const noexcept
+                                            Entity::Type &element) const noexcept
     {
         try {
             if (auto it = fromStrConvById.find(element.hashType()); it != fromStrConvById.end())

@@ -23,6 +23,9 @@
 #include "EntityProperties.h"
 #include "ui_EntityProperties.h"
 
+#include <Models/ApplicationModel.h>
+#include <Models/SectionalTextConverter.hpp>
+
 #include <Entity/Type.h>
 #include <Entity/Enum.h>
 
@@ -34,23 +37,33 @@
 
 namespace GUI {
 
-    EntityProperties::EntityProperties(QWidget *parent)
+    EntityProperties::EntityProperties(const Models::ApplicationModel &appModel,
+                                       const Models::SharedMessenger &messenger, QWidget *parent)
         : QWidget(parent)
         , m_ui(new Ui::EntityProperties)
+        , m_Converter(std::make_shared<Models::SectionalTextConverter>(messenger))
     {
         m_ui->setupUi(this);
 
-        m_handler = std::make_shared<PropertiesHandlerBase>(*m_ui->vl);
+        m_Converter->registerTypeSearcher(appModel.globalDatabase());
+        G_CONNECT(&appModel, &Models::ApplicationModel::currentProjectChanged,
+                  [this](auto &&prev, auto &&cur)
+                  {
+                      if (prev)
+                          m_Converter->unregisterTypeSearcher(prev->database());
+
+                      if (cur)
+                          m_Converter->registerTypeSearcher(cur->database());
+                  });
+
+        m_handler = std::make_shared<PropertiesHandlerBase>(*m_ui->vl, *m_Converter);
     }
 
-    EntityProperties::~EntityProperties()
-    {
-    }
+    EntityProperties::~EntityProperties() = default;
 
     void EntityProperties::onSelectedElementsChanged(const Entity::TypesList &types)
     {
-        if (types.size() == 1)
-            m_handler->setEntity(types.first());
+        m_handler->setEntity(types.size() == 1 ? types.first() : nullptr);
     }
 
 } // namespace GUI

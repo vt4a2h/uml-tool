@@ -27,7 +27,7 @@
 #include <QSet>
 
 #include <DB/DBTypes.hpp>
-#include <Common/CommonTypes.hpp>
+#include <Entity/EntityTypes.hpp>
 
 #include "ModelsTypes.hpp"
 
@@ -54,8 +54,8 @@ namespace Models
          *
          *  For scoped enum with two int elements.
          */
-        QString toString(Common::BasicElement const & element) const noexcept;
-        void fromString(QString const & s, Common::BasicElement & element) const noexcept;
+        QString toString(const Entity::Type &element) const noexcept;
+        void fromString(QString const & s, Entity::Type & element) const noexcept;
 
     public slots:
         void registerTypeSearcher(DB::SharedTypeSearcher const & typeSearcher);

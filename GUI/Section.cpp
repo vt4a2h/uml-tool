@@ -23,6 +23,10 @@
 #include "Section.h"
 #include "ui_Section.h"
 
+#include <QRegularExpression>
+
+#include <Models/SectionalTextConverter.hpp>
+
 namespace GUI {
 
     /**
@@ -31,11 +35,13 @@ namespace GUI {
      * @param help
      * @param parent
      */
-    Section::Section(const QString &sectionName, const QString &help, QWidget *parent)
+    Section::Section(const QString &sectionName, const QString &help,
+                     Models::SectionalTextConverter &converter, QWidget *parent)
         : QWidget(parent)
         , m_ui(new Ui::Section)
         , m_Folded(false)
         , m_SectionName(sectionName)
+        , m_Converter(converter)
     {
         m_ui->setupUi(this);
 
@@ -91,8 +97,53 @@ namespace GUI {
     void Section::setModified(bool modified)
     {
         m_Modified = modified;
+
+        auto newName = m_ui->lblSectionName->text();
+        newName.remove(QRegularExpression("( \\*)$"));
+
+        if (m_Modified)
+            newName += " *";
+
+        m_ui->lblSectionName->setText(newName);
     }
 
+    /**
+     * @brief Section::entity
+     * @return
+     */
+    Entity::SharedType Section::entity() const
+    {
+        return m_Entity;
+    }
+
+    /**
+     * @brief Section::setEntity
+     * @param entity
+     */
+    void Section::setEntity(const Entity::SharedType &entity)
+    {
+        m_Entity = entity;
+        m_ui->pteEditor->setPlainText(m_Converter.toString(*m_Entity));
+    }
+    
+    /**
+     * @brief Section::converter
+     * @return
+     */
+    const Models::SectionalTextConverter &Section::converter() const
+    {
+        return m_Converter;
+    }
+
+    /**
+     * @brief Section::converter
+     * @return
+     */
+    Models::SectionalTextConverter &Section::converter()
+    {
+        return m_Converter;
+    }
+    
     /**
      * @brief Section::sectionHelp
      * @return
@@ -101,7 +152,7 @@ namespace GUI {
     {
         return m_SectionHelp;
     }
-
+    
     /**
      * @brief Section::setSectionHelp
      * @param sectionHelp

@@ -27,6 +27,8 @@
 #include <QWidget>
 
 #include <Models/ModelsTypes.hpp>
+#include <Common/CommonTypes.hpp>
+#include <Entity/EntityTypes.hpp>
 
 namespace GUI {
 
@@ -40,7 +42,8 @@ namespace GUI {
         Q_OBJECT
 
     public:
-        explicit Section(const QString &sectionName, const QString &help, QWidget *parent = nullptr);
+        explicit Section(const QString &sectionName, const QString &help,
+                         Models::SectionalTextConverter &converter, QWidget *parent = nullptr);
         ~Section() override;
 
         QString sectionName() const;
@@ -48,6 +51,15 @@ namespace GUI {
 
         QString sectionHelp() const;
         void setSectionHelp(const QString &sectionHelp);
+
+        const Models::SectionalTextConverter &converter() const;
+        Models::SectionalTextConverter &converter();
+
+        Entity::SharedType entity() const;
+        void setEntity(const Entity::SharedType &entity);
+
+    public slots:
+        void setModified(bool modified);
 
     protected:
         void mouseReleaseEvent(QMouseEvent *event) override;
@@ -57,7 +69,6 @@ namespace GUI {
         void setFolded(bool folded);
 
         bool modified() const;
-        void setModified(bool modified);
 
     private:
         QScopedPointer<Ui::Section> m_ui;
@@ -66,6 +77,9 @@ namespace GUI {
         bool m_Modified;
         QString m_SectionName;
         QString m_SectionHelp;
+
+        Models::SectionalTextConverter &m_Converter;
+        Entity::SharedType m_Entity;
     };
 
 

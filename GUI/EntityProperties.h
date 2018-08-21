@@ -27,6 +27,7 @@
 
 #include <Entity/EntityTypes.hpp>
 #include <Entity/Type.h>
+#include <Models/ModelsTypes.hpp>
 
 #include "GuiTypes.hpp"
 
@@ -47,8 +48,13 @@ namespace GUI {
         Q_OBJECT
 
     public:
-        explicit EntityProperties(QWidget *parent = nullptr);
-        ~EntityProperties();
+        explicit EntityProperties(const Models::ApplicationModel &appModel,
+                                  const Models::SharedMessenger &messenger,
+                                  QWidget *parent = nullptr);
+        ~EntityProperties() override;
+
+        Models::SharedMessenger messanger() const;
+        void setMessanger(const Models::SharedMessenger &messanger);
 
     public slots:
         void onSelectedElementsChanged(const Entity::TypesList &types);
@@ -57,6 +63,8 @@ namespace GUI {
         QScopedPointer<Ui::EntityProperties> m_ui;
 
         SharedPropHandler m_handler;
+
+        Models::SharedSectionalTextConverter m_Converter;
     };
 
 } // namespace GUI

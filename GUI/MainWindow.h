@@ -78,7 +78,7 @@ namespace GUI {
         Q_DISABLE_COPY(MainWindow)
 
         explicit MainWindow(const Models::SharedApplicationModel &applicationModel);
-        ~MainWindow();
+        ~MainWindow() override;
 
         QPointer<QGraphicsScene> scene() const;
 
@@ -148,7 +148,6 @@ namespace GUI {
         View             *m_MainView;
         QUndoView        *m_UndoView;
         Elements         *m_Elements;
-        EntityProperties *m_EntityProperties;
 
         About            *m_AboutWidget;
         NewProjectDialog *m_NewProjectDialog;
@@ -158,6 +157,8 @@ namespace GUI {
         QTableView                  *m_MessagesView;
         QDockWidget                 *m_MessagesDock;
         Models::SharedMessagesModel  m_MessagesModel;
+
+        EntityProperties *m_EntityProperties;
 
         QPointer<QToolButton> m_MessagesButton;
 
