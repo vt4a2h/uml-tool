@@ -27,6 +27,7 @@
 #include <QHash>
 
 #include <Entity/Type.h>
+
 #include <Models/SectionalTextConverter.hpp>
 
 #include "Section.h"
@@ -144,8 +145,9 @@ namespace GUI {
         m_SaveConnection =
             G_CONNECT(currentSection(), &Section::saved,
                       [this](auto &&text) {
-                          currentSection()->setModified(!m_Converter.fromString(text, *m_Entity));
-                          /*TODO: update scene on saved action and mark project as changed*/});
+                          bool modified = !m_Converter.fromString(text, *m_Entity);
+                          currentSection()->setModified(modified);
+                          /*TODO: update scene on saved action*/});
         return true;
     }
 

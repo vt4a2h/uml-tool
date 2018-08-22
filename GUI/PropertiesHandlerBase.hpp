@@ -25,6 +25,7 @@
 #include <QCoreApplication>
 
 #include <Entity/Type.h>
+#include <Project/ProjectTypes.hpp>
 
 #include "IPropertiesHandler.hpp"
 
@@ -72,6 +73,8 @@ namespace GUI {
         QHash<Entity::KindOfType, SectionPtr> m_SectionsByType;
 
         Entity::SharedType m_Entity;
+
+        Projects::SharedProject m_CurrentProject;
 
         QMetaObject::Connection m_SaveConnection;
     };

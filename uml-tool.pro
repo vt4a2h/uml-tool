@@ -93,7 +93,8 @@ SOURCES += \
     GUI/EntityProperties.cpp \
     GUI/Section.cpp \
     Models/SectionalTextConverter.cpp \
-    GUI/PropertiesHandlerBase.cpp
+    GUI/PropertiesHandlerBase.cpp \
+    Commands/UpdateEntity.cpp
 
 HEADERS += \
     enums.h \
@@ -205,7 +206,8 @@ HEADERS += \
     GUI/GuiTypes.hpp \
     Models/SectionalTextConverter.hpp \
     Common/CommonTypes.hpp \
-    GUI/PropertiesHandlerBase.hpp
+    GUI/PropertiesHandlerBase.hpp \
+    Commands/UpdateEntity.hpp
 
 INCLUDEPATH *= $$PWD/boost-di/include $$PWD/range-v3/include
 

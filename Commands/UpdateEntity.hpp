@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2018 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 28/03/2015.
+** Created 22/08/2018.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,32 +22,22 @@
 *****************************************************************************/
 #pragma once
 
-#include <QCoreApplication>
-#include <QUndoCommand>
+#include "BaseCommand.h"
 
 namespace Commands {
 
-    /// The Base Command class
-    class BaseCommand : public QObject, public QUndoCommand
+    class UpdateEntity : public BaseCommand
     {
-        Q_DECLARE_TR_FUNCTIONS(BaseCommand)
-
     public:
-        explicit BaseCommand(QUndoCommand *parent = nullptr);
-        explicit BaseCommand(const QString &text, QUndoCommand *parent = nullptr);
+        UpdateEntity();
 
-        ~BaseCommand() override;
+    public: // QUndoCommand overridies
+        void undo() override;
+        void redo() override;
 
-    protected:
-        /// Perform some cleanups in destructor
-        virtual void cleanup() {}
-        /// Perform checking objects state
-        virtual void sanityCheck() {}
-
-    protected: // Date
-
-        bool m_CleaningRequired = false;
-        bool m_Done = false; // do first time -- false, redo -- true
+    public: // BaseCommand overridies
+        void sanityCheck() override;
+        void cleanup() override;
     };
 
 } // namespace Commands

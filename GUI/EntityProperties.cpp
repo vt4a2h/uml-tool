@@ -45,6 +45,9 @@ namespace GUI {
     {
         m_ui->setupUi(this);
 
+        // Invoke only when ui is setup
+        m_handler = std::make_shared<PropertiesHandlerBase>(*m_ui->vl, *m_Converter);
+
         m_Converter->registerTypeSearcher(appModel.globalDatabase());
         G_CONNECT(&appModel, &Models::ApplicationModel::currentProjectChanged,
                   [this](auto &&prev, auto &&cur)
@@ -55,8 +58,6 @@ namespace GUI {
                       if (cur)
                           m_Converter->registerTypeSearcher(cur->database());
                   });
-
-        m_handler = std::make_shared<PropertiesHandlerBase>(*m_ui->vl, *m_Converter);
     }
 
     EntityProperties::~EntityProperties() = default;

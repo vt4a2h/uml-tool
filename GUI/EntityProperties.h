@@ -62,9 +62,9 @@ namespace GUI {
     private: // Data
         QScopedPointer<Ui::EntityProperties> m_ui;
 
-        SharedPropHandler m_handler;
-
         Models::SharedSectionalTextConverter m_Converter;
+
+        SharedPropHandler m_handler;
     };
 
 } // namespace GUI
