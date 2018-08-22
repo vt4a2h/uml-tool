@@ -50,8 +50,7 @@ namespace GUI {
 
         setSectionHelp(help);
 
-        m_ui->pteEditor->addAction(m_ui->actionSave);
-        G_CONNECT(m_ui->actionSave, &QAction::triggered,
+        G_CONNECT(m_ui->pbSave, &QPushButton::clicked,
                   [this]{ emit saved(m_ui->pteEditor->toPlainText()); });
         G_CONNECT(m_ui->pteEditor, &QPlainTextEdit::textChanged, [this]{ setModified(true); });
     }
@@ -73,7 +72,7 @@ namespace GUI {
     void Section::setFolded(bool folded)
     {
         m_Folded = folded;
-        m_ui->pteEditor->setVisible(!m_Folded);
+        m_ui->wgtSection->setVisible(!m_Folded);
         m_ui->lblSectionName->setText((this->folded() ? "►" : "▼") + m_SectionName);
     }
 
@@ -118,9 +117,8 @@ namespace GUI {
      */
     void Section::updateText(const QString &newText)
     {
-       QSignalBlocker blocker(m_ui->pteEditor); // TODO: make scoped
+       QSignalBlocker blocker(m_ui->pteEditor);
        m_ui->pteEditor->setPlainText(newText);
-       blocker.unblock();
     }
     
     /**
