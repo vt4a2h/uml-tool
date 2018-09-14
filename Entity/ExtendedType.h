@@ -44,10 +44,10 @@ namespace Entity {
 
         ExtendedType();
         ExtendedType(const QString &name, const Common::ID &scopeId);
-        ExtendedType(ExtendedType &&) noexcept = default;
+        ExtendedType(ExtendedType &&) = default;
         ExtendedType(const ExtendedType &) = default;
 
-        ExtendedType& operator= (ExtendedType &&) noexcept = default;
+        ExtendedType& operator= (ExtendedType &&) = default;
         ExtendedType& operator= (const ExtendedType &) = default;
         friend bool operator ==(const ExtendedType &lhs, const ExtendedType &rhs);
 
