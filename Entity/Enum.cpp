@@ -201,6 +201,58 @@ namespace Entity {
     }
 
     /**
+     * @brief Enum::Enum
+     * @param src
+     */
+    Enum::Enum(Enum &&src) noexcept
+        : Type(std::move(src))
+        , m_EnumTypeId(std::move(src.m_EnumTypeId))
+        , m_StrongStatus(std::move(src.m_StrongStatus))
+        , m_Elements(std::move(src.m_Elements))
+    {
+    }
+
+    /**
+     * @brief Enum::Enum
+     * @param src
+     */
+    Enum::Enum(const Enum &src)
+        : Type(src)
+        , m_EnumTypeId(src.m_EnumTypeId)
+        , m_StrongStatus(src.m_StrongStatus)
+        , m_Elements(src.m_Elements)
+    {
+    }
+
+    /**
+     * @brief Enum::operator =
+     * @param src
+     * @return
+     */
+    Enum &Enum::operator=(Enum &&src) noexcept
+    {
+        static_cast<Type&>(*this) = static_cast<Type&&>(src);
+        m_EnumTypeId = std::move(src.m_EnumTypeId);
+        m_StrongStatus = std::move(src.m_StrongStatus);
+        m_Elements = std::move(src.m_Elements);
+
+        return *this;
+    }
+
+    /**
+     * @brief Enum::operator =
+     * @param src
+     * @return
+     */
+    Enum &Enum::operator=(const Enum &src)
+    {
+        Enum tmp(src);
+        *this = std::move(tmp);
+
+        return *this;
+    }
+
+    /**
      * @brief operator ==
      * @param lhs
      * @param rhs

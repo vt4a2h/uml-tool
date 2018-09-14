@@ -78,11 +78,11 @@ namespace Entity {
     public:
         Enum();
         Enum(const QString &name, const Common::ID &scopeId);
-        Enum(Enum &&) noexcept = default;
-        Enum(const Enum &) = default;
+        Enum(Enum &&src) noexcept;
+        Enum(const Enum & src);
 
-        Enum& operator= (Enum &&) noexcept = default;
-        Enum& operator= (const Enum &) = default;
+        Enum& operator= (Enum &&src) noexcept;
+        Enum& operator= (const Enum &src);
         friend bool operator== (const Enum &lhs, const Enum &rhs);
 
         bool isStrong() const;
