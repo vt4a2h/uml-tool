@@ -287,14 +287,14 @@ namespace Models
             throw ConvException(ConvException::tr("Cannot get enum from this string"),
                                 ConvException::tr("The string is empty"));
 
-        Entity::Enum tmpEnum;
+        Entity::Enum tmpEnum(to<Entity::Enum>(e));
 
         readEnumHeader(lines[0], ts, tmpEnum);
 
         if (lines.length() > 1)
             readEnumerators(lines | ranges::view::slice(1, lines.length()), tmpEnum);
 
-        swap(to<Entity::Enum>(e), tmpEnum);
+        to<Entity::Enum>(e) = std::move(tmpEnum);
     }
 
     using FromStringConverter = std::function<void(QString const&, Entity::Type &,
