@@ -47,6 +47,10 @@ namespace GUI {
 
         // Invoke only when ui is setup
         m_handler = std::make_shared<PropertiesHandlerBase>(*m_ui->vl, *m_Converter);
+        G_CONNECT(static_cast<PropertiesHandlerBase*>(m_handler.get()),
+                  &PropertiesHandlerBase::sceneUpdateRequired,
+                  this,
+                  &EntityProperties::sceneUpdateRequired);
 
         m_Converter->registerTypeSearcher(appModel.globalDatabase());
         G_CONNECT(&appModel, &Models::ApplicationModel::currentProjectChanged,

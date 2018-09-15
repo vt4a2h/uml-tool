@@ -55,6 +55,9 @@ namespace GUI {
         /// Save current changes
         void save() override;
 
+    signals:
+        void sceneUpdateRequired(const QRectF &rect);
+
     protected: // Metods
         QLayout &layout();
 

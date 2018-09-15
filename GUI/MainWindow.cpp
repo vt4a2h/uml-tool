@@ -556,6 +556,8 @@ namespace GUI {
 
         G_CONNECT(m_MainScene.get(), &Graphics::Scene::selectedItemsChanged,
                   m_EntityProperties, &EntityProperties::onSelectedElementsChanged);
+        G_CONNECT(m_EntityProperties, &EntityProperties::sceneUpdateRequired,
+                  m_MainScene.get(), qOverload<const QRectF &>(&QGraphicsScene::update));
     }
 
     /**

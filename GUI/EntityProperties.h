@@ -59,6 +59,9 @@ namespace GUI {
     public slots:
         void onSelectedElementsChanged(const Entity::TypesList &types);
 
+    signals:
+        void sceneUpdateRequired(const QRectF &rect);
+
     private: // Data
         QScopedPointer<Ui::EntityProperties> m_ui;
 

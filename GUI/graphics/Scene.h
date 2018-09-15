@@ -43,7 +43,7 @@ namespace Graphics {
                    NOTIFY showRelationTrackChanged)
     public:
         Scene(QObject * parent = nullptr);
-        ~Scene();
+        ~Scene() override;
 
         void initTrackLine();
 

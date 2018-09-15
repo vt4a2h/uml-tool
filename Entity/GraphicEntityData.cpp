@@ -22,6 +22,8 @@
 *****************************************************************************/
 #include "GraphicEntityData.h"
 
+#include <QRectF>
+
 #include <Utility/helpfunctions.h>
 
 namespace Entity {
@@ -148,6 +150,20 @@ namespace Entity {
     void GraphicEntityData::setHeight(qreal height)
     {
         m_Height = height;
+    }
+
+    /**
+     * @brief GraphicEntityData::boundingRect
+     * @return
+     */
+    QRectF GraphicEntityData::boundingRect() const
+    {
+        QRectF rect;
+        rect.setWidth(width());
+        rect.setHeight(height());
+        rect.moveCenter(pos());
+
+        return rect;
     }
 
     /**

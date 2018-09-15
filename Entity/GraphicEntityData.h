@@ -57,6 +57,8 @@ namespace Entity {
         qreal height() const;
         void setHeight(qreal height);
 
+        QRectF boundingRect() const;
+
     public slots:
         void onPosChanged(const QPointF &from, const QPointF &to);
 

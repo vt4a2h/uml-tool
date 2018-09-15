@@ -27,6 +27,7 @@
 #include <QHash>
 
 #include <Entity/Type.h>
+#include <Entity/GraphicEntityData.h>
 
 #include <Models/SectionalTextConverter.hpp>
 
@@ -144,10 +145,18 @@ namespace GUI {
         currentSection()->updateText(m_Converter.toString(*m_Entity));
         m_SaveConnection =
             G_CONNECT(currentSection(), &Section::saved,
-                      [this](auto &&text) {
+                      [this](auto &&text)
+                      {
+                          if (!m_Entity)
+                              return;
+
                           bool modified = !m_Converter.fromString(text, *m_Entity);
                           currentSection()->setModified(modified);
-                          /*TODO: update scene on saved action*/});
+
+                          auto itemRect = m_Entity->graphicEntityData()->boundingRect();
+                          emit sceneUpdateRequired(itemRect);
+                      });
+
         return true;
     }
 
