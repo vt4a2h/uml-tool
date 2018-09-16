@@ -5,16 +5,20 @@
 </a>
 [![Coverage Status](https://coveralls.io/repos/vt4a2h/uml-tool/badge.svg?branch=master)](https://coveralls.io/r/vt4a2h/uml-tool?branch=master)
 
-# UML tool for Qt.
+# UML tool for Qt
 
 **Dependencies:** 
-- Qt    >= 5.5
-- gcc   >= 5
+- Qt    >= 5.10
+- gcc   >= 7
 - boost >= 1.59
 - gtest (the latest one). Only for tests.
 - CMake >= 3.0.0 (If you prefer it, but you can use qmake for building)
 
-**C++ standard**: C++14 (17 is coming soon).
+**Submodules:**
+- boost-di
+- ranges-v3
+
+**C++ standard**: C++17
 
 **License**: LGPL v3.
 
