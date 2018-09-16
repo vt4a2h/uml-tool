@@ -153,7 +153,8 @@ namespace Graphics {
 
             return scene.addWidget(le);
         }
-    }
+
+    } // namespace
 
     /**
      * @brief Entity::Entity

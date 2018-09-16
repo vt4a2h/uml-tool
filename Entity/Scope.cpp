@@ -340,7 +340,7 @@ namespace Entity {
         Util::checkAndSet(src, "Scopes", errorList, [&src, &errorList, this](){
             if (src["Scopes"].isArray()) {
                 SharedScope scope;
-                for (auto &&val : src["Scopes"].toArray()) {
+                for (auto val : src["Scopes"].toArray()) {
                     scope = std::make_shared<Scope>();
                     scope->fromJson(val.toObject(), errorList);
                     m_Scopes.insert(scope->id(), scope);
@@ -355,7 +355,7 @@ namespace Entity {
         Util::checkAndSet(src, "Types", errorList, [&src, &errorList, this](){
             if (src["Types"].isArray()) {
                 auto const & factory = EntityFactory::instance();
-                for (auto &&val : src["Types"].toArray())
+                for (auto val : src["Types"].toArray())
                     G_ASSERT(factory.make(val.toObject(), errorList, id()));
             } else {
                 errorList << "Error: \"Types\" is not array";

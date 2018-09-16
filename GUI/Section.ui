@@ -97,6 +97,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pbSave">
+          <property name="toolTip">
+           <string>NOTE: this is temporary solution</string>
+          </property>
           <property name="text">
            <string>&amp;Save changes</string>
           </property>

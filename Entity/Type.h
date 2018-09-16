@@ -66,7 +66,7 @@ namespace Entity {
         Type(const Type &src);
 
         Type& operator= (Type &&) noexcept = default;
-        Type& operator= (Type src);
+        Type& operator= (const Type &src);
 
         friend bool operator ==(const Type &lhs, const Type &rhs);
 

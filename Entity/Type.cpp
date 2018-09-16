@@ -84,9 +84,11 @@ namespace Entity {
      * @param src
      * @return
      */
-    Type &Type::operator=(Type src)
+    Type &Type::operator=(const Type &src)
     {
-        swap(*this, src);
+        Type tmp(src);
+        swap(*this, tmp);
+
         return *this;
     }
 

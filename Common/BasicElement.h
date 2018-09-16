@@ -39,7 +39,7 @@ namespace Common {
         BasicElement(const QString &name, const Common::ID &scopeId,
                      const Common::ID &id);
         BasicElement(const BasicElement &src);
-        BasicElement(BasicElement &&src) noexcept = default;
+        BasicElement(BasicElement &&src) noexcept;
         BasicElement(const QJsonObject &src, QStringList &errorList);
 
         virtual Common::ID id() const;
@@ -71,7 +71,7 @@ namespace Common {
 
     public:
         BasicElement &operator =(const BasicElement &rhs);
-        BasicElement &operator =(BasicElement &&rhs) noexcept = default;
+        BasicElement &operator =(BasicElement &&rhs) noexcept;
 
         friend bool operator ==(const BasicElement &lhs, const BasicElement &rhs);
 
@@ -81,6 +81,9 @@ namespace Common {
         QString m_Name;
         Common::ID m_Id;
         Common::ID m_ScopeId;
+
+    private:
+        void mvName(QString &&name);
     };
 
 } // namespace common
