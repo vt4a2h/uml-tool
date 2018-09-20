@@ -81,9 +81,6 @@ namespace Common {
         QString m_Name;
         Common::ID m_Id;
         Common::ID m_ScopeId;
-
-    private:
-        void mvName(QString &&name);
     };
 
 } // namespace common

@@ -84,7 +84,7 @@ namespace Common {
     BasicElement &BasicElement::operator =(const BasicElement &rhs)
     {
         if (this != &rhs) {
-            setName(rhs.name());
+            m_Name = rhs.name();
             m_Id = rhs.m_Id;
             m_ScopeId = rhs.m_ScopeId;
         }
@@ -99,7 +99,7 @@ namespace Common {
      */
     BasicElement &BasicElement::operator =(BasicElement &&rhs) noexcept
     {
-        mvName(std::move(rhs.m_Name));
+        m_Name = std::move(rhs.m_Name);
         m_Id = std::move(rhs.m_Id);
         m_ScopeId = std::move(rhs.m_ScopeId);
 
@@ -195,20 +195,6 @@ namespace Common {
         if (m_Name != name) {
             auto oldName = m_Name;
             m_Name = name;
-
-            emit nameChanged(oldName, m_Name);
-        }
-    }
-
-    /**
-     * @brief BasicElement::setName
-     * @param name
-     */
-    void BasicElement::mvName(QString &&name)
-    {
-        if (m_Name != name) {
-            QString oldName = static_cast<QString&>(m_Name);
-            m_Name = std::move(name);
 
             emit nameChanged(oldName, m_Name);
         }

@@ -111,7 +111,6 @@ namespace Entity {
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
         add_meta(Enum)
-
     private:
         Common::ID m_EnumTypeId;
         bool m_StrongStatus;
@@ -121,4 +120,5 @@ namespace Entity {
 } // namespace entity
 
 Q_DECLARE_METATYPE(Entity::Enumerator)
+Q_DECLARE_METATYPE(Entity::Enumerators)
 Q_DECLARE_METATYPE(Entity::SharedEnumarator)

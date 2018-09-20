@@ -150,6 +150,7 @@ namespace GUI {
                           if (!m_Entity)
                               return;
 
+                          // FIXME: add memento command
                           bool modified = !m_Converter.fromString(text, *m_Entity);
                           currentSection()->setModified(modified);
 

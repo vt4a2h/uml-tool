@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 20186 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 11/03/2016.
+** Created 20/09/2018.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,19 +22,24 @@
 *****************************************************************************/
 #pragma once
 
-#include <memory>
+#include <QJsonObject>
 
-#include <QMetaType>
+#include "IMemento.hpp"
+#include "CommonTypes.hpp"
 
 namespace Common {
 
-    class BasicElement;
-    // TODO: rename
-    using SharedBasicEntity = std::shared_ptr<BasicElement>;
+    class MementoJson : public IMemento
+    {
+    public:
+        MementoJson(const BasicElement &elem);
 
-    class IMemento;
-    using UniqueMemento = std::unique_ptr<IMemento>;
+        Type type() const override;
 
-} // common
+        QJsonObject json() const;
 
-Q_DECLARE_METATYPE(Common::SharedBasicEntity)
+    private:
+        QJsonObject m_JsonObj;
+    };
+
+} // namespace Common
