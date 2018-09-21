@@ -64,7 +64,7 @@ namespace Common {
         static QString staticMarker() noexcept;
 
         UniqueMemento exportState() const;
-        OptErrLst importState(UniqueMemento state);
+        OptErrLst importState(const Memento &state);
 
     signals:
         void nameChanged(const QString &oldName, const QString &newName);

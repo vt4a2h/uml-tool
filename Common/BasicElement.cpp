@@ -307,17 +307,14 @@ namespace Common {
      * @param state
      * @return
      */
-    OptErrLst BasicElement::importState(UniqueMemento state)
+    OptErrLst BasicElement::importState(const Memento &state)
     {
-        if (!state)
-            return QStringList() << tr("Attempt to import from invalid state");
-
         // Preserve current state
         auto tmpObjJson = toJson();
 
         // Load new state
         QStringList errors;
-        fromJson(state->json(), errors);
+        fromJson(state.json(), errors);
 
         if (errors.isEmpty())
             return std::nullopt;

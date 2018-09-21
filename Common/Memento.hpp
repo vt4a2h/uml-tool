@@ -36,6 +36,7 @@ namespace Common {
         QJsonObject json() const;
 
     private:
+        friend class MementoTester;
         QJsonObject m_JsonObj;
     };
 

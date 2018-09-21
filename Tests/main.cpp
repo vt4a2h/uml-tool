@@ -39,6 +39,7 @@
 #include <cases/SignatureMakerCases.h>
 #include <cases/CommandsCases.h>
 #include <cases/ID.h>
+#include <cases/Memento.h>
 #include <cases/HelpersCases.h>
 #include <cases/SectionalTextConverterCases.h>
 

@@ -107,7 +107,8 @@ HEADERS += \
     cases/HelpersCases.h \
     Arguments.hpp \
     TestSectionalTextConverter.hpp \
-    cases/SectionalTextConverterCases.h
+    cases/SectionalTextConverterCases.h \
+    cases/Memento.h
 
 SOURCES += main.cpp \
            $$PWD/../Application/settings.cpp \

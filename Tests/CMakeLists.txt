@@ -36,7 +36,7 @@ set(TEST_HEADERS
     ${ROOT}/Tests/TestProjectBase.h
     ${ROOT}/Tests/Arguments.hpp
     ${ROOT}/Tests/TestCommands.h)
-    
+
 set(TEST_SOURCES
     ${ROOT}/Tests/main.cpp
     ${ROOT}/Tests/Arguments.cpp)
@@ -59,6 +59,7 @@ set(CASES_HEADERS
     ${CASES_DIR}/CommandsCases.h
     ${CASES_DIR}/ProjectMakerCases.h
     ${CASES_DIR}/ID.h
+    ${CASES_DIR}/Memento.h
     ${CASES_DIR}/SectionalTextConverterCases.h
     ${CASES_DIR}/HelpersCases.h)
 
