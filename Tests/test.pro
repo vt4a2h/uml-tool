@@ -85,6 +85,7 @@ HEADERS += \
     $$PWD/../DB/Database.h \
     $$PWD/../Common/BasicElement.h \
     $$PWD/../Common/ID.h \
+    $$PWD/../Common/Memento.hpp \
     $$PWD/../DB/DBTypes.hpp \
     cases/TypeMakerTestCases.h \
     cases/SignatureParserCases.h \
@@ -125,6 +126,7 @@ SOURCES += main.cpp \
            $$PWD/../Entity/property.cpp \
            $$PWD/../Entity/GraphicEntityData.cpp \
            $$PWD/../Common/id.cpp \
+           $$PWD/../Common/Memento.cpp \
            $$PWD/../Entity/isectional.cpp \
            $$PWD/../Utility/helpfunctions.cpp \
            $$PWD/../DB/database.cpp \

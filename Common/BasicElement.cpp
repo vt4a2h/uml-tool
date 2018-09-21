@@ -28,6 +28,8 @@
 
 #include <Helpers/GeneratorID.h>
 
+#include <Common/Memento.hpp>
+
 #include "enums.h"
 
 namespace Common {
@@ -84,7 +86,7 @@ namespace Common {
     BasicElement &BasicElement::operator =(const BasicElement &rhs)
     {
         if (this != &rhs) {
-            m_Name = rhs.name();
+            m_Name = rhs.m_Name;
             m_Id = rhs.m_Id;
             m_ScopeId = rhs.m_ScopeId;
         }
@@ -289,6 +291,43 @@ namespace Common {
     QString BasicElement::staticMarker() noexcept
     {
         return "BasicEntity";
+    }
+
+    /**
+     * @brief BasicElement::exportState
+     * @return
+     */
+    UniqueMemento BasicElement::exportState() const
+    {
+        return std::make_unique<Memento>(*this);
+    }
+
+    /**
+     * @brief BasicElement::importState
+     * @param state
+     * @return
+     */
+    OptErrLst BasicElement::importState(UniqueMemento state)
+    {
+        if (!state)
+            return QStringList() << tr("Attempt to import from invalid state");
+
+        // Preserve current state
+        auto tmpObjJson = toJson();
+
+        // Load new state
+        QStringList errors;
+        fromJson(state->json(), errors);
+
+        if (errors.isEmpty())
+            return std::nullopt;
+
+        // Restore previous state
+        QStringList tmpErrLst;
+        fromJson(tmpObjJson, tmpErrLst);
+        Q_ASSERT(tmpErrLst.isEmpty());
+
+        return errors;
     }
 
 } // namespace common

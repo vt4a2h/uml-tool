@@ -24,17 +24,14 @@
 
 #include <QJsonObject>
 
-#include "IMemento.hpp"
-#include "CommonTypes.hpp"
+#include <Common/CommonTypes.hpp>
 
 namespace Common {
 
-    class MementoJson : public IMemento
+    class Memento
     {
     public:
-        MementoJson(const BasicElement &elem);
-
-        Type type() const override;
+        Memento(const BasicElement &elem);
 
         QJsonObject json() const;
 

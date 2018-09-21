@@ -246,13 +246,12 @@ set(COMMON_HEADERS
     ${COMMON}/CommonTypes.hpp
     ${COMMON}/meta.h
     ${COMMON}/ElementsFactory.h
-    ${COMMON}/MementoJson.hpp
-    ${COMMON}/IMemento.hpp
+    ${COMMON}/Memento.hpp
     ${COMMON}/SharedFromThis.h)
 set(COMMON_SRC
     ${COMMON}/ElementsFactory.cpp
     ${COMMON}/BasicElement.cpp
-    ${COMMON}/MementoJson.cpp
+    ${COMMON}/Memento.cpp
     ${COMMON}/ID.cpp)
 
 set(FREE_HEADERS

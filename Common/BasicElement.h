@@ -25,6 +25,7 @@
 #include <QObject>
 
 #include <Common/ID.h>
+#include <Common/CommonTypes.hpp>
 
 namespace Common {
 
@@ -61,6 +62,9 @@ namespace Common {
 
         virtual QString marker() const noexcept;
         static QString staticMarker() noexcept;
+
+        UniqueMemento exportState() const;
+        OptErrLst importState(UniqueMemento state);
 
     signals:
         void nameChanged(const QString &oldName, const QString &newName);

@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 20186 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 11/03/2016.
+** Created 21/09/2018.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,24 +20,29 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#pragma once
+#include "Memento.hpp"
 
-#include <memory>
-#include <optional>
-
-#include <QMetaType>
+#include <Common/BasicElement.h>
 
 namespace Common {
 
-    class BasicElement;
-    // TODO: rename
-    using SharedBasicEntity = std::shared_ptr<BasicElement>;
+    /**
+     * @brief Memento::Memento
+     * @param elem
+     */
+    Memento::Memento(const BasicElement &elem)
+        : m_JsonObj(elem.toJson())
+    {
+        Q_ASSERT(!m_JsonObj.empty());
+    }
 
-    class Memento;
-    using UniqueMemento = std::unique_ptr<Memento>;
+    /**
+     * @brief Memento::json
+     * @return
+     */
+    QJsonObject Memento::json() const
+    {
+        return m_JsonObj;
+    }
 
-    using OptErrLst = std::optional<QStringList>;
-
-} // common
-
-Q_DECLARE_METATYPE(Common::SharedBasicEntity)
+} // namespace Common
