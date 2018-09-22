@@ -47,6 +47,7 @@ namespace Entity {
      * @brief The Class class
      */
     class Class : public Type
+                , public boost::equality_comparable<Class>
     {
         Q_OBJECT
 

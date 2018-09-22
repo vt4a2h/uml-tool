@@ -38,13 +38,12 @@ TEST(MementoTest, SimpleConstruction)
     ASSERT_EQ(memento.json(), be->toJson());
 }
 
-TEST(MementoTest, RestoreBaseClass_Success)
+TEST(MementoTest, RestoreBasicElement_Success)
 {
     auto be = std::make_unique<Common::BasicElement>("Foo", Common::ID(42));
     auto tmpBe = std::make_unique<Common::BasicElement>(*be);
 
     auto memento = be->exportState();
-
     ASSERT_TRUE(memento);
 
     be->setName("Foo1");
@@ -72,12 +71,11 @@ namespace Common {
 
 } // Common
 
-TEST(MementoTest, RestoreBaseClass_Fail)
+TEST(MementoTest, RestoreBasicElement_Fail)
 {
     auto be = std::make_unique<Common::BasicElement>("Foo", Common::ID(42));
 
     auto memento = be->exportState();
-
     ASSERT_TRUE(memento);
 
     auto &internalJson = Common::MementoTester(*memento).internalJson();
@@ -91,4 +89,36 @@ TEST(MementoTest, RestoreBaseClass_Fail)
     ASSERT_NE(be->toJson(), memento->json());
 }
 
-// TODO: add tests for more complicated type like "class"
+static auto makeTstClass()
+{
+    auto cl = std::make_unique<Entity::Class>("Foo", Common::ID(42));
+
+    cl->makeMethod("getFoo");
+    cl->makeMethod("getBar");
+
+    cl->addField("foo", Common::ID(42));
+    cl->addField("bar", Common::ID(42));
+
+    cl->addProperty("Foo", Common::ID(42));
+    cl->addProperty("Bar", Common::ID(42));
+
+    return cl;
+}
+
+TEST(MementoTest, RestoreClass_Success)
+{
+    auto cl = makeTstClass();
+    auto tmpCl = std::make_shared<Entity::Class>(*cl);
+
+    auto memento = cl->exportState();
+    ASSERT_TRUE(memento);
+
+    cl->setFinalStatus(true);
+    ASSERT_NE(cl->exportState()->json(), memento->json());
+    ASSERT_NE(*cl, *tmpCl);
+
+    auto errors = cl->importState(*memento);
+    ASSERT_FALSE(errors.has_value());
+    ASSERT_EQ(cl->exportState()->json(), memento->json());
+    ASSERT_EQ(*cl, *tmpCl);
+}
