@@ -40,7 +40,6 @@ namespace Models {
 
 namespace GUI {
 
-    class EditEntityDialog;
     class MainWindow;
 
     // TODO: move functionality to the scene class (or eliminate)
@@ -67,7 +66,6 @@ namespace GUI {
         QPointer<Graphics::GraphisEntity> m_CurrentEntity;
 
         std::unique_ptr<QMenu> m_Menu;
-        std::unique_ptr<EditEntityDialog> m_EditDialog;
 
         Models::SharedApplicationModel m_ApplicationModel;
     };

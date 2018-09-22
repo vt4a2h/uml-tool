@@ -79,7 +79,6 @@ SOURCES += \
     Commands/MoveTypeToAnotherScope.cpp \
     Commands/RemoveComponentsCommands.cpp \
     Commands/RenameEntity.cpp \
-    GUI/EditEntityDialog.cpp \
     GUI/About.cpp \
     Application/Settings.cpp \
     Commands/AddComponentsCommands.cpp \
@@ -183,7 +182,6 @@ HEADERS += \
     Commands/MoveTypeToAnotherScope.h \
     Commands/RemoveComponentsCommands.h \
     Commands/RenameEntity.h \
-    GUI/EditEntityDialog.h \
     GUI/graphics/Common.h \
     GUI/About.h \
     Application/Settings.h \
@@ -218,7 +216,6 @@ unix: QMAKE_CXXFLAGS *= -isystem $$PWD/range-v3/include
 
 FORMS += \
     GUI/addscope.ui \
-    GUI/editentitydialog.ui \
     GUI/editmethoddialog.ui \
     GUI/chooseglobaldatabasedialog.ui \
     GUI/elements.ui \

@@ -31,7 +31,6 @@
 #include <Models/ApplicationModel.h>
 
 #include "graphics/Entity.h"
-#include "EditEntityDialog.h"
 #include "MainWindow.h"
 
 namespace GUI {
@@ -48,14 +47,9 @@ namespace GUI {
         : QObject(parent)
         , m_Scene(scene)
         , m_Menu(std::make_unique<QMenu>())
-        , m_EditDialog(std::make_unique<EditEntityDialog>(parentForm))
         , m_ApplicationModel(model)
     {
         makeMenu();
-
-        connect(m_EditDialog.get(), &EditEntityDialog::needNewScope, parentForm, &MainWindow::onCreateScope);
-        connect(m_ApplicationModel.get(), &Models::ApplicationModel::scopeAdded,
-                m_EditDialog.get(), &EditEntityDialog::onScopeAdded);
     }
 
     /**
@@ -107,12 +101,6 @@ namespace GUI {
     void SceneFilter::makeMenu()
     {
         auto actionEdit = m_Menu->addAction(tr("Edit"));
-        connect(actionEdit, &QAction::triggered,
-                [this]() {
-                    m_EditDialog->setData(m_ApplicationModel, m_CurrentEntity->typeObject());
-                    m_EditDialog->exec();
-                });
-
         m_Menu->addSeparator();
         m_Menu->addAction(tr("Delete"));
     }

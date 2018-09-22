@@ -125,7 +125,6 @@ set(GUI_HEADERS
     ${GUI}/View.h
     ${GUI}/Elements.h
     ${GUI}/MainWindow.h
-    ${GUI}/EditEntityDialog.h
     ${GUI}/About.h
     ${GUI}/NewProject.h
     ${GUI}/HtmlDelegate.h
@@ -145,7 +144,6 @@ set(GUI_SRC
     ${GUI}/Elements.cpp
     ${GUI}/View.cpp
     ${GUI}/MainWindow.cpp
-    ${GUI}/EditEntityDialog.cpp
     ${GUI}/About.cpp
     ${GUI}/NewProject.cpp
     ${GUI}/HtmlDelegate.cpp

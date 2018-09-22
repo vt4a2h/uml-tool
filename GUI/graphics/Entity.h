@@ -38,11 +38,6 @@ class QGraphicsProxyWidget;
 class QLineEdit;
 QT_END_NAMESPACE
 
-namespace GUI
-{
-    class EditEntityDialog;
-}
-
 /// namespace graphics
 namespace Graphics {
 

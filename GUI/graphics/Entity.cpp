@@ -34,8 +34,6 @@
 
 #include <Application/Settings.h>
 
-#include <GUI/EditEntityDialog.h>
-
 #include <Entity/Type.h>
 #include <Entity/Enum.h>
 #include <Entity/Union.h>
