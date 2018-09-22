@@ -29,7 +29,6 @@ SOURCES += \
     Translation/signaturemaker.cpp \
     Utility/helpfunctions.cpp \
     GUI/addscope.cpp \
-    GUI/editmethoddialog.cpp \
     GUI/chooseglobaldatabasedialog.cpp \
     GUI/componentseditdelegate.cpp \
     GUI/signatureeditdelegate.cpp \
@@ -123,7 +122,6 @@ HEADERS += \
     Translation/signaturemaker.h \
     Utility/helpfunctions.h \
     GUI/addscope.h \
-    GUI/editmethoddialog.h \
     GUI/chooseglobaldatabasedialog.h \
     GUI/componentseditdelegate.h \
     GUI/signatureeditdelegate.h \
@@ -214,7 +212,6 @@ unix: QMAKE_CXXFLAGS *= -isystem $$PWD/range-v3/include
 
 FORMS += \
     GUI/addscope.ui \
-    GUI/editmethoddialog.ui \
     GUI/chooseglobaldatabasedialog.ui \
     GUI/elements.ui \
     GUI/MainWindow.ui \
