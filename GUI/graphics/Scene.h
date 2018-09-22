@@ -25,6 +25,8 @@
 #include <QGraphicsScene>
 #include <QPointer>
 
+#include <Commands/CommandsTypes.h>
+
 #include <Project/ProjectTypes.hpp>
 
 #include <Entity/EntityTypes.hpp>
@@ -42,7 +44,7 @@ namespace Graphics {
         Q_PROPERTY(bool showRelationTrack READ showRelationTrack WRITE setShowRelationTrack
                    NOTIFY showRelationTrackChanged)
     public:
-        Scene(QObject * parent = nullptr);
+        Scene(Commands::SharedCommandStack cs, QObject * parent = nullptr);
         ~Scene() override;
 
         void initTrackLine();
@@ -83,6 +85,8 @@ namespace Graphics {
         QGraphicsLineItem * m_RelationTrackLine;
 
         Projects::WeakProject m_Project;
+
+        Commands::SharedCommandStack m_CommandStack;
     };
 
 } // namespace grphics

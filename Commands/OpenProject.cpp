@@ -102,7 +102,6 @@ namespace Commands
         }
 
         m_AppModel->addProject(m_Project);
-        m_Project->setCommandsStack(m_CommandsStack);
 
         if (m_Project != m_AppModel->currentProject() && !m_MakeProjectCurrentCmd)
             m_MakeProjectCurrentCmd =

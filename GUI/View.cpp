@@ -41,9 +41,11 @@ namespace GUI {
      * @brief View::View
      * @param parent
      */
-    View::View(const Models::SharedApplicationModel &model, QWidget *parent)
+    View::View(const Models::SharedApplicationModel &model, Commands::SharedCommandStack cs,
+               QWidget *parent)
         : QGraphicsView(parent)
         , m_ApplicationModel(model)
+        , m_CommandStack(std::move(cs))
     {
         setAcceptDrops(true);
 
@@ -142,11 +144,10 @@ namespace GUI {
             auto projectDb = G_ASSERT(pr->database());
             auto scope = G_ASSERT(projectDb->scope(Common::ID::projectScopeID()));
 
-            if (auto stack = pr->commandsStack()) {
-                auto pos = mapToScene(eventPos);
-                if (auto cmd = std::make_unique<Commands::CreateEntity>(kindOfType, scope->id(), pos))
-                    stack->push(cmd.release());
-            }
+            auto pos = mapToScene(eventPos);
+            auto cmd = std::make_unique<Commands::CreateEntity>(kindOfType, scope->id(), pos);
+            G_ASSERT(m_CommandStack)->push(cmd.release());
+
         } else {
             qWarning() << Q_FUNC_INFO << ": there is no project.";
         }

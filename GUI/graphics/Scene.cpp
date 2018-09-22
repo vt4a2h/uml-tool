@@ -80,7 +80,7 @@ namespace Graphics {
      * @brief Scene::Scene
      * @param parent
      */
-    Scene::Scene(QObject *parent)
+    Scene::Scene(Commands::SharedCommandStack cs, QObject *parent)
         : QGraphicsScene(parent)
         , m_ShowRelationTrack(false)
         , m_TrackRelationIsActive(false)
@@ -88,6 +88,7 @@ namespace Graphics {
         , m_TrackTo(nullptr)
         , m_activeRelationType(Relationship::SimpleRelation)
         , m_RelationTrackLine(nullptr)
+        , m_CommandStack(std::move(cs))
     {
         initTrackLine();
         makeConnections();
@@ -202,7 +203,7 @@ namespace Graphics {
                 auto cmd = std::make_unique<Commands::AddRelation>(m_activeRelationType,
                                                                    m_TrackFrom->id(),
                                                                    m_TrackTo->id());
-                pr()->commandsStack()->push(cmd.release());
+                G_ASSERT(m_CommandStack)->push(cmd.release());
 
                 // TODO: handle situation when user moved item and then clicked undo
             }

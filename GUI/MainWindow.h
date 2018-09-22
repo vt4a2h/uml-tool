@@ -139,6 +139,9 @@ namespace GUI {
         void configureStatusBar();
 
         std::unique_ptr<Ui::MainWindow> ui;
+
+        Commands::SharedCommandStack m_CommandsStack;
+
         Graphics::UniqueScene m_MainScene;
 
         QMenu *m_ProjectTreeMenu;
@@ -168,7 +171,6 @@ namespace GUI {
         QPointer<QAction> m_ClearRecentProjects;
 
         Models::SharedApplicationModel m_ApplicationModel;
-        Commands::SharedCommandStack m_CommandsStack;
     };
 
 } // namespace gui

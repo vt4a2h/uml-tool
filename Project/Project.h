@@ -89,9 +89,6 @@ namespace Projects {
 
         Common::ID genID();
 
-        Commands::SharedCommandStack commandsStack() const;
-        void setCommandsStack(const Commands::SharedCommandStack &commandsStack);
-
     public slots:
         void setSaveStatus(bool newStatus);
         void setName(const QString &name);

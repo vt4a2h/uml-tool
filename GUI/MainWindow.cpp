@@ -176,10 +176,11 @@ namespace GUI {
      */
     MainWindow::MainWindow(const Models::SharedApplicationModel &applicationModel)
         : ui(std::make_unique<Ui::MainWindow>())
-        , m_MainScene(std::make_unique<Graphics::Scene>())
+        , m_CommandsStack(std::make_shared<QUndoStack>())
+        , m_MainScene(std::make_unique<Graphics::Scene>(m_CommandsStack))
         , m_ProjectTreeMenu(new QMenu(this))
         , m_ProjectTreeView(new QTreeView(this))
-        , m_MainView(new View(applicationModel, this))
+        , m_MainView(new View(applicationModel, m_CommandsStack, this))
         , m_UndoView(new QUndoView(this))
         , m_Elements(new Elements(this))
         , m_AboutWidget(new About(this))
@@ -190,7 +191,6 @@ namespace GUI {
         , m_MessagesModel(std::make_shared<Models::MessagesModel>())
         , m_EntityProperties(new EntityProperties(*applicationModel, m_MessagesModel, this))
         , m_ApplicationModel(applicationModel)
-        , m_CommandsStack(std::make_shared<QUndoStack>())
     {
         ui->setupUi(this);
 
@@ -376,8 +376,9 @@ namespace GUI {
             if (m_AddScope->exec())  {
                 QString scopeName = m_AddScope->scopeName();
                 if (!scopeName.isEmpty())
-                    if (auto stack = m_ApplicationModel->currentProject()->commandsStack())
-                        stack->push(std::make_unique<Commands::CreateScope>(scopeName, *m_ApplicationModel).release());
+                    G_ASSERT(m_CommandsStack)->push(
+                        std::make_unique<Commands::CreateScope>(
+                            scopeName, *m_ApplicationModel).release());
             }
         } else
             QMessageBox::information(this, tr("Information"), tr("No current project."), QMessageBox::Ok);
@@ -417,7 +418,6 @@ namespace GUI {
         }
 
         auto newProject = m_ApplicationModel->makeProject(name, path);
-        newProject->setCommandsStack(m_CommandsStack);
         Commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel, m_MainScene.get()).redo();
         newProject->save();
 

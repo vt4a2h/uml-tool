@@ -24,8 +24,11 @@
 
 #include <QGraphicsView>
 
-#include <Project/ProjectTypes.hpp>
+#include <Commands/CommandsTypes.h>
+
 #include <Models/ModelsTypes.hpp>
+
+#include <Project/ProjectTypes.hpp>
 
 namespace Models { class ApplicationModel; }
 namespace Entity { enum class KindOfType : int; }
@@ -38,7 +41,8 @@ namespace GUI {
         Q_OBJECT
 
     public:
-        View(const Models::SharedApplicationModel &model, QWidget *parent = 0);
+        View(const Models::SharedApplicationModel &model, Commands::SharedCommandStack cs,
+             QWidget *parent = nullptr);
 
     public: // QGraphicsView overrides
         void dropEvent(QDropEvent *de) override;
@@ -57,6 +61,7 @@ namespace GUI {
 
         Projects::WeakProject m_Project;
         Models::WeakApplicationModel m_ApplicationModel;
+        Commands::SharedCommandStack m_CommandStack;
     };
 
 } // namespace gui

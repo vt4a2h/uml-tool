@@ -58,7 +58,7 @@ namespace Projects {
             return scope;
         }
 
-    }
+    } // namespace
 
     /**
      * @brief Project::Project
@@ -402,20 +402,26 @@ namespace Projects {
      */
     void Project::onGraphicsEntityRegistred(const Graphics::EntityPtr &e)
     {
+        // FIXME: the entire method should be removed
         if (!e)
             return;
 
+        // FIXME: changing modified status should be moved to the separate command (MoveGraphicObject?) {
         G_CONNECT(e, &Graphics::GraphisEntity::xChanged, this, &Project::Project::touch);
         G_CONNECT(e, &Graphics::GraphisEntity::yChanged, this, &Project::Project::touch);
-        m_graphicsEntityConnections[e->id()] = G_CONNECT(e.data(), &Graphics::GraphisEntity::moved,
-                  [this, e = e](const QPointF &from, const QPointF &to) {
-                      if (!e)
-                          return;
+        // }
 
-                      auto cmd = std::make_unique<Commands::MoveGraphicObject>(
-                                     *e, G_ASSERT(e->typeObject())->name(), from, to);
-                      G_ASSERT(commandsStack())->push(cmd.release());
-        });
+        // FIXME: this code should be moved somwhere else {
+//        m_graphicsEntityConnections[e->id()] = G_CONNECT(e.data(), &Graphics::GraphisEntity::moved,
+//                  [this, e = e](const QPointF &from, const QPointF &to) {
+//                      if (!e)
+//                          return;
+
+//                      auto cmd = std::make_unique<Commands::MoveGraphicObject>(
+//                                     *e, G_ASSERT(e->typeObject())->name(), from, to);
+//                      G_ASSERT(commandsStack())->push(cmd.release());
+//        });
+        // }
     }
 
     /**
@@ -470,24 +476,6 @@ namespace Projects {
                   this, &Project::onGraphicsEntityRegistred);
         G_CONNECT(m_Database.get(), &DB::ProjectDatabase::graphicsEntityUnregistred,
                   this, &Project::onGraphicsEntityUnregistred);
-    }
-
-    /**
-     * @brief Project::CommandsStack
-     * @return
-     */
-    Commands::SharedCommandStack Project::commandsStack() const
-    {
-        return m_CommandsStack;
-    }
-
-    /**
-     * @brief Project::setCommandsStack
-     * @param commandsStack
-     */
-    void Project::setCommandsStack(const Commands::SharedCommandStack &commandsStack)
-    {
-        m_CommandsStack = commandsStack;
     }
 
     /**

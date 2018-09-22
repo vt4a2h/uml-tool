@@ -53,8 +53,8 @@ protected:
         m_FakeAppModel->addProject(m_Project);
         m_FakeAppModel->setCurrentProject(m_Project->name());
 
-        m_Scene = std::make_unique<Graphics::Scene>();
         m_CommandsStack = std::make_shared<QUndoStack>();
+        m_Scene = std::make_unique<Graphics::Scene>(m_CommandsStack);
 
         const_cast<Entity::EntityFactory &>(
             Entity::EntityFactory::instance()).onSceneChanged(m_Scene.get());
