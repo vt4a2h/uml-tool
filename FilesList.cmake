@@ -117,7 +117,6 @@ set(GUI ${ROOT}/GUI)
 set(GUI_HEADERS
     ${GUI}/addscope.h
     ${GUI}/GuiTypes.hpp
-    ${GUI}/scenefilter.h
     ${GUI}/editmethoddialog.h
     ${GUI}/chooseglobaldatabasedialog.h
     ${GUI}/componentseditdelegate.h
@@ -136,7 +135,6 @@ set(GUI_HEADERS
     ${GUI}/IPropertiesHandler.hpp)
 set(GUI_SRC
     ${GUI}/addscope.cpp
-    ${GUI}/scenefilter.cpp
     ${GUI}/editmethoddialog.cpp
     ${GUI}/chooseglobaldatabasedialog.cpp
     ${GUI}/componentseditdelegate.cpp

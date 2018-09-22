@@ -66,7 +66,6 @@
 #include "About.h"
 #include "NewProject.h"
 #include "addscope.h"
-#include "scenefilter.h"
 #include "Constants.h"
 #include "Elements.h"
 #include "View.h"
