@@ -119,7 +119,6 @@ set(GUI_HEADERS
     ${GUI}/GuiTypes.hpp
     ${GUI}/chooseglobaldatabasedialog.h
     ${GUI}/componentseditdelegate.h
-    ${GUI}/signatureeditdelegate.h
     ${GUI}/View.h
     ${GUI}/Elements.h
     ${GUI}/MainWindow.h
@@ -136,7 +135,6 @@ set(GUI_SRC
     ${GUI}/addscope.cpp
     ${GUI}/chooseglobaldatabasedialog.cpp
     ${GUI}/componentseditdelegate.cpp
-    ${GUI}/signatureeditdelegate.cpp
     ${GUI}/Elements.cpp
     ${GUI}/View.cpp
     ${GUI}/MainWindow.cpp

@@ -28,9 +28,6 @@ namespace GUI {
     class MainWindow;
     using UniqueMainWindow = std::unique_ptr<MainWindow>;
 
-    class SignatureEditDelegate;
-    using UniqueSignatureEditDelegate = std::unique_ptr<SignatureEditDelegate>;
-
     class IPropertiesHandler;
     using SharedPropHandler = std::shared_ptr<IPropertiesHandler>;
 }

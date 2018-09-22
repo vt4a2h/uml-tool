@@ -31,7 +31,6 @@ SOURCES += \
     GUI/addscope.cpp \
     GUI/chooseglobaldatabasedialog.cpp \
     GUI/componentseditdelegate.cpp \
-    GUI/signatureeditdelegate.cpp \
     Helpers/entityhelpres.cpp \
     Entity/Components/token.cpp \
     Entity/isectional.cpp \
@@ -124,7 +123,6 @@ HEADERS += \
     GUI/addscope.h \
     GUI/chooseglobaldatabasedialog.h \
     GUI/componentseditdelegate.h \
-    GUI/signatureeditdelegate.h \
     Helpers/entityhelpres.h \
     Entity/Components/componentscommon.h \
     Entity/Components/components_types.h \
