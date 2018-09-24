@@ -106,10 +106,6 @@ namespace Projects {
         void saved();
         void modified();
 
-    private slots:
-        void onGraphicsEntityRegistred(const Graphics::EntityPtr &e);
-        void onGraphicsEntityUnregistred(const Graphics::EntityPtr &e);
-
     private:
         QString projectFileName() const;
         QString databaseFileName() const;
@@ -126,8 +122,6 @@ namespace Projects {
         DB::SharedProjectDatabase m_Database;
 
         ErrorList m_Errors;
-
-        IDConnectionHash m_graphicsEntityConnections;
 
         Commands::SharedCommandStack m_CommandsStack;
     };
@@ -147,5 +141,7 @@ namespace Projects {
     private:
         SharedProject m_OldProject;
     };
+
+    uint qHash(const SharedProject &p);
 
 } // namespace project

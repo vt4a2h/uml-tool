@@ -397,46 +397,6 @@ namespace Projects {
     }
 
     /**
-     * @brief Project::onGraphicsEntityRegistred
-     * @param e
-     */
-    void Project::onGraphicsEntityRegistred(const Graphics::EntityPtr &e)
-    {
-        // FIXME: the entire method should be removed
-        if (!e)
-            return;
-
-        // FIXME: changing modified status should be moved to the separate command (MoveGraphicObject?) {
-        G_CONNECT(e, &Graphics::GraphisEntity::xChanged, this, &Project::Project::touch);
-        G_CONNECT(e, &Graphics::GraphisEntity::yChanged, this, &Project::Project::touch);
-        // }
-
-        // FIXME: this code should be moved somwhere else {
-//        m_graphicsEntityConnections[e->id()] = G_CONNECT(e.data(), &Graphics::GraphisEntity::moved,
-//                  [this, e = e](const QPointF &from, const QPointF &to) {
-//                      if (!e)
-//                          return;
-
-//                      auto cmd = std::make_unique<Commands::MoveGraphicObject>(
-//                                     *e, G_ASSERT(e->typeObject())->name(), from, to);
-//                      G_ASSERT(commandsStack())->push(cmd.release());
-//        });
-        // }
-    }
-
-    /**
-     * @brief Project::onGraphicsEntityUnregistred
-     * @param e
-     */
-    void Project::onGraphicsEntityUnregistred(const Graphics::EntityPtr &e)
-    {
-        G_DISCONNECT(e, &Graphics::GraphisEntity::xChanged, this, &Project::Project::touch);
-        G_DISCONNECT(e, &Graphics::GraphisEntity::yChanged, this, &Project::Project::touch);
-        G_DISCONNECT(m_graphicsEntityConnections.take(e->id()));
-        Q_ASSERT(m_graphicsEntityConnections.find(e->id()) == std::end(m_graphicsEntityConnections));
-    }
-
-    /**
      * @brief Project::projectFileName
      * @return
      */
@@ -470,12 +430,10 @@ namespace Projects {
      */
     void Project::makeConnections()
     {
+        // FIXME: remove as well {
         G_CONNECT(m_Database.get(), &DB::ProjectDatabase::relationAdded, this, &Project::touch);
         G_CONNECT(m_Database.get(), &DB::ProjectDatabase::relationRemoved, this, &Project::touch);
-        G_CONNECT(m_Database.get(), &DB::ProjectDatabase::graphicsEntityRegistred,
-                  this, &Project::onGraphicsEntityRegistred);
-        G_CONNECT(m_Database.get(), &DB::ProjectDatabase::graphicsEntityUnregistred,
-                  this, &Project::onGraphicsEntityUnregistred);
+        // }
     }
 
     /**
@@ -508,6 +466,11 @@ namespace Projects {
                      &Entity::EntityFactory::instance(), &Entity::EntityFactory::onProjectChanged);
         G_DISCONNECT(this, &ScopedProjectSetter::projectChanged,
                      &Relationship::RelationFactory::instance(), &Relationship::RelationFactory::onProjectChanged);
+    }
+
+    uint qHash(const SharedProject &p)
+    {
+        return ::qHash(p.get());
     }
 
 } // namespace project

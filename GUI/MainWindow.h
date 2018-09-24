@@ -171,6 +171,7 @@ namespace GUI {
         QPointer<QAction> m_ClearRecentProjects;
 
         Models::SharedApplicationModel m_ApplicationModel;
+        QHash<Projects::SharedProject, QMetaObject::Connection> m_geConnections;
     };
 
 } // namespace gui

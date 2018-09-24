@@ -35,8 +35,6 @@ namespace Projects {
     using WeakProject = std::weak_ptr<Project>;
     using Projects = QHash<QString, SharedProject>;
     using ProjectsList = QVector<SharedProject>;
-
-    using IDConnectionHash = QHash<Common::ID, QMetaObject::Connection>;
 }
 
 Q_DECLARE_METATYPE(Projects::SharedProject)
