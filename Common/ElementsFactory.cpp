@@ -112,6 +112,24 @@ namespace Common {
     }
 
     /**
+     * @brief ElementsFactory::commandStack
+     * @return
+     */
+    Commands::SharedCommandStack ElementsFactory::commandStack() const
+    {
+        return m_CommandStack;
+    }
+
+    /**
+     * @brief ElementsFactory::setCommandStack
+     * @param commandStack
+     */
+    void ElementsFactory::setCommandStack(const Commands::SharedCommandStack &commandStack)
+    {
+        m_CommandStack = commandStack;
+    }
+
+    /**
      * @brief ElementsFactory::scene
      * @return
      */

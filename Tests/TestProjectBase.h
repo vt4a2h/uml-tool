@@ -25,6 +25,9 @@
 #include <gtest/gtest.h>
 
 #include <QDir>
+#include <QUndoStack>
+
+#include <Commands/CommandsTypes.h>
 
 #include <DB/ProjectDatabase.h>
 #include <DB/Database.h>
@@ -72,6 +75,7 @@ protected:
         ef.setGlobalDatabase(m_GlobalDb);
         ef.onProjectChanged(nullptr, m_Project);
         ef.setTreeModel(m_fakeTreeModel);
+        ef.setCommandStack(m_tmpCommandStack);
     }
 
     void setProject(const Projects::SharedProject &pr)
@@ -102,4 +106,6 @@ protected:
 
     std::shared_ptr<Models::ProjectTreeModel> m_fakeTreeModel =
         std::make_shared<Models::ProjectTreeModel>();
+
+    Commands::SharedCommandStack m_tmpCommandStack = std::make_shared<QUndoStack>();
 };

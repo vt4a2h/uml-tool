@@ -237,6 +237,15 @@ namespace GUI {
     }
 
     /**
+     * @brief MainWindow::commandsStack
+     * @return
+     */
+    Commands::SharedCommandStack MainWindow::commandsStack() const
+    {
+        return m_CommandsStack;
+    }
+
+    /**
      * @brief MainWindow::onExit
      */
     void MainWindow::onExit()
@@ -721,37 +730,11 @@ namespace GUI {
         {
             G_DISCONNECT(previous.get(), &Projects::Project::saved, this, &MainWindow::update);
             G_DISCONNECT(previous.get(), &Projects::Project::modified, this, &MainWindow::update);
-
-            if (auto it = m_geConnections.find(previous); it != m_geConnections.end()) {
-                G_DISCONNECT(*it);
-                m_geConnections.erase(it);
-            }
         }
 
         if (current) {
             G_CONNECT(current.get(), &Projects::Project::saved, this, &MainWindow::update);
             G_CONNECT(current.get(), &Projects::Project::modified, this, &MainWindow::update);
-
-            Q_ASSERT(!m_geConnections.contains(current));
-
-            auto projDb = G_ASSERT(current->database());
-            m_geConnections[current] =
-                G_CONNECT(projDb.get(), &DB::ProjectDatabase::graphicsEntityRegistred,
-                    [this](auto &&e) {
-                       if (!e)
-                           return;
-
-                       G_ASSERT(connect(e.data(), &Graphics::GraphisEntity::moved,
-                           [this, e = e](auto &&from, auto &&to) {
-                               if (!e)
-                                   return;
-
-                               auto cmd =
-                                   std::make_unique<Commands::MoveGraphicObject>(
-                                       *e, G_ASSERT(e->typeObject())->name(), from, to);
-                               G_ASSERT(m_CommandsStack)->push(cmd.release());
-                           }));
-                    });
         }
 
         update();

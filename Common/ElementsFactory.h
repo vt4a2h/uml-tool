@@ -33,6 +33,8 @@
 
 #include <Entity/EntityTypes.hpp>
 
+#include <Commands/CommandsTypes.h>
+
 class QGraphicsScene;
 
 namespace Common {
@@ -56,7 +58,7 @@ namespace Common {
         Q_DECLARE_FLAGS(CreationOptions, CreationOption)
 
     public:
-        explicit ElementsFactory(QObject *parent = 0);
+        explicit ElementsFactory(QObject *parent = nullptr);
 
         void setGlobalDatabase(const DB::SharedDatabase &db);
 
@@ -66,6 +68,9 @@ namespace Common {
 
         Models::SharedTreeModel treeModel() const;
         void setTreeModel(const Models::WeakTreeModel &treeModel);
+
+        Commands::SharedCommandStack commandStack() const;
+        void setCommandStack(const Commands::SharedCommandStack &commandStack);
 
     public slots:
         void onSceneChanged(const QPointer<QGraphicsScene> &scene);
@@ -82,6 +87,7 @@ namespace Common {
         DB::WeakDatabase m_GlobalDatabase;
         DB::WeakScopeSearchers m_AdditionalScopeSearchers;
         Models::WeakTreeModel m_TreeModel;
+        Commands::SharedCommandStack m_CommandStack;
     };
 
 } // namespace common

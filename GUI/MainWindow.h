@@ -84,6 +84,8 @@ namespace GUI {
 
         Models::SharedMessenger messenger() const;
 
+        Commands::SharedCommandStack commandsStack() const;
+
     public slots:
         void onCreateScope();
         void update();
@@ -171,7 +173,6 @@ namespace GUI {
         QPointer<QAction> m_ClearRecentProjects;
 
         Models::SharedApplicationModel m_ApplicationModel;
-        QHash<Projects::SharedProject, QMetaObject::Connection> m_geConnections;
     };
 
 } // namespace gui

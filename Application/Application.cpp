@@ -129,7 +129,8 @@ namespace App {
 
         template <class Factory>
         void setUpFactory(const Factory& f, const Models::SharedApplicationModel &model,
-                          const QPointer<QGraphicsScene>& scene)
+                          const QPointer<QGraphicsScene>& scene,
+                          const Commands::SharedCommandStack &commandStack)
         {
             G_CONNECT(model.get(), &Models::ApplicationModel::currentProjectChanged,
                       &f, &Factory::onProjectChanged);
@@ -138,6 +139,7 @@ namespace App {
             factory.onSceneChanged(scene);
             factory.setGlobalDatabase(model->globalDatabase());
             factory.setTreeModel(model->treeModel());
+            factory.setCommandStack(commandStack);
         }
     }
 
@@ -155,9 +157,10 @@ namespace App {
                   this, &Application::updateGlobalDBParameters);
 
         // Set up factories
-        setUpFactory(Entity::EntityFactory::instance(), m_ApplicationModel, m_MainWindow->scene());
+        setUpFactory(Entity::EntityFactory::instance(), m_ApplicationModel, m_MainWindow->scene(),
+                     m_MainWindow->commandsStack());
         setUpFactory(Relationship::RelationFactory::instance(), m_ApplicationModel,
-                     m_MainWindow->scene());
+                     m_MainWindow->scene(), m_MainWindow->commandsStack());
     }
 
     /**

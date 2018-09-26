@@ -26,7 +26,10 @@
 
 #include <QGraphicsScene>
 
+#include <Commands/MoveGraphicObject.h>
+
 #include <DB/ProjectDatabase.h>
+
 #include <Entity/Class.h>
 #include <Entity/ExtendedType.h>
 #include <Entity/Union.h>
@@ -34,6 +37,7 @@
 #include <Entity/TemplateClass.h>
 
 #include <Models/ProjectTreeModel.h>
+
 #include <Project/Project.h>
 
 namespace Entity {
@@ -56,6 +60,7 @@ namespace Entity {
 
         void addGraphicEntity(const QPointer<QGraphicsScene> &scene,
                               const DB::SharedProjectDatabase &projectDB,
+                              const Commands::SharedCommandStack &commandStack,
                               const Entity::SharedType &type,
                               const QPointF pos = QPointF())
         {
@@ -72,6 +77,20 @@ namespace Entity {
                 // and signal about changing position will be emitted
                 if (!pos.isNull())
                     graphicEntity->setPos(pos);
+
+                // Connect only after position has changed
+                Q_ASSERT(commandStack);
+                G_CONNECT(graphicEntity, &Graphics::GraphisEntity::moved,
+                          [graphicEntity, commandStack](auto &&from, auto &&to) {
+                              if (!graphicEntity)
+                                  return;
+
+                              auto cmd =
+                                  std::make_unique<Commands::MoveGraphicObject>(
+                                      *graphicEntity, G_ASSERT(graphicEntity->typeObject())->name(),
+                                      from, to);
+                              G_ASSERT(commandStack)->push(cmd.release());
+                          });
             }
         }
     }
@@ -108,7 +127,7 @@ namespace Entity {
                 Q_ASSERT(!options.testFlag(AddToDatabase));
 
                 if (project() && options.testFlag(AddToScene))
-                    addGraphicEntity(scene(), project()->database(), type, pos);
+                    addGraphicEntity(scene(), project()->database(), commandStack(), type, pos);
 
                 if (project() && options.testFlag(AddToTreeModel))
                     if (auto tm = treeModel())
@@ -147,7 +166,7 @@ namespace Entity {
                 result->fromJson(src, errors);
                 if (errors.isEmpty()) {
                     if (addToScene && project())
-                        addGraphicEntity(scene(), project()->database(), result);
+                        addGraphicEntity(scene(), project()->database(), commandStack(), result);
 
                     return result;
                 }
