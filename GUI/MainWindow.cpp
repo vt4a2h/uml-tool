@@ -352,7 +352,7 @@ namespace GUI {
     void MainWindow::onSaveProject()
     {
         if (auto currentPtoject = m_ApplicationModel->currentProject()) {
-            if (!currentPtoject->isSaved())
+            if (currentPtoject->isModified())
                 currentPtoject->save();
         } else {
             QMessageBox::information(this, tr("Information"), tr("Nothing to save."), QMessageBox::Ok);
@@ -402,7 +402,7 @@ namespace GUI {
     void MainWindow::createNewProject(const QString &name, const QString &path)
     {
         if (Projects::SharedProject currentProject = m_ApplicationModel->currentProject()) {
-            if (!currentProject->isSaved()) {
+            if (currentProject->isModified()) {
                 int result =
                     QMessageBox::question
                         ( this
@@ -612,7 +612,7 @@ namespace GUI {
     void MainWindow::makeTitle()
     {
         auto pr = m_ApplicationModel->currentProject();
-        QString projectName = pr ? pr->name().append(pr->isSaved() ? "" : "*") : "";
+        QString projectName = pr ? pr->name().append(pr->isModified() ? "*" : "") : "";
         setWindowTitle(titleTemplate.arg(!projectName.isEmpty() ? projectName.append(" - ") : ""));
     }
 
@@ -683,7 +683,7 @@ namespace GUI {
         bool state = !!m_ApplicationModel->currentProject();
 
         ui->actionCreateScope->setEnabled(state);
-        ui->actionSaveProject->setEnabled(state && !m_ApplicationModel->currentProject()->isSaved());
+        ui->actionSaveProject->setEnabled(state && m_ApplicationModel->currentProject()->isModified());
         ui->actionCloseProject->setEnabled(state);
 
         ui->actionRedo->setEnabled(m_CommandsStack->canRedo());
@@ -727,15 +727,12 @@ namespace GUI {
                                              const Projects::SharedProject &current)
     {
         if (previous)
-        {
-            G_DISCONNECT(previous.get(), &Projects::Project::saved, this, &MainWindow::update);
-            G_DISCONNECT(previous.get(), &Projects::Project::modified, this, &MainWindow::update);
-        }
+            G_DISCONNECT(previous.get(), &Projects::Project::modifiedStatusUpdated,
+                         this, &MainWindow::update);
 
-        if (current) {
-            G_CONNECT(current.get(), &Projects::Project::saved, this, &MainWindow::update);
-            G_CONNECT(current.get(), &Projects::Project::modified, this, &MainWindow::update);
-        }
+        if (current)
+            G_CONNECT(current.get(), &Projects::Project::modifiedStatusUpdated,
+                      this, &MainWindow::update);
 
         update();
     }
@@ -776,7 +773,7 @@ namespace GUI {
         bool needExit = true;
 
         if (auto pr = m_ApplicationModel->currentProject()) {
-            if (!pr->isSaved()) {
+            if (pr->isModified()) {
                 int result = QMessageBox::question(this,
                                                    tr("Confirmation"),
                                                    tr("Project \"%1\" is not saved. Save?").arg(pr->name()),
@@ -784,6 +781,7 @@ namespace GUI {
                 switch (result) {
                     case QMessageBox::Yes:
                         pr->save();
+                        [[fallthrough]];
                     case QMessageBox::No:
                         break;
                     case QMessageBox::Abort:

@@ -82,20 +82,19 @@ namespace Projects {
         QJsonObject toJson() const;
         void fromJson(const QJsonObject &src, QStringList &errorList);
 
-        bool isSaved() const;
-
         bool hasErrors() const;
         ErrorList lastErrors() const;
 
         Common::ID genID();
 
+        bool isModified() const;
+
     public slots:
-        void setSaveStatus(bool newStatus);
+        void setModified(bool modified);
         void setName(const QString &name);
         void setPath(const QString &path);
 
         void save();
-        void touch();
 
     signals:
         void nameChanged(const QString &name);
@@ -103,21 +102,19 @@ namespace Projects {
 
         void errors(const QString &message, const ErrorList &errorsList);
 
-        void saved();
-        void modified();
+        void modifiedStatusUpdated(bool modified);
 
     private:
         QString projectFileName() const;
         QString databaseFileName() const;
         QString projectPath(const QString &basePath) const;
-        void makeConnections();
 
         QString m_Name;
         QString m_Path;
 
         Common::ID m_nextUniqueID;
 
-        bool m_SaveStatus;
+        bool m_Modified;
 
         DB::SharedProjectDatabase m_Database;
 

@@ -30,7 +30,7 @@ TEST_F(TestProjects, LoadSaveProject)
     m_Project->database()->addScope("foo")->addType("bar");
     m_Project->save();
 
-    EXPECT_TRUE(m_Project->isSaved())
+    EXPECT_FALSE(m_Project->isModified())
             << "Project should be saved.";
 
     auto oldProject = m_Project;
@@ -39,7 +39,7 @@ TEST_F(TestProjects, LoadSaveProject)
     m_Project->load(rootPath_ + sep_ + oldProject->name().toLower().replace(" ", "_") +
                     "." + PROJECT_FILE_EXTENTION);
 
-    EXPECT_TRUE(m_Project->isSaved())
+    EXPECT_FALSE(m_Project->isModified())
             << "Project should be saved.";
 
     // We should increase id for old project, because it was increased twice in the loaded project

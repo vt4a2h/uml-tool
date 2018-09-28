@@ -90,7 +90,6 @@ namespace DB {
     public slots:
         void onTypeUserAdded(const Entity::SharedTypeUser &tu);
         void onRelationIDChanged(const Common::ID &oldID, const Common::ID &newID);
-        // TODO: add signals to detect adding/ removing relation in order to touch project
 
     public: // Database overrides
         Entity::SharedScope addScope(const QString &name,

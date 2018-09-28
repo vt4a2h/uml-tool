@@ -346,8 +346,6 @@ namespace Models {
             beginInsertRows(projectIndex, pos, pos);
             auto &&newItem = pr->makeChild(QVariant::fromValue(scope), TreeItemType::ScopeItem);
             endInsertRows();
-
-            observeItemChanging(m_CurrentProject, scope.get(), newItem);
         }
     }
 
@@ -390,10 +388,8 @@ namespace Models {
 
                 auto pos = scopeIndex.row() + 1;
                 beginInsertRows(scopeIndex, pos, pos);
-                auto &&newItem = scope->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
+                scope->makeChild(QVariant::fromValue(type), TreeItemType::TypeItem);
                 endInsertRows();
-
-                observeItemChanging(m_CurrentProject, type.get(), newItem);
             }
         }
     }
@@ -451,21 +447,15 @@ namespace Models {
         auto projectItem = &m_Projects.last();
         for (auto &&scope : database->scopes()) {
             auto scopeItem = addItem(QVariant::fromValue(scope), projectItem, TreeItemType::ScopeItem);
-            observeItemChanging(pr, scope.get(), scopeItem);
 
             for (auto &&type : scope->types()) {
                 auto typeItem = addItem(QVariant::fromValue(type), scopeItem, TreeItemType::TypeItem);
-                observeItemChanging(pr, type.get(), typeItem);
 
-                for (auto &&field : type->fields()) {
-                    auto fieldItem = addItem(QVariant::fromValue(field), typeItem, TreeItemType::FieldItem);
-                    observeItemChanging(pr, field.get(), fieldItem);
-                }
+                for (auto &&field : type->fields())
+                    addItem(QVariant::fromValue(field), typeItem, TreeItemType::FieldItem);
 
-                for (auto &&method : type->methods()) {
-                    auto methodItem = addItem(QVariant::fromValue(method), typeItem, TreeItemType::MethodItem);
-                    observeItemChanging(pr, method.get(), methodItem);
-                }
+                for (auto &&method : type->methods())
+                    addItem(QVariant::fromValue(method), typeItem, TreeItemType::MethodItem);
             }
         }
 
@@ -537,14 +527,6 @@ namespace Models {
         }
 
         emit dataChanged(topLeftIndex, bottomRightIndex);
-    }
-
-    void ProjectTreeModel::observeItemChanging(const Projects::SharedProject &p,
-                                               Common::BasicElement * entity, BasicTreeItem *item)
-    {
-        connect(entity, &Common::BasicElement::nameChanged, [=]{ update(item); });
-        connect(entity, &Common::BasicElement::nameChanged,
-                G_ASSERT(p.get()), &Projects::Project::touch);
     }
 
 } // namespace models

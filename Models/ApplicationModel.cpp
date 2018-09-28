@@ -149,8 +149,7 @@ namespace Models {
             result = projectDB->addScope(name);
             m_TreeModel->addScope(result, m_CurrentProject->name());
             // TODO: add scope with parent scope
-
-            currentProject()->touch();
+            // TODO: extract as a command
             emit scopeAdded(result);
         }
 
@@ -181,7 +180,6 @@ namespace Models {
         if (m_CurrentProject) {
             m_CurrentProject->database()->removeScope(id);
             m_TreeModel->removeScope(id, m_CurrentProject->name());
-            m_CurrentProject->touch();
         }
     }
 
@@ -194,12 +192,8 @@ namespace Models {
     {
         if (auto &&pr = project(projectName))
             if (auto &&db = pr->database())
-                if (auto &&scope = db->scope(scopeID)) {
+                if (auto &&scope = db->scope(scopeID))
                     scope->addExistsType(type);
-                    connect(type.get(), &Common::BasicElement::nameChanged,
-                            m_CurrentProject.get(), &Projects::Project::touch);
-                    // todo: connect scope id change to project touch
-                }
 
         m_TreeModel->addType(type, scopeID, projectName);
     }

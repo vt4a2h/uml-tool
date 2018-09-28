@@ -76,12 +76,10 @@ namespace Projects {
         : m_Name(name)
         , m_Path(path)
         , m_nextUniqueID(Common::ID::firstFreeID().value())
-        , m_SaveStatus(false)
+        , m_Modified(false)
         , m_Database(std::make_shared<DB::ProjectDatabase>())
     {
         m_Database->addExistsScope(makeProjectScope());
-
-        makeConnections();
     }
 
     /**
@@ -92,7 +90,7 @@ namespace Projects {
         : m_Name(std::move(src.m_Name))
         , m_Path(std::move(src.m_Path))
         , m_nextUniqueID(std::move(src.m_nextUniqueID))
-        , m_SaveStatus(std::move(src.m_SaveStatus))
+        , m_Modified(std::move(src.m_Modified))
         , m_Database(std::move(src.m_Database))
         , m_CommandsStack(std::move(src.m_CommandsStack))
     {
@@ -115,7 +113,7 @@ namespace Projects {
             m_Name = std::move(lhs.m_Name);
             m_Path = std::move(lhs.m_Path);
             m_nextUniqueID = std::move(lhs.m_nextUniqueID);
-            m_SaveStatus = std::move(lhs.m_SaveStatus);
+            m_Modified = std::move(lhs.m_Modified);
             m_Database = std::move(lhs.m_Database);
             m_CommandsStack = std::move(lhs.m_CommandsStack);
         }
@@ -134,7 +132,7 @@ namespace Projects {
         return lhs.m_Name == rhs.m_Name &&
                lhs.m_Path == rhs.m_Path &&
                lhs.m_nextUniqueID == rhs.m_nextUniqueID &&
-               lhs.m_SaveStatus   == rhs.m_SaveStatus   &&
+               lhs.m_Modified   == rhs.m_Modified   &&
                lhs.m_Errors       == rhs.m_Errors       &&
                *lhs.m_Database    == *rhs.m_Database;
     }
@@ -163,11 +161,7 @@ namespace Projects {
         m_Database->setName(databaseFileName());
         m_Database->load(m_Errors);
 
-        setSaveStatus(m_Errors.isEmpty());
-
-        for (auto &&scope : m_Database->scopes())
-            for (auto &&entity : scope->types())
-                connect(entity.get(), &Common::BasicElement::nameChanged, this, &Project::touch);
+        setModified(m_Errors.isEmpty());
 
         // Fixup if needed
         if (!m_Database->scope(Common::ID::projectScopeID()))
@@ -206,7 +200,7 @@ namespace Projects {
             m_Errors << "Project path is empty.";
         }
 
-        setSaveStatus(m_Errors.isEmpty());
+        setModified(m_Errors.isEmpty());
 
         if (!m_Errors.isEmpty())
             emit errors(tr("Project save error%1").arg(m_Errors.count() <= 1 ? "" : "s"), m_Errors);
@@ -284,15 +278,6 @@ namespace Projects {
     }
 
     /**
-     * @brief Project::isSaved
-     * @return
-     */
-    bool Project::isSaved() const
-    {
-        return m_SaveStatus;
-    }
-
-    /**
      * @brief Project::hasErrors
      * @return
      */
@@ -320,18 +305,24 @@ namespace Projects {
     }
 
     /**
+     * @brief Project::isModified
+     * @return
+     */
+    bool Project::isModified() const
+    {
+       return m_Modified;
+    }
+
+    /**
      * @brief Project::setSaveStatus
      * @param newStatus
      */
-    void Project::setSaveStatus(bool newStatus)
+    void Project::setModified(bool modified)
     {
-        if (newStatus != m_SaveStatus) {
-            m_SaveStatus = newStatus;
+        if (modified != m_Modified) {
+            m_Modified = modified;
 
-            if (isSaved())
-                emit saved();
-            else
-                emit modified();
+            emit modifiedStatusUpdated(m_Modified);
         }
     }
 
@@ -389,14 +380,6 @@ namespace Projects {
     }
 
     /**
-     * @brief Project::touch
-     */
-    void Project::touch()
-    {
-        setSaveStatus(false);
-    }
-
-    /**
      * @brief Project::projectFileName
      * @return
      */
@@ -423,17 +406,6 @@ namespace Projects {
     {
         return QDir::toNativeSeparators(
                    basePath + "/" + projectFileName() + "." + PROJECT_FILE_EXTENTION);
-    }
-
-    /**
-     * @brief Project::makeConnections
-     */
-    void Project::makeConnections()
-    {
-        // FIXME: remove as well {
-        G_CONNECT(m_Database.get(), &DB::ProjectDatabase::relationAdded, this, &Project::touch);
-        G_CONNECT(m_Database.get(), &DB::ProjectDatabase::relationRemoved, this, &Project::touch);
-        // }
     }
 
     /**
