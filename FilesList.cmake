@@ -21,6 +21,7 @@ set(CMD_HEADERS
     ${CMD}/RenameEntity.h
     ${CMD}/AddComponentsCommands.h
     ${CMD}/UpdateEntity.h
+    ${CMD}/CommandFactory.hpp
     ${CMD}/OpenProject.h)
 set(CMD_SRC
     ${CMD}/CreateEntity.cpp
@@ -35,6 +36,7 @@ set(CMD_SRC
     ${CMD}/RenameEntity.cpp
     ${CMD}/AddComponentsCommands.cpp
     ${CMD}/UpdateEntity.cpp
+    ${CMD}/CommandFactory.cpp
     ${CMD}/OpenProject.cpp)
 
 set(DB ${ROOT}/DB)

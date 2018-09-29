@@ -25,7 +25,6 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
-#include <QUndoStack>
 #include <QAction>
 #include <QDebug>
 

@@ -91,7 +91,8 @@ SOURCES += \
     Models/SectionalTextConverter.cpp \
     GUI/PropertiesHandlerBase.cpp \
     Commands/UpdateEntity.cpp \
-    Common/Memento.cpp
+    Common/Memento.cpp \
+    Commands/CommandFactory.cpp
 
 HEADERS += \
     enums.h \
@@ -201,7 +202,8 @@ HEADERS += \
     Common/CommonTypes.hpp \
     GUI/PropertiesHandlerBase.hpp \
     Commands/UpdateEntity.hpp \
-    Common/Memento.hpp
+    Common/Memento.hpp \
+    Commands/CommandFactory.hpp
 
 INCLUDEPATH *= $$PWD/boost-di/include $$PWD/range-v3/include
 

@@ -39,8 +39,6 @@
 #include "types.h"
 #include "ProjectTypes.hpp"
 
-class QUndoStack;
-
 /**
  * @brief project
  */

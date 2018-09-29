@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2015 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2018 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 28/03/2015.
+** Created 29/09/2018.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,33 +20,22 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#pragma once
-
-#include <QCoreApplication>
-#include <QUndoCommand>
+#include "CommandFactory.hpp"
 
 namespace Commands {
 
-    /// The Base Command class
-    class BaseCommand : public QObject, public QUndoCommand
+    CommandFactory &CommandFactory::instance()
     {
-        Q_DECLARE_TR_FUNCTIONS(BaseCommand)
+        static CommandFactory factory;
+        return factory;
+    }
 
-    public:
-        explicit BaseCommand(QUndoCommand *parent = nullptr);
-        explicit BaseCommand(const QString &text, QUndoCommand *parent = nullptr);
+    void CommandFactory::onCurrentProjectChanged(const Projects::SharedProject &/*previous*/,
+                                                 const Projects::SharedProject &current)
+    {
+        m_CurrentProject = current;
+    }
 
-        ~BaseCommand() override;
-
-    protected:
-        /// Perform some cleanups in destructor
-        virtual void cleanup() {}
-        /// Perform checking objects state
-        virtual void sanityCheck() {}
-
-    protected: // Date
-        bool m_CleaningRequired = false;
-        bool m_Done = false; // do first time -- false, redo -- true
-    };
+    CommandFactory::CommandFactory() = default;
 
 } // namespace Commands
