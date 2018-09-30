@@ -344,7 +344,7 @@ namespace Models {
 
             auto pos = projectIndex.row() + 1;
             beginInsertRows(projectIndex, pos, pos);
-            auto &&newItem = pr->makeChild(QVariant::fromValue(scope), TreeItemType::ScopeItem);
+            pr->makeChild(QVariant::fromValue(scope), TreeItemType::ScopeItem);
             endInsertRows();
         }
     }

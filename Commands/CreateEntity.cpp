@@ -82,7 +82,7 @@ namespace Commands {
     /**
      * @brief CreateEntity::undo
      */
-    void CreateEntity::undo()
+    void CreateEntity::undoImpl()
     {
         sanityCheck();
 
@@ -106,7 +106,7 @@ namespace Commands {
     /**
      * @brief CreateEntity::redo
      */
-    void CreateEntity::redo()
+    void CreateEntity::redoImpl()
     {
         auto &&factory = Entity::EntityFactory::instance();
         auto project = G_ASSERT(factory.project());

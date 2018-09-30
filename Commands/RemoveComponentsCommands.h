@@ -46,7 +46,7 @@ namespace Commands {
         {}
 
     protected:
-        void redoImpl(const std::function<int()> &deleter)
+        void redoImplComponent(const std::function<int()> &deleter)
         {
             Entity::SharedComponents tmp;
             if (m_Model->components() != m_Components)
@@ -75,8 +75,8 @@ namespace Commands {
                      const Entity::SharedMethod &method, int pos = -1,
                      QUndoCommand *parent = nullptr);
 
-        void redo() override;
-        void undo() override;
+        void redoImpl() override;
+        void undoImpl() override;
     };
 
     /// The RemoveField class
@@ -87,8 +87,8 @@ namespace Commands {
                     const Entity::SharedField &field, int pos = -1,
                      QUndoCommand *parent = nullptr);
 
-        void redo() override;
-        void undo() override;
+        void redoImpl() override;
+        void undoImpl() override;
     };
 
     /// The RemoveElement class
@@ -98,8 +98,8 @@ namespace Commands {
         RemoveElement(const Models::SharedClassComponentsModel &model, const Entity::SharedEnumarator &element, int pos = -1,
                     QUndoCommand *parent = nullptr);
 
-        void redo() override;
-        void undo() override;
+        void redoImpl() override;
+        void undoImpl() override;
     };
 
 } // namespace Commands

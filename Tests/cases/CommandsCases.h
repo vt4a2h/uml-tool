@@ -44,7 +44,7 @@ TEST_F(CommandsTester, CreateEntityCommand)
         auto kindOfType = Entity::KindOfType(type);
 
         auto cmd = std::make_unique<Commands::CreateEntity>(kindOfType, scopeID, pos);
-        cmd->redo();
+        cmd->redoImpl();
 
         auto entity = cmd->entity();
         ASSERT_TRUE(!!entity);
@@ -59,7 +59,7 @@ TEST_F(CommandsTester, CreateEntityCommand)
         ASSERT_TRUE(!!m_ProjectDb->graphicsEntity(entity->id()));
         ASSERT_EQ(m_ProjectDb->graphicsEntity(entity->id()), graphicEntity);
 
-        cmd->undo();
+        cmd->undoImpl();
         ASSERT_TRUE(!!entity);
         ASSERT_FALSE(!!m_ProjectDb->scope(scopeID)->type(entity->id()));
         ASSERT_TRUE(!!graphicEntity);
@@ -73,17 +73,17 @@ TEST_F(CommandsTester, CreateScopeCommand)
 
     auto cmd = std::make_unique<Commands::CreateScope>(scopeName, *m_FakeAppModel);
 
-    cmd->redo();
+    cmd->redoImpl();
     ASSERT_FALSE(cmd->scopeName().isEmpty());
     ASSERT_TRUE(!!cmd->scope());
 
     auto newScope = m_ProjectDb->scope(cmd->scope()->id());
     ASSERT_EQ(newScope, cmd->scope());
 
-    cmd->undo();
+    cmd->undoImpl();
     ASSERT_FALSE(!!m_ProjectDb->scope(newScope->id()));
 
-    cmd->redo();
+    cmd->redoImpl();
     ASSERT_TRUE(!!m_ProjectDb->scope(newScope->id()));
 }
 
@@ -98,16 +98,16 @@ TEST_F(CommandsTester, MakeProjectCurrent)
     auto cmd = std::make_unique<Commands::MakeProjectCurrent>(
                    testProjectName, m_FakeAppModel, Graphics::ScenePtr());
 
-    cmd->redo();
+    cmd->redoImpl();
 
     ASSERT_EQ(testProject, m_FakeAppModel->currentProject());
     ASSERT_EQ(oldCurrent->name(), cmd->previousProjectName());
     ASSERT_EQ(testProjectName, cmd->currentProjectName());
 
-    cmd->undo();
+    cmd->undoImpl();
     ASSERT_EQ(m_FakeAppModel->project(cmd->previousProjectName()), m_FakeAppModel->currentProject());
 
-    cmd->redo();
+    cmd->redoImpl();
     ASSERT_EQ(testProject, m_FakeAppModel->currentProject());
 }
 
@@ -124,10 +124,10 @@ TEST_F(CommandsTester, MoveGraphicObject)
     auto cmd =
         std::make_unique<Commands::MoveGraphicObject>(e, someType->name(), initialPos, dstPoint);
 
-    cmd->redo();
+    cmd->redoImpl();
     ASSERT_EQ(e.pos(), dstPoint);
 
-    cmd->undo();
+    cmd->undoImpl();
     ASSERT_EQ(e.pos(), initialPos);
 }
 
@@ -147,11 +147,11 @@ TEST_F(CommandsTester, MoveTypeToAnotherScope)
     auto cmd = std::make_unique<Commands::MoveTypeToAnotherScope>(type, m_FakeAppModel, firstScope,
                                                                 secondScope);
 
-    cmd->redo();
+    cmd->redoImpl();
     ASSERT_FALSE(firstScope->containsType(type->id()));
     ASSERT_TRUE(secondScope->containsType(type->id()));
 
-    cmd->undo();
+    cmd->undoImpl();
     ASSERT_TRUE(firstScope->containsType(type->id()));
     ASSERT_FALSE(secondScope->containsType(type->id()));
 }
@@ -160,16 +160,16 @@ TEST_F(CommandsTester, RemoveProject)
 {
     auto createEntityCmd = std::make_unique<Commands::CreateEntity>(
         Entity::KindOfType::Class, Common::ID::projectScopeID(), QPointF(10, 20));
-    createEntityCmd->redo();
+    createEntityCmd->redoImpl();
 
     auto removeProject =
         std::make_unique<Commands::RemoveProject>(m_Project, m_FakeAppModel, m_Scene.get());
 
-    removeProject->redo();
+    removeProject->redoImpl();
     ASSERT_FALSE(!!m_FakeAppModel->project(m_Project->name()));
     ASSERT_FALSE(m_Scene->items().contains(createEntityCmd->graphicsEntity().data()));
 
-    removeProject->undo();
+    removeProject->undoImpl();
     ASSERT_TRUE(!!m_FakeAppModel->project(m_Project->name()));
     ASSERT_EQ(m_FakeAppModel->currentProject(), m_Project);
     ASSERT_TRUE(m_Scene->items().contains(createEntityCmd->graphicsEntity().data()));
@@ -185,10 +185,10 @@ TEST_F(CommandsTester, RenameEntity)
 
     auto renameEntityCommand = std::make_unique<Commands::RenameEntity>(c, newClassName);
 
-    renameEntityCommand->redo();
+    renameEntityCommand->redoImpl();
     ASSERT_EQ(c->name(), newClassName);
 
-    renameEntityCommand->undo();
+    renameEntityCommand->undoImpl();
     ASSERT_EQ(c->name(), defaultClassName);
 }
 
@@ -206,14 +206,14 @@ TEST_F(CommandsTester, OpenProject)
                                                        m_MainWindow, m_RecentProjectsMenu);
     cmd->setSuppressDialogs(true);
 
-    cmd->redo();
+    cmd->redoImpl();
 
     auto newCurrentProject = m_FakeAppModel->currentProject();
     ASSERT_TRUE(!!newCurrentProject);
     ASSERT_NE(currentProject, newCurrentProject);
     ASSERT_EQ(newCurrentProject->fullPath(), tstProject->fullPath());
 
-    cmd->undo();
+    cmd->undoImpl();
 
     ASSERT_EQ(m_FakeAppModel->currentProject(), currentProject);
 }

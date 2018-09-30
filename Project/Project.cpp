@@ -161,7 +161,7 @@ namespace Projects {
         m_Database->setName(databaseFileName());
         m_Database->load(m_Errors);
 
-        setModified(m_Errors.isEmpty());
+        setModified(!m_Errors.isEmpty());
 
         // Fixup if needed
         if (!m_Database->scope(Common::ID::projectScopeID()))
@@ -200,7 +200,7 @@ namespace Projects {
             m_Errors << "Project path is empty.";
         }
 
-        setModified(m_Errors.isEmpty());
+        setModified(!m_Errors.isEmpty());
 
         if (!m_Errors.isEmpty())
             emit errors(tr("Project save error%1").arg(m_Errors.count() <= 1 ? "" : "s"), m_Errors);

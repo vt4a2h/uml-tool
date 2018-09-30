@@ -154,7 +154,7 @@ namespace Common {
     void BasicElement::setId(const ID &id)
     {
         if (id != m_Id) {
-            auto tmpID = m_Id;
+            ID tmpID = m_Id;
             m_Id = id;
 
             emit idChanged(tmpID, m_Id);

@@ -44,8 +44,8 @@ namespace Commands {
         Graphics::EntityPtr graphicsEntity() const;
 
     public: // QUndoCommand overridies
-        void undo()    override;
-        void redo()    override;
+        void undoImpl()    override;
+        void redoImpl()    override;
 
     public: // BaseCommand overridies
         void sanityCheck() override;

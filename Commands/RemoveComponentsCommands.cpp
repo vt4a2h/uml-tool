@@ -41,17 +41,17 @@ namespace Commands {
     /**
      * @brief RemoveMethod::redo
      */
-    void RemoveMethod::redo()
+    void RemoveMethod::redoImpl()
     {
-        redoImpl([this](){ return m_Model->removeMethod(m_Component); });
+        redoImplComponent([this](){ return m_Model->removeMethod(m_Component); });
     }
 
     /**
      * @brief RemoveMethod::undo
      */
-    void RemoveMethod::undo()
+    void RemoveMethod::undoImpl()
     {
-        AddMethod(m_Model, m_Component, m_Pos).redo();
+        AddMethod(m_Model, m_Component, m_Pos).redoImpl();
     }
 
     /**
@@ -69,17 +69,17 @@ namespace Commands {
     /**
      * @brief RemoveField::redo
      */
-    void RemoveField::redo()
+    void RemoveField::redoImpl()
     {
-        redoImpl([this](){ return m_Model->removeField(m_Component); });
+        redoImplComponent([this](){ return m_Model->removeField(m_Component); });
     }
 
     /**
      * @brief RemoveField::undo
      */
-    void RemoveField::undo()
+    void RemoveField::undoImpl()
     {
-        AddField(m_Model, m_Component, m_Pos).redo();
+        AddField(m_Model, m_Component, m_Pos).redoImpl();
     }
 
     /**
@@ -97,17 +97,17 @@ namespace Commands {
     /**
      * @brief RemoveElement::redo
      */
-    void RemoveElement::redo()
+    void RemoveElement::redoImpl()
     {
-        redoImpl([this](){ return m_Model->removeElement(m_Component); });
+        redoImplComponent([this](){ return m_Model->removeElement(m_Component); });
     }
 
     /**
      * @brief RemoveElement::undo
      */
-    void RemoveElement::undo()
+    void RemoveElement::undoImpl()
     {
-        AddElement(m_Model, m_Component, m_Pos).redo();
+        AddElement(m_Model, m_Component, m_Pos).redoImpl();
     }
 
 } // Commands

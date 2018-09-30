@@ -41,17 +41,17 @@ namespace Commands {
     /**
      * @brief AddMethod::redo
      */
-    void AddMethod::redo()
+    void AddMethod::redoImpl()
     {
-        redoImpl([this](){ m_Model->addExistsMethod(m_Component, m_Pos); }, [this](){ return m_Model->addMethod(); });
+        redoImplComponent([this](){ m_Model->addExistsMethod(m_Component, m_Pos); }, [this](){ return m_Model->addMethod(); });
     }
 
     /**
      * @brief AddMethod::undo
      */
-    void AddMethod::undo()
+    void AddMethod::undoImpl()
     {
-        RemoveMethod(m_Model, m_Component).redo();
+        RemoveMethod(m_Model, m_Component).redoImpl();
     }
 
     /**
@@ -69,17 +69,17 @@ namespace Commands {
     /**
      * @brief AddField::redo
      */
-    void AddField::redo()
+    void AddField::redoImpl()
     {
-        redoImpl([this](){ m_Model->addExistsField(m_Component, m_Pos); }, [this](){ return m_Model->addField(); });
+        redoImplComponent([this](){ m_Model->addExistsField(m_Component, m_Pos); }, [this](){ return m_Model->addField(); });
     }
 
     /**
      * @brief AddField::undo
      */
-    void AddField::undo()
+    void AddField::undoImpl()
     {
-        RemoveField(m_Model, m_Component).redo();
+        RemoveField(m_Model, m_Component).redoImpl();
     }
 
     /**
@@ -97,17 +97,17 @@ namespace Commands {
     /**
      * @brief AddElement::redo
      */
-    void AddElement::redo()
+    void AddElement::redoImpl()
     {
-        redoImpl([this](){ m_Model->addExistsElement(m_Component, m_Pos); }, [this](){ return m_Model->addElement(); } );
+        redoImplComponent([this](){ m_Model->addExistsElement(m_Component, m_Pos); }, [this](){ return m_Model->addElement(); } );
     }
 
     /**
      * @brief AddElement::undo
      */
-    void AddElement::undo()
+    void AddElement::undoImpl()
     {
-        RemoveElement(m_Model, m_Component).redo();
+        RemoveElement(m_Model, m_Component).redoImpl();
     }
 
 } // namespace Commands

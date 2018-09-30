@@ -428,7 +428,7 @@ namespace GUI {
         }
 
         auto newProject = m_ApplicationModel->makeProject(name, path);
-        Commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel, m_MainScene.get()).redo();
+        Commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel, m_MainScene.get()).redoImpl();
         newProject->save();
 
         addRecentProject(newProject->fullPath());

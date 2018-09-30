@@ -43,7 +43,7 @@ namespace Commands {
     /**
      * @brief CreateScope::redo
      */
-    void CreateScope::redo()
+    void CreateScope::redoImpl()
     {
         if (m_Done) {
             if (m_NewScope)
@@ -58,7 +58,7 @@ namespace Commands {
     /**
      * @brief CreateScope::undo
      */
-    void CreateScope::undo()
+    void CreateScope::undoImpl()
     {
         if (m_NewScope)
             m_Model.removeScope(m_NewScope->id());

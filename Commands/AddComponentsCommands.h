@@ -46,7 +46,7 @@ namespace Commands {
         {}
 
     protected:
-        void redoImpl(const std::function<void()> &addExists, const std::function<Component()> &addNew)
+        void redoImplComponent(const std::function<void()> &addExists, const std::function<Component()> &addNew)
         {
             if (m_Done) {
                 Q_ASSERT(m_Component);
@@ -84,8 +84,8 @@ namespace Commands {
         explicit AddMethod(const Models::SharedClassComponentsModel &model, const Entity::SharedMethod &method = nullptr,
                            int pos = -1, QUndoCommand *parent = nullptr);
 
-        void redo() override;
-        void undo() override;
+        void redoImpl() override;
+        void undoImpl() override;
     };
 
     /// The AddField class
@@ -95,8 +95,8 @@ namespace Commands {
         explicit AddField(const Models::SharedClassComponentsModel &model, const Entity::SharedField &field = nullptr,
                           int pos = -1, QUndoCommand *parent = nullptr);
 
-        void redo() override;
-        void undo() override;
+        void redoImpl() override;
+        void undoImpl() override;
     };
 
     /// The AddElement class
@@ -106,8 +106,8 @@ namespace Commands {
         explicit AddElement(const Models::SharedClassComponentsModel &model, const Entity::SharedEnumarator &element = nullptr,
                             int pos = -1, QUndoCommand *parent = nullptr);
 
-        void redo() override;
-        void undo() override;
+        void redoImpl() override;
+        void undoImpl() override;
     };
 
 } // namespace Commands

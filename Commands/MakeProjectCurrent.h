@@ -40,11 +40,14 @@ namespace Commands {
                            const Graphics::ScenePtr &scene);
 
     public: // QUndoCommand overrides
-        void undo() override;
-        void redo() override;
+        void undoImpl() override;
+        void redoImpl() override;
 
         QString currentProjectName() const;
         QString previousProjectName() const;
+
+    public: // BaseCommand overrides
+        bool modifiesProject() const noexcept override;
 
     private:
         void sanityCheck() override;

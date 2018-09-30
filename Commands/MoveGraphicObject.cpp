@@ -46,7 +46,7 @@ namespace Commands {
     /**
      * @brief MoveGraphicObject::redo
      */
-    void MoveGraphicObject::redo()
+    void MoveGraphicObject::redoImpl()
     {
         m_Object.setPos(m_To); // To avoid infinity recursion, because object is already moved
     }
@@ -54,7 +54,7 @@ namespace Commands {
     /**
      * @brief MoveGraphicObject::undo
      */
-    void MoveGraphicObject::undo()
+    void MoveGraphicObject::undoImpl()
     {
         m_Object.setPos(m_From);
     }

@@ -36,8 +36,8 @@ namespace Commands {
         MoveGraphicObject(QGraphicsItem &object, const QString &name,
                           const QPointF &from, const QPointF &to, QUndoCommand * parent = nullptr);
 
-        void redo() override;
-        void undo() override;
+        void redoImpl() override;
+        void undoImpl() override;
 
     private:
         QGraphicsItem &m_Object;

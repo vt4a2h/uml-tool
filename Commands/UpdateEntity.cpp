@@ -10,7 +10,7 @@ namespace Commands {
     /**
      * @brief UpdateEntity::undo
      */
-    void UpdateEntity::undo()
+    void UpdateEntity::undoImpl()
     {
         sanityCheck();
     }
@@ -18,7 +18,7 @@ namespace Commands {
     /**
      * @brief UpdateEntity::redo
      */
-    void UpdateEntity::redo()
+    void UpdateEntity::redoImpl()
     {
         sanityCheck();
 

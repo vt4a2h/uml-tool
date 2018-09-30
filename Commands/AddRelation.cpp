@@ -72,7 +72,7 @@ namespace Commands {
     /**
      * @brief AddRelation::redo
      */
-    void AddRelation::redo()
+    void AddRelation::redoImpl()
     {
         Q_ASSERT(m_Tail.isValid() && m_Head.isValid());
 
@@ -104,7 +104,7 @@ namespace Commands {
     /**
      * @brief AddRelation::undo
      */
-    void AddRelation::undo()
+    void AddRelation::undoImpl()
     {
         const auto & factory = Relationship::RelationFactory::instance();
         if (auto pr = factory.project()) {

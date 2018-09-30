@@ -27,6 +27,7 @@
 #include <Commands/CommandsTypes.h>
 
 #include <Project/ProjectTypes.hpp>
+#include <Project/Project.h>
 
 namespace Commands {
 
@@ -39,14 +40,16 @@ namespace Commands {
 
         static CommandFactory &instance();
 
+        // TODO: create all commands via this function!
         template <class Command, class... CmdArgs>
         SharedCommand makeCmd(CmdArgs&&... args) const
         {
             auto cmd = std::make_shared<Command>(std::forward<CmdArgs>(args)...);
 
             if (G_ASSERT(m_CurrentProject)) {
-                // TODO: set project state
-                // TODO: connect
+                cmd->setProjectModified(m_CurrentProject->isModified());
+                G_CONNECT(cmd.get(), &Command::modifiesProject,
+                          m_CurrentProject.get(), &Projects::Project::setModified);
             }
 
             return cmd;

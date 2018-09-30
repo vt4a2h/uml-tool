@@ -54,8 +54,8 @@ namespace Commands {
         Relationship::SharedRelation relation() const;
 
     public: // QUndoCommand overrides
-        void redo() override;
-        void undo() override;
+        void redoImpl() override;
+        void undoImpl() override;
 
     private:
         Relationship::RelationType m_Type;

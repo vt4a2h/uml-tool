@@ -30,7 +30,7 @@ namespace Commands {
     /// The Base Command class
     class BaseCommand : public QObject, public QUndoCommand
     {
-        Q_DECLARE_TR_FUNCTIONS(BaseCommand)
+        Q_OBJECT
 
     public:
         explicit BaseCommand(QUndoCommand *parent = nullptr);
@@ -38,15 +38,35 @@ namespace Commands {
 
         ~BaseCommand() override;
 
+        void setProjectModified(bool modified);
+
+        /// Actual undo implementation. Doesn't track project state
+        virtual void undoImpl();
+
+        /// Actual redo implementation. Doesn't track project state
+        virtual void redoImpl();
+
+    public: // QUndoCommand overrides
+        void undo() override;
+        void redo() override;
+
     protected:
         /// Perform some cleanups in destructor
         virtual void cleanup() {}
+
         /// Perform checking objects state
         virtual void sanityCheck() {}
 
+        /// Indicates whether current project should be marked as "modified" after performing this command
+        virtual bool modifiesProject() const noexcept;
+
+    signals:
+        void changeProjectStatus(bool modified);
+
     protected: // Date
         bool m_CleaningRequired = false;
-        bool m_Done = false; // do first time -- false, redo -- true
+        bool m_Done = false; // Do first time -- false, redo -- true
+        bool m_ProjectModified = false;
     };
 
 } // namespace Commands

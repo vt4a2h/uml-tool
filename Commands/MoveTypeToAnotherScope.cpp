@@ -54,7 +54,7 @@ namespace Commands {
     /**
      * @brief MoveTypeToOtherScope::redo
      */
-    void MoveTypeToAnotherScope::redo()
+    void MoveTypeToAnotherScope::redoImpl()
     {
         m_Model->removeType(m_Model->currentProject()->name(), m_SrcScope->id(), m_Type->id());
         m_Model->addExistsType(m_Model->currentProject()->name(), m_DstScope->id(), m_Type);
@@ -63,9 +63,9 @@ namespace Commands {
     /**
      * @brief MoveTypeToOtherScope::undo
      */
-    void MoveTypeToAnotherScope::undo()
+    void MoveTypeToAnotherScope::undoImpl()
     {
-        MoveTypeToAnotherScope(m_Type, m_Model, m_DstScope, m_SrcScope).redo();
+        MoveTypeToAnotherScope(m_Type, m_Model, m_DstScope, m_SrcScope).redoImpl();
     }
 
 } // namespace Commands

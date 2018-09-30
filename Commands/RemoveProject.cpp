@@ -51,7 +51,7 @@ namespace Commands {
     /**
      * @brief RemoveProject::undo
      */
-    void RemoveProject::undo()
+    void RemoveProject::undoImpl()
     {
         // Restore project
         G_ASSERT(m_AppModel->addProject(m_Project));
@@ -67,7 +67,7 @@ namespace Commands {
     /**
      * @brief RemoveProject::redo
      */
-    void RemoveProject::redo()
+    void RemoveProject::redoImpl()
     {
         if (!m_Done) {
             m_GraphicItems = m_Project->database()->graphicsItems();

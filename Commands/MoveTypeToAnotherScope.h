@@ -38,8 +38,8 @@ namespace Commands {
                                const Entity::SharedScope &srcScope, const Entity::SharedScope &dstScope,
                                QUndoCommand *parent = nullptr);
 
-        void redo() override;
-        void undo() override;
+        void redoImpl() override;
+        void undoImpl() override;
 
     private:
         Entity::SharedType m_Type;

@@ -31,7 +31,7 @@ TEST_F(TestProjects, LoadSaveProject)
     m_Project->save();
 
     EXPECT_FALSE(m_Project->isModified())
-            << "Project should be saved.";
+        << "Project should be saved.";
 
     auto oldProject = m_Project;
 

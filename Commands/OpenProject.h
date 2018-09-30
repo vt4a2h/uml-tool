@@ -57,8 +57,8 @@ namespace Commands
         using MenuRebuilder = std::function<void(QMenu& /*Recent projects menu*/)>;
 
     public: // QUndoCommand overrides
-        void undo()    override;
-        void redo()    override;
+        void undoImpl()    override;
+        void redoImpl()    override;
 
     public: // BaseCommand overrides
         bool suppressDialogs() const;

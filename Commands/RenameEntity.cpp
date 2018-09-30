@@ -47,7 +47,7 @@ namespace Commands
     /**
      * @brief RenameEntity::redo
      */
-    void RenameEntity::redo()
+    void RenameEntity::redoImpl()
     {
         sanityCheck();
 
@@ -58,7 +58,7 @@ namespace Commands
     /**
      * @brief RenameEntity::undo
      */
-    void RenameEntity::undo()
+    void RenameEntity::undoImpl()
     {
         m_Entity->setName(m_OldName);
     }

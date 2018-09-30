@@ -66,7 +66,7 @@ namespace Commands
     /**
      * @brief MakeProjectCurrent::undo
      */
-    void MakeProjectCurrent::undo()
+    void MakeProjectCurrent::undoImpl()
     {
         sanityCheck();
 
@@ -78,7 +78,7 @@ namespace Commands
     /**
      * @brief MakeProjectCurrent::redo
      */
-    void MakeProjectCurrent::redo()
+    void MakeProjectCurrent::redoImpl()
     {
         if (!m_Done) {
             if (auto p = m_AppModel->currentProject()) {
@@ -125,6 +125,15 @@ namespace Commands
     QString MakeProjectCurrent::previousProjectName() const
     {
         return m_PreviousProjectName;
+    }
+
+    /**
+     * @brief MakeProjectCurrent::changesProjectStatus
+     * @return
+     */
+    bool MakeProjectCurrent::modifiesProject() const noexcept
+    {
+        return false;
     }
 
     /**

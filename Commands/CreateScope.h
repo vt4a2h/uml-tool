@@ -40,8 +40,8 @@ namespace Commands {
         CreateScope(const QString &name, Models::ApplicationModel &model,
                     QUndoCommand *parent = nullptr);
 
-        void redo() override;
-        void undo() override;
+        void redoImpl() override;
+        void undoImpl() override;
 
         QString scopeName() const;
         Entity::SharedScope scope() const;

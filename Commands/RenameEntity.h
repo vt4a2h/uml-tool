@@ -36,8 +36,8 @@ namespace Commands
         RenameEntity(const Common::SharedBasicEntity &entity, const QString &newName,
                      QUndoCommand *parent = nullptr);
 
-        void redo() override;
-        void undo() override;
+        void redoImpl() override;
+        void undoImpl() override;
 
     protected:
         void sanityCheck() override;

@@ -66,7 +66,7 @@ namespace Commands
     /**
      * @brief OpenProject::redo
      */
-    void OpenProject::redo()
+    void OpenProject::redoImpl()
     {
         if (!m_Done) {
             auto projects = m_AppModel->projects();
@@ -108,7 +108,7 @@ namespace Commands
                 std::make_shared<Commands::MakeProjectCurrent>(m_Project->name(), m_AppModel, m_Scene);
 
         if (m_MakeProjectCurrentCmd)
-            m_MakeProjectCurrentCmd->redo();
+            m_MakeProjectCurrentCmd->redoImpl();
 
         if (!App::Settings::recentProjects().contains(m_Project->fullPath())) {
             m_UpdateRecentProjectsMenu = true;
@@ -119,13 +119,13 @@ namespace Commands
     /**
      * @brief OpenProject::undo
      */
-    void OpenProject::undo()
+    void OpenProject::undoImpl()
     {
         if (!m_Project || m_commandFailed)
             return;
 
         if (m_MakeProjectCurrentCmd)
-            m_MakeProjectCurrentCmd->undo();
+            m_MakeProjectCurrentCmd->undoImpl();
 
         m_AppModel->removeProject(m_Project->name());
 

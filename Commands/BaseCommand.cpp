@@ -39,7 +39,8 @@ namespace Commands {
      * @param parent
      */
     BaseCommand::BaseCommand(const QString &text, BaseCommand::QUndoCommand *parent)
-        : QUndoCommand(text, parent)
+        : QObject()
+        , QUndoCommand(text, parent)
     {
     }
 
@@ -49,6 +50,60 @@ namespace Commands {
     BaseCommand::~BaseCommand()
     {
         cleanup();
+    }
+
+    /**
+     * @brief BaseCommand::setProjectModified
+     * @param modified
+     * @return
+     */
+    void BaseCommand::setProjectModified(bool modified)
+    {
+        m_ProjectModified = modified;
+    }
+
+    /**
+     * @brief BaseCommand::undo
+     */
+    void BaseCommand::undo()
+    {
+        undoImpl();
+
+        emit changeProjectStatus(m_ProjectModified);
+    }
+
+    void BaseCommand::redo()
+    {
+        redoImpl();
+
+        emit changeProjectStatus(modifiesProject());
+    }
+
+    /**
+     * @brief BaseCommand::changesProjectStatus
+     * @return
+     */
+    bool BaseCommand::modifiesProject() const noexcept
+    {
+        return true;
+    }
+
+    /**
+     * @brief BaseCommand::undoImpl
+     */
+    void BaseCommand::undoImpl()
+    {
+        Q_ASSERT_X(false, Q_FUNC_INFO,
+                   "Should never be invoked. Implement this function in your class, please.");
+    }
+
+    /**
+     * @brief BaseCommand::redoImpl
+     */
+    void BaseCommand::redoImpl()
+    {
+        Q_ASSERT_X(false, Q_FUNC_INFO,
+                   "Should never be invoked. Implement this function in your class, please.");
     }
 
 } // namespace Commands
