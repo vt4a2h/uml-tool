@@ -90,7 +90,6 @@ SOURCES += \
     GUI/Section.cpp \
     Models/SectionalTextConverter.cpp \
     GUI/PropertiesHandlerBase.cpp \
-    Commands/UpdateEntity.cpp \
     Common/Memento.cpp \
     Commands/CommandFactory.cpp
 
@@ -201,7 +200,6 @@ HEADERS += \
     Models/SectionalTextConverter.hpp \
     Common/CommonTypes.hpp \
     GUI/PropertiesHandlerBase.hpp \
-    Commands/UpdateEntity.hpp \
     Common/Memento.hpp \
     Commands/CommandFactory.hpp
 
