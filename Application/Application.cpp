@@ -26,6 +26,8 @@
 #include <QApplication>
 #include <QFile>
 
+#include <Commands/CommandFactory.hpp>
+
 #include <GUI/MainWindow.h>
 #include <GUI/chooseglobaldatabasedialog.h>
 
@@ -153,6 +155,8 @@ namespace App {
     {
         G_CONNECT(m_ApplicationModel.get(), &Models::ApplicationModel::currentProjectChanged,
                   &Helpers::GeneratorID::instance(), &Helpers::GeneratorID::onCurrentProjectChanged);
+        G_CONNECT(m_ApplicationModel.get(), &Models::ApplicationModel::currentProjectChanged,
+                  &Commands::CommandFactory::instance(), &Commands::CommandFactory::onCurrentProjectChanged);
         G_CONNECT(m_MainWindow.get(), &GUI::MainWindow::globalDatabaseChanged,
                   this, &Application::updateGlobalDBParameters);
 

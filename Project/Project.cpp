@@ -29,8 +29,6 @@
 
 #include <Common/BasicElement.h>
 
-#include <Commands/MoveGraphicObject.h>
-
 #include <Entity/Type.h>
 #include <Entity/Scope.h>
 #include <Entity/EntityFactory.h>

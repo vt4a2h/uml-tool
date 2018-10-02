@@ -145,7 +145,7 @@ namespace GUI {
             auto scope = G_ASSERT(projectDb->scope(Common::ID::projectScopeID()));
 
             auto pos = mapToScene(eventPos);
-            auto cmd = std::make_unique<Commands::CreateEntity>(kindOfType, scope->id(), pos);
+            auto cmd = Commands::make<Commands::CreateEntity>(kindOfType, scope->id(), pos);
             G_ASSERT(m_CommandStack)->push(cmd.release());
 
         } else {

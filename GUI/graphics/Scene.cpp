@@ -199,9 +199,9 @@ namespace Graphics {
                 Q_ASSERT(m_activeRelationType != Relationship::SimpleRelation);
 
                 // TODO: check From and To types, sometimes relation cannot be created
-                auto cmd = std::make_unique<Commands::AddRelation>(m_activeRelationType,
-                                                                   m_TrackFrom->id(),
-                                                                   m_TrackTo->id());
+                auto cmd = Commands::make<Commands::AddRelation>(m_activeRelationType,
+                                                                 m_TrackFrom->id(),
+                                                                 m_TrackTo->id());
                 G_ASSERT(m_CommandStack)->push(cmd.release());
 
                 // TODO: handle situation when user moved item and then clicked undo

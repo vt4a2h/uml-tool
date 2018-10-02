@@ -86,7 +86,7 @@ namespace Entity {
                                   return;
 
                               auto cmd =
-                                  std::make_unique<Commands::MoveGraphicObject>(
+                                  Commands::make<Commands::MoveGraphicObject>(
                                       *graphicEntity, G_ASSERT(graphicEntity->typeObject())->name(),
                                       from, to);
                               G_ASSERT(commandStack)->push(cmd.release());

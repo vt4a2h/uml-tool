@@ -62,7 +62,6 @@
 #include <Commands/MakeProjectCurrent.h>
 #include <Commands/RemoveProject.h>
 #include <Commands/OpenProject.h>
-#include <Commands/MoveGraphicObject.h>
 
 #include "About.h"
 #include "NewProject.h"
@@ -77,11 +76,6 @@
 
 namespace {
     const int treeViewIndent = 20;
-    const QSize iconSize(20, 20);
-
-    const double treeSizeFactor = 0.3;
-    const double canvasSizeFactor = 0.7;
-    const double consoleSizeFactor = 0.3;
 
     const QString titleTemplate = "%1Q-UML";
 
@@ -259,10 +253,10 @@ namespace GUI {
      */
     void MainWindow::openProject(const QString &path)
     {
-        auto cmd = std::make_unique<Commands::OpenProject>(tr("Open new project"), path,
-                                                           m_ApplicationModel, m_CommandsStack,
-                                                           m_MainScene.get(), *this,
-                                                           *m_RecentProjects);
+        auto cmd = Commands::make<Commands::OpenProject>(tr("Open new project"), path,
+                                                         m_ApplicationModel, m_CommandsStack,
+                                                         m_MainScene.get(), *this,
+                                                         *m_RecentProjects);
         G_CONNECT(cmd.get(), &Commands::OpenProject::recentProjectAdded,
                   this, &MainWindow::onRecentProjectAdded);
         G_CONNECT(cmd.get(), &Commands::OpenProject::recentProjectRemoved,
@@ -387,7 +381,7 @@ namespace GUI {
                 QString scopeName = m_AddScope->scopeName();
                 if (!scopeName.isEmpty())
                     G_ASSERT(m_CommandsStack)->push(
-                        std::make_unique<Commands::CreateScope>(
+                        Commands::make<Commands::CreateScope>(
                             scopeName, *m_ApplicationModel).release());
             }
         } else
@@ -648,8 +642,8 @@ namespace GUI {
                 if (m_ApplicationModel->currentProject() == project)
                     name.clear();
 
-                auto cmd = std::make_unique<Commands::MakeProjectCurrent>(name, m_ApplicationModel,
-                                                                          m_MainScene.get());
+                auto cmd = Commands::make<Commands::MakeProjectCurrent>(name, m_ApplicationModel,
+                                                                        m_MainScene.get());
                 m_CommandsStack->push(cmd.release());
             }
         }
@@ -667,7 +661,7 @@ namespace GUI {
             if (data.canConvert<Projects::SharedProject>()) {
                 auto name = index.data(Models::ProjectTreeModel::ID).toString();
                 if (auto project = m_ApplicationModel->project(name)) {
-                    auto cmd = std::make_unique<Commands::RemoveProject>(
+                    auto cmd = Commands::make<Commands::RemoveProject>(
                                    project, m_ApplicationModel, m_MainScene.get());
                     m_CommandsStack->push(cmd.release());
                 }

@@ -24,7 +24,7 @@
 
 namespace Commands {
 
-    CommandFactory &CommandFactory::instance()
+    const CommandFactory &CommandFactory::instance()
     {
         static CommandFactory factory;
         return factory;

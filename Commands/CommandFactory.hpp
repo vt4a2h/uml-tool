@@ -38,17 +38,16 @@ namespace Commands {
     public:
         SINGLETON(CommandFactory)
 
-        static CommandFactory &instance();
+        static const CommandFactory &instance();
 
-        // TODO: create all commands via this function!
         template <class Command, class... CmdArgs>
-        SharedCommand makeCmd(CmdArgs&&... args) const
+        std::unique_ptr<Command> makeCmd(CmdArgs&&... args) const
         {
-            auto cmd = std::make_shared<Command>(std::forward<CmdArgs>(args)...);
+            auto cmd = std::make_unique<Command>(std::forward<CmdArgs>(args)...);
 
-            if (G_ASSERT(m_CurrentProject)) {
+            if (m_CurrentProject) {
                 cmd->setProjectModified(m_CurrentProject->isModified());
-                G_CONNECT(cmd.get(), &Command::modifiesProject,
+                G_CONNECT(cmd.get(), &Command::changeProjectStatus,
                           m_CurrentProject.get(), &Projects::Project::setModified);
             }
 
@@ -66,4 +65,11 @@ namespace Commands {
         Projects::SharedProject m_CurrentProject;
     };
 
+    template <class Command, class... CmdArgs>
+    std::unique_ptr<Command> make(CmdArgs&&... args)
+    {
+        return CommandFactory::instance().makeCmd<Command>(std::forward<CmdArgs>(args)...);
+    }
+
 } // namespace Commands
+

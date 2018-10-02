@@ -37,9 +37,6 @@ namespace Relationship {
     using SharedRelation = std::shared_ptr<Relation>;
     using Relations = QHash<Common::ID, SharedRelation>;
     using RelationsList = QVector<SharedRelation>;
-
-    class AddRelation;
-    using UniqueRelationCmd = std::unique_ptr<AddRelation>;
 }
 
 Q_DECLARE_METATYPE(Relationship::SharedRelation)

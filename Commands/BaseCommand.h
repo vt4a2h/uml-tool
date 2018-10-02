@@ -22,8 +22,9 @@
 *****************************************************************************/
 #pragma once
 
-#include <QCoreApplication>
 #include <QUndoCommand>
+
+#include "CommandFactory.hpp" // Required everywhere if commands are used
 
 namespace Commands {
 
