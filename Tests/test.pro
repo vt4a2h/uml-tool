@@ -64,6 +64,7 @@ HEADERS += \
     $$PWD/../Commands/RemoveProject.h \
     $$PWD/../Commands/RenameEntity.h \
     $$PWD/../Commands/OpenProject.h \
+    $$PWD/../Commands/CommandFactory.hpp \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -176,4 +177,5 @@ SOURCES += main.cpp \
            $$PWD/../Commands/RemoveProject.cpp \
            $$PWD/../Commands/RenameEntity.cpp \
            $$PWD/../Commands/OpenProject.cpp \
+           $$PWD/../Commands/CommandFactory.cpp \
            Arguments.cpp
