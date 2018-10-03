@@ -54,6 +54,7 @@ HEADERS += \
     $$PWD/../Relationship/Relation.h \
     $$PWD/../Relationship/RelationFactory.h \
     $$PWD/../Common/ElementsFactory.h \
+    $$PWD/../Common/IOriginator.hpp \
     $$PWD/../Commands/basecommand.h \
     $$PWD/../Commands/CreateEntity.h \
     $$PWD/../Commands/CreateScope.h \

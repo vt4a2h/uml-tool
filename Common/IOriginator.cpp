@@ -20,33 +20,10 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "Memento.hpp"
+#include "IOriginator.hpp"
 
-namespace Commands {
+namespace Common {
 
-    /**
-     * @brief Memento::Memento
-     * @param originator
-     */
-    Memento::Memento(Common::WeakOriginator originator)
-        : m_Originator(std::move(originator))
-    {
-    }
+    IOriginator::~IOriginator() = default;
 
-    /**
-     * @brief Memento::undoImpl
-     */
-    void Memento::undoImpl()
-    {
-
-    }
-
-    /**
-     * @brief Memento::redoImpl
-     */
-    void Memento::redoImpl()
-    {
-
-    }
-
-} // namespace Commands
+} // Common

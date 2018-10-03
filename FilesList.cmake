@@ -21,7 +21,7 @@ set(CMD_HEADERS
     ${CMD}/RenameEntity.h
     ${CMD}/AddComponentsCommands.h
     ${CMD}/CommandFactory.hpp
-    ${CMD}/Memento.hpp
+    ${CMD}/MementoCmd.hpp
     ${CMD}/OpenProject.h)
 set(CMD_SRC
     ${CMD}/CreateEntity.cpp
@@ -35,7 +35,7 @@ set(CMD_SRC
     ${CMD}/RemoveComponentsCommands.cpp
     ${CMD}/RenameEntity.cpp
     ${CMD}/AddComponentsCommands.cpp
-    ${CMD}/Memento.cpp
+    ${CMD}/MementoCmd.cpp
     ${CMD}/OpenProject.cpp)
 
 set(DB ${ROOT}/DB)
@@ -246,6 +246,7 @@ set(COMMON_SRC
     ${COMMON}/ElementsFactory.cpp
     ${COMMON}/BasicElement.cpp
     ${COMMON}/Memento.cpp
+    ${COMMON}/IOriginator.cpp
     ${COMMON}/ID.cpp)
 
 set(FREE_HEADERS
