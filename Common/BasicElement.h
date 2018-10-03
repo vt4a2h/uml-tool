@@ -26,11 +26,12 @@
 
 #include <Common/ID.h>
 #include <Common/CommonTypes.hpp>
+#include <Common/IOriginator.hpp>
 
 namespace Common {
 
     /// Base class for all elements
-    class BasicElement : public QObject
+    class BasicElement : public QObject, public IOriginator
     {
         Q_OBJECT
 
@@ -63,8 +64,8 @@ namespace Common {
         virtual QString marker() const noexcept;
         static QString staticMarker() noexcept;
 
-        UniqueMemento exportState() const;
-        OptErrLst importState(const Memento &state);
+        UniqueMemento exportState() const override;
+        OptErrLst importState(const Memento &state) override;
 
     signals:
         void nameChanged(const QString &oldName, const QString &newName);

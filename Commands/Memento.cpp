@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2018 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 11/03/2016.
+** Created 03/10/2018.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -20,27 +20,33 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#pragma once
+#include "Memento.hpp"
 
-#include <memory>
-#include <optional>
+namespace Commands {
 
-#include <QMetaType>
+    /**
+     * @brief Memento::Memento
+     * @param originator
+     */
+    Memento::Memento(Common::WeakOriginator originator)
+        : m_Originator(std::move(originator))
+    {
+    }
 
-namespace Common {
+    /**
+     * @brief Memento::undoImpl
+     */
+    void Memento::undoImpl()
+    {
 
-    class BasicElement;
-    // TODO: rename
-    using SharedBasicEntity = std::shared_ptr<BasicElement>;
+    }
 
-    class Memento;
-    using UniqueMemento = std::unique_ptr<Memento>;
+    /**
+     * @brief Memento::redoImpl
+     */
+    void Memento::redoImpl()
+    {
 
-    using OptErrLst = std::optional<QStringList>;
+    }
 
-    class IOriginator;
-    using WeakOriginator = std::weak_ptr<IOriginator>;
-
-} // common
-
-Q_DECLARE_METATYPE(Common::SharedBasicEntity)
+} // namespace Commands

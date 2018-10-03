@@ -1,8 +1,8 @@
 /*****************************************************************************
 **
-** Copyright (C) 2016 Fanaskov Vitaly (vt4a2h@gmail.com)
+** Copyright (C) 2018 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
-** Created 11/03/2016.
+** Created 03/10/2018.
 **
 ** This file is part of Q-UML (UML tool for Qt).
 **
@@ -22,25 +22,23 @@
 *****************************************************************************/
 #pragma once
 
-#include <memory>
-#include <optional>
+#include <Common/CommonTypes.hpp>
 
-#include <QMetaType>
+#include "BaseCommand.h"
 
-namespace Common {
+namespace Commands {
 
-    class BasicElement;
-    // TODO: rename
-    using SharedBasicEntity = std::shared_ptr<BasicElement>;
+    class Memento : public BaseCommand
+    {
+    public:
+        Memento(Common::WeakOriginator originator);
 
-    class Memento;
-    using UniqueMemento = std::unique_ptr<Memento>;
+    public: // BaseCommand overridies
+        void undoImpl() override;
+        void redoImpl() override;
 
-    using OptErrLst = std::optional<QStringList>;
+    private:
+        Common::WeakOriginator m_Originator;
+    };
 
-    class IOriginator;
-    using WeakOriginator = std::weak_ptr<IOriginator>;
-
-} // common
-
-Q_DECLARE_METATYPE(Common::SharedBasicEntity)
+} // namespace Commands
