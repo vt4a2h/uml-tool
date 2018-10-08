@@ -34,36 +34,6 @@
 #include "Section.h"
 #include "QtHelpers.h"
 
-namespace {
-
-    struct EntityDate
-    {
-        QString sectionName;
-        QString description;
-    };
-
-    static const EntityDate enumDate =
-    {
-        QT_TRANSLATE_NOOP("Enum declaration", "Enum declaration"),
-        QT_TRANSLATE_NOOP("Enum declaration",
-                          "Enter enum declaration in the following format:<br>"
-                          "enum-key<sub>opt</sub> identifier type<sub>opt</sub><br>"
-                          "enumerator constexpr<br>"
-                          "enumerator constexpr<br>"
-                          "...<br>"
-                          "enumerator constexpr<br><br>"
-                          "For example:<br>"
-                          "class Foo int<br>"
-                          "a 1<br>"
-                          "b 2")
-    };
-
-    static const QHash<Entity::KindOfType, EntityDate> dateByType =
-    {
-        { Entity::KindOfType::Enum, enumDate },
-    };
-}
-
 namespace GUI {
 
     /**
@@ -96,8 +66,8 @@ namespace GUI {
             auto sectionIt = m_SectionsByType.find(e->kindOfType());
             if (sectionIt != std::end(m_SectionsByType))
                 return *sectionIt;
-            else if (auto dateIt = dateByType.find(e->kindOfType()); dateIt != std::end(dateByType))
-                return addSection(dateIt->sectionName, dateIt->description, e->kindOfType());
+            else if (auto data = e->displayData())
+                return addSection(data.value().sectionName, data.value().description, e->kindOfType());
         }
 
         return nullptr;

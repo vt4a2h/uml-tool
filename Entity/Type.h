@@ -51,12 +51,19 @@ namespace Entity {
     uint qHash(const KindOfType &e);
     QString kindOfTypeToString(KindOfType kind, bool raw = true);
 
+    /// Data displayed when element is active
+    struct DisplayData
+    {
+        QString sectionName; ///< The name of section
+        QString description; ///< Section description
+    };
+
     /**
      * @brief The Type class
      */
     class Type
         : public Common::BasicElement
-        , public IComponents
+        , public IComponents // FIXME: remove!
     {
     public:
         Type();
@@ -81,7 +88,9 @@ namespace Entity {
 
         friend void swap(Type &lhs, Type &rhs) noexcept;
 
-    public: // BasicEntity implementation
+        virtual OptionalDisplayData displayData() const;
+
+    public: // BasicElement implementation
         QJsonObject toJson() const override;
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 

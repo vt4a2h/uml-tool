@@ -39,7 +39,7 @@ namespace Common {
     using OptErrLst = std::optional<QStringList>;
 
     class IOriginator;
-    using WeakOriginator = std::weak_ptr<IOriginator>;
+    using SharedOriginator = std::shared_ptr<IOriginator>;
 
 } // common
 

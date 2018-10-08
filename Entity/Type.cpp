@@ -191,6 +191,15 @@ namespace Entity {
     }
 
     /**
+     * @brief Type::displayData
+     * @return
+     */
+    OptionalDisplayData Type::displayData() const
+    {
+       return std::nullopt;
+    }
+
+    /**
      * @brief Entity::Type::swap
      * @param lhs
      * @param rhs

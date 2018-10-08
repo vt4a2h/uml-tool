@@ -455,4 +455,21 @@ namespace Entity {
         return pos;
     }
 
+    OptionalDisplayData Entity::Enum::displayData() const
+    {
+        return DisplayData{
+            tr("Enum declaration", "Enum declaration"),
+            tr("Enum declaration",
+               "Enter enum declaration in the following format:<br>"
+               "enum-key<sub>opt</sub> identifier type<sub>opt</sub><br>"
+               "enumerator constexpr<br>"
+               "enumerator constexpr<br>"
+               "...<br>"
+               "enumerator constexpr<br><br>"
+               "For example:<br>"
+               "class Foo int<br>"
+               "a 1<br>"
+               "b 2")};
+    }
+
 } // namespace entity

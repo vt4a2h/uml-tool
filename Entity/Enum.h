@@ -111,6 +111,10 @@ namespace Entity {
         void fromJson(const QJsonObject &src, QStringList &errorList) override;
 
         add_meta(Enum)
+
+    public: // Type implementation
+        OptionalDisplayData displayData() const override;
+
     private:
         Common::ID m_EnumTypeId;
         bool m_StrongStatus;

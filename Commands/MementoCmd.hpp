@@ -30,15 +30,20 @@ namespace Commands {
 
     class Memento : public BaseCommand
     {
+    public: // Types
+        using StateChanger = std::function<bool()>;
+
     public:
-        Memento(Common::WeakOriginator originator);
+        Memento(Common::SharedOriginator originator);
 
     public: // BaseCommand overridies
         void undoImpl() override;
         void redoImpl() override;
 
     private:
-        Common::WeakOriginator m_Originator;
+        Common::SharedOriginator m_Originator;
+        Common::UniqueMemento m_PrevState;
+        Common::UniqueMemento m_CurrState;
     };
 
 } // namespace Commands

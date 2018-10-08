@@ -23,6 +23,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 
 #include <QtContainerFwd>
 #include <QMetaType>
@@ -123,6 +124,9 @@ namespace Entity {
 
     class GraphicEntityData;
     using SharedGraphicEntityData = std::shared_ptr<GraphicEntityData>;
+
+    struct DisplayData;
+    using OptionalDisplayData = std::optional<DisplayData>;
 }
 
 Q_DECLARE_METATYPE(Entity::SharedField)

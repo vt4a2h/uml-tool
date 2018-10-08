@@ -22,13 +22,16 @@
 *****************************************************************************/
 #include "MementoCmd.hpp"
 
+#include <Common/IOriginator.hpp>
+#include <Common/Memento.hpp>
+
 namespace Commands {
 
     /**
      * @brief Memento::Memento
      * @param originator
      */
-    Memento::Memento(Common::WeakOriginator originator)
+    Memento::Memento(Common::SharedOriginator originator)
         : m_Originator(std::move(originator))
     {
     }
@@ -38,7 +41,10 @@ namespace Commands {
      */
     void Memento::undoImpl()
     {
-
+        if (G_ASSERT(m_PrevState && m_Originator))
+            if (auto errors = m_Originator->importState(*m_PrevState))
+                for (auto &&e: errors.value())
+                    qDebug() << e;
     }
 
     /**
@@ -46,7 +52,10 @@ namespace Commands {
      */
     void Memento::redoImpl()
     {
-
+        if (!m_Done) {
+            if (G_ASSERT(m_Originator))
+                m_PrevState = m_Originator->exportState();
+        }
     }
 
 } // namespace Commands
