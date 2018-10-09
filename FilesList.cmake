@@ -67,6 +67,7 @@ set(ENTITY_HEADERS
     ${ENTITY}/Property.h
     ${ENTITY}/Template.h
     ${ENTITY}/ClassMethod.h
+    ${ENTITY}/ITextRepresentable.hpp
     ${ENTITY}/TemplateClassMethod.h)
 set(ENTITY_SRC
     ${ENTITY}/field.cpp
@@ -83,6 +84,7 @@ set(ENTITY_SRC
     ${ENTITY}/Property.cpp
     ${ENTITY}/Template.cpp
     ${ENTITY}/ClassMethod.cpp
+    ${ENTITY}/ITextRepresentable.cpp
     ${ENTITY}/TemplateClassMethod.cpp)
 
 set(ENTITY_COMPONENTS ${ENTITY}/Components)

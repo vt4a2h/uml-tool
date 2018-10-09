@@ -93,7 +93,8 @@ SOURCES += \
     Common/Memento.cpp \
     Commands/CommandFactory.cpp \
     Commands/MementoCmd.cpp \
-    Common/IOriginator.cpp
+    Common/IOriginator.cpp \
+    Entity/ITextRepresentable.cpp
 
 HEADERS += \
     enums.h \
@@ -205,7 +206,8 @@ HEADERS += \
     Common/Memento.hpp \
     Commands/CommandFactory.hpp \
     Common/IOriginator.hpp \
-    Commands/MementoCmd.hpp
+    Commands/MementoCmd.hpp \
+    Entity/ITextRepresentable.hpp
 
 INCLUDEPATH *= $$PWD/boost-di/include $$PWD/range-v3/include
 
