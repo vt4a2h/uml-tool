@@ -241,4 +241,23 @@ namespace Entity {
         }
     }
 
+    /**
+     * @brief Type::toString
+     * @return
+     */
+    QString Type::toString() const noexcept
+    {
+        return QString::null;
+    }
+
+    /**
+     * @brief Type::fromString
+     * @param s
+     * @return
+     */
+    bool Type::fromString(const QString &/*s*/) const noexcept
+    {
+        return false;
+    }
+
 } // namespace entity

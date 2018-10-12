@@ -27,7 +27,8 @@
 #include <Common/BasicElement.h>
 #include <Common/meta.h>
 
-#include <Entity/Components/icomponents.h>
+#include <Entity/Components/icomponents.h> // TODO: remove
+#include <Entity/ITextRepresentable.hpp>
 
 #include "EntityTypes.hpp"
 
@@ -63,6 +64,7 @@ namespace Entity {
      */
     class Type
         : public Common::BasicElement
+        , public ITextRepresentable
         , public IComponents // FIXME: remove!
     {
     public:
@@ -89,6 +91,10 @@ namespace Entity {
         friend void swap(Type &lhs, Type &rhs) noexcept;
 
         virtual OptionalDisplayData displayData() const;
+
+    public: // ITextRepresentable implementetion
+        QString toString() const noexcept override;
+        bool fromString(const QString &s) const noexcept override;
 
     public: // BasicElement implementation
         QJsonObject toJson() const override;
