@@ -38,6 +38,7 @@ HEADERS += \
     $$PWD/../Entity/GraphicEntityData.h \
     $$PWD/../Entity/EntityFactory.h \
     $$PWD/../Entity/Template.h \
+    $$PWD/../Entity/ITextRepresentable.cpp \
     $$PWD/../Constants.h \
     $$PWD/../Entity/field.h \
     $$PWD/../QtHelpers.h \
@@ -128,6 +129,8 @@ SOURCES += main.cpp \
            $$PWD/../Entity/Template.cpp \
            $$PWD/../Entity/property.cpp \
            $$PWD/../Entity/GraphicEntityData.cpp \
+           $$PWD/../Entity/ITextRepresentable.cpp \
+           $$PWD/../Common/IOriginator.cpp \
            $$PWD/../Common/id.cpp \
            $$PWD/../Common/Memento.cpp \
            $$PWD/../Entity/isectional.cpp \
