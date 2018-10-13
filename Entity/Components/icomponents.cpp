@@ -29,9 +29,7 @@ namespace Entity {
     /**
      * @brief IComponents::~IComponents
      */
-    IComponents::~IComponents()
-    {
-    }
+    IComponents::~IComponents() = default;
 
     /**
      * @brief IComponents::addNewMethod

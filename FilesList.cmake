@@ -86,6 +86,9 @@ set(ENTITY_SRC
     ${ENTITY}/ClassMethod.cpp
     ${ENTITY}/ITextRepresentable.cpp
     ${ENTITY}/TemplateClassMethod.cpp)
+set(CONVERTERS ${ENTITY}/Converters)
+set(CONVERTERS_HEADERS
+    ${CONVERTERS}/ITextConversionStrategy.hpp)
 
 set(ENTITY_COMPONENTS ${ENTITY}/Components)
 set(ENTITY_COMPONNTS_HEADERS

@@ -207,7 +207,8 @@ HEADERS += \
     Commands/CommandFactory.hpp \
     Common/IOriginator.hpp \
     Commands/MementoCmd.hpp \
-    Entity/ITextRepresentable.hpp
+    Entity/ITextRepresentable.hpp \
+    Entity/Converters/ITextConversionStrategy.hpp
 
 INCLUDEPATH *= $$PWD/boost-di/include $$PWD/range-v3/include
 
