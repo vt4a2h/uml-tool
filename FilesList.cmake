@@ -88,7 +88,10 @@ set(ENTITY_SRC
     ${ENTITY}/TemplateClassMethod.cpp)
 set(CONVERTERS ${ENTITY}/Converters)
 set(CONVERTERS_HEADERS
+    ${CONVERTERS}/BaseTextConversionStrategy.hpp
     ${CONVERTERS}/ITextConversionStrategy.hpp)
+set(CONVERSION_SRC
+    ${CONVERTERS}/BaseTextConversionStrategy.cpp)
 
 set(ENTITY_COMPONENTS ${ENTITY}/Components)
 set(ENTITY_COMPONNTS_HEADERS

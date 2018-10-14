@@ -94,7 +94,8 @@ SOURCES += \
     Commands/CommandFactory.cpp \
     Commands/MementoCmd.cpp \
     Common/IOriginator.cpp \
-    Entity/ITextRepresentable.cpp
+    Entity/ITextRepresentable.cpp \
+    Entity/Converters/BaseTextConversionStrategy.cpp
 
 HEADERS += \
     enums.h \
@@ -208,7 +209,8 @@ HEADERS += \
     Common/IOriginator.hpp \
     Commands/MementoCmd.hpp \
     Entity/ITextRepresentable.hpp \
-    Entity/Converters/ITextConversionStrategy.hpp
+    Entity/Converters/ITextConversionStrategy.hpp \
+    Entity/Converters/BaseTextConversionStrategy.hpp
 
 INCLUDEPATH *= $$PWD/boost-di/include $$PWD/range-v3/include
 

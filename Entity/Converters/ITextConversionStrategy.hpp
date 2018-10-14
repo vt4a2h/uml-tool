@@ -23,12 +23,14 @@
 #pragma once
 
 #include <DB/DBTypes.hpp>
+
 #include <Models/ModelsTypes.hpp>
+
+#include <Entity/EntityTypes.hpp>
 
 namespace Entity::Converters {
 
     /// Convert basic objects from text and vice versa
-    template <class Element>
     class ITextConversionStrategy
     {
     public:
@@ -38,14 +40,14 @@ namespace Entity::Converters {
         /**
          * @return QString::null if conversion failed, and text representation otherwise
          */
-        virtual QString toString(const Element &element) const noexcept = 0;
+        virtual QString toString(const Entity::Type &element) const noexcept = 0;
 
         /// Attempt to parse @p element from string @p s
         /**
          * If conversion failed, element is unchanged
          * @return true if successed, false if failed
          */
-        virtual bool fromString(const QString &s, Element &element) const noexcept = 0;
+        virtual bool fromString(const QString &s, Entity::Type &element) const noexcept = 0;
 
         /// Register any useful type searcher, e.g., project database
         /**
