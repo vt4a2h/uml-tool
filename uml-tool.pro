@@ -210,7 +210,8 @@ HEADERS += \
     Commands/MementoCmd.hpp \
     Entity/ITextRepresentable.hpp \
     Entity/Converters/ITextConversionStrategy.hpp \
-    Entity/Converters/BaseTextConversionStrategy.hpp
+    Entity/Converters/BaseTextConversionStrategy.hpp \
+    Entity/Converters/ConvertersTypes.hpp
 
 INCLUDEPATH *= $$PWD/boost-di/include $$PWD/range-v3/include
 

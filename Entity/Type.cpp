@@ -29,7 +29,10 @@
 #include <QTextStream>
 
 #include <Utility/helpfunctions.h>
+
 #include <Helpers/GeneratorID.h>
+
+#include <Entity/Converters/ITextConversionStrategy.hpp>
 
 #include "Scope.h"
 #include "enums.h"
@@ -76,6 +79,7 @@ namespace Entity {
         : BasicElement(src)
         , m_KindOfType(src.m_KindOfType)
         , m_GraphicEntityData(src.m_GraphicEntityData)
+        , m_TextConversionStrategy(src.m_TextConversionStrategy)
     {
     }
 
@@ -211,6 +215,7 @@ namespace Entity {
         swap(static_cast<Common::BasicElement&>(lhs), static_cast<Common::BasicElement&>(rhs));
         swap(lhs.m_KindOfType, rhs.m_KindOfType);
         swap(lhs.m_GraphicEntityData, rhs.m_GraphicEntityData);
+        swap(lhs.m_TextConversionStrategy, rhs.m_TextConversionStrategy);
     }
 
     /**
@@ -247,7 +252,7 @@ namespace Entity {
      */
     QString Type::toString() const noexcept
     {
-        return QString::null;
+        return m_TextConversionStrategy ? m_TextConversionStrategy->toString(*this) : QString::null;
     }
 
     /**
@@ -255,9 +260,18 @@ namespace Entity {
      * @param s
      * @return
      */
-    bool Type::fromString(const QString &/*s*/) const noexcept
+    bool Type::fromString(const QString &s) noexcept
     {
-        return false;
+        return m_TextConversionStrategy ? m_TextConversionStrategy->fromString(s, *this) : false;
+    }
+
+    /**
+     * @brief Type::setTextConversionStrategy
+     * @param convStrat
+     */
+    void Type::setTextConversionStrategy(const Converters::SharedConversionStrategy &convStrat)
+    {
+        m_TextConversionStrategy = convStrat;
     }
 
 } // namespace entity

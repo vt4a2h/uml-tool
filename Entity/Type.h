@@ -28,9 +28,9 @@
 #include <Common/meta.h>
 
 #include <Entity/Components/icomponents.h> // TODO: remove
+#include <Entity/Converters/ConvertersTypes.hpp>
+#include <Entity/EntityTypes.hpp>
 #include <Entity/ITextRepresentable.hpp>
-
-#include "EntityTypes.hpp"
 
 class QJsonObject;
 
@@ -92,9 +92,23 @@ namespace Entity {
 
         virtual OptionalDisplayData displayData() const;
 
+        template <class DstElem>
+        const DstElem &to() const noexcept
+        {
+            Q_ASSERT(hashType() == DstElem::staticHashType());
+            return static_cast<const DstElem &>(*this);
+        }
+
+        template <class DstElem>
+        DstElem &to() noexcept
+        {
+            return const_cast<DstElem &>(const_cast<const Type *>(this)->to<DstElem>());
+        }
+
     public: // ITextRepresentable implementetion
         QString toString() const noexcept override;
-        bool fromString(const QString &s) const noexcept override;
+        bool fromString(const QString &s) noexcept override;
+        void setTextConversionStrategy(const Converters::SharedConversionStrategy &convStrat) override;
 
     public: // BasicElement implementation
         QJsonObject toJson() const override;
@@ -109,6 +123,8 @@ namespace Entity {
         void setBaseTypeName();
 
         SharedGraphicEntityData m_GraphicEntityData;
+
+        Converters::SharedConversionStrategy m_TextConversionStrategy;
     };
 
 } // namespace entity

@@ -76,13 +76,6 @@ namespace Models
     {
     }
 
-    template <class T>
-    T const & to(Entity::Type const &elem)
-    {
-        Q_ASSERT(T::staticHashType() == elem.hashType());
-        return static_cast<T const &>(elem);
-    }
-
     static DB::SharedTypeSearchers lockTS(DB::WeakTypeSearchersSet const &ts)
     {
         DB::SharedTypeSearchers result;
@@ -109,7 +102,7 @@ namespace Models
         if (lockedTS.isEmpty())
             return QString::null;
 
-        auto const & e = to<Entity::Enum>(elem);
+        auto const & e = elem.to<Entity::Enum>();
 
         QString result("enum");
 
@@ -179,13 +172,6 @@ namespace Models
         }
 
         return QString::null;
-    }
-
-    template <class DstElem>
-    DstElem & to(Entity::Type & e)
-    {
-        Q_ASSERT(e.hashType() == DstElem::staticHashType());
-        return static_cast<DstElem&>(e);
     }
 
     static Common::ID typeIDByName(QStringRef const& name, DB::WeakTypeSearchersSet const& searchers)
@@ -287,14 +273,14 @@ namespace Models
             throw ConvException(ConvException::tr("Cannot get enum from this string"),
                                 ConvException::tr("The string is empty"));
 
-        Entity::Enum tmpEnum(to<Entity::Enum>(e));
+        Entity::Enum tmpEnum(e.to<Entity::Enum>());
 
         readEnumHeader(lines[0], ts, tmpEnum);
 
         if (lines.length() > 1)
             readEnumerators(lines | ranges::view::slice(1, lines.length()), tmpEnum);
 
-        to<Entity::Enum>(e) = std::move(tmpEnum);
+        e.to<Entity::Enum>() = std::move(tmpEnum);
     }
 
     using FromStringConverter = std::function<void(QString const&, Entity::Type &,

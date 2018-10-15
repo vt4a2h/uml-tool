@@ -178,7 +178,7 @@ namespace Models {
      */
     void MessagesModel::setViewStatusFunction(ViewStatusFunc f)
     {
-        m_IsViewing = f;
+        m_IsViewing = std::move(f);
     }
 
     /**

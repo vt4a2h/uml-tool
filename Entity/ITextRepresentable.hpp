@@ -23,6 +23,7 @@
 #pragma once
 
 #include <Entity/EntityTypes.hpp>
+#include <Entity/Converters/ConvertersTypes.hpp>
 
 namespace Entity {
 
@@ -47,7 +48,11 @@ namespace Entity {
          * @note the object will be unchanged if conversion failed
          * @return true on success; false otherwise
          */
-        virtual bool fromString(const QString &s) const noexcept = 0;
+        virtual bool fromString(const QString &s) noexcept = 0;
+
+        /// Specifies conversion strategy
+        /** If @p convStrat is nullptr, then @p toString and @p fromString have no effect. */
+        virtual void setTextConversionStrategy(const Converters::SharedConversionStrategy &convStrat) = 0;
     };
 
 } // namespace Entity
