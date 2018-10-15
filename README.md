@@ -8,7 +8,7 @@
 # UML tool for Qt
 
 ## General information:
-This tool is for creating UML class diagrams with taking into account Qt Framework specific (slots/signals/properties etc.). It is possible to create a class diagram and generate the project based on it with this tool. The tool might be using for fast prototuping and generating boilerplate code.
+This tool is for creating UML class diagrams with taking into account Qt Framework specific (slots/signals/properties etc.). It is possible to create a class diagram and generate the project based on it with this tool. The tool can be used for fast prototyping and generating boilerplate code.
 
 Please note that this project is under development. There are still no stable releases so far. 
 This is independent project and is not affiliated with The Qt Company and its beneficiaries.
