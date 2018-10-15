@@ -50,10 +50,12 @@ namespace Entity::Converters {
     static SharedType typeSearchImpl(const DB::WeakTypeSearchersSet typeSearchers, const Key &key,
                                      Method m)
     {
-        for (auto &&weakTs: typeSearchers)
-            if (auto ts = weakTs.lock())
-                if (auto t = (*ts.*m)(key))
-                    return t;
+        try {
+            for (auto &&weakTs: typeSearchers)
+                if (auto ts = weakTs.lock())
+                    if (auto t = (*ts.*m)(key))
+                        return t;
+        } catch (...) {}
 
         return nullptr;
     }
@@ -66,6 +68,11 @@ namespace Entity::Converters {
     SharedType BaseTextConversionStrategy::typeByName(const QString &name) const noexcept
     {
         return typeSearchImpl(m_TypeSearchers, name, &DB::ITypeSearcher::typeByName);
+    }
+
+    Models::SharedMessenger BaseTextConversionStrategy::messenger() const noexcept
+    {
+        return m_Messenger;
     }
 
     void BaseTextConversionStrategy::registerMessenger(const Models::SharedMessenger &messenger)

@@ -49,6 +49,8 @@ namespace Entity::Converters {
         Entity::SharedType typeByID(const Common::ID &id) const noexcept;
         Entity::SharedType typeByName(const QString &name) const noexcept;
 
+        Models::SharedMessenger messenger() const noexcept;
+
     private:
         DB::WeakTypeSearchersSet m_TypeSearchers;
         Models::SharedMessenger m_Messenger;
