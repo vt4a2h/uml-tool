@@ -165,6 +165,15 @@ namespace Models {
     }
 
     /**
+     * @brief MessagesModel::addMessage
+     * @param e
+     */
+    void MessagesModel::addMessage(const MessageException &e)
+    {
+       addMessage(e.type, e.summary, e.description);
+    }
+
+    /**
      * @brief MessagesModel::markAllMessagesRead
      */
     void MessagesModel::markAllMessagesRead()

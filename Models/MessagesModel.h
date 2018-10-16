@@ -52,6 +52,7 @@ namespace Models {
         Messages messages() const override;
         uint unreadMessagesCount() const override;
         void clear() override;
+        void addMessage(const MessageException &e) override;
 
     public: // QAbstractItemModel overrides
         int rowCount(const QModelIndex &parent) const override;

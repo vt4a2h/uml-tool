@@ -50,6 +50,14 @@ namespace Models {
         QDateTime   date;
     };
 
+    /// Exception to display as a message
+    struct MessageException: public std::exception
+    {
+        MessageType type;
+        QString summary;
+        QString description;
+    };
+
     /// Interface for messaging
     class IMessenger
     {
@@ -58,6 +66,7 @@ namespace Models {
 
         virtual void addMessage(MessageType type, const QString &summary,
                                 const QString &description = QString::null) = 0;
+        virtual void addMessage(const MessageException &e) = 0;
         virtual Messages messages() const = 0;
         virtual uint unreadMessagesCount() const = 0;
         virtual void clear() = 0;
