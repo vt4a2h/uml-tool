@@ -89,9 +89,11 @@ set(ENTITY_SRC
 set(CONVERTERS ${ENTITY}/Converters)
 set(CONVERTERS_HEADERS
     ${CONVERTERS}/ConvertersTypes.hpp
+    ${CONVERTERS}/EnumTextConversionStrategy.hpp
     ${CONVERTERS}/BaseTextConversionStrategy.hpp
     ${CONVERTERS}/ITextConversionStrategy.hpp)
 set(CONVERSION_SRC
+    ${CONVERTERS}/EnumTextConversionStrategy.cpp
     ${CONVERTERS}/BaseTextConversionStrategy.cpp)
 
 set(ENTITY_COMPONENTS ${ENTITY}/Components)

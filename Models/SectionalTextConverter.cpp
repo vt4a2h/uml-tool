@@ -52,9 +52,9 @@ namespace Models
         Q_DECLARE_TR_FUNCTIONS(ConvException)
 
     public:
-        ConvException(QString const& shortMsg, QString const& descr = QString::null)
-            : m_ShortMsg(shortMsg)
-            , m_Descr(descr)
+        ConvException(QString shortMsg, QString descr = QString::null)
+            : m_ShortMsg(std::move(shortMsg))
+            , m_Descr(std::move(descr))
         {}
 
         void writeMsg(IMessenger &messenger) const

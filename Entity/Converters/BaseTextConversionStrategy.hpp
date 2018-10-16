@@ -36,8 +36,8 @@ namespace Entity::Converters {
         Q_OBJECT
 
     public: // ITextConversionStrategy interface
-        QString toString(const Type &element) const noexcept override;
-        bool fromString(const QString &s, Type &element) const noexcept override;
+        QString toString(const Type &element) const noexcept final;
+        bool fromString(const QString &s, Type &element) const noexcept final;
 
         void registerMessenger(const Models::SharedMessenger &messenger) override;
 
@@ -50,6 +50,10 @@ namespace Entity::Converters {
         Entity::SharedType typeByName(const QString &name) const noexcept;
 
         Models::SharedMessenger messenger() const noexcept;
+
+    protected: // ITextConversionStrategy interface
+        QString toStringImpl(const Entity::Type &element) const noexcept override;
+        bool fromStringImpl(const QString &s, Entity::Type &element) const noexcept override;
 
     private:
         DB::WeakTypeSearchersSet m_TypeSearchers;

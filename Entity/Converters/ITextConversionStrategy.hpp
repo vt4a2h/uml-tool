@@ -64,6 +64,10 @@ namespace Entity::Converters {
          * @note if there is no messenger registered, user will not be able to track conversion state
          */
         virtual void registerMessenger(const Models::SharedMessenger &messenger) = 0;
+
+    protected:
+        virtual QString toStringImpl(const Entity::Type &element) const noexcept = 0;
+        virtual bool fromStringImpl(const QString &s, Entity::Type &element) const noexcept = 0;
     };
 
 } // namespace Entity::Converters

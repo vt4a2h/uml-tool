@@ -22,18 +22,39 @@
 *****************************************************************************/
 #include "BaseTextConversionStrategy.hpp"
 
+#include <functional>
+
 #include <DB/ITypeSearcher.h>
+
+#include <Models/IMessenger.h>
 
 namespace Entity::Converters {
 
-    QString BaseTextConversionStrategy::toString(const Type &/*element*/) const noexcept
+    template <class F, class ...Args>
+    auto invokeSafe(const Models::SharedMessenger &messenger, F f, Args&&... args)
     {
-        return QString::null;
+        try {
+            return std::invoke(f, std::forward<Args>(args)...);
+        } catch (const Models::MessageException &e) {
+            if (messenger)
+                messenger->addMessage(e);
+        } catch (...) {
+            if (messenger)
+                messenger->addMessage(Models::MessageType::Error,
+                                      BaseTextConversionStrategy::tr("Unexpected error"));
+        }
+
+        return decltype(std::invoke(f, std::forward<Args>(args)...)){};
     }
 
-    bool BaseTextConversionStrategy::fromString(const QString &/*s*/, Type &/*element*/) const noexcept
+    QString BaseTextConversionStrategy::toString(const Type &element) const noexcept
     {
-        return false;
+        return invokeSafe(messenger(), &BaseTextConversionStrategy::toStringImpl, this, element);
+    }
+
+    bool BaseTextConversionStrategy::fromString(const QString &s, Type &element) const noexcept
+    {
+        return invokeSafe(messenger(), &BaseTextConversionStrategy::fromStringImpl, this, s, element);
     }
 
     void BaseTextConversionStrategy::registerTypeSearcher(const DB::WeakTypeSearcher &typeSearcher)
@@ -73,6 +94,16 @@ namespace Entity::Converters {
     Models::SharedMessenger BaseTextConversionStrategy::messenger() const noexcept
     {
         return m_Messenger;
+    }
+
+    QString BaseTextConversionStrategy::toStringImpl(const Type &/*element*/) const noexcept
+    {
+        return QString::null;
+    }
+
+    bool BaseTextConversionStrategy::fromStringImpl(const QString &/*s*/, Type &/*element*/) const noexcept
+    {
+        return false;
     }
 
     void BaseTextConversionStrategy::registerMessenger(const Models::SharedMessenger &messenger)
