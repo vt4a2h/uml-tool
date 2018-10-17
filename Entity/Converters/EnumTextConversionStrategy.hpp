@@ -34,6 +34,7 @@ namespace Entity::Converters {
 
     private:
         void addEnumTypename(const Entity::Enum &e, QString &result) const;
+        void readEnumHeader(QStringRef header, Entity::Enum &dstEnum) const;
     };
 
 } // namespace Entity::Converters

@@ -49,6 +49,13 @@ namespace Entity::Converters {
         Entity::SharedType typeByID(const Common::ID &id) const noexcept;
         Entity::SharedType typeByName(const QString &name) const noexcept;
 
+        /// Retrieve type ID by the type @p name
+        /**
+         * @return QString::null is name is empty
+         * @throw Models::MessageException if type with the @p name is not found
+         */
+        Common::ID typeIdByName(const QString &name) const;
+
         Models::SharedMessenger messenger() const noexcept;
 
     protected: // ITextConversionStrategy interface

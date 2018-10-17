@@ -22,6 +22,10 @@
 *****************************************************************************/
 #include "EnumTextConversionStrategy.hpp"
 
+#include <QRegularExpression>
+
+#include <range/v3/view/slice.hpp>
+
 #include <Entity/Enum.h>
 
 #include <Models/IMessenger.h>
@@ -89,10 +93,112 @@ namespace Entity::Converters {
         return result;
     }
 
-    bool EnumTextConversionStrategy::fromStringImpl(const QString &s, Type &element) const
+    void EnumTextConversionStrategy::readEnumHeader(QStringRef header, Entity::Enum &dstEnum) const
     {
+        static const QString scopedGroup = "isScoped";
+        static const QString nameGroup   = "name"    ;
+        static const QString typeGroup   = "type"    ;
 
+        static const QString headerPattern =
+            "^enum(?:\\s+(?<" + scopedGroup + ">class))?"
+            "\\s+(?<" + nameGroup + ">\\w+)"
+            "(?:\\s+(?<" + typeGroup + ">\\w+))?"
+            "[\\r\\n]*?$";
+
+        QRegularExpression headerRe(headerPattern);
+        if (auto headerReMach = headerRe.match(header); headerReMach.hasMatch()) {
+            dstEnum.setStrongStatus(!headerReMach.capturedRef(scopedGroup).isEmpty());
+            dstEnum.setName(headerReMach.captured(nameGroup));
+
+            auto typeName = headerReMach.captured(typeGroup);
+            dstEnum.setEnumTypeId(typeIdByName(typeName));
+        } else
+            throw Models::MessageException(Models::MessageType::Error, tr("Cannot read enum header"));
     }
 
+    static auto split(const QString &s)
+    {
+        auto lines = s.splitRef("\n", QString::SkipEmptyParts);
+        if (lines.isEmpty())
+            throw Models::MessageException(Models::MessageType::Error,
+                                           EnumTextConversionStrategy::tr("Cannot get enum from this string"),
+                                           EnumTextConversionStrategy::tr("The string is empty"));
+
+        return lines;
+    }
+
+    static auto baseFromStr(QStringRef baseRef)
+    {
+        if (baseRef.isEmpty())
+            return Entity::Enumerator::Dec;
+
+        if (baseRef == QStringLiteral("0"))
+            return Entity::Enumerator::Oct;
+
+        return Entity::Enumerator::Hex;
+    }
+
+    static auto enumValueFromStr(QStringRef valueRef, QStringRef baseRef)
+    {
+        Entity::Enumerator::OptionalValue result;
+
+        if (!valueRef.isEmpty()) {
+            auto base = baseFromStr(baseRef);
+
+            bool convRes = false;
+            auto value = valueRef.toInt(&convRes, base);
+            if (!convRes)
+                throw Models::MessageException(
+                          Models::MessageType::Error,
+                          EnumTextConversionStrategy::tr("Cannot convert enumerator value: ") + valueRef);
+
+            result = std::make_pair(value, base);
+        }
+
+        return result;
+    }
+
+    template<class Collection>
+    void readEnumerators(const Collection &lines, Entity::Enum &dstEnum)
+    {
+        if (lines.length() <= 1)
+            return;
+
+        static const QString nameGroup   = "name" ;
+        static const QString valueGroup  = "value";
+        static const QString nsGroup     = "ns"   ;
+
+        static const QString enumeratorPattern =
+            "^(?<" + nameGroup + ">\\w+)"
+            "(?:\\s+(?<" + nsGroup + ">(?:0|0x))?(?<" + valueGroup + ">[0-9A-Fa-f]+))?[\\r\\n]*?$";
+
+        for (auto &&enumeratorLine: lines | ranges::view::slice(1, lines.length())) {
+            QRegularExpression enumeratorRe(enumeratorPattern);
+            auto enumeratorReMach = enumeratorRe.match(enumeratorLine);
+            if (enumeratorReMach.hasMatch()) {
+                auto enumerator = dstEnum.addElement(enumeratorReMach.captured(nameGroup));
+
+                if (auto valueRef = enumeratorReMach.capturedRef(valueGroup); !valueRef.isEmpty())
+                    enumerator->setValue(
+                        enumValueFromStr(valueRef, enumeratorReMach.capturedRef(nsGroup)));
+            } else
+                throw Models::MessageException(
+                          Models::MessageType::Error,
+                          EnumTextConversionStrategy::tr("Cannot read enumerator: ") + enumeratorLine);
+        }
+    }
+
+    bool EnumTextConversionStrategy::fromStringImpl(const QString &s, Type &element) const
+    {
+        Entity::Enum tmpEnum(element.to<Entity::Enum>());
+
+        auto lines = split(s);
+        readEnumHeader(lines[0], tmpEnum);
+        readEnumerators(lines, tmpEnum);
+
+        swap(element.to<Entity::Enum>(), tmpEnum);
+
+        return true;
+    }
 
 } // namespace Entity::Converters

@@ -24,6 +24,8 @@
 
 #include <functional>
 
+#include <Entity/Type.h>
+
 #include <DB/ITypeSearcher.h>
 
 #include <Models/IMessenger.h>
@@ -89,6 +91,17 @@ namespace Entity::Converters {
     SharedType BaseTextConversionStrategy::typeByName(const QString &name) const noexcept
     {
         return typeSearchImpl(m_TypeSearchers, name, &DB::ITypeSearcher::typeByName);
+    }
+
+    Common::ID BaseTextConversionStrategy::typeIdByName(const QString &name) const
+    {
+        if (name.isEmpty())
+            return Common::ID::nullID();
+
+        if (auto type = typeByName(name))
+            return type->id();
+
+        throw Models::MessageException(Models::MessageType::Error, tr("Bad type name: ") + name);
     }
 
     Models::SharedMessenger BaseTextConversionStrategy::messenger() const noexcept
