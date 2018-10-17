@@ -98,49 +98,7 @@ namespace Models
     static QString enumToString(Entity::Type const &elem, DB::WeakTypeSearchersSet const &ts,
                                 Models::IMessenger &messenger)
     {
-        auto lockedTS = lockTS(ts);
-        if (lockedTS.isEmpty())
-            return QString::null;
 
-        auto const & e = elem.to<Entity::Enum>();
-
-        QString result("enum");
-
-        if (e.isStrong())
-            result.append(" class");
-
-        if (e.name().isEmpty()) {
-            messenger.addMessage(Models::MessageType::Error, "Enum name is empty");
-            return QString::null;
-        }
-        result.append(" " + e.name());
-
-        if (auto id = e.enumTypeId(); id.isValid()) {
-            if (auto type = typeByID(id, lockedTS)) {
-                result.append(" ").append(type->name());
-            } else {
-                messenger.addMessage(Models::MessageType::Error, "Wrong type ID",
-                                     "Cannot find the following type id: " + id.toString());
-                return QString::null;
-            }
-        }
-
-        result.append("\n");
-
-        for (auto && enumerator : e.enumerators()) {
-            QString name = enumerator->name();
-            if (name.isEmpty()) {
-                messenger.addMessage(Models::MessageType::Error, "Enumerator name is empty");
-                return QString::null;
-            }
-
-            result.append(enumerator->name());
-            if (auto val = enumerator->value())
-                result.append(QString(" %1").arg(Entity::Enumerator::valToString(val.value())));
-            result.append("\n");
-        }
-
-        return result;
     }
 
     using ToStringConverter =

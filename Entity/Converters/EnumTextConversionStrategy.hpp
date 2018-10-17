@@ -29,8 +29,11 @@ namespace Entity::Converters {
     class EnumTextConversionStrategy: public BaseTextConversionStrategy
     {
     protected: // ITextConversionStrategy interface
-        QString toStringImpl(const Type &element) const noexcept override;
-        bool fromStringImpl(const QString &s, Type &element) const noexcept override;
+        QString toStringImpl(const Type &element) const override;
+        bool fromStringImpl(const QString &s, Type &element) const override;
+
+    private:
+        void addEnumTypename(const Entity::Enum &e, QString &result) const;
     };
 
 } // namespace Entity::Converters

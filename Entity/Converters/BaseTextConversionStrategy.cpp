@@ -96,12 +96,12 @@ namespace Entity::Converters {
         return m_Messenger;
     }
 
-    QString BaseTextConversionStrategy::toStringImpl(const Type &/*element*/) const noexcept
+    QString BaseTextConversionStrategy::toStringImpl(const Type &/*element*/) const
     {
         return QString::null;
     }
 
-    bool BaseTextConversionStrategy::fromStringImpl(const QString &/*s*/, Type &/*element*/) const noexcept
+    bool BaseTextConversionStrategy::fromStringImpl(const QString &/*s*/, Type &/*element*/) const
     {
         return false;
     }

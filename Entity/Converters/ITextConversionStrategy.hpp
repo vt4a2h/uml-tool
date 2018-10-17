@@ -66,8 +66,8 @@ namespace Entity::Converters {
         virtual void registerMessenger(const Models::SharedMessenger &messenger) = 0;
 
     protected:
-        virtual QString toStringImpl(const Entity::Type &element) const noexcept = 0;
-        virtual bool fromStringImpl(const QString &s, Entity::Type &element) const noexcept = 0;
+        virtual QString toStringImpl(const Entity::Type &element) const = 0;
+        virtual bool fromStringImpl(const QString &s, Entity::Type &element) const = 0;
     };
 
 } // namespace Entity::Converters

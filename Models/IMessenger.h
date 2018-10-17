@@ -53,6 +53,9 @@ namespace Models {
     /// Exception to display as a message
     struct MessageException: public std::exception
     {
+        MessageException(MessageType type, QString summary, QString description = QString::null)
+            : type(type), summary(std::move(summary)), description(std::move(description)) {}
+
         MessageType type;
         QString summary;
         QString description;
