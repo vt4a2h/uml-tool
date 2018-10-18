@@ -40,10 +40,8 @@ namespace GUI {
      * @brief PropertiesHandlerBase::PropertiesHandlerBase
      * @param sectionsLayout
      */
-    PropertiesHandlerBase::PropertiesHandlerBase(QLayout &sectionsLayout,
-                                                 Models::SectionalTextConverter &converter)
+    PropertiesHandlerBase::PropertiesHandlerBase(QLayout &sectionsLayout)
         : m_MainLayout(sectionsLayout)
-        , m_Converter(converter)
     {
     }
 
@@ -66,7 +64,8 @@ namespace GUI {
             auto sectionIt = m_SectionsByType.find(e->kindOfType());
             if (sectionIt != std::end(m_SectionsByType))
                 return *sectionIt;
-            else if (auto data = e->displayData())
+
+            if (auto data = e->displayData())
                 return addSection(data.value().sectionName, data.value().description, e->kindOfType());
         }
 
@@ -112,7 +111,7 @@ namespace GUI {
             return false;
 
         currentSection()->setVisible(true);
-        currentSection()->updateText(m_Converter.toString(*m_Entity));
+        currentSection()->updateText(m_Entity->toString());
         m_SaveConnection =
             G_CONNECT(currentSection(), &Section::saved,
                       [this](auto &&text)
@@ -121,7 +120,7 @@ namespace GUI {
                               return;
 
                           // FIXME: add memento command
-                          bool modified = !m_Converter.fromString(text, *m_Entity);
+                          bool modified = !m_Entity->fromString(text);
                           currentSection()->setModified(modified);
 
                           auto itemRect = m_Entity->graphicEntityData()->boundingRect();

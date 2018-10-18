@@ -60,6 +60,7 @@ namespace Common {
     public:
         explicit ElementsFactory(QObject *parent = nullptr);
 
+        DB::SharedDatabase globalDatabase() const;
         void setGlobalDatabase(const DB::SharedDatabase &db);
 
         QPointer<QGraphicsScene> scene() const;
@@ -72,11 +73,19 @@ namespace Common {
         Commands::SharedCommandStack commandStack() const;
         void setCommandStack(const Commands::SharedCommandStack &commandStack);
 
+        virtual void init();
+
+        Models::SharedMessenger messenger() const;
+        void setMessenger(const Models::SharedMessenger &messenger);
+
     public slots:
         void onSceneChanged(const QPointer<QGraphicsScene> &scene);
         void onProjectChanged(const Projects::SharedProject &p, const Projects::SharedProject &c);
         void addAdditionaScopeSearcher(const DB::SharedScopeSearcher &s);
         void removeAdditionaScopeSearcher(const DB::SharedScopeSearcher &s);
+
+    signals:
+        void projectChanged(const Projects::SharedProject &p, const Projects::SharedProject &c);
 
     protected:
         Entity::SharedScope scope(const Common::ID &id) const;
@@ -88,6 +97,7 @@ namespace Common {
         DB::WeakScopeSearchers m_AdditionalScopeSearchers;
         Models::WeakTreeModel m_TreeModel;
         Commands::SharedCommandStack m_CommandStack;
+        Models::SharedMessenger m_Messenger;
     };
 
 } // namespace common

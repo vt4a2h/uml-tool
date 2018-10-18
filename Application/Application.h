@@ -40,7 +40,7 @@ namespace App {
         Q_OBJECT
 
     public:
-        Application(const Models::SharedApplicationModel &appModel, GUI::UniqueMainWindow mainWindow);
+        Application(Models::SharedApplicationModel appModel, GUI::UniqueMainWindow mainWindow);
         ~Application();
 
         bool run();

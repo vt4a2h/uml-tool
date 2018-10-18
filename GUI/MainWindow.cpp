@@ -184,7 +184,7 @@ namespace GUI {
         , m_Preferences(new Preferences(applicationModel, this))
         , m_MessagesView(new QTableView(this))
         , m_MessagesModel(std::make_shared<Models::MessagesModel>())
-        , m_EntityProperties(new EntityProperties(*applicationModel, m_MessagesModel, this))
+        , m_EntityProperties(new EntityProperties(this))
         , m_ApplicationModel(applicationModel)
     {
         ui->setupUi(this);
@@ -198,9 +198,7 @@ namespace GUI {
     /**
      * @brief MainWindow::~MainWindow
      */
-    MainWindow::~MainWindow()
-    {
-    }
+    MainWindow::~MainWindow() = default;
 
     /**
      * @brief MainWindow::scene

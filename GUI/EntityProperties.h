@@ -48,13 +48,8 @@ namespace GUI {
         Q_OBJECT
 
     public:
-        explicit EntityProperties(const Models::ApplicationModel &appModel,
-                                  const Models::SharedMessenger &messenger,
-                                  QWidget *parent = nullptr);
+        explicit EntityProperties(QWidget *parent = nullptr);
         ~EntityProperties() override;
-
-        Models::SharedMessenger messanger() const;
-        void setMessanger(const Models::SharedMessenger &messanger);
 
     public slots:
         void onSelectedElementsChanged(const Entity::TypesList &types);
@@ -64,8 +59,6 @@ namespace GUI {
 
     private: // Data
         QScopedPointer<Ui::EntityProperties> m_ui;
-
-        Models::SharedSectionalTextConverter m_Converter;
 
         SharedPropHandler m_handler;
     };

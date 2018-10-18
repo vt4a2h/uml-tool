@@ -58,10 +58,11 @@ namespace Common {
      * @brief ElementsFactory::onProjectChanged
      * @param p
      */
-    void ElementsFactory::onProjectChanged(const Projects::SharedProject &,
+    void ElementsFactory::onProjectChanged(const Projects::SharedProject &p,
                                            const Projects::SharedProject &c)
     {
         m_Project = c;
+        emit projectChanged(p, c);
     }
 
     /**
@@ -111,6 +112,29 @@ namespace Common {
         return scope;
     }
 
+    DB::SharedDatabase ElementsFactory::globalDatabase() const
+    {
+        return m_GlobalDatabase.lock();
+    }
+
+    /**
+     * @brief ElementsFactory::messenger
+     * @return
+     */
+    Models::SharedMessenger ElementsFactory::messenger() const
+    {
+        return m_Messenger;
+    }
+
+    /**
+     * @brief ElementsFactory::setMessenger
+     * @param messenger
+     */
+    void ElementsFactory::setMessenger(const Models::SharedMessenger &messenger)
+    {
+        m_Messenger = messenger;
+    }
+
     /**
      * @brief ElementsFactory::commandStack
      * @return
@@ -127,6 +151,13 @@ namespace Common {
     void ElementsFactory::setCommandStack(const Commands::SharedCommandStack &commandStack)
     {
         m_CommandStack = commandStack;
+    }
+
+    /**
+     * @brief ElementsFactory::init
+     */
+    void ElementsFactory::init()
+    {
     }
 
     /**

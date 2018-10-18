@@ -41,7 +41,7 @@ namespace GUI {
         using SectionPtr   = QPointer<Section>;
 
     public:
-        PropertiesHandlerBase(QLayout &sectionsLayout, Models::SectionalTextConverter &converter);
+        PropertiesHandlerBase(QLayout &sectionsLayout);
 
     public: // IPropertiesHandler interface
         bool activate() override;
@@ -71,7 +71,6 @@ namespace GUI {
 
     private: // Data
         QLayout &m_MainLayout;
-        Models::SectionalTextConverter &m_Converter;
 
         QHash<Entity::KindOfType, SectionPtr> m_SectionsByType;
 

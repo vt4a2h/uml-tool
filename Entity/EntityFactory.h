@@ -53,6 +53,8 @@ namespace Entity {
                         const Common::ID &scopeID = Common::ID::projectScopeID(),
                         CreationOptions options = EntityCommon) const;
 
+        void init() override;
+
     private:
         explicit EntityFactory(QObject * parent = nullptr);
     };

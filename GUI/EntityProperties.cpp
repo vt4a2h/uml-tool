@@ -37,31 +37,18 @@
 
 namespace GUI {
 
-    EntityProperties::EntityProperties(const Models::ApplicationModel &appModel,
-                                       const Models::SharedMessenger &messenger, QWidget *parent)
+    EntityProperties::EntityProperties(QWidget *parent)
         : QWidget(parent)
         , m_ui(new Ui::EntityProperties)
-        , m_Converter(std::make_shared<Models::SectionalTextConverter>(messenger))
     {
         m_ui->setupUi(this);
 
         // Invoke only when ui is setup
-        m_handler = std::make_shared<PropertiesHandlerBase>(*m_ui->vl, *m_Converter);
+        m_handler = std::make_shared<PropertiesHandlerBase>(*m_ui->vl);
         G_CONNECT(static_cast<PropertiesHandlerBase*>(m_handler.get()),
                   &PropertiesHandlerBase::sceneUpdateRequired,
                   this,
                   &EntityProperties::sceneUpdateRequired);
-
-        m_Converter->registerTypeSearcher(appModel.globalDatabase());
-        G_CONNECT(&appModel, &Models::ApplicationModel::currentProjectChanged,
-                  [this](auto &&prev, auto &&cur)
-                  {
-                      if (prev)
-                          m_Converter->unregisterTypeSearcher(prev->database());
-
-                      if (cur)
-                          m_Converter->registerTypeSearcher(cur->database());
-                  });
     }
 
     EntityProperties::~EntityProperties() = default;

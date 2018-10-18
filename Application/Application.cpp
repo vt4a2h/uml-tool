@@ -132,7 +132,8 @@ namespace App {
         template <class Factory>
         void setUpFactory(const Factory& f, const Models::SharedApplicationModel &model,
                           const QPointer<QGraphicsScene>& scene,
-                          const Commands::SharedCommandStack &commandStack)
+                          const Commands::SharedCommandStack &commandStack,
+                          const Models::SharedMessenger &messenger)
         {
             G_CONNECT(model.get(), &Models::ApplicationModel::currentProjectChanged,
                       &f, &Factory::onProjectChanged);
@@ -142,15 +143,18 @@ namespace App {
             factory.setGlobalDatabase(model->globalDatabase());
             factory.setTreeModel(model->treeModel());
             factory.setCommandStack(commandStack);
+            factory.setMessenger(messenger);
+
+            factory.init();
         }
     }
 
     /**
      * @brief Application::Application
      */
-    Application::Application(const Models::SharedApplicationModel &appModel,
+    Application::Application(Models::SharedApplicationModel appModel,
                              GUI::UniqueMainWindow mainWindow)
-        : m_ApplicationModel(appModel)
+        : m_ApplicationModel(std::move(appModel))
         , m_MainWindow(std::move(mainWindow))
     {
         G_CONNECT(m_ApplicationModel.get(), &Models::ApplicationModel::currentProjectChanged,
@@ -162,17 +166,14 @@ namespace App {
 
         // Set up factories
         setUpFactory(Entity::EntityFactory::instance(), m_ApplicationModel, m_MainWindow->scene(),
-                     m_MainWindow->commandsStack());
+                     m_MainWindow->commandsStack(), m_MainWindow->messenger());
         setUpFactory(Relationship::RelationFactory::instance(), m_ApplicationModel,
-                     m_MainWindow->scene(), m_MainWindow->commandsStack());
+                     m_MainWindow->scene(), m_MainWindow->commandsStack(), m_MainWindow->messenger());
     }
 
     /**
      * @brief Application::~Application
      */
-    Application::~Application()
-    {
-
-    }
+    Application::~Application() = default;
 
 } // namespace application

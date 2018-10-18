@@ -26,7 +26,12 @@
 
 #include <QGraphicsScene>
 
+#include <boost/mpl/map.hpp>
+
 #include <Commands/MoveGraphicObject.h>
+
+#include <Entity/Converters/ConvertersTypes.hpp>
+#include <Entity/Converters/EnumTextConversionStrategy.hpp>
 
 #include <DB/ProjectDatabase.h>
 
@@ -43,7 +48,7 @@
 namespace Entity {
 
     namespace {
-        QHash<KindOfType, std::function<SharedType(const Entity::SharedScope &)>> makers = {
+        const QHash<KindOfType, std::function<SharedType(const Entity::SharedScope &)>> makers = {
             { KindOfType::Type,
               [] (const Entity::SharedScope &s) { return s->addType<Entity::Type>();          } },
             { KindOfType::ExtendedType,
@@ -56,6 +61,10 @@ namespace Entity {
               [] (const Entity::SharedScope &s) { return s->addType<Entity::Class>();         } },
             { KindOfType::TemplateClass,
               [] (const Entity::SharedScope &s) { return s->addType<Entity::TemplateClass>(); } },
+        };
+
+        const QHash<KindOfType, Entity::Converters::SharedConversionStrategy> convStrategies = {
+            { KindOfType::Enum, std::make_shared<Entity::Converters::EnumTextConversionStrategy>() },
         };
 
         void addGraphicEntity(const QPointer<QGraphicsScene> &scene,
@@ -93,7 +102,13 @@ namespace Entity {
                           });
             }
         }
-    }
+
+        QHash<KindOfType, Converters::SharedConversionStrategy> strategies = {
+            {KindOfType::Type, std::make_shared<Converters::BaseTextConversionStrategy>()},
+            {KindOfType::Enum, std::make_shared<Converters::EnumTextConversionStrategy>()},
+        };
+
+    } // namespace
 
     /**
      * @brief EntitiesFactory::get
@@ -133,6 +148,9 @@ namespace Entity {
                     if (auto tm = treeModel())
                         if (auto p = project())
                             tm->addType(type, scopeID, p->name());
+
+                if (auto it = strategies.constFind(type->kindOfType()); it != std::cend(strategies))
+                    type->setTextConversionStrategy(*it);
 
                 return type;
             }
@@ -177,6 +195,30 @@ namespace Entity {
         }
 
         return nullptr;
+    }
+
+    /**
+     * @brief EntityFactory::init
+     */
+    void EntityFactory::init()
+    {
+        for (auto v: qAsConst(strategies)) {
+            if (G_ASSERT(v)) {
+                v->registerMessenger(G_ASSERT(messenger()));
+                v->registerTypeSearcher(G_ASSERT(globalDatabase()));
+
+                G_CONNECT(this, &EntityFactory::projectChanged, [v](auto p, auto c) {
+                    if (!v)
+                        return;
+
+                    if (p)
+                        v->unregisterTypeSearcher(p->database());
+
+                    if (c)
+                        v->registerTypeSearcher(c->database());
+                });
+            }
+        }
     }
 
     /**
