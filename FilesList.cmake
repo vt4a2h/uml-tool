@@ -35,6 +35,7 @@ set(CMD_SRC
     ${CMD}/RemoveComponentsCommands.cpp
     ${CMD}/RenameEntity.cpp
     ${CMD}/AddComponentsCommands.cpp
+    ${CMD}/CommandFactory.cpp
     ${CMD}/MementoCmd.cpp
     ${CMD}/OpenProject.cpp)
 
