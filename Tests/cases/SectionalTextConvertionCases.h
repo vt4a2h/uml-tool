@@ -26,29 +26,31 @@
 
 #include <Utility/helpfunctions.h>
 
-#include "TestSectionalTextConverter.hpp"
+#include "TestSectionalTextConvertion.hpp"
 
 using namespace Testing;
 
 TEST_F(SectionalTextConverter, EnumToStrting_Success)
 {
     Entity::Enum e("Foo", Common::ID::projectScopeID());
-    QString result = m_Converter->toString(e);
+    e.setTextConversionStrategy(m_EnumConversionStrategy);
+
+    QString result = e.toString();
     ASSERT_EQ(result.toStdString(), "enum Foo\n");
     ASSERT_TRUE(m_Messenger->messages().empty());
 
     e.setStrongStatus(true);
-    result = m_Converter->toString(e);
+    result = e.toString();
     ASSERT_EQ(result.toStdString(), "enum class Foo\n");
     ASSERT_TRUE(m_Messenger->messages().empty());
 
     e.setEnumTypeId(m_GlobalDb->typeByName("int")->id());
-    result = m_Converter->toString(e);
+    result = e.toString();
     ASSERT_EQ(result.toStdString(), "enum class Foo int\n");
 
     e.addElement("element1")->setValue(2);
     e.addElement("element2")->setValue(5);
-    result = m_Converter->toString(e);
+    result = e.toString();
     ASSERT_EQ(result.toStdString(), "enum class Foo int\n"
                                     "element1 2\n"
                                     "element2 5\n");
@@ -59,21 +61,18 @@ TEST_F(SectionalTextConverter, EnumToStrting_Success)
 
     e.addElement("e1");
     e.addElement("e2");
-    result = m_Converter->toString(e);
+    result = e.toString();
     ASSERT_EQ(result.toStdString(), "enum class Foo int\n"
                                     "e1\n"
                                     "e2\n");
 }
 
-TEST_F(SectionalTextConverter, EnumToStrting_Fail)
-{
-
-}
-
 TEST_F(SectionalTextConverter, EnumFromString_Base_Success)
 {
     Entity::Enum enum_;
-    m_Converter->fromString("enum Foo", enum_);
+    enum_.setTextConversionStrategy(m_EnumConversionStrategy);
+
+    enum_.fromString("enum Foo");
 
     ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
 
@@ -85,7 +84,9 @@ TEST_F(SectionalTextConverter, EnumFromString_Base_Success)
 TEST_F(SectionalTextConverter, EnumFromString_Scoped_Success)
 {
     Entity::Enum enum_;
-    m_Converter->fromString("enum class Foo int", enum_);
+    enum_.setTextConversionStrategy(m_EnumConversionStrategy);
+
+    enum_.fromString("enum class Foo int");
 
     ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
 
@@ -107,7 +108,9 @@ TEST_F(SectionalTextConverter, EnumFromString_WithEnumerators_Success)
         enumStr += en + "\n";
 
     Entity::Enum enum_;
-    m_Converter->fromString(enumStr, enum_);
+    enum_.setTextConversionStrategy(m_EnumConversionStrategy);
+
+    enum_.fromString(enumStr);
     ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
 
     auto enumerators = enum_.enumerators();
@@ -137,7 +140,9 @@ TEST_F(SectionalTextConverter, EnumFromString_WithEnumeratorsAndValues_Success)
         enumStr += en + "\n";
 
     Entity::Enum enum_;
-    m_Converter->fromString(enumStr, enum_);
+    enum_.setTextConversionStrategy(m_EnumConversionStrategy);
+
+    enum_.fromString(enumStr);
     ASSERT_EQ(m_Messenger->unreadMessagesCount(), 0);
 
     auto enumerators = enum_.enumerators();
@@ -158,20 +163,21 @@ TEST_F(SectionalTextConverter, EnumFromString_WithEnumeratorsAndValues_Success)
 TEST_F(SectionalTextConverter, EnumFromString_Fail)
 {
     Entity::Enum enum_;
+    enum_.setTextConversionStrategy(m_EnumConversionStrategy);
 
-    m_Converter->fromString("enum", enum_);
+    enum_.fromString("enum");
     ASSERT_TRUE(m_Messenger->unreadMessagesCount() > 0);
     m_Messenger->clear();
 
-    m_Converter->fromString("enum ewfe efew", enum_);
+    enum_.fromString("enum ewfe efew");
     ASSERT_TRUE(m_Messenger->unreadMessagesCount() > 0);
     m_Messenger->clear();
 
-    m_Converter->fromString("enum\n\r ewfe efew ewrw e\n", enum_);
+    enum_.fromString("enum\n\r ewfe efew ewrw e\n");
     ASSERT_TRUE(m_Messenger->unreadMessagesCount() > 0);
     m_Messenger->clear();
 
-    m_Converter->fromString("enum Foo\n32 a\ngwgew ewfew", enum_);
+    enum_.fromString("enum Foo\n32 a\ngwgew ewfew");
     ASSERT_TRUE(m_Messenger->unreadMessagesCount() > 0);
     m_Messenger->clear();
 }

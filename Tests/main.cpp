@@ -41,7 +41,7 @@
 #include <cases/ID.h>
 #include <cases/Memento.h>
 #include <cases/HelpersCases.h>
-#include <cases/SectionalTextConverterCases.h>
+#include <cases/SectionalTextConvertionCases.h>
 
 #include "Arguments.hpp"
 

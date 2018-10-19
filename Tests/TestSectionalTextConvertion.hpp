@@ -26,9 +26,9 @@
 
 #include <QDateTime>
 
-#include <Models/SectionalTextConverter.hpp>
 #include <Models/IMessenger.h>
 #include <Models/ModelsTypes.hpp>
+#include <Entity/Converters/EnumTextConversionStrategy.hpp>
 
 #include "TestProject.h"
 
@@ -42,6 +42,11 @@ namespace Testing
                         const QString &description) override
         {
             m_Messages.push_back({type, summary, description, QDateTime::currentDateTime()});
+        }
+
+        void addMessage(const Models::MessageException &e) override
+        {
+            addMessage(e.type, e.summary, e.description);
         }
 
         Models::Messages messages() const override
@@ -67,19 +72,20 @@ namespace Testing
     class SectionalTextConverter : public ProjectBase
     {
     protected:
-
-        void SetUp()
+        void SetUp() final
         {
             m_Messenger = std::make_shared<TestMessenger>();
 
-            m_Converter = std::make_shared<Models::SectionalTextConverter>(m_Messenger);
-            m_Converter->registerTypeSearcher(m_GlobalDb);
-            m_Converter->registerTypeSearcher(m_ProjectDb);
+            m_EnumConversionStrategy->registerMessenger(m_Messenger);
+            m_EnumConversionStrategy->registerTypeSearcher(m_GlobalDb);
+            m_EnumConversionStrategy->registerTypeSearcher(m_ProjectDb);
         }
 
     protected:
         Models::SharedMessenger m_Messenger;
-        Models::SharedSectionalTextConverter m_Converter;
+
+        Entity::Converters::SharedConversionStrategy m_EnumConversionStrategy =
+            std::make_shared<Entity::Converters::EnumTextConversionStrategy>();
     };
 
 } // namespace Testing

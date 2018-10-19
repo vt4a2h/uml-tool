@@ -38,7 +38,6 @@ HEADERS += \
     $$PWD/../Entity/GraphicEntityData.h \
     $$PWD/../Entity/EntityFactory.h \
     $$PWD/../Entity/Template.h \
-    $$PWD/../Entity/ITextRepresentable.cpp \
     $$PWD/../Constants.h \
     $$PWD/../Entity/field.h \
     $$PWD/../QtHelpers.h \
@@ -67,6 +66,11 @@ HEADERS += \
     $$PWD/../Commands/RenameEntity.h \
     $$PWD/../Commands/OpenProject.h \
     $$PWD/../Commands/CommandFactory.hpp \
+    $$PWD/../Entity/ITextRepresentable.hpp \
+    $$PWD/../Entity/Converters/ITextConversionStrategy.hpp \
+    $$PWD/../Entity/Converters/BaseTextConversionStrategy.hpp \
+    $$PWD/../Entity/Converters/ConvertersTypes.hpp \
+    $$PWD/../Entity/Converters/EnumTextConversionStrategy.hpp \
     TestRelationMaker.h \
     TestDepthSearch.h \
     helpers.h \
@@ -109,9 +113,9 @@ HEADERS += \
     cases/ID.h \
     cases/HelpersCases.h \
     Arguments.hpp \
-    TestSectionalTextConverter.hpp \
-    cases/SectionalTextConverterCases.h \
-    cases/Memento.h
+    cases/Memento.h \
+    TestSectionalTextConvertion.hpp \
+    cases/SectionalTextConvertionCases.h
 
 SOURCES += main.cpp \
            $$PWD/../Application/settings.cpp \
@@ -182,4 +186,6 @@ SOURCES += main.cpp \
            $$PWD/../Commands/RenameEntity.cpp \
            $$PWD/../Commands/OpenProject.cpp \
            $$PWD/../Commands/CommandFactory.cpp \
+           $$PWD/../Entity/Converters/BaseTextConversionStrategy.cpp \
+           $$PWD/../Entity/Converters/EnumTextConversionStrategy.cpp \
            Arguments.cpp
