@@ -113,7 +113,8 @@ namespace Entity::Converters {
             auto typeName = headerReMach.captured(typeGroup);
             dstEnum.setEnumTypeId(typeIdByName(typeName));
         } else
-            throw Models::MessageException(Models::MessageType::Error, tr("Cannot read enum header"));
+            throw Models::MessageException(Models::MessageType::Error,
+                                           tr("Cannot read enum header: ") + header);
     }
 
     static auto split(const QString &s)
@@ -161,6 +162,10 @@ namespace Entity::Converters {
     template<class Collection>
     void readEnumerators(const Collection &lines, Entity::Enum &dstEnum)
     {
+        for (auto &&e: dstEnum.enumerators())
+            if (e)
+                dstEnum.removeEnumerator(e->name());
+
         if (lines.length() <= 1)
             return;
 

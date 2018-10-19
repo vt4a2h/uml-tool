@@ -51,9 +51,6 @@ namespace GUI {
         QString sectionHelp() const;
         void setSectionHelp(const QString &sectionHelp);
 
-        const Models::SectionalTextConverter &converter() const;
-        Models::SectionalTextConverter &converter();
-
         Entity::SharedType entity() const;
         void setEntity(const Entity::SharedType &entity);
 

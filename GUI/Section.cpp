@@ -25,8 +25,6 @@
 
 #include <QRegularExpression>
 
-#include <Models/SectionalTextConverter.hpp>
-
 #include "QtHelpers.h"
 
 namespace GUI {
@@ -120,7 +118,7 @@ namespace GUI {
        QSignalBlocker blocker(m_ui->pteEditor);
        m_ui->pteEditor->setPlainText(newText);
     }
-    
+
     /**
      * @brief Section::sectionHelp
      * @return
@@ -129,7 +127,7 @@ namespace GUI {
     {
         return m_SectionHelp;
     }
-    
+
     /**
      * @brief Section::setSectionHelp
      * @param sectionHelp
@@ -161,9 +159,7 @@ namespace GUI {
     /**
      * @brief Section::~Section
      */
-    Section::~Section()
-    {
-    }
+    Section::~Section() = default;
 
 } // namespace GUI
 
