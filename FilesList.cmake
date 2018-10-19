@@ -188,14 +188,12 @@ set(MODELS_HEADERS
     ${MODELS}/ModelsTypes.hpp
     ${MODELS}/ComponentsModel.h
     ${MODELS}/MessagesModel.h
-    ${MODELS}/SectionalTextConverter.hpp
     ${MODELS}/IMessenger.h)
 set(MODELS_SRC
     ${MODELS}/ProjectTreeModel.cpp
     ${MODELS}/ApplicationModel.cpp
     ${MODELS}/BasicTreeItem.cpp
     ${MODELS}/ComponentsModel.cpp
-    ${MODELS}/SectionalTextConverter.cpp
     ${MODELS}/MessagesModel.cpp)
 
 set(PROJECT ${ROOT}/Project)

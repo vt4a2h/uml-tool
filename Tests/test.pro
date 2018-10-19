@@ -44,7 +44,6 @@ HEADERS += \
     $$PWD/../Models/ApplicationModel.h \
     $$PWD/../Models/projecttreemodel.h \
     $$PWD/../Models/basictreeitem.h \
-    $$PWD/../Models/SectionalTextConverter.hpp \
     $$PWD/../Helpers/entityhelpres.h\
     $$PWD/../Helpers/GeneratorID.h\
     $$PWD/../GUI/graphics/GraphicsRelation.h \
@@ -171,7 +170,6 @@ SOURCES += main.cpp \
            $$PWD/../Models/ApplicationModel.cpp \
            $$PWD/../Models/projecttreemodel.cpp \
            $$PWD/../Models/basictreeitem.cpp \
-           $$PWD/../Models/SectionalTextConverter.cpp \
            $$PWD/../Helpers/entityhelpres.cpp \
            $$PWD/../Helpers/GeneratorID.cpp \
            $$PWD/../Common/ElementsFactory.cpp \

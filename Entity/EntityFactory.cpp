@@ -26,8 +26,6 @@
 
 #include <QGraphicsScene>
 
-#include <boost/mpl/map.hpp>
-
 #include <Commands/MoveGraphicObject.h>
 
 #include <Entity/Converters/ConvertersTypes.hpp>

@@ -69,7 +69,7 @@ namespace Testing
         Models::Messages m_Messages;
     };
 
-    class SectionalTextConverter : public ProjectBase
+    class SectionalTextConvertion : public ProjectBase
     {
     protected:
         void SetUp() final

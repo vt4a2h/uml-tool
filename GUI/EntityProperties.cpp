@@ -24,7 +24,6 @@
 #include "ui_EntityProperties.h"
 
 #include <Models/ApplicationModel.h>
-#include <Models/SectionalTextConverter.hpp>
 
 #include <Entity/Type.h>
 #include <Entity/Enum.h>

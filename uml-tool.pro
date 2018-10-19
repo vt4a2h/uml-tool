@@ -81,7 +81,6 @@ SOURCES += \
     Models/ComponentsModel.cpp \
     Models/MessagesModel.cpp \
     Models/ProjectTreeModel.cpp \
-    Models/SectionalTextConverter.cpp \
     Project/Project.cpp \
     Relationship/Relation.cpp \
     Relationship/RelationFactory.cpp \
@@ -194,7 +193,6 @@ HEADERS += \
     Models/MessagesModel.h \
     Models/ModelsTypes.hpp \
     Models/ProjectTreeModel.h \
-    Models/SectionalTextConverter.hpp \
     Project/Project.h \
     Project/ProjectTypes.hpp \
     QtHelpers.h \

@@ -29,8 +29,6 @@
 #include <Entity/Type.h>
 #include <Entity/GraphicEntityData.h>
 
-#include <Models/SectionalTextConverter.hpp>
-
 #include "Section.h"
 #include "QtHelpers.h"
 

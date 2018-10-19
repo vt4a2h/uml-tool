@@ -26,7 +26,7 @@ set(TEST_HEADERS
     ${ROOT}/Tests/TestProjectMaker.h
     ${ROOT}/Tests/TestProject.h
     ${ROOT}/Tests/TestSignatureMaker.hpp
-    ${ROOT}/Tests/TestSectionalTextConverter.hpp
+    ${ROOT}/Tests/TestSectionalTextConvertion.hpp
     ${ROOT}/Tests/TestIComponents.h
     ${ROOT}/Tests/TestEntities.h
     ${ROOT}/Tests/TestComponentsMaker.h
@@ -60,7 +60,7 @@ set(CASES_HEADERS
     ${CASES_DIR}/ProjectMakerCases.h
     ${CASES_DIR}/ID.h
     ${CASES_DIR}/Memento.h
-    ${CASES_DIR}/SectionalTextConverterCases.h
+    ${CASES_DIR}/SectionalTextConvertionCases.h
     ${CASES_DIR}/HelpersCases.h)
 
 include_directories(${Qt5Widgets_INCLUDES} ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CASES_DIR} ${GTEST_INCLUDE_DIRS})

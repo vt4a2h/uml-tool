@@ -30,7 +30,7 @@
 
 using namespace Testing;
 
-TEST_F(SectionalTextConverter, EnumToStrting_Success)
+TEST_F(SectionalTextConvertion, EnumToStrting_Success)
 {
     Entity::Enum e("Foo", Common::ID::projectScopeID());
     e.setTextConversionStrategy(m_EnumConversionStrategy);
@@ -67,7 +67,7 @@ TEST_F(SectionalTextConverter, EnumToStrting_Success)
                                     "e2\n");
 }
 
-TEST_F(SectionalTextConverter, EnumFromString_Base_Success)
+TEST_F(SectionalTextConvertion, EnumFromString_Base_Success)
 {
     Entity::Enum enum_;
     enum_.setTextConversionStrategy(m_EnumConversionStrategy);
@@ -81,7 +81,7 @@ TEST_F(SectionalTextConverter, EnumFromString_Base_Success)
     ASSERT_EQ(enum_.enumTypeId(), Common::ID::nullID());
 }
 
-TEST_F(SectionalTextConverter, EnumFromString_Scoped_Success)
+TEST_F(SectionalTextConvertion, EnumFromString_Scoped_Success)
 {
     Entity::Enum enum_;
     enum_.setTextConversionStrategy(m_EnumConversionStrategy);
@@ -98,7 +98,7 @@ TEST_F(SectionalTextConverter, EnumFromString_Scoped_Success)
     ASSERT_EQ(type->name().toStdString(), "int");
 }
 
-TEST_F(SectionalTextConverter, EnumFromString_WithEnumerators_Success)
+TEST_F(SectionalTextConvertion, EnumFromString_WithEnumerators_Success)
 {
     static constexpr int enumeratorsCount = 3;
     const std::array<QString, enumeratorsCount> enumeratorNames = {"foo1", "foo2", "foo3"};
@@ -123,7 +123,7 @@ TEST_F(SectionalTextConverter, EnumFromString_WithEnumerators_Success)
         ASSERT_EQ(enumeratorNames[i].toStdString(), enumerators[int(i)]->name().toStdString());
 }
 
-TEST_F(SectionalTextConverter, EnumFromString_WithEnumeratorsAndValues_Success)
+TEST_F(SectionalTextConvertion, EnumFromString_WithEnumeratorsAndValues_Success)
 {
     static constexpr int enumeratorsCount = 3;
     const std::array<QString, enumeratorsCount> enumeratorNames = {"foo1 10", "foo2 015", "foo3 0xFF"};
@@ -160,7 +160,7 @@ TEST_F(SectionalTextConverter, EnumFromString_WithEnumeratorsAndValues_Success)
     }
 }
 
-TEST_F(SectionalTextConverter, EnumFromString_Fail)
+TEST_F(SectionalTextConvertion, EnumFromString_Fail)
 {
     Entity::Enum enum_;
     enum_.setTextConversionStrategy(m_EnumConversionStrategy);

@@ -51,7 +51,4 @@ namespace Models {
 
     class IMessenger;
     using SharedMessenger = std::shared_ptr<IMessenger>;
-
-    class SectionalTextConverter;
-    using SharedSectionalTextConverter = std::shared_ptr<SectionalTextConverter>;
 }
