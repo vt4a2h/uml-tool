@@ -59,7 +59,7 @@ fi
 # Test
 if [ ! -z ${TEST} ]; then
    if [ ! -e ${TESTS_BIN} ]; then
-      echo "No parent directory specified"
+      echo "Test executable file is not exist: ${TESTS_BIN}"
       exit -1
    fi
    
