@@ -69,7 +69,7 @@ fi
 # Collect coverage
 if [ ! -z ${COV} ]; then
    lcov --directory . --capture --output-file coverage.info
-   lcov --remove coverage.info 'Tests/*' '/usr/*' '/opt/*' '*_autogen' --output-file coverage.info
+   lcov --remove coverage.info 'Tests/*' '/usr/*' '/opt/*' '*_autogen*' '*range-v3*' --output-file coverage.info
    lcov --list coverage.info
    coveralls-lcov --repo-token W5rWWqj02gOXKImGoV7l5jrWCWGe9jrtQ coverage.info
 fi
