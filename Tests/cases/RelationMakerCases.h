@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "TestRelationMaker.h"
+#include "Tests/TestRelationMaker.h"
 
 #include <Entity/ExtendedType.h>
 

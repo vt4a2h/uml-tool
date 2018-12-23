@@ -20,7 +20,7 @@
 ** along with Q-UML.  If not, see <http://www.gnu.org/licenses/>.
 **
 *****************************************************************************/
-#include "TestClassComponents.h"
+#include "Tests/TestClassComponents.h"
 
 #include "Constants.h"
 

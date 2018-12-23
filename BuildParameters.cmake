@@ -7,9 +7,9 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(Qt5Widgets REQUIRED)
-find_package(Boost 1.54.0 REQUIRED)
-
-include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/range-v3/include ${CMAKE_SOURCE_DIR}/boost-di/include)
+if(BUILD_TESTING AND COLLECT_COVERAGE)
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lstdc++ --coverage")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g --coverage")
+endif(BUILD_TESTING AND COLLECT_COVERAGE)
 
 add_definitions(-DQT_USE_QSTRINGBUILDER)

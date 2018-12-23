@@ -22,8 +22,8 @@
 *****************************************************************************/
 #pragma once
 
-#include "TestDepthSearch.h"
-#include "helpers.h"
+#include "Tests/TestDepthSearch.h"
+#include "Tests/helpers.h"
 
 TEST_F(DepthSearch, ScopeSearchWorks)
 {

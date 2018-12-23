@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "TestFileMaker.h"
+#include "Tests/TestFileMaker.h"
 
 TEST_F(FileMaker, MakeFileStructure)
 {

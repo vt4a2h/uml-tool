@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "TestCommands.h"
+#include "Tests/TestCommands.h"
 
 #include <Commands/CreateEntity.h>
 #include <Commands/CreateScope.h>

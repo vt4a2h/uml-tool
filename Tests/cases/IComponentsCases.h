@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "TestIComponents.h"
+#include "Tests/TestIComponents.h"
 
 #define TEST_COMPONENTS(capName, pluralForm, capPluralForm) \
     void test##capPluralForm( Entity::SharedComponents &components, bool contains ) \

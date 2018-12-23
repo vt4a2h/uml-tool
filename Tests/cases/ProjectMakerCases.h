@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "TestProjectMaker.h"
+#include "Tests/TestProjectMaker.h"
 
 #include <Entity/Scope.h>
 #include <Entity/Class.h>
@@ -30,7 +30,7 @@
 #include <Entity/TemplateClass.h>
 #include <Entity/field.h>
 
-#include "helpers.h"
+#include "Tests/helpers.h"
 
 TEST_F(ProjectMaker, MakeClass)
 {

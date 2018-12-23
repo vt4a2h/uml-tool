@@ -240,4 +240,4 @@ DISTFILES += \
     BuildToolset.cmake \
     CMakeLists.txt \
     FilesList.cmake \
-    Tests/CMakeLists.txt
+    Tests/TestFiles.cmake

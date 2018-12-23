@@ -52,9 +52,8 @@ rm -rf ${BUILD_DIR} && mkdir ${BUILD_DIR} && cd ${BUILD_DIR}
 
 # Build
 if [ ! -z ${BUILD} ]; then
-   ${CMAKE_BIN} ${CONFIG_PARAMS} ..
-   ${CMAKE_BIN} --build . --target uml-tool -- -j$(nproc --all)
-   ${CMAKE_BIN} --build . --target tests -- -j$(nproc --all)
+   CXX=g++-7 CC=gcc-7 ${CMAKE_BIN} ${CONFIG_PARAMS} ..
+   ${CMAKE_BIN} --build . --target all -- -j$(nproc --all)
 fi
 
 # Test

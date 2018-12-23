@@ -1,6 +1,6 @@
 if(UNIX AND NOT APPLE)
-    set(CMAKE_C_COMPILER gcc-7)
-    set(CMAKE_CXX_COMPILER g++-7)
+    set(CMAKE_C_COMPILER ${CXX})
+    set(CMAKE_CXX_COMPILER ${CC})
 else()
     message(FATAL_ERROR "Unsupported system")
 endif(UNIX AND NOT APPLE)

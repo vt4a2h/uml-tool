@@ -28,7 +28,7 @@
 #include <Models/ComponentsModel.h>
 #include <Entity/Components/token.h>
 
-#include "TestComponentSignatureParser.h"
+#include "Tests/TestComponentSignatureParser.h"
 
 namespace {
 

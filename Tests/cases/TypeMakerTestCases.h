@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "TestTypeMaker.h"
+#include "Tests/TestTypeMaker.h"
 
 TEST_F(TypeMaker, MakesRightTypes)
 {

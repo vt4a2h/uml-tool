@@ -24,7 +24,7 @@
 
 #include <boost/range/algorithm/find_if.hpp>
 
-#include "TestSignatureMaker.hpp"
+#include "Tests/TestSignatureMaker.hpp"
 
 using namespace boost;
 

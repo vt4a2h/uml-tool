@@ -26,7 +26,7 @@
 
 #include <Utility/helpfunctions.h>
 
-#include "TestSectionalTextConvertion.hpp"
+#include "Tests/TestSectionalTextConvertion.hpp"
 
 using namespace Testing;
 

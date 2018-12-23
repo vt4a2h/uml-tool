@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "TestJson.h"
+#include "Tests/TestJson.h"
 
 #include <Entity/TemplateClass.h>
 #include <Entity/ExtendedType.h>

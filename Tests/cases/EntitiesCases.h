@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "TestEntities.h"
+#include "Tests/TestEntities.h"
 
 #include <boost/range/algorithm/equal.hpp>
 

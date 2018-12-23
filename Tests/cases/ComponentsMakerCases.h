@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "TestComponentsMaker.h"
+#include "Tests/TestComponentsMaker.h"
 
 #include <Entity/field.h>
 #include <Entity/Property.h>

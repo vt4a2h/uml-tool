@@ -22,7 +22,7 @@
 *****************************************************************************/
 #pragma once
 
-#include "TestProjectTranslator.h"
+#include "Tests/TestProjectTranslator.h"
 
 #include <templates.cpp>
 
