@@ -35,7 +35,7 @@ fi
 # Setup env
 BUILD_DIR=${PARENT_DIR}/build
 CMAKE_BIN=${PARENT_DIR}/uml-tool-dependencies/cmake/linux/bin/cmake
-TESTS_BIN=${PARENT_DIR}/build/Tests/tests
+TESTS_BIN=${BUILD_DIR}/tests
 
 CONFIG_PARAMS="-DCMAKE_BUILD_TYPE=Release"
 
@@ -58,6 +58,11 @@ fi
 
 # Test
 if [ ! -z ${TEST} ]; then
+   if [ ! -e ${TESTS_BIN} ]; then
+      echo "No parent directory specified"
+      exit -1
+   fi
+   
    ${TESTS_BIN} --gtest_shuffle --test_root ${PARENT_DIR}/Tests --db_path ${PARENT_DIR}
 fi
 
