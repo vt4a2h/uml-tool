@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
 
 # Should be set above project name definition
 include(BuildToolset.cmake)
