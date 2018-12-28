@@ -27,16 +27,13 @@
 #include <QMetaType>
 #include <QCoreApplication>
 
-#include <boost/operators.hpp>
-
 #include "types.h"
 
 namespace Common
 {
 
     /// ID for all objects
-    class ID : public boost::equality_comparable<ID>
-             , public boost::less_than_comparable<ID>
+    class ID
     {
         Q_DECLARE_TR_FUNCTIONS(ID)
 
@@ -54,7 +51,11 @@ namespace Common
         ~ID() = default;
 
         friend bool operator ==(const ID &lhs, const ID &rhs);
+        friend bool operator !=(const ID &lhs, const ID &rhs);
         friend bool operator < (const ID &lhs, const ID &rhs);
+        friend bool operator > (const ID &lhs, const ID &rhs);
+        friend bool operator <=(const ID &lhs, const ID &rhs);
+        friend bool operator >=(const ID &lhs, const ID &rhs);
 
         friend ID operator +(const ID &lhs, const ID &rhs);
         friend ID operator +(const ID &lhs, int val);

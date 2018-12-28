@@ -49,6 +49,39 @@ namespace Common
     }
 
     /**
+     * @brief operator >=
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator >=(const ID &lhs, const ID &rhs)
+    {
+        return (lhs > rhs) || (lhs == rhs);
+    }
+
+    /**
+     * @brief operator <=
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator <=(const ID &lhs, const ID &rhs)
+    {
+        return (lhs < rhs) || (lhs == rhs);
+    }
+
+    /**
+     * @brief Common::ID::operator !=
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator !=(const ID &lhs, const ID &rhs)
+    {
+       return !(lhs == rhs);
+    }
+
+    /**
      * @brief Common::ID::operator +
      * @param lhs
      * @param rhs
@@ -88,6 +121,17 @@ namespace Common
     bool operator <(const ID &lhs, const ID &rhs)
     {
         return lhs.m_value < rhs.m_value;
+    }
+
+    /**
+     * @brief operator >
+     * @param lhs
+     * @param rhs
+     * @return
+     */
+    bool operator >(const ID &lhs, const ID &rhs)
+    {
+        return lhs.m_value > rhs.m_value;
     }
 
     /**

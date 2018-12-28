@@ -100,6 +100,11 @@ namespace Entity
         return *this;
     }
 
+    bool operator !=(const Class &lhs, const Class &rhs)
+    {
+        return !(lhs == rhs);
+    }
+
     /**
      * @brief operator ==
      * @param lhs

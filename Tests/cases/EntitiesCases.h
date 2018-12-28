@@ -24,7 +24,7 @@
 
 #include "Tests/TestEntities.h"
 
-#include <boost/range/algorithm/equal.hpp>
+#include <range/v3/algorithm/equal.hpp>
 
 #include <Entity/Property.h>
 
@@ -230,7 +230,7 @@ TEST_F(Enteties, OptionalClassMethods)
     tmpMethods << _class->addNewMethod();
     tmpMethods << _class->addNewProperty()->addGetter().getter();
     Entity::MethodsList methods = _class->allMethods(Entity::All);
-    ASSERT_TRUE(boost::range::equal(tmpMethods, methods));
+    ASSERT_TRUE(ranges::equal(tmpMethods, methods));
 }
 
 TEST_F(Enteties, OptionaClassFields)

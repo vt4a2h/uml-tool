@@ -47,7 +47,6 @@ namespace Entity {
      * @brief The Class class
      */
     class Class : public Type
-                , public boost::equality_comparable<Class>
     {
         Q_OBJECT
 
@@ -61,6 +60,7 @@ namespace Entity {
         Class &operator =(const Class &rhs);
 
         friend bool operator ==(const Class &lhs, const Class &rhs);
+        friend bool operator !=(const Class &lhs, const Class &rhs);
 
         Parent addParent(const Common::ID &typeId, Section section);
         Parent parent(const Common::ID &typeId) const;
