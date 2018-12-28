@@ -8,7 +8,6 @@ project(UmlTool)
 include(BuildParameters.cmake)
 
 find_package(Qt5Widgets REQUIRED)
-find_package(Boost 1.54.0 REQUIRED)
 if(BUILD_TESTING)
     find_package(GTest REQUIRED)
     enable_testing()
@@ -22,7 +21,7 @@ include(FilesList.cmake)
 
 set(RESOURCES ${GUI}/main.qrc)
 
-include_directories(${Qt5Widgets_INCLUDES} ${Boost_INCLUDE_DIRS} ${APP} ${CMD} ${DB} ${ENTITY}
+include_directories(${Qt5Widgets_INCLUDES} ${APP} ${CMD} ${DB} ${ENTITY}
                     ${ENTITY_COMPONENTS} ${GEN} ${GUI} ${GUI_GRAPHICS} ${HELPERS} ${MODELS}
                     ${PROJECT} ${REL} ${TRANSLATION} ${UTIL} ${COMMON} ${BOOST_DI})
 
@@ -34,8 +33,6 @@ add_executable(uml-tool ${FREE_SRC} ${APP_SRC} ${CMD_SRC} ${DB_SRC} ${ENTITY_SRC
                ${ENTITY_COMPONNTS_HEADERS} ${GEN_HEADERS} ${GUI_HEADERS} ${GUI_GRAPHICS_HEADERS} ${HELPERS_HEADERS}
                ${MODELS_HEADERS} ${PROJECT_HEADERS} ${REL_HEADERS} ${TRANSLATION_HEADERS} ${UTIL_HEADERS}
                ${COMMON_HEADERS} ${CONVERTERS_HEADERS})
-
-target_link_libraries(uml-tool ${Boost_LIBRARIES})
 
 include(CommonFunctions.cmake)
 setCommonTargetProperties(uml-tool)
@@ -54,7 +51,7 @@ if(BUILD_TESTING)
                    ${HELPERS_HEADERS} ${MODELS_HEADERS} ${PROJECT_HEADERS} ${REL_HEADERS} ${TRANSLATION_HEADERS}
                    ${UTIL_HEADERS} ${COMMON_HEADERS} ${CONVERTERS_HEADERS})
 
-    target_link_libraries(tests ${Boost_LIBRARIES} ${GTEST_LIBRARIES} pthread)
+    target_link_libraries(tests ${GTEST_LIBRARIES} pthread)
 
     setCommonTargetProperties(tests)
     qt5_use_modules(tests Widgets Core)
