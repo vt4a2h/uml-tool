@@ -14,15 +14,15 @@ Please note that this project is under development. There are still no stable re
 This is independent project and is not affiliated with The Qt Company and its beneficiaries.
 
 ## Dependencies:
-- Qt    >= 5.10
-- gcc   >= 7
-- boost >= 1.59
+- Qt    >= 5.12
+- gcc   >= 8
 - gtest (the latest one). Only for tests.
-- CMake >= 3.0.0 (If you prefer it, but you can use qmake for building)
+- CMake >= 3.13.0 (If you prefer it, but you can use qmake for building). Supplied as a part of submodule uml-tool-dependencies.
 
 ## Submodules:
 - boost-di
 - ranges-v3
+- uml-tool-dependencies
 
 ## C++ standard: 
 C++17 (w/o extensions)
