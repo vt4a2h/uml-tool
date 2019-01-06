@@ -36,6 +36,7 @@
 #include <QJsonObject>
 
 #include <DB/DBTypes.hpp>
+#include <DB/Database.h>
 #include <Entity/EntityTypes.hpp>
 
 #include "types.h"
@@ -80,30 +81,26 @@ namespace Util {
 
     QStringList scopesNamesList(const Entity::SharedType &type, const DB::SharedDatabase &DB);
 
-    template <class D>
-    std::shared_ptr<Entity::Type> findType(const Common::ID &id, const D &database)
+    template <class... Args>
+    std::shared_ptr<Entity::Type> findType(const Common::ID &id, const Args&... args)
     {
-        return database ? database->typeByID(id) : nullptr;
+        for (auto &&db: std::vector<DB::SharedDatabase>{args...})
+            if (db)
+                if (auto type = db->typeByID(id))
+                    return type;
+
+        return nullptr;
     }
 
-    template <class D, class... Args>
-    std::shared_ptr<Entity::Type> findType(const Common::ID &id, const D &database, const Args&... args)
+    template <class... Args>
+    std::shared_ptr<Entity::Scope> findScope(const Common::ID &id, const Args&... args)
     {
-        auto result = findType(id, database);
-        return result ? result : findType(id, args...);
-    }
+        for (auto &&db: std::vector<DB::SharedDatabase>{args...})
+            if (db)
+                if (auto scope = db->scope(id, true /*searchInDepth*/))
+                    return scope;
 
-    template <class D>
-    std::shared_ptr<Entity::Scope> findScope(const Common::ID &id, const D &database)
-    {
-        return database ? database->scope(id, true /*searchInDepth*/) : nullptr;
-    }
-
-    template <class D, class... Args>
-    std::shared_ptr<Entity::Scope> findScope(const Common::ID &id, const D &database, const Args&... args)
-    {
-        auto result = findScope(id, database);
-        return result ? result : findScope(id, args...);
+        return nullptr;
     }
 
     template <class List>
