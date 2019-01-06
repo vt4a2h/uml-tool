@@ -82,6 +82,7 @@ SOURCES += \
     Models/MessagesModel.cpp \
     Models/ProjectTreeModel.cpp \
     Project/Project.cpp \
+    Project/ProjectFactory.cpp \
     Relationship/Relation.cpp \
     Relationship/RelationFactory.cpp \
     Relationship/association.cpp \
@@ -95,8 +96,7 @@ SOURCES += \
     Translation/signaturemaker.cpp \
     Utility/helpfunctions.cpp \
     main.cpp \
-    templates.cpp \
-    ProjectFactory.cpp
+    templates.cpp
 
 HEADERS += \
     Application/Application.h \
@@ -196,6 +196,7 @@ HEADERS += \
     Models/ProjectTreeModel.h \
     Project/Project.h \
     Project/ProjectTypes.hpp \
+    Project/ProjectFactory.hpp \
     QtHelpers.h \
     Relationship/Relation.h \
     Relationship/RelationFactory.h \
@@ -212,8 +213,7 @@ HEADERS += \
     Translation/translator_types.hpp \
     Utility/helpfunctions.h \
     enums.h \
-    types.h \
-    ProjectFactory.hpp
+    types.h
 
 INCLUDEPATH *= $$PWD/boost-di/include $$PWD/range-v3/include
 

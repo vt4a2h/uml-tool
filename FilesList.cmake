@@ -203,8 +203,8 @@ set(PROJECT_HEADERS
     ${PROJECT}/ProjectFactory.hpp
     ${PROJECT}/ProjectTypes.hpp)
 set(PROJECT_SRC
-    ${PROJECT}/ProjectFactory.cpp
-    ${PROJECT}/Project.cpp)
+    ${PROJECT}/Project.cpp
+    ${PROJECT}/ProjectFactory.cpp)
 
 set(REL ${ROOT}/Relationship)
 set(REL_HEADERS
