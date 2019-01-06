@@ -95,7 +95,8 @@ SOURCES += \
     Translation/signaturemaker.cpp \
     Utility/helpfunctions.cpp \
     main.cpp \
-    templates.cpp
+    templates.cpp \
+    ProjectFactory.cpp
 
 HEADERS += \
     Application/Application.h \
@@ -211,7 +212,8 @@ HEADERS += \
     Translation/translator_types.hpp \
     Utility/helpfunctions.h \
     enums.h \
-    types.h
+    types.h \
+    ProjectFactory.hpp
 
 INCLUDEPATH *= $$PWD/boost-di/include $$PWD/range-v3/include
 
@@ -241,3 +243,8 @@ DISTFILES += \
     CMakeLists.txt \
     FilesList.cmake \
     Tests/TestFiles.cmake
+
+# TODO: generate qt.conf wit correct path to plugins:
+# [Paths]
+# Plugins = path-to-plugins
+# $$[QT_INSTALL_PLUGINS]

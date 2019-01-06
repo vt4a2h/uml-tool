@@ -200,8 +200,10 @@ set(MODELS_SRC
 set(PROJECT ${ROOT}/Project)
 set(PROJECT_HEADERS
     ${PROJECT}/Project.h
+    ${PROJECT}/ProjectFactory.hpp
     ${PROJECT}/ProjectTypes.hpp)
 set(PROJECT_SRC
+    ${PROJECT}/ProjectFactory.cpp
     ${PROJECT}/Project.cpp)
 
 set(REL ${ROOT}/Relationship)
