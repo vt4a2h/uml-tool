@@ -34,12 +34,17 @@
 #define G_CONNECT(arg, ...) G_ASSERT(QObject::connect(arg, ##__VA_ARGS__))
 #define G_DISCONNECT(arg, ...) G_ASSERT(QObject::disconnect(arg, ##__VA_ARGS__))
 
-// Guarded condition, assert in debug mode if condition is false
-#define G_ASSERT(c) qthelpers::details::g_assert(c, Q_FUNC_INFO, #c, __FILE__, __LINE__)
+#ifdef QT_DEBUG
+    // Guarded condition, assert in debug mode if condition is false
+    #define G_ASSERT(c) qthelpers::details::g_assert(c, Q_FUNC_INFO, #c, __FILE__, __LINE__)
 
-// Conditional G_ASSERT
-#define G_ASSERT_C(c, cond) qthelpers::details::g_assert_c(c, !!(cond), Q_FUNC_INFO, \
-                                                          #c, __FILE__, __LINE__)
+    // Conditional G_ASSERT
+    #define G_ASSERT_C(c, cond) qthelpers::details::g_assert_c(c, !!(cond), Q_FUNC_INFO, \
+                                                              #c, __FILE__, __LINE__)
+#else
+    #define G_ASSERT(c) c
+    #define G_ASSERT_C(c, cond) c
+#endif
 
 namespace qthelpers
 {
@@ -49,12 +54,8 @@ namespace qthelpers
         inline decltype(auto) g_assert(Condition &&c, const char *where,
                                        const char *what, const char *file, int line)
         {
-        #ifdef QT_DEBUG
             if (!c)
                 qt_assert_x(where, what, file, line);
-        #else
-            Q_UNUSED(where); Q_UNUSED(what); Q_UNUSED(file); Q_UNUSED(line);
-        #endif
 
             return std::forward<Condition>(c);
         }
@@ -63,12 +64,8 @@ namespace qthelpers
         inline decltype(auto) g_assert_c(Condition &&c, bool cond, const char *where,
                                          const char *what, const char *file, int line)
         {
-#ifdef QT_DEBUG
             if (cond && !c)
                 qt_assert_x(where, what, file, line);
-#else
-            Q_UNUSED(cond); Q_UNUSED(where); Q_UNUSED(what); Q_UNUSED(file); Q_UNUSED(line);
-#endif
 
             return std::forward<Condition>(c);
         }
