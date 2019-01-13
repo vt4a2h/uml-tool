@@ -1,3 +1,7 @@
+#include <utility>
+
+#include <utility>
+
 /*****************************************************************************
 **
 ** Copyright (C) 2014 Fanaskov Vitaly (vt4a2h@gmail.com)
@@ -70,14 +74,18 @@ namespace Projects {
      * @param name
      * @param path
      */
-    Project::Project(const QString &name, const QString &path)
-        : m_Name(name)
-        , m_Path(path)
+    Project::Project(QString name, QString path)
+        : m_Name(std::move(name))
+        , m_Path(std::move(path))
         , m_nextUniqueID(Common::ID::firstFreeID().value())
         , m_Modified(false)
         , m_Database(std::make_shared<DB::ProjectDatabase>())
     {
         m_Database->addExistsScope(makeProjectScope());
+        G_CONNECT(m_Database.get(), &DB::ProjectDatabase::scopeAdded,
+                  [this](auto &&scope){ emit scopeAdded(this->name(), scope); });
+        G_CONNECT(m_Database.get(), &DB::ProjectDatabase::scopeRemoved,
+                  [this](auto &&scope){ emit scopeRemoved(this->name(), scope); });
     }
 
     /**
@@ -88,7 +96,7 @@ namespace Projects {
         : m_Name(std::move(src.m_Name))
         , m_Path(std::move(src.m_Path))
         , m_nextUniqueID(std::move(src.m_nextUniqueID))
-        , m_Modified(std::move(src.m_Modified))
+        , m_Modified(src.m_Modified)
         , m_Database(std::move(src.m_Database))
         , m_CommandsStack(std::move(src.m_CommandsStack))
     {
@@ -97,8 +105,7 @@ namespace Projects {
     /**
      * @brief Project::~Project
      */
-    Project::~Project()
-    {}
+    Project::~Project() = default;
 
     /**
      * @brief Project::operator =
@@ -111,7 +118,7 @@ namespace Projects {
             m_Name = std::move(lhs.m_Name);
             m_Path = std::move(lhs.m_Path);
             m_nextUniqueID = std::move(lhs.m_nextUniqueID);
-            m_Modified = std::move(lhs.m_Modified);
+            m_Modified = lhs.m_Modified;
             m_Database = std::move(lhs.m_Database);
             m_CommandsStack = std::move(lhs.m_CommandsStack);
         }

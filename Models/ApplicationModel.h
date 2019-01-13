@@ -43,7 +43,7 @@ namespace Models {
 
     public:
         explicit ApplicationModel();
-        ~ApplicationModel();
+        ~ApplicationModel() override;
 
         // TODO: move to some database class
         Projects::SharedProject makeProject();
@@ -56,10 +56,6 @@ namespace Models {
         // }
 
         // TODO: remove from this class (breaks SRP) {
-        Entity::SharedScope makeScope(const QString &name);
-        void addExistsScope(const Entity::SharedScope &scope);
-        void removeScope(const Common::ID &id);
-
         void addExistsType(const QString &projectName, const Common::ID &scopeID, const Entity::SharedType &type);
         void removeType(const QString &projectName, const Common::ID &scopeID, const Common::ID &typeID);
         // }
@@ -73,7 +69,6 @@ namespace Models {
         SharedTreeModel treeModel() const;
 
     signals:
-        void scopeAdded(const Entity::SharedScope &scope);
         void currentProjectChanged(const Projects::SharedProject &previous,
                                    const Projects::SharedProject &current);
 

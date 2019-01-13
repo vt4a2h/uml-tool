@@ -57,9 +57,9 @@ namespace Projects {
         Q_DISABLE_COPY(Project)
 
         explicit Project();
-        Project(const QString &name, const QString &path);
+        Project(QString name, QString path);
         Project(Project &&src) noexcept;
-        ~Project();
+        ~Project() override;
 
         Project& operator =(Project &&lhs) noexcept;
         friend bool operator ==(const Project &lhs, const Project &rhs);
@@ -101,6 +101,9 @@ namespace Projects {
         void errors(const QString &message, const ErrorList &errorsList);
 
         void modifiedStatusUpdated(bool modified);
+
+        void scopeAdded(const QString &projectName, const Entity::SharedScope &scope);
+        void scopeRemoved(const QString &projectName, const Entity::SharedScope &scope);
 
     private:
         QString projectFileName() const;

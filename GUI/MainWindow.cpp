@@ -366,12 +366,12 @@ namespace GUI {
      */
     void MainWindow::onCreateScope()
     {
-        if (m_ApplicationModel->currentProject()) {
+        if (auto p = m_ApplicationModel->currentProject()) {
 
-            m_AddScope->setProjectName(m_ApplicationModel->currentProject()->name());
+            m_AddScope->setProjectName(p->name());
 
             QStringList lst;
-            for (auto &&scope : m_ApplicationModel->currentProject()->database()->scopes())
+            for (auto &&scope : p->database()->scopes())
                 lst << scope->name();
             m_AddScope->addExistingScopesNames(lst);
 
@@ -380,7 +380,7 @@ namespace GUI {
                 if (!scopeName.isEmpty())
                     G_ASSERT(m_CommandsStack)->push(
                         Commands::make<Commands::CreateScope>(
-                            scopeName, *m_ApplicationModel).release());
+                            scopeName, p->database()).release());
             }
         } else
             QMessageBox::information(this, tr("Information"), tr("No current project."), QMessageBox::Ok);
@@ -425,17 +425,6 @@ namespace GUI {
 
         addRecentProject(newProject->fullPath());
         rebuildRecentProjectMenu();
-    }
-
-    /**
-     * @brief MainWindow::createScope
-     * @param name
-     */
-    void MainWindow::createScope(const QString &name)
-    {
-        if (!m_ApplicationModel->makeScope(name)) {
-            QMessageBox::information(this, tr("Information"), tr("Cannot create scope."), QMessageBox::Ok);
-        }
     }
 
     /**

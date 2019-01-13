@@ -308,7 +308,14 @@ namespace Models {
      */
     void ProjectTreeModel::addProject(const Projects::SharedProject &pr)
     {
+        if (!pr)
+            return;
+
         addProjectItem(pr);
+        G_CONNECT(pr.get(), &Projects::Project::scopeAdded,
+                  [this](auto &&prName, auto &&scope){ this->addScope(scope, prName); });
+        G_CONNECT(pr.get(), &Projects::Project::scopeRemoved,
+                  [this](auto &&prName, auto &&scope){ this->removeScope(scope->id(), prName); });
     }
 
     /**

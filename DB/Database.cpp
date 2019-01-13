@@ -187,7 +187,7 @@ namespace DB {
      */
     Entity::SharedScope Database::addScope(const QString &name, const Common::ID &parentScopeId)
     {
-        Entity::SharedScope scope(nullptr);
+        Entity::SharedScope scope = nullptr;
 
         if (!parentScopeId.isValid()) {
             scope = std::make_shared<Entity::Scope>(name, Common::ID::globalScopeID());
@@ -201,8 +201,10 @@ namespace DB {
             }
         }
 
-        if (scope)
+        if (scope) {
             connectScope(scope.get());
+            emit scopeAdded(scope);
+        }
 
         return scope;
     }
@@ -219,6 +221,9 @@ namespace DB {
         Q_ASSERT(!m_Scopes.contains(scope->id()));
         m_Scopes[scope->id()] = scope;
         connectScope(scope.get());
+
+        emit scopeAdded(scope);
+
         return scope;
     }
 
@@ -257,10 +262,12 @@ namespace DB {
      */
     void Database::removeScope(const Common::ID &id)
     {
-        auto it = m_Scopes.find(id);
-        if (it != m_Scopes.end()) {
-            connectScope(it->get(), false /*connect*/);
-            m_Scopes.remove((*it)->id());
+        if (auto it = m_Scopes.find(id); it != m_Scopes.end()) {
+            auto scope = *it;
+            connectScope(scope.get(), false /*connect*/);
+            m_Scopes.remove(scope->id());
+
+            emit scopeRemoved(scope);
         }
     }
 
@@ -621,12 +628,11 @@ namespace DB {
 
         ids << scope->id();
 
-        if (scope->containsChildScope(id)) {
+        if (scope->containsChildScope(id))
             ids << scope->getChildScope(id)->id();
-            return;
-        } else {
-            for (auto sc : scope->scopes()) recursiveFind(sc, id, ids);
-        }
+        else
+            for (auto &&sc : scope->scopes())
+                recursiveFind(sc, id, ids);
     }
 
     /**

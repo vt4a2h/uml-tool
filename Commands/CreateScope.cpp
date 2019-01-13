@@ -32,11 +32,11 @@ namespace Commands {
      * @param model
      * @param parent
      */
-    CreateScope::CreateScope(const QString &name, Models::ApplicationModel &model,
+    CreateScope::CreateScope(const QString &name, DB::SharedDatabase projectDB,
                              QUndoCommand *parent)
         : BaseCommand(tr("Create scope \"%1\"").arg(name), parent)
         , m_ScopeName(name)
-        , m_Model(model)
+        , m_ProjectDB(std::move(G_ASSERT(projectDB)))
     {
     }
 
@@ -47,10 +47,11 @@ namespace Commands {
     {
         if (m_Done) {
             if (m_NewScope)
-                m_Model.addExistsScope(m_NewScope);
+                m_ProjectDB->addExistsScope(m_NewScope);
+            else
+                setObsolete(true);
         } else {
-            // TODO: name should be unique (check all scopes and, if needed, make unique name)
-            m_NewScope = m_Model.makeScope(m_ScopeName);
+            m_NewScope = m_ProjectDB->addScope(m_ScopeName);
             m_Done = true; // done first time
         }
     }
@@ -61,7 +62,9 @@ namespace Commands {
     void CreateScope::undoImpl()
     {
         if (m_NewScope)
-            m_Model.removeScope(m_NewScope->id());
+            m_ProjectDB->removeScope(m_NewScope->id());
+        else
+            setObsolete(true);
     }
 
     /**

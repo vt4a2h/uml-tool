@@ -46,9 +46,7 @@ namespace Models {
     /**
      * @brief ApplicationModal::~ApplicationModal
      */
-    ApplicationModel::~ApplicationModel()
-    {
-    }
+    ApplicationModel::~ApplicationModel() = default;
 
     /**
      * @brief ApplicationModel::makeProject
@@ -71,6 +69,7 @@ namespace Models {
         auto newProject(std::make_shared<Projects::Project>(name, path));
         newProject->setGlobalDatabase(globalDatabase());
         m_TreeModel->addProject(newProject);
+
         return *m_Projects.insert(newProject->name(), newProject);
     }
 
@@ -132,55 +131,6 @@ namespace Models {
     bool ApplicationModel::containsProject(const QString &name)
     {
         return m_Projects.contains(name);
-    }
-
-    /**
-     * @brief ApplicationModel::makeScope
-     * @param name
-     * @return
-     */
-    Entity::SharedScope ApplicationModel::makeScope(const QString &name)
-    {
-        Entity::SharedScope result;
-
-        if (m_CurrentProject) {
-            auto projectDB = m_CurrentProject->database();
-            Q_ASSERT(projectDB);
-            result = projectDB->addScope(name);
-            m_TreeModel->addScope(result, m_CurrentProject->name());
-            // TODO: add scope with parent scope
-            // TODO: extract as a command
-            emit scopeAdded(result);
-        }
-
-        return result;
-    }
-
-    /**
-     * @brief ApplicationModel::addExistsScope
-     * @param scope
-     */
-    void ApplicationModel::addExistsScope(const Entity::SharedScope &scope)
-    {
-        if (m_CurrentProject && scope) {
-            auto projectDB = m_CurrentProject->database();
-            Q_ASSERT(projectDB);
-            projectDB->addExistsScope(scope);
-            m_TreeModel->addScope(scope, m_CurrentProject->name());
-            emit scopeAdded(scope);
-        }
-    }
-
-    /**
-     * @brief ApplicationModel::removeScope
-     * @param id
-     */
-    void ApplicationModel::removeScope(const Common::ID &id)
-    {
-        if (m_CurrentProject) {
-            m_CurrentProject->database()->removeScope(id);
-            m_TreeModel->removeScope(id, m_CurrentProject->name());
-        }
     }
 
     /**

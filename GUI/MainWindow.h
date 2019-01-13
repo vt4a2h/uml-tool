@@ -97,7 +97,6 @@ namespace GUI {
         void onCloseProject();
 
         void createNewProject(const QString &name, const QString &path);
-        void createScope(const QString &name);
         void makeTitle();
 
         void onProjectTreeMenu(const QPoint &p);

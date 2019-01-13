@@ -25,6 +25,8 @@
 #include "BaseCommand.h"
 
 #include <Entity/EntityTypes.hpp>
+#include <Models/ModelsTypes.hpp>
+#include <DB/DBTypes.hpp>
 
 namespace Models {
     class ApplicationModel;
@@ -37,7 +39,7 @@ namespace Commands {
     class CreateScope : public BaseCommand
     {
     public:
-        CreateScope(const QString &name, Models::ApplicationModel &model,
+        CreateScope(const QString &name, DB::SharedDatabase projectDB,
                     QUndoCommand *parent = nullptr);
 
         void redoImpl() override;
@@ -49,7 +51,7 @@ namespace Commands {
     private:
         QString m_ScopeName;
         Entity::SharedScope m_NewScope;
-        Models::ApplicationModel &m_Model;
+        DB::SharedDatabase m_ProjectDB;
     };
 
 } // namespace Commands

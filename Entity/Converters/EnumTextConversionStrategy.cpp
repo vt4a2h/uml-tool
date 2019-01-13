@@ -150,8 +150,8 @@ namespace Entity::Converters {
             auto value = valueRef.toInt(&convRes, base);
             if (!convRes)
                 throw Models::MessageException(
-                          Models::MessageType::Error,
-                          EnumTextConversionStrategy::tr("Cannot convert enumerator value: ") + valueRef);
+                    Models::MessageType::Error,
+                    EnumTextConversionStrategy::tr("Cannot convert enumerator value: ") + valueRef);
 
             result = std::make_pair(value, base);
         }

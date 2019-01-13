@@ -109,6 +109,8 @@ namespace DB {
 
     signals:
         void loaded();
+        void scopeAdded(const Entity::SharedScope &scope);
+        void scopeRemoved(const Entity::SharedScope &scope);
 
     protected:
         Entity::SharedScope depthScopeSearch(const Common::ID &id) const;

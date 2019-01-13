@@ -39,8 +39,7 @@ namespace Commands {
      * @param parent
      */
     BaseCommand::BaseCommand(const QString &text, BaseCommand::QUndoCommand *parent)
-        : QObject()
-        , QUndoCommand(text, parent)
+        :  QUndoCommand(text, parent)
     {
     }
 
