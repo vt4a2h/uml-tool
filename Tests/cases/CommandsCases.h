@@ -71,7 +71,7 @@ TEST_F(CommandsTester, CreateScopeCommand)
 {
     QString scopeName = "Foo";
 
-    auto cmd = std::make_unique<Commands::CreateScope>(scopeName, *m_FakeAppModel);
+    auto cmd = std::make_unique<Commands::CreateScope>(scopeName, m_ProjectDb);
 
     cmd->redoImpl();
     ASSERT_FALSE(cmd->scopeName().isEmpty());
