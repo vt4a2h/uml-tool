@@ -13,7 +13,6 @@ set(TEST_HEADERS
     ${TESTS_DIR}/TestSectionalTextConvertion.hpp
     ${TESTS_DIR}/TestIComponents.h
     ${TESTS_DIR}/TestEntities.h
-    ${TESTS_DIR}/TestComponentsMaker.h
     ${TESTS_DIR}/TestComponentsBase.h
     ${TESTS_DIR}/TestClassComponents.h
     ${TESTS_DIR}/TestComponentSignatureParser.h
@@ -37,7 +36,6 @@ set(CASES_HEADERS
     ${CASES_DIR}/FileJsonCases.h
     ${CASES_DIR}/EntitiesCases.h
     ${CASES_DIR}/DepthSearchCases.h
-    ${CASES_DIR}/ComponentsMakerCases.h
     ${CASES_DIR}/ClassComponentsCases.h
     ${CASES_DIR}/FileMakerCases.h
     ${CASES_DIR}/CommandsCases.h

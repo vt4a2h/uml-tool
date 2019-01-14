@@ -99,14 +99,12 @@ set(ENTITY_COMPONENTS ${ENTITY}/Components)
 set(ENTITY_COMPONNTS_HEADERS
     ${ENTITY_COMPONENTS}/componentsignatureparser.h
     ${ENTITY_COMPONENTS}/icomponents.h
-    ${ENTITY_COMPONENTS}/componentsmaker.h
     ${ENTITY_COMPONENTS}/componentscommon.h
     ${ENTITY_COMPONENTS}/components_types.h
     ${ENTITY_COMPONENTS}/token.h)
 set(ENTITY_COMPONNTS_SRC
     ${ENTITY_COMPONENTS}/componentsignatureparser.cpp
     ${ENTITY_COMPONENTS}/icomponents.cpp
-    ${ENTITY_COMPONENTS}/componentsmaker.cpp
     ${ENTITY_COMPONENTS}/token.cpp)
 
 set(GEN ${ROOT}/Generator)

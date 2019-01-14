@@ -81,7 +81,6 @@ HEADERS += \
     TestSignatureMaker.hpp \
     TestIComponents.h \
     TestEntities.h \
-    TestComponentsMaker.h \
     TestComponentsBase.h \
     TestClassComponents.h \
     TestComponentSignatureParser.h \
@@ -102,7 +101,6 @@ HEADERS += \
     cases/FileJsonCases.h \
     cases/EntitiesCases.h \
     cases/DepthSearchCases.h \
-    cases/ComponentsMakerCases.h \
     cases/ClassComponentsCases.h \
     cases/FileMakerCases.h \
     TestCommands.h \
@@ -163,7 +161,6 @@ SOURCES += main.cpp \
            $$PWD/../Generator/basiccppprojectgenerator.cpp \
            $$PWD/../Project/project.cpp \
            $$PWD/../Translation/code.cpp \
-           $$PWD/../Entity/Components/componentsmaker.cpp \
            $$PWD/../Entity/Components/componentsignatureparser.cpp \
            $$PWD/../Translation/signaturemaker.cpp \
            $$PWD/../Models/ApplicationModel.cpp \

@@ -32,7 +32,6 @@ SOURCES += \
     Entity/Class.cpp \
     Entity/ClassMethod.cpp \
     Entity/Components/componentsignatureparser.cpp \
-    Entity/Components/componentsmaker.cpp \
     Entity/Components/icomponents.cpp \
     Entity/Components/token.cpp \
     Entity/Converters/BaseTextConversionStrategy.cpp \
@@ -133,7 +132,6 @@ HEADERS += \
     Entity/Components/components_types.h \
     Entity/Components/componentscommon.h \
     Entity/Components/componentsignatureparser.h \
-    Entity/Components/componentsmaker.h \
     Entity/Components/icomponents.h \
     Entity/Components/token.h \
     Entity/Converters/BaseTextConversionStrategy.hpp \
