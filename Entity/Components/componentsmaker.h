@@ -42,6 +42,7 @@ namespace Components {
     };
 
     /// The ComponentsMaker class
+    // FIXME: REMOVE
     class ComponentsMaker
     {
         Q_DECLARE_TR_FUNCTIONS(ComponentsMaker)

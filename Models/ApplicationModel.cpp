@@ -134,38 +134,6 @@ namespace Models {
     }
 
     /**
-     * @brief ApplicationModel::addExistsType
-     * @param type
-     */
-    void ApplicationModel::addExistsType(const QString &projectName, const Common::ID &scopeID,
-                                         const Entity::SharedType &type)
-    {
-        if (auto &&pr = project(projectName))
-            if (auto &&db = pr->database())
-                if (auto &&scope = db->scope(scopeID))
-                    scope->addExistsType(type);
-
-        m_TreeModel->addType(type, scopeID, projectName);
-    }
-
-    /**
-     * @brief ApplicationModel::removeType
-     * @param projectID
-     * @param scopeID
-     * @param typeID
-     */
-    void ApplicationModel::removeType(const QString &projectName, const Common::ID &scopeID,
-                                      const Common::ID &typeID)
-    {
-        if (auto &&pr = project(projectName))
-            if (auto &&db = pr->database())
-                if (auto &&scope = db->scope(scopeID))
-                    scope->removeType(typeID);
-
-        m_TreeModel->removeType(projectName, scopeID, typeID);
-    }
-
-    /**
      * @brief ApplicationModal::currentProject
      * @return
      */

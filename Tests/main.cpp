@@ -35,7 +35,7 @@
 #include "cases/EntitiesCases.h"
 #include "cases/ClassComponentsCases.h"
 #include "cases/SignatureParserCases.h"
-#include "cases/ComponentsMakerCases.h"
+//#include "cases/ComponentsMakerCases.h" // FIXME: remove
 #include "cases/SignatureMakerCases.h"
 #include "cases/CommandsCases.h"
 #include "cases/ID.h"

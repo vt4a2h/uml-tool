@@ -18,7 +18,6 @@ SOURCES += \
     Commands/MakeProjectCurrent.cpp \
     Commands/MementoCmd.cpp \
     Commands/MoveGraphicObject.cpp \
-    Commands/MoveTypeToAnotherScope.cpp \
     Commands/OpenProject.cpp \
     Commands/RemoveComponentsCommands.cpp \
     Commands/RemoveProject.cpp \
@@ -111,7 +110,6 @@ HEADERS += \
     Commands/MakeProjectCurrent.h \
     Commands/MementoCmd.hpp \
     Commands/MoveGraphicObject.h \
-    Commands/MoveTypeToAnotherScope.h \
     Commands/OpenProject.h \
     Commands/RemoveComponentsCommands.h \
     Commands/RemoveProject.h \

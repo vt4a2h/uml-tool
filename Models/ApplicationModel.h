@@ -55,11 +55,6 @@ namespace Models {
         bool containsProject(const QString& name);
         // }
 
-        // TODO: remove from this class (breaks SRP) {
-        void addExistsType(const QString &projectName, const Common::ID &scopeID, const Entity::SharedType &type);
-        void removeType(const QString &projectName, const Common::ID &scopeID, const Common::ID &typeID);
-        // }
-
         Projects::SharedProject currentProject() const;
         bool setCurrentProject(const QString &name);
 

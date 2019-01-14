@@ -290,8 +290,8 @@ namespace Components {
             auto it = ranges::find_if(types, [=](const Entity::SharedType &type) {
                                                   return extType->isEqual(*type, false);
                                               });
-            if (it == cend(types))
-                m_Model->addExistsType(m_Model->currentProject()->name(), m_Scope->id(), extType);
+//            if (it == cend(types))
+//                m_Model->addExistsType(m_Model->currentProject()->name(), m_Scope->id(), extType);
 
             return {"", extType};
          } else {

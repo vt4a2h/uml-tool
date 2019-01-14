@@ -16,7 +16,6 @@ set(CMD_HEADERS
     ${CMD}/MakeProjectCurrent.h
     ${CMD}/CreateScope.h
     ${CMD}/MoveGraphicObject.h
-    ${CMD}/MoveTypeToAnotherScope.h
     ${CMD}/RemoveComponentsCommands.h
     ${CMD}/RenameEntity.h
     ${CMD}/AddComponentsCommands.h
@@ -31,7 +30,6 @@ set(CMD_SRC
     ${CMD}/MakeProjectCurrent.cpp
     ${CMD}/CreateScope.cpp
     ${CMD}/MoveGraphicObject.cpp
-    ${CMD}/MoveTypeToAnotherScope.cpp
     ${CMD}/RemoveComponentsCommands.cpp
     ${CMD}/RenameEntity.cpp
     ${CMD}/AddComponentsCommands.cpp

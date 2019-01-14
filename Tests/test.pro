@@ -60,7 +60,6 @@ HEADERS += \
     $$PWD/../Commands/MakeProjectCurrent.h \
     $$PWD/../Commands/MoveGraphicObject.h \
     $$PWD/../Commands/AddRelation.h \
-    $$PWD/../Commands/MoveTypeToAnotherScope.h \
     $$PWD/../Commands/RemoveProject.h \
     $$PWD/../Commands/RenameEntity.h \
     $$PWD/../Commands/OpenProject.h \
@@ -179,7 +178,6 @@ SOURCES += main.cpp \
            $$PWD/../Commands/MakeProjectCurrent.cpp \
            $$PWD/../Commands/MoveGraphicObject.cpp \
            $$PWD/../Commands/AddRelation.cpp \
-           $$PWD/../Commands/MoveTypeToAnotherScope.cpp \
            $$PWD/../Commands/RemoveProject.cpp \
            $$PWD/../Commands/RenameEntity.cpp \
            $$PWD/../Commands/OpenProject.cpp \

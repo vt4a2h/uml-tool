@@ -28,7 +28,6 @@
 #include <Commands/CreateScope.h>
 #include <Commands/MakeProjectCurrent.h>
 #include <Commands/MoveGraphicObject.h>
-#include <Commands/MoveTypeToAnotherScope.h>
 #include <Commands/RemoveProject.h>
 #include <Commands/RenameEntity.h>
 #include <Commands/OpenProject.h>
@@ -129,31 +128,6 @@ TEST_F(CommandsTester, MoveGraphicObject)
 
     cmd->undoImpl();
     ASSERT_EQ(e.pos(), initialPos);
-}
-
-TEST_F(CommandsTester, MoveTypeToAnotherScope)
-{
-    auto firstScope = m_Project->database()->addScope("first");
-    ASSERT_TRUE(!!firstScope);
-
-    auto secondScope = m_Project->database()->addScope("second");
-    ASSERT_TRUE(!!secondScope);
-
-    auto type = firstScope->addType("SomeType");
-    ASSERT_TRUE(!!type);
-    ASSERT_TRUE(firstScope->containsType(type->id()));
-    ASSERT_FALSE(secondScope->containsType(type->id()));
-
-    auto cmd = std::make_unique<Commands::MoveTypeToAnotherScope>(type, m_FakeAppModel, firstScope,
-                                                                secondScope);
-
-    cmd->redoImpl();
-    ASSERT_FALSE(firstScope->containsType(type->id()));
-    ASSERT_TRUE(secondScope->containsType(type->id()));
-
-    cmd->undoImpl();
-    ASSERT_TRUE(firstScope->containsType(type->id()));
-    ASSERT_FALSE(secondScope->containsType(type->id()));
 }
 
 TEST_F(CommandsTester, RemoveProject)
