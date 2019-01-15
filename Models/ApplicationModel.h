@@ -52,7 +52,6 @@ namespace Models {
         Projects::SharedProject project(const QString &name) const;
         Projects::ProjectsList projects() const;
         bool removeProject(const QString &name);
-        bool containsProject(const QString& name);
         // }
 
         Projects::SharedProject currentProject() const;

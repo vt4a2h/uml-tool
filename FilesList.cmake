@@ -197,9 +197,11 @@ set(PROJECT ${ROOT}/Project)
 set(PROJECT_HEADERS
     ${PROJECT}/Project.h
     ${PROJECT}/ProjectFactory.hpp
+    ${PROJECT}/ProjectDB.hpp
     ${PROJECT}/ProjectTypes.hpp)
 set(PROJECT_SRC
     ${PROJECT}/Project.cpp
+    ${PROJECT}/ProjectDB.cpp
     ${PROJECT}/ProjectFactory.cpp)
 
 set(REL ${ROOT}/Relationship)

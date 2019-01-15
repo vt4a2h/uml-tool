@@ -124,16 +124,6 @@ namespace Models {
     }
 
     /**
-     * @brief ApplicationModal::containsProject
-     * @param id
-     * @return
-     */
-    bool ApplicationModel::containsProject(const QString &name)
-    {
-        return m_Projects.contains(name);
-    }
-
-    /**
      * @brief ApplicationModal::currentProject
      * @return
      */

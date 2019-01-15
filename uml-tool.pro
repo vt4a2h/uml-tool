@@ -94,7 +94,8 @@ SOURCES += \
     Translation/signaturemaker.cpp \
     Utility/helpfunctions.cpp \
     main.cpp \
-    templates.cpp
+    templates.cpp \
+    Project/ProjectDB.cpp
 
 HEADERS += \
     Application/Application.h \
@@ -209,7 +210,8 @@ HEADERS += \
     Translation/translator_types.hpp \
     Utility/helpfunctions.h \
     enums.h \
-    types.h
+    types.h \
+    Project/ProjectDB.hpp
 
 INCLUDEPATH *= $$PWD/boost-di/include $$PWD/range-v3/include
 
