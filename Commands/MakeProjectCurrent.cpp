@@ -29,6 +29,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
+#include <Project/ProjectDB.hpp>
+
 namespace Commands
 {
 
@@ -86,7 +88,7 @@ namespace Commands
                 m_PreviousGraphicItems = p->database()->graphicsItems();
             }
 
-            if (auto p = m_AppModel->project(m_CurrentProjectName))
+            if (auto p = m_AppModel->projectsDb().projectByName(m_CurrentProjectName))
                 m_CurrentGraphicItems = p->database()->graphicsItems();
 
             m_Done = true;
@@ -104,11 +106,11 @@ namespace Commands
      */
     void MakeProjectCurrent::sanityCheck()
     {
-        if (auto p = m_AppModel->project(m_CurrentProjectName))
+        if (auto p = m_AppModel->projectsDb().projectByName(m_CurrentProjectName))
             Q_ASSERT_X(ranges::equal(p->database()->graphicsItems(), m_CurrentGraphicItems),
                        Q_FUNC_INFO, "Current project is in the inconsistent state.");
 
-        if (auto p = m_AppModel->project(m_PreviousProjectName))
+        if (auto p = m_AppModel->projectsDb().projectByName(m_PreviousProjectName))
             Q_ASSERT_X(ranges::equal(p->database()->graphicsItems(), m_PreviousGraphicItems),
                        Q_FUNC_INFO, "Previous project is in the inconsistent state.");
 

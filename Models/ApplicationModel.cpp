@@ -26,6 +26,8 @@
 #include <Entity/Class.h>
 #include <Entity/ClassMethod.h>
 
+#include <Project/ProjectDB.hpp>
+
 #include "Constants.h"
 
 namespace Models {
@@ -43,8 +45,9 @@ namespace Models {
                   m_TreeModel.get(), &ProjectTreeModel::onCurrentProjectChanged);
     }
 
+
     /**
-     * @brief ApplicationModal::~ApplicationModal
+     * @brief ApplicationModel::~ApplicationModel
      */
     ApplicationModel::~ApplicationModel() = default;
 
@@ -54,8 +57,7 @@ namespace Models {
      */
     Projects::SharedProject ApplicationModel::makeProject()
     {
-        auto project = makeProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH);
-        return project;
+        return makeProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH);
     }
 
     /**
@@ -69,8 +71,9 @@ namespace Models {
         auto newProject(std::make_shared<Projects::Project>(name, path));
         newProject->setGlobalDatabase(globalDatabase());
         m_TreeModel->addProject(newProject);
+        projectsDb().addProject(newProject);
 
-        return *m_Projects.insert(newProject->name(), newProject);
+        return newProject;
     }
 
     /**
@@ -80,47 +83,13 @@ namespace Models {
      */
     bool ApplicationModel::addProject(const Projects::SharedProject &pr)
     {
-        if (!pr || m_Projects.contains(pr->name()))
+        if (!pr || projectsDb().contains(pr->name()))
             return false;
 
-        m_Projects[pr->name()] = pr;
+        projectsDb().addProject(pr);
         pr->setGlobalDatabase(globalDatabase());
         m_TreeModel->addProject(pr);
         return true;
-    }
-
-    /**
-     * @brief ApplicationModel::getProject
-     * @param id
-     * @return
-     */
-    Projects::SharedProject ApplicationModel::project(const QString &name) const
-    {
-        return m_Projects[name];
-    }
-
-    /**
-     * @brief ApplicationModal::projects
-     * @return
-     */
-    Projects::ProjectsList ApplicationModel::projects() const
-    {
-        return m_Projects.values().toVector();
-    }
-
-    /**
-     * @brief ApplicationModal::removeProject
-     * @param id
-     */
-    bool ApplicationModel::removeProject(const QString &name)
-    {
-        auto it = m_Projects.find(name);
-        if (it != m_Projects.end()) {
-            m_TreeModel->removeProject(*it);
-            return !!m_Projects.remove(name);
-        }
-
-        return false;
     }
 
     /**
@@ -150,16 +119,12 @@ namespace Models {
             return true;
         }
 
-        auto it = m_Projects.find(name);
-        if (it == m_Projects.end())
-            return false;
-
-        if (*it != m_CurrentProject) {
+        if (auto proj = projectsDb().projectByName(name); proj != m_CurrentProject) {
             auto previous = m_CurrentProject;
             if (previous)
                 previous->database()->setClearGraphics(true);
 
-            m_CurrentProject = *it;
+            m_CurrentProject = proj;
             if (m_CurrentProject)
                 m_CurrentProject->database()->setClearGraphics(false);
 
@@ -195,6 +160,24 @@ namespace Models {
     SharedTreeModel ApplicationModel::treeModel() const
     {
         return m_TreeModel;
+    }
+
+    /**
+     * @brief ApplicationModel::projectsDb
+     * @return
+     */
+    Projects::ProjectDatabase &ApplicationModel::projectsDb()
+    {
+        return *m_projectsDb;
+    }
+
+    /**
+     * @brief ApplicationModel::projectsDb
+     * @return
+     */
+    const Projects::ProjectDatabase &ApplicationModel::projectsDb() const
+    {
+        return *m_projectsDb;
     }
 
 } // namespace models

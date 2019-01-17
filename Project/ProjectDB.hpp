@@ -24,7 +24,7 @@
 
 #include <Project/ProjectTypes.hpp>
 
-namespace Project {
+namespace Projects {
 
     class ProjectDatabase : public QObject
     {
@@ -33,15 +33,22 @@ namespace Project {
     public:
         ProjectDatabase();
 
-        void addProject(const Projects::SharedProject &project);
-        void removeProject(const Projects::SharedProject &project);
+        void addProject(const SharedProject &project);
+        void removeProject(const SharedProject &project);
+
+        ProjectsVector projectsAsVector() const;
+
+        bool contains(const QString &name) const;
+        bool isEmpty() const;
+
+        SharedProject projectByName(const QString &name) const noexcept;
 
     signals:
-        void projectAdded(const Projects::SharedProject &project);
-        void projectRemoved(const Projects::SharedProject &project);
+        void projectAdded(const SharedProject &project);
+        void projectRemoved(const SharedProject &project);
 
     private:
-        Projects::Projects m_Projects;
+        Projects m_Projects;
     };
 
-} // namespace Project
+} // namespace Projects

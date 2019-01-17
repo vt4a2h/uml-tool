@@ -34,7 +34,10 @@ namespace Projects {
     using SharedProject = std::shared_ptr<Project>;
     using WeakProject = std::weak_ptr<Project>;
     using Projects = QHash<QString, SharedProject>;
-    using ProjectsList = QVector<SharedProject>;
+    using ProjectsVector = QVector<SharedProject>;
+
+    class ProjectDatabase;
+    using UniqueProjectDb = std::unique_ptr<ProjectDatabase>;
 }
 
 Q_DECLARE_METATYPE(Projects::SharedProject)

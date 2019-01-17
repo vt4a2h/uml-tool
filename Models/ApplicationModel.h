@@ -43,15 +43,13 @@ namespace Models {
 
     public:
         explicit ApplicationModel();
+
         ~ApplicationModel() override;
 
         // TODO: move to some database class
         Projects::SharedProject makeProject();
         Projects::SharedProject makeProject(const QString &name, const QString &path);
         bool addProject(const Projects::SharedProject &pr);
-        Projects::SharedProject project(const QString &name) const;
-        Projects::ProjectsList projects() const;
-        bool removeProject(const QString &name);
         // }
 
         Projects::SharedProject currentProject() const;
@@ -62,12 +60,15 @@ namespace Models {
 
         SharedTreeModel treeModel() const;
 
+        Projects::ProjectDatabase &projectsDb();
+        const Projects::ProjectDatabase &projectsDb() const;
+
     signals:
         void currentProjectChanged(const Projects::SharedProject &previous,
                                    const Projects::SharedProject &current);
 
     private:
-        Projects::Projects m_Projects;
+        Projects::UniqueProjectDb m_projectsDb;
         Projects::SharedProject m_CurrentProject;
 
         DB::SharedDatabase m_GlobalDatabase;

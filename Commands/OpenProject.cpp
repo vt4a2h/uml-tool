@@ -31,6 +31,8 @@
 
 #include <Application/Settings.h>
 
+#include <Project/ProjectDB.hpp>
+
 namespace Commands
 {
 
@@ -69,7 +71,7 @@ namespace Commands
     void OpenProject::redoImpl()
     {
         if (!m_Done) {
-            auto projects = m_AppModel->projects();
+            auto projects = m_AppModel->projectsDb().projectsAsVector();
             auto it = ranges::find_if(projects, [&](auto &&p) { return p->fullPath() == m_ProjectPath; });
             m_Project = it != std::end(projects) ? *it : nullptr;
 
@@ -127,7 +129,7 @@ namespace Commands
         if (m_MakeProjectCurrentCmd)
             m_MakeProjectCurrentCmd->undoImpl();
 
-        m_AppModel->removeProject(m_Project->name());
+        m_AppModel->projectsDb().removeProject(m_Project);
 
         if (m_UpdateRecentProjectsMenu)
             emit recentProjectRemoved(m_Project->fullPath());

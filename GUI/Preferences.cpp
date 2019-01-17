@@ -32,6 +32,8 @@
 
 #include <Models/ApplicationModel.h>
 
+#include <Project/ProjectDB.hpp>
+
 #include "QtHelpers.h"
 #include "Constants.h"
 
@@ -105,8 +107,7 @@ namespace GUI {
         // Application database
         auto db = G_ASSERT(m_AppModel->globalDatabase());
         if (db->fullPath() != ui->leGlobalDb->text()) {
-            auto projects = m_AppModel->projects();
-            if (!projects.isEmpty())
+            if (!m_AppModel->projectsDb().isEmpty())
                 QMessageBox::warning(this, tr("Some projects are opened"),
                                      tr("You cannot change global database if there are "
                                         "one or more projects opened.\nTry closing them "

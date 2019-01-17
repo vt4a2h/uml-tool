@@ -31,6 +31,8 @@
 #include <GUI/graphics/GraphicsRelation.h>
 #include <GUI/graphics/Entity.h>
 
+#include <Project/ProjectDB.hpp>
+
 namespace Commands {
 
    /**
@@ -83,7 +85,7 @@ namespace Commands {
         }
 
         // Remove project itself
-        G_ASSERT(m_AppModel)->removeProject(G_ASSERT(m_Project)->name());
+        G_ASSERT(m_AppModel)->projectsDb().removeProject(m_Project);
 
         // Clean scene
         ranges::for_each(m_GraphicItems, [this](auto &&i) { G_ASSERT(m_Scene)->removeItem(i); });

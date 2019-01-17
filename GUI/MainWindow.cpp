@@ -63,6 +63,8 @@
 #include <Commands/RemoveProject.h>
 #include <Commands/OpenProject.h>
 
+#include <Project/ProjectDB.hpp>
+
 #include "About.h"
 #include "NewProject.h"
 #include "addscope.h"
@@ -357,7 +359,7 @@ namespace GUI {
     void MainWindow::onCloseProject()
     {
         if (m_ApplicationModel && m_ApplicationModel->currentProject()) {
-            m_ApplicationModel->removeProject(m_ApplicationModel->currentProject()->name());
+            m_ApplicationModel->projectsDb().removeProject(m_ApplicationModel->currentProject());
         }
     }
 
@@ -623,7 +625,7 @@ namespace GUI {
         QVariant data = index.data(Models::ProjectTreeModel::SharedData);
         if (index.isValid() && data.canConvert<Projects::SharedProject>()) {
             auto name = index.data(Models::ProjectTreeModel::ID).toString();
-            if (auto project = m_ApplicationModel->project(name))
+            if (auto project = m_ApplicationModel->projectsDb().projectByName(name))
             {
                 // Check if we need to unset project
                 if (m_ApplicationModel->currentProject() == project)
@@ -647,7 +649,7 @@ namespace GUI {
             QVariant data = index.data(Models::ProjectTreeModel::SharedData);
             if (data.canConvert<Projects::SharedProject>()) {
                 auto name = index.data(Models::ProjectTreeModel::ID).toString();
-                if (auto project = m_ApplicationModel->project(name)) {
+                if (auto project = m_ApplicationModel->projectsDb().projectByName(name)) {
                     auto cmd = Commands::make<Commands::RemoveProject>(
                                    project, m_ApplicationModel, m_MainScene.get());
                     m_CommandsStack->push(cmd.release());
@@ -671,7 +673,7 @@ namespace GUI {
         ui->actionUndo->setEnabled(m_CommandsStack->canUndo());
 
         m_Elements->setEnabled(state);
-        m_ProjectTreeView->setEnabled(!m_ApplicationModel->projects().isEmpty());
+        m_ProjectTreeView->setEnabled(!m_ApplicationModel->projectsDb().isEmpty());
         m_MainView->setEnabled(state);
 
         ranges::for_each(m_RelationActions, [&](auto &&a){ a->setEnabled(state); });

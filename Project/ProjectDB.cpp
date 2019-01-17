@@ -24,11 +24,15 @@
 
 #include <Project/Project.h>
 
-namespace Project {
+namespace Projects {
 
     ProjectDatabase::ProjectDatabase() = default;
 
-    void ProjectDatabase::addProject(const Projects::SharedProject &project)
+    /**
+     * @brief ProjectDatabase::addProject
+     * @param project
+     */
+    void ProjectDatabase::addProject(const SharedProject &project)
     {
         if (project && !m_Projects.contains(project->name())) {
             m_Projects[project->name()] = project;
@@ -36,7 +40,11 @@ namespace Project {
         }
     }
 
-    void ProjectDatabase::removeProject(const Projects::SharedProject &project)
+    /**
+     * @brief ProjectDatabase::removeProject
+     * @param project
+     */
+    void ProjectDatabase::removeProject(const SharedProject &project)
     {
         if (!project)
             return;
@@ -45,6 +53,47 @@ namespace Project {
             m_Projects.erase(it);
             emit projectRemoved(project);
         }
+    }
+
+    /**
+     * @brief ProjectDatabase::projectsAsVector
+     * @return
+     */
+    ProjectsVector ProjectDatabase::projectsAsVector() const
+    {
+       return m_Projects.values().toVector();
+    }
+
+    /**
+     * @brief ProjectDatabase::containsProject
+     * @param name
+     * @return
+     */
+    bool ProjectDatabase::contains(const QString &name) const
+    {
+        return m_Projects.contains(name) ;
+    }
+
+    /**
+     * @brief ProjectDatabase::isEmpty
+     * @return
+     */
+    bool ProjectDatabase::isEmpty() const
+    {
+       return m_Projects.isEmpty();
+    }
+
+    /**
+     * @brief ProjectDatabase::projectByName
+     * @param name
+     * @return
+     */
+    SharedProject ProjectDatabase::projectByName(const QString &name) const noexcept
+    {
+        if (auto it = m_Projects.find(name); it != m_Projects.end())
+            return *it;
+
+        return nullptr;
     }
 
 } // namespace Project
