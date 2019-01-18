@@ -43,4 +43,5 @@ set(CASES_HEADERS
     ${CASES_DIR}/ID.h
     ${CASES_DIR}/Memento.h
     ${CASES_DIR}/SectionalTextConvertionCases.h
+    ${CASES_DIR}/ProjectDB.h
     ${CASES_DIR}/HelpersCases.h)

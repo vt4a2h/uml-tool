@@ -5,7 +5,7 @@ CONFIG -= app_bundle
 
 QMAKE_CXXFLAGS *= -pedantic -Wextra -Wall
 
-QT += widgets
+QT += widgets testlib
 
 LIBS += -lgtest -lpthread
 
@@ -91,6 +91,7 @@ HEADERS += \
     $$PWD/../Common/ID.h \
     $$PWD/../Common/Memento.hpp \
     $$PWD/../DB/DBTypes.hpp \
+    $$PWD/../Project/ProjectDB.hpp \
     cases/TypeMakerTestCases.h \
     cases/SignatureParserCases.h \
     cases/SignatureMakerCases.h \
@@ -111,7 +112,8 @@ HEADERS += \
     Arguments.hpp \
     cases/Memento.h \
     TestSectionalTextConvertion.hpp \
-    cases/SectionalTextConvertionCases.h
+    cases/SectionalTextConvertionCases.h \
+    cases/ProjectDB.h
 
 SOURCES += main.cpp \
            $$PWD/../Application/settings.cpp \
@@ -160,6 +162,7 @@ SOURCES += main.cpp \
            $$PWD/../Generator/abstractprojectgenerator.cpp \
            $$PWD/../Generator/basiccppprojectgenerator.cpp \
            $$PWD/../Project/project.cpp \
+           $$PWD/../Project/ProjectDB.cpp \
            $$PWD/../Translation/code.cpp \
            $$PWD/../Entity/Components/componentsignatureparser.cpp \
            $$PWD/../Translation/signaturemaker.cpp \

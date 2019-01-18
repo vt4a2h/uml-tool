@@ -33,8 +33,8 @@ namespace Projects {
     public:
         ProjectDatabase();
 
-        void addProject(const SharedProject &project);
-        void removeProject(const SharedProject &project);
+        bool addProject(const SharedProject &project);
+        bool removeProject(const SharedProject &project);
 
         ProjectsVector projectsAsVector() const;
 

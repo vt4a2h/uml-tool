@@ -38,6 +38,7 @@ namespace Models {
      */
     ApplicationModel::ApplicationModel()
         : QObject(nullptr)
+        , m_projectsDb(std::make_unique<Projects::ProjectDatabase>())
         , m_GlobalDatabase(std::make_shared<DB::Database>())
         , m_TreeModel(std::make_shared<ProjectTreeModel>())
     {

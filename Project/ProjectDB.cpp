@@ -32,27 +32,35 @@ namespace Projects {
      * @brief ProjectDatabase::addProject
      * @param project
      */
-    void ProjectDatabase::addProject(const SharedProject &project)
+    bool ProjectDatabase::addProject(const SharedProject &project)
     {
-        if (project && !m_Projects.contains(project->name())) {
+        if (project && !contains(project->name())) {
             m_Projects[project->name()] = project;
             emit projectAdded(project);
+
+            return true;
         }
+
+        return false;
     }
 
     /**
      * @brief ProjectDatabase::removeProject
      * @param project
      */
-    void ProjectDatabase::removeProject(const SharedProject &project)
+    bool ProjectDatabase::removeProject(const SharedProject &project)
     {
         if (!project)
-            return;
+            return false;
 
         if (auto it = m_Projects.find(project->name()); it != m_Projects.end()) {
             m_Projects.erase(it);
             emit projectRemoved(project);
+
+            return true;
         }
+
+        return false;
     }
 
     /**

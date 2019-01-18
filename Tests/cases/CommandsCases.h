@@ -32,6 +32,8 @@
 #include <Commands/RenameEntity.h>
 #include <Commands/OpenProject.h>
 
+#include <Project/ProjectDB.hpp>
+
 TEST_F(CommandsTester, CreateEntityCommand)
 {
     auto scopeID = Common::ID::projectScopeID();
@@ -104,7 +106,8 @@ TEST_F(CommandsTester, MakeProjectCurrent)
     ASSERT_EQ(testProjectName, cmd->currentProjectName());
 
     cmd->undoImpl();
-    ASSERT_EQ(m_FakeAppModel->project(cmd->previousProjectName()), m_FakeAppModel->currentProject());
+    ASSERT_EQ(m_FakeAppModel->projectsDb().projectByName(cmd->previousProjectName()),
+              m_FakeAppModel->currentProject());
 
     cmd->redoImpl();
     ASSERT_EQ(testProject, m_FakeAppModel->currentProject());
@@ -140,11 +143,11 @@ TEST_F(CommandsTester, RemoveProject)
         std::make_unique<Commands::RemoveProject>(m_Project, m_FakeAppModel, m_Scene.get());
 
     removeProject->redoImpl();
-    ASSERT_FALSE(!!m_FakeAppModel->project(m_Project->name()));
+    ASSERT_FALSE(!!m_FakeAppModel->projectsDb().projectByName(m_Project->name()));
     ASSERT_FALSE(m_Scene->items().contains(createEntityCmd->graphicsEntity().data()));
 
     removeProject->undoImpl();
-    ASSERT_TRUE(!!m_FakeAppModel->project(m_Project->name()));
+    ASSERT_TRUE(!!m_FakeAppModel->projectsDb().projectByName(m_Project->name()));
     ASSERT_EQ(m_FakeAppModel->currentProject(), m_Project);
     ASSERT_TRUE(m_Scene->items().contains(createEntityCmd->graphicsEntity().data()));
 }

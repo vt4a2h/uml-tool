@@ -41,6 +41,7 @@
 #include "cases/Memento.h"
 #include "cases/HelpersCases.h"
 #include "cases/SectionalTextConvertionCases.h"
+#include "cases/ProjectDB.h"
 
 #include "Arguments.hpp"
 
