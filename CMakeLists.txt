@@ -10,6 +10,7 @@ include(BuildParameters.cmake)
 find_package(Qt5Widgets REQUIRED)
 if(BUILD_TESTING)
     find_package(GTest REQUIRED)
+    find_package(Qt5Test REQUIRED)
     enable_testing()
 endif(BUILD_TESTING)
 
@@ -54,7 +55,7 @@ if(BUILD_TESTING)
     target_link_libraries(tests ${GTEST_LIBRARIES} pthread)
 
     setCommonTargetProperties(tests)
-    qt5_use_modules(tests Widgets Core)
+    qt5_use_modules(tests Widgets Core Test)
 
     gtest_discover_tests(tests)
 endif(BUILD_TESTING)

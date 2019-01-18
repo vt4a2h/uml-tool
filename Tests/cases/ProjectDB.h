@@ -1,4 +1,4 @@
-/*****************************************************************************
+﻿/*****************************************************************************
 **
 ** Copyright (C) 2019 Fanaskov Vitaly (vt4a2h@gmail.com)
 **
@@ -37,16 +37,20 @@ TEST(ProjectDBTest, AddProject_Success)
     ASSERT_TRUE(added);
 }
 
-TEST(ProjectDBTest, AddProject_Fail)
+TEST(ProjectDBTest, AddProject_NormalProject_Fail)
+{
+    Projects::ProjectDatabase db;
+
+    auto project = std::make_shared<Projects::Project>("Foo", "Bar");
+    db.addProject(project);
+    ASSERT_FALSE(db.addProject(project));
+}
+
+TEST(ProjectDBTest, AddProject_NullProject_Fail)
 {
     Projects::ProjectDatabase db;
 
     auto added = db.addProject(nullptr);
-    ASSERT_FALSE(added);
-
-    auto project = std::make_shared<Projects::Project>("Foo", "Bar");
-    db.addProject(project);
-    added = db.addProject(project);
     ASSERT_FALSE(added);
 }
 
@@ -61,14 +65,19 @@ TEST(ProjectDBTest, RemoveProject_Success)
     ASSERT_TRUE(removed);
 }
 
-TEST(ProjectDBTest, RemoveProject_Fail)
+TEST(ProjectDBTest, RemoveProject_NormalProject_Fail)
+{
+    Projects::ProjectDatabase db;
+
+    auto removed = db.removeProject(std::make_shared<Projects::Project>("Foo", "Bar"));
+    ASSERT_FALSE(removed);
+}
+
+TEST(ProjectDBTest, RemoveProject_NullProject_Fail)
 {
     Projects::ProjectDatabase db;
 
     auto removed = db.removeProject(nullptr);
-    ASSERT_FALSE(removed);
-
-    removed = db.removeProject(std::make_shared<Projects::Project>("Foo", "Bar"));
     ASSERT_FALSE(removed);
 }
 
@@ -91,4 +100,94 @@ TEST(ProjectDBTest, RemoveProject_SignalEmmited)
 
     db.removeProject(project);
     ASSERT_EQ(sp.count(), 1);
+}
+
+TEST(ProjectDBTest, ConvertToVector_InitialVectorIsEmpty)
+{
+    Projects::ProjectDatabase db;
+    ASSERT_TRUE(db.projectsAsVector().isEmpty());
+}
+
+static auto genProjects()
+{
+    return QVector<Projects::SharedProject>{
+        std::make_shared<Projects::Project>("Foo", "FooPath"),
+        std::make_shared<Projects::Project>("Foo1", "Foo1Path"),
+        std::make_shared<Projects::Project>("Foo2", "Foo2Path"),
+        std::make_shared<Projects::Project>("Foo3", "Foo3Path"),
+        std::make_shared<Projects::Project>("Foo4", "Foo4Path"),
+    };
+}
+
+TEST(ProjectDBTest, ConvertToVector_VectorContainsAllProjects)
+{
+    Projects::ProjectDatabase db;
+
+    auto projects = genProjects();
+    for (auto &&p : projects)
+        db.addProject(p);
+
+    for (auto &&p : db.projectsAsVector())
+        ASSERT_NE(projects.indexOf(p), -1);
+}
+
+TEST(ProjectDBTest, Contains_Success)
+{
+    Projects::ProjectDatabase db;
+
+    db.addProject(std::make_shared<Projects::Project>("Foo", "FooPath"));
+    ASSERT_TRUE(db.contains("Foo"));
+}
+
+TEST(ProjectDBTest, Contains_Fail)
+{
+    Projects::ProjectDatabase db;
+
+    db.addProject(std::make_shared<Projects::Project>("Foo", "FooPath"));
+    ASSERT_FALSE(db.contains("Bar"));
+}
+
+TEST(ProjectDBTest, IsEmpty_InitialState_Success)
+{
+    Projects::ProjectDatabase db;
+    ASSERT_TRUE(db.isEmpty());
+}
+
+
+TEST(ProjectDBTest, IsEmpty_Success)
+{
+    Projects::ProjectDatabase db;
+
+    auto p = std::make_shared<Projects::Project>("Foo", "FooPath");
+    db.addProject(p);
+    db.removeProject(p);
+    ASSERT_TRUE(db.isEmpty());
+}
+
+
+TEST(ProjectDBTest, IsEmpty_Fail)
+{
+    Projects::ProjectDatabase db;
+
+    db.addProject(std::make_shared<Projects::Project>("Foo", "FooPath"));
+    ASSERT_FALSE(db.isEmpty());
+}
+
+TEST(ProjectDBTest, ProjectByName_Success)
+{
+    Projects::ProjectDatabase db;
+
+    auto p = std::make_shared<Projects::Project>("Foo", "FooPath");
+    db.addProject(p);
+
+    auto foundP = db.projectByName("Foo");
+    ASSERT_EQ(p, foundP);
+}
+
+TEST(ProjectDBTest, ProjectByName_Fail)
+{
+    Projects::ProjectDatabase db;
+
+    db.addProject(std::make_shared<Projects::Project>("Foo", "FooPath"));
+    ASSERT_FALSE(!!db.projectByName("Bar"));
 }
