@@ -47,10 +47,8 @@ namespace Commands
         Q_OBJECT
 
     public:
-        OpenProject(const QString &name, const QString &path,
-                    const Models::SharedApplicationModel &appModel,
-                    const Commands::SharedCommandStack &stack, const Graphics::ScenePtr &scene,
-                    QMainWindow &mv, QMenu &rp, QUndoCommand *parent = nullptr);
+        OpenProject(const QString &name, const QString &path,const Models::SharedApplicationModel &appModel,
+                    const Graphics::ScenePtr &scene, QUndoCommand *parent = nullptr);
 
     public: // Types
         using ProjectAdder  = std::function<void(const QString& /*Project name*/)>;
@@ -60,28 +58,16 @@ namespace Commands
         void undoImpl()    override;
         void redoImpl()    override;
 
-    public: // BaseCommand overrides
-        bool suppressDialogs() const;
-        void setSuppressDialogs(bool suppressDialogs);
-
     signals:
         void recentProjectAdded(const QString &);
-        void recentProjectRemoved(const QString &);
+        void projectErrors(const QString &);
 
     private:
         QString                        m_ProjectPath;
         Models::SharedApplicationModel m_AppModel;
-        Commands::SharedCommandStack   m_CommandsStack;
         Graphics::ScenePtr             m_Scene;
-        QMainWindow                    &m_MainWindow;
-        QMenu                          &m_RecentProjectsMenu;
 
-        SharedCommand m_MakeProjectCurrentCmd;
         Projects::SharedProject m_Project;
-
-        bool m_SuppressDialogs;
-        bool m_commandFailed;
-        bool m_UpdateRecentProjectsMenu;
     };
 
 } // Commands

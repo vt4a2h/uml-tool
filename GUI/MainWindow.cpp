@@ -253,15 +253,15 @@ namespace GUI {
      */
     void MainWindow::openProject(const QString &path)
     {
-        auto cmd = Commands::make<Commands::OpenProject>(tr("Open new project"), path,
-                                                         m_ApplicationModel, m_CommandsStack,
-                                                         m_MainScene.get(), *this,
-                                                         *m_RecentProjects);
-        G_CONNECT(cmd.get(), &Commands::OpenProject::recentProjectAdded,
+        Commands::OpenProject cmd(tr("Open new project"), path, m_ApplicationModel, scene());
+
+        G_CONNECT(&cmd, &Commands::OpenProject::recentProjectAdded,
                   this, &MainWindow::onRecentProjectAdded);
-        G_CONNECT(cmd.get(), &Commands::OpenProject::recentProjectRemoved,
-                  this, &MainWindow::onRecentProjectRemoved);
-        m_CommandsStack->push(cmd.release());
+        G_CONNECT(&cmd, &Commands::OpenProject::projectErrors, [&](auto &&errors) {
+            QMessageBox::critical(this, tr("Cannot open project"), errors);
+        });
+
+        cmd.redo();
     }
 
     /**

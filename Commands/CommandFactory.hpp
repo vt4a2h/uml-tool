@@ -36,7 +36,7 @@ namespace Commands {
         Q_OBJECT
 
     public:
-        SINGLETON(CommandFactory)
+        NEITHER_COPIABLE_NOR_MOVABLE(CommandFactory)
 
         static const CommandFactory &instance();
 

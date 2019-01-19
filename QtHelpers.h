@@ -24,7 +24,7 @@
 
 #include <QObject>
 
-#define SINGLETON(ClassName) \
+#define NEITHER_COPIABLE_NOR_MOVABLE(ClassName) \
     ClassName(const ClassName &) = delete; \
     ClassName(ClassName &&) = delete; \
     ClassName& operator =(const ClassName&) = delete; \

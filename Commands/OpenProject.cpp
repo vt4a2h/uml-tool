@@ -22,6 +22,8 @@
 *****************************************************************************/
 #include "OpenProject.h"
 
+#include <exception>
+
 #include <range/v3/algorithm/find_if.hpp>
 
 #include <QMessageBox>
@@ -49,19 +51,11 @@ namespace Commands
      */
     OpenProject::OpenProject(const QString &name, const QString &path,
                              const Models::SharedApplicationModel &appModel,
-                             const Commands::SharedCommandStack &stack,
-                             const Graphics::ScenePtr &scene,
-                             QMainWindow &mv, QMenu &rp, QUndoCommand *parent)
+                             const Graphics::ScenePtr &scene, QUndoCommand *parent)
         : BaseCommand(name, parent)
         , m_ProjectPath(path)
         , m_AppModel(appModel)
-        , m_CommandsStack(stack)
         , m_Scene(scene)
-        , m_MainWindow(mv)
-        , m_RecentProjectsMenu(rp)
-        , m_SuppressDialogs(false)
-        , m_commandFailed(false)
-        , m_UpdateRecentProjectsMenu(false)
     {
     }
 
@@ -70,51 +64,36 @@ namespace Commands
      */
     void OpenProject::redoImpl()
     {
-        if (!m_Done) {
+        try {
+            if (m_Done)
+                throw std::logic_error(tr("Operation is not permitted").toUtf8());
+
             auto projects = m_AppModel->projectsDb().projectsAsVector();
             auto it = ranges::find_if(projects, [&](auto &&p) { return p->fullPath() == m_ProjectPath; });
             m_Project = it != std::end(projects) ? *it : nullptr;
+            if (m_Project)
+                throw std::logic_error(tr("Cannot add the same project twice").toUtf8());
 
-            if (!m_Project) {
-                m_Project = std::make_shared<Projects::Project>();
-                m_Project->load(m_ProjectPath);
-            }
+            // TODO: project should be created with a factory that sets global DB
+            m_Project = std::make_shared<Projects::Project>();
+            m_Project->load(m_ProjectPath);
+
+            if (m_Project->hasErrors())
+                throw std::logic_error(m_Project->lastErrors().join("\n").toUtf8());
+
+            if (!m_AppModel->projectsDb().addProject(m_Project))
+                throw std::logic_error(tr("Cannot add project with the same name twice").toUtf8());
+
+            Commands::MakeProjectCurrent(m_Project->name(), m_AppModel, m_Scene).redo();
+
+            emit recentProjectAdded(m_Project->fullPath());
 
             m_Done = true;
-        }
-
-        // Just in case
-        if (!G_ASSERT(m_Project))
-            return;
-
-        if (m_Project->hasErrors()) {
-            if (!m_SuppressDialogs) {
-                auto errors = m_Project->lastErrors();
-                QMessageBox::critical
-                    ( &m_MainWindow
-                    , tr("Open project: %n error(s).", "", errors.count())
-                    , errors.join("\n")
-                    , QMessageBox::Ok
-                    );
-            }
-
-            m_commandFailed = true;
-
-            return;
-        }
-
-        m_AppModel->addProject(m_Project);
-
-        if (m_Project != m_AppModel->currentProject() && !m_MakeProjectCurrentCmd)
-            m_MakeProjectCurrentCmd =
-                Commands::make<Commands::MakeProjectCurrent>(m_Project->name(), m_AppModel, m_Scene);
-
-        if (m_MakeProjectCurrentCmd)
-            m_MakeProjectCurrentCmd->redoImpl();
-
-        if (!App::Settings::recentProjects().contains(m_Project->fullPath())) {
-            m_UpdateRecentProjectsMenu = true;
-            emit recentProjectAdded(m_Project->fullPath());
+        } catch (const std::logic_error &e) {
+            setObsolete(true);
+            emit projectErrors(QString::fromUtf8(e.what()));
+        } catch (...) {
+            Q_ASSERT(!"Unexpected error");
         }
     }
 
@@ -123,34 +102,8 @@ namespace Commands
      */
     void OpenProject::undoImpl()
     {
-        if (!m_Project || m_commandFailed)
-            return;
-
-        if (m_MakeProjectCurrentCmd)
-            m_MakeProjectCurrentCmd->undoImpl();
-
-        m_AppModel->projectsDb().removeProject(m_Project);
-
-        if (m_UpdateRecentProjectsMenu)
-            emit recentProjectRemoved(m_Project->fullPath());
-    }
-
-    /**
-     * @brief OpenProject::suppressDialogs
-     * @return
-     */
-    bool OpenProject::suppressDialogs() const
-    {
-        return m_SuppressDialogs;
-    }
-
-    /**
-     * @brief OpenProject::setSuppressDialogs
-     * @param suppressDialogs
-     */
-    void OpenProject::setSuppressDialogs(bool suppressDialogs)
-    {
-        m_SuppressDialogs = suppressDialogs;
+        Q_ASSERT(!"Command is not undoable");
+        setObsolete(true);
     }
 
 } // namespace Commands

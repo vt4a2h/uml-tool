@@ -55,9 +55,6 @@ namespace Models {
 
         bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
-        void addProject(const Projects::SharedProject &pr);
-        void removeProject(const Projects::SharedProject &pr);
-
         void addScope(const Entity::SharedScope &scope, const QString &projectName);
         void removeScope(const Common::ID &scopeId, const QString &projectName);
 
@@ -69,6 +66,8 @@ namespace Models {
     public slots:
         void onCurrentProjectChanged(const Projects::SharedProject &previous,
                                      const Projects::SharedProject &current);
+        void addProject(const Projects::SharedProject &pr);
+        void removeProject(const Projects::SharedProject &pr);
 
     private:
         void addProjectItem(const Projects::SharedProject &pr);

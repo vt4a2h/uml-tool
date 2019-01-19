@@ -42,7 +42,7 @@ namespace Entity {
     class EntityFactory : public Common::ElementsFactory
     {
     public:
-        SINGLETON(EntityFactory)
+        NEITHER_COPIABLE_NOR_MOVABLE(EntityFactory)
 
         static const EntityFactory &instance();
 

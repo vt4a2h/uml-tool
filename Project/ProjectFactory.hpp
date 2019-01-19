@@ -29,7 +29,7 @@ namespace Projects {
     class ProjectFactory
     {
     public:
-        SINGLETON(ProjectFactory)
+        NEITHER_COPIABLE_NOR_MOVABLE(ProjectFactory)
 
         ~ProjectFactory();
 

@@ -38,7 +38,7 @@ namespace Helpers {
         Q_OBJECT
 
     public:
-        SINGLETON(GeneratorID)
+        NEITHER_COPIABLE_NOR_MOVABLE(GeneratorID)
 
         static const GeneratorID &instance();
 

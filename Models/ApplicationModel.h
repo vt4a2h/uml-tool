@@ -42,8 +42,9 @@ namespace Models {
         Q_OBJECT
 
     public:
-        explicit ApplicationModel();
+        NEITHER_COPIABLE_NOR_MOVABLE(ApplicationModel)
 
+        explicit ApplicationModel();
         ~ApplicationModel() override;
 
         // TODO: move to some database class
@@ -68,7 +69,7 @@ namespace Models {
                                    const Projects::SharedProject &current);
 
     private:
-        Projects::UniqueProjectDb m_projectsDb;
+        Projects::UniqueProjectDb m_ProjectsDb;
         Projects::SharedProject m_CurrentProject;
 
         DB::SharedDatabase m_GlobalDatabase;

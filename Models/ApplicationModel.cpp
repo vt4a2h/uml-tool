@@ -38,12 +38,16 @@ namespace Models {
      */
     ApplicationModel::ApplicationModel()
         : QObject(nullptr)
-        , m_projectsDb(std::make_unique<Projects::ProjectDatabase>())
+        , m_ProjectsDb(std::make_unique<Projects::ProjectDatabase>())
         , m_GlobalDatabase(std::make_shared<DB::Database>())
         , m_TreeModel(std::make_shared<ProjectTreeModel>())
     {
         G_CONNECT(this, &ApplicationModel::currentProjectChanged,
                   m_TreeModel.get(), &ProjectTreeModel::onCurrentProjectChanged);
+        G_CONNECT(m_ProjectsDb.get(), &Projects::ProjectDatabase::projectAdded,
+                  m_TreeModel.get(), &ProjectTreeModel::addProject);
+        G_CONNECT(m_ProjectsDb.get(), &Projects::ProjectDatabase::projectRemoved,
+                  m_TreeModel.get(), &ProjectTreeModel::removeProject);
     }
 
 
@@ -71,7 +75,6 @@ namespace Models {
     {
         auto newProject(std::make_shared<Projects::Project>(name, path));
         newProject->setGlobalDatabase(globalDatabase());
-        m_TreeModel->addProject(newProject);
         projectsDb().addProject(newProject);
 
         return newProject;
@@ -89,7 +92,6 @@ namespace Models {
 
         projectsDb().addProject(pr);
         pr->setGlobalDatabase(globalDatabase());
-        m_TreeModel->addProject(pr);
         return true;
     }
 
@@ -169,7 +171,7 @@ namespace Models {
      */
     Projects::ProjectDatabase &ApplicationModel::projectsDb()
     {
-        return *m_projectsDb;
+        return *m_ProjectsDb;
     }
 
     /**
@@ -178,7 +180,7 @@ namespace Models {
      */
     const Projects::ProjectDatabase &ApplicationModel::projectsDb() const
     {
-        return *m_projectsDb;
+        return *m_ProjectsDb;
     }
 
 } // namespace models

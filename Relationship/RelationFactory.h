@@ -40,7 +40,7 @@ namespace Relationship {
         Q_OBJECT
 
     public:
-        SINGLETON(RelationFactory)
+        NEITHER_COPIABLE_NOR_MOVABLE(RelationFactory)
 
         static const RelationFactory &instance();
 
