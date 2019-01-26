@@ -34,6 +34,7 @@
 
 #include <Project/Project.h>
 #include <Project/ProjectTypes.hpp>
+#include <Project/ProjectFactory.hpp>
 
 #include <Entity/EntityFactory.h>
 #include <Relationship/RelationFactory.h>
@@ -58,6 +59,7 @@ protected:
 
         initFactory(Entity::EntityFactory::instance());
         initFactory(Relationship::RelationFactory::instance());
+        Projects::ProjectFactory::instance().initialise(m_GlobalDb);
 
         ErrorList errors;
         m_GlobalDb->load(errors);

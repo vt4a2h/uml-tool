@@ -47,12 +47,6 @@ namespace Models {
         explicit ApplicationModel();
         ~ApplicationModel() override;
 
-        // TODO: move to some database class
-        Projects::SharedProject makeProject();
-        Projects::SharedProject makeProject(const QString &name, const QString &path);
-        bool addProject(const Projects::SharedProject &pr);
-        // }
-
         Projects::SharedProject currentProject() const;
         bool setCurrentProject(const QString &name);
 

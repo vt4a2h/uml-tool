@@ -33,6 +33,7 @@
 #include <Commands/OpenProject.h>
 
 #include <Project/ProjectDB.hpp>
+#include <Project/ProjectFactory.hpp>
 
 TEST_F(CommandsTester, CreateEntityCommand)
 {
@@ -91,7 +92,8 @@ TEST_F(CommandsTester, CreateScopeCommand)
 TEST_F(CommandsTester, MakeProjectCurrent)
 {
     QString testProjectName = "Test Project";
-    auto testProject = m_FakeAppModel->makeProject(testProjectName, "");
+    auto testProject = Projects::ProjectFactory::instance().makeProject(testProjectName, "");
+    m_FakeAppModel->projectsDb().addProject(testProject);
     auto oldCurrent = m_FakeAppModel->currentProject();
     ASSERT_TRUE(!!oldCurrent);
 
@@ -179,18 +181,11 @@ TEST_F(CommandsTester, OpenProject)
     auto currentProject = m_FakeAppModel->currentProject();
 
     auto cmd = std::make_shared<Commands::OpenProject>("Open new project", tstProject->fullPath(),
-                                                       m_FakeAppModel, m_CommandsStack, m_Scene.get(),
-                                                       m_MainWindow, m_RecentProjectsMenu);
-    cmd->setSuppressDialogs(true);
-
+                                                       m_FakeAppModel, m_Scene.get());
     cmd->redoImpl();
 
     auto newCurrentProject = m_FakeAppModel->currentProject();
     ASSERT_TRUE(!!newCurrentProject);
     ASSERT_NE(currentProject, newCurrentProject);
     ASSERT_EQ(newCurrentProject->fullPath(), tstProject->fullPath());
-
-    cmd->undoImpl();
-
-    ASSERT_EQ(m_FakeAppModel->currentProject(), currentProject);
 }

@@ -40,6 +40,8 @@
 
 #include <Relationship/RelationFactory.h>
 
+#include <Project/ProjectFactory.hpp>
+
 #include "Settings.h"
 
 namespace App {
@@ -164,11 +166,14 @@ namespace App {
         G_CONNECT(m_MainWindow.get(), &GUI::MainWindow::globalDatabaseChanged,
                   this, &Application::updateGlobalDBParameters);
 
-        // Set up factories
+        // Set up item factories
         setUpFactory(Entity::EntityFactory::instance(), m_ApplicationModel, m_MainWindow->scene(),
                      m_MainWindow->commandsStack(), m_MainWindow->messenger());
         setUpFactory(Relationship::RelationFactory::instance(), m_ApplicationModel,
                      m_MainWindow->scene(), m_MainWindow->commandsStack(), m_MainWindow->messenger());
+
+        // Set up other factories
+        Projects::ProjectFactory::instance().initialise(m_ApplicationModel->globalDatabase());
     }
 
     /**

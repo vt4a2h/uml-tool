@@ -56,7 +56,7 @@ namespace Commands {
     void RemoveProject::undoImpl()
     {
         // Restore project
-        G_ASSERT(m_AppModel->addProject(m_Project));
+        G_ASSERT(m_AppModel->projectsDb().addProject(m_Project));
 
         // Recover project status
         if (m_WasCurrent)

@@ -64,6 +64,7 @@
 #include <Commands/OpenProject.h>
 
 #include <Project/ProjectDB.hpp>
+#include <Project/ProjectFactory.hpp>
 
 #include "About.h"
 #include "NewProject.h"
@@ -421,7 +422,7 @@ namespace GUI {
             }
         }
 
-        auto newProject = m_ApplicationModel->makeProject(name, path);
+        auto newProject = Projects::ProjectFactory::instance().makeProject(name, path);
         Commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel, m_MainScene.get()).redoImpl();
         newProject->save();
 

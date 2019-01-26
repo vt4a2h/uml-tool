@@ -22,6 +22,10 @@
 *****************************************************************************/
 #pragma once
 
+#include <DB/DBTypes.hpp>
+
+#include "ProjectTypes.hpp"
+
 #include "QtHelpers.h"
 
 namespace Projects {
@@ -33,8 +37,19 @@ namespace Projects {
 
         ~ProjectFactory();
 
+        static ProjectFactory &instance();
+
+        void initialise(DB::SharedDatabase globalDb);
+
+        DB::SharedDatabase globalDB() const;
+
+        SharedProject makeProject() const;
+        SharedProject makeProject(const QString &name, const QString &path) const;
+
     private:
         ProjectFactory();
+
+        DB::SharedDatabase m_GlobalDB;
     };
 
 } // namespace Projects

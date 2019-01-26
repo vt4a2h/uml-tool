@@ -34,6 +34,7 @@
 #include <Application/Settings.h>
 
 #include <Project/ProjectDB.hpp>
+#include <Project/ProjectFactory.hpp>
 
 namespace Commands
 {
@@ -74,8 +75,7 @@ namespace Commands
             if (m_Project)
                 throw std::logic_error(tr("Cannot add the same project twice").toUtf8());
 
-            // TODO: project should be created with a factory that sets global DB
-            m_Project = std::make_shared<Projects::Project>();
+            m_Project = Projects::ProjectFactory::instance().makeProject();
             m_Project->load(m_ProjectPath);
 
             if (m_Project->hasErrors())

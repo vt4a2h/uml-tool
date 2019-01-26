@@ -37,6 +37,8 @@
 
 #include <Commands/CommandsTypes.h>
 
+#include <Project/ProjectDB.hpp>
+
 #include "TestProjectBase.h"
 
 class CommandsTester : public ProjectBase
@@ -50,7 +52,7 @@ protected:
     {
         m_FakeAppModel = std::make_shared<Models::ApplicationModel>();
         m_FakeAppModel->setGlobalDatabse(m_GlobalDb);
-        m_FakeAppModel->addProject(m_Project);
+        m_FakeAppModel->projectsDb().addProject(m_Project);
         m_FakeAppModel->setCurrentProject(m_Project->name());
 
         m_CommandsStack = std::make_shared<QUndoStack>();

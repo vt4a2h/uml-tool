@@ -30,6 +30,7 @@
 
 #include <Project/Project.h>
 #include <Project/ProjectTypes.hpp>
+#include <Project/ProjectDB.hpp>
 
 #include <DB/Database.h>
 #include <DB/DBTypes.hpp>
@@ -68,7 +69,7 @@ protected:
 
         initFactory(Entity::EntityFactory::instance());
 
-        m_ApplicationModel->addProject(m_Project);
+        m_ApplicationModel->projectsDb().addProject(m_Project);
         m_ApplicationModel->setCurrentProject(m_Project->name());
         Q_ASSERT(m_Project == m_ApplicationModel->currentProject());
 

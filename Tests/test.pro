@@ -30,6 +30,7 @@ HEADERS += \
     $$PWD/../types.h \
     $$PWD/../Application/settings.h \
     $$PWD/../Project/project.h \
+    $$PWD/../Project/ProjectFactory.hpp \
     $$PWD/../Entity/property.h \
     $$PWD/../Entity/class.h \
     $$PWD/../Entity/scope.h \
@@ -163,6 +164,7 @@ SOURCES += main.cpp \
            $$PWD/../Generator/basiccppprojectgenerator.cpp \
            $$PWD/../Project/project.cpp \
            $$PWD/../Project/ProjectDB.cpp \
+           $$PWD/../Project/ProjectFactory.cpp \
            $$PWD/../Translation/code.cpp \
            $$PWD/../Entity/Components/componentsignatureparser.cpp \
            $$PWD/../Translation/signaturemaker.cpp \

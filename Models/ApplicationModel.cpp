@@ -57,45 +57,6 @@ namespace Models {
     ApplicationModel::~ApplicationModel() = default;
 
     /**
-     * @brief ApplicationModel::makeProject
-     * @return
-     */
-    Projects::SharedProject ApplicationModel::makeProject()
-    {
-        return makeProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH);
-    }
-
-    /**
-     * @brief ApplicationModal::makeProject
-     * @param name
-     * @param path
-     * @return
-     */
-    Projects::SharedProject ApplicationModel::makeProject(const QString &name, const QString &path)
-    {
-        auto newProject(std::make_shared<Projects::Project>(name, path));
-        newProject->setGlobalDatabase(globalDatabase());
-        projectsDb().addProject(newProject);
-
-        return newProject;
-    }
-
-    /**
-     * @brief ApplicationModel::addProject
-     * @param pr
-     * @return
-     */
-    bool ApplicationModel::addProject(const Projects::SharedProject &pr)
-    {
-        if (!pr || projectsDb().contains(pr->name()))
-            return false;
-
-        projectsDb().addProject(pr);
-        pr->setGlobalDatabase(globalDatabase());
-        return true;
-    }
-
-    /**
      * @brief ApplicationModal::currentProject
      * @return
      */

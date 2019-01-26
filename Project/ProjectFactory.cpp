@@ -22,9 +22,43 @@
 *****************************************************************************/
 #include "ProjectFactory.hpp"
 
+#include "Constants.h"
+#include "Project.h"
+
 namespace Projects {
 
     ProjectFactory::~ProjectFactory() = default;
     ProjectFactory::ProjectFactory() = default;
+
+    ProjectFactory &ProjectFactory::instance()
+    {
+        static ProjectFactory factory;
+        return factory;
+    }
+
+    void ProjectFactory::initialise(DB::SharedDatabase globalDb)
+    {
+        m_GlobalDB = std::move(globalDb);
+    }
+
+    DB::SharedDatabase ProjectFactory::globalDB() const
+    {
+        return m_GlobalDB;
+    }
+
+    SharedProject ProjectFactory::makeProject() const
+    {
+        return makeProject(DEFAULT_PROJECT_NAME, DEFAULT_PROJECT_PATH);
+    }
+
+    SharedProject ProjectFactory::makeProject(const QString &name, const QString &path) const
+    {
+        auto project = std::make_shared<Project>(name, path);
+
+        Q_ASSERT(!!globalDB());
+        project->setGlobalDatabase(globalDB());
+
+        return project;
+    }
 
 } // namespace Projects
