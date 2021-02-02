@@ -423,6 +423,7 @@ namespace GUI {
         }
 
         auto newProject = Projects::ProjectFactory::instance().makeProject(name, path);
+        m_ApplicationModel->projectsDb().addProject(newProject);
         Commands::MakeProjectCurrent(newProject->name(), m_ApplicationModel, m_MainScene.get()).redoImpl();
         newProject->save();
 
