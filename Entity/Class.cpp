@@ -337,7 +337,7 @@ namespace Entity
      */
     MethodsList Class::optionalMethods(Section s) const
     {
-        return std::move(optionalEntites<MethodsList>(m_OptionalMethods.values(), s));
+        return optionalEntites<MethodsList>(m_OptionalMethods.values(), s);
     }
 
     /**
@@ -347,7 +347,7 @@ namespace Entity
      */
     FieldsList Class::optionalFields(Section s) const
     {
-        return std::move(optionalEntites<FieldsList>(m_OptionalFields.values(), s));
+        return optionalEntites<FieldsList>(m_OptionalFields.values(), s);
     }
 
     /**
@@ -694,10 +694,10 @@ namespace Entity
             if (src["Parents"].isArray()) {
                 for (auto &&value : src["Parents"].toArray()) {
                     o = value.toObject();
-                    Util::checkAndSet(o, "Id", errorList, [&o, &p, &errorList, this](){
+                    Util::checkAndSet(o, "Id", errorList, [&o, &p, &errorList](){
                         p.first.fromJson(o["Id"], errorList);
                     });
-                    Util::checkAndSet(o, "Section", errorList, [&o, &p, this](){
+                    Util::checkAndSet(o, "Section", errorList, [&o, &p](){
                         p.second = static_cast<Section>(o["Section"].toInt());
                     });
                     m_Parents.append(p);
