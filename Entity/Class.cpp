@@ -30,6 +30,7 @@
 #include <range/v3/algorithm/copy_if.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 #include <range/v3/view/transform.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 
 #include <Utility/helpfunctions.h>
 
@@ -321,7 +322,7 @@ namespace Entity
             ContainerShared result;
 
             for (auto &&entities : c)
-                ranges::copy_if(entities | ranges::view::transform([](auto &&e){ return e.lock(); }),
+                ranges::copy_if(entities | ranges::views::transform([](auto &&e){ return e.lock(); }),
                                 ranges::back_inserter(result),
                                 [&](auto &&e){ return e && (e->section() == s || s == All); });
 

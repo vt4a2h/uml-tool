@@ -24,6 +24,7 @@
 #include "ProjectDatabase.h"
 
 #include <range/v3/algorithm/transform.hpp>
+#include <range/v3/iterator/insert_iterators.hpp>
 
 #include <QJsonObject>
 #include <QJsonArray>
